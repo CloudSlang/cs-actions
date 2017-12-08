@@ -63,7 +63,7 @@ public class PowerShellOsDetectorServiceTest {
         toBeReturnedOsDetails.setVersion("ultimate");
         doReturn(toBeReturnedOsDetails).when(osDetectorHelperService).processOutput(any(OperatingSystemDetails.class), anyMapOf(String.class, String.class), anyString());
 
-        OperatingSystemDetails actualOsDetails = powerShellOsDetectorService.detect(new OsDetectorInputs.Builder().withPowerShellTimeout("007").build());
+        OperatingSystemDetails actualOsDetails = powerShellOsDetectorService.detectOs(new OsDetectorInputs.Builder().withPowerShellTimeout("007").build());
 
         assertEquals("b os", actualOsDetails.getName());
         assertEquals("xYZ", actualOsDetails.getArchitecture());

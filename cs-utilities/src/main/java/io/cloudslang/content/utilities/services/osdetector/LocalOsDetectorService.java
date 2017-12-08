@@ -27,7 +27,7 @@ import static org.apache.commons.lang3.SystemUtils.OS_VERSION;
 /**
  * Created by Tirla Florin-Alin on 05/12/2017.
  **/
-public class LocalOsDetectorService implements OsDetectorService {
+public class LocalOsDetectorService implements OperatingSystemDetector {
     private final OsDetectorHelperService osDetectorHelperService;
 
     public LocalOsDetectorService(OsDetectorHelperService osDetectorHelperService) {
@@ -54,7 +54,7 @@ public class LocalOsDetectorService implements OsDetectorService {
     }
 
     @Override
-    public OperatingSystemDetails detect(OsDetectorInputs osDetectorInputs) {
+    public OperatingSystemDetails detectOs(OsDetectorInputs osDetectorInputs) {
         OperatingSystemDetails operatingSystemDetails = new OperatingSystemDetails();
         String host = osDetectorInputs.getHost();
         if (isLocalAddress(host)) {

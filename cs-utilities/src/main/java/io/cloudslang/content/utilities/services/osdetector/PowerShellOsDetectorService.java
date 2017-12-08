@@ -31,7 +31,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 /**
  * Created by Tirla Florin-Alin on 24/11/2017.
  **/
-public class PowerShellOsDetectorService implements OsDetectorService {
+public class PowerShellOsDetectorService implements OperatingSystemDetector {
     private static final String POWER_SHELL = "PowerShell";
     private final OsDetectorHelperService osDetectorHelperService;
     private final WSManRemoteShellService wsManRemoteShellService;
@@ -42,7 +42,7 @@ public class PowerShellOsDetectorService implements OsDetectorService {
     }
 
     @Override
-    public OperatingSystemDetails detect(OsDetectorInputs wsManRequestInputs) {
+    public OperatingSystemDetails detectOs(OsDetectorInputs wsManRequestInputs) {
         OperatingSystemDetails operatingSystemDetails = new OperatingSystemDetails();
         Map<String, String> execute = runCommandUsingPowershell(getWsManRequestInputs(wsManRequestInputs));
 

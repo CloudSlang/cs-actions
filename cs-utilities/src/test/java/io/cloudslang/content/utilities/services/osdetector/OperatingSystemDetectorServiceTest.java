@@ -25,7 +25,7 @@ import static org.mockito.Mockito.doReturn;
  * Created by Tirla Florin-Alin on 08/12/2017.
  **/
 @RunWith(PowerMockRunner.class)
-public class OperatingSystemDetectorTest {
+public class OperatingSystemDetectorServiceTest {
     @Mock
     private SshOsDetectorService sshOsDetectorService;
 
@@ -41,22 +41,22 @@ public class OperatingSystemDetectorTest {
     @Mock
     private OsDetectorHelperService osDetectorHelperService;
 
-    private OperatingSystemDetector operatingSystemDetector;
+    private OperatingSystemDetectorService operatingSystemDetectorService;
 
     @Before
     public void setUp() {
-        operatingSystemDetector = new OperatingSystemDetector(sshOsDetectorService, powershellOsDetectorService, nmapOsDetectorService, localOsDetectorService, osDetectorHelperService);
+        operatingSystemDetectorService = new OperatingSystemDetectorService(sshOsDetectorService, powershellOsDetectorService, nmapOsDetectorService, localOsDetectorService, osDetectorHelperService);
     }
 
     @Test
     public void testDetectOsWithAllDetectorsFailed() {
         doReturn(false).when(osDetectorHelperService).foundOperatingSystem(any(OperatingSystemDetails.class));
-        doReturn(new OperatingSystemDetails()).when(localOsDetectorService).detect(any(OsDetectorInputs.class));
-        doReturn(new OperatingSystemDetails()).when(sshOsDetectorService).detect(any(OsDetectorInputs.class));
-        doReturn(new OperatingSystemDetails()).when(powershellOsDetectorService).detect(any(OsDetectorInputs.class));
-        doReturn(new OperatingSystemDetails()).when(nmapOsDetectorService).detect(any(OsDetectorInputs.class));
+        doReturn(new OperatingSystemDetails()).when(localOsDetectorService).detectOs(any(OsDetectorInputs.class));
+        doReturn(new OperatingSystemDetails()).when(sshOsDetectorService).detectOs(any(OsDetectorInputs.class));
+        doReturn(new OperatingSystemDetails()).when(powershellOsDetectorService).detectOs(any(OsDetectorInputs.class));
+        doReturn(new OperatingSystemDetails()).when(nmapOsDetectorService).detectOs(any(OsDetectorInputs.class));
 
-        OperatingSystemDetails actualOsDetails = operatingSystemDetector.detectOs(new OsDetectorInputs.Builder().build());
+        OperatingSystemDetails actualOsDetails = operatingSystemDetectorService.detectOs(new OsDetectorInputs.Builder().build());
 
         assertEquals("", actualOsDetails.getName());
         assertEquals("", actualOsDetails.getVersion());

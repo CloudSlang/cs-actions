@@ -22,20 +22,15 @@ import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.ssh.services.actions.ScoreSSHShellCommand;
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
-import io.cloudslang.content.utilities.entities.constants.OsDetectorConstants;
 import io.cloudslang.content.utilities.services.osdetector.LocalOsDetectorService;
 import io.cloudslang.content.utilities.services.osdetector.NmapOsDetectorService;
-import io.cloudslang.content.utilities.services.osdetector.OperatingSystemDetector;
+import io.cloudslang.content.utilities.services.osdetector.OperatingSystemDetectorService;
 import io.cloudslang.content.utilities.services.osdetector.OsDetectorHelperService;
 import io.cloudslang.content.utilities.services.osdetector.PowerShellOsDetectorService;
 import io.cloudslang.content.utilities.services.osdetector.SshOsDetectorService;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
 import java.util.Map;
 
-import static com.google.common.net.InetAddresses.isInetAddress;
-import static com.google.common.net.InternetDomainName.isValid;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -66,7 +61,6 @@ import static io.cloudslang.content.ssh.utils.Constants.KNOWN_HOSTS_PATH;
 import static io.cloudslang.content.ssh.utils.Constants.KNOWN_HOSTS_POLICY;
 import static io.cloudslang.content.ssh.utils.Constants.PRIVATE_KEY_DATA;
 import static io.cloudslang.content.ssh.utils.Constants.PRIVATE_KEY_FILE;
-import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.ALLOWED_CHARACTERS;
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.BASIC_AUTH;
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.DEFAULT_ALLOWED_CIPHERS;
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.DEFAULT_NMAP_ARGUMENTS;
@@ -76,7 +70,6 @@ import static io.cloudslang.content.utilities.entities.constants.OsDetectorConst
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.DEFAULT_SSH_TIMEOUT;
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.HOST;
-import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.ILLEGAL_CHARACTERS;
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.KNOWN_HOSTS_STRICT;
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.NMAP_ARGUMENTS;
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.NMAP_PATH;
@@ -87,7 +80,6 @@ import static io.cloudslang.content.utilities.entities.constants.OsDetectorConst
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.OS_FAMILY;
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.OS_NAME;
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.OS_VERSION;
-import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.PERMISSIVE_NMAP_VALIDATOR;
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.POWERSHELL_OPERATION_TIMEOUT;
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.RESTRICTIVE_NMAP_VALIDATOR;
 import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.SSH_CONNECT_TIMEOUT;
@@ -100,8 +92,6 @@ import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.contains;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class OsDetector {
     /**
@@ -319,7 +309,7 @@ public class OsDetector {
 
             OsDetectorHelperService osDetectorHelperService = new OsDetectorHelperService();
             NmapOsDetectorService nmapOsDetectorService = new NmapOsDetectorService(osDetectorHelperService);
-            OperatingSystemDetector service = new OperatingSystemDetector(new SshOsDetectorService(osDetectorHelperService, new ScoreSSHShellCommand()),
+            OperatingSystemDetectorService service = new OperatingSystemDetectorService(new SshOsDetectorService(osDetectorHelperService, new ScoreSSHShellCommand()),
                     new PowerShellOsDetectorService(osDetectorHelperService, new WSManRemoteShellService()),
                     nmapOsDetectorService,
                     new LocalOsDetectorService(osDetectorHelperService), osDetectorHelperService);

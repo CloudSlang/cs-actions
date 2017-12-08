@@ -35,7 +35,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 /**
  * Created by Tirla Florin-Alin on 24/11/2017.
  **/
-public class NmapOsDetectorService implements OsDetectorService {
+public class NmapOsDetectorService implements OperatingSystemDetector {
     private static final String OS_DETAILS = "OS details: ";
     private static final String NMAP = "Nmap";
     private final OsDetectorHelperService osDetectorHelperService;
@@ -45,7 +45,7 @@ public class NmapOsDetectorService implements OsDetectorService {
     }
 
     @Override
-    public OperatingSystemDetails detect(OsDetectorInputs osDetectorInputs) {
+    public OperatingSystemDetails detectOs(OsDetectorInputs osDetectorInputs) {
         OperatingSystemDetails operatingSystemDetails = new OperatingSystemDetails();
         List<String> nmapCommandOutput = new ArrayList<>();
         try {

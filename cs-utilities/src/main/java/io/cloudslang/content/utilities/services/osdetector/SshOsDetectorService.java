@@ -26,7 +26,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 /**
  * Created by Tirla Florin-Alin on 24/11/2017.
  **/
-public class SshOsDetectorService implements OsDetectorService {
+public class SshOsDetectorService implements OperatingSystemDetector {
     private static final String SSH = "SSH";
     private final OsDetectorHelperService osDetectorHelperService;
     private final ScoreSSHShellCommand scoreSSHShellCommand;
@@ -37,7 +37,7 @@ public class SshOsDetectorService implements OsDetectorService {
     }
 
     @Override
-    public OperatingSystemDetails detect(OsDetectorInputs osDetectorInputs) {
+    public OperatingSystemDetails detectOs(OsDetectorInputs osDetectorInputs) {
         OperatingSystemDetails operatingSystemDetails = new OperatingSystemDetails();
         Map<String, String> execute = scoreSSHShellCommand.execute(getSshShellInputs(osDetectorInputs));
 

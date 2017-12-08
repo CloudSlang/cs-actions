@@ -42,7 +42,7 @@ public class LocalOsDetectorServiceTest {
 
     @Test
     public void testDetectWithLocalhost() {
-        OperatingSystemDetails detectedOs = localOsDetectorService.detect(new OsDetectorInputs.Builder().withHost("localhost").build());
+        OperatingSystemDetails detectedOs = localOsDetectorService.detectOs(new OsDetectorInputs.Builder().withHost("localhost").build());
 
         performDetectionSuccessChecks(detectedOs);
     }
@@ -56,14 +56,14 @@ public class LocalOsDetectorServiceTest {
 
     @Test
     public void testDetectWithLocalIpHost() {
-        OperatingSystemDetails detectedOs = localOsDetectorService.detect(new OsDetectorInputs.Builder().withHost("127.0.0.1").build());
+        OperatingSystemDetails detectedOs = localOsDetectorService.detectOs(new OsDetectorInputs.Builder().withHost("127.0.0.1").build());
 
         performDetectionSuccessChecks(detectedOs);
     }
 
     @Test
     public void testDetectWithInvalidHost() {
-        OperatingSystemDetails detectedOs = localOsDetectorService.detect(new OsDetectorInputs.Builder().withHost("!&(DA").build());
+        OperatingSystemDetails detectedOs = localOsDetectorService.detectOs(new OsDetectorInputs.Builder().withHost("!&(DA").build());
 
         performDetectionFailChecks(detectedOs);
     }
@@ -77,7 +77,7 @@ public class LocalOsDetectorServiceTest {
 
     @Test
     public void testDetectWithExternalHost() {
-        OperatingSystemDetails detectedOs = localOsDetectorService.detect(new OsDetectorInputs.Builder().withHost("!&(DA").build());
+        OperatingSystemDetails detectedOs = localOsDetectorService.detectOs(new OsDetectorInputs.Builder().withHost("!&(DA").build());
 
         performDetectionFailChecks(detectedOs);
     }

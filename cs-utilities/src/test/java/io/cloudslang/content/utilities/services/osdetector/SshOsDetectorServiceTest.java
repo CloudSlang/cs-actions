@@ -55,7 +55,7 @@ public class SshOsDetectorServiceTest {
         toBeReturnedOsDetails.setVersion("ultimate");
         doReturn(toBeReturnedOsDetails).when(osDetectorHelperService).processOutput(any(OperatingSystemDetails.class), anyMapOf(String.class, String.class), anyString());
 
-        OperatingSystemDetails actualOsDetails = sshOsDetectorService.detect(new OsDetectorInputs.Builder().build());
+        OperatingSystemDetails actualOsDetails = sshOsDetectorService.detectOs(new OsDetectorInputs.Builder().build());
 
         assertEquals("b os", actualOsDetails.getName());
         assertEquals("xYZ", actualOsDetails.getArchitecture());

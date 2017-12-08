@@ -84,7 +84,7 @@ public class NmapOsDetectorServiceTest {
     @Test
     public void testNmapDetectionWithTimeout() throws InterruptedException, ExecutionException, TimeoutException, IOException {
         doReturn(new ProcessResponseEntity("stdout", "stderr", -1, true)).when(processExecutor).execute(anyString(), anyInt());
-        OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detect(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
+        OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detectOs(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
 
         performFailureChecks(actualOsDetails, "The nmap command timed out");
 
@@ -93,7 +93,7 @@ public class NmapOsDetectorServiceTest {
     @Test
     public void testNmapDetectionWithIOException() throws InterruptedException, ExecutionException, TimeoutException, IOException {
         doThrow(new IOException("error msg")).when(processExecutor).execute(anyString(), anyInt());
-        OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detect(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
+        OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detectOs(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
 
         performFailureChecks(actualOsDetails, "Failed to run Nmap command: error msg");
 
@@ -102,7 +102,7 @@ public class NmapOsDetectorServiceTest {
     @Test
     public void testNmapDetectionWithTimeoutException() throws InterruptedException, ExecutionException, TimeoutException, IOException {
         doThrow(new TimeoutException("timeout msg")).when(processExecutor).execute(anyString(), anyInt());
-        OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detect(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
+        OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detectOs(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
 
         performFailureChecks(actualOsDetails, "The nmap command timed out");
     }
@@ -110,7 +110,7 @@ public class NmapOsDetectorServiceTest {
     @Test
     public void testNmapDetectionWithInterruptedException() throws InterruptedException, ExecutionException, TimeoutException, IOException {
         doThrow(new InterruptedException("error msg")).when(processExecutor).execute(anyString(), anyInt());
-        OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detect(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
+        OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detectOs(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
 
         performFailureChecks(actualOsDetails, "Execution of Nmap command was canceled.");
     }
@@ -118,7 +118,7 @@ public class NmapOsDetectorServiceTest {
     @Test
     public void testNmapDetectionWithExecutionException() throws InterruptedException, ExecutionException, TimeoutException, IOException {
         doThrow(new ExecutionException(null)).when(processExecutor).execute(anyString(), anyInt());
-        OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detect(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
+        OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detectOs(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
 
         performFailureChecks(actualOsDetails, "An exception occurred while running the Nmap command: null");
     }
@@ -128,7 +128,7 @@ public class NmapOsDetectorServiceTest {
         doReturn(new ProcessResponseEntity("stdout", "stderr", 0, false)).when(processExecutor).execute(anyString(), anyInt());
         doReturn("b os").when(osDetectorHelperService).cropValue(anyString(), anyString(), anyString());
         doReturn("b os fam").when(osDetectorHelperService).resolveOsFamily(anyString());
-        OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detect(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
+        OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detectOs(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
 
         assertEquals("b os", actualOsDetails.getName());
         assertEquals("b os fam", actualOsDetails.getFamily());

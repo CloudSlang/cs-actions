@@ -12,7 +12,7 @@ package io.cloudslang.content.utilities.actions;
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
 import io.cloudslang.content.utilities.services.osdetector.NmapOsDetectorService;
-import io.cloudslang.content.utilities.services.osdetector.OperatingSystemDetector;
+import io.cloudslang.content.utilities.services.osdetector.OperatingSystemDetectorService;
 import io.cloudslang.content.utilities.services.osdetector.OsDetectorHelperService;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +45,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class OsDetectorTest {
     private static final String HOST = "my-host.much.wow";
     @Mock
-    private OperatingSystemDetector operatingSystemDetector;
+    private OperatingSystemDetectorService operatingSystemDetectorService;
 
     @Mock
     private OsDetectorHelperService osDetectorHelperService;
@@ -59,7 +59,7 @@ public class OsDetectorTest {
     public void setUp() throws Exception {
         whenNew(OsDetectorHelperService.class).withNoArguments().thenReturn(osDetectorHelperService);
         whenNew(NmapOsDetectorService.class).withAnyArguments().thenReturn(nmapOsDetectorService);
-        whenNew(OperatingSystemDetector.class).withAnyArguments().thenReturn(operatingSystemDetector);
+        whenNew(OperatingSystemDetectorService.class).withAnyArguments().thenReturn(operatingSystemDetectorService);
 
         doCallRealMethod().when(osDetectorHelperService).formatOsCommandsOutput(Matchers.<Map<String, List<String>>>any());
         doCallRealMethod().when(osDetectorHelperService).validateNmapInputs(any(OsDetectorInputs.class), any(NmapOsDetectorService.class));
@@ -67,11 +67,11 @@ public class OsDetectorTest {
 
     @Test
     public void testDefaultValues() throws Exception {
-        doReturn(new OperatingSystemDetails()).when(operatingSystemDetector).detectOs(any(OsDetectorInputs.class));
+        doReturn(new OperatingSystemDetails()).when(operatingSystemDetectorService).detectOs(any(OsDetectorInputs.class));
         osDetector.execute(HOST, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
                 "", "", "", "", "", "", "", "", "", "", "", "");
 
-        verify(operatingSystemDetector).detectOs(getInputsWithDefault());
+        verify(operatingSystemDetectorService).detectOs(getInputsWithDefault());
     }
 
     @Test
@@ -120,7 +120,7 @@ public class OsDetectorTest {
         returnedOsDetails.setVersion("ignored");
         returnedOsDetails.addCommandOutput("some detector", singletonList("some output"));
 
-        doReturn(returnedOsDetails).when(operatingSystemDetector).detectOs(any(OsDetectorInputs.class));
+        doReturn(returnedOsDetails).when(operatingSystemDetectorService).detectOs(any(OsDetectorInputs.class));
 
         Map<String, String> actualResult = osDetector.execute(HOST, "", "", "", "", "", "", "", "", "", "", "", "",
                 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
@@ -145,7 +145,7 @@ public class OsDetectorTest {
         returnedOsDetails.setArchitecture("xYZ");
         returnedOsDetails.addCommandOutput("some detector", singletonList("some output"));
 
-        doReturn(returnedOsDetails).when(operatingSystemDetector).detectOs(any(OsDetectorInputs.class));
+        doReturn(returnedOsDetails).when(operatingSystemDetectorService).detectOs(any(OsDetectorInputs.class));
         doReturn(true).when(osDetectorHelperService).foundOperatingSystem(any(OperatingSystemDetails.class));
 
         Map<String, String> actualResult = osDetector.execute(HOST, "", "", "", "", "", "", "", "", "", "", "", "",
