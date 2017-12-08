@@ -38,7 +38,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
  * Created by Tirla Florin-Alin on 27/11/2017.
  **/
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({OsDetector.class, OperatingSystemDetector.class})
+@PrepareForTest({OsDetector.class})
 public class OsDetectorTest {
     private static final String HOST = "my-host.much.wow";
     @Mock

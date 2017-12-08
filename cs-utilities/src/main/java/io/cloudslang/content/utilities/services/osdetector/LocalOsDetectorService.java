@@ -55,9 +55,9 @@ public class LocalOsDetectorService implements OsDetectorService {
     }
 
     @Override
-    public OperatingSystemDetails detect(OsDetectorInputs nmapInputs) {
+    public OperatingSystemDetails detect(OsDetectorInputs osDetectorInputs) {
         OperatingSystemDetails operatingSystemDetails = new OperatingSystemDetails();
-        String host = nmapInputs.getHost();
+        String host = osDetectorInputs.getHost();
         if (isLocalAddress(host)) {
             operatingSystemDetails.setName(OS_NAME);
             operatingSystemDetails.setVersion(OS_VERSION);
