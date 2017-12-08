@@ -9,6 +9,8 @@
 */
 package io.cloudslang.content.utilities.entities;
 
+import java.util.Objects;
+
 /**
  * Created by Tirla Florin-Alin on 28/11/2017.
  **/
@@ -213,6 +215,58 @@ public class OsDetectorInputs {
 
     public String getSshConnectTimeout() {
         return sshConnectTimeout;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        OsDetectorInputs that = (OsDetectorInputs) o;
+        return Objects.equals(host, that.host) &&
+                Objects.equals(port, that.port) &&
+                Objects.equals(username, that.username) &&
+                Objects.equals(password, that.password) &&
+                Objects.equals(nmapTimeout, that.nmapTimeout) &&
+                Objects.equals(nmapPath, that.nmapPath) &&
+                Objects.equals(nmapArguments, that.nmapArguments) &&
+                Objects.equals(nmapValidator, that.nmapValidator) &&
+                Objects.equals(privateKeyFile, that.privateKeyFile) &&
+                Objects.equals(privateKeyData, that.privateKeyData) &&
+                Objects.equals(knownHostsPolicy, that.knownHostsPolicy) &&
+                Objects.equals(knownHostsPath, that.knownHostsPath) &&
+                Objects.equals(allowedCiphers, that.allowedCiphers) &&
+                Objects.equals(agentForwarding, that.agentForwarding) &&
+                Objects.equals(protocol, that.protocol) &&
+                Objects.equals(authType, that.authType) &&
+                Objects.equals(proxyHost, that.proxyHost) &&
+                Objects.equals(proxyPort, that.proxyPort) &&
+                Objects.equals(proxyUsername, that.proxyUsername) &&
+                Objects.equals(proxyPassword, that.proxyPassword) &&
+                Objects.equals(trustAllRoots, that.trustAllRoots) &&
+                Objects.equals(x509HostnameVerifier, that.x509HostnameVerifier) &&
+                Objects.equals(trustKeystore, that.trustKeystore) &&
+                Objects.equals(trustPassword, that.trustPassword) &&
+                Objects.equals(kerberosConfFile, that.kerberosConfFile) &&
+                Objects.equals(kerberosLoginConfFile, that.kerberosLoginConfFile) &&
+                Objects.equals(kerberosSkipPortForLookup, that.kerberosSkipPortForLookup) &&
+                Objects.equals(keystore, that.keystore) &&
+                Objects.equals(keystorePassword, that.keystorePassword) &&
+                Objects.equals(winrmLocale, that.winrmLocale) &&
+                Objects.equals(powerShellTimeout, that.powerShellTimeout) &&
+                Objects.equals(sshTimeout, that.sshTimeout) &&
+                Objects.equals(sshConnectTimeout, that.sshConnectTimeout);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(host, port, username, password, nmapTimeout, nmapPath, nmapArguments, nmapValidator, privateKeyFile,
+                privateKeyData, knownHostsPolicy, knownHostsPath, allowedCiphers, agentForwarding, protocol, authType, proxyHost,
+                proxyPort, proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, kerberosConfFile,
+                kerberosLoginConfFile, kerberosSkipPortForLookup, keystore, keystorePassword, winrmLocale, powerShellTimeout, sshTimeout, sshConnectTimeout);
     }
 
     public static class Builder {

@@ -384,8 +384,6 @@ public class OsDetector {
                 throw new IllegalArgumentException(format("The '%s' input contains illegal characters. To perform a weaker validation set the value '%s' for the input '%s'.",
                         NMAP_ARGUMENTS, PERMISSIVE_NMAP_VALIDATOR, NMAP_VALIDATOR));
             }
-
-
         } else if (equalsIgnoreCase(nmapValidator, PERMISSIVE_NMAP_VALIDATOR)) {
             StringBuilder argumentViolation = new StringBuilder();
             for (char illegalCharacter : ILLEGAL_CHARACTERS) {
