@@ -7,7 +7,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
 */
-package io.cloudslang.content.utilities.util;
+package io.cloudslang.content.utilities.entities;
 
 public class ProcessResponseEntity {
     private final String stdout;

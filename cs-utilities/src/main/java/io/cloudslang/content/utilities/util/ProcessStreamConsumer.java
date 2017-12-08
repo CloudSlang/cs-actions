@@ -9,6 +9,7 @@
 */
 package io.cloudslang.content.utilities.util;
 
+import io.cloudslang.content.utilities.entities.ProcessResponseEntity;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;

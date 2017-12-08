@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableList;
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
 import io.cloudslang.content.utilities.util.ProcessExecutor;
-import io.cloudslang.content.utilities.util.ProcessResponseEntity;
+import io.cloudslang.content.utilities.entities.ProcessResponseEntity;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

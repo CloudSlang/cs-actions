@@ -10,6 +10,7 @@
 package io.cloudslang.content.utilities.util;
 
 import com.google.common.collect.ImmutableList;
+import io.cloudslang.content.utilities.entities.ProcessResponseEntity;
 import org.apache.commons.lang3.text.StrTokenizer;
 
 import java.io.IOException;

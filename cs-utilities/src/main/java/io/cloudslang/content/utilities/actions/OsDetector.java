@@ -241,44 +241,44 @@ public class OsDetector {
                     @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR),
             }
     )
-    public Map<String, String> executeCommand(@Param(value = HOST, required = true) String host,
+    public Map<String, String> execute(@Param(value = HOST, required = true) String host,
 
-                                              @Param(USERNAME) String username,
-                                              @Param(PASSWORD) String password,
-                                              @Param(PORT) String port,
+                                       @Param(USERNAME) String username,
+                                       @Param(PASSWORD) String password,
+                                       @Param(PORT) String port,
 
-                                              @Param(PROXY_HOST) String proxyHost,
-                                              @Param(PROXY_PORT) String proxyPort,
-                                              @Param(PROXY_USERNAME) String proxyUsername,
-                                              @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(PROXY_HOST) String proxyHost,
+                                       @Param(PROXY_PORT) String proxyPort,
+                                       @Param(PROXY_USERNAME) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
 
-                                              @Param(PRIVATE_KEY_FILE) String privateKeyFile,
-                                              @Param(value = PRIVATE_KEY_DATA, encrypted = true) String privateKeyData,
-                                              @Param(KNOWN_HOSTS_POLICY) String knownHostsPolicy,
-                                              @Param(KNOWN_HOSTS_PATH) String knownHostsPath,
-                                              @Param(ALLOWED_CIPHERS) String allowedCiphers,
-                                              @Param(value = AGENT_FORWARDING) String agentForwarding,
-                                              @Param(SSH_TIMEOUT) String sshTimeout,
-                                              @Param(SSH_CONNECT_TIMEOUT) String sshConnectTimeout,
+                                       @Param(PRIVATE_KEY_FILE) String privateKeyFile,
+                                       @Param(value = PRIVATE_KEY_DATA, encrypted = true) String privateKeyData,
+                                       @Param(KNOWN_HOSTS_POLICY) String knownHostsPolicy,
+                                       @Param(KNOWN_HOSTS_PATH) String knownHostsPath,
+                                       @Param(ALLOWED_CIPHERS) String allowedCiphers,
+                                       @Param(value = AGENT_FORWARDING) String agentForwarding,
+                                       @Param(SSH_TIMEOUT) String sshTimeout,
+                                       @Param(SSH_CONNECT_TIMEOUT) String sshConnectTimeout,
 
-                                              @Param(PROTOCOL) String protocol,
-                                              @Param(AUTH_TYPE) String authType,
-                                              @Param(TRUST_ALL_ROOTS) String trustAllRoots,
-                                              @Param(X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
-                                              @Param(TRUST_KEYSTORE) String trustKeystore,
-                                              @Param(value = TRUST_PASSWORD, encrypted = true) String trustPassword,
-                                              @Param(KEYSTORE) String keystore,
-                                              @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
-                                              @Param(KERBEROS_CONFIG_FILE) String kerberosConfFile,
-                                              @Param(KERBEROS_LOGIN_CONFIG_FILE) String kerberosLoginConfFile,
-                                              @Param(KERBEROS_SKIP_PORT_CHECK) String kerberosSkipPortForLookup,
-                                              @Param(WINRM_LOCALE) String winrmLocale,
-                                              @Param(POWERSHELL_OPERATION_TIMEOUT) String powerShellTimeout,
+                                       @Param(PROTOCOL) String protocol,
+                                       @Param(AUTH_TYPE) String authType,
+                                       @Param(TRUST_ALL_ROOTS) String trustAllRoots,
+                                       @Param(X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
+                                       @Param(TRUST_KEYSTORE) String trustKeystore,
+                                       @Param(value = TRUST_PASSWORD, encrypted = true) String trustPassword,
+                                       @Param(KEYSTORE) String keystore,
+                                       @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
+                                       @Param(KERBEROS_CONFIG_FILE) String kerberosConfFile,
+                                       @Param(KERBEROS_LOGIN_CONFIG_FILE) String kerberosLoginConfFile,
+                                       @Param(KERBEROS_SKIP_PORT_CHECK) String kerberosSkipPortForLookup,
+                                       @Param(WINRM_LOCALE) String winrmLocale,
+                                       @Param(POWERSHELL_OPERATION_TIMEOUT) String powerShellTimeout,
 
-                                              @Param(NMAP_PATH) String nmapPath,
-                                              @Param(NMAP_ARGUMENTS) String nmapArguments,
-                                              @Param(NMAP_VALIDATOR) String nmapValidator,
-                                              @Param(NMAP_TIMEOUT) String nmapTimeout) {
+                                       @Param(NMAP_PATH) String nmapPath,
+                                       @Param(NMAP_ARGUMENTS) String nmapArguments,
+                                       @Param(NMAP_VALIDATOR) String nmapValidator,
+                                       @Param(NMAP_TIMEOUT) String nmapTimeout) {
 
         try {
             OsDetectorInputs osDetectorInputs = new OsDetectorInputs.Builder()
@@ -342,6 +342,5 @@ public class OsDetector {
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }
-
     }
 }
