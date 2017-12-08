@@ -9,10 +9,45 @@
 */
 package io.cloudslang.content.utilities.entities.constants;
 
+import java.util.regex.Pattern;
+
 /**
  * Created by Tirla Florin-Alin on 24/11/2017.
  **/
 public class OsDetectorConstants {
+    public static final String HOST = "host";
+
+    public static final String NMAP_PATH = "nmapPath";
+    public static final String NMAP_ARGUMENTS = "nmapArguments";
+    public static final String NMAP_VALIDATOR = "nmapValidator";
+    public static final String NMAP_TIMEOUT = "nmapTimeout";
+
+    public static final String DEFAULT_NMAP_PATH = "nmap";
+    public static final String DEFAULT_NMAP_ARGUMENTS = "-sS -sU -O -Pn --top-ports 20";
+
+    public static final String RESTRICTIVE_NMAP_VALIDATOR = "restrictive";
+    public static final String PERMISSIVE_NMAP_VALIDATOR = "permissive";
+    public static final String DEFAULT_NMAP_TIMEOUT = "30000";
+    public static final String DEFAULT_POWER_SHELL_OP_TIMEOUT = "60000";
+    public static final String DEFAULT_SSH_TIMEOUT = "90000";
+    public static final String DEFAULT_PROXY_PORT = "8080";
+    public static final String SSH_TIMEOUT = "sshTimeout";
+    public static final String SSH_CONNECT_TIMEOUT = "sshConnectTimeout";
+    public static final String POWERSHELL_OPERATION_TIMEOUT = "powershellOperationTimeout";
+    public static final String DEFAULT_ALLOWED_CIPHERS = "aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc";
+    public static final String DETECTION = " detection";
+    public static final String KNOWN_HOSTS_STRICT = "strict";
+    public static final String BASIC_AUTH = "basic";
+
+    // Allow whitespace, any letter, any digit, dash, comma, dot, equals
+    public static final Pattern ALLOWED_CHARACTERS = Pattern.compile("[ a-zA-Z0-9\\-,.=]*");
+    public static final char[] ILLEGAL_CHARACTERS = {'*', '?', '[', ']', '$', '|', '<', '>', '&', '%', '(', ')', '!', ';', '\\'};
+
+    public static final String OS_VERSION = "osVersion";
+    public static final String OS_NAME = "osName";
+    public static final String OS_FAMILY = "osFamily";
+    public static final String OS_ARCHITECTURE = "osArchitecture";
+    public static final String OS_COMMANDS = "osCommands";
     public static final String WINDOWS = "Windows";
     public static final String WINDOWS_OS_NAME_KEY = "OS Name:";
     public static final String WINDOWS_OS_VERSION_KEY = "OS Version:";

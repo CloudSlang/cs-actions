@@ -22,18 +22,17 @@ import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.ssh.services.actions.ScoreSSHShellCommand;
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
+import io.cloudslang.content.utilities.entities.constants.OsDetectorConstants;
 import io.cloudslang.content.utilities.services.osdetector.LocalOsDetectorService;
 import io.cloudslang.content.utilities.services.osdetector.NmapOsDetectorService;
 import io.cloudslang.content.utilities.services.osdetector.OperatingSystemDetector;
+import io.cloudslang.content.utilities.services.osdetector.OsDetectorHelperService;
 import io.cloudslang.content.utilities.services.osdetector.PowerShellOsDetectorService;
 import io.cloudslang.content.utilities.services.osdetector.SshOsDetectorService;
-import io.cloudslang.content.utilities.services.osdetector.OsDetectorHelperService;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import static com.google.common.net.InetAddresses.isInetAddress;
 import static com.google.common.net.InternetDomainName.isValid;
@@ -67,53 +66,44 @@ import static io.cloudslang.content.ssh.utils.Constants.KNOWN_HOSTS_PATH;
 import static io.cloudslang.content.ssh.utils.Constants.KNOWN_HOSTS_POLICY;
 import static io.cloudslang.content.ssh.utils.Constants.PRIVATE_KEY_DATA;
 import static io.cloudslang.content.ssh.utils.Constants.PRIVATE_KEY_FILE;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.ALLOWED_CHARACTERS;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.BASIC_AUTH;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.DEFAULT_ALLOWED_CIPHERS;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.DEFAULT_NMAP_ARGUMENTS;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.DEFAULT_NMAP_PATH;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.DEFAULT_NMAP_TIMEOUT;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.DEFAULT_POWER_SHELL_OP_TIMEOUT;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.DEFAULT_PROXY_PORT;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.DEFAULT_SSH_TIMEOUT;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.HOST;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.ILLEGAL_CHARACTERS;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.KNOWN_HOSTS_STRICT;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.NMAP_ARGUMENTS;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.NMAP_PATH;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.NMAP_TIMEOUT;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.NMAP_VALIDATOR;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.OS_ARCHITECTURE;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.OS_COMMANDS;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.OS_FAMILY;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.OS_NAME;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.OS_VERSION;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.PERMISSIVE_NMAP_VALIDATOR;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.POWERSHELL_OPERATION_TIMEOUT;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.RESTRICTIVE_NMAP_VALIDATOR;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.SSH_CONNECT_TIMEOUT;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.SSH_TIMEOUT;
 import static io.cloudslang.content.utils.Constants.InputNames.PROTOCOL;
 import static io.cloudslang.content.utils.Constants.InputNames.WINRM_LOCALE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
-import static java.lang.System.lineSeparator;
 import static org.apache.commons.lang3.StringUtils.contains;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class OsDetector {
-    private static final String HOST = "host";
-
-    private static final String NMAP_PATH = "nmapPath";
-    private static final String NMAP_ARGUMENTS = "nmapArguments";
-    private static final String NMAP_VALIDATOR = "nmapValidator";
-    private static final String NMAP_TIMEOUT = "nmapTimeout";
-
-    private static final String DEFAULT_NMAP_PATH = "nmap";
-    private static final String DEFAULT_NMAP_ARGUMENTS = "-sS -sU -O -Pn --top-ports 20";
-
-    private static final String RESTRICTIVE_NMAP_VALIDATOR = "restrictive";
-    private static final String PERMISSIVE_NMAP_VALIDATOR = "permissive";
-    private static final String DEFAULT_NMAP_TIMEOUT = "30000";
-    private static final String DEFAULT_POWER_SHELL_OP_TIMEOUT = "60000";
-    private static final String DEFAULT_SSH_TIMEOUT = "90000";
-    private static final String DEFAULT_PROXY_PORT = "8080";
-    private static final String SSH_TIMEOUT = "sshTimeout";
-    private static final String SSH_CONNECT_TIMEOUT = "sshConnectTimeout";
-    private static final String POWERSHELL_OPERATION_TIMEOUT = "powershellOperationTimeout";
-    private static final String DEFAULT_ALLOWED_CIPHERS = "aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc";
-    private static final String DETECTION = " detection";
-    private static final String KNOWN_HOSTS_STRICT = "strict";
-    private static final String BASIC_AUTH = "basic";
-
-    // Allow whitespace, any letter, any digit, dash, comma, dot, equals
-    private final Pattern ALLOWED_CHARACTERS = Pattern.compile("[ a-zA-Z0-9\\-,.=]*");
-    private static final char[] ILLEGAL_CHARACTERS = {'*', '?', '[', ']', '$', '|', '<', '>', '&', '%', '(', ')', '!', ';', '\\'};
-
-    private static final String OS_VERSION = "osVersion";
-    private static final String OS_NAME = "osName";
-    private static final String OS_FAMILY = "osFamily";
-    private static final String OS_ARCHITECTURE = "osArchitecture";
-    private static final String OS_COMMANDS = "osCommands";
-
     /**
      * Attempts to detect the operating system of a machine by using system calls (if the machine is local), connecting
      * to the machine using SSH or PowerShell (and running specific commands) or by running a Nmap command.
@@ -334,7 +324,7 @@ public class OsDetector {
                     nmapOsDetectorService,
                     new LocalOsDetectorService(osDetectorHelperService), osDetectorHelperService);
 
-            validateNmapInputs(osDetectorInputs, nmapOsDetectorService);
+            osDetectorHelperService.validateNmapInputs(osDetectorInputs, nmapOsDetectorService);
 
             OperatingSystemDetails os = service.detectOs(osDetectorInputs);
             Map<String, String> returnResult;
@@ -347,65 +337,11 @@ public class OsDetector {
             } else {
                 returnResult = getFailureResultsMap("Unable to detect the operating system.");
             }
-            returnResult.put(OS_COMMANDS, formatOsCommandsOutput(os.getCommandsOutput()));
+            returnResult.put(OS_COMMANDS, osDetectorHelperService.formatOsCommandsOutput(os.getCommandsOutput()));
             return returnResult;
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }
 
-    }
-
-    private String formatOsCommandsOutput(Map<String, List<String>> commandsOutput) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Map.Entry<String, List<String>> entry : commandsOutput.entrySet()) {
-            stringBuilder.append(entry.getKey()).append(DETECTION).append(lineSeparator());
-            for (String cmdOutput : entry.getValue()) {
-                stringBuilder.append(cmdOutput).append(lineSeparator());
-            }
-        }
-        return stringBuilder.toString();
-    }
-
-    private void validateNmapInputs(OsDetectorInputs osDetectorInputs, NmapOsDetectorService nmapOsDetectorService) {
-        String nmapPath = osDetectorInputs.getNmapPath();
-        if (!StringUtils.equals(nmapPath, DEFAULT_NMAP_PATH) && !new File(nmapPath).isAbsolute()) {
-            throw new IllegalArgumentException(format("The '%s' input must be an absolute path or the string '%s'.", NMAP_PATH, DEFAULT_NMAP_PATH));
-        }
-
-        String host = osDetectorInputs.getHost();
-        if (!equalsIgnoreCase("localhost", host) && !isInetAddress(host) && !isValid(host)) {
-            throw new IllegalArgumentException(format("The '%s' input must be an must be localhost or an internet domain name or an internet address.", HOST));
-        }
-
-        String nmapArguments = osDetectorInputs.getNmapArguments();
-        String nmapValidator = osDetectorInputs.getNmapValidator();
-        if (equalsIgnoreCase(nmapValidator, RESTRICTIVE_NMAP_VALIDATOR)) {
-            if (!ALLOWED_CHARACTERS.matcher(nmapArguments).matches()) {
-                throw new IllegalArgumentException(format("The '%s' input contains illegal characters. To perform a weaker validation set the value '%s' for the input '%s'.",
-                        NMAP_ARGUMENTS, PERMISSIVE_NMAP_VALIDATOR, NMAP_VALIDATOR));
-            }
-        } else if (equalsIgnoreCase(nmapValidator, PERMISSIVE_NMAP_VALIDATOR)) {
-            StringBuilder argumentViolation = new StringBuilder();
-            for (char illegalCharacter : ILLEGAL_CHARACTERS) {
-                if (contains(nmapArguments, illegalCharacter)) {
-                    argumentViolation.append(illegalCharacter);
-                }
-            }
-            if (argumentViolation.length() != 0) {
-                throw new IllegalArgumentException(format("The '%s' input contains the following illegal characters: %s.",
-                        NMAP_ARGUMENTS, argumentViolation.toString()));
-            }
-        } else {
-            throw new IllegalArgumentException(format("The value provided for '%s' in invalid. Valid values are: %s, %s.",
-                    NMAP_VALIDATOR, RESTRICTIVE_NMAP_VALIDATOR, PERMISSIVE_NMAP_VALIDATOR));
-        }
-
-
-        String proxyHost = osDetectorInputs.getProxyHost();
-        String proxyPort = osDetectorInputs.getProxyPort();
-        if (!contains(nmapArguments, "--proxies") && !contains(nmapArguments, "--proxy") && isNotEmpty(proxyHost)) {
-            // just for early exit in case of invalid input
-            nmapOsDetectorService.appendProxyArgument("", proxyHost, proxyPort);
-        }
     }
 }

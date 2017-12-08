@@ -17,11 +17,13 @@ import io.cloudslang.content.utilities.services.osdetector.OsDetectorHelperServi
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
@@ -30,6 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -57,6 +60,9 @@ public class OsDetectorTest {
         whenNew(OsDetectorHelperService.class).withNoArguments().thenReturn(osDetectorHelperService);
         whenNew(NmapOsDetectorService.class).withAnyArguments().thenReturn(nmapOsDetectorService);
         whenNew(OperatingSystemDetector.class).withAnyArguments().thenReturn(operatingSystemDetector);
+
+        doCallRealMethod().when(osDetectorHelperService).formatOsCommandsOutput(Matchers.<Map<String, List<String>>>any());
+        doCallRealMethod().when(osDetectorHelperService).validateNmapInputs(any(OsDetectorInputs.class), any(NmapOsDetectorService.class));
     }
 
     @Test
