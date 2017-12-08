@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.apache.commons.lang3.SystemUtils.OS_ARCH;
@@ -21,12 +20,11 @@ import static org.mockito.Mockito.doReturn;
  * Created by Tirla Florin-Alin on 08/12/2017.
  **/
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({LocalOsDetectorService.class})
 public class LocalOsDetectorServiceTest {
     @Mock
     private OsDetectorUtils osDetectorUtils;
 
-    private LocalOsDetectorService localOsDetectorService;// = new LocalOsDetectorService(osDetectorUtils);
+    private LocalOsDetectorService localOsDetectorService;
 
     @Before
     public void setUp() {
