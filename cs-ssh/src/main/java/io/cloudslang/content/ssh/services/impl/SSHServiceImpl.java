@@ -40,6 +40,8 @@ public class SSHServiceImpl implements SSHService {
     private static final String KNOWN_HOSTS_ADD = "add";
     private static final String ALLOWED_CIPHERS = "aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc";
     public static final String EXIT_COMMAND = "exit";
+    private static final String KEX = "ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha256,diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1";
+
     private Session session;
     private Channel execChannel;
 
@@ -66,6 +68,7 @@ public class SSHServiceImpl implements SSHService {
         JSch.setConfig("cipher.s2c", finalListOfAllowedCiphers);
         JSch.setConfig("cipher.c2s", finalListOfAllowedCiphers);
         JSch.setConfig("PreferredAuthentications", "publickey,password,keyboard-interactive");
+        JSch.setConfig("kex", KEX);
 
         try {
             session = jsch.getSession(details.getUsername(), details.getHost(), details.getPort());
