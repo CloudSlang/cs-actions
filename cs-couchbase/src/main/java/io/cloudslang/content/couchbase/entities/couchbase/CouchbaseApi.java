@@ -14,7 +14,9 @@ package io.cloudslang.content.couchbase.entities.couchbase;
  * 4/9/2017.
  */
 public enum CouchbaseApi {
-    BUCKETS("/pools/default/buckets");
+    CONTROLLER("/controller"),
+    POOLS("/pools"),
+    POOLS_DEFAULT("/pools/default");
 
     private final String value;
 

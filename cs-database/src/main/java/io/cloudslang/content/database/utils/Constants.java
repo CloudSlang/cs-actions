@@ -33,4 +33,18 @@ public class Constants {
     public static final String TRUSTORE_PARAMS = SEMI_COLON + TRUST_STORE + EQUALS + STRING_PARAMETER + SEMI_COLON + TRUST_STORE_PASSWORD + EQUALS + STRING_PARAMETER;
     public static final String COLON = ":";
     public static final String INTEGRATED_SECURITY = "integratedSecurity";
+
+    public static final String TRUE = Boolean.TRUE.toString();
+    public static final String EMPTY_DRIVER_PATH_EXCEPTION = "The authDriverPath is empty.";
+    public static final String DRIVER_PATH_NOT_ABSOLUTE_EXCEPTION = "The authDriverPath provided is not absolute.";
+    public static final String NOT_THE_SHORTEST_PATH_EXCEPTION = "The path provided for the authDriverPath is not a valid one. The path should be the shortest possible, i.e. normalized.";
+    public static final String JAVA_LIBRARY_PATH = "java.library.path";
+    public static final String CURRENT_DIRECTORY_NOTATION = ".";
+    public static final String SYS_PATHS = "sys_paths";
+    public static final String NEW_LINE = System.lineSeparator();
+    public static final String SYMBOLIC_PATH_EXCEPTION = "The library path provided should be an absolute path not a symbolic link.";
+    public static final String INVALID_DIRECTORY_PATH_EXCEPTION = "The provided path does not point to a valid directory.";
+    public static final String INVALID_PATH = "The provided path is invalid.";
+    public static final String PATH_SEPARATOR = "path.separator";
+    public static final String INACCESSIBLE_OR_INEXISTENT_SYS_PATHS_FIELD_EXCEPTION = "Field named 'sys_paths' could not be found or it is not accessible.";
 }

@@ -9,10 +9,6 @@
 */
 package io.cloudslang.content.couchbase.factory;
 
-import io.cloudslang.content.couchbase.entities.couchbase.ClusterUri;
-import io.cloudslang.content.couchbase.entities.couchbase.CouchbaseApi;
-import io.cloudslang.content.couchbase.entities.couchbase.NodesUri;
-import io.cloudslang.content.couchbase.entities.couchbase.ViewsUri;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
@@ -20,10 +16,16 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.C
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.VIEWS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.UNSUPPORTED_COUCHBASE_API;
-import static io.cloudslang.content.couchbase.factory.buckets.BucketsUriFactory.getBucketsUri;
-import static io.cloudslang.content.couchbase.factory.nodes.NodesUriFactory.getNodesUri;
-import static io.cloudslang.content.couchbase.factory.views.ViewsUriFactory.getViewsUri;
+import static io.cloudslang.content.couchbase.entities.couchbase.CouchbaseApi.CONTROLLER;
+import static io.cloudslang.content.couchbase.entities.couchbase.CouchbaseApi.POOLS_DEFAULT;
+import static io.cloudslang.content.couchbase.entities.couchbase.NodesUri.getNodesUriValue;
+import static io.cloudslang.content.couchbase.entities.couchbase.SuffixUri.getSuffixUriValue;
+import static io.cloudslang.content.couchbase.entities.couchbase.ViewsUri.getViewsUriValue;
+import static io.cloudslang.content.couchbase.factory.buckets.BucketsUriFactory.getBucketsUriValue;
+import static io.cloudslang.content.couchbase.factory.cluster.ClusterUriFactory.getClusterUriValue;
+import static io.cloudslang.content.couchbase.factory.views.ViewsUriFactory.getViewsUriSuffix;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.appendTo;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Created by Mihai Tusa
@@ -38,13 +40,13 @@ public class UriFactory {
         String action = wrapper.getCommonInputs().getAction();
         switch (wrapper.getCommonInputs().getApi()) {
             case BUCKETS:
-                return appendTo(CouchbaseApi.BUCKETS.getValue(), getBucketsUri(wrapper), action);
+                return appendTo(POOLS_DEFAULT.getValue(), getBucketsUriValue(wrapper), action);
             case CLUSTER:
-                return ClusterUri.getValue(action);
+                return getClusterUriValue(wrapper) + getSuffixUriValue(action);
             case NODES:
-                return appendTo(NodesUri.getValue(action), getNodesUri(wrapper), action);
+                return appendTo(CONTROLLER.getValue() + getNodesUriValue(action), EMPTY, action);
             case VIEWS:
-                return appendTo(ViewsUri.getValue(action), getViewsUri(wrapper), action);
+                return appendTo(POOLS_DEFAULT.getValue() + getViewsUriValue(action), getViewsUriSuffix(wrapper), action);
             default:
                 throw new RuntimeException(UNSUPPORTED_COUCHBASE_API);
         }

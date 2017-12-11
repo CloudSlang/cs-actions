@@ -18,6 +18,8 @@ public class DBExceptionValues extends ExceptionValues {
     public static final String INVALID_IGNORE_CASE = "The value \"%s\" is an invalid value for ignoreCase input.";
     public static final String INVALID_AUTH_TYPE = "The authentication type input \"%s\" is not valid authentication method.";
     public static final String INVALID_AUTH_TYPE_WINDOWS = "Windows authentication can only be used with MSSQL!";
+    public static final String INVALID_AUTH_LIBRARY_DIRECTORY = "When using Windows authentication, a full path to the directory containing the SQL JDBC auth driver must be provided.";
+    public static final String INVALID_SQL_JDBC_AUTH_DRIVER = "The auth library path doesn't contain the SQL JDBC auth driver.";
     public static final String INVALID_INSTANCE = "The instance input can only be used with MSSQL.";
     public static final String INVALID_NEGATIVE_TIMEOUT = "Timeout must be greater than zero!";
     public static final String INVALID_TIMEOUT = "Timeout has to be a positive integer!";

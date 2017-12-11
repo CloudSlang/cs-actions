@@ -36,7 +36,7 @@ public enum ConflictResolutionType {
             return SEQNO.getValue();
         }
 
-        for (ConflictResolutionType resolution : ConflictResolutionType.values()) {
+        for (ConflictResolutionType resolution : values()) {
             if (resolution.getValue().equalsIgnoreCase(input)) {
                 return resolution.getValue();
             }

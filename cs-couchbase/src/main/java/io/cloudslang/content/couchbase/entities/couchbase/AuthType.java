@@ -36,7 +36,7 @@ public enum AuthType {
             return NONE.getValue();
         }
 
-        for (AuthType type : AuthType.values()) {
+        for (AuthType type : values()) {
             if (type.getValue().equalsIgnoreCase(input)) {
                 return type.getValue();
             }

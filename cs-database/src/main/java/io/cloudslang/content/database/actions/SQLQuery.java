@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
@@ -41,6 +42,7 @@ import static io.cloudslang.content.database.constants.DBResponseNames.NO_MORE;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryInputs;
 import static io.cloudslang.content.database.utils.SQLUtils.getRowsFromGlobalSessionMap;
+import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.NumberUtilities.toInteger;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -66,11 +68,22 @@ public class SQLQuery {
      * @param databaseName              The name of the database to connect to.
      * @param authenticationType        The type of authentication used to access the database (applicable only to MSSQL type).
      *                                  Default: sql
-     *                                  Values: sql
-     *                                  Note: currently, the only valid value is sql, more are planed
+     *                                  Values: sql, windows
      * @param dbClass                   The class name of the JDBC driver to use.
      * @param dbURL                     The URL required to load up the driver and make your connection.
      * @param command                   The SQL query to execute.
+     * @param trustAllRoots             Specifies whether to enable weak security over SSL/TSL. A certificate is trusted even if no trusted certification authority issued it.
+     *                                  Default value: false
+     *                                  Valid values: true, false
+     *                                  Note: If trustAllRoots is set to 'false', a trustStore and a trustStorePassword must be provided.
+     * @param trustStore                The pathname of the Java TrustStore file. This contains certificates from other parties that you expect to communicate with,
+     *                                  or from Certificate Authorities that you trust to identify other parties.
+     *                                  If the trustAllRoots input is set to 'true' this input is ignored.
+     * @param trustStorePassword        The password associated with the trustStore file.
+     * @param authLibraryPath           The path to the folder where sqljdbc_auth.dll is located. This path must be provided when using windows authentication.
+     *                                  Note: The sqljdbc_auth.dll can be found inside the sqljdbc driver. The driver can be downloaded from https://www.microsoft.com/en-us/download/details.aspx?id=11774.
+     *                                  The downloaded jar should be extracted and the library can be found in the 'auth' folder.
+     *                                  The path provided should be the path to the folder where the sqljdbc_auth.dll library is located, not the path to the file itself.
      * @param delimiter                 The delimiter to use between resulted values in "returnResult" and column names in "columnNames".
      * @param key                       The key to help keep multiple query results distinct.
      * @param timeout                   Seconds to wait before timing out the SQL command execution. When the default value is used, there
@@ -106,8 +119,8 @@ public class SQLQuery {
             })
     public Map<String, String> execute(@Param(value = DB_SERVER_NAME, required = true) String dbServerName,
                                        @Param(value = DB_TYPE) String dbType,
-                                       @Param(value = USERNAME, required = true) String username,
-                                       @Param(value = PASSWORD, required = true, encrypted = true) String password,
+                                       @Param(value = USERNAME) String username,
+                                       @Param(value = PASSWORD, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
                                        @Param(value = DATABASE_NAME, required = true) String databaseName,
@@ -115,9 +128,10 @@ public class SQLQuery {
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
                                        @Param(value = COMMAND, required = true) String command,
-//                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
-//                                       @Param(value = TRUST_STORE) String trustStore,
-//                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+                                       @Param(value = TRUST_STORE) String trustStore,
+                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+                                       @Param(value = AUTH_LIBRARY_PATH) String authLibraryPath,
                                        @Param(value = DELIMITER, required = true) String delimiter,
                                        @Param(value = KEY, required = true) String key,
                                        @Param(value = TIMEOUT) String timeout,
@@ -128,25 +142,27 @@ public class SQLQuery {
                                        @Param(value = GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
 
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
+        username = defaultIfEmpty(username, EMPTY);
+        password = defaultIfEmpty(password, EMPTY);
         instance = defaultIfEmpty(instance, EMPTY);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
-//        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
-//        trustStore = defaultIfEmpty(trustStore, EMPTY);
-//        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
+        trustStore = defaultIfEmpty(trustStore, EMPTY);
+        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
         timeout = defaultIfEmpty(timeout, DEFAULT_TIMEOUT);
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
         ignoreCase = defaultIfEmpty(ignoreCase, TRUE);
 
         final List<String> preInputsValidation = validateSqlQueryInputs(dbServerName, dbType, username, password, instance, dbPort,
-                databaseName, authenticationType, command, /*trustAllRoots, trustStore, trustStorePassword,*/
-                timeout, resultSetType, resultSetConcurrency, ignoreCase);
+                databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                timeout, resultSetType, resultSetConcurrency, ignoreCase, authLibraryPath);
 
         if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
         }
 
-        final boolean ignoreCaseBool = BooleanUtilities.toBoolean(ignoreCase);
+        final boolean ignoreCaseBool = toBoolean(ignoreCase);
         dbType = getDbType(dbType);
 
         final SQLInputs sqlInputs = SQLInputs.builder()
@@ -161,9 +177,10 @@ public class SQLQuery {
                 .dbClass(getOrDefaultDBClass(dbClass, dbType))
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .sqlCommand(command)
-//                .trustAllRoots(BooleanUtilities.toBoolean(trustAllRoots))
-//                .trustStore(trustStore)
-//                .trustStorePassword(trustStorePassword)
+                .trustAllRoots(toBoolean(trustAllRoots))
+                .trustStore(trustStore)
+                .trustStorePassword(trustStorePassword)
+                .authLibraryPath(authLibraryPath)
                 .strDelim(delimiter)
                 .key(key)
                 .timeout(toInteger(timeout))

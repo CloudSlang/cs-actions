@@ -17,7 +17,9 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  */
 public enum SuffixUri {
     GET_BUCKET_STATISTICS("GetBucketStatistics", "/stats"),
-    GET_DESIGN_DOC_INFO("GetDesignDocsInfo", "/ddocs");
+    GET_DESIGN_DOCS_INFO("GetDesignDocsInfo", "/ddocs"),
+    REBALANCING_NODES("RebalancingNodes", "/rebalance"),
+    REMOTE_CLUSTERS("GetDestinationClusterReference", "/remoteClusters");
 
     private final String key;
     private final String value;
@@ -27,10 +29,10 @@ public enum SuffixUri {
         this.value = value;
     }
 
-    public static String getValue(String key) {
-        for (SuffixUri suffixUri : SuffixUri.values()) {
+    public static String getSuffixUriValue(String key) {
+        for (SuffixUri suffixUri : values()) {
             if (suffixUri.getKey().equalsIgnoreCase(key)) {
-                return suffixUri.getValue();
+                return suffixUri.getSuffixUriValue();
             }
         }
 
@@ -41,7 +43,7 @@ public enum SuffixUri {
         return key;
     }
 
-    private String getValue() {
+    private String getSuffixUriValue() {
         return value;
     }
 }

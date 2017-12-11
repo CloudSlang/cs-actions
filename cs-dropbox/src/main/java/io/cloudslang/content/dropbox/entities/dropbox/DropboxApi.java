@@ -27,7 +27,7 @@ public enum DropboxApi {
     }
 
     public static String getApi(String input) {
-        for (DropboxApi api : DropboxApi.values()) {
+        for (DropboxApi api : values()) {
             if (api.getKey().equalsIgnoreCase(input)) {
                 return api.getValue();
             }

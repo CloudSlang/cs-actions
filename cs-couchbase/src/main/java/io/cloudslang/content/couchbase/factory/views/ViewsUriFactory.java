@@ -23,7 +23,7 @@ public class ViewsUriFactory {
         // prevent instantiation
     }
 
-    public static String getViewsUri(InputsWrapper wrapper) {
+    public static String getViewsUriSuffix(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
             case GET_DESIGN_DOCS_INFO:
                 return wrapper.getBucketInputs().getBucketName();

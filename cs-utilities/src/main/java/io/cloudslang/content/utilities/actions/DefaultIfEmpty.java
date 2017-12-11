@@ -6,7 +6,7 @@
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
-*/
+ */
 package io.cloudslang.content.utilities.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;

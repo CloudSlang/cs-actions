@@ -30,13 +30,17 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Misce
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.BLANK_SPACE;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.COMMA;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.PORT_REGEX;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.SLASH;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.COUCHBASE_DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.INIT_INDEX;
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
-import static io.cloudslang.content.couchbase.entities.couchbase.SuffixUri.getValue;
+import static io.cloudslang.content.couchbase.entities.couchbase.SuffixUri.getSuffixUriValue;
 import static io.cloudslang.content.couchbase.factory.UriFactory.getUri;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.NumberUtilities.isValidInt;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
@@ -65,13 +69,13 @@ public class InputsUtil {
         HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setMethod(method);
         httpClientInputs.setAuthType(BASIC);
-        httpClientInputs.setQueryParamsAreURLEncoded(FALSE);
+        httpClientInputs.setQueryParamsAreURLEncoded(valueOf(FALSE));
         httpClientInputs.setUsername(username);
         httpClientInputs.setPassword(password);
 
-        httpClientInputs.setTrustAllRoots(valueOf(getEnforcedBooleanCondition(trustAllRoots, true)));
-        httpClientInputs.setKeepAlive(valueOf(getEnforcedBooleanCondition(keepAlive, true)));
-        httpClientInputs.setUseCookies(valueOf(getEnforcedBooleanCondition(useCookies, true)));
+        httpClientInputs.setTrustAllRoots(valueOf(getEnforcedBooleanCondition(trustAllRoots, FALSE)));
+        httpClientInputs.setKeepAlive(valueOf(getEnforcedBooleanCondition(keepAlive, TRUE)));
+        httpClientInputs.setUseCookies(valueOf(getEnforcedBooleanCondition(useCookies, TRUE)));
 
         if (isNotBlank(proxyHost) && isNotBlank(proxyPort)) {
             httpClientInputs.setProxyHost(proxyHost);
@@ -96,12 +100,10 @@ public class InputsUtil {
         httpClientInputs.setConnectTimeout(getInputWithDefaultValue(connectTimeout, valueOf(INIT_INDEX)));
         httpClientInputs.setSocketTimeout(getInputWithDefaultValue(socketTimeout, valueOf(INIT_INDEX)));
 
-        if (isBlank(x509HostnameVerifier)) {
+        if (isBlank(x509HostnameVerifier) || !asList(ALLOW_ALL, BROWSER_COMPATIBLE, STRICT).contains(x509HostnameVerifier)) {
             httpClientInputs.setX509HostnameVerifier(ALLOW_ALL);
         } else {
-            if (asList(ALLOW_ALL, BROWSER_COMPATIBLE, STRICT).contains(x509HostnameVerifier)) {
-                httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
-            }
+            httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
         }
 
         return httpClientInputs;
@@ -112,7 +114,7 @@ public class InputsUtil {
     }
 
     public static String appendTo(String prefix, String suffix, String action) {
-        return (isBlank(suffix)) ? prefix : prefix + "/" + suffix + getValue(action);
+        return (isBlank(suffix)) ? prefix : prefix + SLASH + suffix + getSuffixUriValue(action);
     }
 
     public static String getPayloadString(Map<String, String> payloadMap, String separator, String suffix, boolean deleteLastChar) {
@@ -137,15 +139,11 @@ public class InputsUtil {
             throw new IllegalArgumentException(format("Incorrect provided value: %s input. %s", input, CONSTRAINS_ERROR_MESSAGE));
         }
 
-        return Integer.parseInt(input);
+        return parseInt(input);
     }
 
     public static String getEnabledString(String input, boolean enforcedBoolean) {
-        if (getEnforcedBooleanCondition(input, enforcedBoolean)) {
-            return valueOf(1);
-        }
-
-        return valueOf(INIT_INDEX);
+        return getEnforcedBooleanCondition(input, enforcedBoolean) ? valueOf(1) : valueOf(INIT_INDEX);
     }
 
     /**
@@ -161,7 +159,7 @@ public class InputsUtil {
      * @return A boolean according with above description.
      */
     public static boolean getEnforcedBooleanCondition(String input, boolean enforcedBoolean) {
-        return (enforcedBoolean) ? isValid(input) == Boolean.parseBoolean(input) : Boolean.parseBoolean(input);
+        return (enforcedBoolean) ? isValid(input) == parseBoolean(input) : parseBoolean(input);
     }
 
     public static int getValidIntValue(String input, Integer minAllowed, Integer maxAllowed, Integer defaultValue) {
@@ -202,8 +200,8 @@ public class InputsUtil {
 
     public static void validateNotBothBlankInputs(String value1, String value2, String name1, String name2) {
         if (isBlank(value1) && isBlank(value2)) {
-            throw new RuntimeException(format("The values: %s, %s provided for inputs: %s, %s cannot be both empty. " +
-                    "Please provide values for at least one of them.", value1, value2, name1, name2));
+            throw new RuntimeException(format("The values: %s, %s provided for inputs: %s, %s cannot be both empty. Please provide values for at least one of them.",
+                    value1, value2, name1, name2));
         }
     }
 
@@ -221,46 +219,39 @@ public class InputsUtil {
     }
 
     private static String[] getStringsArray(String input, String delimiter) {
-        if (isBlank(input)) {
-            return null;
-        }
-        return split(input, delimiter);
+        return isBlank(input) ? null : split(input, delimiter);
     }
 
     private static void validateClusterInternalNodeFormat(String input) {
         if (!input.contains(AT)) {
-            throw new RuntimeException(format("The provided value for: \"%s\" input must be a valid Couchbase internal " +
-                    "node format.", input));
+            throw new RuntimeException(format("The provided value for: \"%s\" input must be a valid Couchbase internal node format.", input));
         }
 
         int indexOfAt = input.indexOf(AT);
         String ipv4Address = input.substring(indexOfAt + 1);
 
         if (!isValidIPv4Address(ipv4Address)) {
-            throw new RuntimeException(format("The value of: [%s] input as part of: [%s] input must be a valid IPv4 " +
-                    "address.", ipv4Address, input));
+            throw new RuntimeException(format("The value of: [%s] input as part of: [%s] input must be a valid IPv4 address.", ipv4Address, input));
         }
     }
 
     private static boolean isValidIPv4Address(String input) {
-        return new InetAddressValidator().isValidInet4Address(input) ? Boolean.TRUE : Boolean.FALSE;
+        return new InetAddressValidator().isValidInet4Address(input) ? TRUE : FALSE;
     }
 
     private static int getIntegerWithinValidRange(String input, Integer minAllowed, Integer maxAllowed) {
         if (isValidInt(input, minAllowed, maxAllowed, true, true)) {
-            return Integer.parseInt(input);
+            return parseInt(input);
         }
 
-        throw new RuntimeException(format("The provided value: %s is not within valid range. See operation inputs " +
-                "description section for details.", input));
+        throw new RuntimeException(format("The provided value: %s is not within valid range. See operation inputs description section for details.", input));
     }
 
     private static int getIntegerAboveMinimum(String input, Integer minAllowed) {
         try {
-            int validInt = Integer.parseInt(input);
+            int validInt = parseInt(input);
             if (validInt < minAllowed) {
-                throw new RuntimeException(format("The provided value: %s is bellow minimum allowed. See operation inputs " +
-                        "description section for details.", input));
+                throw new RuntimeException(format("The provided value: %s is bellow minimum allowed. See operation inputs description section for details.", input));
             }
 
             return validInt;

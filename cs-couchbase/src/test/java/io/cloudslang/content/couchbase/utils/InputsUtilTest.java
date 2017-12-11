@@ -11,7 +11,6 @@ package io.cloudslang.content.couchbase.utils;
 
 import io.cloudslang.content.couchbase.entities.couchbase.AuthType;
 import io.cloudslang.content.couchbase.entities.couchbase.BucketType;
-import io.cloudslang.content.couchbase.entities.couchbase.ClusterUri;
 import io.cloudslang.content.couchbase.entities.couchbase.ConflictResolutionType;
 import io.cloudslang.content.couchbase.entities.couchbase.EvictionPolicy;
 import org.junit.Rule;
@@ -27,8 +26,6 @@ import static io.cloudslang.content.couchbase.utils.InputsUtil.getValidPort;
 import static io.cloudslang.content.couchbase.utils.TestUtils.setExpectedExceptions;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created by TusaM
@@ -64,13 +61,6 @@ public class InputsUtilTest {
         String toTest = getEnumValidValuesString(EvictionPolicy.class);
 
         assertEquals("fullEviction, valueOnly", toTest);
-    }
-
-    @Test
-    public void testGetEnumValidValuesStringInvalidEnum() {
-        String toTest = getEnumValidValuesString(ClusterUri.class);
-
-        assertTrue(isEmpty(toTest));
     }
 
     @Test

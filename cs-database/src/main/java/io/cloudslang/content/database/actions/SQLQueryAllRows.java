@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
@@ -34,6 +35,7 @@ import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryAllRowsInputs;
+import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.NumberUtilities.toInteger;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -58,11 +60,22 @@ public class SQLQueryAllRows {
      * @param databaseName              The name of the database to connect to.
      * @param authenticationType        The type of authentication used to access the database (applicable only to MSSQL type).
      *                                  Default: sql
-     *                                  Values: sql
-     *                                  Note: currently, the only valid value is sql, more are planed
+     *                                  Values: sql, windows
      * @param dbClass                   The class name of the JDBC driver to use.
      * @param dbURL                     The URL required to load up the driver and make your connection.
      * @param command                   The SQL query to execute.
+     * @param trustAllRoots             Specifies whether to enable weak security over SSL/TSL. A certificate is trusted even if no trusted certification authority issued it.
+     *                                  Default value: false
+     *                                  Valid values: true, false
+     *                                  Note: If trustAllRoots is set to 'false', a trustStore and a trustStorePassword must be provided.
+     * @param trustStore                The pathname of the Java TrustStore file. This contains certificates from other parties that you expect to communicate with,
+     *                                  or from Certificate Authorities that you trust to identify other parties.
+     *                                  If the trustAllRoots input is set to 'true' this input is ignored.
+     * @param trustStorePassword        The password associated with the trustStore file.
+     * @param authLibraryPath           The path to the folder where sqljdbc_auth.dll is located. This path must be provided when using windows authentication.
+     *                                  Note: The sqljdbc_auth.dll can be found inside the sqljdbc driver. The driver can be downloaded from https://www.microsoft.com/en-us/download/details.aspx?id=11774.
+     *                                  The downloaded jar should be extracted and the library can be found in the 'auth' folder.
+     *                                  The path provided should be the path to the folder where the sqljdbc_auth.dll library is located, not the path to the file itself.
      * @param colDelimiter              The delimiter to use between columns in resulting table.
      *                                  Default value: comma (,)
      * @param rowDelimiter              The delimiter to use between rows in resulting table.
@@ -95,8 +108,8 @@ public class SQLQueryAllRows {
             })
     public Map<String, String> execute(@Param(value = DB_SERVER_NAME, required = true) String dbServerName,
                                        @Param(value = DB_TYPE) String dbType,
-                                       @Param(value = USERNAME, required = true) String username,
-                                       @Param(value = PASSWORD, required = true, encrypted = true) String password,
+                                       @Param(value = USERNAME) String username,
+                                       @Param(value = PASSWORD, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
                                        @Param(value = DATABASE_NAME, required = true) String databaseName,
@@ -104,9 +117,10 @@ public class SQLQueryAllRows {
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
                                        @Param(value = COMMAND, required = true) String command,
-//                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
-//                                       @Param(value = TRUST_STORE) String trustStore,
-//                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+                                       @Param(value = TRUST_STORE) String trustStore,
+                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+                                       @Param(value = AUTH_LIBRARY_PATH) String authLibraryPath,
                                        @Param(value = COL_DELIMITER) String colDelimiter,
                                        @Param(value = ROW_DELIMITER) String rowDelimiter,
                                        @Param(value = TIMEOUT) String timeout,
@@ -115,19 +129,21 @@ public class SQLQueryAllRows {
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
 
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
+        username = defaultIfEmpty(username, EMPTY);
+        password = defaultIfEmpty(password, EMPTY);
         instance = defaultIfEmpty(instance, EMPTY);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
-//        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
-//        trustStore = defaultIfEmpty(trustStore, EMPTY);
-//        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
+        trustStore = defaultIfEmpty(trustStore, EMPTY);
+        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
         timeout = defaultIfEmpty(timeout, DEFAULT_TIMEOUT);
 
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
 
         final List<String> preInputsValidation = validateSqlQueryAllRowsInputs(dbServerName, dbType, username, password, instance,
-                dbPort, databaseName, authenticationType, command, /*trustAllRoots, trustStore, trustStorePassword,*/
-                timeout, resultSetType, resultSetConcurrency);
+                dbPort, databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
+                timeout, resultSetType, resultSetConcurrency, authLibraryPath);
 
         if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
@@ -146,9 +162,10 @@ public class SQLQueryAllRows {
                 .dbClass(getOrDefaultDBClass(dbClass, dbType))
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .sqlCommand(command)
-//                .trustAllRoots(toBoolean(trustAllRoots))
-//                .trustStore(trustStore)
-//                .trustStorePassword(trustStorePassword)
+                .trustAllRoots(toBoolean(trustAllRoots))
+                .trustStore(trustStore)
+                .trustStorePassword(trustStorePassword)
+                .authLibraryPath(authLibraryPath)
                 .colDelimiter(defaultIfEmpty(colDelimiter, COMMA_DELIMITER))
                 .rowDelimiter(defaultIfEmpty(rowDelimiter, NEW_LINE))
                 .timeout(toInteger(timeout))

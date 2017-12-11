@@ -54,6 +54,12 @@
             <organization>Hewlett Packard Enterprise</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
+        <developer>
+            <name>Mihai Ionut Marisca</name>
+            <email>ionut-mihai.marisca@hpe.com</email>
+            <organization>Hewlett Packard Enterprise</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
     </developers>
 
     <properties>
@@ -69,6 +75,7 @@
         <score-content-sdk.version>1.10.6</score-content-sdk.version>
         <cs-commons.version>0.0.4</cs-commons.version>
         <junit.version>4.12</junit.version>
+        <pdfbox.version>2.0.8</pdfbox.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -103,7 +110,11 @@
             <artifactId>guava</artifactId>
             <version>20.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>${pdfbox.version}</version>
+        </dependency>
         <!-- region test scope dependencies-->
         <dependency>
             <groupId>junit</groupId>
@@ -196,6 +207,7 @@
         </pluginManagement>
 
         <plugins>
+            <!--License checker for build-->
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
@@ -212,6 +224,8 @@
                     <properties>
                         <copyright.year>2017</copyright.year>
                     </properties>
+                    <!--Custom mapping for java extensions-->
+                    <useDefaultMapping>false</useDefaultMapping>
                     <mapping>
                         <java>cs-actions-java-header</java>
                     </mapping>

@@ -50,6 +50,8 @@ public class RemoteSecureCopyAction {
      * @param knownHostsPolicy The policy used for managing known_hosts file. Valid values: allow, strict, add. Default value: strict
      * @param knownHostsPath The path to the known hosts file.
      * @param timeout Time in milliseconds to wait for the command to complete. Default value is 90000 (90 seconds)
+     * @param proxyHost The HTTP proxy host
+     * @param proxyPort The HTTP proxy port
      *
      * @return - a map containing the output of the operation. Keys present in the map are:
      *     <br><b>returnResult</b> - The primary output.
@@ -84,7 +86,9 @@ public class RemoteSecureCopyAction {
             @Param(Constants.InputNames.DESTINATION_PRIVATE_KEY_FILE) String destinationPrivateKeyFile,
             @Param(Constants.InputNames.KNOWN_HOSTS_POLICY) String knownHostsPolicy,
             @Param(Constants.InputNames.KNOWN_HOSTS_PATH) String knownHostsPath,
-            @Param(Constants.InputNames.TIMEOUT) String timeout) {
+            @Param(Constants.InputNames.TIMEOUT) String timeout,
+            @Param(Constants.InputNames.PROXY_HOST) String proxyHost,
+            @Param(Constants.InputNames.PROXY_PORT) String proxyPort) {
 
         RemoteSecureCopyInputs remoteSecureCopyInputs = new RemoteSecureCopyInputs(sourcePath, destinationHost, destinationPath, destinationUsername);
         remoteSecureCopyInputs.setSrcHost(sourceHost);
@@ -98,6 +102,8 @@ public class RemoteSecureCopyAction {
         remoteSecureCopyInputs.setKnownHostsPolicy(knownHostsPolicy);
         remoteSecureCopyInputs.setKnownHostsPath(knownHostsPath);
         remoteSecureCopyInputs.setTimeout(timeout);
+        remoteSecureCopyInputs.setProxyHost(proxyHost);
+        remoteSecureCopyInputs.setProxyPort(proxyPort);
 
         return new RemoteSecureCopyService().execute(remoteSecureCopyInputs);
 
