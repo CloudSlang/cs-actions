@@ -6,8 +6,7 @@
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- */
-
+*/
 package io.cloudslang.content.utilities.services;
 
 import org.jetbrains.annotations.NotNull;

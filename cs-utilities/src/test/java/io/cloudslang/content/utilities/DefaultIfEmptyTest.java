@@ -6,8 +6,7 @@
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- */
-
+*/
 package io.cloudslang.content.utilities;
 
 import io.cloudslang.content.utilities.actions.DefaultIfEmpty;
