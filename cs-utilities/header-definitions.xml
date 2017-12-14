@@ -5,9 +5,9 @@
         <beforeEachLine> </beforeEachLine>
         <endLine> */</endLine>
         <afterEachLine> </afterEachLine>
-        <emptyLineAfterHeader>true</emptyLineAfterHeader>
         <firstLineDetectionPattern>/*</firstLineDetectionPattern>
         <lastLineDetectionPattern> */</lastLineDetectionPattern>
+        <emptyLineAfterHeader>true</emptyLineAfterHeader>
         <allowBlankLines>false</allowBlankLines>
         <isMultiline>true</isMultiline>
         <padLines>false</padLines>

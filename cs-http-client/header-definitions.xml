@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <additionalHeaders>
     <cs-actions-java-header>
         <firstLine>/*</firstLine>
@@ -7,6 +7,7 @@
         <afterEachLine> </afterEachLine>
         <firstLineDetectionPattern>/*</firstLineDetectionPattern>
         <lastLineDetectionPattern> */</lastLineDetectionPattern>
+        <emptyLineAfterHeader>true</emptyLineAfterHeader>
         <allowBlankLines>false</allowBlankLines>
         <isMultiline>true</isMultiline>
         <padLines>false</padLines>
