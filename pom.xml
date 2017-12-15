@@ -282,6 +282,7 @@
         <module>cs-couchbase</module>
         <module>cs-database</module>
         <module>cs-date-time</module>
+        <module>cs-dca</module>
         <module>cs-dropbox</module>
         <module>cs-google</module>
         <module>cs-http-client</module>

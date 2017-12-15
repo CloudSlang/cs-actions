@@ -307,8 +307,6 @@ public class HttpClientAction {
         httpClientInputs.setPassword(password);
         httpClientInputs.setKerberosConfFile(kerberosConfFile);
         httpClientInputs.setKerberosLoginConfFile(kerberosLoginConfFile);
-//        httpClientInputs.setKerberosDomain(kerberosDomain);
-//        httpClientInputs.setKerberosKdc(kerberosKdc);
         httpClientInputs.setKerberosSkipPortCheck(kerberosSkipPortForLookup);
         httpClientInputs.setProxyHost(proxyHost);
         httpClientInputs.setProxyPort(proxyPort);
