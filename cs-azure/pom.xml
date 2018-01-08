@@ -53,6 +53,19 @@
         </developer>
     </developers>
 
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>Maven Central staging repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>Maven Central snapshots repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <properties>
         <!--Maven versions-->
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
