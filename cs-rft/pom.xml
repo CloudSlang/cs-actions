@@ -159,6 +159,10 @@
                             </goals>
                         </execution>
                     </executions>
+                    <!--Disabled doclint due to javadoc changes in Java 8 -->
+                    <configuration>
+                        <additionalparam>-Xdoclint:none</additionalparam>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
