@@ -37,6 +37,9 @@ public class Inputs {
         public static final String PREFIX = "prefix";
         public static final String QUERY_PARAMS = "queryParams";
         public static final String VERSION = "version";
+        public static final String REGION = "region";
+        public static final String CONNECT_TIMEOUT = "connectTimeout";
+        public static final String EXECUTION_TIMEOUT = "executionTimeout";
     }
 
     public static class CustomInputs {
@@ -85,6 +88,9 @@ public class Inputs {
         public static final String VOLUME_TYPE = "volumeType";
         public static final String VPC_ID = "vpcId";
         public static final String ZONE_NAMES_STRING = "zoneNamesString";
+        public static final String FUNCTION_NAME = "function";
+        public static final String FUNCTION_QUALIFIER = "qualifier";
+        public static final String FUNCTION_PAYLOAD = "functionPayload";
     }
 
     public static class ElasticIpInputs {
