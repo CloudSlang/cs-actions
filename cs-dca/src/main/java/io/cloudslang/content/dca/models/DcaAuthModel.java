@@ -17,8 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DcaAuthModel {
-    public static final String USERNAME = "username";
-    public static final String PASSWORD = "password";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
 
     private final String tenantName;
     private final Map<String, String> passwordCredentials;

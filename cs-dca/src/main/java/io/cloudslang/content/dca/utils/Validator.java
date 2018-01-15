@@ -9,6 +9,7 @@
  */
 package io.cloudslang.content.dca.utils;
 
+import io.cloudslang.content.utils.NumberUtilities;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -38,6 +39,26 @@ public class Validator {
     public void validateProtocol(String protocol) {
         if (!(HTTPS.equalsIgnoreCase(protocol) || HTTP.equalsIgnoreCase(protocol))) {
             validationErrorList.add("Invalid protocol. Valid values: 'http' and 'https'.");
+        }
+    }
+
+    public void validateInt(@NotNull final String intValue) {
+        if (!NumberUtilities.isValidInt(intValue)) {
+            validationErrorList.add("Invalid integer.");
+        }
+    }
+
+    @SafeVarargs
+    public final void validateSameLength(List<String>... args) {
+        if (args.length < 1) {
+            return;
+        }
+
+        final List<String> firstList = args[0];
+        for (final List<String> list : args) {
+            if (list.size() != firstList.size()) {
+                validationErrorList.add("Lists are of not equal size!");
+            }
         }
     }
 }

@@ -9,6 +9,7 @@
  */
 package io.cloudslang.content.dca.actions.authentication;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -20,20 +21,29 @@ import io.cloudslang.content.dca.utils.Validator;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+import static io.cloudslang.content.dca.utils.Constants.*;
 import static io.cloudslang.content.dca.utils.DefaultValues.*;
 import static io.cloudslang.content.dca.utils.OutputNames.AUTH_TOKEN;
+import static io.cloudslang.content.dca.utils.OutputNames.REFRESH_TOKEN;
 import static io.cloudslang.content.dca.utils.Utilities.*;
+import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.*;
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static java.lang.Integer.parseInt;
 import static java.lang.System.lineSeparator;
+import static java.net.HttpURLConnection.HTTP_OK;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static org.apache.commons.lang3.StringUtils.join;
 
@@ -44,14 +54,15 @@ public class GetAuthenticationToken {
                     @Output(RETURN_RESULT),
                     @Output(RETURN_CODE),
                     @Output(EXCEPTION),
-                    @Output(AUTH_TOKEN)
+                    @Output(AUTH_TOKEN),
+                    @Output(REFRESH_TOKEN)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ERROR)
             }
     )
-    public static Map<String, String> execute(
+    public Map<String, String> execute(
             @Param(value = InputNames.IDM_HOST, required = true) final String idmHostInp,
             @Param(InputNames.IDM_PORT) final String idmPortInp,
             @Param(InputNames.PROTOCOL) final String protocolInp,
@@ -93,7 +104,7 @@ public class GetAuthenticationToken {
 
         // VALIDATION
         final Validator validator = new Validator();
-        validator.validatePort(idmPortInp);
+        validator.validatePort(idmPortStr);
         validator.validateProtocol(protocolStr);
 
         if (!validator.getValidationErrorList().isEmpty()) {
@@ -117,10 +128,31 @@ public class GetAuthenticationToken {
         setConnectionParameters(httpClientInputs, connectTimeout, socketTimeout, useCookies, keepAlive,
                 connectionsMaxPerRoot, connectionsMaxTotal);
 
+        httpClientInputs.setContentType(APPLICATION_JSON);
+        httpClientInputs.setResponseCharacterSet(UTF_8.toString());
+        httpClientInputs.setRequestCharacterSet(UTF_8.toString());
+        httpClientInputs.setFollowRedirects(TRUE);
+        httpClientInputs.setMethod(POST);
+
         try {
-            final Map<String, String> resultMap = new CSHttpClient().execute(httpClientInputs);
-            resultMap.put(AUTH_TOKEN, resultMap.get(RETURN_RESULT));
-            return resultMap;
+            final Map<String, String> httpClientResultMap = new CSHttpClient().execute(httpClientInputs);
+            final ObjectMapper mapper = new ObjectMapper();
+            final Map responseMap = mapper.readValue(httpClientResultMap.get(RETURN_RESULT), Map.class);
+
+            if (parseInt(httpClientResultMap.get(STATUS_CODE)) == HTTP_OK) {
+                final String authToken = ((LinkedHashMap) responseMap.get("token")).get("id").toString();
+
+                final String refreshToken = responseMap.get(REFRESH_TOKEN).toString();
+
+                final Map<String, String> resultMap = getSuccessResultsMap(authToken);
+
+                resultMap.put(AUTH_TOKEN, authToken);
+                resultMap.put(REFRESH_TOKEN, refreshToken);
+
+                return resultMap;
+            } else {
+                return getFailureResultsMap(join(responseMap.get("errors"), NEW_LINE));
+            }
         } catch (Exception e) {
             return getFailureResultsMap("Failed to get authentication token.", e);
         }

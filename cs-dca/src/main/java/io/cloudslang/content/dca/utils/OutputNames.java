@@ -11,4 +11,5 @@ package io.cloudslang.content.dca.utils;
 
 public class OutputNames {
     public static final String AUTH_TOKEN = "authToken";
+    public static final String REFRESH_TOKEN = "refreshToken";
 }

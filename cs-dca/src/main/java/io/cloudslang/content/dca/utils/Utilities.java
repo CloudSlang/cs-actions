@@ -11,16 +11,17 @@ package io.cloudslang.content.dca.utils;
 
 import io.cloudslang.content.dca.models.DcaAuthModel;
 import io.cloudslang.content.httpclient.HttpClientInputs;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.List;
 
-import static io.cloudslang.content.constants.BooleanValues.TRUE;
-import static io.cloudslang.content.dca.utils.Constants.APPLICATION_JSON;
-import static io.cloudslang.content.dca.utils.Constants.POST;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.splitPreserveAllTokens;
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 public class Utilities {
 
@@ -28,10 +29,7 @@ public class Utilities {
     public static String getIdmUrl(@NotNull final String protocol,
                                    @NotNull final String idmHostInp,
                                    @NotNull final String idmPort) {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setHost(idmHostInp);
-        uriBuilder.setPort(Integer.valueOf(idmPort));
-        uriBuilder.setScheme(protocol);
+        final URIBuilder uriBuilder = getUriBuilder(protocol, idmHostInp, idmPort);
         uriBuilder.setPath(Constants.IDM_TOKENS_PATH);
 
         try {
@@ -39,6 +37,29 @@ public class Utilities {
         } catch (MalformedURLException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @NotNull
+    public static String getDcaDeployUrl(@NotNull final String protocol,
+                                         @NotNull final String dcaHost,
+                                         @NotNull final String dcaPort) {
+        final URIBuilder uriBuilder = getUriBuilder(protocol, dcaHost, dcaPort);
+        uriBuilder.setPath(Constants.DCA_DEPLOYMENT_PATH);
+
+        try {
+            return uriBuilder.build().toURL().toString();
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NotNull
+    private static URIBuilder getUriBuilder(@NotNull String protocol, @NotNull String dcaHost, @NotNull String dcaPort) {
+        final URIBuilder uriBuilder = new URIBuilder();
+        uriBuilder.setHost(dcaHost);
+        uriBuilder.setPort(Integer.valueOf(dcaPort));
+        uriBuilder.setScheme(protocol);
+        return uriBuilder;
     }
 
     public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,
@@ -74,12 +95,7 @@ public class Utilities {
         final DcaAuthModel dcaAuthModel = new DcaAuthModel(dcaTenant);
         dcaAuthModel.setCredentials(dcaUsername, dcaPassword);
         httpClientInputs.setBody(dcaAuthModel.toJson());
-
-        httpClientInputs.setContentType(APPLICATION_JSON);
-        httpClientInputs.setResponseCharacterSet(UTF_8.toString());
-        httpClientInputs.setRequestCharacterSet(UTF_8.toString());
-        httpClientInputs.setFollowRedirects(TRUE);
-        httpClientInputs.setMethod(POST);
+        httpClientInputs.setPreemptiveAuth("true");
     }
 
     public static void setIdmAuthentication(@NotNull final HttpClientInputs httpClientInputs,
@@ -106,5 +122,21 @@ public class Utilities {
         httpClientInputs.setKeepAlive(keepAlive);
         httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
         httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
+    }
+
+    @NotNull
+    public static List<String> splitToList(@NotNull final String string, @NotNull final String delimiter) {
+        return asList(splitPreserveAllTokens(string, delimiter));
+    }
+
+    @NotNull
+    public static String getAuthHeaders(@NotNull final String authToken, @NotNull final String refreshToken) {
+        final StringBuilder headerBuilder = new StringBuilder();
+        headerBuilder.append(Constants.X_AUTH_TOKEN).append(authToken).append(Constants.HEADERS_DELIMITER);
+//        headerBuilder.append("Content-Type:").append(APPLICATION_JSON).append(Constants.HEADERS_DELIMITER);
+        if (StringUtils.isNotEmpty(refreshToken)) {
+            headerBuilder.append(Constants.REFRESH_TOKEN).append(refreshToken).append(Constants.HEADERS_DELIMITER);
+        }
+        return headerBuilder.toString();
     }
 }
