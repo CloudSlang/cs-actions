@@ -42,7 +42,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
 
 public class InvokeLambdaAction {
     /**
-     * Invokes an AWD Lambda Function in sync mode using AWS Java SDK
+     * Invokes an AWS Lambda Function in sync mode using AWS Java SDK
      *
      * @param identity          Access key associated with your Amazon AWS or IAM account.
      *                          Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
@@ -67,7 +67,7 @@ public class InvokeLambdaAction {
      * @return                  A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      *                          operation, or failure message and the exception if there is one
      */
-    @Action(name = "Invoke Lambda Function",
+    @Action(name = "Invoke AWS Lambda Function",
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -81,45 +81,43 @@ public class InvokeLambdaAction {
             }
     )
     public Map<String, String> execute(
-                                            @Param(value = IDENTITY,   required = true)  String identity,
-                                            @Param(value = CREDENTIAL, required = true, encrypted = true)  String credential,
-                                            @Param(value = REGION,     required = true)  String region,
-                                            @Param(value = PROXY_HOST)                   String proxyHost,
-                                            @Param(value = PROXY_PORT)                   int    proxyPort,
-                                            @Param(value = PROXY_USERNAME)               String proxyUsername,
-                                            @Param(value = PROXY_PASSWORD)               String proxyPassword,
-                                            @Param(value = FUNCTION_NAME, required = true) String function,
-                                            @Param(value = FUNCTION_QUALIFIER)          String qualifier,
-                                            @Param(value = FUNCTION_PAYLOAD)            String payload,
-                                            @Param(value = CONNECT_TIMEOUT)             int connectTimeoutMs,
-                                            @Param(value = EXECUTION_TIMEOUT)           int execTimeoutMs) {
+            @Param(value = IDENTITY,   required = true)  String identity,
+            @Param(value = CREDENTIAL, required = true, encrypted = true)  String credential,
+            @Param(value = REGION,     required = true)  String region,
+            @Param(value = PROXY_HOST)                   String proxyHost,
+            @Param(value = PROXY_PORT)                   int    proxyPort,
+            @Param(value = PROXY_USERNAME)               String proxyUsername,
+            @Param(value = PROXY_PASSWORD)               String proxyPassword,
+            @Param(value = FUNCTION_NAME, required = true) String function,
+            @Param(value = FUNCTION_QUALIFIER)          String qualifier,
+            @Param(value = FUNCTION_PAYLOAD)            String payload,
+            @Param(value = CONNECT_TIMEOUT)             int connectTimeoutMs,
+            @Param(value = EXECUTION_TIMEOUT)           int execTimeoutMs) {
 
-            ClientConfiguration clientConf = new ClientConfiguration()
-                    .withConnectionTimeout(connectTimeoutMs)
-                    .withProxyHost(proxyHost)
-                    .withProxyPort(proxyPort)
-                    .withProxyUsername(proxyUsername)
-                    .withProxyPassword(proxyPassword);
+        ClientConfiguration clientConf = new ClientConfiguration()
+                .withConnectionTimeout(connectTimeoutMs)
+                .withProxyHost(proxyHost)
+                .withProxyPort(proxyPort)
+                .withProxyUsername(proxyUsername)
+                .withProxyPassword(proxyPassword);
 
-            AWSLambdaAsyncClient client = (AWSLambdaAsyncClient) AWSLambdaAsyncClientBuilder.standard()
-                    .withClientConfiguration(clientConf)
-                    .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(identity, credential)))
-                    .withRegion(region)
-                    .build();
+        AWSLambdaAsyncClient client = (AWSLambdaAsyncClient) AWSLambdaAsyncClientBuilder.standard()
+                .withClientConfiguration(clientConf)
+                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(identity, credential)))
+                .withRegion(region)
+                .build();
 
-            InvokeRequest invokeRequest = new InvokeRequest()
-                    .withFunctionName(function)
-                    .withQualifier(qualifier)
-                    .withPayload(payload)
-                    .withSdkClientExecutionTimeout(execTimeoutMs);
+        InvokeRequest invokeRequest = new InvokeRequest()
+                .withFunctionName(function)
+                .withQualifier(qualifier)
+                .withPayload(payload)
+                .withSdkClientExecutionTimeout(execTimeoutMs);
 
-            Map<String, String> actionExecutionResults;
-            try {
-                InvokeResult invokeResult = client.invoke(invokeRequest);
-                actionExecutionResults = OutputUtilities.getSuccessResultsMap(new String(invokeResult.getPayload().array()));
-            } catch (Exception e) {
-                actionExecutionResults = OutputUtilities.getFailureResultsMap(e);
-            }
-            return actionExecutionResults;
+        try {
+            InvokeResult invokeResult = client.invoke(invokeRequest);
+            return OutputUtilities.getSuccessResultsMap(new String(invokeResult.getPayload().array()));
+        } catch (Exception e) {
+            return OutputUtilities.getFailureResultsMap(e);
+        }
     }
 }
