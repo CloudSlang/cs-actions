@@ -20,7 +20,6 @@ import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType;
 import io.cloudslang.content.database.services.dbconnection.TotalMaxPoolSizeExceedException;
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -28,11 +27,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
-import static io.cloudslang.content.database.constants.DBOtherValues.MSSQL_DB_TYPE;
-import static io.cloudslang.content.database.utils.Constants.AUTH_WINDOWS;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbClassForType;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbEnumForType;
-import static org.apache.commons.lang3.StringUtils.SPACE;
 
 /**
  * Created by victor on 13.01.2017.
@@ -64,11 +60,10 @@ public class ConnectionService {
                 return dbCon;
             } catch (TotalMaxPoolSizeExceedException e) {
                 throw new RuntimeException(e.getMessage(), e.getCause());
-            } catch (SQLException ignored) {
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
         throw new RuntimeException("Couldn't find a valid url to connect to");
-
-
     }
 }
