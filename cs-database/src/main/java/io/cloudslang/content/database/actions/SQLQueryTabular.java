@@ -26,7 +26,6 @@ import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLQueryTabularService;
 import io.cloudslang.content.database.utils.SQLInputs;
-import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;

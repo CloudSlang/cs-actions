@@ -65,5 +65,7 @@ public class ConnectionService {
             }
         }
         throw new RuntimeException("Couldn't find a valid url to connect to");
+
+
     }
 }
