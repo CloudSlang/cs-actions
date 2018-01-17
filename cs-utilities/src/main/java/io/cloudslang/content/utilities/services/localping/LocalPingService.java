@@ -19,16 +19,14 @@ import io.cloudslang.content.utilities.entities.LocalPingInputs;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
 import io.cloudslang.content.utilities.services.osdetector.LocalOsDetectorService;
 import io.cloudslang.content.utilities.services.osdetector.OsDetectorHelperService;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.HUNDRED_PERCENT_LOSS;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.PERCENTAGE_PACKETS_LOST;
+import static io.cloudslang.content.utilities.util.CommandExecutor.executeCommand;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
@@ -59,20 +57,6 @@ public class LocalPingService {
         }
 
         return resultsMap;
-    }
-
-    @NotNull
-    private String executeCommand(String command) throws IOException {
-        Process process = Runtime.getRuntime().exec(command);
-        BufferedReader inputStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-        StringBuilder output = new StringBuilder();
-        String currentLine;
-        while ((currentLine = inputStream.readLine()) != null) {
-            output.append(currentLine)
-                    .append(System.lineSeparator());
-        }
-        return output.toString();
     }
 
     private boolean pingSucceeded(String percentageLost) {
