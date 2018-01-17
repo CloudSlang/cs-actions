@@ -22,6 +22,8 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.COMMA;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.INVALID_ARGUMENT_IP_VERSION;
+import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.IP_VERSION_4;
+import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.IP_VERSION_6;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.PACKETS_RECEIVED;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.PACKETS_SENT;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.PACKET_COUNT_SHOULD_HAVE_A_NUMERIC_VALUE;
@@ -47,9 +49,9 @@ public class WindowsPingCommand implements LocalPingCommand {
 
         String ipVersion = localPingInputs.getIpVersion();
         if (isNotEmpty(ipVersion)) {
-            if (ipVersion.equals("6")) {
+            if (ipVersion.equals(IP_VERSION_6)) {
                 command.append("-6 ");
-            } else if (ipVersion.equals("4")) {
+            } else if (ipVersion.equals(IP_VERSION_4)) {
                 command.append("-4 ");
             } else {
                 throw new IllegalArgumentException(format(INVALID_ARGUMENT_IP_VERSION, ipVersion));

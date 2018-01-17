@@ -39,4 +39,6 @@ public class LocalPingConstants {
     public static final String HUNDRED_PERCENT_LOSS = "100";
     public static final String SLASH = "/";
     public static final String LOCAL_PING_OPERATION_NAME = "Local Ping";
+    public static final String IP_VERSION_6 = "6";
+    public static final String IP_VERSION_4 = "4";
 }
