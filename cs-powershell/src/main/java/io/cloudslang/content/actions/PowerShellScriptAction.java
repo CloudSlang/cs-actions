@@ -34,6 +34,8 @@ import static io.cloudslang.content.utils.Constants.InputNames.*;
 import static io.cloudslang.content.utils.Constants.OutputNames.*;
 import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAILURE;
 import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCCESS;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.WSManUtils.verifyScriptExecutionStatus;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
@@ -132,7 +134,7 @@ public class PowerShellScriptAction {
             @Param(value = WINRM_LOCALE) String winrmLocale,
             @Param(value = OPERATION_TIMEOUT) String operationTimeout
     ) {
-        Map<String, String> resultMap = new HashMap<>();
+
         try {
             WSManRemoteShellService wsManRemoteShellService = new WSManRemoteShellService();
 
@@ -153,36 +155,20 @@ public class PowerShellScriptAction {
                     .withMaxEnvelopeSize(maxEnvelopeSize)
                     .withTrustAllRoots(trustAllRoots)
                     .withX509HostnameVerifier(x509HostnameVerifier)
-                    .withKeystore(defaultIfEmpty(keystore,DEFAULT_JAVA_KEYSTORE))
-                    .withKeystorePassword(defaultIfEmpty(keystorePassword,CHANGEIT))
-                    .withTrustKeystore(defaultIfEmpty(trustKeystore,DEFAULT_JAVA_KEYSTORE))
+                    .withKeystore(defaultIfEmpty(keystore, DEFAULT_JAVA_KEYSTORE))
+                    .withKeystorePassword(defaultIfEmpty(keystorePassword, CHANGEIT))
+                    .withTrustKeystore(defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE))
                     .withTrustPassword(defaultIfEmpty(trustPassword, CHANGEIT))
                     .withScript(script)
                     .withWinrmLocale(winrmLocale)
                     .withOperationTimeout(operationTimeout)
                     .build();
 
-            resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
+            Map<String, String> resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
             verifyScriptExecutionStatus(resultMap);
-        } catch (NumberFormatException nfe) {
-            resultMap.put(EXCEPTION, ExceptionUtils.getStackTrace(nfe));
-            resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
+            return resultMap;
         } catch (Exception e) {
-            resultMap.put(EXCEPTION, ExceptionUtils.getStackTrace(e));
-            resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
-        }
-        return resultMap;
-    }
-
-    /**
-     * Checks the scriptExitCode value of the script execution and fails the operation if exit code is different than zero.
-     * @param resultMap
-     */
-    private void verifyScriptExecutionStatus(Map<String, String> resultMap) {
-        if (ZERO_SCRIPT_EXIT_CODE.equals(resultMap.get(SCRIPT_EXIT_CODE))) {
-            resultMap.put(RETURN_CODE, RETURN_CODE_SUCCESS);
-        } else {
-            resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
+            return getFailureResultsMap(e);
         }
     }
 }
