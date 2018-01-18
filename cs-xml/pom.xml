@@ -14,15 +14,13 @@
     * limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-xml</artifactId>
-    <version>0.0.11-SNAPSHOT</version>
+    <version>0.0.12-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -64,7 +62,7 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.6</score-content-sdk.version>
         <cs-commons.version>0.0.5</cs-commons.version>
-        <cs-http-client.version>0.1.71</cs-http-client.version>
+        <cs-http-client.version>0.1.73</cs-http-client.version>
         <junit.version>4.12</junit.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -166,6 +164,10 @@
                             </goals>
                         </execution>
                     </executions>
+                    <!--Disabled doclint due to javadoc changes in Java 8 -->
+                    <configuration>
+                        <additionalparam>-Xdoclint:none</additionalparam>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
