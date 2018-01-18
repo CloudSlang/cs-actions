@@ -34,6 +34,7 @@ import static io.cloudslang.content.utils.Constants.InputNames.*;
 import static io.cloudslang.content.utils.Constants.OutputNames.*;
 import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAILURE;
 import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCCESS;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by giloan on 3/26/2016.
@@ -41,6 +42,8 @@ import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCC
 public class PowerShellScriptAction {
 
     private static final String ZERO_SCRIPT_EXIT_CODE = "0";
+    private static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
+    private static final String CHANGEIT = "changeit";
 
     /**
      * Executes a PowerShell script on a remote host.
@@ -150,10 +153,10 @@ public class PowerShellScriptAction {
                     .withMaxEnvelopeSize(maxEnvelopeSize)
                     .withTrustAllRoots(trustAllRoots)
                     .withX509HostnameVerifier(x509HostnameVerifier)
-                    .withKeystore(keystore)
-                    .withKeystorePassword(keystorePassword)
-                    .withTrustKeystore(trustKeystore)
-                    .withTrustPassword(trustPassword)
+                    .withKeystore(defaultIfEmpty(keystore,DEFAULT_JAVA_KEYSTORE))
+                    .withKeystorePassword(defaultIfEmpty(keystorePassword,CHANGEIT))
+                    .withTrustKeystore(defaultIfEmpty(trustKeystore,DEFAULT_JAVA_KEYSTORE))
+                    .withTrustPassword(defaultIfEmpty(trustPassword, CHANGEIT))
                     .withScript(script)
                     .withWinrmLocale(winrmLocale)
                     .withOperationTimeout(operationTimeout)
