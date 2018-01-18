@@ -20,7 +20,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-powershell</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.7-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A WinRM client for executing PowerShell Commands.</description>
@@ -39,6 +39,19 @@
         <url>https://github.com/CloudSlang/cs-actions.git</url>
         <tag>master</tag>
     </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>Maven Central staging repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>Maven Central snapshots repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <developers>
         <developer>
@@ -60,8 +73,8 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.6</score-content-sdk.version>
-        <cs-http-client.version>0.1.71</cs-http-client.version>
-        <cs-commons.version>0.0.4</cs-commons.version>
+        <cs-http-client.version>0.1.73</cs-http-client.version>
+        <cs-commons.version>0.0.5</cs-commons.version>
         <junit.version>4.12</junit.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -154,6 +167,10 @@
                             </goals>
                         </execution>
                     </executions>
+                    <!--Disabled doclint due to javadoc changes in Java 8 -->
+                    <configuration>
+                        <additionalparam>-Xdoclint:none</additionalparam>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
