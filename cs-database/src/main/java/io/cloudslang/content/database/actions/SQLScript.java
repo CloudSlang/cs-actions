@@ -68,7 +68,9 @@ public class SQLScript {
      *                                  Default: sql
      *                                  Values: sql, windows
      * @param dbClass                   The classname of the JDBC driver to use.
+     *                                  Examples: "oracle.jdbc.driver.OracleDriver", "org.postgresql.Driver"
      * @param dbURL                     The url required to load up the driver and make your connection.
+     *                                  Examples: "jdbc:oracle:drivertype:@database", "jdbc:postgresql://host:port/database"
      * @param delimiter                 The delimiter to use <sqlCommands>
      * @param sqlCommands               All the SQL commands that you want to run using the <delimiter>
      * @param scriptFileName            SQL script file name. The command in the file need to have ';' to indicate the end of the command

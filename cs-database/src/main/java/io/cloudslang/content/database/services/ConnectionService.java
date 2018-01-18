@@ -19,6 +19,7 @@ import io.cloudslang.content.database.services.databases.SqlDatabase;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType;
 import io.cloudslang.content.database.services.dbconnection.TotalMaxPoolSizeExceedException;
+import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.SQLInputs;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +52,7 @@ public class ConnectionService {
     private Connection obtainConnection(@NotNull final List<String> dbUrls, @NotNull final SQLInputs sqlInputs) {
         final DBType enumDbType = getDbEnumForType(sqlInputs.getDbType());
         final Properties properties = sqlInputs.getDatabasePoolingProperties();
-
+        final StringBuilder sqlExceptions = new StringBuilder();
 
         for (final String currentUrl : dbUrls) {
             try {
@@ -61,11 +62,11 @@ public class ConnectionService {
             } catch (TotalMaxPoolSizeExceedException e) {
                 throw new RuntimeException(e.getMessage(), e.getCause());
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                sqlExceptions.append(e.getMessage()).append(Constants.NEW_LINE);
             }
         }
-        throw new RuntimeException("Couldn't find a valid url to connect to");
-
-
+        //Remove the last added new line
+        sqlExceptions.setLength(sqlExceptions.length() - 2);
+        throw new RuntimeException("Couldn't find a valid url to connect to." + Constants.NEW_LINE + sqlExceptions);
     }
 }

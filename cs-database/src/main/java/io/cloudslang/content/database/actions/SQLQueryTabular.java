@@ -67,8 +67,11 @@ public class SQLQueryTabular {
      *                                  Default: sql
      *                                  Values: sql, windows
      * @param dbClass                   The classname of the JDBC driver to use.
+     *                                  Examples: "oracle.jdbc.driver.OracleDriver", "org.postgresql.Driver"
      * @param dbURL                     The url required to load up the driver and make your connection.
-     * @param command                   The command to execute.
+     *                                  Examples: "jdbc:oracle:drivertype:@database", "jdbc:postgresql://host:port/database"
+     * @param command                   The SQL query to execute.
+     *                                  Example: "SELECT * FROM table"
      * @param trustAllRoots             Specifies whether to enable weak security over SSL/TSL. A certificate is trusted even if no trusted certification authority issued it.
      *                                  Default value: false
      *                                  Valid values: true, false
