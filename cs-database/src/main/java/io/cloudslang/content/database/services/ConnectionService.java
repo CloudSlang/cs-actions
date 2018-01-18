@@ -25,11 +25,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbClassForType;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbEnumForType;
+import static org.apache.commons.lang3.StringUtils.join;
 
 /**
  * Created by victor on 13.01.2017.
@@ -52,7 +54,7 @@ public class ConnectionService {
     private Connection obtainConnection(@NotNull final List<String> dbUrls, @NotNull final SQLInputs sqlInputs) {
         final DBType enumDbType = getDbEnumForType(sqlInputs.getDbType());
         final Properties properties = sqlInputs.getDatabasePoolingProperties();
-        final StringBuilder sqlExceptions = new StringBuilder();
+        final List<String> exceptionsList = new ArrayList<>();
 
         for (final String currentUrl : dbUrls) {
             try {
@@ -62,11 +64,11 @@ public class ConnectionService {
             } catch (TotalMaxPoolSizeExceedException e) {
                 throw new RuntimeException(e.getMessage(), e.getCause());
             } catch (SQLException e) {
-                sqlExceptions.append(e.getMessage()).append(Constants.NEW_LINE);
+                exceptionsList.add(e.getMessage());
             }
         }
-        //Remove the last added new line
-        sqlExceptions.setLength(sqlExceptions.length() - 2);
-        throw new RuntimeException("Couldn't find a valid url to connect to." + Constants.NEW_LINE + sqlExceptions);
+
+        throw new RuntimeException("Couldn't find a valid url to connect to." + Constants.NEW_LINE +
+                join(exceptionsList, Constants.NEW_LINE));
     }
 }
