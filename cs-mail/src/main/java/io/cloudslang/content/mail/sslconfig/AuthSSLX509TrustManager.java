@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.mail.sslconfig;
 
 /*
@@ -59,6 +74,7 @@ public class AuthSSLX509TrustManager implements X509TrustManager {
      */
     private static final Log LOG = LogFactory
             .getLog(AuthSSLX509TrustManager.class);
+    public static final int RADIX_16 = 16;
     private X509TrustManager defaultTrustManager = null;
 
     /**
@@ -84,8 +100,7 @@ public class AuthSSLX509TrustManager implements X509TrustManager {
                 X509Certificate cert = certificates[c];
                 LOG.info(" Client certificate " + (c + 1) + ":");
                 LOG.info("  Subject DN: " + cert.getSubjectDN());
-                LOG.info("  Signature Algorithm: "
-                        + cert.getSigAlgName());
+                LOG.info("  Signature Algorithm: " + cert.getSigAlgName());
                 LOG.info("  Valid from: " + cert.getNotBefore());
                 LOG.info("  Valid until: " + cert.getNotAfter());
                 LOG.info("  Issuer: " + cert.getIssuerDN());
@@ -104,12 +119,11 @@ public class AuthSSLX509TrustManager implements X509TrustManager {
                 X509Certificate cert = certificates[c];
                 LOG.info(" Server certificate " + (c + 1) + ":");
                 LOG.info("  Subject DN: " + cert.getSubjectDN());
-                LOG.info("  Signature Algorithm: "
-                        + cert.getSigAlgName());
+                LOG.info("  Signature Algorithm: " + cert.getSigAlgName());
                 LOG.info("  Valid from: " + cert.getNotBefore());
                 LOG.info("  Valid until: " + cert.getNotAfter());
                 LOG.info("  Issuer: " + cert.getIssuerDN());
-                LOG.info("  SN: " + cert.getSerialNumber().toString(16));
+                LOG.info("  SN: " + cert.getSerialNumber().toString(RADIX_16));
             }
         }
         defaultTrustManager.checkServerTrusted(certificates, authType);

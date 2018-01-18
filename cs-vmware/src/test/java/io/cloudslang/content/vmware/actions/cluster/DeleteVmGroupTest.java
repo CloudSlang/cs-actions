@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.actions.cluster;
 
 import io.cloudslang.content.constants.OutputNames;
@@ -52,7 +67,7 @@ public class DeleteVmGroupTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
         when(clusterComputeResourceServiceMock.deleteVmGroup(any(HttpInputs.class), any(VmInputs.class))).thenReturn(expectedResultMap);
 
-        Map<String, String> actualResultMap = deleteVmGroup.deleteVmGroup("", "", "", "", "", "", "", "");
+        Map<String, String> actualResultMap = deleteVmGroup.deleteVmGroup("", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, times(1)).deleteVmGroup(any(HttpInputs.class), any(VmInputs.class));
 
@@ -62,7 +77,7 @@ public class DeleteVmGroupTest {
 
     @Test
     public void testDeleteVmGroupProtocolException() throws Exception {
-        Map<String, String> resultMap = deleteVmGroup.deleteVmGroup("", "", "myProtocol", "", "", "", "", "");
+        Map<String, String> resultMap = deleteVmGroup.deleteVmGroup("", "", "myProtocol", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).deleteVmGroup(any(HttpInputs.class), any(VmInputs.class));
 
@@ -73,7 +88,7 @@ public class DeleteVmGroupTest {
 
     @Test
     public void testDeleteVmGroupPortException() throws Exception {
-        Map<String, String> resultMap = deleteVmGroup.deleteVmGroup("", "myPort", "", "", "", "", "", "");
+        Map<String, String> resultMap = deleteVmGroup.deleteVmGroup("", "myPort", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).deleteVmGroup(any(HttpInputs.class), any(VmInputs.class));
 

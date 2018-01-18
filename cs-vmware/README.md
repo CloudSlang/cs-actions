@@ -1,4 +1,4 @@
-cloud-slang-content/virtualization
+cs-content/vmware
 =============
 
 This repository includes CloudSlang flows and operations needed to work with VMware.
@@ -18,7 +18,7 @@ This repository includes CloudSlang flows and operations needed to work with VMw
 2. Go to (https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.dsg.doc_50%2Fsdk_sg_server_certificate_Appendix.6.4.html) to see how to obtain a valid vCenter certificate.
 
 
-###### How to add the vim25.jar and build VMware Java actions?
+###### How to add the vim25.jar and build VMWare Java actions?
 
 1. Clone the repository at (https://github.com/CloudSlang/cs-actions).
 2. Add the VMware proprietary dependency, the `vim25.jar`, using (https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html) as a guide or just copy the jar file into you local Maven repository.

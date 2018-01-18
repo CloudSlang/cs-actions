@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.services;
 
 import com.vmware.vim25.HttpNfcLeaseDeviceUrl;
@@ -36,6 +51,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,6 +63,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.vmware.constants.Constants.DISK_DRIVE_CIM_TYPE;
+import static io.cloudslang.content.vmware.utils.ConnectionUtils.clearConnectionFromContext;
 import static io.cloudslang.content.vmware.utils.OvfUtils.getHttpNfcLeaseErrorState;
 import static io.cloudslang.content.vmware.utils.OvfUtils.getHttpNfcLeaseInfo;
 import static io.cloudslang.content.vmware.utils.OvfUtils.getHttpNfcLeaseState;
@@ -72,20 +89,26 @@ public class DeployOvfTemplateService {
                                   final Map<String, String> ovfNetworkMap, final Map<String, String> ovfPropertyMap)
             throws Exception {
         final ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
-        final ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> pair =
-                createLeaseSetup(connectionResources, vmInputs, templatePath, ovfNetworkMap, ovfPropertyMap);
-        final ManagedObjectReference httpNfcLease = pair.getLeft();
-        final OvfCreateImportSpecResult importSpecResult = pair.getRight();
+        try {
+            final ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> pair = createLeaseSetup(connectionResources, vmInputs, templatePath, ovfNetworkMap, ovfPropertyMap);
+            final ManagedObjectReference httpNfcLease = pair.getLeft();
+            final OvfCreateImportSpecResult importSpecResult = pair.getRight();
 
-        final HttpNfcLeaseInfo httpNfcLeaseInfo = getHttpNfcLeaseInfoWhenReady(connectionResources, httpNfcLease);
-        final List<HttpNfcLeaseDeviceUrl> deviceUrls = httpNfcLeaseInfo.getDeviceUrl();
-        final ProgressUpdater progressUpdater = executor.isParallel()
-                ? new AsyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources)
-                : new SyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources);
+            final HttpNfcLeaseInfo httpNfcLeaseInfo = getHttpNfcLeaseInfoWhenReady(connectionResources, httpNfcLease);
+            final List<HttpNfcLeaseDeviceUrl> deviceUrls = httpNfcLeaseInfo.getDeviceUrl();
+            final ProgressUpdater progressUpdater = executor.isParallel() ?
+                    new AsyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources) :
+                    new SyncProgressUpdater(getDisksTotalNoBytes(importSpecResult), httpNfcLease, connectionResources);
 
-        executor.execute(progressUpdater);
-        transferVmdkFiles(templatePath, importSpecResult, deviceUrls, progressUpdater);
-        executor.shutdown();
+            executor.execute(progressUpdater);
+            transferVmdkFiles(templatePath, importSpecResult, deviceUrls, progressUpdater);
+            executor.shutdown();
+        } finally {
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
+        }
     }
 
     protected ImmutablePair<ManagedObjectReference, OvfCreateImportSpecResult> createLeaseSetup(
@@ -107,8 +130,8 @@ public class DeployOvfTemplateService {
         final List<OvfNetworkMapping> ovfNetworkMappings = getOvfNetworkMappings(ovfNetworkMap, connectionResources);
         final List<KeyValue> ovfPropertyMappings = getOvfPropertyMappings(ovfPropertyMap);
 
-        final OvfCreateImportSpecResult importSpecResult = connectionResources.getVimPortType().
-                createImportSpec(ovfManager, getOvfTemplateAsString(templatePath), resourcePool, datastoreMor,
+        final OvfCreateImportSpecResult importSpecResult = connectionResources.getVimPortType()
+                .createImportSpec(ovfManager, getOvfTemplateAsString(templatePath), resourcePool, datastoreMor,
                         getOvfCreateImportSpecParams(vmInputs, hostMor, ovfNetworkMappings, ovfPropertyMappings));
 
         checkImportSpecResultForErrors(importSpecResult);
@@ -192,7 +215,7 @@ public class DeployOvfTemplateService {
             final TarArchiveInputStream tar = new TarArchiveInputStream(new FileInputStream(templateFilePathStr));
             TarArchiveEntry entry;
             while ((entry = tar.getNextTarEntry()) != null) {
-                if (entry.getName().startsWith(vmdkName)) {
+                if (new File(entry.getName()).getName().startsWith(vmdkName)) {
                     return new TransferVmdkFromInputStream(tar, entry.getSize());
                 }
             }
@@ -223,7 +246,7 @@ public class DeployOvfTemplateService {
             try (final TarArchiveInputStream tar = new TarArchiveInputStream(new FileInputStream(templatePath))) {
                 TarArchiveEntry entry;
                 while ((entry = tar.getNextTarEntry()) != null) {
-                    if (isOvf(Paths.get(entry.getName()))) {
+                    if (isOvf(Paths.get(new File(entry.getName()).getName()))) {
                         return OvfUtils.writeToString(tar, entry.getSize());
                     }
                 }

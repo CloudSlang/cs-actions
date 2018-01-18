@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.utils;
 
 import io.cloudslang.content.constants.ExceptionValues;
@@ -121,6 +136,60 @@ public class NumberUtilitiesTest {
     public void toDoubleInvalid() throws Exception {
         testInvalidDouble("aaa");
         testInvalidDouble("fff.111");
+    }
+
+    @Test
+    public void isValidLongTrue() throws Exception {
+        assertTrue(NumberUtilities.isValidLong("12345"));
+        assertTrue(NumberUtilities.isValidLong("-123"));
+        assertTrue(NumberUtilities.isValidLong("999999999999999999", -1999999999999999999L, 1999999999999999999L));
+        assertTrue(NumberUtilities.isValidLong("999999999999999999", -1999999999999999L, 1999999999999999999L, true, false));
+        assertTrue(NumberUtilities.isValidLong("123456789123456789", 123456789123456789L, 1123456789123456789L, true, true));
+        assertTrue(NumberUtilities.isValidLong("999999999999999999", -2, 1999999999999999999L, false, true));
+        assertTrue(NumberUtilities.isValidLong("-123456789123456789", -1123456789123456789L, 0, false, false));
+    }
+
+
+    private void testInvalidBoundsLong(String value, long lowerBound, long upperBound) {
+        try {
+            NumberUtilities.isValidLong(value, lowerBound, upperBound);
+            assertFalse(true);
+        } catch (IllegalArgumentException iae) {
+            assertEquals(iae.getMessage(), ExceptionValues.INVALID_BOUNDS);
+        }
+    }
+
+    @Test
+    public void isValidLongFalse() throws Exception {
+        assertFalse(NumberUtilities.isValidLong(""));
+        assertFalse(NumberUtilities.isValidLong("one"));
+        assertFalse(NumberUtilities.isValidLong("fff9999999999", -19999999999L, 19999999999L));
+        assertFalse(NumberUtilities.isValidLong("999999999999999", 9999999999999999L, 99999999999999999L, true, true));
+        assertFalse(NumberUtilities.isValidLong("999999999999999", 0, 99999999999999L, false, true));
+        testInvalidBoundsLong("10", 100, -100);
+    }
+
+    @Test
+    public void toLongValid() throws Exception {
+        assertEquals(NumberUtilities.toLong("12345"), 12345);
+        assertEquals(NumberUtilities.toLong("-123"), -123);
+        assertEquals(NumberUtilities.toLong(null, 0), 0);
+        assertEquals(NumberUtilities.toLong("", 100), 100);
+    }
+
+    private void testInvalidLong(String value) {
+        try {
+            NumberUtilities.toLong(value);
+            assertFalse(true);
+        } catch (IllegalArgumentException iae) {
+            assertEquals(iae.getMessage(), value + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_LONG_VALUE);
+        }
+    }
+
+    @Test
+    public void toLongInvalid() throws Exception {
+        testInvalidLong("aaa");
+        testInvalidLong("a0b0c0");
     }
 
 }

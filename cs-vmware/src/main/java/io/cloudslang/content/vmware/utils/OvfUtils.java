@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.utils;
 
 import com.sun.org.apache.xerces.internal.dom.ElementNSImpl;
@@ -39,8 +54,8 @@ public class OvfUtils {
     public static ManagedObjectReference getHttpNfcLease(final ConnectionResources connectionResources, final ImportSpec importSpec,
                                                          final ManagedObjectReference resourcePool, final ManagedObjectReference hostMor,
                                                          final ManagedObjectReference folderMor) throws Exception {
-        return connectionResources.getVimPortType().
-                importVApp(resourcePool, importSpec, folderMor, hostMor);
+        return connectionResources.getVimPortType()
+                .importVApp(resourcePool, importSpec, folderMor, hostMor);
     }
 
     public static HttpNfcLeaseInfo getHttpNfcLeaseInfo(final ConnectionResources connectionResources, final ManagedObjectReference httpNfcLease) throws Exception {

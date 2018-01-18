@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.actions.cluster;
 
 import io.cloudslang.content.constants.OutputNames;
@@ -53,7 +68,7 @@ public class CreateHostGroupTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
         when(clusterComputeResourceServiceMock.createHostGroup(any(HttpInputs.class), any(VmInputs.class), any(List.class))).thenReturn(expectedResultMap);
 
-        Map<String, String> actualResultMap = createHostGroup.createHostGroup("", "", "", "", "", "", "", "", "", "");
+        Map<String, String> actualResultMap = createHostGroup.createHostGroup("", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, times(1)).createHostGroup(any(HttpInputs.class), any(VmInputs.class), any(List.class));
 
@@ -63,7 +78,7 @@ public class CreateHostGroupTest {
 
     @Test
     public void testCreateHostGroupProtocolException() throws Exception {
-        Map<String, String> resultMap = createHostGroup.createHostGroup("", "", "myProtocol", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = createHostGroup.createHostGroup("", "", "myProtocol", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).createHostGroup(any(HttpInputs.class), any(VmInputs.class), any(List.class));
 
@@ -74,7 +89,7 @@ public class CreateHostGroupTest {
 
     @Test
     public void testCreateHostGroupPortException() throws Exception {
-        Map<String, String> resultMap = createHostGroup.createHostGroup("", "myPort", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = createHostGroup.createHostGroup("", "myPort", "", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).createHostGroup(any(HttpInputs.class), any(VmInputs.class), any(List.class));
 

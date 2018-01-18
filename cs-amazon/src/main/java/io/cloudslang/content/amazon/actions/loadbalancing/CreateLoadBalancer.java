@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.amazon.actions.loadbalancing;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -14,21 +29,16 @@ import io.cloudslang.content.amazon.entities.inputs.LoadBalancerInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Outputs.SUCCESS;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.SUCCESS_RETURN_CODE;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE_RETURN_CODE;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.LOAD_BALANCING_API;
-import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.LOAD_BALANCER_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.LOAD_BALANCER_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.LoadBalancingQueryApiActions.CREATE_LOAD_BALANCER;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.HEADERS;
@@ -40,16 +50,16 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.QUERY_PARAMS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KEY_TAGS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VALUE_TAGS_STRING;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.IamInputs.SECURITY_GROUP_IDS_STRING;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.SUBNET_IDS_STRING;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.LoadBalancerInputs.LOAD_BALANCER_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.LoadBalancerInputs.SCHEME;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.SUCCESS;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.SUCCESS_RETURN_CODE;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.FAILURE_RETURN_CODE;
 
 /**
  * Created by TusaM
@@ -74,11 +84,11 @@ public class CreateLoadBalancer {
      *                               Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost              Optional - proxy server used to connect to Amazon API. If empty no proxy will
      *                               be used.
-     * @param proxyPort              Optional - proxy server port. You must either specify values for both <proxyHost>
-     *                               and <proxyPort> inputs or leave them both empty.
+     * @param proxyPort              Optional - proxy server port. You must either specify values for both proxyHost
+     *                               and proxyPort inputs or leave them both empty.
      * @param proxyUsername          Optional - proxy server user name.
      *                               Default: ""
-     * @param proxyPassword          Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword          Optional - proxy server password associated with the proxyUsername input value.
      * @param headers                Optional - string containing the headers to use for the request separated by new
      *                               line (CRLF). The header name-value pair will be separated by ":"
      *                               Format: Conforming with HTTP standard for headers (RFC 2616)
@@ -121,7 +131,7 @@ public class CreateLoadBalancer {
      *                               Pattern: ^([\p{L}\p{Z}\p{N}_.:/=+\-@]*)$
      *                               Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Create Load Balancer",
             outputs = {
@@ -153,10 +163,10 @@ public class CreateLoadBalancer {
                                        @Param(value = KEY_TAGS_STRING) String keyTagsString,
                                        @Param(value = VALUE_TAGS_STRING) String valueTagsString) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, LOAD_BALANCER_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, LOAD_BALANCER_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, LOAD_BALANCING_API)
+                    .withEndpoint(endpoint, LOAD_BALANCING_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

@@ -1,13 +1,29 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.xml.actions;
 
-import io.cloudslang.content.xml.utils.Constants;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
@@ -16,6 +32,8 @@ import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.apache.commons.io.IOUtils.readLines;
+import static org.apache.commons.lang3.StringUtils.join;
 
 /**
  * Created by moldovas on 09/21/2016.
@@ -24,14 +42,16 @@ public class ApplyXslTransformationTest {
     private ApplyXslTransformation applyXslTransformation;
     private String xml;
     private String xsl;
+    private String invalidXml;
+    private String resultHtml;
 
     @Before
     public void setUp() throws Exception {
         applyXslTransformation = new ApplyXslTransformation();
-        URI xmlResource = getClass().getResource("/applyxslres/testTransform.xml").toURI();
-        xml = FileUtils.readFileToString(new File(xmlResource));
-        URI xslResource = getClass().getResource("/applyxslres/xslTemplate.xsl").toURI();
-        xsl = FileUtils.readFileToString(new File(xslResource));
+        xml = join(readLines(ClassLoader.getSystemResourceAsStream("applyxslres/testTransform.xml"), Charset.forName("UTF-8")), IOUtils.LINE_SEPARATOR);
+        xsl = join(readLines(ClassLoader.getSystemResourceAsStream("applyxslres/xslTemplate.xsl"), Charset.forName("UTF-8")), IOUtils.LINE_SEPARATOR);
+        invalidXml = join(readLines(ClassLoader.getSystemResourceAsStream("applyxslres/invalid.xml"), Charset.forName("UTF-8")), IOUtils.LINE_SEPARATOR);
+        resultHtml = join(readLines(ClassLoader.getSystemResourceAsStream("applyxslres/result.html"), Charset.forName("UTF-8")), IOUtils.LINE_SEPARATOR);
     }
 
     @After
@@ -77,17 +97,7 @@ public class ApplyXslTransformationTest {
         assertNotNull(result);
         assertNotNull(result.get(RETURN_RESULT));
         assertEquals(result.get(RETURN_CODE), SUCCESS);
-        assertEquals(result.get(RETURN_RESULT), "<HTML>\n" +
-                "<HEAD>\n" +
-                "<META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
-                "<TITLE>Map</TITLE>\n" +
-                "</HEAD>\n" +
-                "<BODY>\n" +
-                "    key1=value1<br>\n" +
-                "    key2=<br>\n" +
-                "\n" +
-                "</BODY>\n" +
-                "</HTML>\n");
+        assertEquals(result.get(RETURN_RESULT), resultHtml);
     }
 
     @Test
@@ -167,33 +177,13 @@ public class ApplyXslTransformationTest {
         assertNotNull(result);
         assertNotNull(result.get(RETURN_RESULT));
         assertEquals(SUCCESS, result.get(RETURN_CODE));
-        assertEquals(result.get(RETURN_RESULT), "<HTML>\n" +
-                "<HEAD>\n" +
-                "<META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
-                "<TITLE>Map</TITLE>\n" +
-                "</HEAD>\n" +
-                "<BODY>\n" +
-                "    key1=value1<br>\n" +
-                "    key2=<br>\n" +
-                "\n" +
-                "</BODY>\n" +
-                "</HTML>\n");
+        assertEquals(result.get(RETURN_RESULT), resultHtml);
     }
 
     @Test
     public void applyXslTransformationInvalidXml() {
         Map<String, String> result = applyXslTransformation.applyXslTransformation(
-                "<?xml version=\"1.0\"?>\n" +
-                        "<catalog>\n" +
-                        "   <book id=\"bk101\">\n" +
-                        "      <author>Gambardella, Matthew</author>\n" +
-                        "      <title>XML Developer's Guide</title>\n" +
-                        "      <genre>Computer</genre>\n" +
-                        "      <price>44.95</price>\n" +
-                        "      <publish_date>2000-10-01</publish_date>\n" +
-                        "      <description>An in-depth look at creating applications \n" +
-                        "      with XML.</description>\n" +
-                        "   </book>",
+                invalidXml,
                 xsl,
                 "",
                 ""

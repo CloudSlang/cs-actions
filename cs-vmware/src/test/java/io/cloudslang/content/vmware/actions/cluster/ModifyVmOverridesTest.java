@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.actions.cluster;
 
 import io.cloudslang.content.constants.ReturnCodes;
@@ -73,7 +88,7 @@ public class ModifyVmOverridesTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(service);
         doReturn(map).when(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
 
-        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "vmName", "", "", CLUSTER_RESTART_PRIORITY);
+        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "", "vmName", "", "", CLUSTER_RESTART_PRIORITY, null);
 
         verifyNew(ClusterComputeResourceService.class).withNoArguments();
         verify(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
@@ -85,7 +100,7 @@ public class ModifyVmOverridesTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(service);
         doThrow(new Exception(OPERATION_FAILED)).when(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
 
-        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "", "vm-123", "", CLUSTER_RESTART_PRIORITY); // TODO
+        Map<String, String> result = action.modifyVmOverrides("", "", "", "", "", "", "", "", "", "vm-123", "", CLUSTER_RESTART_PRIORITY, null);
 
         verifyNew(ClusterComputeResourceService.class).withNoArguments();
         verify(service).updateOrAddVmOverride(any(HttpInputs.class), any(VmInputs.class), anyString());
@@ -109,8 +124,8 @@ public class ModifyVmOverridesTest {
 
     @Test
     public void testValidateMutualExclusiveInputs() throws Exception {
-        verifyFailureResultMap(action.modifyVmOverrides("", "", "", "", "", "", "", "", "", "", CLUSTER_RESTART_PRIORITY));
-        verifyFailureResultMap(action.modifyVmOverrides("", "", "", "", "", "", "", "vmName", "vm-123", "", CLUSTER_RESTART_PRIORITY));
+        verifyFailureResultMap(action.modifyVmOverrides("", "", "", "", "", "", "", "", "", "", "", CLUSTER_RESTART_PRIORITY, null));
+        verifyFailureResultMap(action.modifyVmOverrides("", "", "", "", "", "", "", "", "vmName", "vm-123", "", CLUSTER_RESTART_PRIORITY, null));
     }
 
     private void verifyFailureResultMap(Map<String, String> result) {

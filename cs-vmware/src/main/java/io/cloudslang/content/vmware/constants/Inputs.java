@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.constants;
 
 /**
@@ -5,6 +20,8 @@ package io.cloudslang.content.vmware.constants;
  * 10/20/2015.
  */
 public class Inputs {
+    public static final String VMWARE_GLOBAL_SESSION_OBJECT = "VMWareGlobalSessionObject";
+
     // Http client specific inputs
     public static final String HOST = "host";
     public static final String PORT = "port";
@@ -12,6 +29,7 @@ public class Inputs {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String TRUST_EVERYONE = "trustEveryone";
+    public static final String CLOSE_SESSION = "closeSession";
 
     // VM specific inputs
     public static final String DATA_CENTER_NAME = "dataCenterName";
@@ -83,7 +101,6 @@ public class Inputs {
     public static final String USER = "user";
 
     //template upload inputs
-    public static final String CLOSE_SESSION = "closeSession";
     public static final String PATH = "path";
     public static final String NAME = "name";
     public static final String DATACENTER = "datacenter";

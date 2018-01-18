@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.ssh.utils;
 
 import java.nio.file.Path;
@@ -26,6 +41,7 @@ public class Constants {
     public static final String PROXY_USERNAME = "proxyUsername";
     public static final String PROXY_PASSWORD = "proxyPassword";
     public static final String CONNECT_TIMEOUT = "connectTimeout";
+    public static final String USE_SHELL = "useShell";
     // outputs
     public static final String STDOUT = "STDOUT";
     public static final String STDERR = "STDERR";
@@ -34,6 +50,7 @@ public class Constants {
     public static final int DEFAULT_PORT = 22;
     public static final int DEFAULT_PROXY_PORT = 8080;
     public static final boolean DEFAULT_ALLOW_EXPECT_COMMANDS = false;
+    public static final boolean DEFAULT_USE_SHELL = false;
     public static final int DEFAULT_TIMEOUT = 90000; //90 seconds
     public static final int DEFAULT_CONNECT_TIMEOUT = 10000; //10 seconds
     public static final boolean DEFAULT_USE_PSEUDO_TERMINAL = false;

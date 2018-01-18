@@ -1,4 +1,21 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.amazon.entities.constants;
+
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 
 /**
  * Created by Mihai Tusa.
@@ -8,6 +25,7 @@ public class Constants {
     public static class Apis {
         public static final String EC2_API = "ec2";
         public static final String LOAD_BALANCING_API = "elasticloadbalancing";
+        public static final String S3_API = "s3";
     }
 
     public static class DefaultApiVersion {
@@ -18,6 +36,7 @@ public class Constants {
         public static final String NETWORK_DEFAULT_API_VERSION = "2016-11-15";
         public static final String REGIONS_DEFAULT_API_VERSION = "2016-11-15";
         public static final String SNAPSHOTS_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String STORAGE_DEFAULT_API_VERSION = "2006-03-01";
         public static final String TAGS_DEFAULT_API_VERSION = "2016-11-15";
         public static final String VOLUMES_DEFAULT_API_VERSION = "2016-11-15";
     }
@@ -41,11 +60,13 @@ public class Constants {
         public static final String NOT_RELEVANT = "Not relevant";
         public static final String PIPE_DELIMITER = "|";
         public static final String SCOPE_SEPARATOR = "/";
+        public static final String DEFAULT_INSTANCE_TYPE = "m1.small";
     }
 
     public static class Values {
-        public static final int START_INDEX = 0;
+        public static final int DEFAULT_MAX_KEYS = 1000;
         public static final int ONE = 1;
+        public static final int START_INDEX = 0;
     }
 
     public static class AwsParams {
@@ -66,6 +87,7 @@ public class Constants {
         public static final String FILTER = "Filter";
         public static final String FILTER_NAME = "Filter.%d.Name";
         public static final String FILTER_VALUE = "Filter.%d.Value";
+        public static final String FIXED_PREFIX = DOT + "member" + DOT;
         public static final String FORCE = "Force";
         public static final String HEADER_DELIMITER = "\\r?\\n";
         public static final String HTTP_CLIENT_METHOD_GET = "GET";
@@ -75,7 +97,6 @@ public class Constants {
         public static final String KEY = "Key";
         public static final String LAUNCH_PERMISSION = "launchPermission";
         public static final String LISTENERS = "Listeners";
-        public static final String MEMBER = "member";
         public static final String NAME = "Name";
         public static final String NO_REBOOT = "NoReboot";
         public static final String NETWORK_INTERFACE = "NetworkInterface";
@@ -116,18 +137,23 @@ public class Constants {
         public static final String CREATE_NETWORK_INTERFACE = "CreateNetworkInterface";
         public static final String CREATE_SNAPSHOT = "CreateSnapshot";
         public static final String CREATE_SUBNET = "CreateSubnet";
+        public static final String CREATE_VPC = "CreateVpc";
         public static final String CREATE_TAGS = "CreateTags";
         public static final String CREATE_VOLUME = "CreateVolume";
         public static final String DELETE_NETWORK_INTERFACE = "DeleteNetworkInterface";
         public static final String DELETE_SNAPSHOT = "DeleteSnapshot";
         public static final String DELETE_SUBNET = "DeleteSubnet";
         public static final String DELETE_VOLUME = "DeleteVolume";
+        public static final String DELETE_VPC = "DeleteVpc";
         public static final String DEREGISTER_IMAGE = "DeregisterImage";
         public static final String DESCRIBE_AVAILABILITY_ZONES = "DescribeAvailabilityZones";
         public static final String DESCRIBE_IMAGES = "DescribeImages";
         public static final String DESCRIBE_IMAGE_ATTRIBUTE = "DescribeImageAttribute";
         public static final String DESCRIBE_INSTANCES = "DescribeInstances";
         public static final String DESCRIBE_REGIONS = "DescribeRegions";
+        public static final String DESCRIBE_NETWORK_INTERFACES = "DescribeNetworkInterfaces";
+        public static final String DESCRIBE_TAGS = "DescribeTags";
+        public static final String DESCRIBE_VOLUMES = "DescribeVolumes";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
         public static final String DETACH_VOLUME = "DetachVolume";
         public static final String DISASSOCIATE_ADDRESS = "DisassociateAddress";
@@ -145,5 +171,10 @@ public class Constants {
     public static class LoadBalancingQueryApiActions {
         public static final String CREATE_LOAD_BALANCER = "CreateLoadBalancer";
         public static final String DELETE_LOAD_BALANCER = "DeleteLoadBalancer";
+        public static final String DESCRIBE_LOAD_BALANCERS = "DescribeLoadBalancers";
+    }
+
+    public static class S3QueryApiActions {
+        public static final String GET_BUCKET = "GET Bucket";
     }
 }

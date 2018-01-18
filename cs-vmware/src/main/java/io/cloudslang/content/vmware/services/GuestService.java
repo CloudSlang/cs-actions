@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.services;
 
 import com.vmware.vim25.CustomizationSpec;
@@ -11,9 +26,12 @@ import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.services.helpers.ResponseHelper;
 import io.cloudslang.content.vmware.services.utils.GuestConfigSpecs;
+import io.cloudslang.content.vmware.utils.ConnectionUtils;
 import io.cloudslang.content.vmware.utils.ResponseUtils;
 
 import java.util.Map;
+
+import static io.cloudslang.content.vmware.utils.ConnectionUtils.clearConnectionFromContext;
 
 /**
  * Created by Mihai Tusa.
@@ -30,7 +48,7 @@ public class GuestService {
      * @param vmInputs    Object that has all the specific inputs necessary to identify the targeted virtual machine
      * @param guestInputs Object that has all specific inputs necessary to customize specified virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> customizeVM(HttpInputs httpInputs, VmInputs vmInputs, GuestInputs guestInputs, boolean isWin)
@@ -46,7 +64,8 @@ public class GuestService {
                 connectionResources.getVimPortType().checkCustomizationSpec(vmMor, customizationSpec);
                 ManagedObjectReference task = connectionResources.getVimPortType().customizeVMTask(vmMor, customizationSpec);
 
-                return new ResponseHelper(connectionResources, task).getResultsMap("Success: The [" +
+                return new ResponseHelper(connectionResources, task)
+                        .getResultsMap("Success: The [" +
                         vmInputs.getVirtualMachineName() + "] VM was successfully customized. The taskId is: " +
                         task.getValue(), "Failure: The [" + vmInputs.getVirtualMachineName() + "] VM could not be customized.");
             } else {
@@ -55,7 +74,10 @@ public class GuestService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -66,7 +88,7 @@ public class GuestService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message or failure
-     * message and the exception if there is one
+     *         message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> mountTools(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -84,7 +106,10 @@ public class GuestService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 }

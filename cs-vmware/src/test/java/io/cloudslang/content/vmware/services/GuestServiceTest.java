@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.services;
 
 import com.vmware.vim25.CustomizationSpec;
@@ -102,6 +117,7 @@ public class GuestServiceTest {
     @Test
     public void customizeWinVMSuccess() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+        when(httpInputsMock.isCloseSession()).thenReturn(true);
         when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getWinCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
@@ -131,6 +147,7 @@ public class GuestServiceTest {
     @Test
     public void customizeWinVMFailure() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+        when(httpInputsMock.isCloseSession()).thenReturn(true);
         when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getWinCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
@@ -160,6 +177,7 @@ public class GuestServiceTest {
     @Test
     public void customizeWinVMNotFound() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+        when(httpInputsMock.isCloseSession()).thenReturn(true);
         when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getWinCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
@@ -191,6 +209,7 @@ public class GuestServiceTest {
     @Test
     public void customizeLinuxVMSuccess() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+        when(httpInputsMock.isCloseSession()).thenReturn(true);
         when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
@@ -219,6 +238,7 @@ public class GuestServiceTest {
     @Test
     public void customizeLinuxVMFailure() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+        when(httpInputsMock.isCloseSession()).thenReturn(true);
         when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
@@ -247,6 +267,7 @@ public class GuestServiceTest {
     @Test
     public void customizeLinuxVMNotFound() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+        when(httpInputsMock.isCloseSession()).thenReturn(true);
         when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
@@ -277,6 +298,7 @@ public class GuestServiceTest {
     @Test
     public void customizeLinuxVMException() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
+        when(httpInputsMock.isCloseSession()).thenReturn(true);
         when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         whenNew(GuestConfigSpecs.class).withNoArguments().thenReturn(guestConfigSpecsMock);
         when(guestConfigSpecsMock.getLinuxCustomizationSpec(any(GuestInputs.class))).thenReturn(customizationSpecMock);
@@ -308,6 +330,7 @@ public class GuestServiceTest {
     public void mountToolsSuccess() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
+        when(httpInputsMock.isCloseSession()).thenReturn(true);
         PowerMockito.doNothing().when(vimPortMock).mountToolsInstaller(any(ManagedObjectReference.class));
 
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("whateverName").build();
@@ -329,6 +352,7 @@ public class GuestServiceTest {
     public void mountToolsNotFound() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(morObjectHandlerMock);
         when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(null);
+        when(httpInputsMock.isCloseSession()).thenReturn(true);
         PowerMockito.doNothing().when(vimPortMock).mountToolsInstaller(any(ManagedObjectReference.class));
 
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withVirtualMachineName("whateverName").build();
@@ -348,6 +372,7 @@ public class GuestServiceTest {
     @Test
     public void mountToolsException() throws Exception {
         whenNew(MorObjectHandler.class).withNoArguments().thenReturn(null);
+        when(httpInputsMock.isCloseSession()).thenReturn(true);
         when(morObjectHandlerMock.getMor(any(ConnectionResources.class), anyString(), anyString())).thenReturn(vmMorMock);
         doNothing().when(vimPortMock).mountToolsInstaller(any(ManagedObjectReference.class));
 

@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.connection.helpers;
 
 import com.vmware.vim25.DynamicProperty;
@@ -35,27 +50,6 @@ public class MoRefHandler {
         this.vimPort = connection.getVimPort();
     }
 
-    /**
-     * Returns all the MOREFs of the specified type that are present under the
-     * container
-     *
-     * @param folder    {@link ManagedObjectReference} of the container to begin the
-     *                  search from
-     * @param morefType Type of the managed entity that needs to be searched
-     * @return Map of name and MOREF of the managed objects present. If none
-     * exist then empty Map is returned
-     * @throws InvalidPropertyFaultMsg
-     * @throws RuntimeFaultFaultMsg
-     */
-    public Map<String, ManagedObjectReference> inContainerByType(ManagedObjectReference folder,
-                                                                 String morefType,
-                                                                 RetrieveOptions retrieveOptions)
-            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        RetrieveResult results = containerViewByType(folder, morefType, retrieveOptions);
-
-        return toMap(results);
-    }
-
     public ManagedObjectReference findManagedObjectReferenceByTypeAndId(final ManagedObjectReference folder,
                                                                         final String morefType,
                                                                         final RetrieveOptions retrieveOptions, final String id) throws Exception {
@@ -87,11 +81,11 @@ public class MoRefHandler {
                 // Now create Object Spec
                 new ObjectSpecBuilder().obj(entityMor))};
 
-        List<ObjectContent> oCont = vimPort.retrievePropertiesEx(serviceContent.getPropertyCollector(),
+        List<ObjectContent> objCont = vimPort.retrievePropertiesEx(serviceContent.getPropertyCollector(),
                 Arrays.asList(propertyFilterSpecs), new RetrieveOptions()).getObjects();
 
-        if (oCont != null) {
-            for (ObjectContent oc : oCont) {
+        if (objCont != null) {
+            for (ObjectContent oc : objCont) {
                 List<DynamicProperty> dps = oc.getPropSet();
                 for (DynamicProperty dp : dps) {
                     retVal.put(dp.getName(), dp.getVal());
@@ -102,22 +96,49 @@ public class MoRefHandler {
         return retVal;
     }
 
+    /**
+     * Returns all the MOREFs of the specified type that are present under the
+     * container
+     *
+     * @param folder    {@link ManagedObjectReference} of the container to begin the
+     *                  search from
+     * @param morefType Type of the managed entity that needs to be searched
+     * @return Map of name and MOREF of the managed objects present. If none
+     *         exist then empty Map is returned
+     * @throws InvalidPropertyFaultMsg
+     * @throws RuntimeFaultFaultMsg
+     */
+    public Map<String, ManagedObjectReference> inContainerByType(ManagedObjectReference folder,
+                                                                 String morefType,
+                                                                 RetrieveOptions retrieveOptions)
+            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
+        RetrieveResult results = containerViewByType(folder, morefType, retrieveOptions);
+
+        return toMap(results);
+    }
+
     public Map<String, ManagedObjectReference> inContainerByType(ManagedObjectReference container,
                                                                  String morefType)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         return inContainerByType(container, morefType, new RetrieveOptions());
     }
 
-    /**
-     * Initialize the helper object on the current connection at invocation time. Do not initialize on construction
-     * since the connection may not be ready yet.
-     */
+    private PropertyFilterSpec[] propertyFilterSpecs(ManagedObjectReference container,
+                                                     String morefType,
+                                                     String... morefProperties
+    ) throws RuntimeFaultFaultMsg {
+        ManagedObjectReference viewManager = serviceContent.getViewManager();
+        ManagedObjectReference containerView = vimPort.createContainerView(viewManager, container,
+                Arrays.asList(morefType), true);
 
-    private RetrieveResult containerViewByType(final ManagedObjectReference container,
-                                               final String morefType,
-                                               final RetrieveOptions retrieveOptions
-    ) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
-        return this.containerViewByType(container, morefType, retrieveOptions, ManagedObjectType.NAME.getValue());
+        return new PropertyFilterSpec[]{
+                new PropertyFilterSpecBuilder().propSet(new PropertySpecBuilder().all(false)
+                        .type(morefType).pathSet(morefProperties)).objectSet(new ObjectSpecBuilder()
+                        .obj(containerView).skip(true).selectSet(new TraversalSpecBuilder()
+                                .name(ManagedObjectType.VIEW.getValue())
+                                .path(ManagedObjectType.VIEW.getValue())
+                                .skip(false)
+                                .type(ManagedObjectType.CONTAINER_VIEW.getValue())))};
     }
 
     /**
@@ -140,22 +161,16 @@ public class MoRefHandler {
         return containerViewByType(retrieveOptions, propertyFilterSpecs);
     }
 
-    private PropertyFilterSpec[] propertyFilterSpecs(ManagedObjectReference container,
-                                                     String morefType,
-                                                     String... morefProperties
-    ) throws RuntimeFaultFaultMsg {
-        ManagedObjectReference viewManager = serviceContent.getViewManager();
-        ManagedObjectReference containerView = vimPort.createContainerView(viewManager, container,
-                Arrays.asList(morefType), true);
+    /**
+     * Initialize the helper object on the current connection at invocation time. Do not initialize on construction
+     * since the connection may not be ready yet.
+     */
 
-        return new PropertyFilterSpec[]{
-                new PropertyFilterSpecBuilder().propSet(new PropertySpecBuilder().all(false)
-                        .type(morefType).pathSet(morefProperties)).objectSet(new ObjectSpecBuilder()
-                        .obj(containerView).skip(true).selectSet(new TraversalSpecBuilder()
-                                .name(ManagedObjectType.VIEW.getValue())
-                                .path(ManagedObjectType.VIEW.getValue())
-                                .skip(false)
-                                .type(ManagedObjectType.CONTAINER_VIEW.getValue())))};
+    private RetrieveResult containerViewByType(final ManagedObjectReference container,
+                                               final String morefType,
+                                               final RetrieveOptions retrieveOptions
+    ) throws RuntimeFaultFaultMsg, InvalidPropertyFaultMsg {
+        return this.containerViewByType(container, morefType, retrieveOptions, ManagedObjectType.NAME.getValue());
     }
 
     private RetrieveResult containerViewByType(final RetrieveOptions retrieveOptions,

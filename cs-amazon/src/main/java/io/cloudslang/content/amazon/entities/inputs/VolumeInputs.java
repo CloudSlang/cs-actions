@@ -1,8 +1,26 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.amazon.utils.InputsUtil;
+import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getEnforcedBooleanCondition;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 /**
@@ -15,6 +33,9 @@ public class VolumeInputs {
     private final String iops;
     private final String deviceName;
     private final String description;
+    private final String maxResults;
+    private final String nextToken;
+    private final String volumeIdsString;
 
     private final boolean encrypted;
     private final boolean force;
@@ -25,6 +46,9 @@ public class VolumeInputs {
         this.iops = builder.iops;
         this.deviceName = builder.deviceName;
         this.description = builder.description;
+        this.maxResults = builder.maxResults;
+        this.nextToken = builder.nextToken;
+        this.volumeIdsString = builder.volumeIdsString;
 
         this.encrypted = builder.encrypted;
         this.force = builder.force;
@@ -58,12 +82,27 @@ public class VolumeInputs {
         return force;
     }
 
+    public String getMaxResults() {
+        return maxResults;
+    }
+
+    public String getNextToken() {
+        return nextToken;
+    }
+
+    public String getVolumeIdsString() {
+        return volumeIdsString;
+    }
+
     public static class Builder {
         private String snapshotId;
         private String size;
         private String iops;
         private String deviceName;
         private String description;
+        private String maxResults;
+        private String nextToken;
+        private String volumeIdsString;
 
         private boolean encrypted;
         private boolean force;
@@ -72,38 +111,53 @@ public class VolumeInputs {
             return new VolumeInputs(this);
         }
 
-        public Builder withSnapshotId(String inputValue) {
+        public Builder withSnapshotId(@NotNull final String inputValue) {
             snapshotId = inputValue;
             return this;
         }
 
-        public Builder withSize(String inputValue) {
+        public Builder withSize(@NotNull final String inputValue) {
             size = inputValue;
             return this;
         }
 
-        public Builder withIops(String inputValue) {
+        public Builder withIops(@NotNull final String inputValue) {
             iops = isBlank(inputValue) ? NOT_RELEVANT : inputValue;
             return this;
         }
 
-        public Builder withDeviceName(String inputValue) {
+        public Builder withDeviceName(@NotNull final String inputValue) {
             deviceName = inputValue;
             return this;
         }
 
-        public Builder withDescription(String inputValue) {
+        public Builder withDescription(@NotNull final String inputValue) {
             description = inputValue;
             return this;
         }
 
-        public Builder withEncrypted(String inputValue) {
-            encrypted = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
+        public Builder withEncrypted(@NotNull final String inputValue) {
+            encrypted = getEnforcedBooleanCondition(inputValue, false);
             return this;
         }
 
-        public Builder withForce(String inputValue) {
-            force = InputsUtil.getEnforcedBooleanCondition(inputValue, false);
+        public Builder withForce(@NotNull final String inputValue) {
+            force = getEnforcedBooleanCondition(inputValue, false);
+            return this;
+        }
+
+        public Builder withMaxResults(@NotNull final String inputValue) {
+            maxResults = InputsUtil.getMaxResultsCount(inputValue);
+            return this;
+        }
+
+        public Builder withNextToken(@NotNull final String inputValue) {
+            nextToken = inputValue;
+            return this;
+        }
+
+        public Builder withVolumeIdsString(@NotNull final String inputValue) {
+            volumeIdsString = inputValue;
             return this;
         }
     }

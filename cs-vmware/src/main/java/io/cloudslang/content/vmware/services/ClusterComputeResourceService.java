@@ -1,24 +1,23 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.services;
 
-import com.vmware.vim25.ArrayUpdateOperation;
-import com.vmware.vim25.ClusterConfigInfoEx;
-import com.vmware.vim25.ClusterConfigSpecEx;
-import com.vmware.vim25.ClusterDasVmConfigInfo;
-import com.vmware.vim25.ClusterDasVmConfigSpec;
-import com.vmware.vim25.ClusterDasVmSettings;
-import com.vmware.vim25.ClusterGroupInfo;
-import com.vmware.vim25.ClusterGroupSpec;
-import com.vmware.vim25.ClusterHostGroup;
-import com.vmware.vim25.ClusterRuleInfo;
-import com.vmware.vim25.ClusterRuleSpec;
-import com.vmware.vim25.ClusterVmGroup;
-import com.vmware.vim25.ClusterVmHostRuleInfo;
-import com.vmware.vim25.DynamicProperty;
-import com.vmware.vim25.InvalidCollectorVersionFaultMsg;
-import com.vmware.vim25.InvalidPropertyFaultMsg;
-import com.vmware.vim25.ManagedObjectReference;
-import com.vmware.vim25.ObjectContent;
-import com.vmware.vim25.RuntimeFaultFaultMsg;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.vmware.vim25.*;
 import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.entities.ClusterParameter;
@@ -34,15 +33,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.vmware.constants.ErrorMessages.AFFINE_HOST_GROUP_DOES_NOT_EXIST;
-import static io.cloudslang.content.vmware.constants.ErrorMessages.ANOTHER_FAILURE_MSG;
-import static io.cloudslang.content.vmware.constants.ErrorMessages.ANTI_AFFINE_HOST_GROUP_DOES_NOT_EXIST;
-import static io.cloudslang.content.vmware.constants.ErrorMessages.CLUSTER_RULE_COULD_NOT_BE_FOUND;
-import static io.cloudslang.content.vmware.constants.ErrorMessages.FAILURE_MSG;
-import static io.cloudslang.content.vmware.constants.ErrorMessages.RULE_ALREADY_EXISTS;
-import static io.cloudslang.content.vmware.constants.ErrorMessages.SUCCESS_MSG;
-import static io.cloudslang.content.vmware.constants.ErrorMessages.VM_GROUP_DOES_NOT_EXIST;
-import static io.cloudslang.content.vmware.constants.ErrorMessages.VM_NOT_FOUND;
+import static io.cloudslang.content.vmware.constants.Constants.RESTART_PRIORITY;
+import static io.cloudslang.content.vmware.constants.Constants.VM_ID;
+import static io.cloudslang.content.vmware.constants.ErrorMessages.*;
+import static io.cloudslang.content.vmware.utils.ConnectionUtils.clearConnectionFromContext;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Created by das giloan on 8/30/2016.
@@ -61,23 +56,54 @@ public class ClusterComputeResourceService {
      */
     public Map<String, String> updateOrAddVmOverride(final HttpInputs httpInputs, final VmInputs vmInputs, final String restartPriority) throws Exception {
         final ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+        try {
+            final ManagedObjectReference vmMor = getVirtualMachineReference(vmInputs, connectionResources);
 
-        final ManagedObjectReference vmMor = getVirtualMachineReference(vmInputs, connectionResources);
+            final ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+                    ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
 
-        final ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
-                ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
+            final ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
+            final ClusterDasVmConfigSpec clusterDasVmConfigSpec = getClusterVmConfiguration(clusterConfigInfoEx, vmMor, restartPriority);
 
-        final ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
-        final ClusterDasVmConfigSpec clusterDasVmConfigSpec = getClusterVmConfiguration(clusterConfigInfoEx, vmMor, restartPriority);
+            final ManagedObjectReference task = connectionResources.getVimPortType()
+                    .reconfigureComputeResourceTask(clusterMor, createClusterConfigSpecEx(clusterConfigInfoEx, clusterDasVmConfigSpec), true);
 
-        final ManagedObjectReference task = connectionResources.getVimPortType().
-                reconfigureComputeResourceTask(clusterMor, createClusterConfigSpecEx(clusterConfigInfoEx, clusterDasVmConfigSpec), true);
+            return new ResponseHelper(connectionResources, task)
+                    .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
+                            String.format(FAILURE_MSG, vmInputs.getClusterName()));
+        } finally {
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
+        }
+    }
 
-        final Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
-                .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
-                        String.format(FAILURE_MSG, vmInputs.getClusterName()));
-        connectionResources.getConnection().disconnect();
-        return resultMap;
+    public String getVmOverride(final HttpInputs httpInputs, final VmInputs vmInputs) throws Exception {
+        ConnectionResources connectionResources = new ConnectionResources(httpInputs, vmInputs);
+        try {
+
+
+            final ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+                    ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
+
+            final ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName());
+
+            final String restartPriority;
+            if (StringUtilities.isNotBlank(vmInputs.getVirtualMachineId()) || StringUtilities.isNotBlank(vmInputs.getVirtualMachineName())) {
+                final ManagedObjectReference vmMor = getVirtualMachineReference(vmInputs, connectionResources);
+                restartPriority = getVmRestartPriority(clusterConfigInfoEx, vmMor);
+            } else {
+                restartPriority = getVmRestartPriority(clusterConfigInfoEx);
+            }
+
+            return restartPriority;
+        } finally {
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
+        }
     }
 
     private ManagedObjectReference getVirtualMachineReference(final VmInputs vmInputs, final ConnectionResources connectionResources) throws Exception {
@@ -89,12 +115,18 @@ public class ClusterComputeResourceService {
 
     public Map<String, String> createVmGroup(HttpInputs httpInputs, VmInputs vmInputs, List<String> vmNameList) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs);
+        try {
+            ClusterVmGroup clusterVmGroup = new ClusterVmGroup();
+            clusterVmGroup.setName(vmInputs.getVmGroupName());
+            clusterVmGroup.getVm().addAll(getVmManagedObjectReferences(vmNameList, connectionResources));
 
-        ClusterVmGroup clusterVmGroup = new ClusterVmGroup();
-        clusterVmGroup.setName(vmInputs.getVmGroupName());
-        clusterVmGroup.getVm().addAll(getVmManagedObjectReferences(vmNameList, connectionResources));
-
-        return createGroup(vmInputs, connectionResources, clusterVmGroup);
+            return createGroup(vmInputs, connectionResources, clusterVmGroup);
+        } finally {
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
+        }
     }
 
     private Map<String, String> createGroup(VmInputs vmInputs, ConnectionResources connectionResources, ClusterGroupInfo clusterGroupInfo) throws Exception {
@@ -116,96 +148,122 @@ public class ClusterComputeResourceService {
     }
 
     private Map<String, String> reconfigureCluster(VmInputs vmInputs, ConnectionResources connectionResources, ManagedObjectReference clusterMor, ClusterConfigSpecEx clusterConfigSpecEx) throws RuntimeFaultFaultMsg, InvalidCollectorVersionFaultMsg, InvalidPropertyFaultMsg {
-        ManagedObjectReference task = connectionResources.getVimPortType().
-                reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
+        ManagedObjectReference task = connectionResources.getVimPortType()
+                .reconfigureComputeResourceTask(clusterMor, clusterConfigSpecEx, true);
 
-        Map<String, String> resultMap = new ResponseHelper(connectionResources, task)
+        return new ResponseHelper(connectionResources, task)
                 .getResultsMap(String.format(SUCCESS_MSG, vmInputs.getClusterName(), task.getValue()),
                         String.format(FAILURE_MSG, vmInputs.getClusterName()));
-        connectionResources.getConnection().disconnect();
-        return resultMap;
     }
 
     public Map<String, String> deleteVmGroup(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs);
+        try {
+            ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+                    ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
 
-        ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
-                ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
+            ClusterVmGroup clusterVmGroup = new ClusterVmGroup();
+            clusterVmGroup.setName(vmInputs.getVmGroupName());
 
-        ClusterVmGroup clusterVmGroup = new ClusterVmGroup();
-        clusterVmGroup.setName(vmInputs.getVmGroupName());
+            ClusterGroupSpec clusterGroupSpec = new ClusterGroupSpec();
+            clusterGroupSpec.setInfo(clusterVmGroup);
+            clusterGroupSpec.setOperation(ArrayUpdateOperation.REMOVE);
+            clusterGroupSpec.setRemoveKey(vmInputs.getVmGroupName());
 
-        ClusterGroupSpec clusterGroupSpec = new ClusterGroupSpec();
-        clusterGroupSpec.setInfo(clusterVmGroup);
-        clusterGroupSpec.setOperation(ArrayUpdateOperation.REMOVE);
-        clusterGroupSpec.setRemoveKey(vmInputs.getVmGroupName());
-
-        return reconfigureClusterGroup(vmInputs, connectionResources, clusterMor, clusterGroupSpec);
+            return reconfigureClusterGroup(vmInputs, connectionResources, clusterMor, clusterGroupSpec);
+        } finally {
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
+        }
     }
 
     public String listGroups(HttpInputs httpInputs, String clusterName, String delimiter, Class clazz) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs);
+        try {
+            ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+                    ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), clusterName);
 
-        ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
-                ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), clusterName);
+            ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, clusterName);
 
-        ClusterConfigInfoEx clusterConfigInfoEx = getClusterConfiguration(connectionResources, clusterMor, clusterName);
-
-        List<String> groupNameList = new ArrayList<>();
-        for (ClusterGroupInfo clusterGroupInfo : clusterConfigInfoEx.getGroup()) {
-            if (clusterGroupInfo.getClass().isAssignableFrom(clazz)) {
-                groupNameList.add(clusterGroupInfo.getName());
+            List<String> groupNameList = new ArrayList<>();
+            for (ClusterGroupInfo clusterGroupInfo : clusterConfigInfoEx.getGroup()) {
+                if (clusterGroupInfo.getClass().isAssignableFrom(clazz)) {
+                    groupNameList.add(clusterGroupInfo.getName());
+                }
+            }
+            return StringUtilities.join(groupNameList, delimiter);
+        } finally {
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
             }
         }
-        String result = StringUtilities.join(groupNameList, delimiter);
-        connectionResources.getConnection().disconnect();
-        return result;
     }
 
     public Map<String, String> createHostGroup(HttpInputs httpInputs, VmInputs vmInputs, List<String> hostNameList) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs);
+        try {
+            ClusterHostGroup clusterHostGroup = new ClusterHostGroup();
+            clusterHostGroup.setName(vmInputs.getHostGroupName());
+            clusterHostGroup.getHost().addAll(getHostManagedObjectReferences(hostNameList, connectionResources));
 
-        ClusterHostGroup clusterHostGroup = new ClusterHostGroup();
-        clusterHostGroup.setName(vmInputs.getHostGroupName());
-        clusterHostGroup.getHost().addAll(getHostManagedObjectReferences(hostNameList, connectionResources));
-
-        return createGroup(vmInputs, connectionResources, clusterHostGroup);
+            return createGroup(vmInputs, connectionResources, clusterHostGroup);
+        } finally {
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
+        }
     }
 
     public Map<String, String> deleteHostGroup(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs);
+        try {
+            ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+                    ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
 
-        ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
-                ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
+            ClusterHostGroup clusterHostGroup = new ClusterHostGroup();
+            clusterHostGroup.setName(vmInputs.getHostGroupName());
 
-        ClusterHostGroup clusterHostGroup = new ClusterHostGroup();
-        clusterHostGroup.setName(vmInputs.getHostGroupName());
+            ClusterGroupSpec clusterGroupSpec = new ClusterGroupSpec();
+            clusterGroupSpec.setInfo(clusterHostGroup);
+            clusterGroupSpec.setOperation(ArrayUpdateOperation.REMOVE);
+            clusterGroupSpec.setRemoveKey(vmInputs.getHostGroupName());
 
-        ClusterGroupSpec clusterGroupSpec = new ClusterGroupSpec();
-        clusterGroupSpec.setInfo(clusterHostGroup);
-        clusterGroupSpec.setOperation(ArrayUpdateOperation.REMOVE);
-        clusterGroupSpec.setRemoveKey(vmInputs.getHostGroupName());
-
-        return reconfigureClusterGroup(vmInputs, connectionResources, clusterMor, clusterGroupSpec);
+            return reconfigureClusterGroup(vmInputs, connectionResources, clusterMor, clusterGroupSpec);
+        } finally {
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
+        }
     }
 
     public Map<String, String> createAffinityRule(HttpInputs httpInputs, VmInputs vmInputs,
                                                   String affineHostGroupName, String antiAffineHostGroupName) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs);
+        try {
+            ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+                    ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
 
-        ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
-                ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
+            if (ruleExists(getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName()), vmInputs.getRuleName())) {
+                throw new Exception(String.format(RULE_ALREADY_EXISTS, vmInputs.getRuleName()));
+            } else {
+                ClusterVmHostRuleInfo clusterVmHostRuleInfo = getClusterVmHostRuleInfo(getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName()), vmInputs, affineHostGroupName, antiAffineHostGroupName);
 
-        if (ruleExists(getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName()), vmInputs.getRuleName())) {
-            throw new Exception(String.format(RULE_ALREADY_EXISTS, vmInputs.getRuleName()));
-        } else {
-            ClusterVmHostRuleInfo clusterVmHostRuleInfo = getClusterVmHostRuleInfo(getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName()), vmInputs, affineHostGroupName, antiAffineHostGroupName);
+                ClusterRuleSpec clusterRuleSpec = new ClusterRuleSpec();
+                clusterRuleSpec.setInfo(clusterVmHostRuleInfo);
+                clusterRuleSpec.setOperation(ArrayUpdateOperation.ADD);
 
-            ClusterRuleSpec clusterRuleSpec = new ClusterRuleSpec();
-            clusterRuleSpec.setInfo(clusterVmHostRuleInfo);
-            clusterRuleSpec.setOperation(ArrayUpdateOperation.ADD);
-
-            return reconfigureClusterRule(vmInputs, connectionResources, clusterMor, clusterRuleSpec);
+                return reconfigureClusterRule(vmInputs, connectionResources, clusterMor, clusterRuleSpec);
+            }
+        } finally {
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -218,19 +276,25 @@ public class ClusterComputeResourceService {
 
     public Map<String, String> deleteClusterRule(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
         ConnectionResources connectionResources = new ConnectionResources(httpInputs);
+        try {
+            ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
+                    ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
 
-        ManagedObjectReference clusterMor = new MorObjectHandler().getSpecificMor(connectionResources, connectionResources.getMorRootFolder(),
-                ClusterParameter.CLUSTER_COMPUTE_RESOURCE.getValue(), vmInputs.getClusterName());
+            List<ClusterRuleInfo> clusterRuleInfoList = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName()).getRule();
 
-        List<ClusterRuleInfo> clusterRuleInfoList = getClusterConfiguration(connectionResources, clusterMor, vmInputs.getClusterName()).getRule();
+            ClusterRuleInfo clusterRuleInfo = getClusterRuleInfo(clusterRuleInfoList, vmInputs.getRuleName());
+            ClusterRuleSpec clusterRuleSpec = new ClusterRuleSpec();
+            clusterRuleSpec.setInfo(clusterRuleInfo);
+            clusterRuleSpec.setOperation(ArrayUpdateOperation.REMOVE);
+            clusterRuleSpec.setRemoveKey(clusterRuleInfo.getKey());
 
-        ClusterRuleInfo clusterRuleInfo = getClusterRuleInfo(clusterRuleInfoList, vmInputs.getRuleName());
-        ClusterRuleSpec clusterRuleSpec = new ClusterRuleSpec();
-        clusterRuleSpec.setInfo(clusterRuleInfo);
-        clusterRuleSpec.setOperation(ArrayUpdateOperation.REMOVE);
-        clusterRuleSpec.setRemoveKey(clusterRuleInfo.getKey());
-
-        return reconfigureClusterRule(vmInputs, connectionResources, clusterMor, clusterRuleSpec);
+            return reconfigureClusterRule(vmInputs, connectionResources, clusterMor, clusterRuleSpec);
+        } finally {
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
+        }
     }
 
     @NotNull
@@ -267,7 +331,7 @@ public class ClusterComputeResourceService {
                                                            VmInputs vmInputs, String affineHostGroupName, String antiAffineHostGroupName) throws Exception {
         ClusterVmHostRuleInfo clusterVmHostRuleInfo = new ClusterVmHostRuleInfo();
         clusterVmHostRuleInfo.setName(vmInputs.getRuleName());
-        if (StringUtilities.isNotBlank(affineHostGroupName)) {
+        if (isNotBlank(affineHostGroupName)) {
             clusterVmHostRuleInfo = addAffineGroupToRule(clusterVmHostRuleInfo, clusterConfigInfoEx, affineHostGroupName);
         } else {
             clusterVmHostRuleInfo = addAntiAffineGroupToRule(clusterVmHostRuleInfo, clusterConfigInfoEx, antiAffineHostGroupName);
@@ -374,6 +438,37 @@ public class ClusterComputeResourceService {
         clusterDasVmConfigInfo.setKey(vmMor);
         clusterDasVmConfigInfo.setDasSettings(createClusterDasVmSettings(restartPriority));
         return clusterDasVmConfigInfo;
+    }
+
+    /**
+     * @param clusterConfigInfoEx
+     * @param vmMor
+     * @return
+     */
+    private String getVmRestartPriority(ClusterConfigInfoEx clusterConfigInfoEx, ManagedObjectReference vmMor) {
+        List<ClusterDasVmConfigInfo> dasVmConfig = clusterConfigInfoEx.getDasVmConfig();
+        for (ClusterDasVmConfigInfo clusterDasVmConfigInfo : dasVmConfig) {
+            if (vmMor.getValue().equals(clusterDasVmConfigInfo.getKey().getValue())) {
+                return clusterDasVmConfigInfo.getDasSettings().getRestartPriority();
+            }
+        }
+        return "unknown configuration";
+    }
+
+    /**
+     * @param clusterConfigInfoEx
+     * @return
+     */
+    private String getVmRestartPriority(ClusterConfigInfoEx clusterConfigInfoEx) {
+        JsonArray resultArray = new JsonArray();
+        List<ClusterDasVmConfigInfo> dasVmConfig = clusterConfigInfoEx.getDasVmConfig();
+        for (ClusterDasVmConfigInfo clusterDasVmConfigInfo : dasVmConfig) {
+            JsonObject vmRestartPriority = new JsonObject();
+            vmRestartPriority.addProperty(VM_ID, clusterDasVmConfigInfo.getKey().getValue());
+            vmRestartPriority.addProperty(RESTART_PRIORITY, clusterDasVmConfigInfo.getDasSettings().getRestartPriority());
+            resultArray.add(vmRestartPriority);
+        }
+        return resultArray.toString();
     }
 
     /**

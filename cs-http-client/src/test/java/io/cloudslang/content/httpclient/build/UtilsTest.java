@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.httpclient.build;
 
 import org.apache.http.NameValuePair;
@@ -58,5 +73,19 @@ public class UtilsTest {
         encodeQueryParams = Utils.urlEncodeMultipleParams(queryParams, false);
         assertEquals("p ar am 1", encodeQueryParams.get(0).getName());
         assertEquals("The st ring @foo-bar", encodeQueryParams.get(0).getValue());
+    }
+
+    @Test
+    public void testValidatePortNumberValidValue() {
+        String portStringValue = "821";
+        final int portNumber;
+        portNumber = Integer.parseInt(portStringValue);
+        assertEquals(portNumber, Utils.validatePortNumber(portStringValue));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidatePortNumberInvalidValue() {
+        String portStringValue = "0";
+        Utils.validatePortNumber(portStringValue);
     }
 }

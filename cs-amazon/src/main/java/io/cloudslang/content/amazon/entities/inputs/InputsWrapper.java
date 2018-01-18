@@ -1,8 +1,25 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.aws.AmazonApi;
-import io.cloudslang.content.amazon.utils.InputsUtil;
+import org.jetbrains.annotations.NotNull;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
 
@@ -21,7 +38,9 @@ public class InputsWrapper {
     private InstanceInputs instanceInputs;
     private LoadBalancerInputs loadBalancerInputs;
     private NetworkInputs networkInputs;
+    private StorageInputs storageInputs;
     private VolumeInputs volumeInputs;
+    private FilterInputs filterInputs;
 
     private final String apiService;
     private final String requestUri;
@@ -114,6 +133,14 @@ public class InputsWrapper {
         return networkInputs;
     }
 
+    public StorageInputs getStorageInputs() {
+        return storageInputs;
+    }
+
+    public void setStorageInputs(StorageInputs storageInputs) {
+        this.storageInputs = storageInputs;
+    }
+
     public void setNetworkInputs(NetworkInputs networkInputs) {
         this.networkInputs = networkInputs;
     }
@@ -158,6 +185,14 @@ public class InputsWrapper {
         return queryParams;
     }
 
+    public FilterInputs getFilterInputs() {
+        return filterInputs;
+    }
+
+    public void setFilterInputs(@NotNull final FilterInputs filterInputs) {
+        this.filterInputs = filterInputs;
+    }
+
     public static class Builder {
         private HttpClientInputs httpClientInputs;
         private CommonInputs commonInputs;
@@ -191,7 +226,7 @@ public class InputsWrapper {
         }
 
         public Builder withRequestUri(String inputValue) {
-            requestUri = InputsUtil.getDefaultStringInput(inputValue, SCOPE_SEPARATOR);
+            requestUri = getDefaultStringInput(inputValue, SCOPE_SEPARATOR);
             return this;
         }
 

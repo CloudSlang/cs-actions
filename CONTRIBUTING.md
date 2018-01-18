@@ -1,4 +1,6 @@
 # CloudSlang Contribution Guide
+
+
 We welcome and encourage community contributions to CloudSlang.
 Please familiarize yourself with the Contribution Guidelines and Project Roadmap before contributing.
 There are many ways to help CloudSlang:
@@ -15,8 +17,10 @@ The best way to directly collaborate with the project contributors is through Gi
 
 
 Note that all patches from all contributors get reviewed.
-After a pull request is made, other contributors will offer feedback. If the patch passes review, a maintainer will accept it with a comment.
-When a pull request fails testing, the author is expected to update the pull request to address the failure until it passes testing and the pull request merges successfully.
+After a pull request is made, other contributors will offer feedback. 
+If the patch passes review, a maintainer will accept it with a comment.
+When a pull request fails testing, the author is expected to update the 
+pull request to address the failure until it passes testing and the pull request merges successfully.
 
 At least one review from a maintainer is required for all patches (even patches from maintainers).
 
@@ -62,18 +66,27 @@ By making a contribution to this project, I certify that:
     maintained indefinitely and may be redistributed consistent with
     this project or the open source license(s) involved.
 
+
 ### Sign your work
 
-To accept the DCO, simply add this line to each commit message with your name and email address (git commit -s will do this for you):
+To accept the DCO, simply add this line to each commit message with 
+your name and email address (git commit -s will do this for you):
 
 Signed-off-by: Jane Example <jane@example.com>
 For legal reasons, no anonymous or pseudonymous contributions are accepted.
 
-## Pull Requests
-We encourage and support contributions from the community. No fix is too small. We strive to process all pull requests as soon as possible and with constructive feedback. If your pull request is not accepted at first, please try again after addressing the feedback you received.
-To make a pull request you will need a GitHub account. For help, see GitHub's documentation on forking and pull requests. (https://help.github.com/articles/using-pull-requests/ )
 
-Normally, all pull requests must include tests that test your change. Occasionally, a change will be very difficult to test. In those cases, please include a note in your commit message explaining why tests are not included.
+## Pull Requests
+
+We encourage and support contributions from the community. No fix is too small. 
+We strive to process all pull requests as soon as possible and with constructive feedback. 
+If your pull request is not accepted at first, please try again after addressing the feedback you received.
+To make a pull request you will need a GitHub account. 
+For help, see GitHub's documentation on forking and pull requests. (https://help.github.com/articles/using-pull-requests/ )
+
+Normally, all pull requests must include tests that test your change. 
+Occasionally, a change will be very difficult to test. 
+In those cases, please include a note in your commit message explaining why tests are not included.
 
 ## Unit tests for cs-actions
 
@@ -108,12 +121,14 @@ Apply the following rules when writing unit tests for the cs-actions @Actions:
     don't perform a real HTTP request, instead use one of the industry established mocking frameworks
     (e.g. Mockito, EasyMock, Powermock ) to mock the request and create isolation unit tests using a framework like JUnit.
 
-##Conduct
+## Conduct
 
 Whether you are a regular contributor or a newcomer, we care about making this community a safe place for you.
 
 We are committed to providing a friendly, safe and welcoming environment for all regardless of their background and the extent of their contributions.
 Please avoid using nicknames that might detract from a friendly, safe and welcoming environment for all.
 Be kind and courteous.
-Those who insult, demean or harass anyone will be excluded from interaction. In particular, behavior that excludes people in socially marginalized groups will not be tolerated.
-We welcome discussion about creating a welcoming, safe and productive environment for the community. If you have any questions, feedback or concerns please let us know. (info@cloudslang.io)
+Those who insult, demean or harass anyone will be excluded from interaction. 
+In particular, behavior that excludes people in socially marginalized groups will not be tolerated.
+We welcome discussion about creating a welcoming, safe and productive environment for the community. 
+If you have any questions, feedback or concerns please let us know. (info@cloudslang.io)

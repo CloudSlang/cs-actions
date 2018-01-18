@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.services;
 
 import com.vmware.vim25.DynamicProperty;
@@ -29,6 +44,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static io.cloudslang.content.vmware.utils.ConnectionUtils.clearConnectionFromContext;
+
 /**
  * Created by Mihai Tusa.
  * 1/6/2016.
@@ -42,7 +59,7 @@ public class VmService {
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted host system
      * @param delimiter  String that represents the delimiter needed in the result list
      * @return Map with String as key and value that contains returnCode of the operation, a list that contains all the
-     * guest operating system descriptors supported by the host system or failure message and the exception if there is one
+     *         guest operating system descriptors supported by the host system or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> getOsDescriptors(HttpInputs httpInputs, VmInputs vmInputs, String delimiter) throws Exception {
@@ -60,7 +77,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -70,7 +90,7 @@ public class VmService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to create a new virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> createVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -91,7 +111,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
 
     }
@@ -102,7 +125,7 @@ public class VmService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> deleteVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -122,7 +145,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -132,7 +158,7 @@ public class VmService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> powerOnVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -152,7 +178,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -162,7 +191,7 @@ public class VmService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> powerOffVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -182,7 +211,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -193,7 +225,7 @@ public class VmService {
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted data center
      * @param delimiter  String that represents the delimiter needed in the result list
      * @return Map with String as key and value that contains returnCode of the operation, a list that contains all the
-     * virtual machines and templates within the data center or failure message and the exception if there is one
+     *         virtual machines and templates within the data center or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> listVMsAndTemplates(HttpInputs httpInputs, VmInputs vmInputs, String delimiter) throws Exception {
@@ -212,7 +244,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -222,7 +257,7 @@ public class VmService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted virtual machine
      * @return Map with String as key and value that contains returnCode of the operation, a JSON formatted string that
-     * contains details of the virtual machine or failure message and the exception if there is one
+     *         contains details of the virtual machine or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> getVMDetails(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -253,7 +288,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -264,7 +302,7 @@ public class VmService {
      * @param httpInputs Object that has all the inputs necessary to made a connection to data center
      * @param vmInputs   Object that has all the specific inputs necessary to identify the targeted device
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> updateVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -292,7 +330,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 
@@ -303,7 +344,7 @@ public class VmService {
      * @param vmInputs   Object that has all the specific inputs necessary to identify the virtual machine that will be
      *                   cloned
      * @return Map with String as key and value that contains returnCode of the operation, success message with task id
-     * of the execution or failure message and the exception if there is one
+     *         of the execution or failure message and the exception if there is one
      * @throws Exception
      */
     public Map<String, String> cloneVM(HttpInputs httpInputs, VmInputs vmInputs) throws Exception {
@@ -336,7 +377,10 @@ public class VmService {
         } catch (Exception ex) {
             return ResponseUtils.getResultsMap(ex.toString(), Outputs.RETURN_CODE_FAILURE);
         } finally {
-            connectionResources.getConnection().disconnect();
+            if (httpInputs.isCloseSession()) {
+                connectionResources.getConnection().disconnect();
+                clearConnectionFromContext(httpInputs.getGlobalSessionObject());
+            }
         }
     }
 }

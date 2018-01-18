@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.constants;
 
 /**
@@ -42,6 +57,7 @@ public class ErrorMessages {
             "If the workgroup value is supplied, then the domain name and authentication fields must be empty.";
     public static final String PROVIDE_AFFINE_OR_ANTI_AFFINE_HOST_GROUP = "One of the affineHostGroupName and antiAffineHostGroupName inputs must not be empty, and the other one must be empty.";
     public static final String PROVIDE_VM_NAME_OR_ID = "Virtual Machine identification inputs are mutually exclusive! Provide only one.";
+    public static final String PROVIDE_VM_NAME_OR_ID_OR_NONE = "Virtual Machine identification inputs are mutually exclusive! Provide only one or none.";
     public static final String RULE_ALREADY_EXISTS = "Rule with name %s already exists.";
     public static final String AFFINE_HOST_GROUP_DOES_NOT_EXIST = "The affineHostGroup provided does not exist.";
     public static final String ANTI_AFFINE_HOST_GROUP_DOES_NOT_EXIST = "The antiAffineHostGroup provided does not exist.";

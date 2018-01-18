@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.actions.cluster;
 
 import com.vmware.vim25.ClusterVmGroup;
@@ -53,7 +68,7 @@ public class ListVmGroupsTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
         when(clusterComputeResourceServiceMock.listGroups(any(HttpInputs.class), any(String.class), any(String.class), eq(ClusterVmGroup.class))).thenReturn(expectedReturnResult);
 
-        Map<String, String> actualResultMap = listVmGroups.listVmGroups("", "", "", "", "", "", "", "");
+        Map<String, String> actualResultMap = listVmGroups.listVmGroups("", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, times(1)).listGroups(any(HttpInputs.class), any(String.class), any(String.class), eq(ClusterVmGroup.class));
 
@@ -63,7 +78,7 @@ public class ListVmGroupsTest {
 
     @Test
     public void testListGroupVmsProtocolException() throws Exception {
-        Map<String, String> resultMap = listVmGroups.listVmGroups("", "", "myProtocol", "", "", "", "", "");
+        Map<String, String> resultMap = listVmGroups.listVmGroups("", "", "myProtocol", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).listGroups(any(HttpInputs.class), any(String.class), any(String.class), eq(ClusterVmGroup.class));
 
@@ -74,7 +89,7 @@ public class ListVmGroupsTest {
 
     @Test
     public void testListGroupVmsPortException() throws Exception {
-        Map<String, String> resultMap = listVmGroups.listVmGroups("", "myPort", "", "", "", "", "", "");
+        Map<String, String> resultMap = listVmGroups.listVmGroups("", "myPort", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).listGroups(any(HttpInputs.class), any(String.class), any(String.class), eq(ClusterVmGroup.class));
 

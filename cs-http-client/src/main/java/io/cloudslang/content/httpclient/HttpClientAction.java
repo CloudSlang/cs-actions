@@ -1,12 +1,17 @@
-/*******************************************************************************
- * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- *******************************************************************************/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package io.cloudslang.content.httpclient;
 
@@ -24,12 +29,17 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+
 /**
  * Created with IntelliJ IDEA.
  * User: davidmih
  * Date: 7/15/14
  */
 public class HttpClientAction {
+
+    private static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
+    private static final String CHANGEIT = "changeit";
 
     /**
      * This operation does an http request and a parsing of the response.
@@ -312,10 +322,10 @@ public class HttpClientAction {
         httpClientInputs.setProxyPassword(proxyPassword);
         httpClientInputs.setTrustAllRoots(trustAllRoots);
         httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
-        httpClientInputs.setTrustKeystore(trustKeystore);
-        httpClientInputs.setTrustPassword(trustPassword);
-        httpClientInputs.setKeystore(keystore);
-        httpClientInputs.setKeystorePassword(keystorePassword);
+        httpClientInputs.setTrustKeystore(defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE));
+        httpClientInputs.setTrustPassword(defaultIfEmpty(trustPassword, CHANGEIT));
+        httpClientInputs.setKeystore(defaultIfEmpty(keystore, DEFAULT_JAVA_KEYSTORE));
+        httpClientInputs.setKeystorePassword(defaultIfEmpty(keystorePassword, CHANGEIT));
         httpClientInputs.setConnectTimeout(connectTimeout);
         httpClientInputs.setSocketTimeout(socketTimeout);
         httpClientInputs.setUseCookies(useCookies);

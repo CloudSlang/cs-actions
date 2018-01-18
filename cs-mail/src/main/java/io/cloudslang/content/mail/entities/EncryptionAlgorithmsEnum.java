@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.mail.entities;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,19 +42,20 @@ public enum EncryptionAlgorithmsEnum {
     SEED_WRAP(SMIMEEnvelopedGenerator.SEED_WRAP);
 
     private String encryptionOID;
-    private EncryptionAlgorithmsEnum(String encryptionOID) {
+    EncryptionAlgorithmsEnum(String encryptionOID) {
         this.encryptionOID = encryptionOID;
     }
 
     public static EncryptionAlgorithmsEnum getEncryptionAlgorithm(String encryptionAlgorithm) {
-        if(StringUtils.isEmpty(encryptionAlgorithm))
+        if (StringUtils.isEmpty(encryptionAlgorithm)) {
             return AES256_CBC;
+        }
 
         try {
             return EncryptionAlgorithmsEnum.valueOf(encryptionAlgorithm.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid encryption algorithm \"" + encryptionAlgorithm + "\". Supported values:" +
-                    getSupportedEncryptionAlgorithms());
+            throw new IllegalArgumentException("Invalid encryption algorithm \"" + encryptionAlgorithm +
+                    "\". Supported values:" + getSupportedEncryptionAlgorithms());
         }
     }
 
@@ -50,7 +66,7 @@ public enum EncryptionAlgorithmsEnum {
     private static String getSupportedEncryptionAlgorithms() {
         String result = "";
         EncryptionAlgorithmsEnum[] algorithms = EncryptionAlgorithmsEnum.values();
-        for(EncryptionAlgorithmsEnum alg : algorithms) {
+        for (EncryptionAlgorithmsEnum alg : algorithms) {
             result += alg.name();
             result += ", ";
         }

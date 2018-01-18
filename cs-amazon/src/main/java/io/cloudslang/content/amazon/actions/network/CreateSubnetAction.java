@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.amazon.actions.network;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -11,10 +26,11 @@ import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.NETWORK_DEFAULT_API_VERSION;
@@ -72,12 +88,12 @@ public class CreateSubnetAction {
      *                         Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost        Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
      *                         Default: ""
-     * @param proxyPort        Optional - proxy server port. You must either specify values for both <proxyHost> and <proxyPort>
+     * @param proxyPort        Optional - proxy server port. You must either specify values for both proxyHost and proxyPort
      *                         inputs or leave them both empty.
      *                         Default: ""
      * @param proxyUsername    Optional - proxy server user name.
      *                         Default: ""
-     * @param proxyPassword    Optional - proxy server password associated with the <proxyUsername> input value.
+     * @param proxyPassword    Optional - proxy server password associated with the proxyUsername input value.
      * @param version          Optional - Version of the web service to made the call against it.
      *                         Example: "2016-11-15"
      *                         Default: "2016-11-15"
@@ -99,7 +115,7 @@ public class CreateSubnetAction {
      * @param cidrBlock        Network range for the subnet, in CIDR notation.
      *                         Example: "10.0.0.0/24"
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
-     * and the exception if there is one), returnCode of the operation and the ID of the request
+     *         and the exception if there is one), returnCode of the operation and the ID of the request
      */
     @Action(name = "Create Subnet",
             outputs = {
@@ -127,10 +143,10 @@ public class CreateSubnetAction {
                                        @Param(value = VPC_ID, required = true) String vpcId,
                                        @Param(value = CIDR_BLOCK, required = true) String cidrBlock) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, NETWORK_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

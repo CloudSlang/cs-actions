@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.actions.cluster;
 
 import io.cloudslang.content.constants.OutputNames;
@@ -53,7 +68,7 @@ public class DeleteClusterRuleTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
         when(clusterComputeResourceServiceMock.deleteClusterRule(any(HttpInputs.class), any(VmInputs.class))).thenReturn(expectedResultMap);
 
-        Map<String, String> actualResultMap = deleteClusterRule.deleteClusterRule("", "", "", "", "", "", "", "");
+        Map<String, String> actualResultMap = deleteClusterRule.deleteClusterRule("", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, times(1)).deleteClusterRule(any(HttpInputs.class), any(VmInputs.class));
 
@@ -63,7 +78,7 @@ public class DeleteClusterRuleTest {
 
     @Test
     public void testDeleteClusterRuleProtocolException() throws Exception {
-        Map<String, String> resultMap = deleteClusterRule.deleteClusterRule("", "", "myProtocol", "", "", "", "", "");
+        Map<String, String> resultMap = deleteClusterRule.deleteClusterRule("", "", "myProtocol", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).deleteClusterRule(any(HttpInputs.class), any(VmInputs.class));
 
@@ -74,7 +89,7 @@ public class DeleteClusterRuleTest {
 
     @Test
     public void testDeleteClusterRulePortException() throws Exception {
-        Map<String, String> resultMap = deleteClusterRule.deleteClusterRule("", "myPort", "", "", "", "", "", "");
+        Map<String, String> resultMap = deleteClusterRule.deleteClusterRule("", "myPort", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).deleteClusterRule(any(HttpInputs.class), any(VmInputs.class));
 

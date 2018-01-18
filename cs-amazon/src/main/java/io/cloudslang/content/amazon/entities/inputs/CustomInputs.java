@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.amazon.entities.aws.Architecture;
@@ -9,7 +24,9 @@ import io.cloudslang.content.amazon.entities.aws.ProductCodeType;
 import io.cloudslang.content.amazon.entities.aws.RootDeviceType;
 import io.cloudslang.content.amazon.entities.aws.VirtualizationType;
 import io.cloudslang.content.amazon.entities.aws.VolumeType;
-import io.cloudslang.content.amazon.utils.InputsUtil;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getRelevantBooleanString;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getValidVolumeAmount;
 
 /**
  * Created by Mihai Tusa.
@@ -386,7 +403,7 @@ public class CustomInputs {
         }
 
         public Builder withDeleteOnTermination(String inputValue) {
-            deleteOnTermination = InputsUtil.getRelevantBooleanString(inputValue);
+            deleteOnTermination = getRelevantBooleanString(inputValue);
             return this;
         }
 
@@ -396,7 +413,7 @@ public class CustomInputs {
         }
 
         public Builder withVolumeSize(String inputValue) {
-            volumeSize = InputsUtil.getValidVolumeAmount(inputValue);
+            volumeSize = getValidVolumeAmount(inputValue);
             return this;
         }
 

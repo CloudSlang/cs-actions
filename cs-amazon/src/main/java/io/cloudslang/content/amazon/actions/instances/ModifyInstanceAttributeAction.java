@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.amazon.actions.instances;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -14,13 +29,14 @@ import io.cloudslang.content.amazon.entities.inputs.IamInputs;
 import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
-import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.INSTANCES_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.INSTANCES_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.MODIFY_INSTANCE_ATTRIBUTE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
@@ -75,11 +91,11 @@ public class ModifyInstanceAttributeAction {
      *                                             will be used.
      *                                             Default: ""
      * @param proxyPort                            Optional - proxy server port. You must either specify values for both
-     *                                             <proxyHost> and <proxyPort> inputs or leave them both empty.
+     *                                             proxyHost and proxyPort inputs or leave them both empty.
      *                                             Default: ""
      * @param proxyUsername                        Optional - proxy server user name.
      *                                             Default: ""
-     * @param proxyPassword                        Optional - proxy server password associated with the <proxyUsername>
+     * @param proxyPassword                        Optional - proxy server password associated with the proxyUsername
      *                                             input value.
      *                                             Default: ""
      * @param headers                              Optional - string containing the headers to use for the request separated
@@ -109,11 +125,11 @@ public class ModifyInstanceAttributeAction {
      *                                             attributes.
      *                                             Default: ""
      * @param blockDeviceMappingDeviceNamesString  Optional - String that contains one or more device names, exposed to
-     *                                             the instance, separated by <delimiter>.
+     *                                             the instance, separated by delimiter.
      *                                             Examples: "/dev/sdh,xvdh"
      *                                             Default: ""
      * @param blockDeviceMappingVirtualNamesString Optional - String that contains one or more virtual names separated
-     *                                             by <delimiter>. Virtual device name is "ephemeralN". Instance store
+     *                                             by delimiter. Virtual device name is "ephemeralN". Instance store
      *                                             volumes are numbered starting from 0. An instance type with 2 available
      *                                             instance store volumes can specify mappings for ephemeral0 and ephemeral1.
      *                                             The number of available instance store volumes depends on the instance
@@ -207,7 +223,7 @@ public class ModifyInstanceAttributeAction {
      *                                             you must provide Base64-encoded text.
      *                                             Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
+     *         operation, or failure message and the exception if there is one
      */
     @Action(name = "Modify Instance Attribute",
             outputs = {
@@ -253,10 +269,10 @@ public class ModifyInstanceAttributeAction {
                                        @Param(value = SRIOV_NET_SUPPORT) String sriovNetSupport,
                                        @Param(value = LOWER_CASE_USER_DATA) String userData) {
         try {
-            version = InputsUtil.getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
+            version = getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

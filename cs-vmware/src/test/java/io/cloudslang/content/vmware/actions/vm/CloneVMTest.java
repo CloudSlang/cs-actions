@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.actions.vm;
 
 import io.cloudslang.content.vmware.entities.VmInputs;
@@ -52,7 +67,7 @@ public class CloneVMTest {
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
         when(vmServiceMock.createVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, times(1)).cloneVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -61,7 +76,7 @@ public class CloneVMTest {
 
     @Test
     public void testCloneVMProtocolException() throws Exception {
-        Map<String, String> resultMap = cloneVM.cloneVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = cloneVM.cloneVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).cloneVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -72,7 +87,7 @@ public class CloneVMTest {
 
     @Test
     public void testCloneVMIntException() throws Exception {
-        Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "2147483648", "", "", "");
+        Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "2147483648", "", "", "", null);
 
         verify(vmServiceMock, never()).cloneVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -83,7 +98,7 @@ public class CloneVMTest {
 
     @Test
     public void testCloneVMLongException() throws Exception {
-        Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "anything", "");
+        Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "anything", "", null);
 
         verify(vmServiceMock, never()).cloneVM(any(HttpInputs.class), any(VmInputs.class));
 

@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.actions.vm;
 
 import io.cloudslang.content.vmware.entities.VmInputs;
@@ -51,7 +66,7 @@ public class UpdateVMTest {
         whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
         when(vmServiceMock.updateVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = updateVM.updateVM("", "", "", "", "", "", "", "update", "cpu", "low", "", "");
+        resultMap = updateVM.updateVM("", "", "", "", "", "", "", "", "update", "cpu", "low", "", "", null);
 
         verify(vmServiceMock, times(1)).updateVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -60,7 +75,7 @@ public class UpdateVMTest {
 
     @Test
     public void testUpdateVMProtocolException() throws Exception {
-        Map<String, String> resultMap = updateVM.updateVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = updateVM.updateVM("", "", "myProtocol", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).deleteVM(any(HttpInputs.class), any(VmInputs.class));
 
@@ -71,7 +86,7 @@ public class UpdateVMTest {
 
     @Test
     public void testUpdateVMOperationException() throws Exception {
-        Map<String, String> resultMap = updateVM.updateVM("", "", "", "", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = updateVM.updateVM("", "", "", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(vmServiceMock, never()).updateVM(any(HttpInputs.class), any(VmInputs.class));
 

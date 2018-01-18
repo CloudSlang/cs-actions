@@ -1,12 +1,17 @@
-/*******************************************************************************
- * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- *******************************************************************************/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package io.cloudslang.content.rft.utils;
 
@@ -29,6 +34,7 @@ public class Constants {
     public static final int DEFAULT_TIMEOUT = 90000;
     public static final String DEFAULT_KNOWN_HOSTS_POLICY = "strict";
     public static final Path DEFAULT_KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
+    public static final int DEFAULT_PROXY_PORT = 8080;
 
     public static final class InputNames {
         public static final String SOURCE_HOST = "sourceHost";
@@ -46,6 +52,8 @@ public class Constants {
         public static final String KNOWN_HOSTS_POLICY = "knownHostsPolicy";
         public static final String KNOWN_HOSTS_PATH = "knownHostsPath";
         public static final String TIMEOUT = "timeout";
+        public static final String PROXY_HOST = "proxyHost";
+        public static final String PROXY_PORT = "proxyPort";
 
     }
 

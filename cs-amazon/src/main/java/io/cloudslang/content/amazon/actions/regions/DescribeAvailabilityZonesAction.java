@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.amazon.actions.regions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -65,11 +80,11 @@ public class DescribeAvailabilityZonesAction {
      *                           will be used.
      *                           Default: ""
      * @param proxyPort          Optional - proxy server port. You must either specify values for both
-     *                           <proxyHost> and <proxyPort> inputs or leave them both empty.
+     *                           proxyHost and proxyPort inputs or leave them both empty.
      *                           Default: ""
      * @param proxyUsername      Optional - proxy server user name.
      *                           Default: ""
-     * @param proxyPassword      Optional - proxy server password associated with the <proxyUsername>
+     * @param proxyPassword      Optional - proxy server password associated with the proxyUsername
      *                           input value.
      *                           Default: ""
      * @param headers            Optional - string containing the headers to use for the request separated
@@ -98,7 +113,7 @@ public class DescribeAvailabilityZonesAction {
      * @param zoneNamesString    Optional - String that contains names of one or more Availability Zones.
      *                           Example: "us-east-1a,us-east-1d"
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
+     *         operation, or failure message and the exception if there is one
      */
     @Action(name = "Describe Instances",
             outputs = {
@@ -132,7 +147,7 @@ public class DescribeAvailabilityZonesAction {
             version = getDefaultStringInput(version, REGIONS_DEFAULT_API_VERSION);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withEndpoint(endpoint, EC2_API)
+                    .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
                     .withCredential(credential)
                     .withProxyHost(proxyHost)

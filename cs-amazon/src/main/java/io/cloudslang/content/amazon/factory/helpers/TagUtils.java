@@ -1,23 +1,47 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
-import io.cloudslang.content.amazon.utils.InputsUtil;
+import io.cloudslang.content.amazon.entities.validators.TagFilterValidator;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.RESOURCE_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.KEY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.RESOURCE_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
-
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KEY_TAGS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.RESOURCE_IDS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VALUE_TAGS_STRING;
+import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.getFiltersQueryMap;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getArrayWithoutDuplicateEntries;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getQueryParamsSpecificString;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getStringsArray;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getValidKeyOrValueTag;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
+import static io.cloudslang.content.amazon.utils.InputsUtil.validateAgainstDifferentArraysLength;
+import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Created by TusaM
@@ -30,18 +54,19 @@ public class TagUtils {
     private static final int KEY_TAG_LENGTH_CONSTRAIN = 127;
     private static final int MAXIMUM_TAGS_ALLOWED = 50;
     private static final int VALUE_TAG_LENGTH_CONSTRAIN = 255;
+    private static final String NEXT_TOKEN = "NextToken";
+    private static final String MAX_RESULTS = "MaxResults";
 
     public Map<String, String> getCreateTagsQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
-        String[] resourceIdsArray = InputsUtil.getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getResourceIdsString(),
+        String[] resourceIdsArray = getArrayWithoutDuplicateEntries(wrapper.getCustomInputs().getResourceIdsString(),
                 RESOURCE_IDS_STRING, wrapper.getCommonInputs().getDelimiter());
 
         if (isNotEmpty(resourceIdsArray)) {
             for (int index = START_INDEX; index < resourceIdsArray.length; index++) {
-                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(RESOURCE_ID, index), resourceIdsArray[index]);
+                queryParamsMap.put(getQueryParamsSpecificString(RESOURCE_ID, index), resourceIdsArray[index]);
             }
         }
         setResourcesTags(queryParamsMap, wrapper.getCustomInputs().getKeyTagsString(), wrapper.getCustomInputs().getValueTagsString(),
@@ -51,9 +76,9 @@ public class TagUtils {
     }
 
     private void setResourcesTags(Map<String, String> queryParamsMap, String keyTagsString, String valueTagsString, String delimiter) {
-        String[] keyTagsStringArray = InputsUtil.getStringsArray(keyTagsString, EMPTY, delimiter);
-        String[] valueTagsStringArray = InputsUtil.getStringsArray(valueTagsString, EMPTY, delimiter);
-        InputsUtil.validateAgainstDifferentArraysLength(keyTagsStringArray, valueTagsStringArray, KEY_TAGS_STRING, VALUE_TAGS_STRING);
+        String[] keyTagsStringArray = getStringsArray(keyTagsString, EMPTY, delimiter);
+        String[] valueTagsStringArray = getStringsArray(valueTagsString, EMPTY, delimiter);
+        validateAgainstDifferentArraysLength(keyTagsStringArray, valueTagsStringArray, KEY_TAGS_STRING, VALUE_TAGS_STRING);
 
         if (isNotEmpty(keyTagsStringArray) && isNotEmpty(valueTagsStringArray)) {
 
@@ -62,16 +87,33 @@ public class TagUtils {
             }
 
             for (int index = START_INDEX; index < keyTagsStringArray.length; index++) {
-                String currentKey = InputsUtil.getValidKeyOrValueTag(keyTagsStringArray[index], EMPTY, true,
-                        keyTagsStringArray[index].startsWith(EXCEPTED_KEY_STRING), false, KEY_TAG_LENGTH_CONSTRAIN,
-                        VALUE_TAG_LENGTH_CONSTRAIN);
-                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(KEY, index), currentKey);
+                String currentKey = getValidKeyOrValueTag(keyTagsStringArray[index], EMPTY, true, keyTagsStringArray[index].startsWith(EXCEPTED_KEY_STRING),
+                        false, KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
+                queryParamsMap.put(getQueryParamsSpecificString(KEY, index), currentKey);
 
                 String emptyOrRelevant = NOT_RELEVANT.equalsIgnoreCase(valueTagsStringArray[index]) ? EMPTY : valueTagsStringArray[index];
-                String currentValue = InputsUtil.getValidKeyOrValueTag(emptyOrRelevant, EMPTY, false, false,
-                        false, KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
-                queryParamsMap.put(InputsUtil.getQueryParamsSpecificString(VALUE, index), currentValue);
+                String currentValue = getValidKeyOrValueTag(emptyOrRelevant, EMPTY, false, false, false,
+                        KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
+                queryParamsMap.put(getQueryParamsSpecificString(VALUE, index), currentValue);
             }
         }
+    }
+
+    @NotNull
+    public Map<String, String> getDescribeTagsQueryParamsMap(@NotNull InputsWrapper wrapper) {
+        final Map<String, String> queryParamsMap = new HashMap<>();
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+
+        setOptionalMapEntry(queryParamsMap, MAX_RESULTS, wrapper.getFilterInputs().getMaxResults(),
+                !NOT_RELEVANT.equalsIgnoreCase(wrapper.getFilterInputs().getMaxResults()));
+        setOptionalMapEntry(queryParamsMap, NEXT_TOKEN, wrapper.getFilterInputs().getNextToken(),
+                isNotBlank(wrapper.getFilterInputs().getNextToken()));
+
+        final TagFilterValidator tagFilterValidator = new TagFilterValidator();
+
+        final Map<String, String> filterQueryMap = getFiltersQueryMap(wrapper.getFilterInputs(), tagFilterValidator);
+        queryParamsMap.putAll(filterQueryMap);
+
+        return queryParamsMap;
     }
 }

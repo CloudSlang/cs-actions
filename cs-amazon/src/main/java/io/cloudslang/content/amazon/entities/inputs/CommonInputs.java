@@ -1,10 +1,27 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.amazon.entities.aws.AmazonApi;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getUrlFromApiService;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
@@ -137,8 +154,8 @@ public class CommonInputs {
             return new CommonInputs(this);
         }
 
-        public Builder withEndpoint(String inputValue, String apiService) throws MalformedURLException {
-            endpoint = new URL(InputsUtil.getUrlFromApiService(inputValue, apiService)).toString();
+        public Builder withEndpoint(String inputValue, String apiService, String prefix) throws MalformedURLException {
+            endpoint = new URL(getUrlFromApiService(inputValue, apiService, prefix)).toString();
             return this;
         }
 
@@ -173,7 +190,7 @@ public class CommonInputs {
         }
 
         public Builder withDelimiter(String inputValue) {
-            delimiter = InputsUtil.getDefaultStringInput(inputValue, COMMA_DELIMITER);
+            delimiter = getDefaultStringInput(inputValue, COMMA_DELIMITER);
             return this;
         }
 
@@ -198,7 +215,7 @@ public class CommonInputs {
         }
 
         public Builder withRequestUri(String inputValue) {
-            requestUri = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
+            requestUri = getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 
@@ -208,12 +225,12 @@ public class CommonInputs {
         }
 
         public Builder withRequestPayload(String inputValue) {
-            requestPayload = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
+            requestPayload = getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 
         public Builder withHttpClientMethod(String inputValue) {
-            httpClientMethod = InputsUtil.getDefaultStringInput(inputValue, HTTP_CLIENT_METHOD_GET);
+            httpClientMethod = getDefaultStringInput(inputValue, HTTP_CLIENT_METHOD_GET);
             return this;
         }
     }

@@ -1,35 +1,28 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.connection.impl;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSessionContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.*;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 class DisableSecurity {
-    private static final String SSL = "SSL";
-
-    /*
-     * Authentication is handled by using a TrustManager and supplying a hostname verifier method.
-     */
-    private static class TrustAllTrustManager implements TrustManager, X509TrustManager {
-
-        public X509Certificate[] getAcceptedIssuers() {
-            return null;
-        }
-
-        public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {
-        }
-
-        public void checkClientTrusted(X509Certificate[] certs, String authType) throws CertificateException {
-        }
-    }
+    private static final String TLS = "TLSv1.2";
 
     public static void trustEveryone() throws NoSuchAlgorithmException, KeyManagementException {
         // Declare a host name verifier that will automatically enable the connection.
@@ -46,7 +39,7 @@ class DisableSecurity {
         trustAllCerts[0] = trustManager;
 
         // Create the SSL context
-        SSLContext sc = SSLContext.getInstance(SSL);
+        SSLContext sc = SSLContext.getInstance(TLS);
 
         // Create the session context
         SSLSessionContext sslsc = sc.getServerSessionContext();
@@ -60,5 +53,21 @@ class DisableSecurity {
 
         // Set the default host name verifier to enable the connection.
         HttpsURLConnection.setDefaultHostnameVerifier(verifier);
+    }
+
+    /*
+     * Authentication is handled by using a TrustManager and supplying a hostname verifier method.
+     */
+    private static class TrustAllTrustManager implements TrustManager, X509TrustManager {
+
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+
+        public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+        }
+
+        public void checkClientTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+        }
     }
 }

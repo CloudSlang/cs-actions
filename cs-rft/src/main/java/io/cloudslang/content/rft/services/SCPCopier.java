@@ -1,12 +1,17 @@
-/*******************************************************************************
- * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- *******************************************************************************/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package io.cloudslang.content.rft.services;
 
@@ -64,6 +69,9 @@ public class SCPCopier {
 
             JSch jsch = new JSch();
             session = jsch.getSession(remoteSecureCopyInputs.getDestUsername(), remoteSecureCopyInputs.getDestHost(), StringUtils.toInt(remoteSecureCopyInputs.getDestPort(), Constants.DEFAULT_PORT));
+
+            String proxyHost = remoteSecureCopyInputs.getProxyHost();
+            if (!StringUtils.isEmpty(proxyHost)) session.setProxy(new ProxyHTTP(proxyHost, StringUtils.toInt(remoteSecureCopyInputs.getProxyPort(), Constants.DEFAULT_PROXY_PORT)));
 
             establishKnownHostsConfiguration(ConnectionUtils.resolveKnownHosts(remoteSecureCopyInputs.getKnownHostsPolicy(), remoteSecureCopyInputs.getKnownHostsPath()), jsch, session);
             establishPrivateKeyFile(ConnectionUtils.getKeyFile(remoteSecureCopyInputs.getDestPrivateKeyFile(), remoteSecureCopyInputs.getDestPassword()), jsch, session, false);
@@ -151,6 +159,9 @@ public class SCPCopier {
 
             JSch jsch = new JSch();
             session = jsch.getSession(remoteSecureCopyInputs.getSrcUsername(), remoteSecureCopyInputs.getSrcHost(), StringUtils.toInt(remoteSecureCopyInputs.getSrcPort(), Constants.DEFAULT_PORT));
+
+            String proxyHost = remoteSecureCopyInputs.getProxyHost();
+            if (!StringUtils.isEmpty(proxyHost)) session.setProxy(new ProxyHTTP(proxyHost, StringUtils.toInt(remoteSecureCopyInputs.getProxyPort(), Constants.DEFAULT_PROXY_PORT)));
 
             establishKnownHostsConfiguration(ConnectionUtils.resolveKnownHosts(remoteSecureCopyInputs.getKnownHostsPolicy(), remoteSecureCopyInputs.getKnownHostsPath()), jsch, session);
             establishPrivateKeyFile(ConnectionUtils.getKeyFile(remoteSecureCopyInputs.getSrcPrivateKeyFile(), remoteSecureCopyInputs.getSrcPassword()), jsch, session, true);

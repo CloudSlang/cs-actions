@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.actions.cluster;
 
 import io.cloudslang.content.constants.OutputNames;
@@ -54,7 +69,7 @@ public class CreateAffinityRuleTest {
         whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
         when(clusterComputeResourceServiceMock.createAffinityRule(any(HttpInputs.class), any(VmInputs.class), any(String.class), any(String.class))).thenReturn(expectedResultMap);
 
-        Map<String, String> actualResultMap = createAffinityRule.createAffinityRule("", "", "", "", "", "", "", "", "", "affineHostGroup", "");
+        Map<String, String> actualResultMap = createAffinityRule.createAffinityRule("", "", "", "", "", "", "", "", "", "", "affineHostGroup", "", null);
 
         verify(clusterComputeResourceServiceMock, times(1)).createAffinityRule(any(HttpInputs.class), any(VmInputs.class), any(String.class), any(String.class));
 
@@ -64,7 +79,7 @@ public class CreateAffinityRuleTest {
 
     @Test
     public void testCreateAffinityRuleHostGroupsNotProvidedException() throws Exception {
-        Map<String, String> resultMap = createAffinityRule.createAffinityRule("", "", "", "", "", "", "", "", "", "", "");
+        Map<String, String> resultMap = createAffinityRule.createAffinityRule("", "", "", "", "", "", "", "", "", "", "", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).createAffinityRule(any(HttpInputs.class), any(VmInputs.class), any(String.class), any(String.class));
 
@@ -75,7 +90,7 @@ public class CreateAffinityRuleTest {
 
     @Test
     public void testCreateAffinityRuleProtocolException() throws Exception {
-        Map<String, String> resultMap = createAffinityRule.createAffinityRule("", "", "myProtocol", "", "", "", "", "", "", "affineHostGroup", "");
+        Map<String, String> resultMap = createAffinityRule.createAffinityRule("", "", "myProtocol", "", "", "", "", "", "", "", "affineHostGroup", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).createAffinityRule(any(HttpInputs.class), any(VmInputs.class), any(String.class), any(String.class));
 
@@ -86,7 +101,7 @@ public class CreateAffinityRuleTest {
 
     @Test
     public void testCreateAffinityRulePortException() throws Exception {
-        Map<String, String> resultMap = createAffinityRule.createAffinityRule("", "myPort", "", "", "", "", "", "", "", "affineHostGroup", "");
+        Map<String, String> resultMap = createAffinityRule.createAffinityRule("", "myPort", "", "", "", "", "", "", "", "", "affineHostGroup", "", null);
 
         verify(clusterComputeResourceServiceMock, never()).createAffinityRule(any(HttpInputs.class), any(VmInputs.class), any(String.class), any(String.class));
 

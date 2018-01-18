@@ -1,12 +1,17 @@
-/*******************************************************************************
- * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- *******************************************************************************/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package io.cloudslang.content.httpclient.build.conn;
 
@@ -98,9 +103,12 @@ public class SSLConnectionSocketFactoryBuilder {
         } else {
             try {
                 //need to override isTrusted() method to accept CA certs because the Apache HTTP Client ver.4.3 will only accepts self-signed certificates
-                KeyStore keyStore = createKeyStore(new URL("file:" + javaKeystore), changeit);
+                KeyStore keyStore = createKeyStore(new URL("file:" + keystore), keystorePassword);
+                sslContextBuilder.loadKeyMaterial(keyStore, keystorePassword.toCharArray());
 
-                sslContextBuilder.loadTrustMaterial(keyStore, new TrustSelfSignedStrategy() {
+                String internalJavaKeystoreUri = "file:" + javaKeystore;
+                KeyStore javaTrustStore = createKeyStore(new URL(internalJavaKeystoreUri), changeit);
+                sslContextBuilder.loadTrustMaterial(javaTrustStore, new TrustSelfSignedStrategy() {
                     @Override
                     public boolean isTrusted(X509Certificate[] chain, String authType)
                             throws CertificateException {

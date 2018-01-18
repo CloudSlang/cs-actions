@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.actions.guest;
 
 import io.cloudslang.content.vmware.entities.VmInputs;
@@ -51,7 +66,7 @@ public class MountToolsTest {
         whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
         when(guestServiceMock.mountTools(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = mountTools.mountTools("", "", "", "", "", "", "");
+        resultMap = mountTools.mountTools("", "", "", "", "", "", "true", "", null);
 
         verify(guestServiceMock, times(1)).mountTools(any(HttpInputs.class), any(VmInputs.class));
 
@@ -64,7 +79,7 @@ public class MountToolsTest {
         whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
         when(guestServiceMock.mountTools(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
 
-        resultMap = mountTools.mountTools("", "", "myProtocol", "", "", "", "");
+        resultMap = mountTools.mountTools("", "", "myProtocol", "", "", "", "true", "", null);
 
         verify(guestServiceMock, never()).mountTools(any(HttpInputs.class), any(VmInputs.class));
 

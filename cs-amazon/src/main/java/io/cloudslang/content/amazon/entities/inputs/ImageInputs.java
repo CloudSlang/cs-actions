@@ -1,8 +1,26 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.amazon.entities.inputs;
 
 import io.cloudslang.content.amazon.entities.aws.ImageState;
 import io.cloudslang.content.amazon.entities.aws.ImageType;
-import io.cloudslang.content.amazon.utils.InputsUtil;
+
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getEnforcedBooleanCondition;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getRelevantBooleanString;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
@@ -104,17 +122,17 @@ public class ImageInputs {
         }
 
         public Builder withImageName(String inputValue) {
-            imageName = InputsUtil.getDefaultStringInput(inputValue, NOT_RELEVANT);
+            imageName = getDefaultStringInput(inputValue, NOT_RELEVANT);
             return this;
         }
 
         public Builder withImageIdsString(String inputValue) {
-            imageIdsString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
+            imageIdsString = getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 
         public Builder withOwnersString(String inputValue) {
-            ownersString = InputsUtil.getDefaultStringInput(inputValue, EMPTY);
+            ownersString = getDefaultStringInput(inputValue, EMPTY);
             return this;
         }
 
@@ -139,7 +157,7 @@ public class ImageInputs {
         }
 
         public Builder withIsPublic(String inputValue) {
-            isPublic = InputsUtil.getRelevantBooleanString(inputValue);
+            isPublic = getRelevantBooleanString(inputValue);
             return this;
         }
 
@@ -154,7 +172,7 @@ public class ImageInputs {
         }
 
         public Builder withImageNoReboot(String inputValue) {
-            imageNoReboot = InputsUtil.getEnforcedBooleanCondition(inputValue, true);
+            imageNoReboot = getEnforcedBooleanCondition(inputValue, true);
             return this;
         }
     }

@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.amazon.factory;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
@@ -39,6 +54,8 @@ class Ec2QueryParamsMapBuilder {
                 return new TagUtils().getCreateTagsQueryParamsMap(wrapper);
             case CREATE_VOLUME:
                 return new VolumeUtils().getCreateVolumeQueryParamsMap(wrapper);
+            case CREATE_VPC:
+                return new NetworkUtils().getCreateVpcQueryParamsMap(wrapper);
             case DELETE_NETWORK_INTERFACE:
                 return new NetworkUtils().getDeleteNetworkInterfaceQueryParamsMap(wrapper);
             case DELETE_SNAPSHOT:
@@ -47,6 +64,8 @@ class Ec2QueryParamsMapBuilder {
                 return new NetworkUtils().getDeleteSubnetQueryParamsMap(wrapper);
             case DELETE_VOLUME:
                 return new VolumeUtils().getDeleteVolumeQueryParamsMap(wrapper);
+            case DELETE_VPC:
+                return new NetworkUtils().getDeleteVpcQueryParamsMap(wrapper);
             case DESCRIBE_AVAILABILITY_ZONES:
                 return new RegionUtils().getDescribeAvailabilityZonesQueryParamsMap(wrapper);
             case DESCRIBE_IMAGES:
@@ -55,8 +74,14 @@ class Ec2QueryParamsMapBuilder {
                 return new ImageUtils().getDescribeImageAttributeQueryParamsMap(wrapper);
             case DESCRIBE_INSTANCES:
                 return new InstanceUtils().getDescribeInstancesQueryParamsMap(wrapper);
+            case DESCRIBE_NETWORK_INTERFACES:
+                return new NetworkUtils().getDescribeNetworkInterfacesQueryParamsMap(wrapper);
             case DESCRIBE_REGIONS:
                 return new RegionUtils().getDescribeRegionsQueryParamsMap(wrapper);
+            case DESCRIBE_TAGS:
+                return new TagUtils().getDescribeTagsQueryParamsMap(wrapper);
+            case DESCRIBE_VOLUMES:
+                return new VolumeUtils().getDescribeVolumesQueryParamsMap(wrapper);
             case DEREGISTER_IMAGE:
                 return new ImageUtils().getDeregisterImageQueryParamsMap(wrapper);
             case DETACH_NETWORK_INTERFACE:

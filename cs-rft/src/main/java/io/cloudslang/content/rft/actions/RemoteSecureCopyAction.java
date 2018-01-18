@@ -1,12 +1,17 @@
-/*******************************************************************************
- * (c) Copyright 2014 Hewlett-Packard Development Company, L.P.
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- *******************************************************************************/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package io.cloudslang.content.rft.actions;
 
@@ -51,6 +56,8 @@ public class RemoteSecureCopyAction {
      * @param knownHostsPolicy The policy used for managing known_hosts file. Valid values: allow, strict, add. Default value: strict
      * @param knownHostsPath The path to the known hosts file.
      * @param timeout Time in milliseconds to wait for the command to complete. Default value is 90000 (90 seconds)
+     * @param proxyHost The HTTP proxy host
+     * @param proxyPort The HTTP proxy port
      *
      * @return - a map containing the output of the operation. Keys present in the map are:
      *     <br><b>returnResult</b> - The primary output.
@@ -85,7 +92,9 @@ public class RemoteSecureCopyAction {
             @Param(Constants.InputNames.DESTINATION_PRIVATE_KEY_FILE) String destinationPrivateKeyFile,
             @Param(Constants.InputNames.KNOWN_HOSTS_POLICY) String knownHostsPolicy,
             @Param(Constants.InputNames.KNOWN_HOSTS_PATH) String knownHostsPath,
-            @Param(Constants.InputNames.TIMEOUT) String timeout) {
+            @Param(Constants.InputNames.TIMEOUT) String timeout,
+            @Param(Constants.InputNames.PROXY_HOST) String proxyHost,
+            @Param(Constants.InputNames.PROXY_PORT) String proxyPort) {
 
         RemoteSecureCopyInputs remoteSecureCopyInputs = new RemoteSecureCopyInputs(sourcePath, destinationHost, destinationPath, destinationUsername);
         remoteSecureCopyInputs.setSrcHost(sourceHost);
@@ -99,6 +108,8 @@ public class RemoteSecureCopyAction {
         remoteSecureCopyInputs.setKnownHostsPolicy(knownHostsPolicy);
         remoteSecureCopyInputs.setKnownHostsPath(knownHostsPath);
         remoteSecureCopyInputs.setTimeout(timeout);
+        remoteSecureCopyInputs.setProxyHost(proxyHost);
+        remoteSecureCopyInputs.setProxyPort(proxyPort);
 
         return new RemoteSecureCopyService().execute(remoteSecureCopyInputs);
 

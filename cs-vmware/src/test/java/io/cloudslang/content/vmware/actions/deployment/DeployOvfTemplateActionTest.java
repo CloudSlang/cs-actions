@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.vmware.actions.deployment;
 
 import io.cloudslang.content.constants.ReturnCodes;
@@ -60,8 +75,8 @@ public class DeployOvfTemplateActionTest {
         prepareForTests();
         Mockito.doNothing().when(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
 
-        Map<String, String> result = action.deployTemplate("", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES, OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES, "");
+        Map<String, String> result = action.deployTemplate("", "", "", "", "", "", "", "", "", "", "", "", "",
+                "", "", "", "", "", "", "", OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES, OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES, "", null);
 
         Mockito.verify(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
         assertEquals(ReturnCodes.SUCCESS, result.get(Outputs.RETURN_CODE));
@@ -77,8 +92,8 @@ public class DeployOvfTemplateActionTest {
         prepareForTests();
         Mockito.doThrow(new Exception(OPERATION_FAILED)).when(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
 
-        Map<String, String> result = action.deployTemplate("", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES, OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES, "");
+        Map<String, String> result = action.deployTemplate("", "", "", "", "", "", "", "", "", "", "", "", "",
+                "", "", "", "", "", "", "", OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES, OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES, "", null);
 
         Mockito.verify(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
         assertEquals(ReturnCodes.FAILURE, result.get(Outputs.RETURN_CODE));

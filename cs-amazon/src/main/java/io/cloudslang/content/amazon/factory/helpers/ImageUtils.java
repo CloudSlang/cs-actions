@@ -1,11 +1,23 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +36,10 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.USER_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getStringsList;
+import static io.cloudslang.content.amazon.utils.InputsUtil.putCollectionInQueryMap;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
+import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -66,7 +82,7 @@ public class ImageUtils {
 
     public Map<String, String> getDeregisterImageQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(IMAGE_ID, wrapper.getCustomInputs().getImageId());
 
         return queryParamsMap;
@@ -74,14 +90,14 @@ public class ImageUtils {
 
     public Map<String, String> getCreateImageQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
         queryParamsMap.put(INSTANCE_ID, wrapper.getCustomInputs().getInstanceId());
         queryParamsMap.put(NAME, wrapper.getImageInputs().getImageName());
 
-        InputsUtil.setOptionalMapEntry(queryParamsMap, DESCRIPTION, wrapper.getImageInputs().getDescription(),
+        setOptionalMapEntry(queryParamsMap, DESCRIPTION, wrapper.getImageInputs().getDescription(),
                 isNotBlank(wrapper.getImageInputs().getDescription()));
-        InputsUtil.setOptionalMapEntry(queryParamsMap, NO_REBOOT, valueOf(wrapper.getImageInputs().isImageNoReboot()),
+        setOptionalMapEntry(queryParamsMap, NO_REBOOT, valueOf(wrapper.getImageInputs().isImageNoReboot()),
                 isNotBlank(valueOf(wrapper.getImageInputs().isImageNoReboot())));
 
         return queryParamsMap;
@@ -89,7 +105,7 @@ public class ImageUtils {
 
     public Map<String, String> getDescribeImageAttributeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(IMAGE_ID, wrapper.getCustomInputs().getImageId());
         queryParamsMap.put(ATTRIBUTE, wrapper.getCustomInputs().getAttribute());
 
@@ -98,15 +114,14 @@ public class ImageUtils {
 
     public Map<String, String> getModifyImageAttributeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        List<String> userIds = InputsUtil.getStringsList(wrapper.getImageInputs().getUserIdsString(), wrapper.getCommonInputs().getDelimiter());
-        List<String> userGroupIds = InputsUtil.getStringsList(wrapper.getImageInputs().getUserGroupsString(), wrapper.getCommonInputs().getDelimiter());
+        List<String> userIds = getStringsList(wrapper.getImageInputs().getUserIdsString(), wrapper.getCommonInputs().getDelimiter());
+        List<String> userGroupIds = getStringsList(wrapper.getImageInputs().getUserGroupsString(), wrapper.getCommonInputs().getDelimiter());
 
         if (userIds == null && userGroupIds == null) {
             throw new RuntimeException(BOTH_PERMISSION_INPUTS_EMPTY);
         }
 
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(),
-                wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(ATTRIBUTE, wrapper.getCustomInputs().getAttribute());
         queryParamsMap.put(OPERATION_TYPE, wrapper.getCustomInputs().getOperationType());
         queryParamsMap.put(IMAGE_ID, wrapper.getCustomInputs().getImageId());
@@ -117,12 +132,12 @@ public class ImageUtils {
     }
 
     public Map<String, String> getDescribeImagesQueryParamsMap(InputsWrapper wrapper) {
-        List<String> imageIds = InputsUtil.getStringsList(wrapper.getImageInputs().getImageIdsString(), wrapper.getCommonInputs().getDelimiter());
-        List<String> ownerIds = InputsUtil.getStringsList(wrapper.getImageInputs().getOwnersString(), wrapper.getCommonInputs().getDelimiter());
+        List<String> imageIds = getStringsList(wrapper.getImageInputs().getImageIdsString(), wrapper.getCommonInputs().getDelimiter());
+        List<String> ownerIds = getStringsList(wrapper.getImageInputs().getOwnersString(), wrapper.getCommonInputs().getDelimiter());
 
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
-        InputsUtil.setOptionalMapEntry(queryParamsMap, EXECUTABLE_BY + DOT + ONE, valueOf(wrapper.getCustomInputs().getIdentityId()),
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        setOptionalMapEntry(queryParamsMap, EXECUTABLE_BY + DOT + ONE, valueOf(wrapper.getCustomInputs().getIdentityId()),
                 isNotBlank(valueOf(wrapper.getCustomInputs().getIdentityId())));
 
         int currentIndex = ONE;
@@ -164,17 +179,6 @@ public class ImageUtils {
         return queryParamsMap;
     }
 
-    private void putCollectionInQueryMap(Map<String, String> queryParamsMap, String paramName, Collection<String> set) {
-        if (set != null) {
-            int step;
-            Iterator<String> iterator = set.iterator();
-            for (step = ONE; iterator.hasNext(); step++) {
-                String curValue = iterator.next();
-                queryParamsMap.put(String.format("%s.%d", paramName, step), curValue);
-            }
-        }
-    }
-
     private int appendOptionalFilters(Map<String, String> queryParamsMap, String filterName, int filterIndex, String filterValue) {
         if (isNotBlank(filterValue)) {
             queryParamsMap.put(String.format(FILTER_NAME, filterIndex), filterName);
@@ -188,7 +192,7 @@ public class ImageUtils {
 
     public Map<String, String> getResetImageAttributeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
-        InputsUtil.setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         queryParamsMap.put(ATTRIBUTE, wrapper.getCustomInputs().getAttribute());
         queryParamsMap.put(IMAGE_ID, wrapper.getCustomInputs().getImageId());
 
