@@ -23,12 +23,10 @@ public class LocalPingDescriptions {
     public static class InputsDescription {
         public static final String IP_VERSION_INPUT_DESC = "IP version forced to the ping command executed on the target host. " +
                 "For Windows -4 or -6 parameters will be added.On Linux will be used ping or ping6. " +
-                "For Solaris -A inet or -A inet6 parameters will be added. " +
-                "For empty string the operation will decide what format to use if targetHost is an ip literal; if targetHost is given as a hostname default 'ping' command will be used on each operating system.\n" +
-                "Values: 4, 6, '' (empty string without quotes).\n" +
-                "Default: '' (empty string without quotes).";
-        public static final String PACKET_SIZE_INPUT_DESC = "The size of the ping packet";
-        public static final String TIMEOUT_INPUT_DESC = "The timeout in miliseconds for the Local Ping operation.\n Default: 90000.";
+                "For empty string the operation will decide what format to use if targetHost is an ip literal; if targetHost " +
+                "is given as a hostname default 'ping' command will be used on each operating system.";
+        public static final String PACKET_SIZE_INPUT_DESC = "The size of the ping packet.";
+        public static final String TIMEOUT_INPUT_DESC = "The timeout in milliseconds for the Local Ping operation.";
         public static final String TARGET_HOST_INPUT_DESC = "The target host to ping.";
         public static final String PACKETS_COUNT_INPUT_DESC = "The number of packets to send.";
     }
