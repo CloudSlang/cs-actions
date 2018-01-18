@@ -161,7 +161,6 @@ public class WSManUtils {
         return StringUtilities.join(escapedModules, COMMA_DELIMITER);
     }
 
-
     /**
      * Checks the scriptExitCode value of the script execution and fails the operation if exit code is different than zero.
      * @param resultMap
