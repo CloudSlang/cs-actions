@@ -47,4 +47,8 @@ public class Constants {
         public static final String SUCCESS = "success";
         public static final String FAILURE = "failure";
     }
+
+    public static final class Others {
+        public static final String ZERO_SCRIPT_EXIT_CODE = "0";
+    }
 }
