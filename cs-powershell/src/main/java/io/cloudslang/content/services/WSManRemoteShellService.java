@@ -188,7 +188,7 @@ public class WSManRemoteShellService {
      */
     private String createShell(CSHttpClient csHttpClient, HttpClientInputs httpClientInputs, WSManRequestInputs wsManRequestInputs)
             throws RuntimeException, IOException, URISyntaxException,
-            TransformerException, XPathExpressionException, SAXException, ParserConfigurationException {
+            XPathExpressionException, SAXException, ParserConfigurationException {
         String document = ResourceLoader.loadAsString(CREATE_SHELL_REQUEST_XML);
         document = createCreateShellRequestBody(document, httpClientInputs.getUrl(), String.valueOf(wsManRequestInputs.getMaxEnvelopeSize()),
                 wsManRequestInputs.getWinrmLocale(), String.valueOf(wsManRequestInputs.getOperationTimeout()));

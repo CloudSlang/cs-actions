@@ -56,5 +56,7 @@ public class Constants {
         public static final String IMPORT_MODULE_PARAMETER = "Import-Module";
         public static final String SINGLE_QUOTE = "'";
         public static final String ZERO_SCRIPT_EXIT_CODE = "0";
+        public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
+        public static final String CHANGEIT = "changeit";
     }
 }

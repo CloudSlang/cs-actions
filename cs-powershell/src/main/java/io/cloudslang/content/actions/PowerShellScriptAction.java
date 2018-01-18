@@ -51,6 +51,8 @@ import static io.cloudslang.content.utils.Constants.InputNames.MODULES;
 import static io.cloudslang.content.utils.Constants.InputNames.OPERATION_TIMEOUT;
 import static io.cloudslang.content.utils.Constants.InputNames.PROTOCOL;
 import static io.cloudslang.content.utils.Constants.InputNames.WINRM_LOCALE;
+import static io.cloudslang.content.utils.Constants.Others.CHANGEIT;
+import static io.cloudslang.content.utils.Constants.Others.DEFAULT_JAVA_KEYSTORE;
 import static io.cloudslang.content.utils.Constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_RESULT;
@@ -60,6 +62,7 @@ import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAIL
 import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCCESS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.WSManUtils.verifyScriptExecutionStatus;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by giloan on 3/26/2016.
