@@ -27,6 +27,7 @@ import io.cloudslang.content.utilities.services.localping.LocalPingService;
 
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OtherValues.EMPTY_STRING;
 import static io.cloudslang.content.utilities.entities.constants.Descriptions.OutputsDescription.EXCEPTION_DESC;
 import static io.cloudslang.content.utilities.entities.constants.Descriptions.OutputsDescription.RETURN_CODE_DESC;
 import static io.cloudslang.content.utilities.entities.constants.Descriptions.ResultsDescription.FAILURE_DESC;
@@ -103,7 +104,15 @@ public class LocalPing {
 
             return new LocalPingService().executePingCommand(localPingInputs);
         } catch (Exception e) {
-            return getFailureResultsMap(e);
+            Map<String, String> resultsMap = getFailureResultsMap(e);
+            resultsMap.put(PACKETS_SENT, EMPTY_STRING);
+            resultsMap.put(PACKETS_RECEIVED, EMPTY_STRING);
+            resultsMap.put(PERCENTAGE_PACKETS_LOST, EMPTY_STRING);
+            resultsMap.put(TRANSMISSION_TIME_MIN, EMPTY_STRING);
+            resultsMap.put(TRANSMISSION_TIME_AVG, EMPTY_STRING);
+            resultsMap.put(TRANSMISSION_TIME_MAX, EMPTY_STRING);
+
+            return resultsMap;
         }
     }
 }
