@@ -34,13 +34,13 @@ import static org.junit.Assert.assertEquals;
 
 public class LinuxPingCommandTest {
 
-    private static final String LINUX_COMMAND_OUTPUT = "PING 10.13.14.220 (10.13.14.220) 56(84) bytes of data.\n" +
-            "64 bytes from 10.13.14.220: icmp_seq=1 ttl=119 time=98.3 ms\n" +
-            "64 bytes from 10.13.14.220: icmp_seq=2 ttl=119 time=105 ms\n" +
-            "64 bytes from 10.13.14.220: icmp_seq=3 ttl=119 time=102 ms\n" +
-            "64 bytes from 10.13.14.220: icmp_seq=4 ttl=119 time=101 ms\n" +
+    private static final String LINUX_COMMAND_OUTPUT = "PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.\n" +
+            "64 bytes from 10.0.0.1: icmp_seq=1 ttl=119 time=98.3 ms\n" +
+            "64 bytes from 10.0.0.1: icmp_seq=2 ttl=119 time=105 ms\n" +
+            "64 bytes from 10.0.0.1: icmp_seq=3 ttl=119 time=102 ms\n" +
+            "64 bytes from 10.0.0.1: icmp_seq=4 ttl=119 time=101 ms\n" +
             "\n" +
-            "--- 10.13.14.220 ping statistics ---\n" +
+            "--- 10.0.0.1 ping statistics ---\n" +
             "4 packets transmitted, 4 received, 0% packet loss, time 3004ms\n" +
             "rtt min/avg/max/mdev = 98.366/102.086/105.476/2.530 ms\n";
 
@@ -50,7 +50,7 @@ public class LinuxPingCommandTest {
     @Test
     public void testCreateCommandSuccess() {
         LocalPingInputs localPingInputs = new LocalPingInputs.LocalPingInputsBuilder()
-                .targetHost("10.13.14.220")
+                .targetHost("10.0.0.1")
                 .packetCount("5")
                 .packetSize("100")
                 .timeout("30000")
@@ -59,13 +59,13 @@ public class LinuxPingCommandTest {
         LocalPingCommand linuxPingCommand = new LinuxPingCommand();
         String command = linuxPingCommand.createCommand(localPingInputs);
 
-        assertEquals("ping -w 30 -c 5 -s 100 10.13.14.220", command);
+        assertEquals("ping -w 30 -c 5 -s 100 10.0.0.1", command);
     }
 
     @Test
     public void testCreateCommandThrowsInvalidTimeoutException() {
         LocalPingInputs localPingInputs = new LocalPingInputs.LocalPingInputsBuilder()
-                .targetHost("10.13.14.220")
+                .targetHost("10.0.0.1")
                 .timeout("invalid")
                 .build();
 
@@ -78,7 +78,7 @@ public class LinuxPingCommandTest {
     @Test
     public void testCreateCommandThrowsInvalidPacketCountException() {
         LocalPingInputs localPingInputs = new LocalPingInputs.LocalPingInputsBuilder()
-                .targetHost("10.13.14.220")
+                .targetHost("10.0.0.1")
                 .packetCount("invalid")
                 .build();
 
@@ -91,7 +91,7 @@ public class LinuxPingCommandTest {
     @Test
     public void testCreateCommandThrowsInvalidPacketSizeException() {
         LocalPingInputs localPingInputs = new LocalPingInputs.LocalPingInputsBuilder()
-                .targetHost("10.13.14.220")
+                .targetHost("10.0.0.1")
                 .packetSize("invalid")
                 .build();
 

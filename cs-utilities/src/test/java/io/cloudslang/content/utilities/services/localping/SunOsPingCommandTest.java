@@ -34,13 +34,13 @@ import static org.junit.Assert.assertEquals;
 
 public class SunOsPingCommandTest {
 
-    private static final String SUN_OS_COMMAND_OUTPUT = "PING 10.13.14.220: 10 data bytes\n" +
-            "18 bytes from pab.emea.net (10.13.14.220): icmp_seq=0. time=186.036 ms\n" +
-            "18 bytes from pab.emea.net (10.13.14.220): icmp_seq=1. time=185.389 ms\n" +
-            "18 bytes from pab.emea.net (10.13.14.220): icmp_seq=2. time=186.500 ms\n" +
-            "18 bytes from pab.emea.net (10.13.14.220): icmp_seq=4. time=186.562 ms\n" +
+    private static final String SUN_OS_COMMAND_OUTPUT = "PING 10.0.0.1: 10 data bytes\n" +
+            "18 bytes from pab.emea.net (10.0.0.1): icmp_seq=0. time=186.036 ms\n" +
+            "18 bytes from pab.emea.net (10.0.0.1): icmp_seq=1. time=185.389 ms\n" +
+            "18 bytes from pab.emea.net (10.0.0.1): icmp_seq=2. time=186.500 ms\n" +
+            "18 bytes from pab.emea.net (10.0.0.1): icmp_seq=4. time=186.562 ms\n" +
             "\n" +
-            "----10.13.14.220 PING Statistics----\n" +
+            "----10.0.0.1 PING Statistics----\n" +
             "5 packets transmitted, 4 packets received, 20% packet loss\n" +
             "round-trip (ms)  min/avg/max/stddev = 185.389/186.122/186.562/0.542\n";
 
@@ -50,7 +50,7 @@ public class SunOsPingCommandTest {
     @Test
     public void testCreateCommandWithTimeout() {
         LocalPingInputs localPingInputs = new LocalPingInputs.LocalPingInputsBuilder()
-                .targetHost("10.13.14.220")
+                .targetHost("10.0.0.1")
                 .packetCount("5")
                 .packetSize("100")
                 .timeout("30000")
@@ -59,13 +59,13 @@ public class SunOsPingCommandTest {
         LocalPingCommand sunOsPingCommand = new SunOsPingCommand();
         String command = sunOsPingCommand.createCommand(localPingInputs);
 
-        assertEquals("ping 10.13.14.220 30", command);
+        assertEquals("ping 10.0.0.1 30", command);
     }
 
     @Test
     public void testCreateCommandWithOtherArgs() {
         LocalPingInputs localPingInputs = new LocalPingInputs.LocalPingInputsBuilder()
-                .targetHost("10.13.14.220")
+                .targetHost("10.0.0.1")
                 .packetCount("5")
                 .packetSize("100")
                 .build();
@@ -73,13 +73,13 @@ public class SunOsPingCommandTest {
         LocalPingCommand sunOsPingCommand = new SunOsPingCommand();
         String command = sunOsPingCommand.createCommand(localPingInputs);
 
-        assertEquals("ping -s 10.13.14.220 100 5", command);
+        assertEquals("ping -s 10.0.0.1 100 5", command);
     }
 
     @Test
     public void testCreateCommandThrowsInvalidTimeoutException() {
         LocalPingInputs localPingInputs = new LocalPingInputs.LocalPingInputsBuilder()
-                .targetHost("10.13.14.220")
+                .targetHost("10.0.0.1")
                 .timeout("invalid")
                 .build();
 
@@ -92,7 +92,7 @@ public class SunOsPingCommandTest {
     @Test
     public void testCreateCommandThrowsInvalidPacketCountException() {
         LocalPingInputs localPingInputs = new LocalPingInputs.LocalPingInputsBuilder()
-                .targetHost("10.13.14.220")
+                .targetHost("10.0.0.1")
                 .packetCount("invalid")
                 .build();
 
@@ -105,7 +105,7 @@ public class SunOsPingCommandTest {
     @Test
     public void testCreateCommandThrowsInvalidPacketSizeException() {
         LocalPingInputs localPingInputs = new LocalPingInputs.LocalPingInputsBuilder()
-                .targetHost("10.13.14.220")
+                .targetHost("10.0.0.1")
                 .packetSize("invalid")
                 .build();
 

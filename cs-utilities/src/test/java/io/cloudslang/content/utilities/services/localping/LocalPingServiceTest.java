@@ -51,7 +51,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({LocalPingService.class, CommandExecutor.class})
 public class LocalPingServiceTest {
 
-    private static final String DUMMY_IP = "10.14.15.220";
+    private static final String DUMMY_IP = "10.0.0.1";
     private static final String INVALID_IP = "1000.0.0.1";
     private static final String COMMAND_OUTPUT = "Reply from 127.0.0.1: bytes=32 time=190ms TTL=122\n" +
             "Reply from 127.0.0.1: bytes=32 time=191ms TTL=122\n" +

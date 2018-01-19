@@ -21,13 +21,13 @@ import static org.junit.Assert.assertEquals;
 
 public class CommandOutputParserTest {
 
-    private static final String LINUX_COMMAND_OUTPUT = "PING 10.13.14.220 (10.13.14.220) 56(84) bytes of data.\n" +
-            "64 bytes from 10.13.14.220: icmp_seq=1 ttl=119 time=91.8 ms\n" +
-            "64 bytes from 10.13.14.220: icmp_seq=2 ttl=119 time=91.7 ms\n" +
-            "64 bytes from 10.13.14.220: icmp_seq=3 ttl=119 time=91.7 ms\n" +
-            "64 bytes from 10.13.14.220: icmp_seq=4 ttl=119 time=91.6 ms\n" +
+    private static final String LINUX_COMMAND_OUTPUT = "PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.\n" +
+            "64 bytes from 10.0.0.1: icmp_seq=1 ttl=119 time=91.8 ms\n" +
+            "64 bytes from 10.0.0.1: icmp_seq=2 ttl=119 time=91.7 ms\n" +
+            "64 bytes from 10.0.0.1: icmp_seq=3 ttl=119 time=91.7 ms\n" +
+            "64 bytes from 10.0.0.1: icmp_seq=4 ttl=119 time=91.6 ms\n" +
             "\n" +
-            "--- 10.13.14.220 ping statistics ---\n" +
+            "--- 10.0.0.1 ping statistics ---\n" +
             "4 packets transmitted, 4 received, 0% packet loss, time 3005ms\n" +
             "rtt min/avg/max/mdev = 91.609/91.745/91.820/0.313 ms\n";
     private static final String SUN_OS_COMMAND_OUTPUT = "PING xyz: 56 data bytes\n" +
