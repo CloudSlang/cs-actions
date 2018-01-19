@@ -88,7 +88,7 @@ public class LocalPingServiceTest {
         mockStatic(CommandExecutor.class);
 
         when(executeCommand(anyString())).thenReturn(COMMAND_OUTPUT);
-        doReturn(WINDOWS).when(localPingServiceSpy).detectOsFamily(anyString());
+        doReturn(WINDOWS).when(localPingServiceSpy).detectLocalOsFamily();
 
         Map<String, String> resultsMap = localPingServiceSpy.executePingCommand(localPingInputs);
 
@@ -104,7 +104,7 @@ public class LocalPingServiceTest {
         mockStatic(CommandExecutor.class);
 
         when(executeCommand(anyString())).thenReturn(INVALID_COMMAND_OUTPUT);
-        doReturn(WINDOWS).when(localPingServiceSpy).detectOsFamily(anyString());
+        doReturn(WINDOWS).when(localPingServiceSpy).detectLocalOsFamily();
 
         Map<String, String> resultsMap = localPingServiceSpy.executePingCommand(localPingInputs);
 
@@ -126,7 +126,7 @@ public class LocalPingServiceTest {
         mockStatic(CommandExecutor.class);
 
         when(executeCommand(anyString())).thenReturn(COMMAND_OUTPUT);
-        doReturn(OTHER).when(localPingServiceSpy).detectOsFamily(anyString());
+        doReturn(OTHER).when(localPingServiceSpy).detectLocalOsFamily();
 
         expectedException.expect(RuntimeException.class);
         expectedException.expectMessage(UNABLE_TO_DETECT_LOCAL_OPERATING_SYSTEM);
@@ -143,7 +143,7 @@ public class LocalPingServiceTest {
         mockStatic(CommandExecutor.class);
 
         when(executeCommand(anyString())).thenReturn(COMMAND_OUTPUT);
-        doReturn(MAC_OS).when(localPingServiceSpy).detectOsFamily(anyString());
+        doReturn(MAC_OS).when(localPingServiceSpy).detectLocalOsFamily();
 
         expectedException.expect(RuntimeException.class);
         expectedException.expectMessage(format(UNSUPPORTED_OPERATING_SYSTEM_S, MAC_OS));

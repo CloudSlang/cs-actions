@@ -45,15 +45,14 @@ public class LocalPingService {
     private static final String IS_ALIVE = "is alive";
 
     public Map<String, String> executePingCommand(LocalPingInputs localPingInputs) throws IOException {
-        String osFamily = detectOsFamily(LOCALHOST);
+        final String osFamily = detectLocalOsFamily();
 
-        if (osFamily == null || osFamily.equalsIgnoreCase(OTHER)) {
+        if (isEmpty(osFamily) || osFamily.equalsIgnoreCase(OTHER)) {
             throw new RuntimeException(UNABLE_TO_DETECT_LOCAL_OPERATING_SYSTEM);
         }
 
         LocalPingCommand localPingCommand = getLocalPingCommand(osFamily);
-
-        String command = localPingCommand.createCommand(localPingInputs);
+        final String command = localPingCommand.createCommand(localPingInputs);
 
         Map<String, String> resultsMap = localPingCommand.parseOutput(executeCommand(command));
         if (pingSucceeded(resultsMap.get(RETURN_RESULT), resultsMap.get(PERCENTAGE_PACKETS_LOST))) {
@@ -67,11 +66,11 @@ public class LocalPingService {
         return resultsMap;
     }
 
-    String detectOsFamily(String host) {
+    String detectLocalOsFamily() {
         OsDetectorHelperService osDetectorHelperService = new OsDetectorHelperService();
         LocalOsDetectorService localOsDetectorService = new LocalOsDetectorService(osDetectorHelperService);
         OsDetectorInputs osDetectorInputs = new OsDetectorInputs.Builder()
-                .withHost(host)
+                .withHost(LOCALHOST)
                 .build();
 
         return osDetectorHelperService.resolveOsFamily(localOsDetectorService.detectOs(osDetectorInputs).getFamily());
