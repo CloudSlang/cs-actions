@@ -22,30 +22,30 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class WSManRequestInputs {
 
-    private String host;
-    private String port;
-    private String protocol;
-    private String username;
-    private String password;
-    private String authType;
-    private String kerberosConfFile;
-    private String kerberosLoginConfFile;
-    private String kerberosSkipPortForLookup;
-    private String proxyHost;
-    private String proxyPort;
-    private String proxyUsername;
-    private String proxyPassword;
-    private int maxEnvelopeSize;
-    private String trustAllRoots;
-    private String x509HostnameVerifier;
-    private String keystore;
-    private String keystorePassword;
-    private String trustKeystore;
-    private String trustPassword;
-    private String script;
-    private String modules;
-    private String winrmLocale;
-    private int operationTimeout;
+    private final String host;
+    private final String port;
+    private final String protocol;
+    private final String username;
+    private final String password;
+    private final String authType;
+    private final String kerberosConfFile;
+    private final String kerberosLoginConfFile;
+    private final String kerberosSkipPortForLookup;
+    private final String proxyHost;
+    private final String proxyPort;
+    private final String proxyUsername;
+    private final String proxyPassword;
+    private final int maxEnvelopeSize;
+    private final String trustAllRoots;
+    private final String x509HostnameVerifier;
+    private final String keystore;
+    private final String keystorePassword;
+    private final String trustKeystore;
+    private final String trustPassword;
+    private final String script;
+    private final String modules;
+    private final String winrmLocale;
+    private final int operationTimeout;
 
     public WSManRequestInputs(WSManRequestInputsBuilder builder) {
         this.host = builder.host;

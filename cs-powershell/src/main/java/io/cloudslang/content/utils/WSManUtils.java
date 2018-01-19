@@ -30,18 +30,10 @@ import java.util.Map;
 import java.util.UUID;
 
 import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
-import static io.cloudslang.content.utils.Constants.Others.ENCODED_COMMAND_PARAMETER;
-import static io.cloudslang.content.utils.Constants.Others.IMPORT_MODULE_PARAMETER;
-import static io.cloudslang.content.utils.Constants.Others.NON_INTERACTIVE_PARAMETER;
-import static io.cloudslang.content.utils.Constants.Others.POWERSHELL_SCRIPT_PREFIX;
-import static io.cloudslang.content.utils.Constants.Others.SINGLE_QUOTE;
-import static io.cloudslang.content.utils.Constants.Others.ZERO_SCRIPT_EXIT_CODE;
-import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.utils.Constants.OutputNames.SCRIPT_EXIT_CODE;
-import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAILURE;
-import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCCESS;
-import static org.apache.commons.lang3.StringUtils.LF;
-import static org.apache.commons.lang3.StringUtils.SPACE;
+import static io.cloudslang.content.utils.Constants.Others.*;
+import static io.cloudslang.content.utils.Constants.OutputNames.*;
+import static io.cloudslang.content.utils.Constants.ReturnCodes.*;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * Created by giloan on 3/29/2016.
