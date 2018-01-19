@@ -35,12 +35,12 @@ import static org.junit.Assert.assertEquals;
 public class SunOsPingCommandTest {
 
     private static final String SUN_OS_COMMAND_OUTPUT = "PING 10.13.14.220: 10 data bytes\n" +
-            "18 bytes from pab.emea.net (10.26.51.44): icmp_seq=0. time=186.036 ms\n" +
-            "18 bytes from pab.emea.net (10.26.51.44): icmp_seq=1. time=185.389 ms\n" +
-            "18 bytes from pab.emea.net (10.26.51.44): icmp_seq=2. time=186.500 ms\n" +
-            "18 bytes from pab.emea.net (10.26.51.44): icmp_seq=4. time=186.562 ms\n" +
+            "18 bytes from pab.emea.net (10.13.14.220): icmp_seq=0. time=186.036 ms\n" +
+            "18 bytes from pab.emea.net (10.13.14.220): icmp_seq=1. time=185.389 ms\n" +
+            "18 bytes from pab.emea.net (10.13.14.220): icmp_seq=2. time=186.500 ms\n" +
+            "18 bytes from pab.emea.net (10.13.14.220): icmp_seq=4. time=186.562 ms\n" +
             "\n" +
-            "----10.26.51.44 PING Statistics----\n" +
+            "----10.13.14.220 PING Statistics----\n" +
             "5 packets transmitted, 4 packets received, 20% packet loss\n" +
             "round-trip (ms)  min/avg/max/stddev = 185.389/186.122/186.562/0.542\n";
 

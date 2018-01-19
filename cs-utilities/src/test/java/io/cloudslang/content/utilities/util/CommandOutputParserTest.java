@@ -21,22 +21,22 @@ import static org.junit.Assert.assertEquals;
 
 public class CommandOutputParserTest {
 
-    private static final String LINUX_COMMAND_OUTPUT = "PING 10.14.14.141 (10.14.14.141) 56(84) bytes of data.\n" +
-            "64 bytes from 10.14.14.141: icmp_seq=1 ttl=119 time=91.8 ms\n" +
-            "64 bytes from 10.14.14.141: icmp_seq=2 ttl=119 time=91.7 ms\n" +
-            "64 bytes from 10.14.14.141: icmp_seq=3 ttl=119 time=91.7 ms\n" +
-            "64 bytes from 10.14.14.141: icmp_seq=4 ttl=119 time=91.6 ms\n" +
+    private static final String LINUX_COMMAND_OUTPUT = "PING 10.13.14.220 (10.13.14.220) 56(84) bytes of data.\n" +
+            "64 bytes from 10.13.14.220: icmp_seq=1 ttl=119 time=91.8 ms\n" +
+            "64 bytes from 10.13.14.220: icmp_seq=2 ttl=119 time=91.7 ms\n" +
+            "64 bytes from 10.13.14.220: icmp_seq=3 ttl=119 time=91.7 ms\n" +
+            "64 bytes from 10.13.14.220: icmp_seq=4 ttl=119 time=91.6 ms\n" +
             "\n" +
-            "--- 10.14.14.141 ping statistics ---\n" +
+            "--- 10.13.14.220 ping statistics ---\n" +
             "4 packets transmitted, 4 received, 0% packet loss, time 3005ms\n" +
             "rtt min/avg/max/mdev = 91.609/91.745/91.820/0.313 ms\n";
     private static final String SUN_OS_COMMAND_OUTPUT = "PING xyz: 56 data bytes\n" +
-            "64 bytes from xyz (4::114:a00:20ff:ab3d:83ed): icmp_seq=0. time=0.479 ms\n" +
-            "64 bytes from xyz (fec0::114:a00:20ff:ab3d:83ed): icmp_seq=1. time=0.843 ms\n" +
-            "64 bytes from xyz (4::114:a00:20ff:ab3d:83ed): icmp_seq=2. time=0.516 ms\n" +
-            "64 bytes from xyz (fec0::114:a00:20ff:ab3d:83ed): icmp_seq=3. time=4.943 ms\n" +
-            "64 bytes from xyz (4::114:a00:20ff:ab3d:83ed): icmp_seq=4. time=0.485 ms\n" +
-            "64 bytes from xyz (fec0::114:a00:20ff:ab3d:83ed): icmp_seq=5. time=2.201 ms\n" +
+            "64 bytes from xyz (4::390:a00:2018:ab3d:7jks): icmp_seq=0. time=0.479 ms\n" +
+            "64 bytes from xyz (4::390:a00:2018:ab3d:7jks): icmp_seq=1. time=0.843 ms\n" +
+            "64 bytes from xyz (4::390:a00:2018:ab3d:7jks): icmp_seq=2. time=0.516 ms\n" +
+            "64 bytes from xyz (4::390:a00:2018:ab3d:7jks): icmp_seq=3. time=4.943 ms\n" +
+            "64 bytes from xyz (4::390:a00:2018:ab3d:7jks): icmp_seq=4. time=0.485 ms\n" +
+            "64 bytes from xyz (4::390:a00:2018:ab3d:7jks): icmp_seq=5. time=2.201 ms\n" +
             "----xyz PING Statistics----     \n" +
             "6 packets transmitted, 6 packets received, 0% packet loss     \n" +
             "round-trip (ms)  min/avg/max/stddev = 0.479/1.583/4.943/1.823";
