@@ -14,21 +14,22 @@
  */
 package io.cloudslang.content.utilities.util;
 
+import static io.cloudslang.content.constants.OtherValues.EMPTY_STRING;
+
 public class CommandOutputParser {
 
     public static String extractValue(String output, String key) {
-        String value = "";
+        String value = EMPTY_STRING;
         int startIndex = output.indexOf(key);
 
         if (startIndex >= 0) {
             value = output.substring(startIndex + key.length());
         }
-
         return value;
     }
 
     public static String extractValue(String output, String key, String endTag) {
-        String value = "";
+        String value = EMPTY_STRING;
         int startIndex = output.indexOf(key);
         int valueStartIndex = startIndex + key.length();
 

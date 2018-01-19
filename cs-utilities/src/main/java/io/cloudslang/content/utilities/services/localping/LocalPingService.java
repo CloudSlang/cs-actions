@@ -23,10 +23,18 @@ import io.cloudslang.content.utilities.services.osdetector.OsDetectorHelperServi
 import java.io.IOException;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OtherValues.EMPTY_STRING;
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.HUNDRED_PERCENT_LOSS;
+import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.LOCALHOST;
+import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.OTHER;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.PERCENTAGE_PACKETS_LOST;
+import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.UNABLE_TO_DETECT_LOCAL_OPERATING_SYSTEM;
+import static io.cloudslang.content.utilities.services.localping.LocalPingCommandFactory.getLocalPingCommand;
 import static io.cloudslang.content.utilities.util.CommandExecutor.executeCommand;
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
@@ -34,9 +42,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
  */
 public class LocalPingService {
 
-    private static final String LOCALHOST = "127.0.0.1";
-    private static final String OTHER = "other";
-    private static final String UNABLE_TO_DETECT_LOCAL_OPERATING_SYSTEM = "Unable to detect local operating system.";
+    private static final String IS_ALIVE = "is alive";
 
     public Map<String, String> executePingCommand(LocalPingInputs localPingInputs) throws IOException {
         String osFamily = detectOsFamily(LOCALHOST);
@@ -45,32 +51,23 @@ public class LocalPingService {
             throw new RuntimeException(UNABLE_TO_DETECT_LOCAL_OPERATING_SYSTEM);
         }
 
-        LocalPingCommand localPingCommand = LocalPingCommandFactory.getLocalPingCommand(osFamily);
+        LocalPingCommand localPingCommand = getLocalPingCommand(osFamily);
 
         String command = localPingCommand.createCommand(localPingInputs);
 
         Map<String, String> resultsMap = localPingCommand.parseOutput(executeCommand(command));
-        if (pingSucceeded(resultsMap.get(PERCENTAGE_PACKETS_LOST))) {
+        if (pingSucceeded(resultsMap.get(RETURN_RESULT), resultsMap.get(PERCENTAGE_PACKETS_LOST))) {
             resultsMap.put(RETURN_CODE, ReturnCodes.SUCCESS);
+            resultsMap.put(EXCEPTION, EMPTY_STRING);
         } else {
             resultsMap.put(RETURN_CODE, ReturnCodes.FAILURE);
+            resultsMap.put(EXCEPTION, resultsMap.get(RETURN_RESULT));
         }
 
         return resultsMap;
     }
 
-    private boolean pingSucceeded(String percentageLost) {
-        boolean succeeded = true;
-        if (isEmpty(percentageLost)) {
-            succeeded = false;
-        } else if (percentageLost.equalsIgnoreCase(HUNDRED_PERCENT_LOSS)) {
-            succeeded = false;
-        }
-
-        return succeeded;
-    }
-
-    private String detectOsFamily(String host) {
+    String detectOsFamily(String host) {
         OsDetectorHelperService osDetectorHelperService = new OsDetectorHelperService();
         LocalOsDetectorService localOsDetectorService = new LocalOsDetectorService(osDetectorHelperService);
         OsDetectorInputs osDetectorInputs = new OsDetectorInputs.Builder()
@@ -78,5 +75,18 @@ public class LocalPingService {
                 .build();
 
         return osDetectorHelperService.resolveOsFamily(localOsDetectorService.detectOs(osDetectorInputs).getFamily());
+    }
+
+    private boolean pingSucceeded(String commandOutput, String percentageLost) {
+        boolean succeeded = true;
+        if (isEmpty(percentageLost) || percentageLost.equalsIgnoreCase(HUNDRED_PERCENT_LOSS)) {
+            succeeded = false;
+        }
+        //Applicable for SunOs systems
+        if (containsIgnoreCase(commandOutput, IS_ALIVE)) {
+            succeeded = true;
+        }
+
+        return succeeded;
     }
 }

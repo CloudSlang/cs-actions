@@ -34,6 +34,8 @@ import static io.cloudslang.content.utilities.entities.constants.LocalPingConsta
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.TRANSMISSION_TIME_MAX;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.TRANSMISSION_TIME_MIN;
 import static io.cloudslang.content.utilities.util.CommandOutputParser.extractValue;
+import static io.cloudslang.content.utils.NumberUtilities.isValidInt;
+import static io.cloudslang.content.utils.NumberUtilities.isValidLong;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -60,9 +62,7 @@ public class WindowsPingCommand implements LocalPingCommand {
 
         String timeout = localPingInputs.getTimeout();
         if (isNotEmpty(timeout)) {
-            try {
-                Long.parseLong(timeout);
-            } catch (NumberFormatException nfe) {
+            if (!isValidLong(timeout)) {
                 throw new RuntimeException(TIMEOUT_SHOULD_HAVE_A_NUMERIC_VALUE);
             }
             command.append(format("-w %s ", timeout));
@@ -70,9 +70,7 @@ public class WindowsPingCommand implements LocalPingCommand {
 
         String packetCount = localPingInputs.getPacketCount();
         if (isNotEmpty(packetCount)) {
-            try {
-                Long.parseLong(packetCount);
-            } catch (NumberFormatException nfe) {
+            if (!isValidLong(packetCount)) {
                 throw new RuntimeException(PACKET_COUNT_SHOULD_HAVE_A_NUMERIC_VALUE);
             }
             command.append(format("-n %s ", packetCount));
@@ -80,9 +78,7 @@ public class WindowsPingCommand implements LocalPingCommand {
 
         String packetSize = localPingInputs.getPacketSize();
         if (isNotEmpty(packetSize)) {
-            try {
-                Integer.parseInt(packetSize);
-            } catch (NumberFormatException nfe) {
+            if (!isValidInt(packetSize)) {
                 throw new RuntimeException(PACKET_SIZE_SHOULD_HAVE_A_NUMERIC_VALUE);
             }
             command.append(format("-l %s ", packetSize));

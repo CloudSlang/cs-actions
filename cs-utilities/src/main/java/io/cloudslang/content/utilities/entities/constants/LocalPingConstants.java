@@ -19,9 +19,9 @@ package io.cloudslang.content.utilities.entities.constants;
  */
 public class LocalPingConstants {
     public static final String INVALID_ARGUMENT_IP_VERSION = "Invalid argument found. IpVersion does not support argument:%s. Supported arguments are: '', '4', '6'";
-    public static final String TIMEOUT_SHOULD_HAVE_A_NUMERIC_VALUE = "Timeout should have a numeric value.";
-    public static final String PACKET_COUNT_SHOULD_HAVE_A_NUMERIC_VALUE = "PacketCount should have a numeric value.";
-    public static final String PACKET_SIZE_SHOULD_HAVE_A_NUMERIC_VALUE = "PacketSize should have a numeric value.";
+    public static final String TIMEOUT_SHOULD_HAVE_A_NUMERIC_VALUE = "Timeout should have a numerical value.";
+    public static final String PACKET_COUNT_SHOULD_HAVE_A_NUMERIC_VALUE = "PacketCount should have a numerical value.";
+    public static final String PACKET_SIZE_SHOULD_HAVE_A_NUMERIC_VALUE = "PacketSize should have a numerical value.";
     public static final int DEFAULT_PACKET_SIZE = 56;
     public static final int DEFAULT_PACKET_COUNT = 4;
     public static final String PACKETS_SENT = "packetsSent";
@@ -41,4 +41,11 @@ public class LocalPingConstants {
     public static final String LOCAL_PING_OPERATION_NAME = "Local Ping";
     public static final String IP_VERSION_6 = "6";
     public static final String IP_VERSION_4 = "4";
+    public static final String WINDOWS = "Windows";
+    public static final String LINUX = "Linux";
+    public static final String SUN_OS = "SunOS";
+    public static final String LOCALHOST = "127.0.0.1";
+    public static final String OTHER = "other";
+    public static final String UNABLE_TO_DETECT_LOCAL_OPERATING_SYSTEM = "Unable to detect local operating system.";
+    public static final String UNSUPPORTED_OPERATING_SYSTEM_S = "Unsupported operating system %s";
 }

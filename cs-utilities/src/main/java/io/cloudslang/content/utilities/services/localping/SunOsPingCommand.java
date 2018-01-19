@@ -31,11 +31,16 @@ import static io.cloudslang.content.utilities.entities.constants.LocalPingConsta
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.PACKET_SIZE_SHOULD_HAVE_A_NUMERIC_VALUE;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.PERCENTAGE_PACKETS_LOST;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.SLASH;
+import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.TIMEOUT_SHOULD_HAVE_A_NUMERIC_VALUE;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.TRANSMISSION_TIME_AVG;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.TRANSMISSION_TIME_MAX;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.TRANSMISSION_TIME_MIN;
 import static io.cloudslang.content.utilities.util.CommandOutputParser.extractValue;
+import static io.cloudslang.content.utils.NumberUtilities.isValidInt;
+import static io.cloudslang.content.utils.NumberUtilities.isValidLong;
+import static java.lang.Long.parseLong;
 import static java.lang.String.format;
+import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
@@ -46,41 +51,53 @@ public class SunOsPingCommand implements LocalPingCommand {
     @Override
     public String createCommand(LocalPingInputs localPingInputs) {
         StringBuilder command = new StringBuilder();
-        command.append(format("ping -s %s ", localPingInputs.getTargetHost()));
+        command.append("ping ");
 
-        String ipVersion = localPingInputs.getIpVersion();
-        if (isNotEmpty(ipVersion)) {
-            if (ipVersion.equals(IP_VERSION_6)) {
-                command.append("-A inet6 ");
-            } else if (ipVersion.equals(IP_VERSION_4)) {
-                command.append("-A inet ");
+        String timeout = localPingInputs.getTimeout();
+        if (isNotEmpty(timeout)) {
+            if (!isValidLong(timeout)) {
+                throw new RuntimeException(TIMEOUT_SHOULD_HAVE_A_NUMERIC_VALUE);
+            }
+
+            //transform timeout value from milliseconds to seconds
+            Long timeoutValue = parseLong(timeout) / 1000;
+
+            command.append(localPingInputs.getTargetHost())
+                    .append(" ")
+                    .append(valueOf(timeoutValue));
+        } else {
+            String ipVersion = localPingInputs.getIpVersion();
+            if (isNotEmpty(ipVersion)) {
+                if (ipVersion.equals(IP_VERSION_6)) {
+                    command.append("-A inet6 ");
+                } else if (ipVersion.equals(IP_VERSION_4)) {
+                    command.append("-A inet ");
+                } else {
+                    throw new IllegalArgumentException(format(INVALID_ARGUMENT_IP_VERSION, ipVersion));
+                }
+            }
+
+            command.append(format("-s %s", localPingInputs.getTargetHost()));
+
+            String packetSize = localPingInputs.getPacketSize();
+            if (isNotEmpty(packetSize)) {
+                if (!isValidInt(packetSize)) {
+                    throw new RuntimeException(PACKET_SIZE_SHOULD_HAVE_A_NUMERIC_VALUE);
+                }
+                command.append(format(" %s ", packetSize));
             } else {
-                throw new IllegalArgumentException(format(INVALID_ARGUMENT_IP_VERSION, ipVersion));
+                command.append(format(" %s ", DEFAULT_PACKET_SIZE));
             }
-        }
 
-        String packetSize = localPingInputs.getPacketSize();
-        if (isNotEmpty(packetSize)) {
-            try {
-                Integer.parseInt(packetSize);
-            } catch (NumberFormatException nfe) {
-                throw new RuntimeException(PACKET_SIZE_SHOULD_HAVE_A_NUMERIC_VALUE);
+            String packetCount = localPingInputs.getPacketCount();
+            if (isNotEmpty(packetCount)) {
+                if (!isValidLong(packetCount)) {
+                    throw new RuntimeException(PACKET_COUNT_SHOULD_HAVE_A_NUMERIC_VALUE);
+                }
+                command.append(format("%s", packetCount));
+            } else {
+                command.append(format("%s", DEFAULT_PACKET_COUNT));
             }
-            command.append(format(" %s ", packetSize));
-        } else {
-            command.append(format(" %s ", DEFAULT_PACKET_SIZE));
-        }
-
-        String packetCount = localPingInputs.getPacketCount();
-        if (isNotEmpty(packetCount)) {
-            try {
-                Long.parseLong(packetCount);
-            } catch (NumberFormatException nfe) {
-                throw new RuntimeException(PACKET_COUNT_SHOULD_HAVE_A_NUMERIC_VALUE);
-            }
-            command.append(format(" %s ", packetCount));
-        } else {
-            command.append(format(" %s ", DEFAULT_PACKET_COUNT));
         }
 
         return command.toString();
@@ -100,8 +117,9 @@ public class SunOsPingCommand implements LocalPingCommand {
         String[] roundTripTime = minMaxAvg.split(SLASH);
 
         resultMap.put(TRANSMISSION_TIME_MIN, roundTripTime[0]);
-        resultMap.put(TRANSMISSION_TIME_MAX, roundTripTime[1]);
-        resultMap.put(TRANSMISSION_TIME_AVG, roundTripTime[2]);
+        resultMap.put(TRANSMISSION_TIME_AVG, roundTripTime[1]);
+        resultMap.put(TRANSMISSION_TIME_MAX, roundTripTime[2]);
+
 
         return resultMap;
     }

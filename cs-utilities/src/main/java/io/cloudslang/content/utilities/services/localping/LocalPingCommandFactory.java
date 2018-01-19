@@ -14,17 +14,16 @@
  */
 package io.cloudslang.content.utilities.services.localping;
 
+import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.LINUX;
+import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.SUN_OS;
+import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.UNSUPPORTED_OPERATING_SYSTEM_S;
+import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.WINDOWS;
 import static java.lang.String.format;
 
 /**
  * Created by pinteae on 1/11/2018.
  */
 public class LocalPingCommandFactory {
-
-    private static final String UNSUPPORTED_OPERATING_SYSTEM_S = "Unsupported operating system %s";
-    private static final String WINDOWS = "Windows";
-    private static final String LINUX = "Linux";
-    private static final String SUN_OS = "SunOS";
 
     public static LocalPingCommand getLocalPingCommand(String osFamily) {
         switch (osFamily) {

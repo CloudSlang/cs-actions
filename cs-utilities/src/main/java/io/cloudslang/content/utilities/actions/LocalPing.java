@@ -86,10 +86,10 @@ public class LocalPing {
             }
     )
     public Map<String, String> execute(@Param(value = TARGET_HOST, required = true, description = TARGET_HOST_INPUT_DESC) String targetHost,
-                                       @Param(value = IP_VERSION, description = IP_VERSION_INPUT_DESC) String ipVersion,
                                        @Param(value = PACKET_COUNT, description = PACKETS_COUNT_INPUT_DESC) String packetCount,
                                        @Param(value = PACKET_SIZE, description = PACKET_SIZE_INPUT_DESC) String packetSize,
-                                       @Param(value = TIMEOUT, description = TIMEOUT_INPUT_DESC) String timeout) {
+                                       @Param(value = TIMEOUT, description = TIMEOUT_INPUT_DESC) String timeout,
+                                       @Param(value = IP_VERSION, description = IP_VERSION_INPUT_DESC) String ipVersion) {
         try {
             String targetIpAddress = getByName(targetHost).getHostAddress();
 
