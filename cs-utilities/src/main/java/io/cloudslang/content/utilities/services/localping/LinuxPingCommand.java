@@ -52,8 +52,8 @@ public class LinuxPingCommand implements LocalPingCommand {
     @Override
     public String createCommand(LocalPingInputs localPingInputs) {
         StringBuilder command = new StringBuilder();
-        String targetHost = localPingInputs.getTargetHost();
-        String ipVersion = localPingInputs.getIpVersion();
+        final String targetHost = localPingInputs.getTargetHost();
+        final String ipVersion = localPingInputs.getIpVersion();
 
         if (isEmpty(ipVersion)) {
             if (InetAddressValidator.getInstance().isValidInet6Address(targetHost)) {
@@ -71,7 +71,7 @@ public class LinuxPingCommand implements LocalPingCommand {
             }
         }
 
-        String timeout = localPingInputs.getTimeout();
+        final String timeout = localPingInputs.getTimeout();
         if (isNotEmpty(timeout)) {
             if (!isValidLong(timeout)) {
                 throw new RuntimeException(TIMEOUT_SHOULD_HAVE_A_NUMERIC_VALUE);
@@ -81,7 +81,7 @@ public class LinuxPingCommand implements LocalPingCommand {
             command.append(format("-w %s ", valueOf(timeoutValue)));
         }
 
-        String packetCount = localPingInputs.getPacketCount();
+        final String packetCount = localPingInputs.getPacketCount();
         if (isNotEmpty(packetCount)) {
             if (!isValidLong(packetCount)) {
                 throw new RuntimeException(PACKET_COUNT_SHOULD_HAVE_A_NUMERIC_VALUE);
@@ -91,7 +91,7 @@ public class LinuxPingCommand implements LocalPingCommand {
             command.append(format("-c %s ", DEFAULT_PACKET_COUNT));
         }
 
-        String packetSize = localPingInputs.getPacketSize();
+        final String packetSize = localPingInputs.getPacketSize();
         if (isNotEmpty(packetSize)) {
             if (!isValidInt(packetSize)) {
                 throw new RuntimeException(PACKET_SIZE_SHOULD_HAVE_A_NUMERIC_VALUE);

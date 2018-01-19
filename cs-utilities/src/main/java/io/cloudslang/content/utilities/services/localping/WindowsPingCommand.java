@@ -49,7 +49,7 @@ public class WindowsPingCommand implements LocalPingCommand {
         StringBuilder command = new StringBuilder();
         command.append("ping ");
 
-        String ipVersion = localPingInputs.getIpVersion();
+        final String ipVersion = localPingInputs.getIpVersion();
         if (isNotEmpty(ipVersion)) {
             if (ipVersion.equals(IP_VERSION_6)) {
                 command.append("-6 ");
@@ -60,7 +60,7 @@ public class WindowsPingCommand implements LocalPingCommand {
             }
         }
 
-        String timeout = localPingInputs.getTimeout();
+        final String timeout = localPingInputs.getTimeout();
         if (isNotEmpty(timeout)) {
             if (!isValidLong(timeout)) {
                 throw new RuntimeException(TIMEOUT_SHOULD_HAVE_A_NUMERIC_VALUE);
@@ -68,7 +68,7 @@ public class WindowsPingCommand implements LocalPingCommand {
             command.append(format("-w %s ", timeout));
         }
 
-        String packetCount = localPingInputs.getPacketCount();
+        final String packetCount = localPingInputs.getPacketCount();
         if (isNotEmpty(packetCount)) {
             if (!isValidLong(packetCount)) {
                 throw new RuntimeException(PACKET_COUNT_SHOULD_HAVE_A_NUMERIC_VALUE);
@@ -76,7 +76,7 @@ public class WindowsPingCommand implements LocalPingCommand {
             command.append(format("-n %s ", packetCount));
         }
 
-        String packetSize = localPingInputs.getPacketSize();
+        final String packetSize = localPingInputs.getPacketSize();
         if (isNotEmpty(packetSize)) {
             if (!isValidInt(packetSize)) {
                 throw new RuntimeException(PACKET_SIZE_SHOULD_HAVE_A_NUMERIC_VALUE);

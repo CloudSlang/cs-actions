@@ -53,20 +53,20 @@ public class SunOsPingCommand implements LocalPingCommand {
         StringBuilder command = new StringBuilder();
         command.append("ping ");
 
-        String timeout = localPingInputs.getTimeout();
+        final String timeout = localPingInputs.getTimeout();
         if (isNotEmpty(timeout)) {
             if (!isValidLong(timeout)) {
                 throw new RuntimeException(TIMEOUT_SHOULD_HAVE_A_NUMERIC_VALUE);
             }
 
             //transform timeout value from milliseconds to seconds
-            Long timeoutValue = parseLong(timeout) / 1000;
+            final Long timeoutValue = parseLong(timeout) / 1000;
 
             command.append(localPingInputs.getTargetHost())
                     .append(" ")
                     .append(valueOf(timeoutValue));
         } else {
-            String ipVersion = localPingInputs.getIpVersion();
+            final String ipVersion = localPingInputs.getIpVersion();
             if (isNotEmpty(ipVersion)) {
                 if (ipVersion.equals(IP_VERSION_6)) {
                     command.append("-A inet6 ");
@@ -79,7 +79,7 @@ public class SunOsPingCommand implements LocalPingCommand {
 
             command.append(format("-s %s", localPingInputs.getTargetHost()));
 
-            String packetSize = localPingInputs.getPacketSize();
+            final String packetSize = localPingInputs.getPacketSize();
             if (isNotEmpty(packetSize)) {
                 if (!isValidInt(packetSize)) {
                     throw new RuntimeException(PACKET_SIZE_SHOULD_HAVE_A_NUMERIC_VALUE);
@@ -89,7 +89,7 @@ public class SunOsPingCommand implements LocalPingCommand {
                 command.append(format(" %s ", DEFAULT_PACKET_SIZE));
             }
 
-            String packetCount = localPingInputs.getPacketCount();
+            final String packetCount = localPingInputs.getPacketCount();
             if (isNotEmpty(packetCount)) {
                 if (!isValidLong(packetCount)) {
                     throw new RuntimeException(PACKET_COUNT_SHOULD_HAVE_A_NUMERIC_VALUE);
@@ -112,14 +112,13 @@ public class SunOsPingCommand implements LocalPingCommand {
         resultMap.put(PACKETS_RECEIVED, extractValue(output, "packets transmitted, ", " packets received, "));
         resultMap.put(PERCENTAGE_PACKETS_LOST, extractValue(output, " received, ", "% packet loss"));
 
-        String minMaxAvg = extractValue(output, "round-trip (ms)  min/avg/max/stddev = ");
+        final String minMaxAvg = extractValue(output, "round-trip (ms)  min/avg/max/stddev = ");
 
-        String[] roundTripTime = minMaxAvg.split(SLASH);
+        final String[] roundTripTime = minMaxAvg.split(SLASH);
 
         resultMap.put(TRANSMISSION_TIME_MIN, roundTripTime[0]);
         resultMap.put(TRANSMISSION_TIME_AVG, roundTripTime[1]);
         resultMap.put(TRANSMISSION_TIME_MAX, roundTripTime[2]);
-
 
         return resultMap;
     }
