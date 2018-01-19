@@ -24,7 +24,7 @@ public class LocalPingInputs {
     private String timeout;
     private String ipVersion;
 
-    public LocalPingInputs(LocalPingInputsBuilder localPingInputsBuilder){
+    public LocalPingInputs(LocalPingInputsBuilder localPingInputsBuilder) {
         this.targetHost = localPingInputsBuilder.targetHost;
         this.packetSize = localPingInputsBuilder.packetSize;
         this.packetCount = localPingInputsBuilder.packetCount;
@@ -84,7 +84,7 @@ public class LocalPingInputs {
             return this;
         }
 
-        public LocalPingInputs build(){
+        public LocalPingInputs build() {
             return new LocalPingInputs(this);
         }
     }
