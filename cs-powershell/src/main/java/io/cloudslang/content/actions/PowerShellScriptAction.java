@@ -24,16 +24,14 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.utils.Constants;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.httpclient.HttpClientInputs.*;
 import static io.cloudslang.content.utils.Constants.InputNames.*;
+import static io.cloudslang.content.utils.Constants.Others.*;
 import static io.cloudslang.content.utils.Constants.OutputNames.*;
-import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAILURE;
-import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCCESS;
+import static io.cloudslang.content.utils.Constants.ReturnCodes.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.WSManUtils.verifyScriptExecutionStatus;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -42,10 +40,6 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  * Created by giloan on 3/26/2016.
  */
 public class PowerShellScriptAction {
-
-    private static final String ZERO_SCRIPT_EXIT_CODE = "0";
-    private static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
-    private static final String CHANGEIT = "changeit";
 
     /**
      * Executes a PowerShell script on a remote host.
@@ -90,6 +84,9 @@ public class PowerShellScriptAction {
      * @param maxEnvelopeSize      The maximum size of a SOAP packet in bytes for all stream content.
      *                             Default value is '153600'.
      * @param script               The PowerShell script that will be executed on the remote shell.
+     * @param modules              Add modules to the current session. The Import-Module cmdlet is used which adds one or more modules to the current session.
+     *                             The modules that you import must be installed on the local computer or a remote computer.
+     *                             To import a module, use the Name, Assembly, ModuleInfo, MinimumVersion and RequiredVersion parameters to identify the module to import.
      * @param winrmLocale          The WinRM locale to use.
      *                             Default value is 'en-US'.
      * @param operationTimeout     Defines the OperationTimeout value in seconds to indicate that the clients expect a response or a fault within the specified time.
@@ -131,10 +128,10 @@ public class PowerShellScriptAction {
             @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
             @Param(value = MAX_ENVELOP_SIZE) String maxEnvelopeSize,
             @Param(value = INPUT_SCRIPT, required = true) String script,
+            @Param(value = MODULES) String modules,
             @Param(value = WINRM_LOCALE) String winrmLocale,
             @Param(value = OPERATION_TIMEOUT) String operationTimeout
     ) {
-
         try {
             WSManRemoteShellService wsManRemoteShellService = new WSManRemoteShellService();
 
@@ -160,6 +157,7 @@ public class PowerShellScriptAction {
                     .withTrustKeystore(defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE))
                     .withTrustPassword(defaultIfEmpty(trustPassword, CHANGEIT))
                     .withScript(script)
+                    .withModules(modules)
                     .withWinrmLocale(winrmLocale)
                     .withOperationTimeout(operationTimeout)
                     .build();
