@@ -34,13 +34,13 @@ import static org.junit.Assert.assertEquals;
 
 public class WindowsPingCommandTest {
 
-    private static final String WINDOWS_COMMAND_OUTPUT = "Pinging OuzoCSA490.hpswlabs.adapps.hp.com [16.77.8.100] with 32 bytes of data:\n" +
-            "Reply from 16.77.8.100: bytes=32 time=185ms TTL=122\n" +
-            "Reply from 16.77.8.100: bytes=32 time=186ms TTL=122\n" +
-            "Reply from 16.77.8.100: bytes=32 time=185ms TTL=122\n" +
-            "Reply from 16.77.8.100: bytes=32 time=186ms TTL=122\n" +
+    private static final String WINDOWS_COMMAND_OUTPUT = "Pinging OuzoCSA490.hpswlabs.adapps.hp.com [10.13.14.220] with 32 bytes of data:\n" +
+            "Reply from 10.13.14.220: bytes=32 time=185ms TTL=122\n" +
+            "Reply from 10.13.14.220: bytes=32 time=186ms TTL=122\n" +
+            "Reply from 10.13.14.220: bytes=32 time=185ms TTL=122\n" +
+            "Reply from 10.13.14.220: bytes=32 time=186ms TTL=122\n" +
             "\n" +
-            "Ping statistics for 16.77.8.100:\n" +
+            "Ping statistics for 10.13.14.220:\n" +
             "    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),\n" +
             "Approximate round trip times in milli-seconds:\n" +
             "    Minimum = 185ms, Maximum = 186ms, Average = 185ms";
