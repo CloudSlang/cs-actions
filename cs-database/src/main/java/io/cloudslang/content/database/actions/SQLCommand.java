@@ -1,12 +1,18 @@
 /*
- * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
-*/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.database.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -24,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
@@ -37,6 +44,7 @@ import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlCommandInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static org.apache.commons.lang3.BooleanUtils.toBoolean;
 import static org.apache.commons.lang3.StringUtils.*;
 
 /**
@@ -57,11 +65,25 @@ public class SQLCommand {
      * @param databaseName              The name of the database.
      * @param authenticationType        The type of authentication used to access the database (applicable only to MSSQL type).
      *                                  Default: sql
-     *                                  Values: sql
-     *                                  Note: currently, the only valid value is sql, more are planed
+     *                                  Values: sql, windows
      * @param dbClass                   The classname of the JDBC driver to use.
+     *                                  Examples: "oracle.jdbc.driver.OracleDriver", "org.postgresql.Driver"
      * @param dbURL                     The url required to load up the driver and make your connection.
+     *                                  Examples: "jdbc:oracle:drivertype:@database", "jdbc:postgresql://host:port/database"
      * @param command                   The command to execute.
+     *                                  Example: "INSERT INTO table_name (column1, column2, column3, ...) VALUES (value1, value2, value3, ...)"
+     * @param trustAllRoots             Specifies whether to enable weak security over SSL/TSL. A certificate is trusted even if no trusted certification authority issued it.
+     *                                  Default value: false
+     *                                  Valid values: true, false
+     *                                  Note: If trustAllRoots is set to 'false', a trustStore and a trustStorePassword must be provided.
+     * @param trustStore                The pathname of the Java TrustStore file. This contains certificates from other parties that you expect to communicate with,
+     *                                  or from Certificate Authorities that you trust to identify other parties.
+     *                                  If the trustAllRoots input is set to 'true' this input is ignored.
+     * @param trustStorePassword        The password associated with the trustStore file.
+     * @param authLibraryPath           The path to the folder where sqljdbc_auth.dll is located. This path must be provided when using windows authentication.
+     *                                  Note: The sqljdbc_auth.dll can be found inside the sqljdbc driver. The driver can be downloaded from https://www.microsoft.com/en-us/download/details.aspx?id=11774.
+     *                                  The downloaded jar should be extracted and the library can be found in the 'auth' folder.
+     *                                  The path provided should be the path to the folder where the sqljdbc_auth.dll library is located, not the path to the file itself.
      * @param databasePoolingProperties Properties for database pooling configuration. Pooling is disabled by default.
      *                                  Default: db.pooling.enable=false
      *                                  Example: db.pooling.enable=true
@@ -87,8 +109,8 @@ public class SQLCommand {
             })
     public Map<String, String> execute(@Param(value = DB_SERVER_NAME, required = true) String dbServerName,
                                        @Param(value = DB_TYPE) String dbType,
-                                       @Param(value = USERNAME, required = true) String username,
-                                       @Param(value = PASSWORD, required = true, encrypted = true) String password,
+                                       @Param(value = USERNAME) String username,
+                                       @Param(value = PASSWORD, encrypted = true) String password,
                                        @Param(value = INSTANCE) String instance,
                                        @Param(value = DB_PORT) String dbPort,
                                        @Param(value = DATABASE_NAME, required = true) String databaseName,
@@ -96,25 +118,29 @@ public class SQLCommand {
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
                                        @Param(value = COMMAND, required = true) String command,
-//                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
-//                                       @Param(value = TRUST_STORE) String trustStore,
-//                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+                                       @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
+                                       @Param(value = TRUST_STORE) String trustStore,
+                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+                                       @Param(value = AUTH_LIBRARY_PATH) String authLibraryPath,
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
 
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
-//        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
+        username = defaultIfEmpty(username, EMPTY);
+        password = defaultIfEmpty(password, EMPTY);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
         resultSetType = defaultIfEmpty(resultSetType, TYPE_FORWARD_ONLY);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
-//        trustStore = defaultIfEmpty(trustStore, EMPTY);
-//        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+        trustStore = defaultIfEmpty(trustStore, EMPTY);
+        trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
+        authLibraryPath = defaultIfEmpty(authLibraryPath, EMPTY);
         instance = defaultIfEmpty(instance, EMPTY);
 
         final List<String> preInputsValidation = validateSqlCommandInputs(dbServerName, dbType, username, password, instance, dbPort,
-                databaseName, authenticationType, command, /*trustAllRoots,*/ resultSetType, resultSetConcurrency/*, trustStore,
-                trustStorePassword*/);
+                databaseName, authenticationType, command, trustAllRoots, resultSetType, resultSetConcurrency, trustStore,
+                trustStorePassword, authLibraryPath);
 
         if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
@@ -134,9 +160,10 @@ public class SQLCommand {
                     .dbClass(getOrDefaultDBClass(dbClass, dbType))
                     .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                     .sqlCommand(command)
-//                    .trustAllRoots(toBoolean(trustAllRoots))
-//                    .trustStore(trustStore)
-//                    .trustStorePassword(trustStorePassword)
+                    .trustAllRoots(toBoolean(trustAllRoots))
+                    .trustStore(trustStore)
+                    .trustStorePassword(trustStorePassword)
+                    .authLibraryPath(authLibraryPath)
                     .databasePoolingProperties(getOrDefaultDBPoolingProperties(databasePoolingProperties, EMPTY))
                     .resultSetType(getResultSetType(resultSetType))
                     .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
@@ -173,7 +200,5 @@ public class SQLCommand {
         }
 
     }
-
-
 
 }

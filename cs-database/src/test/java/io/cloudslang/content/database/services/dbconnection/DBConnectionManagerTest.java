@@ -1,12 +1,18 @@
 /*
- * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
-*/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.database.services.dbconnection;
 
 import com.mchange.v2.c3p0.PooledDataSource;
@@ -118,7 +124,7 @@ public class DBConnectionManagerTest {
         Connection connMock = mock(Connection.class);
         doReturn(connMock).when(dbcManagerSpy).getPooledConnection(any(DBType.class)
                 , any(String.class), any(String.class), any(String.class));
-        dbcManagerSpy.getConnection(DBType.DB2, DB_URL, DHARMA_USER, DHARMA_PASSWORD, getPoolingProperties());
+        dbcManagerSpy.getConnection(DBType.DB2, EMPTY_STRING, DB_URL, DHARMA_USER, DHARMA_PASSWORD, getPoolingProperties());
 
         doNothing().when(dbcManagerSpy).shutdownDbmsPools();
 
@@ -138,7 +144,7 @@ public class DBConnectionManagerTest {
 
         exception.expect(SQLException.class);
         exception.expectMessage("Failed to check out connection dbUrl is empty");
-        dbcManagerSpy.getConnection(aDbType, EMPTY_STRING, DHARMA_USER, DHARMA_PASSWORD, null);
+        dbcManagerSpy.getConnection(aDbType, EMPTY_STRING, EMPTY_STRING, DHARMA_USER, DHARMA_PASSWORD, null);
     }
 
     /**
@@ -152,7 +158,7 @@ public class DBConnectionManagerTest {
 
         exception.expect(SQLException.class);
         exception.expectMessage("Failed to check out connection,username is empty. dburl = " + DB_URL);
-        dbcManagerSpy.getConnection(aDbType, DB_URL, EMPTY_STRING, DHARMA_PASSWORD, null);
+        dbcManagerSpy.getConnection(aDbType, EMPTY_STRING, DB_URL, EMPTY_STRING, DHARMA_PASSWORD, null);
     }
 
     /**
@@ -167,7 +173,7 @@ public class DBConnectionManagerTest {
         exception.expect(SQLException.class);
         exception.expectMessage("Failed to check out connection, password is empty. username = "
                 + DHARMA_USER + " dbUrl = " + DB_URL);
-        dbcManagerSpy.getConnection(aDbType, DB_URL, DHARMA_USER, EMPTY_STRING, null);
+        dbcManagerSpy.getConnection(aDbType, EMPTY_STRING, DB_URL, DHARMA_USER, EMPTY_STRING, null);
     }
 
     /**
@@ -181,7 +187,7 @@ public class DBConnectionManagerTest {
 
         exception.expect(SQLException.class);
         exception.expectMessage("Failed to check out connection db type is null");
-        dbcManagerSpy.getConnection(null, DB_URL, DHARMA_USER, DHARMA_PASSWORD, getPoolingProperties());
+        dbcManagerSpy.getConnection(null, EMPTY_STRING, DB_URL, DHARMA_USER, DHARMA_PASSWORD, getPoolingProperties());
     }
 
     /**
@@ -197,7 +203,7 @@ public class DBConnectionManagerTest {
         doReturn(connMock).when(dbcManagerSpy).getPooledConnection(any(DBType.class)
                 , any(String.class), any(String.class), any(String.class));
 
-        Connection connection = dbcManagerSpy.getConnection(aDbType, DB_URL, DHARMA_USER, DHARMA_PASSWORD, getPoolingProperties());
+        Connection connection = dbcManagerSpy.getConnection(aDbType, EMPTY_STRING, DB_URL, DHARMA_USER, DHARMA_PASSWORD, getPoolingProperties());
         verify(dbcManagerSpy, times(1)).getPooledConnection(any(DBType.class)
                 , any(String.class), any(String.class), any(String.class));
         assertEquals(connMock, connection);
@@ -218,7 +224,7 @@ public class DBConnectionManagerTest {
         Connection connMock = mock(Connection.class);
         doReturn(connMock).when(dbcManagerSpy).getPlainConnection(anyString(), anyString(), anyString());
 
-        Connection connection = dbcManagerSpy.getConnection(aDbType, DB_URL, DHARMA_USER, DHARMA_PASSWORD, dbPoolingPropertiesMock);
+        Connection connection = dbcManagerSpy.getConnection(aDbType, EMPTY_STRING, DB_URL, DHARMA_USER, DHARMA_PASSWORD, dbPoolingPropertiesMock);
         verify(dbcManagerSpy, times(1)).getPlainConnection(anyString(), anyString(), anyString());
         assertEquals(connMock, connection);
     }
@@ -266,7 +272,7 @@ public class DBConnectionManagerTest {
         Connection connMock = mock(Connection.class);
         doReturn(connMock).when(dbcManagerSpy).getPooledConnection(any(DBType.class)
                 , any(String.class), any(String.class), any(String.class));
-        dbcManagerSpy.getConnection(DBType.DB2, DB_URL, DHARMA_USER, DHARMA_PASSWORD, getPoolingProperties());
+        dbcManagerSpy.getConnection(DBType.DB2, EMPTY_STRING, DB_URL, DHARMA_USER, DHARMA_PASSWORD, getPoolingProperties());
 
         dbcManagerSpy.shutdownDbmsPools();
         verify(dataSourceProviderMock, times(1)).closePooledDataSource(any(DataSource.class));

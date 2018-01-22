@@ -1,12 +1,18 @@
 /*
- * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
-*/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.database.constants;
 
 import io.cloudslang.content.constants.InputNames;
@@ -30,6 +36,7 @@ public class DBInputNames extends InputNames {
     public static final String TRUST_ALL_ROOTS = "trustAllRoots";
     public static final String TRUST_STORE = "trustStore";
     public static final String TRUST_STORE_PASSWORD = "trustStorePassword";
+    public static final String AUTH_LIBRARY_PATH = "authLibraryPath";
     public static final String DATABASE_POOLING_PROPERTIES = "databasePoolingProperties";
     public static final String RESULT_SET_TYPE = "resultSetType";
     public static final String RESULT_SET_CONCURRENCY = "resultSetConcurrency";

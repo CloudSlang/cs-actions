@@ -1,41 +1,52 @@
 /*
- * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
-*/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.Address;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.SQLInputs;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
-import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.database.constants.DBExceptionValues.INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL;
 import static io.cloudslang.content.database.constants.DBInputNames.INSTANCE;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.Constants.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.isValidAuthType;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
+import static org.apache.commons.lang3.StringUtils.join;
 
 /**
  * Created by victor on 13.01.2017.
  */
 public class MSSqlDatabase implements SqlDatabase {
-
     private List<String> supportedJdbcDrivers;
 
-    public static String addSslEncryptionToConnection(boolean trustAllRoots, String trustStore, String trustStorePassword, String dbUrlMSSQL) {
+    private static String addSslEncryptionToConnection(boolean trustAllRoots, String trustStore, String trustStorePassword, String dbUrlMSSQL) {
         final StringBuilder dbUrlBuilder = new StringBuilder(dbUrlMSSQL);
         dbUrlBuilder.append(SEMI_COLON)
                 .append(ENCRYPT)
@@ -53,11 +64,66 @@ public class MSSqlDatabase implements SqlDatabase {
         return dbUrlBuilder.toString();
     }
 
+    private static void loadWindowsAuthentication(String sqlJdbcAuthFilePath) {
+        validateLibraryPath(sqlJdbcAuthFilePath);
+        setJavaLibraryPath(sqlJdbcAuthFilePath);
+    }
+
+    private static void setJavaLibraryPath(String sqlJdbcAuthFilePath) {
+        String javaLibraryPath = System.getProperty(JAVA_LIBRARY_PATH);
+
+        if (StringUtils.isEmpty(javaLibraryPath)) {
+            javaLibraryPath = sqlJdbcAuthFilePath;
+        } else {
+            javaLibraryPath = javaLibraryPath.substring(0, javaLibraryPath.length() - 1) + sqlJdbcAuthFilePath + System.getProperty(PATH_SEPARATOR) + CURRENT_DIRECTORY_NOTATION;
+        }
+        System.setProperty(JAVA_LIBRARY_PATH, javaLibraryPath);
+
+        try {
+            Field sysPathsField = ClassLoader.class.getDeclaredField(SYS_PATHS);
+            sysPathsField.setAccessible(true);
+            sysPathsField.set(null, null);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(INACCESSIBLE_OR_INEXISTENT_SYS_PATHS_FIELD_EXCEPTION);
+        }
+    }
+
+    private static void validateLibraryPath(String sqlJdbcAuthLibraryPath) {
+        final List<String> exceptions = new ArrayList<>();
+
+        if (StringUtils.isEmpty(sqlJdbcAuthLibraryPath)) {
+            throw new RuntimeException(EMPTY_DRIVER_PATH_EXCEPTION);
+        }
+
+        final Path libraryPath = Paths.get(sqlJdbcAuthLibraryPath);
+
+        try {
+            if (!libraryPath.equals(libraryPath.toRealPath())) {
+                exceptions.add(SYMBOLIC_PATH_EXCEPTION);
+            }
+            if (!Files.isDirectory(libraryPath)) {
+                exceptions.add(INVALID_DIRECTORY_PATH_EXCEPTION);
+            }
+            if (!libraryPath.isAbsolute()) {
+                exceptions.add(DRIVER_PATH_NOT_ABSOLUTE_EXCEPTION);
+            }
+            if (!libraryPath.equals(libraryPath.normalize())) {
+                exceptions.add(NOT_THE_SHORTEST_PATH_EXCEPTION);
+            }
+        } catch (IOException e) {
+            exceptions.add(INVALID_PATH);
+        } finally {
+            if (exceptions.size() != 0) {
+                throw new RuntimeException(join(exceptions, NEW_LINE));
+            }
+        }
+    }
+
     private void initializeJdbcDrivers() {
         supportedJdbcDrivers = Arrays.asList(SQLSERVER_JDBC_DRIVER, JTDS_JDBC_DRIVER);
     }
 
-    private void loadJdbcDriver(String dbClass) throws ClassNotFoundException {
+    private void loadJdbcDriver(String dbClass, final String authenticationType, final String sqlJdbcAuthFilePath) throws ClassNotFoundException {
         boolean driverFound = false;
         initializeJdbcDrivers();
         for (String driver : supportedJdbcDrivers) {
@@ -67,6 +133,9 @@ public class MSSqlDatabase implements SqlDatabase {
         }
         if (driverFound) {
             Class.forName(dbClass);
+            if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)) {
+                loadWindowsAuthentication(sqlJdbcAuthFilePath);
+            }
         } else {
             throw new RuntimeException("The driver provided is not supported.");
         }
@@ -87,7 +156,7 @@ public class MSSqlDatabase implements SqlDatabase {
             }
 
 
-            loadJdbcDriver(sqlInputs.getDbClass());
+            loadJdbcDriver(sqlInputs.getDbClass(), sqlInputs.getAuthenticationType(), sqlInputs.getAuthLibraryPath());
 
             String host;
 
@@ -117,7 +186,7 @@ public class MSSqlDatabase implements SqlDatabase {
                             .append(sqlInputs.getInstance());
                 }
                 if (AUTH_WINDOWS.equalsIgnoreCase(sqlInputs.getAuthenticationType())) {
-                    dbUrlMSSQL.append(SEMI_COLON + INTEGRATED_SECURITY + EQUALS + TRUE);
+                    dbUrlMSSQL.append(SEMI_COLON + INTEGRATED_SECURITY + EQUALS).append(TRUE);
                 }
                 final String connectionString = addSslEncryptionToConnection(sqlInputs.isTrustAllRoots(), sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), dbUrlMSSQL.toString());
 //                sqlInputs.getDbUrls().add(connectionString);

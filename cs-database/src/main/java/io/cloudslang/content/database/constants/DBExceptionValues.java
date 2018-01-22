@@ -1,12 +1,18 @@
 /*
- * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
-*/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.database.constants;
 
 import io.cloudslang.content.constants.ExceptionValues;
@@ -18,6 +24,8 @@ public class DBExceptionValues extends ExceptionValues {
     public static final String INVALID_IGNORE_CASE = "The value \"%s\" is an invalid value for ignoreCase input.";
     public static final String INVALID_AUTH_TYPE = "The authentication type input \"%s\" is not valid authentication method.";
     public static final String INVALID_AUTH_TYPE_WINDOWS = "Windows authentication can only be used with MSSQL!";
+    public static final String INVALID_AUTH_LIBRARY_DIRECTORY = "When using Windows authentication, a full path to the directory containing the SQL JDBC auth driver must be provided.";
+    public static final String INVALID_SQL_JDBC_AUTH_DRIVER = "The auth library path doesn't contain the SQL JDBC auth driver.";
     public static final String INVALID_INSTANCE = "The instance input can only be used with MSSQL.";
     public static final String INVALID_NEGATIVE_TIMEOUT = "Timeout must be greater than zero!";
     public static final String INVALID_TIMEOUT = "Timeout has to be a positive integer!";

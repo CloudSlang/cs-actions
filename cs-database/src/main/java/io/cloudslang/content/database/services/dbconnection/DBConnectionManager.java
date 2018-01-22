@@ -1,12 +1,18 @@
 /*
- * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
-*/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.database.services.dbconnection;
 
 import com.mchange.v2.c3p0.PooledDataSource;
@@ -19,6 +25,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 
+import static io.cloudslang.content.database.constants.DBOtherValues.MSSQL_DB_TYPE;
+import static io.cloudslang.content.database.utils.Constants.AUTH_WINDOWS;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
@@ -158,18 +166,20 @@ public class DBConnectionManager {
      * @return a Connection to db
      * @throws SQLException
      */
-    public synchronized Connection getConnection(DBType aDbType, String aDbUrl, String aUsername, String aPassword, Properties properties)
+    public synchronized Connection getConnection(DBType aDbType, String aAuthType, String aDbUrl, String aUsername, String aPassword, Properties properties)
             throws SQLException {
         if (isEmpty(aDbUrl)) {
             throw new SQLException("Failed to check out connection dbUrl is empty");
         }
 
-        if (isEmpty(aUsername)) {
-            throw new SQLException("Failed to check out connection,username is empty. dburl = " + aDbUrl);
-        }
+        if (aDbType == null || !(MSSQL_DB_TYPE.equalsIgnoreCase(aDbType.toString()) && AUTH_WINDOWS.equalsIgnoreCase(aAuthType))) {
+            if (isEmpty(aUsername)) {
+                throw new SQLException("Failed to check out connection,username is empty. dburl = " + aDbUrl);
+            }
 
-        if (isEmpty(aPassword)) {
-            throw new SQLException("Failed to check out connection, password is empty. username = " + aUsername + " dbUrl = " + aDbUrl);
+            if (isEmpty(aPassword)) {
+                throw new SQLException("Failed to check out connection, password is empty. username = " + aUsername + " dbUrl = " + aDbUrl);
+            }
         }
 
         customizeDBConnectionManager(properties);

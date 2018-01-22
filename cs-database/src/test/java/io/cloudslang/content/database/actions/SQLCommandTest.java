@@ -1,12 +1,18 @@
 /*
- * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
-*/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.database.actions;
 
 import io.cloudslang.content.database.services.SQLCommandService;
@@ -44,10 +50,10 @@ public class SQLCommandTest {
 
     @Test
     public void execute() throws Exception {
-        final Map<String, String> resultMap = new SQLCommand().execute(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
-                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+        final Map<String, String> resultMap = new SQLCommand().execute(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
         assertThat(resultMap.get(RETURN_CODE), is(FAILURE));
-        assertThat(resultMap.get(RETURN_RESULT), is("dbServerName can't be empty\nusername input is empty.\npassword input is empty.\ndatabase input is empty.\ncommand input is empty."));
+        assertThat(resultMap.get(RETURN_RESULT), is("dbServerName can't be empty\nusername input is empty.\npassword input is empty.\ndatabase input is empty.\ntrustStore or trustStorePassword is mandatory if trustAllRoots is false\ncommand input is empty."));
     }
 
     @Test
@@ -60,7 +66,7 @@ public class SQLCommandTest {
         when(SQLCommandService.executeSqlCommand(any(SQLInputs.class))).thenReturn(res);
 
         final Map<String, String> resultMap = sqlCommand.execute("1", ORACLE_DB_TYPE, "username", "Password", EMPTY, "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, DBMS_OUTPUT, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+                AUTH_SQL, EMPTY, EMPTY, DBMS_OUTPUT, "true", EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
 
         verifyStatic();
         assertThat(resultMap.get(RETURN_CODE), is(SUCCESS));

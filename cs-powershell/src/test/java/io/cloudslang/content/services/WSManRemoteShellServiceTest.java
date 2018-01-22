@@ -1,12 +1,18 @@
-/*******************************************************************************
- * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- *******************************************************************************/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.services;
 
 import io.cloudslang.content.entities.OutputStream;
@@ -92,7 +98,7 @@ public class WSManRemoteShellServiceTest {
     private static final String EXECUTION_IS_TIMED_OUT_METHOD = "executionIsTimedOut";
     private static final String EXECUTE_COMMAND_METHOD = "executeCommand";
     private static final String CREATE_SHELL_METHOD = "createShell";
-    private static final String EXECUTE_REQUEST_METHOD = "executeRequest";
+    private static final String EXECUTE_REQUEST_METHOD = "executeRequestWithBody";
     private static final String DELETE_SHELL_METHOD = "deleteShell";
     private static final String DELETE_RESPONSE_ACTION = "http://schemas.xmlsoap.org/ws/2004/09/transfer/DeleteResponse";
 
@@ -101,8 +107,6 @@ public class WSManRemoteShellServiceTest {
     private CSHttpClient csHttpClientMock;
     @Mock
     private HttpClientInputs httpClientInputsMock;
-    @Mock
-    private URL urlMock;
     @Mock
     private Map<String, String> resultMock;
     @Rule
@@ -139,7 +143,6 @@ public class WSManRemoteShellServiceTest {
     public void tearDown() {
         csHttpClientMock = null;
         httpClientInputsMock = null;
-        urlMock = null;
         resultMock = null;
         wsManRequestInputs = null;
         wsManRemoteShellServiceSpy = null;

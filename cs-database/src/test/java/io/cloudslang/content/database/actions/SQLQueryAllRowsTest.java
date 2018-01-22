@@ -1,12 +1,18 @@
 /*
- * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
-*/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.database.actions;
 
 import io.cloudslang.content.database.services.SQLQueryAllRowsService;
@@ -45,10 +51,9 @@ public class SQLQueryAllRowsTest {
     private final SQLQueryAllRows sqlQueryAllRows = new SQLQueryAllRows();
 
     @Test
-    @Ignore
     public void execute() throws Exception {
         final Map<String, String> resultMap = new SQLQueryAllRows().execute(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
-                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
         assertThat(resultMap.get(RETURN_CODE), is(FAILURE));
         assertThat(resultMap.get(RETURN_RESULT), is("dbServerName can't be empty\n" +
                 "username input is empty.\n" +
@@ -59,7 +64,6 @@ public class SQLQueryAllRowsTest {
     }
 
     @Test
-    @Ignore
     public void executeSuccess() throws Exception {
         final String res = "result";
 
@@ -68,7 +72,7 @@ public class SQLQueryAllRowsTest {
         when(SQLQueryAllRowsService.execQueryAllRows(any(SQLInputs.class))).thenReturn(res);
 
         final Map<String, String> resultMap = sqlQueryAllRows.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, "something", EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
 
         verifyStatic();
         assertThat(resultMap.get(RETURN_CODE), is(SUCCESS));

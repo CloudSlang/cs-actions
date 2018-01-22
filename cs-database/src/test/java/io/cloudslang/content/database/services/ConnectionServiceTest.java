@@ -1,12 +1,18 @@
 /*
- * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
-*/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.database.services;
 
 import io.cloudslang.content.database.services.databases.CustomDatabase;
@@ -22,6 +28,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -34,6 +41,8 @@ import java.util.Properties;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
@@ -46,8 +55,8 @@ public class ConnectionServiceTest {
 
     public static final String CUSTOM_CLASS_DRIVER = "org.h2.Driver";
     public static String CUSTOM_URL = "jdbc:h2:tcp://localhost/~/test";
-    private SQLInputs sqlInputs;
 
+    private SQLInputs sqlInputs;
     @Spy
     private ConnectionService connectionServiceSpy = new ConnectionService();
 
@@ -76,8 +85,15 @@ public class ConnectionServiceTest {
         sqlInputs = SQLInputs.builder().build();
         InputsProcessor.init(sqlInputs);
         mockStatic(DBConnectionManager.class);
+
+        PowerMockito.mockStatic(MSSqlDatabase.class);
+
+        doCallRealMethod().when(MSSqlDatabase.class, "addSslEncryptionToConnection", anyBoolean(), anyString(), anyString(), anyString());
+
+        doNothing().when(MSSqlDatabase.class, "loadWindowsAuthentication", anyString());
+
         when(DBConnectionManager.getInstance()).thenReturn(dbConnectionManagerMock);
-        when(dbConnectionManagerMock.getConnection(any(DBConnectionManager.DBType.class), any(String.class), any(String.class), any(String.class), any(Properties.class))).thenReturn(connectionMock);
+        when(dbConnectionManagerMock.getConnection(any(DBConnectionManager.DBType.class), any(String.class), any(String.class), any(String.class), any(String.class), any(Properties.class))).thenReturn(connectionMock);
     }
 
     @Test

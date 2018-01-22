@@ -1,22 +1,38 @@
 /*
- * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
-*/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.database.services.databases;
 
+import io.cloudslang.content.database.services.ConnectionService;
+import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
+import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBOtherValues.BACK_SLASH;
@@ -24,10 +40,18 @@ import static io.cloudslang.content.database.constants.DBOtherValues.SQLSERVER_J
 import static io.cloudslang.content.database.utils.Constants.AUTH_WINDOWS;
 import static junit.framework.Assert.assertEquals;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
+import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * Created by vranau on 12/10/2014.
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({MSSqlDatabase.class})
+@PowerMockIgnore({"javax.management.*", "org.apache.commons.logging.*"})
 public class MSSqlDatabaseTest {
 
     public static final String DB_NAME = "dbName";
@@ -41,6 +65,14 @@ public class MSSqlDatabaseTest {
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
+
+    @Before
+    public void beforeTest() throws Exception {
+        PowerMockito.mockStatic(MSSqlDatabase.class);
+
+        doCallRealMethod().when(MSSqlDatabase.class, "addSslEncryptionToConnection", anyBoolean(), anyString(), anyString(), anyString());
+        doNothing().when(MSSqlDatabase.class, "loadWindowsAuthentication", anyString());
+    }
 
     @Test
     public void testSetUpInvalidAuthType() throws ClassNotFoundException, SQLException {

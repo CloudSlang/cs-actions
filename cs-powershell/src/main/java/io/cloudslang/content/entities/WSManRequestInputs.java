@@ -1,12 +1,18 @@
-/*******************************************************************************
- * (c) Copyright 2017 Hewlett-Packard Development Company, L.P.
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- *******************************************************************************/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.entities;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,29 +22,30 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class WSManRequestInputs {
 
-    private String host;
-    private String port;
-    private String protocol;
-    private String username;
-    private String password;
-    private String authType;
-    private String kerberosConfFile;
-    private String kerberosLoginConfFile;
-    private String kerberosSkipPortForLookup;
-    private String proxyHost;
-    private String proxyPort;
-    private String proxyUsername;
-    private String proxyPassword;
-    private int maxEnvelopeSize;
-    private String trustAllRoots;
-    private String x509HostnameVerifier;
-    private String keystore;
-    private String keystorePassword;
-    private String trustKeystore;
-    private String trustPassword;
-    private String script;
-    private String winrmLocale;
-    private int operationTimeout;
+    private final String host;
+    private final String port;
+    private final String protocol;
+    private final String username;
+    private final String password;
+    private final String authType;
+    private final String kerberosConfFile;
+    private final String kerberosLoginConfFile;
+    private final String kerberosSkipPortForLookup;
+    private final String proxyHost;
+    private final String proxyPort;
+    private final String proxyUsername;
+    private final String proxyPassword;
+    private final int maxEnvelopeSize;
+    private final String trustAllRoots;
+    private final String x509HostnameVerifier;
+    private final String keystore;
+    private final String keystorePassword;
+    private final String trustKeystore;
+    private final String trustPassword;
+    private final String script;
+    private final String modules;
+    private final String winrmLocale;
+    private final int operationTimeout;
 
     public WSManRequestInputs(WSManRequestInputsBuilder builder) {
         this.host = builder.host;
@@ -62,6 +69,7 @@ public class WSManRequestInputs {
         this.trustKeystore = builder.trustKeystore;
         this.trustPassword = builder.trustPassword;
         this.script = builder.script;
+        this.modules = builder.modules;
         this.winrmLocale = builder.winrmLocale;
         this.operationTimeout = builder.operationTimeout;
     }
@@ -149,6 +157,9 @@ public class WSManRequestInputs {
     public String getScript() {
         return script;
     }
+    public String getModules() {
+        return modules;
+    }
 
     public String getWinrmLocale() {
         return winrmLocale;
@@ -180,6 +191,7 @@ public class WSManRequestInputs {
         private String trustKeystore;
         private String trustPassword;
         private String script;
+        private String modules;
         private String winrmLocale;
         private int operationTimeout;
 
@@ -302,6 +314,11 @@ public class WSManRequestInputs {
 
         public WSManRequestInputsBuilder withKerberosSkipPortForLookup(String kerberosSkipPortForLookup) {
             this.kerberosSkipPortForLookup = kerberosSkipPortForLookup;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withModules(String modules) {
+            this.modules = modules;
             return this;
         }
     }
