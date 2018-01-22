@@ -1,12 +1,3 @@
-/*
- * (c) Copyright 2017 Hewlett-Packard Enterprise Development Company, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- */
 package io.cloudslang.content.dca.actions.templates;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +6,6 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.dca.models.DcaDeploymentModel;
 import io.cloudslang.content.dca.models.DcaResourceModel;
@@ -26,30 +16,29 @@ import io.cloudslang.content.httpclient.HttpClientInputs;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.dca.utils.Constants.*;
-import static io.cloudslang.content.dca.utils.DefaultValues.*;
+import static io.cloudslang.content.dca.utils.DefaultValues.DEFAULT_DCA_PORT;
+import static io.cloudslang.content.dca.utils.DefaultValues.DEFAULT_JAVA_KEYSTORE;
+import static io.cloudslang.content.dca.utils.DefaultValues.DEFAULT_JAVA_KEYSTORE_PASSWORD;
 import static io.cloudslang.content.dca.utils.Utilities.*;
 import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
-import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
-import static java.lang.System.currentTimeMillis;
 import static java.lang.System.lineSeparator;
 import static java.net.HttpURLConnection.HTTP_OK;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static org.apache.commons.lang3.StringUtils.join;
 
-public class DeployTemplate {
+public class GetDeployment {
 
-    @Action(name = "Deploy Template",
+    @Action(name = "Get Deployment",
             outputs = {
                     @Output(RETURN_RESULT),
                     @Output(RETURN_CODE),
@@ -65,15 +54,7 @@ public class DeployTemplate {
             @Param(value = InputNames.PROTOCOL) String protocolInp,
             @Param(value = InputNames.AUTH_TOKEN, required = true) String authToken,
             @Param(value = InputNames.REFRESH_TOKEN) String refreshToken,
-            @Param(value = InputNames.DEPLOYMENT_NAME) String deploymentName,
-            @Param(value = InputNames.DEPLOYMENT_DESCRIPTION) String deploymentDesc,
-            @Param(value = InputNames.DEPLOYMENT_TEMPLATE_ID) String deploymentTemplateId,
-            @Param(value = InputNames.DEPLOYMENT_RESOURCES_JSON) String deploymentResources,
-
-            @Param(InputNames.ASYNC) String asyncInp,
-            @Param(InputNames.TIMEOUT) String timeoutInp,
-            @Param(InputNames.POLLING_INTERVAL) String pollingIntervalInp,
-
+            @Param(value = InputNames.DEPLOYMENT_UUID) String deploymentUuid,
             @Param(HttpClientInputs.PROXY_HOST) String proxyHost,
             @Param(HttpClientInputs.PROXY_PORT) String proxyPort,
             @Param(HttpClientInputs.PROXY_USERNAME) String proxyUsername,
@@ -95,10 +76,6 @@ public class DeployTemplate {
         final String port = defaultIfEmpty(portInp, DEFAULT_DCA_PORT);
         final String protocol = defaultIfEmpty(protocolInp, HTTPS);
 
-        final String asyncStr = defaultIfEmpty(asyncInp, BooleanValues.TRUE);
-        final String timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_TIMEOUT);
-        final String pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL);
-
         final String trustKeystore = defaultIfEmpty(trustKeystoreInp, DEFAULT_JAVA_KEYSTORE);
         final String trustPassword = defaultIfEmpty(trustPasswordInp, DEFAULT_JAVA_KEYSTORE_PASSWORD);
         final String keystore = defaultIfEmpty(keystoreInp, DEFAULT_JAVA_KEYSTORE);
@@ -109,17 +86,13 @@ public class DeployTemplate {
         validator.validatePort(port);
         validator.validateProtocol(protocol);
 
-        validator.validateBoolean(asyncStr);
-        validator.validateInt(timeoutStr);
-        validator.validateInt(pollingIntervalStr);
-
         if (!validator.getValidationErrorList().isEmpty()) {
             return getFailureResultsMap(join(validator.getValidationErrorList(), lineSeparator()));
         }
 
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
 
-        httpClientInputs.setUrl(getDcaDeployUrl(protocol, host, port));
+        httpClientInputs.setUrl(getDcaDeploymentUrl(protocol, host, port, deploymentUuid));
 
         httpClientInputs.setHeaders(getAuthHeaders(authToken, refreshToken));
 
@@ -131,20 +104,11 @@ public class DeployTemplate {
         setConnectionParameters(httpClientInputs, connectTimeout, socketTimeout, useCookies, keepAlive,
                 connectionsMaxPerRoot, connectionsMaxTotal);
 
-        httpClientInputs.setContentType(APPLICATION_JSON);
-//        httpClientInputs.setResponseCharacterSet(UTF_8.toString());
-//        httpClientInputs.setRequestCharacterSet(UTF_8.toString());
-        httpClientInputs.setFollowRedirects(BooleanValues.TRUE);
-        httpClientInputs.setMethod(POST);
+        httpClientInputs.setFollowRedirects(TRUE);
+        httpClientInputs.setMethod(GET);
 
         try {
             final ObjectMapper mapper = new ObjectMapper();
-            final List<DcaResourceModel> resources = mapper.readValue(deploymentResources,
-                    mapper.getTypeFactory().constructCollectionType(List.class, DcaResourceModel.class));
-
-            final DcaDeploymentModel dcaDeploymentModel =
-                    new DcaDeploymentModel(deploymentName, deploymentDesc, deploymentTemplateId, resources);
-            httpClientInputs.setBody(dcaDeploymentModel.toJson());
 
             final Map<String, String> httpClientResult = new CSHttpClient().execute(httpClientInputs);
 
@@ -154,46 +118,11 @@ public class DeployTemplate {
                 return getFailureResultsMap(resultMap.get("message").toString());
             }
 
-            final boolean async = toBoolean(asyncStr);
-            final int timeout = Integer.parseInt(timeoutStr);
-            final int pollingInterval = Integer.parseInt(pollingIntervalStr);
-
-            if (async) {
-                return getSuccessResultsMap(httpClientResult.get(RETURN_RESULT));
-            } else {
-
-                final long finishTime = currentTimeMillis() + SECONDS.toMillis(timeout);
-                final String deploymentUuid = resultMap.get("uuid").toString();
-
-                while (true) {
-                    Thread.sleep(SECONDS.toMillis(pollingInterval));
-
-                    final String getDeploymentResult = new GetDeployment().execute(host, port, protocolInp,
-                            authToken, refreshToken, deploymentUuid, proxyHost, proxyPort, proxyUsername, proxyPassword,
-                            trustAllRoots, x509HostnameVerifier, trustKeystoreInp, trustPasswordInp, keystoreInp,
-                            keystorePasswordInp, connectTimeout, socketTimeout, useCookies, keepAlive,
-                            connectionsMaxPerRoot, connectionsMaxTotal).get(RETURN_RESULT);
-
-                    final Map getMap = mapper.readValue(getDeploymentResult, Map.class);
-
-                    final String status = getMap.get("status").toString();
-
-                    if (status.equalsIgnoreCase("SUCCESS")) {
-                        return getSuccessResultsMap(getDeploymentResult);
-                    }
-
-                    if (status.equalsIgnoreCase("FAILED")) {
-                        return getFailureResultsMap(getDeploymentResult, new Exception("Failed to deploy template!"));
-                    }
-
-                    if (currentTimeMillis() > finishTime) {
-                        throw new TimeoutException("Deploy Template timeout.");
-                    }
-                }
-            }
+            return getSuccessResultsMap(httpClientResult.get(RETURN_RESULT));
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }
     }
 
 }
+

@@ -16,6 +16,7 @@ public class Constants {
     public static final String HTTP = "http";
     public static final String APPLICATION_JSON = "application/json";
     public static final String POST = "POST";
+    public static final String GET = "GET";
 
     public static final String NEW_LINE = System.lineSeparator();
 

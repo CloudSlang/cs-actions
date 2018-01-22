@@ -21,7 +21,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.splitPreserveAllTokens;
-import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 public class Utilities {
 
@@ -45,6 +44,21 @@ public class Utilities {
                                          @NotNull final String dcaPort) {
         final URIBuilder uriBuilder = getUriBuilder(protocol, dcaHost, dcaPort);
         uriBuilder.setPath(Constants.DCA_DEPLOYMENT_PATH);
+
+        try {
+            return uriBuilder.build().toURL().toString();
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NotNull
+    public static String getDcaDeploymentUrl(@NotNull final String protocol,
+                                             @NotNull final String dcaHost,
+                                             @NotNull final String dcaPort,
+                                             @NotNull final String deploymentUuid) {
+        final URIBuilder uriBuilder = getUriBuilder(protocol, dcaHost, dcaPort);
+        uriBuilder.setPath(String.format("%s/%s", Constants.DCA_DEPLOYMENT_PATH, deploymentUuid));
 
         try {
             return uriBuilder.build().toURL().toString();

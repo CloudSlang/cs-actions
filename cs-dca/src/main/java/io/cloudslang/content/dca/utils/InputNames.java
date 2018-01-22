@@ -26,4 +26,8 @@ public class InputNames {
     public static final String DEPLOYMENT_DESCRIPTION = "deploymentDescription";
     public static final String DEPLOYMENT_TEMPLATE_ID = "deploymentTemplateId";
     public static final String DEPLOYMENT_RESOURCES_JSON = "deploymentResourcesJson";
+    public static final String DEPLOYMENT_UUID = "deploymentUuid";
+    public static final String ASYNC = "async";
+    public static final String TIMEOUT = "timeout";
+    public static final String POLLING_INTERVAL = "pollingInterval";
 }

@@ -16,4 +16,7 @@ public class DefaultValues {
 
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String DEFAULT_JAVA_KEYSTORE_PASSWORD = "changeit";
+    public static final String DEFAULT_DCA_PORT = "443";
+    public static final String DEFAULT_TIMEOUT = "1200";
+    public static final String DEFAULT_POLLING_INTERVAL = "30";
 }

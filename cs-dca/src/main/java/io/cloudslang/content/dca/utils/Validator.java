@@ -9,6 +9,7 @@
  */
 package io.cloudslang.content.dca.utils;
 
+import io.cloudslang.content.utils.BooleanUtilities;
 import io.cloudslang.content.utils.NumberUtilities;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,6 +46,12 @@ public class Validator {
     public void validateInt(@NotNull final String intValue) {
         if (!NumberUtilities.isValidInt(intValue)) {
             validationErrorList.add("Invalid integer.");
+        }
+    }
+
+    public void validateBoolean(@NotNull final String booleanValue) {
+        if (!BooleanUtilities.isValid(booleanValue)) {
+            validationErrorList.add("Invalid boolean.");
         }
     }
 
