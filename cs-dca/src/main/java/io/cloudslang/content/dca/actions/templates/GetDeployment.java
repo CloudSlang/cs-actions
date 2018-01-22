@@ -21,14 +21,10 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.dca.models.DcaDeploymentModel;
-import io.cloudslang.content.dca.models.DcaResourceModel;
-import io.cloudslang.content.dca.utils.InputNames;
 import io.cloudslang.content.dca.utils.Validator;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
@@ -37,12 +33,15 @@ import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.dca.utils.Constants.*;
-import static io.cloudslang.content.dca.utils.DefaultValues.DEFAULT_DCA_PORT;
-import static io.cloudslang.content.dca.utils.DefaultValues.DEFAULT_JAVA_KEYSTORE;
-import static io.cloudslang.content.dca.utils.DefaultValues.DEFAULT_JAVA_KEYSTORE_PASSWORD;
+import static io.cloudslang.content.dca.utils.Constants.GET;
+import static io.cloudslang.content.dca.utils.Constants.HTTPS;
+import static io.cloudslang.content.dca.utils.DefaultValues.*;
+import static io.cloudslang.content.dca.utils.Descriptions.Common.*;
+import static io.cloudslang.content.dca.utils.Descriptions.GetDeployment.*;
+import static io.cloudslang.content.dca.utils.InputNames.*;
 import static io.cloudslang.content.dca.utils.Utilities.*;
 import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.System.lineSeparator;
@@ -53,6 +52,7 @@ import static org.apache.commons.lang3.StringUtils.join;
 public class GetDeployment {
 
     @Action(name = "Get Deployment",
+            description = GET_DEPLOYMENT_DESC,
             outputs = {
                     @Output(RETURN_RESULT),
                     @Output(RETURN_CODE),
@@ -63,28 +63,32 @@ public class GetDeployment {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ERROR)
             })
     public Map<String, String> execute(
-            @Param(value = InputNames.DCA_HOST, required = true) String host,
-            @Param(value = InputNames.DCA_PORT) String portInp,
-            @Param(value = InputNames.PROTOCOL) String protocolInp,
-            @Param(value = InputNames.AUTH_TOKEN, required = true) String authToken,
-            @Param(value = InputNames.REFRESH_TOKEN) String refreshToken,
-            @Param(value = InputNames.DEPLOYMENT_UUID) String deploymentUuid,
-            @Param(HttpClientInputs.PROXY_HOST) String proxyHost,
-            @Param(HttpClientInputs.PROXY_PORT) String proxyPort,
-            @Param(HttpClientInputs.PROXY_USERNAME) String proxyUsername,
-            @Param(HttpClientInputs.PROXY_PASSWORD) String proxyPassword,
-            @Param(HttpClientInputs.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(HttpClientInputs.X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
-            @Param(HttpClientInputs.TRUST_KEYSTORE) String trustKeystoreInp,
-            @Param(HttpClientInputs.TRUST_PASSWORD) String trustPasswordInp,
-            @Param(HttpClientInputs.KEYSTORE) String keystoreInp,
-            @Param(HttpClientInputs.KEYSTORE_PASSWORD) String keystorePasswordInp,
-            @Param(HttpClientInputs.CONNECT_TIMEOUT) String connectTimeout,
-            @Param(HttpClientInputs.SOCKET_TIMEOUT) String socketTimeout,
-            @Param(HttpClientInputs.USE_COOKIES) String useCookies,
-            @Param(HttpClientInputs.KEEP_ALIVE) String keepAlive,
-            @Param(HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoot,
-            @Param(HttpClientInputs.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal
+            @Param(value = DCA_HOST, required = true, description = DCA_HOST_DESC) String host,
+            @Param(value = DCA_PORT, description = DCA_PORT_DESC) String portInp,
+            @Param(value = PROTOCOL, description = DCA_PROTOCOL_DESC) String protocolInp,
+            @Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
+            @Param(value = REFRESH_TOKEN, description = REFRESH_TOKEN_DESC) String refreshToken,
+            @Param(value = DEPLOYMENT_UUID, description = DEPLOYMENT_UUID_DESC) String deploymentUuid,
+
+            @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) final String proxyHost,
+            @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) final String proxyPort,
+            @Param(value = PROXY_USERNAME, description = PROXY_USER_DESC) final String proxyUsername,
+            @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASS_DESC) final String proxyPassword,
+
+            @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) final String trustAllRoots,
+            @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) final String x509HostnameVerifier,
+            @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) final String trustKeystoreInp,
+            @Param(value = TRUST_PASSWORD, encrypted = true,
+                    description = TRUST_PASSWORD_DESC) final String trustPasswordInp,
+            @Param(value = KEYSTORE, description = KEYSTORE_DESC) final String keystoreInp,
+            @Param(value = KEYSTORE_PASSWORD, encrypted = true, description = KEYSTORE_PASS_DESC) final String keystorePasswordInp,
+
+            @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) final String connectTimeout,
+            @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) final String socketTimeout,
+            @Param(value = USE_COOKIES, description = USE_COOKIES_DESC) final String useCookies,
+            @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) final String keepAlive,
+            @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) final String connectionsMaxPerRoot,
+            @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) final String connectionsMaxTotal
     ) {
         // defaults
         final String port = defaultIfEmpty(portInp, DEFAULT_DCA_PORT);
