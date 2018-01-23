@@ -15,8 +15,33 @@
 
 package io.cloudslang.content.vmware.services.utils;
 
-import com.vmware.vim25.*;
-import io.cloudslang.content.utils.StringUtilities;
+import com.vmware.vim25.ArrayOfManagedObjectReference;
+import com.vmware.vim25.ConfigTarget;
+import com.vmware.vim25.DatastoreSummary;
+import com.vmware.vim25.DynamicProperty;
+import com.vmware.vim25.InvalidPropertyFaultMsg;
+import com.vmware.vim25.ManagedObjectReference;
+import com.vmware.vim25.ObjectContent;
+import com.vmware.vim25.ResourceAllocationInfo;
+import com.vmware.vim25.RuntimeFaultFaultMsg;
+import com.vmware.vim25.SharesInfo;
+import com.vmware.vim25.SharesLevel;
+import com.vmware.vim25.VirtualCdrom;
+import com.vmware.vim25.VirtualCdromIsoBackingInfo;
+import com.vmware.vim25.VirtualDevice;
+import com.vmware.vim25.VirtualDeviceConfigSpec;
+import com.vmware.vim25.VirtualDeviceConfigSpecFileOperation;
+import com.vmware.vim25.VirtualDeviceConfigSpecOperation;
+import com.vmware.vim25.VirtualDisk;
+import com.vmware.vim25.VirtualDiskFlatVer2BackingInfo;
+import com.vmware.vim25.VirtualEthernetCard;
+import com.vmware.vim25.VirtualEthernetCardNetworkBackingInfo;
+import com.vmware.vim25.VirtualMachineConfigSpec;
+import com.vmware.vim25.VirtualMachineDatastoreInfo;
+import com.vmware.vim25.VirtualMachineRelocateSpec;
+import com.vmware.vim25.VirtualMachineRelocateTransformation;
+import com.vmware.vim25.VirtualMachineSummary;
+import com.vmware.vim25.VirtualPCNet32;
 import io.cloudslang.content.vmware.connection.ConnectionResources;
 import io.cloudslang.content.vmware.constants.Constants;
 import io.cloudslang.content.vmware.constants.ErrorMessages;
@@ -25,6 +50,7 @@ import io.cloudslang.content.vmware.entities.Level;
 import io.cloudslang.content.vmware.entities.ManagedObjectType;
 import io.cloudslang.content.vmware.entities.Operation;
 import io.cloudslang.content.vmware.entities.VmInputs;
+import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.helpers.GetObjectProperties;
 import io.cloudslang.content.vmware.services.helpers.MorObjectHandler;
 import io.cloudslang.content.vmware.utils.InputUtils;
@@ -33,6 +59,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static io.cloudslang.content.vmware.entities.ManagedObjectType.FOLDER;
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.split;
 
 /**
  * Created by Mihai Tusa.
@@ -46,11 +78,13 @@ public class VmUtils {
 
     private static final int DISK_AMOUNT_MULTIPLIER = 1024;
     private static final int DEFAULT_CORES_PER_SOCKET = 1;
+    private static final String CHILD_ENTITY_PROPERTY = "childEntity";
+    private static final String NAME_PROPERTY = "name";
 
 
     public ManagedObjectReference getMorResourcePoolFromCluster(final ConnectionResources connectionResources, final ManagedObjectReference clusterMor,
                                                                 final String resourcePoolName) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        if (StringUtilities.isNotBlank(resourcePoolName)) {
+        if (isNotBlank(resourcePoolName)) {
             return new MorObjectHandler().getSpecificMor(connectionResources, clusterMor,
                     ManagedObjectType.RESOURCE_POOL.getValue(), resourcePoolName);
         } else {
@@ -62,7 +96,7 @@ public class VmUtils {
     public ManagedObjectReference getMorResourcePool(String resourcePoolName, ConnectionResources connectionResources)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference resourcePool;
-        if (StringUtils.isNotBlank(resourcePoolName)) {
+        if (isNotBlank(resourcePoolName)) {
             resourcePool = getManagedObjectReference(resourcePoolName, connectionResources,
                     ManagedObjectType.RESOURCE_POOL.getValue(), ErrorMessages.RESOURCE_POOL_NOT_FOUND);
         } else {
@@ -88,20 +122,63 @@ public class VmUtils {
         return managedObjectReference;
     }
 
-    public ManagedObjectReference getMorFolder(String folderName, ConnectionResources connectionResources)
-            throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
-        ManagedObjectReference folder;
-        if (StringUtils.isNotBlank(folderName)) {
-            ManagedObjectReference morRootFolder = connectionResources.getMorRootFolder();
-            folder = new MorObjectHandler().getSpecificMor(connectionResources, morRootFolder,
-                    ManagedObjectType.FOLDER.getValue(), escapeSpecialCharacters(folderName));
-            if (folder == null) {
-                throw new RuntimeException(ErrorMessages.FOLDER_NOT_FOUND);
+    private ManagedObjectReference getSpecificMorFolder(ConnectionResources connectionResources, String folderPath) throws Exception {
+        ManagedObjectReference currFolder = connectionResources.getVmFolderMor();
+        String[] fullPath = split(folderPath, "/");
+
+        for (String searchedChild : fullPath) {
+            if (isBlank(searchedChild)) {
+                continue;
             }
-        } else {
-            folder = connectionResources.getVmFolderMor();
+            currFolder = findChildFolder(connectionResources, new MorObjectHandler(), currFolder, searchedChild);
         }
-        return folder;
+
+        return currFolder;
+    }
+
+    private static String unEscapeFolderPath(String escapedFolderPath) {
+        String unescapedFolderPath = escapedFolderPath.replace("%5C", "\\");
+        unescapedFolderPath = unescapedFolderPath.replace("%5c", "\\");
+        unescapedFolderPath = unescapedFolderPath.replace("%25", "%");
+
+        return unescapedFolderPath;
+    }
+
+    private ManagedObjectReference findChildFolder(ConnectionResources connectionResources, MorObjectHandler morObjectHandler,
+                                                   ManagedObjectReference folder, String childName) throws Exception {
+        Object childEntity = new MorObjectHandler().getObjectProperties(connectionResources, folder, CHILD_ENTITY_PROPERTY);
+        if (childEntity instanceof ArrayOfManagedObjectReference) {
+            ArrayOfManagedObjectReference children = (ArrayOfManagedObjectReference) childEntity;
+            for (ManagedObjectReference mor : children.getManagedObjectReference()) {
+                if (StringUtils.equals(mor.getType(), FOLDER.getValue()) &&
+                    equalsIgnoreCase(childName, unEscapeFolderPath(morObjectHandler.getObjectProperties(connectionResources, mor, NAME_PROPERTY).toString()))) {
+                    return mor;
+                }
+            }
+            throw new RuntimeException(ErrorMessages.FOLDER_NOT_FOUND);
+        }
+        throw new RuntimeException("Unexpected exception occurred.");
+    }
+
+    public ManagedObjectReference getMorFolder(String folderName, ConnectionResources connectionResources)
+            throws Exception {
+        if (StringUtils.contains(folderName, "/")) {
+            return getSpecificMorFolder(connectionResources, folderName);
+        } else {
+            // perform a search based on name
+            ManagedObjectReference folder;
+            if (isNotBlank(folderName)) {
+                ManagedObjectReference morRootFolder = connectionResources.getMorRootFolder();
+                folder = new MorObjectHandler().getSpecificMor(connectionResources, morRootFolder,
+                        FOLDER.getValue(), escapeSpecialCharacters(folderName));
+                if (folder == null) {
+                    throw new RuntimeException(ErrorMessages.FOLDER_NOT_FOUND);
+                }
+            } else {
+                folder = connectionResources.getVmFolderMor();
+            }
+            return folder;
+        }
     }
 
     /**
@@ -182,7 +259,7 @@ public class VmUtils {
                                                   ManagedObjectReference vmMor, VmInputs vmInputs)
             throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference dataStore = null;
-        if (StringUtils.isNotBlank(dataStoreName)) {
+        if (isNotBlank(dataStoreName)) {
             ManagedObjectReference cloneHostMor = getMorHost(vmInputs.getCloneHost(), connectionResources, vmMor);
             ConfigTarget configTarget = getHostConfigTarget(connectionResources, cloneHostMor);
             List<VirtualMachineDatastoreInfo> dataStoreInfoList = configTarget.getDatastore();
@@ -218,7 +295,7 @@ public class VmUtils {
     public ManagedObjectReference getMorHost(String hostname, ConnectionResources connectionResources,
                                              ManagedObjectReference vmMor) throws InvalidPropertyFaultMsg, RuntimeFaultFaultMsg {
         ManagedObjectReference host = null;
-        if (StringUtils.isNotBlank(hostname)) {
+        if (isNotBlank(hostname)) {
             host = getManagedObjectReference(hostname, connectionResources,
                     ManagedObjectType.HOST_SYSTEM.getValue(), ErrorMessages.HOST_NOT_FOUND);
         } else if (StringUtils.isBlank(hostname) && vmMor != null) {
