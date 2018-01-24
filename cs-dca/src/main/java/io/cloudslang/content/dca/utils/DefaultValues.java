@@ -17,7 +17,7 @@ package io.cloudslang.content.dca.utils;
 public class DefaultValues {
     public static final String DEFAULT_IDM_PORT = "5443";
     public static final String DEFAULT_IDM_PROTOCOL = Constants.HTTPS;
-    public static final String DEFAULT_TENANT = "DEFAULT_TENANT";
+    public static final String DEFAULT_TENANT = "PROVIDER";
 
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String DEFAULT_JAVA_KEYSTORE_PASSWORD = "changeit";

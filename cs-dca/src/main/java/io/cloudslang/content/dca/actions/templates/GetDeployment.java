@@ -69,7 +69,7 @@ public class GetDeployment {
             @Param(value = DCA_PORT, description = DCA_PORT_DESC) final String portInp,
             @Param(value = PROTOCOL, description = DCA_PROTOCOL_DESC) final String protocolInp,
             @Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) final String authToken,
-            @Param(value = REFRESH_TOKEN, description = REFRESH_TOKEN_DESC) final String refreshToken,
+            @Param(value = REFRESH_TOKEN, encrypted = true, description = REFRESH_TOKEN_DESC) final String refreshToken,
             @Param(value = DEPLOYMENT_UUID, required = true, description = DEPLOYMENT_UUID_DESC) final String deploymentUuid,
 
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) final String proxyHost,

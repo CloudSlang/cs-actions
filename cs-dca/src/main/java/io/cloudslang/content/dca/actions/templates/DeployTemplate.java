@@ -77,12 +77,12 @@ public class DeployTemplate {
             @Param(value = DCA_PORT, description = DCA_PORT_DESC) final String portInp,
             @Param(value = PROTOCOL, description = DCA_PROTOCOL_DESC) final String protocolInp,
             @Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) final String authToken,
-            @Param(value = REFRESH_TOKEN, description = REFRESH_TOKEN_DESC) final String refreshToken,
+            @Param(value = REFRESH_TOKEN, encrypted = true, description = REFRESH_TOKEN_DESC) final String refreshToken,
 
-            @Param(value = DEPLOYMENT_NAME, description = NAME_DESC) final String deploymentName,
+            @Param(value = DEPLOYMENT_NAME, required = true, description = NAME_DESC) final String deploymentName,
             @Param(value = DEPLOYMENT_DESCRIPTION, description = DESCRIPTION_DESC) final String deploymentDesc,
-            @Param(value = DEPLOYMENT_TEMPLATE_ID, description = TEMPLATE_ID_DESC) final String deploymentTemplateId,
-            @Param(value = DEPLOYMENT_RESOURCES_JSON, description = RESOURCES_DESC) final String deploymentResources,
+            @Param(value = DEPLOYMENT_TEMPLATE_ID, required = true, description = TEMPLATE_ID_DESC) final String deploymentTemplateId,
+            @Param(value = DEPLOYMENT_RESOURCES_JSON, required = true, description = RESOURCES_DESC) final String deploymentResources,
 
             @Param(value = ASYNC, description = ASYNC_DESC) final String asyncInp,
             @Param(value = TIMEOUT, description = TIMEOUT_DESC) final String timeoutInp,
