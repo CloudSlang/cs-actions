@@ -35,4 +35,12 @@ public class InputNames {
     public static final String ASYNC = "async";
     public static final String TIMEOUT = "timeout";
     public static final String POLLING_INTERVAL = "pollingInterval";
+    public static final String TYPE_UUID = "typeUuid";
+    public static final String DEPLOY_SEQUENCE = "deploySequence";
+    public static final String BASE_RESOURCE_UUID_LIST = "baseResourceUuidList";
+    public static final String BASE_RESOURCE_CI_TYPE_LIST = "baseResourceCiTypeList";
+    public static final String BASE_RESOURCE_TYPE_UUID_LIST = "baseResourceTypeUuidList";
+    public static final String DEPLOYMENT_PARAMETER_NAME_LIST = "deploymentParameterNameList";
+    public static final String DEPLOYMENT_PARAMETER_VALUE_LIST = "deploymentParameterValueList";
+    public static final String DELIMITER = "delimiter";
 }

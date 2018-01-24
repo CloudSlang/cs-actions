@@ -39,6 +39,7 @@ import static io.cloudslang.content.dca.utils.DefaultValues.*;
 import static io.cloudslang.content.dca.utils.Descriptions.Common.*;
 import static io.cloudslang.content.dca.utils.Descriptions.GetDeployment.*;
 import static io.cloudslang.content.dca.utils.InputNames.*;
+import static io.cloudslang.content.dca.utils.OutputNames.STATUS;
 import static io.cloudslang.content.dca.utils.Utilities.*;
 import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.*;
@@ -54,21 +55,22 @@ public class GetDeployment {
     @Action(name = "Get Deployment",
             description = GET_DEPLOYMENT_DESC,
             outputs = {
-                    @Output(RETURN_RESULT),
-                    @Output(RETURN_CODE),
-                    @Output(EXCEPTION)
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = STATUS, description = STATUS_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ERROR)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_RESPONSE_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ERROR, description = FAILURE_RESPONSE_DESC)
             })
     public Map<String, String> execute(
-            @Param(value = DCA_HOST, required = true, description = DCA_HOST_DESC) String host,
-            @Param(value = DCA_PORT, description = DCA_PORT_DESC) String portInp,
-            @Param(value = PROTOCOL, description = DCA_PROTOCOL_DESC) String protocolInp,
-            @Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
-            @Param(value = REFRESH_TOKEN, description = REFRESH_TOKEN_DESC) String refreshToken,
-            @Param(value = DEPLOYMENT_UUID, description = DEPLOYMENT_UUID_DESC) String deploymentUuid,
+            @Param(value = DCA_HOST, required = true, description = DCA_HOST_DESC) final String host,
+            @Param(value = DCA_PORT, description = DCA_PORT_DESC) final String portInp,
+            @Param(value = PROTOCOL, description = DCA_PROTOCOL_DESC) final String protocolInp,
+            @Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) final String authToken,
+            @Param(value = REFRESH_TOKEN, description = REFRESH_TOKEN_DESC) final String refreshToken,
+            @Param(value = DEPLOYMENT_UUID, required = true, description = DEPLOYMENT_UUID_DESC) final String deploymentUuid,
 
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) final String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) final String proxyPort,
@@ -136,7 +138,9 @@ public class GetDeployment {
                 return getFailureResultsMap(resultMap.get("message").toString());
             }
 
-            return getSuccessResultsMap(httpClientResult.get(RETURN_RESULT));
+            final Map<String, String> successResultsMap = getSuccessResultsMap(httpClientResult.get(RETURN_RESULT));
+            successResultsMap.put(STATUS, resultMap.get(STATUS).toString());
+            return successResultsMap;
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }

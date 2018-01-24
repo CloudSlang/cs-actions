@@ -25,7 +25,7 @@ public class Constants {
 
     public static final String NEW_LINE = System.lineSeparator();
 
-    public static final String X_AUTH_TOKEN = "X-Auth-Token:";
-    public static final String REFRESH_TOKEN = "Refresh-Token:";
+    public static final String X_AUTH_TOKEN_HEADER = "X-Auth-Token:";
+    public static final String REFRESH_TOKEN_HEADER = "Refresh-Token:";
     public static final String HEADERS_DELIMITER = "\r\n";
 }

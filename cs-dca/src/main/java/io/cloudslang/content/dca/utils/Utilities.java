@@ -151,10 +151,10 @@ public class Utilities {
     @NotNull
     public static String getAuthHeaders(@NotNull final String authToken, @NotNull final String refreshToken) {
         final StringBuilder headerBuilder = new StringBuilder();
-        headerBuilder.append(Constants.X_AUTH_TOKEN).append(authToken).append(Constants.HEADERS_DELIMITER);
+        headerBuilder.append(Constants.X_AUTH_TOKEN_HEADER).append(authToken).append(Constants.HEADERS_DELIMITER);
 //        headerBuilder.append("Content-Type:").append(APPLICATION_JSON).append(Constants.HEADERS_DELIMITER);
         if (StringUtils.isNotEmpty(refreshToken)) {
-            headerBuilder.append(Constants.REFRESH_TOKEN).append(refreshToken).append(Constants.HEADERS_DELIMITER);
+            headerBuilder.append(Constants.REFRESH_TOKEN_HEADER).append(refreshToken).append(Constants.HEADERS_DELIMITER);
         }
         return headerBuilder.toString();
     }

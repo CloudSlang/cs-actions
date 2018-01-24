@@ -24,7 +24,6 @@ import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.dca.models.DcaDeploymentModel;
 import io.cloudslang.content.dca.models.DcaResourceModel;
-import io.cloudslang.content.dca.utils.InputNames;
 import io.cloudslang.content.dca.utils.Validator;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
@@ -41,6 +40,11 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.dca.utils.Constants.*;
 import static io.cloudslang.content.dca.utils.DefaultValues.*;
 import static io.cloudslang.content.dca.utils.Descriptions.Common.*;
+import static io.cloudslang.content.dca.utils.Descriptions.DeployTemplate.*;
+import static io.cloudslang.content.dca.utils.Descriptions.GetDeployment.RETURN_RESULT_DESC;
+import static io.cloudslang.content.dca.utils.Descriptions.GetDeployment.STATUS_DESC;
+import static io.cloudslang.content.dca.utils.InputNames.*;
+import static io.cloudslang.content.dca.utils.OutputNames.STATUS;
 import static io.cloudslang.content.dca.utils.Utilities.*;
 import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.*;
@@ -57,29 +61,32 @@ import static org.apache.commons.lang3.StringUtils.join;
 public class DeployTemplate {
 
     @Action(name = "Deploy Template",
+            description = DEPLOY_TEMPLATE_DESC,
             outputs = {
-                    @Output(RETURN_RESULT),
-                    @Output(RETURN_CODE),
-                    @Output(EXCEPTION)
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = STATUS, description = STATUS_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ERROR)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_RESPONSE_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ERROR, description = FAILURE_RESPONSE_DESC)
             })
     public Map<String, String> execute(
-            @Param(value = InputNames.DCA_HOST, required = true) String host,
-            @Param(value = InputNames.DCA_PORT) String portInp,
-            @Param(value = InputNames.PROTOCOL) String protocolInp,
-            @Param(value = InputNames.AUTH_TOKEN, required = true) String authToken,
-            @Param(value = InputNames.REFRESH_TOKEN) String refreshToken,
-            @Param(value = InputNames.DEPLOYMENT_NAME) String deploymentName,
-            @Param(value = InputNames.DEPLOYMENT_DESCRIPTION) String deploymentDesc,
-            @Param(value = InputNames.DEPLOYMENT_TEMPLATE_ID) String deploymentTemplateId,
-            @Param(value = InputNames.DEPLOYMENT_RESOURCES_JSON) String deploymentResources,
+            @Param(value = DCA_HOST, required = true, description = DCA_HOST_DESC) final String host,
+            @Param(value = DCA_PORT, description = DCA_PORT_DESC) final String portInp,
+            @Param(value = PROTOCOL, description = DCA_PROTOCOL_DESC) final String protocolInp,
+            @Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) final String authToken,
+            @Param(value = REFRESH_TOKEN, description = REFRESH_TOKEN_DESC) final String refreshToken,
 
-            @Param(InputNames.ASYNC) String asyncInp,
-            @Param(InputNames.TIMEOUT) String timeoutInp,
-            @Param(InputNames.POLLING_INTERVAL) String pollingIntervalInp,
+            @Param(value = DEPLOYMENT_NAME, description = NAME_DESC) final String deploymentName,
+            @Param(value = DEPLOYMENT_DESCRIPTION, description = DESCRIPTION_DESC) final String deploymentDesc,
+            @Param(value = DEPLOYMENT_TEMPLATE_ID, description = TEMPLATE_ID_DESC) final String deploymentTemplateId,
+            @Param(value = DEPLOYMENT_RESOURCES_JSON, description = RESOURCES_DESC) final String deploymentResources,
+
+            @Param(value = ASYNC, description = ASYNC_DESC) final String asyncInp,
+            @Param(value = TIMEOUT, description = TIMEOUT_DESC) final String timeoutInp,
+            @Param(value = POLLING_INTERVAL, description = POLLING_INTERVAL_DESC) final String pollingIntervalInp,
 
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) final String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) final String proxyPort,
@@ -142,8 +149,6 @@ public class DeployTemplate {
                 connectionsMaxPerRoot, connectionsMaxTotal);
 
         httpClientInputs.setContentType(APPLICATION_JSON);
-//        httpClientInputs.setResponseCharacterSet(UTF_8.toString());
-//        httpClientInputs.setRequestCharacterSet(UTF_8.toString());
         httpClientInputs.setFollowRedirects(BooleanValues.TRUE);
         httpClientInputs.setMethod(POST);
 
@@ -178,22 +183,26 @@ public class DeployTemplate {
                 while (true) {
                     Thread.sleep(SECONDS.toMillis(pollingInterval));
 
-                    final String getDeploymentResult = new GetDeployment().execute(host, port, protocolInp,
+                    final Map<String, String> getDeploymentMap = new GetDeployment().execute(host, port, protocolInp,
                             authToken, refreshToken, deploymentUuid, proxyHost, proxyPort, proxyUsername, proxyPassword,
                             trustAllRoots, x509HostnameVerifier, trustKeystoreInp, trustPasswordInp, keystoreInp,
                             keystorePasswordInp, connectTimeout, socketTimeout, useCookies, keepAlive,
-                            connectionsMaxPerRoot, connectionsMaxTotal).get(RETURN_RESULT);
+                            connectionsMaxPerRoot, connectionsMaxTotal);
 
-                    final Map getMap = mapper.readValue(getDeploymentResult, Map.class);
-
-                    final String status = getMap.get("status").toString();
+                    final String getDeploymentResult = getDeploymentMap.get(RETURN_RESULT);
+                    final String status = getDeploymentMap.get(STATUS);
 
                     if (status.equalsIgnoreCase("SUCCESS")) {
-                        return getSuccessResultsMap(getDeploymentResult);
+                        final Map<String, String> successResultsMap = getSuccessResultsMap(getDeploymentResult);
+                        successResultsMap.put(STATUS, status);
+                        return successResultsMap;
                     }
 
                     if (status.equalsIgnoreCase("FAILED")) {
-                        return getFailureResultsMap(getDeploymentResult, new Exception("Failed to deploy template!"));
+                        final Map<String, String> failureResultsMap = getFailureResultsMap(getDeploymentResult,
+                                new Exception("Failed to deploy template!"));
+                        failureResultsMap.put(STATUS, status);
+                        return failureResultsMap;
                     }
 
                     if (currentTimeMillis() > finishTime) {

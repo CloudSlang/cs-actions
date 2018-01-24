@@ -24,4 +24,5 @@ public class DefaultValues {
     public static final String DEFAULT_DCA_PORT = "443";
     public static final String DEFAULT_TIMEOUT = "1200";
     public static final String DEFAULT_POLLING_INTERVAL = "30";
+    public static final String COMMA = ",";
 }
