@@ -36,7 +36,32 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
-import static io.cloudslang.content.vmware.constants.Inputs.*;
+import static io.cloudslang.content.vmware.constants.Inputs.CLOSE_SESSION;
+import static io.cloudslang.content.vmware.constants.Inputs.CLUSTER_NAME;
+import static io.cloudslang.content.vmware.constants.Inputs.DATACENTER;
+import static io.cloudslang.content.vmware.constants.Inputs.DATA_STORE;
+import static io.cloudslang.content.vmware.constants.Inputs.DISK_PROVISIONING;
+import static io.cloudslang.content.vmware.constants.Inputs.HOST;
+import static io.cloudslang.content.vmware.constants.Inputs.HOSTNAME;
+import static io.cloudslang.content.vmware.constants.Inputs.IP_ALLOC_SCHEME;
+import static io.cloudslang.content.vmware.constants.Inputs.IP_PROTOCOL;
+import static io.cloudslang.content.vmware.constants.Inputs.LOCALE_COUNTRY;
+import static io.cloudslang.content.vmware.constants.Inputs.LOCALE_LANG;
+import static io.cloudslang.content.vmware.constants.Inputs.NAME;
+import static io.cloudslang.content.vmware.constants.Inputs.NET_PORT_GROUP_JS;
+import static io.cloudslang.content.vmware.constants.Inputs.OVF_NETWORK_JS;
+import static io.cloudslang.content.vmware.constants.Inputs.OVF_PROP_KEY_JS;
+import static io.cloudslang.content.vmware.constants.Inputs.OVF_PROP_VALUE_JS;
+import static io.cloudslang.content.vmware.constants.Inputs.PARALLEL;
+import static io.cloudslang.content.vmware.constants.Inputs.PASSWORD;
+import static io.cloudslang.content.vmware.constants.Inputs.PATH;
+import static io.cloudslang.content.vmware.constants.Inputs.PORT;
+import static io.cloudslang.content.vmware.constants.Inputs.PROTOCOL;
+import static io.cloudslang.content.vmware.constants.Inputs.RESOURCE_POOL;
+import static io.cloudslang.content.vmware.constants.Inputs.TRUST_EVERYONE;
+import static io.cloudslang.content.vmware.constants.Inputs.USERNAME;
+import static io.cloudslang.content.vmware.constants.Inputs.VMWARE_GLOBAL_SESSION_OBJECT;
+import static io.cloudslang.content.vmware.constants.Inputs.VM_FOLDER;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class DeployOvfTemplateAction {
