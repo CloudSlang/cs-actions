@@ -28,12 +28,15 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
+import io.cloudslang.content.amazon.utils.DefaultValues;
 import io.cloudslang.content.utils.OutputUtilities;
 
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by lrevnic
@@ -85,19 +88,24 @@ public class InvokeLambdaAction {
             @Param(value = CREDENTIAL, required = true, encrypted = true)  String credential,
             @Param(value = REGION,     required = true)  String region,
             @Param(value = PROXY_HOST)                   String proxyHost,
-            @Param(value = PROXY_PORT)                   int    proxyPort,
+            @Param(value = PROXY_PORT)                   String proxyPort,
             @Param(value = PROXY_USERNAME)               String proxyUsername,
             @Param(value = PROXY_PASSWORD)               String proxyPassword,
             @Param(value = FUNCTION_NAME, required = true) String function,
-            @Param(value = FUNCTION_QUALIFIER)          String qualifier,
-            @Param(value = FUNCTION_PAYLOAD)            String payload,
-            @Param(value = CONNECT_TIMEOUT)             int connectTimeoutMs,
-            @Param(value = EXECUTION_TIMEOUT)           int execTimeoutMs) {
+            @Param(value = FUNCTION_QUALIFIER)           String qualifier,
+            @Param(value = FUNCTION_PAYLOAD)             String payload,
+            @Param(value = CONNECT_TIMEOUT)              String connectTimeoutMs,
+            @Param(value = EXECUTION_TIMEOUT)            String execTimeoutMs) {
+
+        proxyPort = defaultIfEmpty(proxyPort, DefaultValues.PROXY_PORT);
+        connectTimeoutMs = defaultIfEmpty(proxyPort, DefaultValues.CONNECT_TIMEOUT);
+        execTimeoutMs = defaultIfBlank(proxyPort, DefaultValues.EXEC_TIMEOUT);
+        qualifier = defaultIfEmpty(qualifier, DefaultValues.DEFAULT_FUNCTION_QUALIFIER);
 
         ClientConfiguration clientConf = new ClientConfiguration()
-                .withConnectionTimeout(connectTimeoutMs)
+                .withConnectionTimeout(Integer.parseInt(connectTimeoutMs))
                 .withProxyHost(proxyHost)
-                .withProxyPort(proxyPort)
+                .withProxyPort(Integer.parseInt(proxyPort))
                 .withProxyUsername(proxyUsername)
                 .withProxyPassword(proxyPassword);
 
@@ -111,7 +119,7 @@ public class InvokeLambdaAction {
                 .withFunctionName(function)
                 .withQualifier(qualifier)
                 .withPayload(payload)
-                .withSdkClientExecutionTimeout(execTimeoutMs);
+                .withSdkClientExecutionTimeout(Integer.parseInt(execTimeoutMs));
 
         try {
             InvokeResult invokeResult = client.invoke(invokeRequest);
