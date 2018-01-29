@@ -297,13 +297,13 @@
         <module>cs-couchbase</module>
         <module>cs-database</module>
         <module>cs-date-time</module>
-        <module>cs-dca</module>
         <module>cs-dropbox</module>
         <module>cs-google</module>
         <module>cs-http-client</module>
         <module>cs-json</module>
         <module>cs-lists</module>
         <module>cs-mail</module>
+        <module>cs-microfocus-dca</module>
         <module>cs-powershell</module>
         <module>cs-rft</module>
         <module>cs-ssh</module>
