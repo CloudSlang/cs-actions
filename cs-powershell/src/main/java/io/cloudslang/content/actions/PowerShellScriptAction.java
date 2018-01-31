@@ -24,23 +24,22 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.utils.Constants;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.httpclient.HttpClientInputs.*;
 import static io.cloudslang.content.utils.Constants.InputNames.*;
+import static io.cloudslang.content.utils.Constants.Others.*;
 import static io.cloudslang.content.utils.Constants.OutputNames.*;
-import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAILURE;
-import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCCESS;
+import static io.cloudslang.content.utils.Constants.ReturnCodes.*;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.WSManUtils.verifyScriptExecutionStatus;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * Created by giloan on 3/26/2016.
  */
 public class PowerShellScriptAction {
-
-    private static final String ZERO_SCRIPT_EXIT_CODE = "0";
 
     /**
      * Executes a PowerShell script on a remote host.
@@ -85,6 +84,9 @@ public class PowerShellScriptAction {
      * @param maxEnvelopeSize      The maximum size of a SOAP packet in bytes for all stream content.
      *                             Default value is '153600'.
      * @param script               The PowerShell script that will be executed on the remote shell.
+     * @param modules              Add modules to the current session. The Import-Module cmdlet is used which adds one or more modules to the current session.
+     *                             The modules that you import must be installed on the local computer or a remote computer.
+     *                             To import a module, use the Name, Assembly, ModuleInfo, MinimumVersion and RequiredVersion parameters to identify the module to import.
      * @param winrmLocale          The WinRM locale to use.
      *                             Default value is 'en-US'.
      * @param operationTimeout     Defines the OperationTimeout value in seconds to indicate that the clients expect a response or a fault within the specified time.
@@ -126,10 +128,10 @@ public class PowerShellScriptAction {
             @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
             @Param(value = MAX_ENVELOP_SIZE) String maxEnvelopeSize,
             @Param(value = INPUT_SCRIPT, required = true) String script,
+            @Param(value = MODULES) String modules,
             @Param(value = WINRM_LOCALE) String winrmLocale,
             @Param(value = OPERATION_TIMEOUT) String operationTimeout
     ) {
-        Map<String, String> resultMap = new HashMap<>();
         try {
             WSManRemoteShellService wsManRemoteShellService = new WSManRemoteShellService();
 
@@ -150,36 +152,21 @@ public class PowerShellScriptAction {
                     .withMaxEnvelopeSize(maxEnvelopeSize)
                     .withTrustAllRoots(trustAllRoots)
                     .withX509HostnameVerifier(x509HostnameVerifier)
-                    .withKeystore(keystore)
-                    .withKeystorePassword(keystorePassword)
-                    .withTrustKeystore(trustKeystore)
-                    .withTrustPassword(trustPassword)
+                    .withKeystore(defaultIfEmpty(keystore, DEFAULT_JAVA_KEYSTORE))
+                    .withKeystorePassword(defaultIfEmpty(keystorePassword, CHANGEIT))
+                    .withTrustKeystore(defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE))
+                    .withTrustPassword(defaultIfEmpty(trustPassword, CHANGEIT))
                     .withScript(script)
+                    .withModules(modules)
                     .withWinrmLocale(winrmLocale)
                     .withOperationTimeout(operationTimeout)
                     .build();
 
-            resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
+            Map<String, String> resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
             verifyScriptExecutionStatus(resultMap);
-        } catch (NumberFormatException nfe) {
-            resultMap.put(EXCEPTION, ExceptionUtils.getStackTrace(nfe));
-            resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
+            return resultMap;
         } catch (Exception e) {
-            resultMap.put(EXCEPTION, ExceptionUtils.getStackTrace(e));
-            resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
-        }
-        return resultMap;
-    }
-
-    /**
-     * Checks the scriptExitCode value of the script execution and fails the operation if exit code is different than zero.
-     * @param resultMap
-     */
-    private void verifyScriptExecutionStatus(Map<String, String> resultMap) {
-        if (ZERO_SCRIPT_EXIT_CODE.equals(resultMap.get(SCRIPT_EXIT_CODE))) {
-            resultMap.put(RETURN_CODE, RETURN_CODE_SUCCESS);
-        } else {
-            resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
+            return getFailureResultsMap(e);
         }
     }
 }

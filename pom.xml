@@ -303,6 +303,7 @@
         <module>cs-json</module>
         <module>cs-lists</module>
         <module>cs-mail</module>
+        <module>cs-microfocus-dca</module>
         <module>cs-powershell</module>
         <module>cs-rft</module>
         <module>cs-ssh</module>

@@ -98,7 +98,7 @@ public class WSManRemoteShellServiceTest {
     private static final String EXECUTION_IS_TIMED_OUT_METHOD = "executionIsTimedOut";
     private static final String EXECUTE_COMMAND_METHOD = "executeCommand";
     private static final String CREATE_SHELL_METHOD = "createShell";
-    private static final String EXECUTE_REQUEST_METHOD = "executeRequest";
+    private static final String EXECUTE_REQUEST_METHOD = "executeRequestWithBody";
     private static final String DELETE_SHELL_METHOD = "deleteShell";
     private static final String DELETE_RESPONSE_ACTION = "http://schemas.xmlsoap.org/ws/2004/09/transfer/DeleteResponse";
 
@@ -107,8 +107,6 @@ public class WSManRemoteShellServiceTest {
     private CSHttpClient csHttpClientMock;
     @Mock
     private HttpClientInputs httpClientInputsMock;
-    @Mock
-    private URL urlMock;
     @Mock
     private Map<String, String> resultMock;
     @Rule
@@ -145,7 +143,6 @@ public class WSManRemoteShellServiceTest {
     public void tearDown() {
         csHttpClientMock = null;
         httpClientInputsMock = null;
-        urlMock = null;
         resultMock = null;
         wsManRequestInputs = null;
         wsManRemoteShellServiceSpy = null;
