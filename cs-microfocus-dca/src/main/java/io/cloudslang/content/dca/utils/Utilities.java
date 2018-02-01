@@ -22,9 +22,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.splitPreserveAllTokens;
 
 public class Utilities {
@@ -145,7 +148,12 @@ public class Utilities {
 
     @NotNull
     public static List<String> splitToList(@NotNull final String string, @NotNull final String delimiter) {
-        return asList(splitPreserveAllTokens(string, delimiter));
+        final List<String> tokens = asList(splitPreserveAllTokens(string, delimiter));
+        if (tokens.isEmpty()) {
+            // to make sure that if empty string is added it will be put in the array
+            return asList(EMPTY);
+        }
+        return tokens;
     }
 
     @NotNull
