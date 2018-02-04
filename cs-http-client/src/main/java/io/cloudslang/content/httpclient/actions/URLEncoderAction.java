@@ -29,11 +29,11 @@ import org.apache.commons.lang3.StringUtils;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.Constants.CHARACTER_SET;
-import static io.cloudslang.content.httpclient.entities.Constants.RETURN_CODE;
-import static io.cloudslang.content.httpclient.entities.Constants.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.Constants.URL;
 import static io.cloudslang.content.httpclient.utils.Descriptions.Commons.EXCEPTION_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.Commons.RETURN_CODE_DESC;
