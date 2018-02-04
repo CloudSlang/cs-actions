@@ -22,7 +22,6 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ReturnCodes;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Map;
 
@@ -34,12 +33,12 @@ import static io.cloudslang.content.httpclient.entities.Constants.CHARACTER_SET;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.Constants.URL;
+import static io.cloudslang.content.httpclient.utils.Descriptions.Commons.CHARACTER_SET_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.Commons.EXCEPTION_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.Commons.RETURN_CODE_DESC;
-import static io.cloudslang.content.httpclient.utils.Descriptions.Commons.RETURN_RESULT_DESC;
+import static io.cloudslang.content.httpclient.utils.Descriptions.Commons.URL_DESC;
+import static io.cloudslang.content.httpclient.utils.Descriptions.UrlDecoder.RETURN_RESULT_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.UrlDecoder.URL_DECODER_DESC;
-import static io.cloudslang.content.httpclient.utils.Descriptions.UrlEncoder.CHARACTER_SET_DESC;
-import static io.cloudslang.content.httpclient.utils.Descriptions.UrlEncoder.URL_DESC;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -52,8 +51,10 @@ public class URLDecoderAction {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS,
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE,
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
     public Map<String, String> execute(
