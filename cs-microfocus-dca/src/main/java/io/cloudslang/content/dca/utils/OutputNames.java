@@ -18,5 +18,9 @@ public class OutputNames {
     public static final String AUTH_TOKEN = "authToken";
     public static final String REFRESH_TOKEN = "refreshToken";
     public static final String STATUS = "status";
+    public static final String NAME = "name";
+    public static final String DNS_NAME = "dnsName";
+    public static final String RESOURCE_TYPE = "resourceType";
+    public static final String RESOURCE_JSON = "resourceJson";
     public static final String DEPLOYMENT_JSON = "deploymentJson";
 }
