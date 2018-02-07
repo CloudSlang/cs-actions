@@ -33,8 +33,7 @@ import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.dca.utils.Constants.GET;
-import static io.cloudslang.content.dca.utils.Constants.HTTPS;
+import static io.cloudslang.content.dca.utils.Constants.*;
 import static io.cloudslang.content.dca.utils.DefaultValues.*;
 import static io.cloudslang.content.dca.utils.Descriptions.Common.*;
 import static io.cloudslang.content.dca.utils.Descriptions.GetDeployment.*;
@@ -45,10 +44,9 @@ import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
-import static java.lang.System.lineSeparator;
+import static java.lang.Integer.parseInt;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.apache.commons.lang3.StringUtils.join;
 
 public class GetDeployment {
 
@@ -102,12 +100,12 @@ public class GetDeployment {
         final String keystorePassword = defaultIfEmpty(keystorePasswordInp, DEFAULT_JAVA_KEYSTORE_PASSWORD);
 
         // validation
-        final Validator validator = new Validator();
-        validator.validatePort(port);
-        validator.validateProtocol(protocol);
+        final Validator validator = new Validator()
+                .validatePort(port, DCA_PORT)
+                .validateProtocol(protocol, PROTOCOL);
 
-        if (!validator.getValidationErrorList().isEmpty()) {
-            return getFailureResultsMap(join(validator.getValidationErrorList(), lineSeparator()));
+        if (validator.hasErrors()) {
+            return getFailureResultsMap(validator.getErrors());
         }
 
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
@@ -134,8 +132,8 @@ public class GetDeployment {
 
             final Map resultMap = mapper.readValue(httpClientResult.get(RETURN_RESULT), Map.class);
 
-            if (Integer.parseInt(httpClientResult.get(STATUS_CODE)) != HTTP_OK) {
-                return getFailureResultsMap(resultMap.get("message").toString());
+            if (parseInt(httpClientResult.get(STATUS_CODE)) != HTTP_OK) {
+                return getFailureResultsMap(resultMap.get(MESSAGE).toString());
             }
 
             final Map<String, String> successResultsMap = getSuccessResultsMap(httpClientResult.get(RETURN_RESULT));
