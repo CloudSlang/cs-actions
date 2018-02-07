@@ -22,8 +22,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -84,6 +82,21 @@ public class Utilities {
                                              @NotNull final String credentialUuid) {
         final URIBuilder uriBuilder = getUriBuilder(protocol, dcaHost, dcaPort);
         uriBuilder.setPath(String.format("%s/%s", DCA_CM_CREDENTIAL_PATH, credentialUuid));
+
+        try {
+            return uriBuilder.build().toURL().toString();
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NotNull
+    public static String getDcaResourceUrl(@NotNull final String protocol,
+                                           @NotNull final String dcaHost,
+                                           @NotNull final String dcaPort,
+                                           @NotNull final String resourceUuid) {
+        final URIBuilder uriBuilder = getUriBuilder(protocol, dcaHost, dcaPort);
+        uriBuilder.setPath(String.format("%s/%s", Constants.DCA_RESOURCE_PATH, resourceUuid));
 
         try {
             return uriBuilder.build().toURL().toString();
