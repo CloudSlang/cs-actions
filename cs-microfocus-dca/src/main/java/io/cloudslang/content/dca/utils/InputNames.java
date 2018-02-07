@@ -43,4 +43,7 @@ public class InputNames {
     public static final String DEPLOYMENT_PARAMETER_NAME_LIST = "deploymentParameterNameList";
     public static final String DEPLOYMENT_PARAMETER_VALUE_LIST = "deploymentParameterValueList";
     public static final String DELIMITER = "delimiter";
+    public static final String CM_HOST = "cmHost";
+    public static final String CM_PORT = "cmPort";
+    public static final String CREDENTIAL_UUID = "credentialUuid";
 }
