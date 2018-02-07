@@ -34,6 +34,7 @@ import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+import static io.cloudslang.content.dca.controllers.JSONParseController.getDnsNameFromArrayNode;
 import static io.cloudslang.content.dca.utils.Constants.*;
 import static io.cloudslang.content.dca.utils.DefaultValues.*;
 import static io.cloudslang.content.dca.utils.Descriptions.Common.*;
@@ -49,7 +50,6 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.Integer.parseInt;
 import static java.net.HttpURLConnection.HTTP_OK;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class GetResource {
@@ -139,33 +139,22 @@ public class GetResource {
 
             final String resourceJson = httpClientResult.get(RETURN_RESULT);
 
-            final Map resultMap = mapper.readValue(resourceJson, Map.class);
+            final JsonNode result = mapper.readTree(resourceJson);
 
             if (parseInt(httpClientResult.get(STATUS_CODE)) != HTTP_OK) {
-                return getFailureResultsMap(resultMap.get(MESSAGE).toString());
+                return getFailureResultsMap(result.get(MESSAGE).asText());
             }
 
-            final String dnsName = getDnsNameFromArrayNode(mapper.readTree(resourceJson).get(ATTRIBUTES));
+            final String dnsName = getDnsNameFromArrayNode(result.get(ATTRIBUTES));
 
             final Map<String, String> successResultsMap = getSuccessResultsMap(SUCCESS_MESSAGE);
-            successResultsMap.put(NAME, resultMap.get(NAME).toString());
+            successResultsMap.put(NAME, result.get(NAME).asText());
             successResultsMap.put(DNS_NAME, dnsName);
             successResultsMap.put(RESOURCE_JSON, resourceJson);
-            successResultsMap.put(RESOURCE_TYPE, resultMap.get(RESOURCE_TYPE).toString());
+            successResultsMap.put(RESOURCE_TYPE, result.get(RESOURCE_TYPE).asText());
             return successResultsMap;
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }
-    }
-
-    private String getDnsNameFromArrayNode(JsonNode node) {
-        if (node.isArray()) {
-            for (final JsonNode attribute : node) {
-                if (attribute.get(NAME).asText().equalsIgnoreCase(DNS_NAME)) {
-                    return attribute.get(VALUE).asText();
-                }
-            }
-        }
-        return EMPTY;
     }
 }
