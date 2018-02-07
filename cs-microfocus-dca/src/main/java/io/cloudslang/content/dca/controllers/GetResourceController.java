@@ -22,7 +22,7 @@ import static io.cloudslang.content.dca.utils.OutputNames.DNS_NAME;
 import static io.cloudslang.content.dca.utils.OutputNames.NAME;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class JSONParseController {
+public class GetResourceController {
     @NotNull
     public static String getDnsNameFromArrayNode(@NotNull final JsonNode node) {
         if (node.isArray()) {

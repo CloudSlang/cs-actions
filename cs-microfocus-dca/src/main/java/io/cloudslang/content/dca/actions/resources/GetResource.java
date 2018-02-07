@@ -34,7 +34,7 @@ import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.dca.controllers.JSONParseController.getDnsNameFromArrayNode;
+import static io.cloudslang.content.dca.controllers.GetResourceController.getDnsNameFromArrayNode;
 import static io.cloudslang.content.dca.utils.Constants.*;
 import static io.cloudslang.content.dca.utils.DefaultValues.*;
 import static io.cloudslang.content.dca.utils.Descriptions.Common.*;
