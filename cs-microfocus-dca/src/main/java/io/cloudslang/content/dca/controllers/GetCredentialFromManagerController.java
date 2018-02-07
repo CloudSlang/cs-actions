@@ -30,8 +30,6 @@ public class GetCredentialFromManagerController {
                     return nodeElement.get(VALUE).asText(EMPTY);
                 }
             }
-        } else {
-            return dataArray.get(keyName).asText(EMPTY);
         }
         return EMPTY;
     }
