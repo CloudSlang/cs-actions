@@ -171,6 +171,7 @@ public class Descriptions {
                 "information.";
         public static final String USERNAME_DESC = "The username of the credential, empty if not found.";
         public static final String PASSWORD_DESC = "The password of the credential, empty if not found.";
-        public static final String RETURN_RESULT_DESC = "JSON representation of the credential data.";
+        public static final String RETURN_RESULT_DESC = "In case of success, a JSON representation of the credential " +
+                "data, otherwise an error message.";
     }
 }
