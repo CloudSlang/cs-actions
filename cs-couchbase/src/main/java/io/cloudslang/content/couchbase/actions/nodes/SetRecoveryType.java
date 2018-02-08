@@ -34,12 +34,12 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+import static io.cloudslang.content.couchbase.entities.builders.HttpClientInputsBuilder.buildHttpClientInputs;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.SET_RECOVERY_TYPE;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.NodeInputs.INTERNAL_NODE_IP_ADDRESS;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.NodeInputs.RECOVERY_TYPE;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
 import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEEP_ALIVE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
@@ -168,7 +168,7 @@ public class SetRecoveryType {
                                        @Param(value = INTERNAL_NODE_IP_ADDRESS) String internalNodeIpAddress,
                                        @Param(value = RECOVERY_TYPE) String recoveryType) {
         try {
-            final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
+            final HttpClientInputs httpClientInputs = buildHttpClientInputs(username, password, proxyHost, proxyPort,
                     proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
                     keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
 

@@ -17,11 +17,14 @@ package io.cloudslang.content.couchbase.factory.cluster;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.GET_CLUSTER_DETAILS;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.GET_CLUSTER_INFO;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.GET_DESTINATION_CLUSTER_REFERENCE;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.REBALANCING_NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.ALL_TYPE_HEADER;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.APPLICATION_JSON;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.FORM_URL_ENCODED;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1;
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 /**
  * Created by TusaM
@@ -35,12 +38,23 @@ public class ClusterHeadersBuilder {
     public static void setClusterHeaders(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
             case REBALANCING_NODES:
-                wrapper.getHttpClientInputs().setContentType(FORM_URL_ENCODED);
                 wrapper.getHttpClientInputs().setHeaders(ALL_TYPE_HEADER);
+                wrapper.getHttpClientInputs().setContentType(FORM_URL_ENCODED);
+                break;
+            case GET_CLUSTER_DETAILS:
+                wrapper.getHttpClientInputs().setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
+                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON.getMimeType());
+                break;
+            case GET_CLUSTER_INFO:
+                wrapper.getHttpClientInputs().setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
+                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON.getMimeType());
+                break;
+            case GET_DESTINATION_CLUSTER_REFERENCE:
+                wrapper.getHttpClientInputs().setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
+                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON.getMimeType());
                 break;
             default:
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
-                wrapper.getHttpClientInputs().setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
+                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON.getMimeType());
         }
     }
 }

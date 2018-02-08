@@ -1,19 +1,4 @@
-/*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package io.cloudslang.content.couchbase.actions.buckets;
+package io.cloudslang.content.couchbase.actions.cluster;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -34,8 +19,8 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.couchbase.entities.builders.HttpClientInputsBuilder.buildHttpClientInputs;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_ALL_BUCKETS;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.CLUSTER;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.GET_AUTO_FAILOVER_SETTINGS;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEEP_ALIVE;
@@ -56,14 +41,11 @@ import static io.cloudslang.content.httpclient.HttpClientInputs.X509_HOSTNAME_VE
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.http.client.methods.HttpGet.METHOD_NAME;
 
-/**
- * Created by Mihai Tusa
- * 3/26/2017.
- */
-public class GetAllBuckets {
+public class GetAutoFailOverSettings {
     /**
-     * Retrieve all buckets information for a cluster.
-     * https://developer.couchbase.com/documentation/server/4.6/rest-api/rest-buckets-summary.html
+     * Retrieve any auto-failover settings for a cluster.
+     * Auto-failover is a global setting for all clusters. Authenticated is required to read this value.
+     * https://developer.couchbase.com/documentation/server/3.x/admin/REST/rest-cluster-autofailover-settings.html
      *
      * @param endpoint             Endpoint to which request will be sent. A valid endpoint will be formatted as it shows in
      *                             bellow example.
@@ -125,7 +107,7 @@ public class GetAllBuckets {
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
-    @Action(name = "Get All Buckets",
+    @Action(name = "Get Auto Fail Over Settings",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
@@ -160,8 +142,8 @@ public class GetAllBuckets {
                     keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withAction(GET_ALL_BUCKETS)
-                    .withApi(BUCKETS)
+                    .withAction(GET_AUTO_FAILOVER_SETTINGS)
+                    .withApi(CLUSTER)
                     .withEndpoint(endpoint)
                     .build();
 

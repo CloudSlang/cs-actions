@@ -43,10 +43,10 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+import static io.cloudslang.content.couchbase.entities.builders.HttpClientInputsBuilder.buildHttpClientInputs;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.CLUSTER;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.GET_DESTINATION_CLUSTER_REFERENCE;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
 import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEEP_ALIVE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
@@ -74,7 +74,7 @@ public class GetDestinationClusterReference {
     /**
      * Retrieves the destination cluster reference.
      * https://developer.couchbase.com/documentation/server/3.x/admin/REST/rest-xdcr-get-ref.html
-     *
+     * <p>
      * Notes: To use XDCR, source and destination clusters must be established. A source cluster is the cluster where the
      * original data is stored. A destination cluster is the cluster where the replica data is stored. Data is copied from
      * the source cluster to the destination cluster.
@@ -169,7 +169,7 @@ public class GetDestinationClusterReference {
                                        @Param(value = USE_COOKIES) String useCookies,
                                        @Param(value = KEEP_ALIVE) String keepAlive) {
         try {
-            final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
+            final HttpClientInputs httpClientInputs = buildHttpClientInputs(username, password, proxyHost, proxyPort,
                     proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
                     keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
 

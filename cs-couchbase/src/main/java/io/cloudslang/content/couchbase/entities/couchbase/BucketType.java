@@ -15,8 +15,13 @@
 
 package io.cloudslang.content.couchbase.entities.couchbase;
 
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValidValuesString;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValues;
 import static java.lang.String.format;
+import static java.util.Arrays.stream;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -26,6 +31,13 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public enum BucketType {
     COUCHBASE("couchbase"),
     MEMCACHED("membase");
+
+    private static final Map<String, String> BUCKET_TYPE_MAP = new HashMap<>();
+
+    static {
+        stream(values())
+                .forEach(bucketType -> BUCKET_TYPE_MAP.put(bucketType.name().toLowerCase(), bucketType.getValue()));
+    }
 
     private final String value;
 
@@ -37,18 +49,11 @@ public enum BucketType {
         return value;
     }
 
-    public static String getValue(String input) {
-        if (isBlank(input)) {
-            return MEMCACHED.getValue();
-        }
-
-        for (BucketType bucket : values()) {
-            if (bucket.getValue().equalsIgnoreCase(input)) {
-                return bucket.getValue();
-            }
-        }
-
-        throw new RuntimeException(format("Invalid Couchbase bucket type value: '%s'. Valid values: '%s'.",
-                input, getEnumValidValuesString(BucketType.class)));
+    public static String getBucketTypeValue(String input) {
+        return isBlank(input) ? MEMCACHED.getValue() :
+                Optional
+                        .ofNullable(BUCKET_TYPE_MAP.get(input))
+                        .orElseThrow(() -> new RuntimeException(format("Invalid Couchbase bucket type value: '%s'. Valid values: '%s'.",
+                                input, getEnumValues(BucketType.class))));
     }
 }

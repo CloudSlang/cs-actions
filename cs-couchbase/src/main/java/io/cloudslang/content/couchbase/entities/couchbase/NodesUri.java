@@ -15,6 +15,11 @@
 
 package io.cloudslang.content.couchbase.entities.couchbase;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static java.util.Arrays.stream;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
@@ -29,19 +34,22 @@ public enum NodesUri {
     private final String key;
     private final String value;
 
+    private static final Map<String, String> NODES_URI_MAP = new HashMap<>();
+
+    static {
+        stream(values())
+                .forEach(nodeUri -> NODES_URI_MAP.put(nodeUri.getKey(), nodeUri.getNodesUriValue()));
+    }
+
     NodesUri(String key, String value) {
         this.key = key;
         this.value = value;
     }
 
-    public static String getNodesUriValue(String key) {
-        for (NodesUri uri : values()) {
-            if (uri.getKey().equalsIgnoreCase(key)) {
-                return uri.getNodesUriValue();
-            }
-        }
-
-        return EMPTY;
+    public static String getNodesUriValue(String input) {
+        return Optional
+                .ofNullable(NODES_URI_MAP.get(input))
+                .orElse(EMPTY);
     }
 
     private String getKey() {

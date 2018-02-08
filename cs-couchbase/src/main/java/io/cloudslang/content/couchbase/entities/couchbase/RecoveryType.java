@@ -15,8 +15,13 @@
 
 package io.cloudslang.content.couchbase.entities.couchbase;
 
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValidValuesString;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValues;
 import static java.lang.String.format;
+import static java.util.Arrays.stream;
 
 /**
  * Created by TusaM
@@ -25,6 +30,13 @@ import static java.lang.String.format;
 public enum RecoveryType {
     DELTA("delta"),
     FULL("full");
+
+    private static final Map<String, String> RECOVERY_TYPE_MAP = new HashMap<>();
+
+    static {
+        stream(values())
+                .forEach(recoveryType -> RECOVERY_TYPE_MAP.put(recoveryType.name().toLowerCase(), recoveryType.getValue()));
+    }
 
     private final String value;
 
@@ -36,14 +48,10 @@ public enum RecoveryType {
         return value;
     }
 
-    public static String getValue(String input) {
-        for (RecoveryType type : values()) {
-            if (type.getValue().equalsIgnoreCase(input)) {
-                return type.getValue();
-            }
-        }
-
-        throw new RuntimeException(format("Invalid Couchbase node recovery type value: '%s'. Valid values: '%s'.",
-                input, getEnumValidValuesString(RecoveryType.class)));
+    public static String getRecoveryTypeValue(String input) {
+        return Optional
+                .ofNullable(RECOVERY_TYPE_MAP.get(input))
+                .orElseThrow(() -> new RuntimeException(format("Invalid Couchbase node recovery type value: '%s'. Valid values: '%s'.",
+                        input, getEnumValues(RecoveryType.class))));
     }
 }

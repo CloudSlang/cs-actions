@@ -26,8 +26,8 @@ import static io.cloudslang.content.couchbase.entities.constants.Inputs.ClusterI
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.ClusterInputs.KNOWN_NODES;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getPayloadString;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.setOptionalMapEntry;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.validateNotBothBlankInputs;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.validateRebalancingNodesPayloadInputs;
+import static io.cloudslang.content.couchbase.validate.Validators.validateNotBothBlankInputs;
+import static io.cloudslang.content.couchbase.validate.Validators.validateRebalancingNodesPayloadInputs;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
@@ -49,8 +49,10 @@ public class ClusterHelper {
         validateRebalancingNodesPayloadInputs(knownNodesString, delimiter);
 
         Map<String, String> payloadMap = new HashMap<>();
-        setOptionalMapEntry(payloadMap, EJECTED_NODES, wrapper.getClusterInputs().getEjectedNodes(), isNotBlank(wrapper.getClusterInputs().getEjectedNodes()));
-        setOptionalMapEntry(payloadMap, KNOWN_NODES, wrapper.getClusterInputs().getKnownNodes(), isNotBlank(wrapper.getClusterInputs().getKnownNodes()));
+        setOptionalMapEntry(payloadMap, EJECTED_NODES, wrapper.getClusterInputs().getEjectedNodes(),
+                isNotBlank(wrapper.getClusterInputs().getEjectedNodes()));
+        setOptionalMapEntry(payloadMap, KNOWN_NODES, wrapper.getClusterInputs().getKnownNodes(),
+                isNotBlank(wrapper.getClusterInputs().getKnownNodes()));
 
         return payloadMap;
     }

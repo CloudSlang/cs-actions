@@ -34,13 +34,13 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+import static io.cloudslang.content.couchbase.entities.builders.HttpClientInputsBuilder.buildHttpClientInputs;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.CLUSTER;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.REBALANCING_NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.ClusterInputs.EJECTED_NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.ClusterInputs.KNOWN_NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.DELIMITER;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
 import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEEP_ALIVE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
@@ -132,7 +132,7 @@ public class RebalancingNodes {
      * @param knownNodes           Optional - A string that contains: none, one or more nodes that are known within the
      *                             cluster.
      *                             Example: "ns_2@10.0.0.2,ns_2@10.0.0.3"
-     * Note: The inputs: ejectedNodes, knownNodes cannot be both blank in order to successfully trigger nodes rebalancing.
+     *                             Note: The inputs: ejectedNodes, knownNodes cannot be both blank in order to successfully trigger nodes rebalancing.
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
@@ -169,7 +169,7 @@ public class RebalancingNodes {
                                        @Param(value = KNOWN_NODES) String knownNodes,
                                        @Param(value = DELIMITER) String delimiter) {
         try {
-            final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
+            final HttpClientInputs httpClientInputs = buildHttpClientInputs(username, password, proxyHost, proxyPort,
                     proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
                     keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
 

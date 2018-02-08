@@ -15,6 +15,11 @@
 
 package io.cloudslang.content.couchbase.entities.couchbase;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static java.util.Arrays.stream;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
@@ -30,19 +35,22 @@ public enum SuffixUri {
     private final String key;
     private final String value;
 
+    private static final Map<String, String> SUFFIX_URI_MAP = new HashMap<>();
+
+    static {
+        stream(values())
+                .forEach(suffixUri -> SUFFIX_URI_MAP.put(suffixUri.getKey(), suffixUri.getSuffixUriValue()));
+    }
+
     SuffixUri(String key, String value) {
         this.key = key;
         this.value = value;
     }
 
-    public static String getSuffixUriValue(String key) {
-        for (SuffixUri suffixUri : values()) {
-            if (suffixUri.getKey().equalsIgnoreCase(key)) {
-                return suffixUri.getSuffixUriValue();
-            }
-        }
-
-        return EMPTY;
+    public static String getSuffixUriValue(String input) {
+        return Optional
+                .ofNullable(SUFFIX_URI_MAP.get(input))
+                .orElse(EMPTY);
     }
 
     private String getKey() {

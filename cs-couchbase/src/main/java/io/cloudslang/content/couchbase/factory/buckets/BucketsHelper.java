@@ -15,18 +15,26 @@
 
 package io.cloudslang.content.couchbase.factory.buckets;
 
-import io.cloudslang.content.couchbase.entities.couchbase.AuthType;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.INPUTS_COMBINATION_ERROR_MESSAGE;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.AMPERSAND;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.EQUAL;
-import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.*;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.setOptionalMapEntry;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.BUCKET_TYPE;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.CONFLICT_RESOLUTION_TYPE;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.EVICTION_POLICY;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.FLUSH_ENABLED;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.PARALLEL_DB_VIEW_COMPACTION;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.RAM_QUOTA_DB;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.REPLICA_INDEX;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.REPLICA_NUMBER;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.SASL_PASSWORD;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.THREADS_NUMBER;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getPayloadString;
+import static io.cloudslang.content.couchbase.utils.InputsUtil.setOptionalMapEntry;
+import static io.cloudslang.content.couchbase.validate.Validators.validateAuthType;
 import static io.cloudslang.content.httpclient.HttpClientInputs.AUTH_TYPE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_PORT;
 import static java.lang.String.valueOf;
@@ -66,11 +74,5 @@ public class BucketsHelper {
         payloadMap.put(THREADS_NUMBER, valueOf(wrapper.getBucketInputs().getThreadsNumber()));
 
         return payloadMap;
-    }
-
-    private void validateAuthType(Map<String, String> getPayloadMap, String authType) {
-        if (AuthType.SASL.getValue().equals(authType) && !getPayloadMap.containsKey(SASL_PASSWORD)) {
-            throw new RuntimeException(INPUTS_COMBINATION_ERROR_MESSAGE);
-        }
     }
 }
