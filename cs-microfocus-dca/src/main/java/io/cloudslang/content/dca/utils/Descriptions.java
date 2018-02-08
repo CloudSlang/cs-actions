@@ -169,5 +169,8 @@ public class Descriptions {
                 "Credential Manager.";
         public static final String CREDENTIAL_UUID_DESC = "The UUID of the credential for which to retrieve the " +
                 "information.";
+        public static final String USERNAME_DESC = "The username of the credential, empty if not found.";
+        public static final String PASSWORD_DESC = "The password of the credential, empty if not found.";
+        public static final String RETURN_RESULT_DESC = "JSON representation of the credential data.";
     }
 }

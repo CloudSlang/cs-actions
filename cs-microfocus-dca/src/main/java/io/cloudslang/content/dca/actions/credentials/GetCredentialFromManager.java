@@ -41,7 +41,6 @@ import static io.cloudslang.content.dca.utils.Constants.HTTP;
 import static io.cloudslang.content.dca.utils.DefaultValues.*;
 import static io.cloudslang.content.dca.utils.Descriptions.Common.*;
 import static io.cloudslang.content.dca.utils.Descriptions.GetCredentialFromManager.*;
-import static io.cloudslang.content.dca.utils.Descriptions.GetDeployment.RETURN_RESULT_DESC;
 import static io.cloudslang.content.dca.utils.InputNames.*;
 import static io.cloudslang.content.dca.utils.Utilities.*;
 import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
@@ -60,8 +59,8 @@ public class GetCredentialFromManager {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = OutputNames.USERNAME, description = EXCEPTION_DESC),
-                    @Output(value = OutputNames.PASSWORD, description = EXCEPTION_DESC)
+                    @Output(value = OutputNames.USERNAME, description = USERNAME_DESC),
+                    @Output(value = OutputNames.PASSWORD, description = PASSWORD_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_RESPONSE_DESC),
