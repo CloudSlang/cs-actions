@@ -23,4 +23,6 @@ public class OutputNames {
     public static final String RESOURCE_TYPE = "resourceType";
     public static final String RESOURCE_JSON = "resourceJson";
     public static final String DEPLOYMENT_JSON = "deploymentJson";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
 }

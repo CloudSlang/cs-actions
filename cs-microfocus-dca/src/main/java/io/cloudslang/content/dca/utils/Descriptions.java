@@ -158,4 +158,20 @@ public class Descriptions {
         public static final String RETURN_RESULT_DESC = "A JSON representation of a DCA Resource, to use in the " +
                 "Deploy Template Operation.";
     }
+
+    public static class GetCredentialFromManager {
+        public static final String GET_CREDENTIAL_FROM_MANAGER_DESC = "This operation can be used to retrieve a " +
+                "credential from DCA credential manager.";
+
+        public static final String CM_HOST_DESC = "The hostname of the DCA Credential Manager container.";
+        public static final String CM_PORT_DESC = "The port of the DCA Credential Manager container.";
+        public static final String PROTOCOL_DESC = "The protocol to use (HTTP, HTTPS) to connect to the DCA " +
+                "Credential Manager.";
+        public static final String CREDENTIAL_UUID_DESC = "The UUID of the credential for which to retrieve the " +
+                "information.";
+        public static final String USERNAME_DESC = "The username of the credential, empty if not found.";
+        public static final String PASSWORD_DESC = "The password of the credential, empty if not found.";
+        public static final String RETURN_RESULT_DESC = "In case of success, a JSON representation of the credential " +
+                "data, otherwise an error message.";
+    }
 }

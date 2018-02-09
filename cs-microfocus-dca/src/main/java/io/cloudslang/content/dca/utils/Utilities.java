@@ -30,6 +30,8 @@ import static org.apache.commons.lang3.StringUtils.splitPreserveAllTokens;
 
 public class Utilities {
 
+    public static final String DCA_CM_CREDENTIAL_PATH = "/credential";
+
     @NotNull
     public static String getIdmUrl(@NotNull final String protocol,
                                    @NotNull final String idmHostInp,
@@ -65,6 +67,21 @@ public class Utilities {
                                              @NotNull final String deploymentUuid) {
         final URIBuilder uriBuilder = getUriBuilder(protocol, dcaHost, dcaPort);
         uriBuilder.setPath(String.format("%s/%s", Constants.DCA_DEPLOYMENT_PATH, deploymentUuid));
+
+        try {
+            return uriBuilder.build().toURL().toString();
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NotNull
+    public static String getDcaCMCredentialUrl(@NotNull final String protocol,
+                                             @NotNull final String dcaHost,
+                                             @NotNull final String dcaPort,
+                                             @NotNull final String credentialUuid) {
+        final URIBuilder uriBuilder = getUriBuilder(protocol, dcaHost, dcaPort);
+        uriBuilder.setPath(String.format("%s/%s", DCA_CM_CREDENTIAL_PATH, credentialUuid));
 
         try {
             return uriBuilder.build().toURL().toString();

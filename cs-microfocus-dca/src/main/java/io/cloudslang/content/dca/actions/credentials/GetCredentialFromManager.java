@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.dca.actions.resources;
+package io.cloudslang.content.dca.actions.credentials;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +22,8 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.dca.controllers.GetCredentialFromManagerController;
+import io.cloudslang.content.dca.utils.OutputNames;
 import io.cloudslang.content.dca.utils.Validator;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
@@ -34,15 +36,12 @@ import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.dca.controllers.GetResourceController.getDnsNameFromArrayNode;
-import static io.cloudslang.content.dca.utils.Constants.*;
+import static io.cloudslang.content.dca.utils.Constants.GET;
+import static io.cloudslang.content.dca.utils.Constants.HTTP;
 import static io.cloudslang.content.dca.utils.DefaultValues.*;
 import static io.cloudslang.content.dca.utils.Descriptions.Common.*;
-import static io.cloudslang.content.dca.utils.Descriptions.GetResource.*;
-import static io.cloudslang.content.dca.utils.InputNames.AUTH_TOKEN;
+import static io.cloudslang.content.dca.utils.Descriptions.GetCredentialFromManager.*;
 import static io.cloudslang.content.dca.utils.InputNames.*;
-import static io.cloudslang.content.dca.utils.InputNames.REFRESH_TOKEN;
-import static io.cloudslang.content.dca.utils.OutputNames.*;
 import static io.cloudslang.content.dca.utils.Utilities.*;
 import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.*;
@@ -52,30 +51,27 @@ import static java.lang.Integer.parseInt;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetResource {
+public class GetCredentialFromManager {
 
-    @Action(name = "Get Resource",
-            description = GET_RESOURCE_DESC,
+    @Action(name = "Get Credential from Manager",
+            description = GET_CREDENTIAL_FROM_MANAGER_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = NAME, description = NAME_DESC),
-                    @Output(value = DNS_NAME, description = DNS_NAME_DESC),
-                    @Output(value = RESOURCE_JSON, description = RESOURCE_JSON_DESC),
-                    @Output(value = RESOURCE_TYPE, description = RESOURCE_TYPE_DESC)
+                    @Output(value = OutputNames.USERNAME, description = USERNAME_DESC),
+                    @Output(value = OutputNames.PASSWORD, description = PASSWORD_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_RESPONSE_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ERROR, description = FAILURE_RESPONSE_DESC)
             })
     public Map<String, String> execute(
-            @Param(value = DCA_HOST, required = true, description = DCA_HOST_DESC) final String host,
-            @Param(value = DCA_PORT, description = DCA_PORT_DESC) final String portInp,
-            @Param(value = PROTOCOL, description = DCA_PROTOCOL_DESC) final String protocolInp,
-            @Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) final String authToken,
-            @Param(value = REFRESH_TOKEN, encrypted = true, description = REFRESH_TOKEN_DESC) final String refreshToken,
-            @Param(value = RESOURCE_UUID, required = true, description = RESOURCE_UUID_DESC) final String resourceUuid,
+            @Param(value = CM_HOST, required = true, description = CM_HOST_DESC) final String cmHostInp,
+            @Param(value = CM_PORT, description = CM_PORT_DESC) final String cmPortInp,
+            @Param(value = PROTOCOL, description = PROTOCOL_DESC) final String protocolInp,
+
+            @Param(value = CREDENTIAL_UUID, required = true, description = CREDENTIAL_UUID_DESC) final String credentialUuid,
 
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) final String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) final String proxyPort,
@@ -85,8 +81,7 @@ public class GetResource {
             @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) final String trustAllRoots,
             @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) final String x509HostnameVerifier,
             @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) final String trustKeystoreInp,
-            @Param(value = TRUST_PASSWORD, encrypted = true,
-                    description = TRUST_PASSWORD_DESC) final String trustPasswordInp,
+            @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) final String trustPasswordInp,
             @Param(value = KEYSTORE, description = KEYSTORE_DESC) final String keystoreInp,
             @Param(value = KEYSTORE_PASSWORD, encrypted = true, description = KEYSTORE_PASS_DESC) final String keystorePasswordInp,
 
@@ -98,8 +93,9 @@ public class GetResource {
             @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) final String connectionsMaxTotal
     ) {
         // defaults
-        final String port = defaultIfEmpty(portInp, DEFAULT_DCA_PORT);
-        final String protocol = defaultIfEmpty(protocolInp, HTTPS);
+        final String cmHost = defaultIfEmpty(cmHostInp, DEFAULT_CM_HOST);
+        final String cmPort = defaultIfEmpty(cmPortInp, DEFAULT_CM_PORT);
+        final String protocol = defaultIfEmpty(protocolInp, HTTP);
 
         final String trustKeystore = defaultIfEmpty(trustKeystoreInp, DEFAULT_JAVA_KEYSTORE);
         final String trustPassword = defaultIfEmpty(trustPasswordInp, DEFAULT_JAVA_KEYSTORE_PASSWORD);
@@ -108,7 +104,7 @@ public class GetResource {
 
         // validation
         final Validator validator = new Validator()
-                .validatePort(port, DCA_PORT)
+                .validatePort(cmPort, CM_PORT)
                 .validateProtocol(protocol, PROTOCOL);
 
         if (validator.hasErrors()) {
@@ -117,9 +113,7 @@ public class GetResource {
 
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
 
-        httpClientInputs.setUrl(getDcaResourceUrl(protocol, host, port, resourceUuid));
-
-        httpClientInputs.setHeaders(getAuthHeaders(authToken, refreshToken));
+        httpClientInputs.setUrl(getDcaCMCredentialUrl(protocol, cmHost, cmPort, credentialUuid));
 
         setProxy(httpClientInputs, proxyHost, proxyPort, proxyUsername, proxyPassword);
 
@@ -137,24 +131,24 @@ public class GetResource {
 
             final Map<String, String> httpClientResult = new CSHttpClient().execute(httpClientInputs);
 
-            final String resourceJson = httpClientResult.get(RETURN_RESULT);
-
-            final JsonNode result = mapper.readTree(resourceJson);
-
-            if (parseInt(httpClientResult.get(STATUS_CODE)) != HTTP_OK) {
-                return getFailureResultsMap(result.get(MESSAGE).asText());
+            final int statusCode = parseInt(httpClientResult.get(STATUS_CODE));
+            if (statusCode != HTTP_OK) {
+                return getFailureResultsMap(String.format("Failed to get credential with id [%s]. Status code: %d.",
+                        credentialUuid, statusCode));
             }
 
-            final String dnsName = getDnsNameFromArrayNode(result.get(ATTRIBUTES));
+            final JsonNode dataArray = mapper.readTree(httpClientResult.get(RETURN_RESULT));
 
-            final Map<String, String> successResultsMap = getSuccessResultsMap(SUCCESS_MESSAGE);
-            successResultsMap.put(NAME, result.get(NAME).asText());
-            successResultsMap.put(DNS_NAME, dnsName);
-            successResultsMap.put(RESOURCE_JSON, resourceJson);
-            successResultsMap.put(RESOURCE_TYPE, result.get(RESOURCE_TYPE).asText());
+            final String username = GetCredentialFromManagerController.getUsernameFromDataArray(dataArray);
+            final String password = GetCredentialFromManagerController.getPasswordFromDataArray(dataArray);
+
+            final Map<String, String> successResultsMap = getSuccessResultsMap(httpClientResult.get(RETURN_RESULT));
+            successResultsMap.put(OutputNames.USERNAME, username);
+            successResultsMap.put(OutputNames.PASSWORD, password);
             return successResultsMap;
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }
     }
+
 }
