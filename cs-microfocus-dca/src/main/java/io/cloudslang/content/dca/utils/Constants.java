@@ -32,4 +32,6 @@ public class Constants {
     public static final String REFRESH_TOKEN_HEADER = "Refresh-Token:";
     public static final String HEADERS_DELIMITER = "\r\n";
     public static final String MESSAGE = "message";
+    public static final String DATA_PATH = "data";
+    public static final String DCA_CM_CREDENTIAL_PATH = "/credential";
 }
