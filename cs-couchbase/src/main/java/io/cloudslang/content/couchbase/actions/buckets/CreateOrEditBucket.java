@@ -25,6 +25,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.couchbase.entities.inputs.BucketInputs;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.execute.CouchbaseService;
+import io.cloudslang.content.couchbase.factory.HttpClientInputsBuilder;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 
 import java.util.Map;
@@ -34,7 +35,6 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.couchbase.entities.builders.HttpClientInputsBuilder.buildHttpClientInputs;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.CREATE_OR_EDIT_BUCKET;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.BUCKET_NAME;
@@ -239,9 +239,23 @@ public class CreateOrEditBucket {
                                        @Param(value = SASL_PASSWORD) String saslPassword,
                                        @Param(value = THREADS_NUMBER) String threadsNumber) {
         try {
-            final HttpClientInputs httpClientInputs = buildHttpClientInputs(username, password, proxyHost, proxyPort,
-                    proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
-                    keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
+            final HttpClientInputsBuilder httpClientInputsBuilder = new HttpClientInputsBuilder.Builder()
+                    .withUsername(username)
+                    .withPassword(password)
+                    .withTrustAllRoots(trustAllRoots)
+                    .withX509HostnameVerifier(x509HostnameVerifier)
+                    .withTrustKeystore(trustKeystore)
+                    .withTrustPassword(trustPassword)
+                    .withKeystore(keystore)
+                    .withKeystorePassword(keystorePassword)
+                    .withConnectTimeout(connectTimeout)
+                    .withSocketTimeout(socketTimeout)
+                    .withUseCookies(useCookies)
+                    .withKeepAlive(keepAlive)
+                    .build();
+
+            final HttpClientInputs httpClientInputs = httpClientInputsBuilder
+                    .getHttpClientInputs(METHOD_NAME, proxyHost, proxyPort, proxyUsername, proxyPassword);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withAction(CREATE_OR_EDIT_BUCKET)
@@ -270,4 +284,5 @@ public class CreateOrEditBucket {
             return getFailureResultsMap(exception);
         }
     }
+
 }

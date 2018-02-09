@@ -20,6 +20,7 @@ package io.cloudslang.content.couchbase.entities.constants;
  * 3/26/2017.
  */
 public class Constants {
+
     private Constants() {
         // prevent instantiation
     }
@@ -33,10 +34,7 @@ public class Constants {
 
     public static class HttpClientInputsValues {
         public static final String ALL_TYPE_HEADER = "Accept:application/json, text/plain, */*";
-        public static final String ALLOW_ALL = "allow_all";
-        public static final String BROWSER_COMPATIBLE = "browser_compatible";
         public static final String FORM_URL_ENCODED = "application/x-www-form-urlencoded; charset=UTF-8";
-        public static final String STRICT = "strict";
         public static final String X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1 = "X-memcachekv-Store-Client-Specification-Version:0.1";
     }
 
@@ -77,6 +75,7 @@ public class Constants {
     }
 
     public static class Miscellaneous {
+        public static final String ALLOW_ALL = "allow_all";
         public static final String AMPERSAND = "&";
         public static final String AT = "@";
         public static final String BLANK_SPACE = " ";
@@ -84,6 +83,7 @@ public class Constants {
         public static final String EQUAL = "=";
         public static final String PORT_REGEX = "^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$";
         public static final String SLASH = "/";
+        public static final String[] VALID_HOSTNAME_VERIFIERS = new String[]{"allow_all", "browser_compatible", "strict"};
     }
 
     public static class Values {
