@@ -142,7 +142,7 @@ public class GetResource {
             final JsonNode result = mapper.readTree(resourceJson);
 
             if (parseInt(httpClientResult.get(STATUS_CODE)) != HTTP_OK) {
-                return getFailureResultsMap(result.get(MESSAGE).asText());
+                return getFailureResultsMap(result.toString());
             }
 
             final String dnsName = getDnsNameFromArrayNode(result.get(ATTRIBUTES));

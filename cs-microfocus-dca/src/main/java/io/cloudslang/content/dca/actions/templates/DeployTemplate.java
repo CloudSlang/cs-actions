@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.dca.actions.templates;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -164,10 +165,10 @@ public class DeployTemplate {
 
             final Map<String, String> httpClientResult = new CSHttpClient().execute(httpClientInputs);
 
-            final Map resultMap = mapper.readValue(httpClientResult.get(RETURN_RESULT), Map.class);
+            final JsonNode result = mapper.readTree(httpClientResult.get(RETURN_RESULT));
 
             if (Integer.parseInt(httpClientResult.get(STATUS_CODE)) != HTTP_OK) {
-                return getFailureResultsMap(resultMap.get("message").toString());
+                return getFailureResultsMap(result.toString());
             }
 
             final boolean async = toBoolean(asyncStr);
@@ -179,7 +180,7 @@ public class DeployTemplate {
             } else {
 
                 final long finishTime = currentTimeMillis() + SECONDS.toMillis(timeout);
-                final String deploymentUuid = resultMap.get("uuid").toString();
+                final String deploymentUuid = result.get("uuid").asText();
 
                 while (true) {
                     Thread.sleep(SECONDS.toMillis(pollingInterval));

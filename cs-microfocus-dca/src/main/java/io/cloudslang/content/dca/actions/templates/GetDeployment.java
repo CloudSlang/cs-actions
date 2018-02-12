@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.dca.actions.templates;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -130,14 +131,14 @@ public class GetDeployment {
 
             final Map<String, String> httpClientResult = new CSHttpClient().execute(httpClientInputs);
 
-            final Map resultMap = mapper.readValue(httpClientResult.get(RETURN_RESULT), Map.class);
+            final JsonNode result = mapper.readTree(httpClientResult.get(RETURN_RESULT));
 
             if (parseInt(httpClientResult.get(STATUS_CODE)) != HTTP_OK) {
-                return getFailureResultsMap(resultMap.get(MESSAGE).toString());
+                return getFailureResultsMap(result.toString());
             }
 
             final Map<String, String> successResultsMap = getSuccessResultsMap(httpClientResult.get(RETURN_RESULT));
-            successResultsMap.put(STATUS, resultMap.get(STATUS).toString());
+            successResultsMap.put(STATUS, result.get(STATUS).asText());
             return successResultsMap;
         } catch (Exception e) {
             return getFailureResultsMap(e);
