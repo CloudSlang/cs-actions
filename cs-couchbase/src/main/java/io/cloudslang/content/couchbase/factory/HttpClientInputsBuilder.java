@@ -14,9 +14,9 @@
  */
 package io.cloudslang.content.couchbase.factory;
 
-import io.cloudslang.content.couchbase.entities.constants.Constants;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.ALLOW_ALL;
 import static io.cloudslang.content.couchbase.validate.Validators.areBothValuesPresent;
 import static io.cloudslang.content.couchbase.validate.Validators.getValidOrDefaultValue;
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
@@ -29,7 +29,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class HttpClientInputsBuilder {
 
-    private static HttpClientInputs httpClientInputs = new HttpClientInputs();
+    private static final HttpClientInputs httpClientInputs = new HttpClientInputs();
 
     private final String username;
     private final String password;
@@ -199,7 +199,7 @@ public class HttpClientInputsBuilder {
         }
 
         public HttpClientInputsBuilder.Builder withX509HostnameVerifier(String inputValue) {
-            this.x509HostnameVerifier = getValidOrDefaultValue(inputValue, Constants.Miscellaneous.ALLOW_ALL, Constants.Miscellaneous.VALID_HOSTNAME_VERIFIERS);
+            this.x509HostnameVerifier = getValidOrDefaultValue(inputValue, ALLOW_ALL, new String[]{"allow_all", "browser_compatible", "strict"});
             httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
 
             return this;

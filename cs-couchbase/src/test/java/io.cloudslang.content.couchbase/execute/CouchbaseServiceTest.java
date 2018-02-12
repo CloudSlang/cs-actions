@@ -66,7 +66,7 @@ public class CouchbaseServiceTest {
     @Before
     public void init() throws Exception {
         whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
-        when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(new HashMap<String, String>());
+        when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(new HashMap<>());
         toTest = new CouchbaseService();
     }
 

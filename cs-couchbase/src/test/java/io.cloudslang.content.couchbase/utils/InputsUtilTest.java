@@ -119,7 +119,7 @@ public class InputsUtilTest {
 
     @Test
     public void testGetEmptyPayloadString() {
-        assertEquals(EMPTY, getPayloadString(new HashMap<String, String>(), ",", "", true));
+        assertEquals(EMPTY, getPayloadString(new HashMap<>(), ",", "", true));
     }
 
     @Test
