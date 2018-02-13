@@ -111,6 +111,20 @@ public class Descriptions {
         public static final String STATUS_DESC = "The status of the deployment.";
     }
 
+    public static class GetResource {
+        public static final String SUCCESS_MESSAGE = "Successfully retrieved the resource details.";
+        public static final String GET_RESOURCE_DESC = "This operation can be used to get information about " +
+                "a DCA resource.";
+        public static final String RESOURCE_UUID_DESC = "The UUID of the resource for which the information " +
+                "will be retrieved.";
+        public static final String RETURN_RESULT_DESC = "In case of success, a successful message, " +
+                "otherwise an error message.";
+        public static final String NAME_DESC = "The name of the resource.";
+        public static final String DNS_NAME_DESC = "The DNS name of the resource.";
+        public static final String RESOURCE_JSON_DESC = "The JSON representation of the resource.";
+        public static final String RESOURCE_TYPE_DESC = "The type of the resource.";
+    }
+
     public static class DeployTemplate {
         public static final String DEPLOY_TEMPLATE_DESC = "This operation can be used to deploy a DCA template.";
 
@@ -143,5 +157,21 @@ public class Descriptions {
 
         public static final String RETURN_RESULT_DESC = "A JSON representation of a DCA Resource, to use in the " +
                 "Deploy Template Operation.";
+    }
+
+    public static class GetCredentialFromManager {
+        public static final String GET_CREDENTIAL_FROM_MANAGER_DESC = "This operation can be used to retrieve a " +
+                "credential from DCA credential manager.";
+
+        public static final String CM_HOST_DESC = "The hostname of the DCA Credential Manager container.";
+        public static final String CM_PORT_DESC = "The port of the DCA Credential Manager container.";
+        public static final String PROTOCOL_DESC = "The protocol to use (HTTP, HTTPS) to connect to the DCA " +
+                "Credential Manager.";
+        public static final String CREDENTIAL_UUID_DESC = "The UUID of the credential for which to retrieve the " +
+                "information.";
+        public static final String USERNAME_DESC = "The username of the credential, empty if not found.";
+        public static final String PASSWORD_DESC = "The password of the credential, empty if not found.";
+        public static final String RETURN_RESULT_DESC = "In case of success, a JSON representation of the credential " +
+                "data, otherwise an error message.";
     }
 }
