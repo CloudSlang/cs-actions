@@ -48,7 +48,6 @@ import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.Integer.parseInt;
-import static java.lang.System.lineSeparator;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -119,12 +118,12 @@ public class GetAuthenticationToken {
         final String keystorePassword = defaultIfEmpty(keystorePasswordInp, DEFAULT_JAVA_KEYSTORE_PASSWORD);
 
         // VALIDATION
-        final Validator validator = new Validator();
-        validator.validatePort(idmPortStr);
-        validator.validateProtocol(protocolStr);
+        final Validator validator = new Validator()
+                .validatePort(idmPortStr, IDM_PORT)
+                .validateProtocol(protocolStr, PROTOCOL);
 
-        if (!validator.getValidationErrorList().isEmpty()) {
-            return getFailureResultsMap(join(validator.getValidationErrorList(), lineSeparator()));
+        if (validator.hasErrors()) {
+            return getFailureResultsMap(validator.getErrors());
         }
 
         // SETUP HTTP INPUTS

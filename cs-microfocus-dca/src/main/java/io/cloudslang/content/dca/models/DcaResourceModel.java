@@ -17,20 +17,21 @@ package io.cloudslang.content.dca.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
 public class DcaResourceModel {
     private String typeUuid;
     private int deploySequence;
 
     private List<DcaBaseResourceModel> baseResources = new ArrayList<>();
     private List<DcaDeploymentParameterModel> deploymentParameters = new ArrayList<>();
-
-    public DcaResourceModel() {
-    }
 
     public DcaResourceModel(String typeUuid, int deploySequence) {
         this.typeUuid = typeUuid;
@@ -56,34 +57,6 @@ public class DcaResourceModel {
     @JsonProperty("TypeUuid")
     public String getTypeUuid() {
         return typeUuid;
-    }
-
-    public void setTypeUuid(String typeUuid) {
-        this.typeUuid = typeUuid;
-    }
-
-    public int getDeploySequence() {
-        return deploySequence;
-    }
-
-    public void setDeploySequence(int deploySequence) {
-        this.deploySequence = deploySequence;
-    }
-
-    public List<DcaBaseResourceModel> getBaseResources() {
-        return baseResources;
-    }
-
-    public void setBaseResources(List<DcaBaseResourceModel> baseResources) {
-        this.baseResources = baseResources;
-    }
-
-    public List<DcaDeploymentParameterModel> getDeploymentParameters() {
-        return deploymentParameters;
-    }
-
-    public void setDeploymentParameters(List<DcaDeploymentParameterModel> deploymentParameters) {
-        this.deploymentParameters = deploymentParameters;
     }
 
     public String toJson() {
