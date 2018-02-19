@@ -113,10 +113,10 @@ public class SunOsPingCommand implements LocalPingCommand {
         resultMap.put(PACKETS_RECEIVED, extractValue(output, "packets transmitted, ", " packets received, "));
         resultMap.put(PERCENTAGE_PACKETS_LOST, extractValue(output, " received, ", "% packet loss"));
 
-        final String minMaxAvg = extractValue(output, "round-trip (ms)  min/avg/max/stddev = ");
+        final String minAvgMax = extractValue(output, "round-trip (ms)  min/avg/max/stddev = ");
 
-        if (isNotEmpty(minMaxAvg)) {
-            final String[] roundTripTime = minMaxAvg.split(SLASH);
+        if (isNotEmpty(minAvgMax)) {
+            final String[] roundTripTime = minAvgMax.split(SLASH);
 
             resultMap.put(TRANSMISSION_TIME_MIN, roundTripTime[0]);
             resultMap.put(TRANSMISSION_TIME_AVG, roundTripTime[1]);

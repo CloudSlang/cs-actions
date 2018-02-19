@@ -114,10 +114,10 @@ public class LinuxPingCommand implements LocalPingCommand {
         resultMap.put(PACKETS_RECEIVED, extractValue(output, "packets transmitted, ", " received, "));
         resultMap.put(PERCENTAGE_PACKETS_LOST, extractValue(output, " received, ", "% packet loss"));
 
-        final String minMaxAvg = extractValue(output, "rtt min/avg/max/mdev = ", " ms");
+        final String minAvgMax = extractValue(output, "rtt min/avg/max/mdev = ", " ms");
 
-        if(isNotEmpty(minMaxAvg)) {
-            final String[] roundTripTime = minMaxAvg.split(SLASH);
+        if(isNotEmpty(minAvgMax)) {
+            final String[] roundTripTime = minAvgMax.split(SLASH);
 
             resultMap.put(TRANSMISSION_TIME_MIN, roundTripTime[0]);
             resultMap.put(TRANSMISSION_TIME_AVG, roundTripTime[1]);
