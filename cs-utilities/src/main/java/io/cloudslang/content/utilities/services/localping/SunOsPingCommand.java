@@ -19,6 +19,7 @@ import io.cloudslang.content.utilities.entities.LocalPingInputs;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OtherValues.EMPTY_STRING;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.DEFAULT_PACKET_COUNT;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.DEFAULT_PACKET_SIZE;
@@ -114,11 +115,17 @@ public class SunOsPingCommand implements LocalPingCommand {
 
         final String minMaxAvg = extractValue(output, "round-trip (ms)  min/avg/max/stddev = ");
 
-        final String[] roundTripTime = minMaxAvg.split(SLASH);
+        if (isNotEmpty(minMaxAvg)) {
+            final String[] roundTripTime = minMaxAvg.split(SLASH);
 
-        resultMap.put(TRANSMISSION_TIME_MIN, roundTripTime[0]);
-        resultMap.put(TRANSMISSION_TIME_AVG, roundTripTime[1]);
-        resultMap.put(TRANSMISSION_TIME_MAX, roundTripTime[2]);
+            resultMap.put(TRANSMISSION_TIME_MIN, roundTripTime[0]);
+            resultMap.put(TRANSMISSION_TIME_AVG, roundTripTime[1]);
+            resultMap.put(TRANSMISSION_TIME_MAX, roundTripTime[2]);
+        } else {
+            resultMap.put(TRANSMISSION_TIME_MIN, EMPTY_STRING);
+            resultMap.put(TRANSMISSION_TIME_AVG, EMPTY_STRING);
+            resultMap.put(TRANSMISSION_TIME_MAX, EMPTY_STRING);
+        }
 
         return resultMap;
     }
