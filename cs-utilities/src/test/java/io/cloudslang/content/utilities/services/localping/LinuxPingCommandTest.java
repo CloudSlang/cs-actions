@@ -44,6 +44,14 @@ public class LinuxPingCommandTest {
             "4 packets transmitted, 4 received, 0% packet loss, time 3004ms\n" +
             "rtt min/avg/max/mdev = 98.366/102.086/105.476/2.530 ms\n";
 
+    private static final String OUTPUT_WITHOUT_ROUND_TRIP_TIMES = "PING 10.0.0.1 (10.0.0.1) 4(32) bytes of data.\n" +
+            "12 bytes from 10.0.0.1: icmp_seq=1 ttl=119\n" +
+            "12 bytes from 10.0.0.1: icmp_seq=2 ttl=119\n" +
+            "12 bytes from 10.0.0.1: icmp_seq=3 ttl=119\n" +
+            "\n" +
+            "--- 10.0.0.1 ping statistics ---\n" +
+            "3 packets transmitted, 3 received, 0% packet loss, time 2003ms\n";
+
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
@@ -111,5 +119,17 @@ public class LinuxPingCommandTest {
         assertEquals("98.366", resultsMap.get(TRANSMISSION_TIME_MIN));
         assertEquals("102.086", resultsMap.get(TRANSMISSION_TIME_AVG));
         assertEquals("105.476", resultsMap.get(TRANSMISSION_TIME_MAX));
+    }
+
+    @Test
+    public void testParseOutputWithoutRoundTripTimes() {
+        Map<String, String> resultsMap = new LinuxPingCommand().parseOutput(OUTPUT_WITHOUT_ROUND_TRIP_TIMES);
+
+        assertEquals("3", resultsMap.get(PACKETS_SENT));
+        assertEquals("3", resultsMap.get(PACKETS_RECEIVED));
+        assertEquals("0", resultsMap.get(PERCENTAGE_PACKETS_LOST));
+        assertEquals("", resultsMap.get(TRANSMISSION_TIME_MIN));
+        assertEquals("", resultsMap.get(TRANSMISSION_TIME_AVG));
+        assertEquals("", resultsMap.get(TRANSMISSION_TIME_MAX));
     }
 }
