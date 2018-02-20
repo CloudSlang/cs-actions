@@ -21,8 +21,10 @@ package io.cloudslang.content.couchbase.entities.couchbase;
  */
 public enum CouchbaseApi {
     CONTROLLER("/controller"),
+    NODE("/node"),
+    NODES("/nodes"),
     POOLS("/pools"),
-    POOLS_DEFAULT("/pools/default");
+    SETTINGS("/settings");
 
     private final String value;
 

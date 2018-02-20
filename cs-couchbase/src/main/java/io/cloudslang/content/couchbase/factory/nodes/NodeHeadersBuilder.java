@@ -19,7 +19,6 @@ import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.ALL_TYPE_HEADER;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.FORM_URL_ENCODED;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.FAIL_OVER_NODE;
 
 /**
  * Created by TusaM

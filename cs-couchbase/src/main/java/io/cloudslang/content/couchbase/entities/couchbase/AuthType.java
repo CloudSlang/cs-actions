@@ -15,8 +15,13 @@
 
 package io.cloudslang.content.couchbase.entities.couchbase;
 
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValidValuesString;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValues;
 import static java.lang.String.format;
+import static java.util.Arrays.stream;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -26,6 +31,13 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public enum AuthType {
     NONE("none"),
     SASL("sasl");
+
+    private static final Map<String, String> AUTH_TYPE_MAP = new HashMap<>();
+
+    static {
+        stream(values())
+                .forEach(authType -> AUTH_TYPE_MAP.put(authType.name().toLowerCase(), authType.getValue()));
+    }
 
     private final String value;
 
@@ -37,18 +49,11 @@ public enum AuthType {
         return value;
     }
 
-    public static String getValue(String input) {
-        if (isBlank(input)) {
-            return NONE.getValue();
-        }
-
-        for (AuthType type : values()) {
-            if (type.getValue().equalsIgnoreCase(input)) {
-                return type.getValue();
-            }
-        }
-
-        throw new RuntimeException(format("Invalid Couchbase bucket authorization type value: '%s'. Valid values: '%s'.",
-                input, getEnumValidValuesString(AuthType.class)));
+    public static String getAuthTypeValue(String input) {
+        return isBlank(input) ? NONE.getValue() :
+                Optional
+                        .ofNullable(AUTH_TYPE_MAP.get(input))
+                        .orElseThrow(() -> new RuntimeException(format("Invalid Couchbase bucket authorization type value: '%s'. Valid values: '%s'.",
+                                input, getEnumValues(AuthType.class))));
     }
 }

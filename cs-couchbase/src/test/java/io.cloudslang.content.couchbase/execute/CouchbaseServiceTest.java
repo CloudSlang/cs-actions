@@ -19,6 +19,7 @@ import io.cloudslang.content.couchbase.entities.inputs.BucketInputs;
 import io.cloudslang.content.couchbase.entities.inputs.ClusterInputs;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.entities.inputs.NodeInputs;
+import io.cloudslang.content.couchbase.factory.HttpClientInputsBuilder;
 import io.cloudslang.content.httpclient.CSHttpClient;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import org.junit.Before;
@@ -33,7 +34,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
 import static io.cloudslang.content.couchbase.utils.TestUtils.setExpectedExceptions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -66,7 +66,7 @@ public class CouchbaseServiceTest {
     @Before
     public void init() throws Exception {
         whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
-        when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(new HashMap<String, String>());
+        when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(new HashMap<>());
         toTest = new CouchbaseService();
     }
 
@@ -170,6 +170,21 @@ public class CouchbaseServiceTest {
 
         assertEquals("http://somewhere.couchbase.com:8091/pools/default/buckets", httpClientInputs.getUrl());
         assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
+        assertEquals("application/json", httpClientInputs.getContentType());
+    }
+
+    @Test
+    public void testGetAutoFailOverSettings() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "GET");
+        CommonInputs commonInputs = getCommonInputs("GetAutoFailOverSettings", "cluster", "http://somewhere.couchbase.com:8091");
+        toTest.execute(httpClientInputs, commonInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://somewhere.couchbase.com:8091/settings/autoFailover", httpClientInputs.getUrl());
         assertEquals("application/json", httpClientInputs.getContentType());
     }
 
@@ -421,4 +436,29 @@ public class CouchbaseServiceTest {
                 .withDelimiter(delimiter)
                 .build();
     }
+
+    private HttpClientInputs getHttpClientInputs(String username, String password, String proxyHost, String proxyPort,
+                                                 String proxyUsername, String proxyPassword, String trustAllRoots,
+                                                 String x509HostnameVerifier, String trustKeystore, String trustPassword,
+                                                 String keystore, String keystorePassword, String connectTimeout,
+                                                 String socketTimeout, String useCookies, String keepAlive, String method) {
+        final HttpClientInputsBuilder httpClientInputsBuilder = new HttpClientInputsBuilder.Builder()
+                .withUsername(username)
+                .withPassword(password)
+                .withTrustAllRoots(trustAllRoots)
+                .withX509HostnameVerifier(x509HostnameVerifier)
+                .withTrustKeystore(trustKeystore)
+                .withTrustPassword(trustPassword)
+                .withKeystore(keystore)
+                .withKeystorePassword(keystorePassword)
+                .withConnectTimeout(connectTimeout)
+                .withSocketTimeout(socketTimeout)
+                .withUseCookies(useCookies)
+                .withKeepAlive(keepAlive)
+                .build();
+
+        return httpClientInputsBuilder
+                .getHttpClientInputs(method, proxyHost, proxyPort, proxyUsername, proxyPassword);
+    }
+
 }

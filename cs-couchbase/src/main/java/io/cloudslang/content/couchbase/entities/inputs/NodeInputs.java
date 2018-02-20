@@ -15,9 +15,8 @@
 
 package io.cloudslang.content.couchbase.entities.inputs;
 
-import io.cloudslang.content.couchbase.entities.couchbase.RecoveryType;
-
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getValidInternalNodeIpAddress;
+import static io.cloudslang.content.couchbase.entities.couchbase.RecoveryType.getRecoveryTypeValue;
+import static io.cloudslang.content.couchbase.validate.Validators.getValidInternalNodeIpAddress;
 
 /**
  * Created by TusaM
@@ -54,7 +53,7 @@ public class NodeInputs {
         }
 
         public NodeInputs.Builder withRecoveryType(String inputValue) {
-            recoveryType = RecoveryType.getValue(inputValue);
+            recoveryType = getRecoveryTypeValue(inputValue);
             return this;
         }
     }

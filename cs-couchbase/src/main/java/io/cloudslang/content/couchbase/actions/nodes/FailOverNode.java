@@ -25,7 +25,9 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.entities.inputs.NodeInputs;
 import io.cloudslang.content.couchbase.execute.CouchbaseService;
+import io.cloudslang.content.couchbase.factory.HttpClientInputsBuilder;
 import io.cloudslang.content.httpclient.HttpClientInputs;
+import org.apache.http.client.methods.HttpPost;
 
 import java.util.Map;
 
@@ -38,10 +40,9 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.N
 import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.FAIL_OVER_NODE;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.NodeInputs.INTERNAL_NODE_IP_ADDRESS;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
 import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
-import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE_PASSWORD;
 import static io.cloudslang.content.httpclient.HttpClientInputs.PASSWORD;
 import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_HOST;
@@ -52,11 +53,10 @@ import static io.cloudslang.content.httpclient.HttpClientInputs.SOCKET_TIMEOUT;
 import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_ALL_ROOTS;
 import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_KEYSTORE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_PASSWORD;
-import static io.cloudslang.content.httpclient.HttpClientInputs.USE_COOKIES;
 import static io.cloudslang.content.httpclient.HttpClientInputs.USERNAME;
+import static io.cloudslang.content.httpclient.HttpClientInputs.USE_COOKIES;
 import static io.cloudslang.content.httpclient.HttpClientInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
 
 /**
  * Created by TusaM
@@ -162,9 +162,23 @@ public class FailOverNode {
                                        @Param(value = KEEP_ALIVE) String keepAlive,
                                        @Param(value = INTERNAL_NODE_IP_ADDRESS) String internalNodeIpAddress) {
         try {
-            final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
-                    proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
-                    keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
+            final HttpClientInputsBuilder httpClientInputsBuilder = new HttpClientInputsBuilder.Builder()
+                    .withUsername(username)
+                    .withPassword(password)
+                    .withTrustAllRoots(trustAllRoots)
+                    .withX509HostnameVerifier(x509HostnameVerifier)
+                    .withTrustKeystore(trustKeystore)
+                    .withTrustPassword(trustPassword)
+                    .withKeystore(keystore)
+                    .withKeystorePassword(keystorePassword)
+                    .withConnectTimeout(connectTimeout)
+                    .withSocketTimeout(socketTimeout)
+                    .withUseCookies(useCookies)
+                    .withKeepAlive(keepAlive)
+                    .build();
+
+            final HttpClientInputs httpClientInputs = httpClientInputsBuilder
+                    .getHttpClientInputs(HttpPost.METHOD_NAME, proxyHost, proxyPort, proxyUsername, proxyPassword);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withAction(FAIL_OVER_NODE)

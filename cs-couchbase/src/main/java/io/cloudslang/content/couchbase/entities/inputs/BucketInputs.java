@@ -15,22 +15,22 @@
 
 package io.cloudslang.content.couchbase.entities.inputs;
 
-import io.cloudslang.content.couchbase.entities.couchbase.AuthType;
-import io.cloudslang.content.couchbase.entities.couchbase.BucketType;
-import io.cloudslang.content.couchbase.entities.couchbase.ConflictResolutionType;
-import io.cloudslang.content.couchbase.entities.couchbase.EvictionPolicy;
-
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.DEFAULT_REPLICA_NUMBER;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.DEFAULT_THREADS_NUMBER;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.INIT_INDEX;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.MAXIMUM_REPLICA_NUMBER;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.MINIMUM_RAM_QUOTA_AMOUNT;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.MAXIMUM_THREADS_NUMBER;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.MINIMUM_RAM_QUOTA_AMOUNT;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Values.MINIMUM_THREADS_NUMBER;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnforcedBooleanCondition;
+import static io.cloudslang.content.couchbase.entities.couchbase.AuthType.getAuthTypeValue;
+import static io.cloudslang.content.couchbase.entities.couchbase.BucketType.getBucketTypeValue;
+import static io.cloudslang.content.couchbase.entities.couchbase.ConflictResolutionType.getConflictResolutionTypeValue;
+import static io.cloudslang.content.couchbase.entities.couchbase.EvictionPolicy.getEvictionPolicyValue;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnabledString;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getValidIntValue;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getValidPort;
+import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnforcedBooleanCondition;
+import static io.cloudslang.content.couchbase.validate.Validators.getValidIntValue;
+import static io.cloudslang.content.couchbase.validate.Validators.getValidPort;
+import static java.lang.Boolean.FALSE;
 import static java.lang.String.valueOf;
 
 /**
@@ -143,7 +143,7 @@ public class BucketInputs {
         }
 
         public BucketInputs.Builder withAuthType(String input) {
-            authType = AuthType.getValue(input);
+            authType = getAuthTypeValue(input);
             return this;
         }
 
@@ -153,17 +153,17 @@ public class BucketInputs {
         }
 
         public BucketInputs.Builder withBucketType(String input) {
-            bucketType = BucketType.getValue(input);
+            bucketType = getBucketTypeValue(input);
             return this;
         }
 
         public BucketInputs.Builder withConflictResolutionType(String input) {
-            conflictResolutionType = ConflictResolutionType.getValue(input);
+            conflictResolutionType = getConflictResolutionTypeValue(input);
             return this;
         }
 
         public BucketInputs.Builder withEvictionPolicy(String input) {
-            evictionPolicy = EvictionPolicy.getValue(input);
+            evictionPolicy = getEvictionPolicyValue(input);
             return this;
         }
 
@@ -173,7 +173,7 @@ public class BucketInputs {
         }
 
         public BucketInputs.Builder withParallelDBAndViewCompaction(String input) {
-            parallelDBAndViewCompaction = valueOf(getEnforcedBooleanCondition(input, Boolean.FALSE));
+            parallelDBAndViewCompaction = valueOf(getEnforcedBooleanCondition(input, FALSE));
             return this;
         }
 

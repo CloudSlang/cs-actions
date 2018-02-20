@@ -15,8 +15,13 @@
 
 package io.cloudslang.content.couchbase.entities.couchbase;
 
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValidValuesString;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValues;
 import static java.lang.String.format;
+import static java.util.Arrays.stream;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -26,6 +31,13 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public enum EvictionPolicy {
     FULL_EVICTION("fullEviction"),
     VALUE_ONLY("valueOnly");
+
+    private static final Map<String, String> EVICTION_POLICY_MAP = new HashMap<>();
+
+    static {
+        stream(values())
+                .forEach(bucketType -> EVICTION_POLICY_MAP.put(bucketType.name().toLowerCase(), bucketType.getValue()));
+    }
 
     private final String value;
 
@@ -37,18 +49,11 @@ public enum EvictionPolicy {
         return value;
     }
 
-    public static String getValue(String input) {
-        if (isBlank(input)) {
-            return VALUE_ONLY.getValue();
-        }
-
-        for (EvictionPolicy policy : values()) {
-            if (policy.getValue().equalsIgnoreCase(input)) {
-                return policy.getValue();
-            }
-        }
-
-        throw new RuntimeException(format("Invalid Couchbase eviction policy value: '%s'. Valid values: '%s'.",
-                input, getEnumValidValuesString(EvictionPolicy.class)));
+    public static String getEvictionPolicyValue(String input) {
+        return isBlank(input) ? VALUE_ONLY.getValue() :
+                Optional
+                        .ofNullable(EVICTION_POLICY_MAP.get(input))
+                        .orElseThrow(() -> new RuntimeException(format("Invalid Couchbase conflict resolution type value: '%s'. Valid values: '%s'.",
+                                input, getEnumValues(ConflictResolutionType.class))));
     }
 }

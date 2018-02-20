@@ -12,13 +12,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.constants;
+package io.cloudslang.content.couchbase.entities.couchbase;
 
-public class DefaultValues {
-    public static final String ASYNC           = "false";
-    public static final String PROTOCOL        = "https";
-    public static final String PROXY_PORT      = "8080";
-    public static final String PROXY_PROTOCOL  = "http";
-    public static final String EXEC_TIMEOUT    = "600000"; //ms
-    public static final String CONNECT_TIMEOUT = "10000"; //ms
+public enum ApiUriSuffix {
+    ADD_NODE("/addNode"),
+    AUTO_FAILOVER("/autoFailover"),
+    DEFAULT("/default"),
+    DO_JOIN_CLUSTER("/doJoinCluster"),
+    EJECT_NODE_ENTRY("/ejectNodeentry"),
+    SELF("/self"),
+    WEB("/web");
+
+    private final String value;
+
+    ApiUriSuffix(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

@@ -31,7 +31,9 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.execute.CouchbaseService;
+import io.cloudslang.content.couchbase.factory.HttpClientInputsBuilder;
 import io.cloudslang.content.httpclient.HttpClientInputs;
+import org.apache.http.client.methods.HttpGet;
 
 import java.util.Map;
 
@@ -46,7 +48,6 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.CLUSTER;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.GET_DESTINATION_CLUSTER_REFERENCE;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
 import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEEP_ALIVE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
@@ -64,7 +65,6 @@ import static io.cloudslang.content.httpclient.HttpClientInputs.USERNAME;
 import static io.cloudslang.content.httpclient.HttpClientInputs.USE_COOKIES;
 import static io.cloudslang.content.httpclient.HttpClientInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.http.client.methods.HttpGet.METHOD_NAME;
 
 /**
  * Created by Mihai Tusa
@@ -74,7 +74,7 @@ public class GetDestinationClusterReference {
     /**
      * Retrieves the destination cluster reference.
      * https://developer.couchbase.com/documentation/server/3.x/admin/REST/rest-xdcr-get-ref.html
-     *
+     * <p>
      * Notes: To use XDCR, source and destination clusters must be established. A source cluster is the cluster where the
      * original data is stored. A destination cluster is the cluster where the replica data is stored. Data is copied from
      * the source cluster to the destination cluster.
@@ -169,9 +169,23 @@ public class GetDestinationClusterReference {
                                        @Param(value = USE_COOKIES) String useCookies,
                                        @Param(value = KEEP_ALIVE) String keepAlive) {
         try {
-            final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
-                    proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
-                    keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
+            final HttpClientInputsBuilder httpClientInputsBuilder = new HttpClientInputsBuilder.Builder()
+                    .withUsername(username)
+                    .withPassword(password)
+                    .withTrustAllRoots(trustAllRoots)
+                    .withX509HostnameVerifier(x509HostnameVerifier)
+                    .withTrustKeystore(trustKeystore)
+                    .withTrustPassword(trustPassword)
+                    .withKeystore(keystore)
+                    .withKeystorePassword(keystorePassword)
+                    .withConnectTimeout(connectTimeout)
+                    .withSocketTimeout(socketTimeout)
+                    .withUseCookies(useCookies)
+                    .withKeepAlive(keepAlive)
+                    .build();
+
+            final HttpClientInputs httpClientInputs = httpClientInputsBuilder
+                    .getHttpClientInputs(HttpGet.METHOD_NAME, proxyHost, proxyPort, proxyUsername, proxyPassword);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withAction(GET_DESTINATION_CLUSTER_REFERENCE)

@@ -25,7 +25,9 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.couchbase.entities.inputs.BucketInputs;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.execute.CouchbaseService;
+import io.cloudslang.content.couchbase.factory.HttpClientInputsBuilder;
 import io.cloudslang.content.httpclient.HttpClientInputs;
+import org.apache.http.client.methods.HttpDelete;
 
 import java.util.Map;
 
@@ -38,10 +40,9 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.B
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.DELETE_BUCKET;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.BUCKET_NAME;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
 import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
-import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE_PASSWORD;
 import static io.cloudslang.content.httpclient.HttpClientInputs.PASSWORD;
 import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_HOST;
@@ -52,11 +53,10 @@ import static io.cloudslang.content.httpclient.HttpClientInputs.SOCKET_TIMEOUT;
 import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_ALL_ROOTS;
 import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_KEYSTORE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_PASSWORD;
-import static io.cloudslang.content.httpclient.HttpClientInputs.USE_COOKIES;
 import static io.cloudslang.content.httpclient.HttpClientInputs.USERNAME;
+import static io.cloudslang.content.httpclient.HttpClientInputs.USE_COOKIES;
 import static io.cloudslang.content.httpclient.HttpClientInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.http.client.methods.HttpDelete.METHOD_NAME;
 
 /**
  * Created by TusaM
@@ -66,7 +66,7 @@ public class DeleteBucket {
     /**
      * Deletes specified bucket.
      * https://developer.couchbase.com/documentation/server/4.6/rest-api/rest-bucket-delete.html
-     *
+     * <p>
      * Note: Bucket deletion is a synchronous operation. When a cluster has multiple servers, some servers might not be
      * able to delete the bucket within the standard 30 second timeout period.
      * If the bucket is deleted on all servers within the standard timeout of 30 seconds, a 200 response code is returned.
@@ -168,9 +168,23 @@ public class DeleteBucket {
                                        @Param(value = KEEP_ALIVE) String keepAlive,
                                        @Param(value = BUCKET_NAME, required = true) String bucketName) {
         try {
-            final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
-                    proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
-                    keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
+            final HttpClientInputsBuilder httpClientInputsBuilder = new HttpClientInputsBuilder.Builder()
+                    .withUsername(username)
+                    .withPassword(password)
+                    .withTrustAllRoots(trustAllRoots)
+                    .withX509HostnameVerifier(x509HostnameVerifier)
+                    .withTrustKeystore(trustKeystore)
+                    .withTrustPassword(trustPassword)
+                    .withKeystore(keystore)
+                    .withKeystorePassword(keystorePassword)
+                    .withConnectTimeout(connectTimeout)
+                    .withSocketTimeout(socketTimeout)
+                    .withUseCookies(useCookies)
+                    .withKeepAlive(keepAlive)
+                    .build();
+
+            final HttpClientInputs httpClientInputs = httpClientInputsBuilder
+                    .getHttpClientInputs(HttpDelete.METHOD_NAME, proxyHost, proxyPort, proxyUsername, proxyPassword);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withAction(DELETE_BUCKET)

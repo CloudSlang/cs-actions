@@ -22,8 +22,9 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.C
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.VIEWS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ErrorMessages.UNSUPPORTED_COUCHBASE_API;
+import static io.cloudslang.content.couchbase.entities.couchbase.ApiUriSuffix.DEFAULT;
 import static io.cloudslang.content.couchbase.entities.couchbase.CouchbaseApi.CONTROLLER;
-import static io.cloudslang.content.couchbase.entities.couchbase.CouchbaseApi.POOLS_DEFAULT;
+import static io.cloudslang.content.couchbase.entities.couchbase.CouchbaseApi.POOLS;
 import static io.cloudslang.content.couchbase.entities.couchbase.NodesUri.getNodesUriValue;
 import static io.cloudslang.content.couchbase.entities.couchbase.SuffixUri.getSuffixUriValue;
 import static io.cloudslang.content.couchbase.entities.couchbase.ViewsUri.getViewsUriValue;
@@ -46,13 +47,13 @@ public class UriFactory {
         String action = wrapper.getCommonInputs().getAction();
         switch (wrapper.getCommonInputs().getApi()) {
             case BUCKETS:
-                return appendTo(POOLS_DEFAULT.getValue(), getBucketsUriValue(wrapper), action);
+                return appendTo(POOLS.getValue() + DEFAULT.getValue(), getBucketsUriValue(wrapper), action);
             case CLUSTER:
                 return getClusterUriValue(wrapper) + getSuffixUriValue(action);
             case NODES:
                 return appendTo(CONTROLLER.getValue() + getNodesUriValue(action), EMPTY, action);
             case VIEWS:
-                return appendTo(POOLS_DEFAULT.getValue() + getViewsUriValue(action), getViewsUriSuffix(wrapper), action);
+                return appendTo(POOLS.getValue() + DEFAULT.getValue() + getViewsUriValue(action), getViewsUriSuffix(wrapper), action);
             default:
                 throw new RuntimeException(UNSUPPORTED_COUCHBASE_API);
         }

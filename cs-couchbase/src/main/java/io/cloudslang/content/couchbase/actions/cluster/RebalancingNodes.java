@@ -25,7 +25,9 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.couchbase.entities.inputs.ClusterInputs;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.execute.CouchbaseService;
+import io.cloudslang.content.couchbase.factory.HttpClientInputsBuilder;
 import io.cloudslang.content.httpclient.HttpClientInputs;
+import org.apache.http.client.methods.HttpPost;
 
 import java.util.Map;
 
@@ -40,7 +42,6 @@ import static io.cloudslang.content.couchbase.entities.constants.Inputs.ClusterI
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.ClusterInputs.KNOWN_NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.DELIMITER;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
 import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEEP_ALIVE;
 import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
@@ -58,7 +59,6 @@ import static io.cloudslang.content.httpclient.HttpClientInputs.USERNAME;
 import static io.cloudslang.content.httpclient.HttpClientInputs.USE_COOKIES;
 import static io.cloudslang.content.httpclient.HttpClientInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
 
 /**
  * Created by TusaM
@@ -132,7 +132,7 @@ public class RebalancingNodes {
      * @param knownNodes           Optional - A string that contains: none, one or more nodes that are known within the
      *                             cluster.
      *                             Example: "ns_2@10.0.0.2,ns_2@10.0.0.3"
-     * Note: The inputs: ejectedNodes, knownNodes cannot be both blank in order to successfully trigger nodes rebalancing.
+     *                             Note: The inputs: ejectedNodes, knownNodes cannot be both blank in order to successfully trigger nodes rebalancing.
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
@@ -169,9 +169,23 @@ public class RebalancingNodes {
                                        @Param(value = KNOWN_NODES) String knownNodes,
                                        @Param(value = DELIMITER) String delimiter) {
         try {
-            final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
-                    proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
-                    keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
+            final HttpClientInputsBuilder httpClientInputsBuilder = new HttpClientInputsBuilder.Builder()
+                    .withUsername(username)
+                    .withPassword(password)
+                    .withTrustAllRoots(trustAllRoots)
+                    .withX509HostnameVerifier(x509HostnameVerifier)
+                    .withTrustKeystore(trustKeystore)
+                    .withTrustPassword(trustPassword)
+                    .withKeystore(keystore)
+                    .withKeystorePassword(keystorePassword)
+                    .withConnectTimeout(connectTimeout)
+                    .withSocketTimeout(socketTimeout)
+                    .withUseCookies(useCookies)
+                    .withKeepAlive(keepAlive)
+                    .build();
+
+            final HttpClientInputs httpClientInputs = httpClientInputsBuilder
+                    .getHttpClientInputs(HttpPost.METHOD_NAME, proxyHost, proxyPort, proxyUsername, proxyPassword);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withAction(REBALANCING_NODES)

@@ -20,6 +20,7 @@ package io.cloudslang.content.couchbase.entities.constants;
  * 3/26/2017.
  */
 public class Constants {
+
     private Constants() {
         // prevent instantiation
     }
@@ -33,11 +34,7 @@ public class Constants {
 
     public static class HttpClientInputsValues {
         public static final String ALL_TYPE_HEADER = "Accept:application/json, text/plain, */*";
-        public static final String ALLOW_ALL = "allow_all";
-        public static final String APPLICATION_JSON = "application/json";
-        public static final String BROWSER_COMPATIBLE = "browser_compatible";
         public static final String FORM_URL_ENCODED = "application/x-www-form-urlencoded; charset=UTF-8";
-        public static final String STRICT = "strict";
         public static final String X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1 = "X-memcachekv-Store-Client-Specification-Version:0.1";
     }
 
@@ -50,6 +47,7 @@ public class Constants {
     }
 
     public static class ClusterActions {
+        public static final String GET_AUTO_FAILOVER_SETTINGS = "GetAutoFailOverSettings";
         public static final String GET_CLUSTER_DETAILS = "GetClusterDetails";
         public static final String GET_CLUSTER_INFO = "GetClusterInfo";
         public static final String GET_DESTINATION_CLUSTER_REFERENCE = "GetDestinationClusterReference";
@@ -77,6 +75,7 @@ public class Constants {
     }
 
     public static class Miscellaneous {
+        public static final String ALLOW_ALL = "allow_all";
         public static final String AMPERSAND = "&";
         public static final String AT = "@";
         public static final String BLANK_SPACE = " ";
@@ -87,10 +86,10 @@ public class Constants {
     }
 
     public static class Values {
-        public static final int INIT_INDEX = 0;
         public static final int COUCHBASE_DEFAULT_PROXY_PORT = 11215;
         public static final int DEFAULT_REPLICA_NUMBER = 1;
         public static final int DEFAULT_THREADS_NUMBER = 2;
+        public static final int INIT_INDEX = 0;
         public static final int MAXIMUM_REPLICA_NUMBER = 3;
         public static final int MAXIMUM_THREADS_NUMBER = 8;
         public static final int MINIMUM_RAM_QUOTA_AMOUNT = 100;

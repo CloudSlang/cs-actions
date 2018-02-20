@@ -15,8 +15,13 @@
 
 package io.cloudslang.content.couchbase.entities.couchbase;
 
-import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValidValuesString;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValues;
 import static java.lang.String.format;
+import static java.util.Arrays.stream;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -26,6 +31,13 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public enum ConflictResolutionType {
     LWW("lww"),
     SEQNO("seqno");
+
+    private static final Map<String, String> CONFLICT_RESOLUTION_TYPE_MAP = new HashMap<>();
+
+    static {
+        stream(values())
+                .forEach(bucketType -> CONFLICT_RESOLUTION_TYPE_MAP.put(bucketType.name().toLowerCase(), bucketType.getValue()));
+    }
 
     private final String value;
 
@@ -37,18 +49,11 @@ public enum ConflictResolutionType {
         return value;
     }
 
-    public static String getValue(String input) {
-        if (isBlank(input)) {
-            return SEQNO.getValue();
-        }
-
-        for (ConflictResolutionType resolution : values()) {
-            if (resolution.getValue().equalsIgnoreCase(input)) {
-                return resolution.getValue();
-            }
-        }
-
-        throw new RuntimeException(format("Invalid Couchbase conflict resolution type value: '%s'. Valid values: '%s'.",
-                input, getEnumValidValuesString(ConflictResolutionType.class)));
+    public static String getConflictResolutionTypeValue(String input) {
+        return isBlank(input) ? SEQNO.getValue() :
+                Optional
+                        .ofNullable(CONFLICT_RESOLUTION_TYPE_MAP.get(input))
+                        .orElseThrow(() -> new RuntimeException(format("Invalid Couchbase conflict resolution type value: '%s'. Valid values: '%s'.",
+                                input, getEnumValues(ConflictResolutionType.class))));
     }
 }

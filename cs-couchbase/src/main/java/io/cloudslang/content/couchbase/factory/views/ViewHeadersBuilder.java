@@ -17,8 +17,7 @@ package io.cloudslang.content.couchbase.factory.views;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
-import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.APPLICATION_JSON;
-
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 /**
  * Created by TusaM
  * 4/28/2017.
@@ -31,7 +30,7 @@ public class ViewHeadersBuilder {
     public static void setViewHeaders(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
             default:
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
+                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON.getMimeType());
         }
     }
 }
