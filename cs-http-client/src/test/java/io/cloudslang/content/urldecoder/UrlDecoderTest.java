@@ -31,7 +31,7 @@ public class UrlDecoderTest {
 
     @Test
     public void testWithIncompleteByteEncodingCharacterSet() {
-        final Map<String, String> result = u.execute("%x", "");
+        final Map<String, String> result = u.execute("%x","");
         assertEquals(FAILURE, result.get (RETURN_CODE));
         assertTrue(result.get(RETURN_RESULT).contains("URLDecoder: Incomplete trailing escape (%) pattern"));
 

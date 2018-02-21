@@ -54,8 +54,10 @@ public class URLEncoderAction {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS,
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE,
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
     public Map<String, String> execute(
