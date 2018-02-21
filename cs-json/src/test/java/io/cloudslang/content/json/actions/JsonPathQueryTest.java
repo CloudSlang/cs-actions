@@ -18,6 +18,10 @@ import static org.junit.Assert.*;
  */
 public class JsonPathQueryTest {
     private JsonPathQuery jsonPathQuery;
+    private static final String BOOKSTORE_JSON = "{\"store\":{\"book\":[{\"title\":\"Sayings of the Century\",\"price\":8.95}," +
+            "{\"title\":\"Sword of Honour\",\"price\":12.99},{\"title\":\"Moby Dick\",\"price\":8.99}," +
+            "{\"title\":\"The Lord of the Rings\",\"price\":22.99}]}," +
+            "\"expensive\":10}";
 
     @Before
     public void setUp() throws Exception {
@@ -37,7 +41,7 @@ public class JsonPathQueryTest {
     }
 
     @Test
-    public void executeInvalidJsonObjecy() throws Exception {
+    public void executeInvalidJsonObject() throws Exception {
         final Map<String, String> resultMap = jsonPathQuery.execute(null, "$.a");
         assertEquals(resultMap.get(OutputNames.RETURN_CODE), ReturnCodes.FAILURE);
         assertEquals(resultMap.get(OutputNames.RETURN_RESULT), INVALID_JSONOBJECT);
@@ -52,4 +56,10 @@ public class JsonPathQueryTest {
         assertNotNull(resultMap.get(OutputNames.EXCEPTION));
     }
 
+    @Test
+    public void executeComplexJsonPath() {
+        final Map<String, String> resultMap = jsonPathQuery.execute(BOOKSTORE_JSON, "$..book[?(@.price <= $['expensive'])]");
+        assertEquals(resultMap.get(OutputNames.RETURN_CODE), ReturnCodes.SUCCESS);
+        assertEquals(resultMap.get(OutputNames.RETURN_RESULT), "[{\"title\":\"Sayings of the Century\",\"price\":8.95},{\"title\":\"Moby Dick\",\"price\":8.99}]");
+    }
 }
