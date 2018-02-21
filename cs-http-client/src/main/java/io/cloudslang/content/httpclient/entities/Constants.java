@@ -12,18 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.httpclient.entities;
 
-package io.cloudslang.content.json.utils;
+public class Constants {
 
-import static io.cloudslang.content.constants.OtherValues.EMPTY_STRING;
-
-/**
- * Created by Folea Ilie Cristian on 2/5/2016.
- */
-public class StringUtils {
-    public static boolean isEmpty(Object val) {
-        return (val == null) || (EMPTY_STRING.equals(val));
-    }
-
-
+    public static final String URL = "url";
+    public static final String CHARACTER_SET = "characterSet";
+    public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
+    public static final String CHANGEIT = "changeit";
 }
