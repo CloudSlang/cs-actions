@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-utilities</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.1.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -129,6 +129,11 @@
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>${pdfbox.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.6</version>
         </dependency>
         <!-- region test scope dependencies-->
         <dependency>

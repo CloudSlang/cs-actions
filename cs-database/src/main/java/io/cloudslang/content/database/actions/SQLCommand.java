@@ -67,8 +67,11 @@ public class SQLCommand {
      *                                  Default: sql
      *                                  Values: sql, windows
      * @param dbClass                   The classname of the JDBC driver to use.
+     *                                  Examples: "oracle.jdbc.driver.OracleDriver", "org.postgresql.Driver"
      * @param dbURL                     The url required to load up the driver and make your connection.
+     *                                  Examples: "jdbc:oracle:drivertype:@database", "jdbc:postgresql://host:port/database"
      * @param command                   The command to execute.
+     *                                  Example: "INSERT INTO table_name (column1, column2, column3, ...) VALUES (value1, value2, value3, ...)"
      * @param trustAllRoots             Specifies whether to enable weak security over SSL/TSL. A certificate is trusted even if no trusted certification authority issued it.
      *                                  Default value: false
      *                                  Valid values: true, false

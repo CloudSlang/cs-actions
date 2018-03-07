@@ -67,9 +67,12 @@ public class SQLQueryAllRows {
      * @param authenticationType        The type of authentication used to access the database (applicable only to MSSQL type).
      *                                  Default: sql
      *                                  Values: sql, windows
-     * @param dbClass                   The class name of the JDBC driver to use.
-     * @param dbURL                     The URL required to load up the driver and make your connection.
+     * @param dbClass                   The classname of the JDBC driver to use.
+     *                                  Examples: "oracle.jdbc.driver.OracleDriver", "org.postgresql.Driver"
+     * @param dbURL                     The url required to load up the driver and make your connection.
+     *                                  Examples: "jdbc:oracle:drivertype:@database", "jdbc:postgresql://host:port/database"
      * @param command                   The SQL query to execute.
+     *                                  Example: "SELECT * FROM table"
      * @param trustAllRoots             Specifies whether to enable weak security over SSL/TSL. A certificate is trusted even if no trusted certification authority issued it.
      *                                  Default value: false
      *                                  Valid values: true, false
