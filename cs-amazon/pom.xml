@@ -74,6 +74,12 @@
             <organization>HP Software</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
+        <developer>
+            <name>Lucian Revnic</name>
+            <email>revnic@microfocus.com</email>
+            <organization>Micro Focus</organization>
+        </developer>
+
     </developers>
 
     <properties>
@@ -88,7 +94,7 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.6</score-content-sdk.version>
         <cs-http-client.version>0.1.73</cs-http-client.version>
-        <cs-commons.version>0.0.5</cs-commons.version>
+        <cs-commons.version>0.0.6</cs-commons.version>
         <junit.version>4.12</junit.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -128,6 +134,11 @@
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-xml</artifactId>
             <version>0.0.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-lambda</artifactId>
+            <version>1.11.263</version>
         </dependency>
         <!--testing dependencies-->
         <dependency>
