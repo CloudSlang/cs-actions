@@ -26,13 +26,15 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
+import io.cloudslang.content.amazon.factory.CloudFormationClientBuilder;
 import io.cloudslang.content.amazon.utils.DefaultValues;
 import io.cloudslang.content.utils.OutputUtilities;
 
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class ListStacksAction {
     /**
@@ -81,10 +83,10 @@ public class ListStacksAction {
 
         proxyPort = defaultIfEmpty(proxyPort, DefaultValues.PROXY_PORT);
         connectTimeoutMs = defaultIfEmpty(connectTimeoutMs, DefaultValues.CONNECT_TIMEOUT);
-        execTimeoutMs = defaultIfBlank(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
+        execTimeoutMs = defaultIfEmpty(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
 
         try {
-            AmazonCloudFormation stackBuilder = CloudFormationClientFactory.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
+            AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
 
             StringBuilder listOfStacksResult = new StringBuilder(EMPTY);
             // Show all the stacks for this account along with the resources for each stack

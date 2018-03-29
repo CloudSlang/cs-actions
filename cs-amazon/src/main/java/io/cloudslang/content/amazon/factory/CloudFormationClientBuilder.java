@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.amazon.actions.cloudformation;
+package io.cloudslang.content.amazon.factory;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -20,7 +20,9 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.cloudformation.AmazonCloudFormation;
 import com.amazonaws.services.cloudformation.AmazonCloudFormationClientBuilder;
 
-public class CloudFormationClientFactory {
+public class CloudFormationClientBuilder {
+    private CloudFormationClientBuilder() {}
+
     public static AmazonCloudFormation getCloudFormationClient(
             String accessKeyId,
             String secretAccessKey,
