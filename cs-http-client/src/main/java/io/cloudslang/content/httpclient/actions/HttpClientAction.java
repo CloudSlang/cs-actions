@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.httpclient;
+package io.cloudslang.content.httpclient.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -23,12 +23,27 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
+import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+import static io.cloudslang.content.httpclient.entities.Constants.CHANGEIT;
+import static io.cloudslang.content.httpclient.entities.Constants.DEFAULT_JAVA_KEYSTORE;
+import static io.cloudslang.content.httpclient.services.HttpClientService.EXCEPTION;
+import static io.cloudslang.content.httpclient.services.HttpClientService.FINAL_LOCATION;
+import static io.cloudslang.content.httpclient.services.HttpClientService.PROTOCOL_VERSION;
+import static io.cloudslang.content.httpclient.services.HttpClientService.REASON_PHRASE;
+import static io.cloudslang.content.httpclient.services.HttpClientService.RESPONSE_HEADERS;
+import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
@@ -38,16 +53,12 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  */
 public class HttpClientAction {
 
-    private static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
-    private static final String CHANGEIT = "changeit";
 
     /**
      * This operation does an http request and a parsing of the response.
-     * It provides features like: http autentication, http secure, connection pool, cookies, proxy.
-     * To acomplish this it uses the third parties from Apache: HttpClient 4.3, HttpCore 4.3.
+     * It provides features like: http authentication, http secure, connection pool, cookies, proxy.
+     * To accomplish this it uses the third parties from Apache: HttpClient 4.3, HttpCore 4.3.
      * It also uses the JCIFS library from the Samba for the 'NTLM' authentication.
-     * <p/>
-     * <br><b>For more info about http client operations see the <i>org.cloudslang.content.httpclient</i> package description.</b>
      *
      * @param url                                The web address to make the request to. This must be a standard URL as specified in RFC 3986. This is a required input.
      *                                           <br>Format: scheme://domain:port/path?query_string#fragment_id.
@@ -239,22 +250,21 @@ public class HttpClientAction {
      * Gateway Timeout, Http Version Not Supported, Gone, Length Required, Requested Range Not Satisfiable, Expectation Failed
      * <p/>
      * <br><br><b>returnCode</b> - The returnCode of the operation: 0 for success, -1 for failure.
-     * @see io.cloudslang.content.httpclient
      */
     @Action(name = "Http Client",
             outputs = {
-                    @Output(CSHttpClient.EXCEPTION),
-                    @Output(CSHttpClient.STATUS_CODE),
-                    @Output(CSHttpClient.FINAL_LOCATION),
-                    @Output(CSHttpClient.RESPONSE_HEADERS),
-                    @Output(CSHttpClient.PROTOCOL_VERSION),
-                    @Output(CSHttpClient.REASON_PHRASE),
-                    @Output("returnCode"),
-                    @Output("returnResult")
+                    @Output(EXCEPTION),
+                    @Output(STATUS_CODE),
+                    @Output(FINAL_LOCATION),
+                    @Output(RESPONSE_HEADERS),
+                    @Output(PROTOCOL_VERSION),
+                    @Output(REASON_PHRASE),
+                    @Output(RETURN_CODE),
+                    @Output(RETURN_RESULT)
             },
             responses = {
-                    @Response(text = "success", field = "returnCode", value = "0", matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = "failure", field = "returnCode", value = "-1", matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
     public Map<String, String> execute(
@@ -313,8 +323,6 @@ public class HttpClientAction {
         httpClientInputs.setPassword(password);
         httpClientInputs.setKerberosConfFile(kerberosConfFile);
         httpClientInputs.setKerberosLoginConfFile(kerberosLoginConfFile);
-//        httpClientInputs.setKerberosDomain(kerberosDomain);
-//        httpClientInputs.setKerberosKdc(kerberosKdc);
         httpClientInputs.setKerberosSkipPortCheck(kerberosSkipPortForLookup);
         httpClientInputs.setProxyHost(proxyHost);
         httpClientInputs.setProxyPort(proxyPort);
@@ -356,7 +364,7 @@ public class HttpClientAction {
         httpClientInputs.setConnectionPoolSessionObject(httpClientPoolingConnectionManager);
 
         try {
-            return new CSHttpClient().execute(httpClientInputs);
+            return new HttpClientService().execute(httpClientInputs);
         } catch (Exception e) {
             return exceptionResult(e.getMessage(), e);
         }
