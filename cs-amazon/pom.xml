@@ -146,7 +146,6 @@
             <artifactId>aws-java-sdk-cloudformation</artifactId>
             <version>${aws-sdk.version}</version>
         </dependency>
-
         <!--testing dependencies-->
         <dependency>
             <groupId>junit</groupId>

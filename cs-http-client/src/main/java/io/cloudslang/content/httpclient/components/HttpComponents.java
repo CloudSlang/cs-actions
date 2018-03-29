@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.httpclient;
+package io.cloudslang.content.httpclient.components;
 
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpRequestBase;

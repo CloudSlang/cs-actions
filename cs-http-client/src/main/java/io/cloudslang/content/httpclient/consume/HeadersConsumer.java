@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.httpclient.consume;
 
-import io.cloudslang.content.httpclient.CSHttpClient;
+import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.http.Header;
 
 import java.util.Map;
@@ -38,6 +38,6 @@ public class HeadersConsumer {
                 result.delete(result.length() - 2, result.length());
             }
         }
-        returnResult.put(CSHttpClient.RESPONSE_HEADERS, result.toString());
+        returnResult.put(HttpClientService.RESPONSE_HEADERS, result.toString());
     }
 }

@@ -18,13 +18,12 @@ package io.cloudslang.content.services;
 import io.cloudslang.content.entities.EncoderDecoder;
 import io.cloudslang.content.entities.OutputStream;
 import io.cloudslang.content.entities.WSManRequestInputs;
-import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.httpclient.CSHttpClient;
+import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.utils.Constants;
 import io.cloudslang.content.utils.ResourceLoader;
 import io.cloudslang.content.utils.WSManUtils;
 import io.cloudslang.content.utils.XMLUtils;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpPost;
 import org.xml.sax.SAXException;
@@ -83,7 +82,6 @@ public class WSManRemoteShellService {
     private static final String EXECUTION_TIMED_OUT = "The script execution timed out!";
     private static final String COMMAND_ID_NOT_RETRIEVED = "The command id could not be retrieved.";
     private static final String SHELL_ID_NOT_RETRIEVED = "The shell id could not be retrieved.";
-    private static final String POWERSHELL_SCRIPT_PREFIX = "PowerShell -NonInteractive -EncodedCommand";
     private static final String UNAUTHORIZED_EXCEPTION_MESSAGE = "Unauthorized! Service responded with 401 status code!";
 
     private long commandExecutionStartTime;
@@ -111,7 +109,7 @@ public class WSManRemoteShellService {
         httpClientInputs = setCommonHttpInputs(httpClientInputs, url, wsManRequestInputs);
         String shellId = createShell(csHttpClient, httpClientInputs, wsManRequestInputs);
         WSManUtils.validateUUID(shellId, SHELL_ID);
-        String commandStr = POWERSHELL_SCRIPT_PREFIX + " " + EncoderDecoder.encodeStringInBase64(wsManRequestInputs.getScript(), Charsets.UTF_16LE);
+        String commandStr = WSManUtils.constructCommand(wsManRequestInputs);
         String commandId = executeCommand(csHttpClient, httpClientInputs, shellId, wsManRequestInputs, commandStr);
         WSManUtils.validateUUID(commandId, COMMAND_ID);
         Map<String, String> scriptResults = receiveCommandResult(csHttpClient, httpClientInputs, shellId, commandId, wsManRequestInputs);
@@ -161,11 +159,11 @@ public class WSManRemoteShellService {
      *
      * @param csHttpClient
      * @param httpClientInputs
-     * @param requestMessage
+     * @param body
      * @return the result of the request execution.
      */
-    private Map<String, String> executeRequest(CSHttpClient csHttpClient, HttpClientInputs httpClientInputs, String requestMessage) {
-        httpClientInputs.setBody(requestMessage);
+    private Map<String, String> executeRequestWithBody(CSHttpClient csHttpClient, HttpClientInputs httpClientInputs, String body) {
+        httpClientInputs.setBody(body);
         Map<String, String> requestResponse = csHttpClient.execute(httpClientInputs);
         if (UNAUTHORIZED_STATUS_CODE.equals(requestResponse.get(STATUS_CODE))) {
             throw new RuntimeException(UNAUTHORIZED_EXCEPTION_MESSAGE);
@@ -190,11 +188,11 @@ public class WSManRemoteShellService {
      */
     private String createShell(CSHttpClient csHttpClient, HttpClientInputs httpClientInputs, WSManRequestInputs wsManRequestInputs)
             throws RuntimeException, IOException, URISyntaxException,
-            TransformerException, XPathExpressionException, SAXException, ParserConfigurationException {
+            XPathExpressionException, SAXException, ParserConfigurationException {
         String document = ResourceLoader.loadAsString(CREATE_SHELL_REQUEST_XML);
         document = createCreateShellRequestBody(document, httpClientInputs.getUrl(), String.valueOf(wsManRequestInputs.getMaxEnvelopeSize()),
                 wsManRequestInputs.getWinrmLocale(), String.valueOf(wsManRequestInputs.getOperationTimeout()));
-        Map<String, String> createShellResult = executeRequest(csHttpClient, httpClientInputs, document);
+        Map<String, String> createShellResult = executeRequestWithBody(csHttpClient, httpClientInputs, document);
         return getResourceId(createShellResult.get(RETURN_RESULT), CREATE_RESPONSE_ACTION, CREATE_RESPONSE_SHELL_ID_XPATH,
                 SHELL_ID_NOT_RETRIEVED);
     }
@@ -222,7 +220,7 @@ public class WSManRemoteShellService {
         documentStr = createExecuteCommandRequestBody(documentStr, httpClientInputs.getUrl(), shellId, command, String.valueOf(wsManRequestInputs.getMaxEnvelopeSize()),
                 wsManRequestInputs.getWinrmLocale(), String.valueOf(wsManRequestInputs.getOperationTimeout()));
         commandExecutionStartTime = System.currentTimeMillis() / 1000;
-        Map<String, String> executeCommandResult = executeRequest(csHttpClient, httpClientInputs, documentStr);
+        Map<String, String> executeCommandResult = executeRequestWithBody(csHttpClient, httpClientInputs, documentStr);
         return getResourceId(executeCommandResult.get(RETURN_RESULT), COMMAND_RESPONSE_ACTION, COMMAND_RESULT_COMMAND_ID_XPATH,
                 COMMAND_ID_NOT_RETRIEVED);
     }
@@ -254,7 +252,7 @@ public class WSManRemoteShellService {
         documentStr = createReceiveRequestBody(documentStr, httpClientInputs.getUrl(), shellId, commandId, String.valueOf(wsManRequestInputs.getMaxEnvelopeSize()), wsManRequestInputs.getWinrmLocale(), String.valueOf(wsManRequestInputs.getOperationTimeout()));
         Map<String, String> receiveResult;
         while (true) {
-            receiveResult = executeRequest(csHttpClient, httpClientInputs, documentStr);
+            receiveResult = executeRequestWithBody(csHttpClient, httpClientInputs, documentStr);
             if (executionIsTimedOut(commandExecutionStartTime, wsManRequestInputs.getOperationTimeout())) {
                 throw new TimeoutException(EXECUTION_TIMED_OUT);
             } else if (WSManUtils.isSpecificResponseAction(receiveResult.get(RETURN_RESULT), RECEIVE_RESPONSE_ACTION) &&
@@ -320,7 +318,7 @@ public class WSManRemoteShellService {
             throws RuntimeException, IOException, URISyntaxException, TransformerException, XPathExpressionException, SAXException, ParserConfigurationException {
         String documentStr = ResourceLoader.loadAsString(DELETE_SHELL_REQUEST_XML);
         documentStr = createDeleteShellRequestBody(documentStr, httpClientInputs.getUrl(), shellId, String.valueOf(wsManRequestInputs.getMaxEnvelopeSize()), wsManRequestInputs.getWinrmLocale(), String.valueOf(wsManRequestInputs.getOperationTimeout()));
-        Map<String, String> deleteShellResult = executeRequest(csHttpClient, httpClientInputs, documentStr);
+        Map<String, String> deleteShellResult = executeRequestWithBody(csHttpClient, httpClientInputs, documentStr);
         if (WSManUtils.isSpecificResponseAction(deleteShellResult.get(RETURN_RESULT), DELETE_RESPONSE_ACTION)) {
             return;
         } else if (WSManUtils.isFaultResponse(deleteShellResult.get(RETURN_RESULT))) {
