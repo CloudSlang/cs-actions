@@ -38,11 +38,6 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-/**
- * Created by lrevnic
- * 1/14/2018.
- */
-
 public class InvokeLambdaAction {
     /**
      * Invokes an AWS Lambda Function in sync mode using AWS Java SDK
