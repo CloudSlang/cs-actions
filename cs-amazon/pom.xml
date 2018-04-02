@@ -79,7 +79,6 @@
             <email>lrevnic@gmail.com</email>
             <organization>Micro Focus</organization>
         </developer>
-
     </developers>
 
     <properties>
@@ -351,5 +350,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>
