@@ -37,7 +37,7 @@ public class ContentTypeBuilderTest {
                 .setContentType(APPLICATION_JSON_CONTENT_TYPE)
                 .setRequestCharacterSet(Consts.UTF_8.name()).buildContentType();
 
-        assertEquals(APPLICATION_JSON_CONTENT_TYPE, contentType.getMimeType().toString());
+        assertEquals(APPLICATION_JSON_CONTENT_TYPE, contentType.getMimeType());
         assertEquals(Consts.UTF_8.name(), contentType.getCharset().name());
     }
 

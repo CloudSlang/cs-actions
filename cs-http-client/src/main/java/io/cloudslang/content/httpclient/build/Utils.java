@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.httpclient.build;
 
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 

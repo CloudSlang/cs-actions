@@ -16,11 +16,13 @@ package io.cloudslang.content.dca.models;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Data
 public class DcaAuthModel {
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
@@ -28,17 +30,9 @@ public class DcaAuthModel {
     private final String tenantName;
     private final Map<String, String> passwordCredentials;
 
-    public DcaAuthModel(String tenantName) {
+    public DcaAuthModel(@NotNull final String tenantName) {
         this.tenantName = tenantName;
         this.passwordCredentials = new HashMap<>();
-    }
-
-    public String getTenantName() {
-        return tenantName;
-    }
-
-    public Map<String, String> getPasswordCredentials() {
-        return passwordCredentials;
     }
 
     public void setCredentials(@NotNull final String username, @NotNull final String password) {

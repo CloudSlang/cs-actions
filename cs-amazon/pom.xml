@@ -96,6 +96,7 @@
         <cs-http-client.version>0.1.73</cs-http-client.version>
         <cs-commons.version>0.0.6</cs-commons.version>
         <junit.version>4.12</junit.version>
+        <aws-sdk.version>1.11.263</aws-sdk.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -138,7 +139,12 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-lambda</artifactId>
-            <version>1.11.263</version>
+            <version>${aws-sdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-cloudformation</artifactId>
+            <version>${aws-sdk.version}</version>
         </dependency>
         <!--testing dependencies-->
         <dependency>

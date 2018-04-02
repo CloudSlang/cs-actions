@@ -32,6 +32,7 @@ public class InputNames {
     public static final String DEPLOYMENT_TEMPLATE_ID = "deploymentTemplateId";
     public static final String DEPLOYMENT_RESOURCES_JSON = "deploymentResourcesJson";
     public static final String DEPLOYMENT_UUID = "deploymentUuid";
+    public static final String RESOURCE_UUID = "resourceUuid";
     public static final String ASYNC = "async";
     public static final String TIMEOUT = "timeout";
     public static final String POLLING_INTERVAL = "pollingInterval";
@@ -43,4 +44,7 @@ public class InputNames {
     public static final String DEPLOYMENT_PARAMETER_NAME_LIST = "deploymentParameterNameList";
     public static final String DEPLOYMENT_PARAMETER_VALUE_LIST = "deploymentParameterValueList";
     public static final String DELIMITER = "delimiter";
+    public static final String CM_HOST = "cmHost";
+    public static final String CM_PORT = "cmPort";
+    public static final String CREDENTIAL_UUID = "credentialUuid";
 }
