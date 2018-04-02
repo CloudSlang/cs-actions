@@ -25,7 +25,7 @@
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Java actions for amazon integration</description>
+    <description>Java actions for Amazon AWS integration</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
 
     <licenses>
