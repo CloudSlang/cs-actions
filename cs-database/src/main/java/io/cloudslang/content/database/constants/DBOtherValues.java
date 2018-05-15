@@ -41,6 +41,7 @@ public class DBOtherValues {
     public static final String DB2_DB_TYPE = "DB2";
     public static final String MYSQL_DB_TYPE = "MySQL";
     public static final String POSTGRES_DB_TYPE = "PostgreSQL";
+    public static final String VERTICA_DB_TYPE = "Vertica";
     public static final String CUSTOM_DB_TYPE = "Custom";
 
     public static final Integer DEFAULT_PORT_ORACLE = 1521;
@@ -50,6 +51,7 @@ public class DBOtherValues {
     public static final Integer DEFAULT_PORT_DB2 = 50000;
     public static final Integer DEFAULT_PORT_MYSQL = 3306;
     public static final Integer DEFAULT_PORT_PSQL = 5432;
+    public static final Integer DEFAULT_PORT_VERTICA = 5433;
     public static final Integer DEFAULT_PORT_CUSTOM = DEFAULT_PORT_ORACLE;
 
     public static final String ORACLE_JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
@@ -59,6 +61,7 @@ public class DBOtherValues {
     public static final String DB2_DRIVER = "com.ibm.db2.jcc.DB2Driver";
     public static final String MYSQL_JDBC_DRIVER = "com.mysql.jdbc.Driver";
     public static final String POSTGRESQL_DRIVER = "org.postgresql.Driver";
+    public static final String VERTICA_DRIVER = "com.vertica.jdbc.Driver";
     public static final String MSSQL_FILE_DRIVER = "sqljdbc_auth.dll";
 
     public static final String KEY_COLUMNS = "%s - Columns";

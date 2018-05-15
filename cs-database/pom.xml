@@ -147,6 +147,11 @@
             <artifactId>postgresql</artifactId>
             <version>9.4.1212.jre7</version>
         </dependency>
+        <dependency>
+           <groupId>com.microfocus.vertica</groupId>
+           <artifactId>vertica-jdbc</artifactId>
+           <version>8.1.1-10</version>
+        </dependency>
         <!-- Testing dependencies-->
         <dependency>
             <groupId>junit</groupId>
