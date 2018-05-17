@@ -150,7 +150,7 @@
         <dependency>
            <groupId>com.microfocus.vertica</groupId>
            <artifactId>vertica-jdbc</artifactId>
-           <version>8.1.1-10</version>
+           <version>9.1.0-0</version>
         </dependency>
         <!-- Testing dependencies-->
         <dependency>
