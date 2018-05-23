@@ -266,4 +266,10 @@ public class Inputs {
         public static final String FILTER_RESOURCE_TYPE = "filterResourceType";
         public static final String FILTER_VALUE = "filterValue";
     }
+
+    public static class CloudFormationInputs {
+        public static final String TEMPLATE_BODY = "templateBody";
+        public static final String STACK_NAME    = "stackName";
+    }
+
 }

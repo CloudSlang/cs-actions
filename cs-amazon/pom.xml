@@ -21,11 +21,11 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-amazon</artifactId>
-    <version>1.0.15-SNAPSHOT</version>
+    <version>1.0.16-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Java actions for amazon integration</description>
+    <description>Java actions for Amazon AWS integration</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
 
     <licenses>
@@ -76,10 +76,9 @@
         </developer>
         <developer>
             <name>Lucian Revnic</name>
-            <email>revnic@microfocus.com</email>
+            <email>lrevnic@gmail.com</email>
             <organization>Micro Focus</organization>
         </developer>
-
     </developers>
 
     <properties>
@@ -96,6 +95,9 @@
         <cs-http-client.version>0.1.73</cs-http-client.version>
         <cs-commons.version>0.0.6</cs-commons.version>
         <junit.version>4.12</junit.version>
+        <aws-sdk.version>1.11.305</aws-sdk.version>
+        <httpcomponents.httpclient.version>4.5.5</httpcomponents.httpclient.version>
+        <httpcomponents.httpcore.version>4.4.9</httpcomponents.httpcore.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -137,8 +139,28 @@
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-core</artifactId>
+            <version>${aws-sdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-lambda</artifactId>
-            <version>1.11.263</version>
+            <version>${aws-sdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-cloudformation</artifactId>
+            <version>${aws-sdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpcomponents.httpclient.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>${httpcomponents.httpcore.version}</version>
         </dependency>
         <!--testing dependencies-->
         <dependency>
