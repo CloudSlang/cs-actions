@@ -15,8 +15,8 @@
 
 package io.cloudslang.content.xml.utils;
 
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.build.auth.AuthTypes;
 import io.cloudslang.content.xml.entities.SimpleNamespaceContext;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
@@ -321,7 +321,7 @@ public class XmlUtils {
     }
 
     public static String createXmlDocumentFromUrl(CommonInputs commonInputs) throws ParserConfigurationException, SAXException, IOException {
-        CSHttpClient scoreHttpClient = new CSHttpClient();
+        HttpClientService scoreHttpClient = new HttpClientService();
         HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setMethod(HttpGet.METHOD_NAME);
         httpClientInputs.setUrl(commonInputs.getXmlDocument());
@@ -347,8 +347,8 @@ public class XmlUtils {
         httpClientInputs.setProxyPassword(commonInputs.getProxyPassword());
 
         Map<String, String> requestResponse = scoreHttpClient.execute(httpClientInputs);
-        if (!OK_STATUS_CODE.equals(requestResponse.get(CSHttpClient.STATUS_CODE))) {
-            throw new RuntimeException("Http request to specified URL: " + commonInputs.getXmlDocument() + " failed with status code: " + requestResponse.get(CSHttpClient.STATUS_CODE) + ". Request response is: " + requestResponse.get(Constants.Outputs.RETURN_RESULT));
+        if (!OK_STATUS_CODE.equals(requestResponse.get(HttpClientService.STATUS_CODE))) {
+            throw new RuntimeException("Http request to specified URL: " + commonInputs.getXmlDocument() + " failed with status code: " + requestResponse.get(HttpClientService.STATUS_CODE) + ". Request response is: " + requestResponse.get(Constants.Outputs.RETURN_RESULT));
         }
         return requestResponse.get(Constants.Outputs.RETURN_RESULT);
     }
