@@ -17,6 +17,7 @@ package io.cloudslang.content.amazon.actions.cloudformation;
 import com.amazonaws.services.cloudformation.AmazonCloudFormation;
 import com.amazonaws.services.cloudformation.model.CreateStackRequest;
 import com.amazonaws.services.cloudformation.model.CreateStackResult;
+import com.amazonaws.services.cloudformation.model.Parameter;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -28,20 +29,11 @@ import io.cloudslang.content.amazon.factory.CloudFormationClientBuilder;
 import io.cloudslang.content.amazon.utils.DefaultValues;
 import io.cloudslang.content.utils.OutputUtilities;
 
+import java.util.ArrayList;
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.STACK_NAME;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.TEMPLATE_BODY;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.REGION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CONNECT_TIMEOUT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.EXECUTION_TIMEOUT;
-
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.*;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateStackAction {
@@ -92,7 +84,8 @@ public class CreateStackAction {
             @Param(value = CONNECT_TIMEOUT)              String connectTimeoutMs,
             @Param(value = EXECUTION_TIMEOUT)            String execTimeoutMs,
             @Param(value = STACK_NAME, required = true)  String stackName,
-            @Param(value = TEMPLATE_BODY, required = true) String templateBody) {
+            @Param(value = TEMPLATE_BODY, required = true) String templateBody,
+            @Param(value = PARAMETERS)                   String parameters) {
 
         proxyPort = defaultIfEmpty(proxyPort, DefaultValues.PROXY_PORT);
         connectTimeoutMs = defaultIfEmpty(connectTimeoutMs, DefaultValues.CONNECT_TIMEOUT);
@@ -101,15 +94,51 @@ public class CreateStackAction {
         try {
             AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
 
-            // Create a stack
             CreateStackRequest createRequest = new CreateStackRequest()
                     .withStackName(stackName)
-                    .withTemplateBody(templateBody);
+                    .withTemplateBody(templateBody)
+                    .withParameters(toArrayOfParameters(parameters));
 
             CreateStackResult result = stackBuilder.createStack(createRequest);
+
             return OutputUtilities.getSuccessResultsMap(result.toString());
         } catch (Exception e) {
             return OutputUtilities.getFailureResultsMap(e);
         }
+    }
+
+    private ArrayList<Parameter> toArrayOfParameters(String parameters) {
+        ArrayList<Parameter> parametersList = new ArrayList<Parameter>();
+
+        for (String line : parameters.split("\n")) {
+            if (!isValid(line)) {
+                continue;
+            }
+            Parameter parameter = new Parameter();
+            parameter.setParameterKey(getKey(line));
+            parameter.setParameterValue(getValue(line));
+            parametersList.add(parameter);
+        }
+
+        return parametersList;
+    }
+
+    private boolean isValid(String paramLine) {
+        String keyValueArr[] = paramLine.split("=", 2);
+        if ((keyValueArr == null) ||                 //can't split
+                (keyValueArr.length < 2) ||          //can't split
+                (keyValueArr[0].trim().isEmpty()) || //empty key
+                (keyValueArr[1].trim().isEmpty()) ){ //empty value
+            return false;
+        }
+        return true;
+    }
+
+    private String getKey(String paramLine) {
+        return paramLine.split("=", 2)[0];
+    }
+
+    private String getValue(String paramLine) {
+        return paramLine.split("=", 2)[1];
     }
 }
