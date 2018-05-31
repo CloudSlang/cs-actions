@@ -38,11 +38,6 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInput
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-/**
- * Created by lrevnic
- * 1/14/2018.
- */
-
 public class InvokeLambdaAction {
     /**
      * Invokes an AWS Lambda Function in sync mode using AWS Java SDK
@@ -98,9 +93,9 @@ public class InvokeLambdaAction {
             @Param(value = EXECUTION_TIMEOUT)            String execTimeoutMs) {
 
         proxyPort = defaultIfEmpty(proxyPort, DefaultValues.PROXY_PORT);
-        connectTimeoutMs = defaultIfEmpty(proxyPort, DefaultValues.CONNECT_TIMEOUT);
-        execTimeoutMs = defaultIfBlank(proxyPort, DefaultValues.EXEC_TIMEOUT);
-        qualifier = defaultIfEmpty(qualifier, DefaultValues.DEFAULT_FUNCTION_QUALIFIER);
+        connectTimeoutMs = defaultIfEmpty(connectTimeoutMs, DefaultValues.CONNECT_TIMEOUT);
+        execTimeoutMs = defaultIfBlank(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
+        qualifier = defaultIfBlank(qualifier, DefaultValues.DEFAULT_FUNCTION_QUALIFIER);
 
         ClientConfiguration clientConf = new ClientConfiguration()
                 .withConnectionTimeout(Integer.parseInt(connectTimeoutMs))
