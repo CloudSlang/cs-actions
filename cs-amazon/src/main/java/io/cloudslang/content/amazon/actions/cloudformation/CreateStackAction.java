@@ -27,6 +27,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.factory.CloudFormationClientBuilder;
 import io.cloudslang.content.amazon.utils.DefaultValues;
+import io.cloudslang.content.amazon.utils.ParametersLine;
 import io.cloudslang.content.utils.OutputUtilities;
 
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class CreateStackAction {
      * @param stackName         Stack name to create
      *                          Example: "MyStack"
      * @param templateBody      AWS Cloud Formation template body in JSON or YAML format
+     * @param parameters        AWS Cloud Formation template parameters in key value format, one key=value per line
      * @return                  A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      *                          operation, or failure message and the exception if there is one
      */
@@ -111,34 +113,19 @@ public class CreateStackAction {
         ArrayList<Parameter> parametersList = new ArrayList<Parameter>();
 
         for (String line : parameters.split("\n")) {
-            if (!isValid(line)) {
+
+            ParametersLine paramLine = new ParametersLine(line);
+
+            if (!paramLine.isValid()) {
                 continue;
             }
+
             Parameter parameter = new Parameter();
-            parameter.setParameterKey(getKey(line));
-            parameter.setParameterValue(getValue(line));
+            parameter.setParameterKey(paramLine.getKey());
+            parameter.setParameterValue(paramLine.getValue());
             parametersList.add(parameter);
         }
 
         return parametersList;
-    }
-
-    private boolean isValid(String paramLine) {
-        String keyValueArr[] = paramLine.split("=", 2);
-        if ((keyValueArr == null) ||                 //can't split
-                (keyValueArr.length < 2) ||          //can't split
-                (keyValueArr[0].trim().isEmpty()) || //empty key
-                (keyValueArr[1].trim().isEmpty()) ){ //empty value
-            return false;
-        }
-        return true;
-    }
-
-    private String getKey(String paramLine) {
-        return paramLine.split("=", 2)[0];
-    }
-
-    private String getValue(String paramLine) {
-        return paramLine.split("=", 2)[1];
     }
 }
