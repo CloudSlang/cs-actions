@@ -21,11 +21,11 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-amazon</artifactId>
-    <version>1.0.15-SNAPSHOT</version>
+    <version>1.0.16-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Java actions for amazon integration</description>
+    <description>Java actions for Amazon AWS integration</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
 
     <licenses>
