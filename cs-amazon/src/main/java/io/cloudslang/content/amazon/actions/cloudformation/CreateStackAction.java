@@ -80,7 +80,7 @@ public class CreateStackAction {
             @Param(value = PROXY_HOST)                   String proxyHost,
             @Param(value = PROXY_PORT)                   String proxyPort,
             @Param(value = PROXY_USERNAME)               String proxyUsername,
-            @Param(value = PROXY_PASSWORD)               String proxyPassword,
+            @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
             @Param(value = CONNECT_TIMEOUT)              String connectTimeoutMs,
             @Param(value = EXECUTION_TIMEOUT)            String execTimeoutMs,
             @Param(value = STACK_NAME, required = true)  String stackName,
