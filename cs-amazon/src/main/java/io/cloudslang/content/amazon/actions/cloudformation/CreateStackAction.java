@@ -32,10 +32,22 @@ import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.*;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.PARAMETERS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.TEMPLATE_BODY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.STACK_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.REGION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.EXECUTION_TIMEOUT;
+
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateStackAction {
@@ -110,8 +122,8 @@ public class CreateStackAction {
         }
     }
 
-    private ArrayList<Parameter> toArrayOfParameters(String parameters) {
-        ArrayList<Parameter> parametersList = new ArrayList<>();
+    private List<Parameter> toArrayOfParameters(final String parameters) {
+        final List<Parameter> parametersList = new ArrayList<>();
 
         for (String line : parameters.split(StringUtils.LF)) {
             final ParametersLine paramLine = new ParametersLine(line);
