@@ -101,11 +101,10 @@ public class ListStacksAction {
             // Show all the stacks for this account along with the resources for each stack
             for (Stack stack : stackBuilder.describeStacks(new DescribeStacksRequest()).getStacks()) {
                 listOfStacksResult.append("Stack : ").append(stack.getStackName()).append(" [").append(stack.getStackStatus()).append("]");
-
                 DescribeStackResourcesRequest stackResourceRequest = new DescribeStackResourcesRequest();
                 stackResourceRequest.setStackName(stack.getStackName());
                 for (StackResource resource : stackBuilder.describeStackResources(stackResourceRequest).getStackResources()) {
-                    listOfStacksResult.append(String.format("    %1$-40s %2$-25s %3$s\n", resource.getResourceType(), resource.getLogicalResourceId(), resource.getPhysicalResourceId()));
+                    listOfStacksResult.append(String.format("%1$-40s,%2$-25s,%3$s\n", resource.getResourceType(), resource.getLogicalResourceId(), resource.getPhysicalResourceId()));
                 }
             }
 

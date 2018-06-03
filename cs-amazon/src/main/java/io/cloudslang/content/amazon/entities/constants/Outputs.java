@@ -26,6 +26,14 @@ public class Outputs {
     public static final String INSTANCE_ID_RESULT = "instanceIdResult";
     public static final String NETWORK_INTERFACE_ID_RESULT = "networkInterfaceIdResult";
     public static final String ATTACHMENT_ID_RESULT = "attachmentIdResult";
+    public static final String STACK_NAME_RESULT = "stackName";
+    public static final String STACK_ID_RESULT = "stackId";
+    public static final String STACK_STATUS_RESULT = "stackStatus";
+    public static final String STACK_STATUS_RESULT_REASON = "stackStatusReason";
+    public static final String STACK_CREATION_TIME_RESULT = "stackCreationTime";
+    public static final String STACK_DESCRIPTION_RESULT = "stackDescription";
+    public static final String STACK_OUTPUTS_RESULT = "stackOutputs";
+    public static final String STACK_RESOURCES_RESULT = "stackResources";
 
     public static final String SUCCESS = "success";
     public static final String FAILURE = "failure";
