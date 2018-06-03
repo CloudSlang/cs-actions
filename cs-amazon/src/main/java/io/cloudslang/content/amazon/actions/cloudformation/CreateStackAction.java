@@ -95,14 +95,14 @@ public class CreateStackAction {
         execTimeoutMs = defaultIfEmpty(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
 
         try {
-            AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
-
-            CreateStackRequest createRequest = new CreateStackRequest()
+            final CreateStackRequest createRequest = new CreateStackRequest()
                     .withStackName(stackName)
                     .withTemplateBody(templateBody)
                     .withParameters(toArrayOfParameters(parameters));
 
-            CreateStackResult result = stackBuilder.createStack(createRequest);
+            final AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
+
+            final CreateStackResult result = stackBuilder.createStack(createRequest);
 
             return OutputUtilities.getSuccessResultsMap(result.toString());
         } catch (Exception e) {
@@ -114,10 +114,9 @@ public class CreateStackAction {
         ArrayList<Parameter> parametersList = new ArrayList<>();
 
         for (String line : parameters.split(StringUtils.LF)) {
-
-            ParametersLine paramLine = new ParametersLine(line);
+            final ParametersLine paramLine = new ParametersLine(line);
             if (paramLine.isValid()) {
-                Parameter parameter = new Parameter();
+                final Parameter parameter = new Parameter();
                 parameter.setParameterKey(paramLine.getKey());
                 parameter.setParameterValue(paramLine.getValue());
                 parametersList.add(parameter);
