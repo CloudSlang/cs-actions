@@ -14,33 +14,42 @@
  */
 package io.cloudslang.content.amazon.utils;
 
+import org.apache.commons.lang3.StringUtils;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EQUAL;
+
 public class ParametersLine {
-    private String parametersLine;
+    private final String parametersLine;
+    private final static int SPLIT_LIMIT  = 2;
+    private final static int KEY_IDX      = 0;
+    private final static int VAL_IDX = 1;
 
     public ParametersLine(String line) {
         parametersLine = line;
     }
 
     public boolean isValid() {
-        if (parametersLine == null || parametersLine.isEmpty()) {
+        if (StringUtils.isEmpty(parametersLine)) {
             return false;
         }
 
-        String keyValueArr[] = parametersLine.split("=", 2);
-        if ((keyValueArr == null) ||                 //can't split
-                (keyValueArr.length < 2) ||          //can't split
-                (keyValueArr[0].trim().isEmpty()) || //empty key
-                (keyValueArr[1].trim().isEmpty()) ){ //empty value
-            return false;
-        }
-        return true;
+        String keyValueArr[] = parametersLine.split(EQUAL, SPLIT_LIMIT);
+        return keyValueArr.length >= SPLIT_LIMIT &&
+                (!StringUtils.isEmpty(keyValueArr[KEY_IDX])) &&
+                (!StringUtils.isEmpty(keyValueArr[VAL_IDX]));
     }
 
     public String getKey() {
-        return parametersLine.split("=", 2)[0];
+        if (StringUtils.isEmpty(parametersLine) ) {
+            return StringUtils.EMPTY;
+        }
+        return parametersLine.split(EQUAL, SPLIT_LIMIT)[KEY_IDX];
     }
 
     public String getValue() {
-        return parametersLine.split("=", 2)[1];
+        if (StringUtils.isEmpty(parametersLine) ) {
+            return StringUtils.EMPTY;
+        }
+
+        return parametersLine.split(EQUAL, SPLIT_LIMIT)[VAL_IDX];
     }
 }

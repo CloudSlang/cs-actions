@@ -29,6 +29,7 @@ import io.cloudslang.content.amazon.factory.CloudFormationClientBuilder;
 import io.cloudslang.content.amazon.utils.DefaultValues;
 import io.cloudslang.content.amazon.utils.ParametersLine;
 import io.cloudslang.content.utils.OutputUtilities;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -57,8 +58,8 @@ public class CreateStackAction {
      *                          Example: "eu-central-1"
      * @param stackName         Stack name to create
      *                          Example: "MyStack"
-     * @param templateBody      AWS Cloud Formation template body in JSON or YAML format
-     * @param parameters        AWS Cloud Formation template parameters in key value format, one key=value per line
+     * @param templateBody      Template body in JSON or YAML format
+     * @param parameters        Template parameters in key value format, one key=value per line
      * @return                  A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      *                          operation, or failure message and the exception if there is one
      */
@@ -110,20 +111,17 @@ public class CreateStackAction {
     }
 
     private ArrayList<Parameter> toArrayOfParameters(String parameters) {
-        ArrayList<Parameter> parametersList = new ArrayList<Parameter>();
+        ArrayList<Parameter> parametersList = new ArrayList<>();
 
-        for (String line : parameters.split("\n")) {
+        for (String line : parameters.split(StringUtils.LF)) {
 
             ParametersLine paramLine = new ParametersLine(line);
-
-            if (!paramLine.isValid()) {
-                continue;
+            if (paramLine.isValid()) {
+                Parameter parameter = new Parameter();
+                parameter.setParameterKey(paramLine.getKey());
+                parameter.setParameterValue(paramLine.getValue());
+                parametersList.add(parameter);
             }
-
-            Parameter parameter = new Parameter();
-            parameter.setParameterKey(paramLine.getKey());
-            parameter.setParameterValue(paramLine.getValue());
-            parametersList.add(parameter);
         }
 
         return parametersList;
