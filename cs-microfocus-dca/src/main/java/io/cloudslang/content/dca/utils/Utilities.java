@@ -15,7 +15,7 @@
 package io.cloudslang.content.dca.utils;
 
 import io.cloudslang.content.dca.models.DcaAuthModel;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
