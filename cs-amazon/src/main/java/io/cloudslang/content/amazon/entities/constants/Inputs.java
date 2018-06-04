@@ -268,8 +268,13 @@ public class Inputs {
     }
 
     public static class CloudFormationInputs {
-        public static final String TEMPLATE_BODY = "templateBody";
         public static final String STACK_NAME    = "stackName";
+        public static final String TEMPLATE_BODY = "templateBody";
+        public static final String PARAMETERS    = "parameters";
+    }
+
+    public static class SNSInputs {
+        public static final String TOPIC_NAME = "topicName";
     }
 
 }

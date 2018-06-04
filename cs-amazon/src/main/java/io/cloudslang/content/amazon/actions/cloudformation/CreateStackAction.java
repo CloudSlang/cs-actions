@@ -17,6 +17,7 @@ package io.cloudslang.content.amazon.actions.cloudformation;
 import com.amazonaws.services.cloudformation.AmazonCloudFormation;
 import com.amazonaws.services.cloudformation.model.CreateStackRequest;
 import com.amazonaws.services.cloudformation.model.CreateStackResult;
+import com.amazonaws.services.cloudformation.model.Parameter;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -26,12 +27,17 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.factory.CloudFormationClientBuilder;
 import io.cloudslang.content.amazon.utils.DefaultValues;
+import io.cloudslang.content.amazon.utils.ParametersLine;
 import io.cloudslang.content.utils.OutputUtilities;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.STACK_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.PARAMETERS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.TEMPLATE_BODY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.STACK_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.REGION;
@@ -64,7 +70,8 @@ public class CreateStackAction {
      *                          Example: "eu-central-1"
      * @param stackName         Stack name to create
      *                          Example: "MyStack"
-     * @param templateBody      AWS Cloud Formation template body in JSON or YAML format
+     * @param templateBody      Template body in JSON or YAML format
+     * @param parameters        Template parameters in key value format, one key=value per line
      * @return                  A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      *                          operation, or failure message and the exception if there is one
      */
@@ -88,28 +95,46 @@ public class CreateStackAction {
             @Param(value = PROXY_HOST)                   String proxyHost,
             @Param(value = PROXY_PORT)                   String proxyPort,
             @Param(value = PROXY_USERNAME)               String proxyUsername,
-            @Param(value = PROXY_PASSWORD)               String proxyPassword,
+            @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
             @Param(value = CONNECT_TIMEOUT)              String connectTimeoutMs,
             @Param(value = EXECUTION_TIMEOUT)            String execTimeoutMs,
             @Param(value = STACK_NAME, required = true)  String stackName,
-            @Param(value = TEMPLATE_BODY, required = true) String templateBody) {
+            @Param(value = TEMPLATE_BODY, required = true) String templateBody,
+            @Param(value = PARAMETERS)                   String parameters) {
 
         proxyPort = defaultIfEmpty(proxyPort, DefaultValues.PROXY_PORT);
         connectTimeoutMs = defaultIfEmpty(connectTimeoutMs, DefaultValues.CONNECT_TIMEOUT);
         execTimeoutMs = defaultIfEmpty(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
 
         try {
-            AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
-
-            // Create a stack
-            CreateStackRequest createRequest = new CreateStackRequest()
+            final CreateStackRequest createRequest = new CreateStackRequest()
                     .withStackName(stackName)
-                    .withTemplateBody(templateBody);
+                    .withTemplateBody(templateBody)
+                    .withParameters(toArrayOfParameters(parameters));
 
-            CreateStackResult result = stackBuilder.createStack(createRequest);
+            final AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
+
+            final CreateStackResult result = stackBuilder.createStack(createRequest);
+
             return OutputUtilities.getSuccessResultsMap(result.toString());
         } catch (Exception e) {
             return OutputUtilities.getFailureResultsMap(e);
         }
+    }
+
+    private List<Parameter> toArrayOfParameters(final String parameters) {
+        final List<Parameter> parametersList = new ArrayList<>();
+
+        for (String line : parameters.split(StringUtils.LF)) {
+            final ParametersLine paramLine = new ParametersLine(line);
+            if (paramLine.isValid()) {
+                final Parameter parameter = new Parameter();
+                parameter.setParameterKey(paramLine.getKey());
+                parameter.setParameterValue(paramLine.getValue());
+                parametersList.add(parameter);
+            }
+        }
+
+        return parametersList;
     }
 }
