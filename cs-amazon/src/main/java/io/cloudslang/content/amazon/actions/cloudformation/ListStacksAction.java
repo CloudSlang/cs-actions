@@ -15,10 +15,8 @@
 package io.cloudslang.content.amazon.actions.cloudformation;
 
 import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.model.DescribeStackResourcesRequest;
 import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
 import com.amazonaws.services.cloudformation.model.Stack;
-import com.amazonaws.services.cloudformation.model.StackResource;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -32,16 +30,7 @@ import io.cloudslang.content.utils.OutputUtilities;
 
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.REGION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CONNECT_TIMEOUT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.EXECUTION_TIMEOUT;
-
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -100,12 +89,7 @@ public class ListStacksAction {
             StringBuilder listOfStacksResult = new StringBuilder(EMPTY);
             // Show all the stacks for this account along with the resources for each stack
             for (Stack stack : stackBuilder.describeStacks(new DescribeStacksRequest()).getStacks()) {
-                listOfStacksResult.append("Stack : ").append(stack.getStackName()).append(" [").append(stack.getStackStatus()).append("]");
-                DescribeStackResourcesRequest stackResourceRequest = new DescribeStackResourcesRequest();
-                stackResourceRequest.setStackName(stack.getStackName());
-                for (StackResource resource : stackBuilder.describeStackResources(stackResourceRequest).getStackResources()) {
-                    listOfStacksResult.append(String.format("%1$-40s,%2$-25s,%3$s\n", resource.getResourceType(), resource.getLogicalResourceId(), resource.getPhysicalResourceId()));
-                }
+                listOfStacksResult.append(stack.getStackName());
             }
 
             return OutputUtilities.getSuccessResultsMap(listOfStacksResult.toString());
