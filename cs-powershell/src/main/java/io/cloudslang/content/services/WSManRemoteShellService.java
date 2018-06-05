@@ -18,8 +18,8 @@ package io.cloudslang.content.services;
 import io.cloudslang.content.entities.EncoderDecoder;
 import io.cloudslang.content.entities.OutputStream;
 import io.cloudslang.content.entities.WSManRequestInputs;
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.Constants;
 import io.cloudslang.content.utils.ResourceLoader;
 import io.cloudslang.content.utils.WSManUtils;
@@ -103,7 +103,7 @@ public class WSManRemoteShellService {
      * @throws SAXException
      */
     public Map<String, String> runCommand(WSManRequestInputs wsManRequestInputs) throws RuntimeException, IOException, InterruptedException, ParserConfigurationException, TransformerException, XPathExpressionException, TimeoutException, URISyntaxException, SAXException {
-        CSHttpClient csHttpClient = new CSHttpClient();
+        HttpClientService csHttpClient = new HttpClientService();
         HttpClientInputs httpClientInputs = new HttpClientInputs();
         URL url = buildURL(wsManRequestInputs, WSMAN_RESOURCE_URI);
         httpClientInputs = setCommonHttpInputs(httpClientInputs, url, wsManRequestInputs);
@@ -162,7 +162,7 @@ public class WSManRemoteShellService {
      * @param body
      * @return the result of the request execution.
      */
-    private Map<String, String> executeRequestWithBody(CSHttpClient csHttpClient, HttpClientInputs httpClientInputs, String body) {
+    private Map<String, String> executeRequestWithBody(HttpClientService csHttpClient, HttpClientInputs httpClientInputs, String body) {
         httpClientInputs.setBody(body);
         Map<String, String> requestResponse = csHttpClient.execute(httpClientInputs);
         if (UNAUTHORIZED_STATUS_CODE.equals(requestResponse.get(STATUS_CODE))) {
@@ -186,7 +186,7 @@ public class WSManRemoteShellService {
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    private String createShell(CSHttpClient csHttpClient, HttpClientInputs httpClientInputs, WSManRequestInputs wsManRequestInputs)
+    private String createShell(HttpClientService csHttpClient, HttpClientInputs httpClientInputs, WSManRequestInputs wsManRequestInputs)
             throws RuntimeException, IOException, URISyntaxException,
             XPathExpressionException, SAXException, ParserConfigurationException {
         String document = ResourceLoader.loadAsString(CREATE_SHELL_REQUEST_XML);
@@ -213,7 +213,7 @@ public class WSManRemoteShellService {
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    private String executeCommand(CSHttpClient csHttpClient, HttpClientInputs httpClientInputs, String shellId,
+    private String executeCommand(HttpClientService csHttpClient, HttpClientInputs httpClientInputs, String shellId,
                                   WSManRequestInputs wsManRequestInputs, String command) throws RuntimeException,
             IOException, URISyntaxException, TransformerException, XPathExpressionException, SAXException, ParserConfigurationException {
         String documentStr = ResourceLoader.loadAsString(EXECUTE_COMMAND_REQUEST_XML);
@@ -244,7 +244,7 @@ public class WSManRemoteShellService {
      * @throws ParserConfigurationException
      * @throws InterruptedException
      */
-    private Map<String, String> receiveCommandResult(CSHttpClient csHttpClient, HttpClientInputs httpClientInputs,
+    private Map<String, String> receiveCommandResult(HttpClientService csHttpClient, HttpClientInputs httpClientInputs,
                                                      String shellId, String commandId, WSManRequestInputs wsManRequestInputs) throws RuntimeException,
             IOException, URISyntaxException, TransformerException, TimeoutException, XPathExpressionException, SAXException,
             ParserConfigurationException, InterruptedException {
@@ -314,7 +314,7 @@ public class WSManRemoteShellService {
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    private void deleteShell(CSHttpClient csHttpClient, HttpClientInputs httpClientInputs, String shellId, WSManRequestInputs wsManRequestInputs)
+    private void deleteShell(HttpClientService csHttpClient, HttpClientInputs httpClientInputs, String shellId, WSManRequestInputs wsManRequestInputs)
             throws RuntimeException, IOException, URISyntaxException, TransformerException, XPathExpressionException, SAXException, ParserConfigurationException {
         String documentStr = ResourceLoader.loadAsString(DELETE_SHELL_REQUEST_XML);
         documentStr = createDeleteShellRequestBody(documentStr, httpClientInputs.getUrl(), shellId, String.valueOf(wsManRequestInputs.getMaxEnvelopeSize()), wsManRequestInputs.getWinrmLocale(), String.valueOf(wsManRequestInputs.getOperationTimeout()));
