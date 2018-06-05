@@ -22,8 +22,8 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.dca.utils.Validator;
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -42,8 +42,8 @@ import static io.cloudslang.content.dca.utils.InputNames.*;
 import static io.cloudslang.content.dca.utils.OutputNames.AUTH_TOKEN;
 import static io.cloudslang.content.dca.utils.OutputNames.REFRESH_TOKEN;
 import static io.cloudslang.content.dca.utils.Utilities.*;
-import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
-import static io.cloudslang.content.httpclient.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -150,7 +150,7 @@ public class GetAuthenticationToken {
         httpClientInputs.setMethod(POST);
 
         try {
-            final Map<String, String> httpClientResultMap = new CSHttpClient().execute(httpClientInputs);
+            final Map<String, String> httpClientResultMap = new HttpClientService().execute(httpClientInputs);
             final ObjectMapper mapper = new ObjectMapper();
             final Map responseMap = mapper.readValue(httpClientResultMap.get(RETURN_RESULT), Map.class);
 

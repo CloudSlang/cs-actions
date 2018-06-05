@@ -18,8 +18,8 @@ package io.cloudslang.content.execute;
 import io.cloudslang.content.dropbox.entities.inputs.CommonInputs;
 import io.cloudslang.content.dropbox.entities.inputs.FolderInputs;
 import io.cloudslang.content.dropbox.execute.DropboxService;
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,16 +46,16 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
  * 5/31/2017.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CSHttpClient.class, DropboxService.class})
+@PrepareForTest({HttpClientService.class, DropboxService.class})
 public class DropboxServiceTest {
     @Mock
-    private CSHttpClient csHttpClientMock;
+    private HttpClientService csHttpClientMock;
 
     private DropboxService toTest;
 
     @Before
     public void init() throws Exception {
-        whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
+        whenNew(HttpClientService.class).withNoArguments().thenReturn(csHttpClientMock);
         when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(new HashMap<String, String>());
         toTest = new DropboxService();
     }

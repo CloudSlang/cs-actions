@@ -21,7 +21,7 @@ import io.cloudslang.content.couchbase.entities.couchbase.ConflictResolutionType
 import io.cloudslang.content.couchbase.entities.couchbase.EvictionPolicy;
 import io.cloudslang.content.couchbase.entities.couchbase.RecoveryType;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.net.MalformedURLException;

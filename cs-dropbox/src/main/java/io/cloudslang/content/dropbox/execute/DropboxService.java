@@ -17,8 +17,8 @@ package io.cloudslang.content.dropbox.execute;
 
 import io.cloudslang.content.dropbox.entities.inputs.CommonInputs;
 import io.cloudslang.content.dropbox.entities.inputs.InputsWrapper;
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 import java.net.MalformedURLException;
 import java.util.Map;
@@ -41,6 +41,6 @@ public class DropboxService {
         httpClientInputs.setBody(buildPayload(wrapper));
         buildHeaders(wrapper);
 
-        return new CSHttpClient().execute(httpClientInputs);
+        return new HttpClientService().execute(httpClientInputs);
     }
 }

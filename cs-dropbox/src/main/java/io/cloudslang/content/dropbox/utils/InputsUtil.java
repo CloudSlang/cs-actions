@@ -16,7 +16,7 @@
 package io.cloudslang.content.dropbox.utils;
 
 import io.cloudslang.content.dropbox.entities.inputs.InputsWrapper;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 import java.net.MalformedURLException;
 import java.net.URL;
