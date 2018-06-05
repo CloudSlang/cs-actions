@@ -38,7 +38,6 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.PRIVATE_IP_ADDRESS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.PUBLIC_IP;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SECURITY_GROUP_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VPC_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NETWORK;
