@@ -108,7 +108,8 @@ public class GetStackDetailsAction {
             final DescribeStackResourcesRequest stackResourceRequest = new DescribeStackResourcesRequest();
 
             for (Stack stack : stackBuilder.describeStacks(describeStacksRequest).getStacks()) {
-                results.put(Outputs.STACK_NAME_RESULT,stack.getStackName());
+                results.put(Outputs.RETURN_RESULT, stack.getStackName() + "[" + stack.getStackStatus() + "]" );
+                results.put(Outputs.STACK_NAME_RESULT, stack.getStackName());
                 results.put(Outputs.STACK_ID_RESULT,stack.getStackId());
                 results.put(Outputs.STACK_STATUS_RESULT,stack.getStackStatus());
                 results.put(Outputs.STACK_STATUS_RESULT_REASON,stack.getStackStatusReason());
@@ -119,10 +120,11 @@ public class GetStackDetailsAction {
                 stackResourceRequest.setStackName(stack.getStackName());
                 results.put(Outputs.STACK_RESOURCES_RESULT,stackBuilder.describeStackResources(stackResourceRequest).getStackResources().toString());
 
-                results.put(Outputs.RETURN_RESULT, Outputs.SUCCESS_RETURN_CODE);
+                results.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
                 results.put(Outputs.EXCEPTION, StringUtils.EMPTY);
             }
         } catch (Exception e) {
+            results.put(Outputs.RETURN_RESULT, e.getMessage());
             results.put(Outputs.STACK_ID_RESULT, StringUtils.EMPTY);
             results.put(Outputs.STACK_STATUS_RESULT,StringUtils.EMPTY);
             results.put(Outputs.STACK_STATUS_RESULT_REASON,StringUtils.EMPTY);
@@ -130,8 +132,8 @@ public class GetStackDetailsAction {
             results.put(Outputs.STACK_DESCRIPTION_RESULT,StringUtils.EMPTY);
             results.put(Outputs.STACK_OUTPUTS_RESULT,StringUtils.EMPTY);
             results.put(Outputs.STACK_RESOURCES_RESULT,StringUtils.EMPTY);
-            results.put(Outputs.EXCEPTION, e.getMessage());
-            results.put(Outputs.RETURN_RESULT, Outputs.FAILURE_RETURN_CODE);
+            results.put(Outputs.RETURN_CODE, Outputs.FAILURE_RETURN_CODE);
+            results.put(Outputs.EXCEPTION, e.getStackTrace().toString());
         }
 
         return results;
