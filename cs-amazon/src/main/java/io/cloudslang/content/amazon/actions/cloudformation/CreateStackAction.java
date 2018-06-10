@@ -24,6 +24,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.amazon.entities.constants.Constants;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.factory.CloudFormationClientBuilder;
 import io.cloudslang.content.amazon.utils.DefaultValues;
@@ -32,12 +33,11 @@ import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.PARAMETERS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.TEMPLATE_BODY;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.STACK_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.REGION;
@@ -100,7 +100,8 @@ public class CreateStackAction {
             @Param(value = EXECUTION_TIMEOUT)            String execTimeoutMs,
             @Param(value = STACK_NAME, required = true)  String stackName,
             @Param(value = TEMPLATE_BODY, required = true) String templateBody,
-            @Param(value = PARAMETERS)                   String parameters) {
+            @Param(value = PARAMETERS)                   String parameters,
+            @Param(value = CAPABILITIES)                 String capabilities) {
 
         proxyPort = defaultIfEmpty(proxyPort, DefaultValues.PROXY_PORT);
         connectTimeoutMs = defaultIfEmpty(connectTimeoutMs, DefaultValues.CONNECT_TIMEOUT);
@@ -110,7 +111,8 @@ public class CreateStackAction {
             final CreateStackRequest createRequest = new CreateStackRequest()
                     .withStackName(stackName)
                     .withTemplateBody(templateBody)
-                    .withParameters(toArrayOfParameters(parameters));
+                    .withParameters(toArrayOfParameters(parameters))
+                    .withCapabilities(toArrayOfString(capabilities));
 
             final AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
 
@@ -138,5 +140,13 @@ public class CreateStackAction {
         }
 
         return parametersList;
+    }
+
+    private List<String> toArrayOfString(final String capabilities) {
+        List<String> arrayList = new ArrayList<>();
+        if (!StringUtils.isEmpty(capabilities)) {
+            arrayList = Arrays.asList(capabilities.split(Constants.Miscellaneous.COMMA_DELIMITER));
+        }
+        return arrayList;
     }
 }
