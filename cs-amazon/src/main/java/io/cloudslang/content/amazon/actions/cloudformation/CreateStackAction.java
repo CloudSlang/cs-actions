@@ -38,16 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.*;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.REGION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CONNECT_TIMEOUT;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.EXECUTION_TIMEOUT;
-
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateStackAction {
@@ -125,12 +116,11 @@ public class CreateStackAction {
     }
 
     private List<Parameter> toArrayOfParameters(final String parameters) {
-        final List<Parameter> parametersList = new ArrayList<>();
-
         if ( StringUtils.isEmpty(parameters)) {
-            return parametersList;
+            return new ArrayList<>();
         }
 
+        final List<Parameter> parametersList = new ArrayList<>();
         for (String line : parameters.split(StringUtils.LF)) {
             final ParametersLine paramLine = new ParametersLine(line);
             if (paramLine.isValid()) {
@@ -140,15 +130,14 @@ public class CreateStackAction {
                 parametersList.add(parameter);
             }
         }
-
         return parametersList;
     }
 
     private List<String> toArrayOfString(final String capabilities) {
-        List<String> arrayList = new ArrayList<>();
-        if (!StringUtils.isEmpty(capabilities)) {
-            arrayList = Arrays.asList(capabilities.split(Constants.Miscellaneous.COMMA_DELIMITER));
+        if (StringUtils.isEmpty(capabilities)) {
+            return new ArrayList<>();
         }
-        return arrayList;
+
+        return Arrays.asList(capabilities.split(Constants.Miscellaneous.COMMA_DELIMITER));
     }
 }
