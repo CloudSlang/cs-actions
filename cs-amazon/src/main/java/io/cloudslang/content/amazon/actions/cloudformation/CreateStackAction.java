@@ -127,15 +127,17 @@ public class CreateStackAction {
     private List<Parameter> toArrayOfParameters(final String parameters) {
         final List<Parameter> parametersList = new ArrayList<>();
 
-        if ( ! StringUtils.isEmpty(parameters)) {
-            for (String line : parameters.split(StringUtils.LF)) {
-                final ParametersLine paramLine = new ParametersLine(line);
-                if (paramLine.isValid()) {
-                    final Parameter parameter = new Parameter();
-                    parameter.setParameterKey(paramLine.getKey());
-                    parameter.setParameterValue(paramLine.getValue());
-                    parametersList.add(parameter);
-                }
+        if ( StringUtils.isEmpty(parameters)) {
+            return parametersList;
+        }
+
+        for (String line : parameters.split(StringUtils.LF)) {
+            final ParametersLine paramLine = new ParametersLine(line);
+            if (paramLine.isValid()) {
+                final Parameter parameter = new Parameter();
+                parameter.setParameterKey(paramLine.getKey());
+                parameter.setParameterValue(paramLine.getValue());
+                parametersList.add(parameter);
             }
         }
 
