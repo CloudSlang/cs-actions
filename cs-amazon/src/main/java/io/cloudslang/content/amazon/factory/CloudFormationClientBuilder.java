@@ -36,24 +36,18 @@ public class CloudFormationClientBuilder {
             String executionTimeoutMs,
             String region) {
 
-        ClientConfiguration clientConf = new ClientConfiguration();
+        connectTimeoutMs = StringUtils.defaultIfEmpty(connectTimeoutMs,"0");
+        executionTimeoutMs = StringUtils.defaultIfEmpty(executionTimeoutMs,"0");
+
+        ClientConfiguration clientConf = new ClientConfiguration().
+                withConnectionTimeout(Integer.parseInt(connectTimeoutMs))
+                .withClientExecutionTimeout(Integer.parseInt(executionTimeoutMs));
+
         if (!StringUtils.isEmpty(proxyHost)) {
             clientConf.setProxyHost(proxyHost);
-        }
-        if (!StringUtils.isEmpty(proxyPort)) {
             clientConf.setProxyPort(Integer.parseInt(proxyPort));
-        }
-        if (!StringUtils.isEmpty(proxyUsername)) {
             clientConf.setProxyUsername(proxyUsername);
-        }
-        if (!StringUtils.isEmpty(proxyPassword)) {
             clientConf.setProxyPassword(proxyPassword);
-        }
-        if (!StringUtils.isEmpty(connectTimeoutMs)) {
-            clientConf.setConnectionTimeout(Integer.parseInt(connectTimeoutMs));
-        }
-        if (!StringUtils.isEmpty(executionTimeoutMs)) {
-            clientConf.setClientExecutionTimeout(Integer.parseInt(connectTimeoutMs));
         }
 
         return AmazonCloudFormationClientBuilder.standard()
