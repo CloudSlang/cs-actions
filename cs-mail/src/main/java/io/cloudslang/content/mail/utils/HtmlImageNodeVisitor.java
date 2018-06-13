@@ -46,7 +46,9 @@ public class HtmlImageNodeVisitor extends NodeVisitor {
     }
 
     public String getContentId() {
-        return new Random(System.currentTimeMillis()).nextInt(100000) + "." + System.currentTimeMillis();
+        final Random random = new Random();
+        final long nextInt = random.nextInt();
+        return Math.abs(random.nextInt(100000)) + "." + (100000000000L + Math.abs(nextInt));
     }
 
     public Map<String, String> getBase64Images() {
