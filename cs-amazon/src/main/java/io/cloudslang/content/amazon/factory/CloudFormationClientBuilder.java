@@ -36,9 +36,6 @@ public class CloudFormationClientBuilder {
             String executionTimeoutMs,
             String region) {
 
-        connectTimeoutMs = StringUtils.defaultIfEmpty(connectTimeoutMs,"0");
-        executionTimeoutMs = StringUtils.defaultIfEmpty(executionTimeoutMs,"0");
-
         ClientConfiguration clientConf = new ClientConfiguration().
                 withConnectionTimeout(Integer.parseInt(connectTimeoutMs))
                 .withClientExecutionTimeout(Integer.parseInt(executionTimeoutMs));
