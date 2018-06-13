@@ -23,6 +23,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.amazon.entities.constants.Constants;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.factory.CloudFormationClientBuilder;
 import io.cloudslang.content.amazon.utils.DefaultValues;
@@ -89,7 +90,11 @@ public class ListStacksAction {
             StringBuilder listOfStacksResult = new StringBuilder(EMPTY);
             // Show all the stacks for this account along with the resources for each stack
             for (Stack stack : stackBuilder.describeStacks(new DescribeStacksRequest()).getStacks()) {
-                listOfStacksResult.append(stack.getStackName());
+                listOfStacksResult.append(stack.getStackName()+ Constants.Miscellaneous.COMMA_DELIMITER);
+            }
+
+            if (listOfStacksResult.length() > 0) {
+                listOfStacksResult.deleteCharAt(listOfStacksResult.length()-1); //remove last comma delimiter
             }
 
             return OutputUtilities.getSuccessResultsMap(listOfStacksResult.toString());
