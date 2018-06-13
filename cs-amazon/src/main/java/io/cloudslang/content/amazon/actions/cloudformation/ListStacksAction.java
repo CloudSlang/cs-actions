@@ -39,22 +39,22 @@ public class ListStacksAction {
     /**
      * List AWS Cloud Formation Stacks
      *
-     * @param identity          Access key associated with your Amazon AWS or IAM account.
-     *                          Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-     * @param credential        Secret access key ID associated with your Amazon AWS or IAM account.
-     * @param proxyHost         Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
-     *                          Default: ""
-     * @param proxyPort         Optional - proxy server port. You must either specify values for both proxyHost and
-     *                          proxyPort inputs or leave them both empty.
-     *                          Default: ""
-     * @param proxyUsername     Optional - proxy server user name.
-     *                          Default: ""
-     * @param proxyPassword     Optional - proxy server password associated with the proxyUsername input value.
-     *                          Default: ""
-     * @param region            AWS region name
-     *                          Example: "eu-central-1"
-     * @return                  A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     *                          operation, or failure message and the exception if there is one
+     * @param identity      Access key associated with your Amazon AWS or IAM account.
+     *                      Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+     * @param credential    Secret access key ID associated with your Amazon AWS or IAM account.
+     * @param proxyHost     Optional - proxy server used to connect to Amazon API. If empty no proxy will be used.
+     *                      Default: ""
+     * @param proxyPort     Optional - proxy server port. You must either specify values for both proxyHost and
+     *                      proxyPort inputs or leave them both empty.
+     *                      Default: ""
+     * @param proxyUsername Optional - proxy server user name.
+     *                      Default: ""
+     * @param proxyPassword Optional - proxy server password associated with the proxyUsername input value.
+     *                      Default: ""
+     * @param region        AWS region name
+     *                      Example: "eu-central-1"
+     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+     * operation, or failure message and the exception if there is one
      */
     @Action(name = "List AWS Cloud Formation stacks",
             outputs = {
@@ -70,15 +70,15 @@ public class ListStacksAction {
             }
     )
     public Map<String, String> execute(
-            @Param(value = IDENTITY,   required = true)  String identity,
-            @Param(value = CREDENTIAL, required = true, encrypted = true)  String credential,
-            @Param(value = REGION,     required = true)  String region,
-            @Param(value = PROXY_HOST)                   String proxyHost,
-            @Param(value = PROXY_PORT)                   String proxyPort,
-            @Param(value = PROXY_USERNAME)               String proxyUsername,
-            @Param(value = PROXY_PASSWORD)               String proxyPassword,
-            @Param(value = CONNECT_TIMEOUT)              String connectTimeoutMs,
-            @Param(value = EXECUTION_TIMEOUT)            String execTimeoutMs) {
+            @Param(value = IDENTITY, required = true) String identity,
+            @Param(value = CREDENTIAL, required = true, encrypted = true) String credential,
+            @Param(value = REGION, required = true) String region,
+            @Param(value = PROXY_HOST) String proxyHost,
+            @Param(value = PROXY_PORT) String proxyPort,
+            @Param(value = PROXY_USERNAME) String proxyUsername,
+            @Param(value = PROXY_PASSWORD) String proxyPassword,
+            @Param(value = CONNECT_TIMEOUT) String connectTimeoutMs,
+            @Param(value = EXECUTION_TIMEOUT) String execTimeoutMs) {
 
         proxyPort = defaultIfEmpty(proxyPort, DefaultValues.PROXY_PORT);
         connectTimeoutMs = defaultIfEmpty(connectTimeoutMs, DefaultValues.CONNECT_TIMEOUT);
@@ -90,11 +90,11 @@ public class ListStacksAction {
             StringBuilder listOfStacksResult = new StringBuilder(EMPTY);
             // Show all the stacks for this account along with the resources for each stack
             for (Stack stack : stackBuilder.describeStacks(new DescribeStacksRequest()).getStacks()) {
-                listOfStacksResult.append(stack.getStackName()+ Constants.Miscellaneous.COMMA_DELIMITER);
+                listOfStacksResult.append(stack.getStackName() + Constants.Miscellaneous.COMMA_DELIMITER);
             }
 
             if (listOfStacksResult.length() > 0) {
-                listOfStacksResult.deleteCharAt(listOfStacksResult.length()-1); //remove last comma delimiter
+                listOfStacksResult.deleteCharAt(listOfStacksResult.length() - 1); //remove last comma delimiter
             }
 
             return OutputUtilities.getSuccessResultsMap(listOfStacksResult.toString());

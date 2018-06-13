@@ -22,7 +22,8 @@ import com.amazonaws.services.cloudformation.AmazonCloudFormationClientBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 public class CloudFormationClientBuilder {
-    private CloudFormationClientBuilder() {}
+    private CloudFormationClientBuilder() {
+    }
 
     public static AmazonCloudFormation getCloudFormationClient(
             String accessKeyId,
@@ -36,12 +37,24 @@ public class CloudFormationClientBuilder {
             String region) {
 
         ClientConfiguration clientConf = new ClientConfiguration();
-        if ( !StringUtils.isEmpty(proxyHost)) { clientConf.setProxyHost(proxyHost); }
-        if ( !StringUtils.isEmpty(proxyPort)) { clientConf.setProxyPort(Integer.parseInt(proxyPort)); }
-        if ( !StringUtils.isEmpty(proxyUsername)) { clientConf.setProxyUsername(proxyUsername); }
-        if ( !StringUtils.isEmpty(proxyPassword)) { clientConf.setProxyPassword(proxyPassword); }
-        if ( !StringUtils.isEmpty(connectTimeoutMs)) { clientConf.setConnectionTimeout(Integer.parseInt(connectTimeoutMs)); }
-        if ( !StringUtils.isEmpty(executionTimeoutMs)) { clientConf.setClientExecutionTimeout(Integer.parseInt(connectTimeoutMs)); }
+        if (!StringUtils.isEmpty(proxyHost)) {
+            clientConf.setProxyHost(proxyHost);
+        }
+        if (!StringUtils.isEmpty(proxyPort)) {
+            clientConf.setProxyPort(Integer.parseInt(proxyPort));
+        }
+        if (!StringUtils.isEmpty(proxyUsername)) {
+            clientConf.setProxyUsername(proxyUsername);
+        }
+        if (!StringUtils.isEmpty(proxyPassword)) {
+            clientConf.setProxyPassword(proxyPassword);
+        }
+        if (!StringUtils.isEmpty(connectTimeoutMs)) {
+            clientConf.setConnectionTimeout(Integer.parseInt(connectTimeoutMs));
+        }
+        if (!StringUtils.isEmpty(executionTimeoutMs)) {
+            clientConf.setClientExecutionTimeout(Integer.parseInt(connectTimeoutMs));
+        }
 
         return AmazonCloudFormationClientBuilder.standard()
                 .withRegion(region)
