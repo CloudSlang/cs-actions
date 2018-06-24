@@ -19,34 +19,31 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.database.constants.DBResponseNames;
 import io.cloudslang.content.database.constants.DBReturnCodes;
 import io.cloudslang.content.database.services.SQLQueryLobService;
-import io.cloudslang.content.database.services.SQLScriptService;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLInputsUtils;
 import io.cloudslang.content.database.utils.SQLSessionResource;
-import io.cloudslang.content.database.utils.SQLUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Spy;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
-import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_READ_ONLY;
-import static io.cloudslang.content.database.constants.DBOtherValues.MSSQL_DB_TYPE;
-import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_FORWARD_ONLY;
+import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBReturnCodes.NO_MORE;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.powermock.api.mockito.PowerMockito.*;
 
@@ -112,7 +109,10 @@ public class SQLQueryLOBTest {
         assertThat(resultMap.get(RETURN_RESULT), is("a"));
     }
 
+    //GlobalSessionObject was implemented
+    //In CloudSlang the object is instantiated by default and cannot be null
     @Test
+    @Ignore
     public void executeSuccessNoGlobalSessionFailure() throws Exception {
         mockStatic(SQLQueryLobService.class);
 
@@ -124,4 +124,5 @@ public class SQLQueryLOBTest {
         verifyStatic();
         assertThat(resultMap.get(RETURN_CODE), is(DBReturnCodes.NO_MORE));
     }
+
 }

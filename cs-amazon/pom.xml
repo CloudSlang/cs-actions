@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-amazon</artifactId>
-    <version>1.0.16-SNAPSHOT</version>
+    <version>1.0.19-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -91,8 +91,8 @@
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <score-content-sdk.version>1.10.6</score-content-sdk.version>
-        <cs-http-client.version>0.1.73</cs-http-client.version>
+        <score-content-sdk.version>1.10.7</score-content-sdk.version>
+        <cs-http-client.version>0.1.74</cs-http-client.version>
         <cs-commons.version>0.0.6</cs-commons.version>
         <junit.version>4.12</junit.version>
         <aws-sdk.version>1.11.305</aws-sdk.version>
@@ -350,5 +350,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>

@@ -23,8 +23,8 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.dca.utils.Validator;
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 import java.util.Map;
 
@@ -44,8 +44,8 @@ import static io.cloudslang.content.dca.utils.InputNames.*;
 import static io.cloudslang.content.dca.utils.InputNames.REFRESH_TOKEN;
 import static io.cloudslang.content.dca.utils.OutputNames.*;
 import static io.cloudslang.content.dca.utils.Utilities.*;
-import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
-import static io.cloudslang.content.httpclient.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.Integer.parseInt;
@@ -135,7 +135,7 @@ public class GetResource {
         try {
             final ObjectMapper mapper = new ObjectMapper();
 
-            final Map<String, String> httpClientResult = new CSHttpClient().execute(httpClientInputs);
+            final Map<String, String> httpClientResult = new HttpClientService().execute(httpClientInputs);
 
             final String resourceJson = httpClientResult.get(RETURN_RESULT);
 

@@ -27,7 +27,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
+import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
 import static io.cloudslang.content.xml.utils.Constants.Defaults.DELIMITER;
 import static io.cloudslang.content.xml.utils.Constants.Defaults.XML_DOCUMENT_SOURCE;
 import static io.cloudslang.content.xml.utils.Constants.Outputs.ERROR_MESSAGE;

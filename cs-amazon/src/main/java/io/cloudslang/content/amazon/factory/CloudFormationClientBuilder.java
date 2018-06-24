@@ -19,9 +19,14 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.cloudformation.AmazonCloudFormation;
 import com.amazonaws.services.cloudformation.AmazonCloudFormationClientBuilder;
+import io.cloudslang.content.amazon.utils.DefaultValues;
+import org.apache.commons.lang3.StringUtils;
+
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CloudFormationClientBuilder {
-    private CloudFormationClientBuilder() {}
+    private CloudFormationClientBuilder() {
+    }
 
     public static AmazonCloudFormation getCloudFormationClient(
             String accessKeyId,
@@ -34,13 +39,19 @@ public class CloudFormationClientBuilder {
             String executionTimeoutMs,
             String region) {
 
+        connectTimeoutMs = defaultIfEmpty(connectTimeoutMs, DefaultValues.CONNECT_TIMEOUT);
+        executionTimeoutMs = defaultIfEmpty(executionTimeoutMs, DefaultValues.EXEC_TIMEOUT);
+
         ClientConfiguration clientConf = new ClientConfiguration()
                 .withConnectionTimeout(Integer.parseInt(connectTimeoutMs))
-                .withProxyHost(proxyHost)
-                .withProxyPort(Integer.parseInt(proxyPort))
-                .withProxyUsername(proxyUsername)
-                .withProxyPassword(proxyPassword)
                 .withClientExecutionTimeout(Integer.parseInt(executionTimeoutMs));
+
+        if (!StringUtils.isEmpty(proxyHost)) {
+            clientConf.setProxyHost(proxyHost);
+            clientConf.setProxyPort(Integer.parseInt(proxyPort));
+            clientConf.setProxyUsername(proxyUsername);
+            clientConf.setProxyPassword(proxyPassword);
+        }
 
         return AmazonCloudFormationClientBuilder.standard()
                 .withRegion(region)
