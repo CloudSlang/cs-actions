@@ -209,35 +209,35 @@
         <plugins>
             <!--License checker for build-->
             <!--<plugin>-->
-                <!--<groupId>com.mycila</groupId>-->
-                <!--<artifactId>license-maven-plugin</artifactId>-->
-                <!--<version>3.0</version>-->
-                <!--<configuration>-->
-                    <!--<header>${project.basedir}/license.template</header>-->
-                    <!--<headerDefinitions>-->
-                        <!--<headerDefinition>${project.basedir}/header-definitions.xml</headerDefinition>-->
-                    <!--</headerDefinitions>-->
-                    <!--<includes>-->
-                        <!--<include>**/*.java</include>-->
-                    <!--</includes>-->
-                    <!--&lt;!&ndash;Pass arguments using ${var} syntax in license.template file&ndash;&gt;-->
-                    <!--<properties>-->
-                        <!--<copyright.year>2017</copyright.year>-->
-                    <!--</properties>-->
-                    <!--&lt;!&ndash;Custom mapping for java extensions&ndash;&gt;-->
-                    <!--<useDefaultMapping>false</useDefaultMapping>-->
-                    <!--<mapping>-->
-                        <!--<java>cs-actions-java-header</java>-->
-                    <!--</mapping>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>process-resources</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>format</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
+            <!--<groupId>com.mycila</groupId>-->
+            <!--<artifactId>license-maven-plugin</artifactId>-->
+            <!--<version>3.0</version>-->
+            <!--<configuration>-->
+            <!--<header>${project.basedir}/license.template</header>-->
+            <!--<headerDefinitions>-->
+            <!--<headerDefinition>${project.basedir}/header-definitions.xml</headerDefinition>-->
+            <!--</headerDefinitions>-->
+            <!--<includes>-->
+            <!--<include>**/*.java</include>-->
+            <!--</includes>-->
+            <!--&lt;!&ndash;Pass arguments using ${var} syntax in license.template file&ndash;&gt;-->
+            <!--<properties>-->
+            <!--<copyright.year>2017</copyright.year>-->
+            <!--</properties>-->
+            <!--&lt;!&ndash;Custom mapping for java extensions&ndash;&gt;-->
+            <!--<useDefaultMapping>false</useDefaultMapping>-->
+            <!--<mapping>-->
+            <!--<java>cs-actions-java-header</java>-->
+            <!--</mapping>-->
+            <!--</configuration>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<phase>process-resources</phase>-->
+            <!--<goals>-->
+            <!--<goal>format</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
             <!--</plugin>-->
         </plugins>
     </build>
@@ -291,6 +291,7 @@
     </profiles>
 
     <modules>
+        <module>cs-alibaba</module>
         <module>cs-amazon</module>
         <module>cs-azure</module>
         <module>cs-commons</module>
