@@ -94,6 +94,11 @@
             <artifactId>aliyun-java-sdk-core</artifactId>
             <version>${aliyun-java-sdk-core.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-ecs</artifactId>
+            <version>4.9.4</version>
+        </dependency>
         <!-- Utils -->
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
