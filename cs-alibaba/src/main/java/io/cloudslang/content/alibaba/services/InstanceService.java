@@ -43,7 +43,7 @@ public class InstanceService {
                                         final Integer internetMaxBandwidthOut,
                                         final String hostname,
                                         final String password,
-                                        final boolean passwordInherit,
+                                        final Boolean passwordInherit,
                                         final String isOptimized,
                                         final String systemDiskCategory,
                                         final Integer systemDiskSize,
