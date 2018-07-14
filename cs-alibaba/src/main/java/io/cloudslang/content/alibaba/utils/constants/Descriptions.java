@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2018 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.alibaba.utils.constants;
 
 public class Descriptions {
@@ -11,6 +25,7 @@ public class Descriptions {
         public static final String PROXY_USERNAME_DESC = "";
         public static final String PROXY_PASSWORD_DESC = "";
         public static final String INSTANCE_ID_DESC = "";
+        public static final String FORCE_STOP_DESC = "";
 
         //Results
         public static final String RETURN_RESULT_DESC = "The authentication token in case of success, or an error" +
@@ -37,8 +52,11 @@ public class Descriptions {
         public static final String STOP_INSTANCE_DESC = "This operation is used to stop an ECS instance.";
 
         //Inputs
-        public static final String FORCE_STOP_DESC = "";
         public static final String CONFIRM_STOP_DESC = "";
         public static final String STOPPED_MODE_DESC = "";
+    }
+
+    public static class RESTARTInstance {
+        public static final String RESTART_INSTANCE_DESC = "This operation is used to resrtart an ECS instance.";
     }
 }

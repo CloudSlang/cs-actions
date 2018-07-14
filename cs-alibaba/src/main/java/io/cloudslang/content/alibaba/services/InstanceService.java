@@ -200,6 +200,33 @@ public class InstanceService {
         }
     }
 
+    public static String restartInstance(final String proxyHost,
+                                         final String proxyPort,
+                                         final String proxyUsername,
+                                         final String proxyPassword,
+                                         final String instanceId,
+                                         final Boolean forceStop,
+                                         final IAcsClient client) throws RuntimeException {
+        // Set JVM proxies during runtime
+        ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
+
+        // Initialize delete instance request
+        final RebootInstanceRequest rebootInstanceRequest = new RebootInstanceRequest();
+        rebootInstanceRequest.setInstanceId(instanceId);
+        rebootInstanceRequest.setForceStop(forceStop);
+
+        // Initiate the request and handle the response or exceptions
+        final RebootInstanceResponse rebootInstanceResponse;
+        try {
+            rebootInstanceResponse = client.getAcsResponse(rebootInstanceRequest);
+            return rebootInstanceResponse.getRequestId();
+        } catch (ClientException e) {
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            ProxyUtil.clearProxy();
+        }
+    }
+
     private static void setRequestTags(CreateInstanceRequest request, List<String> tagsKeys, List<String> tagsValues) {
         if (isEmpty(tagsKeys.get(0))) {
             request.setTag1Key(tagsKeys.get(0));

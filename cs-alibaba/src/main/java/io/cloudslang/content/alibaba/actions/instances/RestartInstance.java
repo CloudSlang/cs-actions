@@ -27,23 +27,22 @@ import io.cloudslang.content.alibaba.utils.constants.Outputs;
 
 import java.util.Map;
 
-import static io.cloudslang.content.alibaba.services.InstanceService.startInstance;
+import static io.cloudslang.content.alibaba.services.InstanceService.restartInstance;
 import static io.cloudslang.content.alibaba.utils.constants.CommonInputs.*;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.*;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StartInstance.INIT_LOCAL_DISK_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StartInstance.START_INSTANCE_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.ExceptionMessages.START_INSTANCE_EXCEPTION;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.RESTARTInstance.RESTART_INSTANCE_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.ExceptionMessages.RESTART_INSTANCE_EXCEPTION;
 import static io.cloudslang.content.alibaba.utils.constants.Outputs.REQUEST_ID;
-import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.START_INSTANCE_SUCCESS;
+import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.RESTART_INSTANCE_SUCCESS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.Boolean.valueOf;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class StartInstance {
-    @Action(name = "Start Instance",
-            description = START_INSTANCE_DESC,
+public class RestartInstance {
+    @Action(name = "Restart Instance",
+            description = RESTART_INSTANCE_DESC,
             outputs = {
                     @Output(value = Outputs.RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = Outputs.RETURN_RESULT, description = RETURN_RESULT_DESC),
@@ -65,7 +64,7 @@ public class StartInstance {
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
                                        @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) String instanceId,
-                                       @Param(value = INIT_LOCAL_DISK, description = INIT_LOCAL_DISK_DESC) String initLocalDisk) {
+                                       @Param(value = FORCE_STOP, description = FORCE_STOP_DESC) String forceStop) {
         //Validate Inputs
         Validator validator = new Validator()
                 .validatePort(proxyPort, PROXY_PORT);
@@ -79,18 +78,18 @@ public class StartInstance {
         final String proxyPortImp = defaultIfEmpty(proxyPort, EMPTY);
         final String proxyUsernameImp = defaultIfEmpty(proxyUsername, EMPTY);
         final String proxyPasswordImp = defaultIfEmpty(proxyPassword, EMPTY);
-        final Boolean initLocalDiskImp = valueOf(initLocalDisk);
+        final Boolean forceStopImp = valueOf(forceStop);
 
         try {
             final IAcsClient client = ClientUtil.getClient(regionId, accessKeyId, accessKeySecret);
-            final String requestId = startInstance(proxyHostImp, proxyPortImp, proxyUsernameImp, proxyPasswordImp, instanceId, initLocalDiskImp, client);
+            final String requestId = restartInstance(proxyHostImp, proxyPortImp, proxyUsernameImp, proxyPasswordImp, instanceId, forceStopImp, client);
 
-            final Map<String, String> resultMap = getSuccessResultsMap(START_INSTANCE_SUCCESS);
+            final Map<String, String> resultMap = getSuccessResultsMap(RESTART_INSTANCE_SUCCESS);
             resultMap.put(REQUEST_ID, requestId);
 
             return resultMap;
         } catch (Exception e) {
-            return getFailureResultsMap(START_INSTANCE_EXCEPTION, e);
+            return getFailureResultsMap(RESTART_INSTANCE_EXCEPTION, e);
         }
     }
 }
