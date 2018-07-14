@@ -99,7 +99,7 @@ public class InstanceService {
         setRequestTags(request, tagsKeys, tagsValues);
 
         // Initiate the request and handle the response or exceptions
-        CreateInstanceResponse response;
+        final CreateInstanceResponse response;
         try {
             response = client.getAcsResponse(request);
             return response.getInstanceId();
@@ -116,20 +116,20 @@ public class InstanceService {
             request.setTag1Value(tagsValues.get(0));
         }
         if (isEmpty(tagsKeys.get(1))) {
-            request.setTag1Key(tagsKeys.get(1));
-            request.setTag1Value(tagsValues.get(1));
+            request.setTag2Key(tagsKeys.get(1));
+            request.setTag2Value(tagsValues.get(1));
         }
         if (isEmpty(tagsKeys.get(2))) {
-            request.setTag1Key(tagsKeys.get(2));
-            request.setTag1Value(tagsValues.get(2));
+            request.setTag3Key(tagsKeys.get(2));
+            request.setTag3Value(tagsValues.get(2));
         }
         if (isEmpty(tagsKeys.get(3))) {
-            request.setTag1Key(tagsKeys.get(3));
-            request.setTag1Value(tagsValues.get(3));
+            request.setTag3Key(tagsKeys.get(3));
+            request.setTag3Value(tagsValues.get(3));
         }
         if (isEmpty(tagsKeys.get(4))) {
-            request.setTag1Key(tagsKeys.get(4));
-            request.setTag1Value(tagsValues.get(4));
+            request.setTag4Key(tagsKeys.get(4));
+            request.setTag4Value(tagsValues.get(4));
         }
     }
 }
