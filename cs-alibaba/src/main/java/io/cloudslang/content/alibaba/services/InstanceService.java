@@ -1,9 +1,25 @@
+/*
+ * (c) Copyright 2018 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.alibaba.services;
 
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.CreateInstanceRequest;
 import com.aliyuncs.ecs.model.v20140526.CreateInstanceRequest.DataDisk;
 import com.aliyuncs.ecs.model.v20140526.CreateInstanceResponse;
+import com.aliyuncs.ecs.model.v20140526.DeleteInstanceRequest;
+import com.aliyuncs.ecs.model.v20140526.DeleteInstanceResponse;
 import com.aliyuncs.exceptions.ClientException;
 import io.cloudslang.content.alibaba.utils.ProxyUtil;
 
@@ -97,7 +113,6 @@ public class InstanceService {
         request.setVSwitchId(vSwitchId);
         request.setZoneId(zoneId);
         setRequestTags(request, tagsKeys, tagsValues);
-
         // Initiate the request and handle the response or exceptions
         final CreateInstanceResponse response;
         try {
@@ -110,6 +125,28 @@ public class InstanceService {
         }
     }
 
+    public static String deleteInstance(final String proxyHost,
+                                        final String proxyPort,
+                                        final String proxyUsername,
+                                        final String proxyPassword,
+                                        final String instanceId,
+                                        final IAcsClient client) throws RuntimeException {
+        // Set JVM proxies during runtime
+        ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
+        // Initialize delete instance request
+        final DeleteInstanceRequest deleteRequest = new DeleteInstanceRequest();
+        deleteRequest.setInstanceId(instanceId);
+        // Initiate the request and handle the response or exceptions
+        final DeleteInstanceResponse deleteResponse;
+        try {
+            deleteResponse = client.getAcsResponse(deleteRequest);
+            return deleteResponse.toString();
+        } catch (ClientException e) {
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            ProxyUtil.clearProxy();
+        }
+    }
     private static void setRequestTags(CreateInstanceRequest request, List<String> tagsKeys, List<String> tagsValues) {
         if (isEmpty(tagsKeys.get(0))) {
             request.setTag1Key(tagsKeys.get(0));
