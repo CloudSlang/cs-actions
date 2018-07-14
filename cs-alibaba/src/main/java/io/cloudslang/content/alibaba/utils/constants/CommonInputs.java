@@ -9,4 +9,5 @@ public class CommonInputs {
     public static final String PROXY_USERNAME = "proxyUsername";
     public static final String PROXY_PASSWORD = "proxyPassword";
     public static final String INSTANCE_ID = "instanceId";
+    public static final String INIT_LOCAL_DISK = "initLocalDisk";
 }

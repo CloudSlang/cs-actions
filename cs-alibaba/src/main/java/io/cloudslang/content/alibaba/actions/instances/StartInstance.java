@@ -14,21 +14,21 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
-import static io.cloudslang.content.alibaba.services.InstanceService.deleteInstance;
+import static io.cloudslang.content.alibaba.services.InstanceService.startInstance;
 import static io.cloudslang.content.alibaba.utils.constants.CommonInputs.*;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.*;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.DeleteInstance.DELTETE_INSTANCE_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.ExceptionMessages.DELETE_INSTANCE_EXCEPTION;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StartInstance.INIT_LOCAL_DISK_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StartInstance.START_INSTANCE_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.ExceptionMessages.START_INSTANCE_EXCEPTION;
 import static io.cloudslang.content.alibaba.utils.constants.Outputs.REQUEST_ID;
-import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.DELETE_INSTANCE_SUCCESS;
+import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.START_INSTANCE_SUCCESS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DeleteInstance {
-
-    @Action(name = "Delete Instance",
-            description = DELTETE_INSTANCE_DESC,
+public class StartInstance {
+    @Action(name = "Start Instance",
+            description = START_INSTANCE_DESC,
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
@@ -49,7 +49,8 @@ public class DeleteInstance {
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
-                                       @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) String instanceId) {
+                                       @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) String instanceId,
+                                       @Param(value = INIT_LOCAL_DISK, description = INIT_LOCAL_DISK_DESC) String initLocalDisk) {
         //Validate Inputs
         Validator validator = new Validator()
                 .validatePort(proxyPort, PROXY_PORT);
@@ -62,17 +63,18 @@ public class DeleteInstance {
         String proxyPortImp = defaultIfEmpty(proxyPort, StringUtils.EMPTY);
         String proxyUsernameImp = defaultIfEmpty(proxyUsername, StringUtils.EMPTY);
         String proxyPasswordImp = defaultIfEmpty(proxyPassword, StringUtils.EMPTY);
+        Boolean initLocalDiskImp = Boolean.valueOf(initLocalDisk);
 
         try {
             final IAcsClient client = ClientUtil.getClient(regionId, accessKeyId, accessKeySecret);
-            final String requestId = deleteInstance(proxyHostImp, proxyPortImp, proxyUsernameImp, proxyPasswordImp, instanceId, client);
+            final String requestId = startInstance(proxyHostImp, proxyPortImp, proxyUsernameImp, proxyPasswordImp, instanceId, initLocalDiskImp, client);
 
-            final Map<String, String> resultMap = getSuccessResultsMap(DELETE_INSTANCE_SUCCESS);
+            final Map<String, String> resultMap = getSuccessResultsMap(START_INSTANCE_SUCCESS);
             resultMap.put(REQUEST_ID, requestId);
 
             return resultMap;
         } catch (Exception e) {
-            return getFailureResultsMap(DELETE_INSTANCE_EXCEPTION, e);
+            return getFailureResultsMap(START_INSTANCE_EXCEPTION, e);
         }
     }
 }

@@ -15,11 +15,8 @@
 package io.cloudslang.content.alibaba.services;
 
 import com.aliyuncs.IAcsClient;
-import com.aliyuncs.ecs.model.v20140526.CreateInstanceRequest;
+import com.aliyuncs.ecs.model.v20140526.*;
 import com.aliyuncs.ecs.model.v20140526.CreateInstanceRequest.DataDisk;
-import com.aliyuncs.ecs.model.v20140526.CreateInstanceResponse;
-import com.aliyuncs.ecs.model.v20140526.DeleteInstanceRequest;
-import com.aliyuncs.ecs.model.v20140526.DeleteInstanceResponse;
 import com.aliyuncs.exceptions.ClientException;
 import io.cloudslang.content.alibaba.utils.ProxyUtil;
 
@@ -144,6 +141,33 @@ public class InstanceService {
         try {
             deleteResponse = client.getAcsResponse(deleteRequest);
             return deleteResponse.getRequestId();
+        } catch (ClientException e) {
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            ProxyUtil.clearProxy();
+        }
+    }
+
+    public static String startInstance(final String proxyHost,
+                                       final String proxyPort,
+                                       final String proxyUsername,
+                                       final String proxyPassword,
+                                       final String instanceId,
+                                       final Boolean initLocalDisk,
+                                       final IAcsClient client) throws RuntimeException {
+        // Set JVM proxies during runtime
+        ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
+
+        // Initialize delete instance request
+        final StartInstanceRequest startInstanceRequest = new StartInstanceRequest();
+        startInstanceRequest.setInstanceId(instanceId);
+        startInstanceRequest.setInitLocalDisk(initLocalDisk);
+
+        // Initiate the request and handle the response or exceptions
+        final StartInstanceResponse startInstanceResponse;
+        try {
+            startInstanceResponse = client.getAcsResponse(startInstanceRequest);
+            return startInstanceResponse.getRequestId();
         } catch (ClientException e) {
             throw new RuntimeException(e.getMessage());
         } finally {
