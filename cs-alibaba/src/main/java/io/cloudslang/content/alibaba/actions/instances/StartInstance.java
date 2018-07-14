@@ -31,10 +31,10 @@ public class StartInstance {
     @Action(name = "Start Instance",
             description = START_INSTANCE_DESC,
             outputs = {
-                    @Output(Outputs.RETURN_CODE),
-                    @Output(Outputs.RETURN_RESULT),
-                    @Output(Outputs.REQUEST_ID),
-                    @Output(Outputs.EXCEPTION)
+                    @Output(value = Outputs.RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = Outputs.RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = Outputs.REQUEST_ID, description = REQUEST_ID_DESC),
+                    @Output(value = Outputs.EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
                     @Response(text = Outputs.SUCCESS, field = Outputs.RETURN_CODE, value = Outputs.SUCCESS_RETURN_CODE,

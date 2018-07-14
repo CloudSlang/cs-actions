@@ -13,22 +13,22 @@ import io.cloudslang.content.alibaba.utils.constants.Outputs;
 
 import java.util.Map;
 
-import static io.cloudslang.content.alibaba.services.InstanceService.deleteInstance;
+import static io.cloudslang.content.alibaba.services.InstanceService.stopInstance;
 import static io.cloudslang.content.alibaba.utils.constants.CommonInputs.*;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.*;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.DeleteInstance.DELTETE_INSTANCE_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.ExceptionMessages.DELETE_INSTANCE_EXCEPTION;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StopInstance.*;
+import static io.cloudslang.content.alibaba.utils.constants.ExceptionMessages.STOP_INSTANCE_EXCEPTION;
 import static io.cloudslang.content.alibaba.utils.constants.Outputs.REQUEST_ID;
-import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.DELETE_INSTANCE_SUCCESS;
+import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.STOP_INSTANCE_SUCCESS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static java.lang.Boolean.valueOf;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DeleteInstance {
-
-    @Action(name = "Delete Instance",
-            description = DELTETE_INSTANCE_DESC,
+public class StopInstance {
+    @Action(name = "Stop Instance",
+            description = STOP_INSTANCE_DESC,
             outputs = {
                     @Output(value = Outputs.RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = Outputs.RETURN_RESULT, description = RETURN_RESULT_DESC),
@@ -49,7 +49,10 @@ public class DeleteInstance {
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
-                                       @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) String instanceId) {
+                                       @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) String instanceId,
+                                       @Param(value = FORCE_STOP, description = FORCE_STOP_DESC) String forceStop,
+                                       @Param(value = CONFIRM_STOP, description = CONFIRM_STOP_DESC) String confirmStop,
+                                       @Param(value = STOPPED_MODE, description = STOPPED_MODE_DESC) String stoppedMode) {
         //Validate Inputs
         Validator validator = new Validator()
                 .validatePort(proxyPort, PROXY_PORT);
@@ -63,17 +66,19 @@ public class DeleteInstance {
         final String proxyPortImp = defaultIfEmpty(proxyPort, EMPTY);
         final String proxyUsernameImp = defaultIfEmpty(proxyUsername, EMPTY);
         final String proxyPasswordImp = defaultIfEmpty(proxyPassword, EMPTY);
+        final Boolean forceStopImp = valueOf(forceStop);
+        final Boolean confirmStopImp = valueOf(confirmStop);
 
         try {
             final IAcsClient client = ClientUtil.getClient(regionId, accessKeyId, accessKeySecret);
-            final String requestId = deleteInstance(proxyHostImp, proxyPortImp, proxyUsernameImp, proxyPasswordImp, instanceId, client);
+            final String requestId = stopInstance(proxyHostImp, proxyPortImp, proxyUsernameImp, proxyPasswordImp, instanceId, forceStopImp, confirmStopImp, stoppedMode, client);
 
-            final Map<String, String> resultMap = getSuccessResultsMap(DELETE_INSTANCE_SUCCESS);
+            final Map<String, String> resultMap = getSuccessResultsMap(STOP_INSTANCE_SUCCESS);
             resultMap.put(REQUEST_ID, requestId);
 
             return resultMap;
         } catch (Exception e) {
-            return getFailureResultsMap(DELETE_INSTANCE_EXCEPTION, e);
+            return getFailureResultsMap(STOP_INSTANCE_EXCEPTION, e);
         }
     }
 }
