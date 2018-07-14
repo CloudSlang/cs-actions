@@ -113,6 +113,7 @@ public class InstanceService {
         request.setVSwitchId(vSwitchId);
         request.setZoneId(zoneId);
         setRequestTags(request, tagsKeys, tagsValues);
+
         // Initiate the request and handle the response or exceptions
         final CreateInstanceResponse response;
         try {
@@ -133,20 +134,23 @@ public class InstanceService {
                                         final IAcsClient client) throws RuntimeException {
         // Set JVM proxies during runtime
         ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
+
         // Initialize delete instance request
         final DeleteInstanceRequest deleteRequest = new DeleteInstanceRequest();
         deleteRequest.setInstanceId(instanceId);
+
         // Initiate the request and handle the response or exceptions
         final DeleteInstanceResponse deleteResponse;
         try {
             deleteResponse = client.getAcsResponse(deleteRequest);
-            return deleteResponse.toString();
+            return deleteResponse.getRequestId();
         } catch (ClientException e) {
             throw new RuntimeException(e.getMessage());
         } finally {
             ProxyUtil.clearProxy();
         }
     }
+
     private static void setRequestTags(CreateInstanceRequest request, List<String> tagsKeys, List<String> tagsValues) {
         if (isEmpty(tagsKeys.get(0))) {
             request.setTag1Key(tagsKeys.get(0));

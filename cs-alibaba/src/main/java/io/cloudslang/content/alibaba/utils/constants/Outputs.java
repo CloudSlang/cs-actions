@@ -1,9 +1,10 @@
-package io.cloudslang.content.alibaba.entities.constants;
+package io.cloudslang.content.alibaba.utils.constants;
 
 public class Outputs {
     public static final String RETURN_CODE = "returnCode";
-    public static final String EXCEPTION = "exception";
     public static final String RETURN_RESULT = "returnResult";
+    public static final String REQUEST_ID = "requestId";
+    public static final String EXCEPTION = "exception";
 
     public static final String SUCCESS = "success";
     public static final String FAILURE = "failure";

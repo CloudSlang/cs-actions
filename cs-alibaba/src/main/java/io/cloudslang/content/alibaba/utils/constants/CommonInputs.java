@@ -1,4 +1,4 @@
-package io.cloudslang.content.alibaba.entities.constants;
+package io.cloudslang.content.alibaba.utils.constants;
 
 public class CommonInputs {
     public static final String REGION_ID = "regionId";
@@ -9,5 +9,4 @@ public class CommonInputs {
     public static final String PROXY_USERNAME = "proxyUsername";
     public static final String PROXY_PASSWORD = "proxyPassword";
     public static final String INSTANCE_ID = "instanceId";
-
 }

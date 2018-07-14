@@ -1,4 +1,4 @@
-package io.cloudslang.content.alibaba.utils;
+package io.cloudslang.content.alibaba.utils.constants;
 
 public class Descriptions {
     public static class Common {

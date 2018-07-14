@@ -7,26 +7,30 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.alibaba.entities.constants.Outputs;
-import io.cloudslang.content.alibaba.services.InstanceService;
+import io.cloudslang.content.alibaba.utils.constants.Outputs;
 import io.cloudslang.content.alibaba.utils.ClientUtil;
 import io.cloudslang.content.alibaba.utils.Validator;
 
 import java.util.Map;
 
-import static io.cloudslang.content.alibaba.entities.constants.CommonInputs.*;
-import static io.cloudslang.content.alibaba.utils.Descriptions.Common.*;
-import static io.cloudslang.content.alibaba.utils.Descriptions.DeleteInstance.*;
+import static io.cloudslang.content.alibaba.utils.constants.CommonInputs.*;
+import static io.cloudslang.content.alibaba.utils.constants.ExceptionMessages.DELETE_INSTANCE_EXCEPTION;
+import static io.cloudslang.content.alibaba.utils.constants.Outputs.REQUEST_ID;
+import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.DELETE_INSTANCE_SUCCESS;
+import static io.cloudslang.content.alibaba.services.InstanceService.deleteInstance;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.*;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.DeleteInstance.DELTETE_INSTANCE_DESC;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 
-public class DeleteInstanceAction {
+public class DeleteInstance {
 
     @Action(name = "Delete Instance",
             description = DELTETE_INSTANCE_DESC,
             outputs = {
                     @Output(Outputs.RETURN_CODE),
                     @Output(Outputs.RETURN_RESULT),
+                    @Output(Outputs.REQUEST_ID),
                     @Output(Outputs.EXCEPTION)
             },
             responses = {
@@ -45,20 +49,23 @@ public class DeleteInstanceAction {
                                        @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
                                        @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) String instanceId) {
         //Validate Inputs
-        Validator validator = new Validator();
-        validator.validatePort(proxyPort, PROXY_PORT);
+        Validator validator = new Validator()
+                .validatePort(proxyPort, PROXY_PORT);
 
         if (validator.hasErrors()) {
             return getFailureResultsMap(validator.getErrors());
         }
 
-        try{
+        try {
             final IAcsClient client = ClientUtil.getClient(regionId, accessKeyId, accessKeySecret);
-            final String result = InstanceService.deleteInstance(proxyHost, proxyPort, proxyUsername, proxyPassword, instanceId, client);
+            final String requestId = deleteInstance(proxyHost, proxyPort, proxyUsername, proxyPassword, instanceId, client);
 
-            return getSuccessResultsMap(result);
-        } catch (Exception e){
-            return getFailureResultsMap("Failed to delete instance. ", e);
+            final Map<String, String> resultMap = getSuccessResultsMap(DELETE_INSTANCE_SUCCESS);
+            resultMap.put(REQUEST_ID, requestId);
+
+            return resultMap;
+        } catch (Exception e) {
+            return getFailureResultsMap(DELETE_INSTANCE_EXCEPTION, e);
         }
     }
 }
