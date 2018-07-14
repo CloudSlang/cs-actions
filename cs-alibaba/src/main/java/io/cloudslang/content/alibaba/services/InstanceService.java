@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.alibaba.services;
 
+import com.aliyuncs.AcsRequest;
+import com.aliyuncs.AcsResponse;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.*;
 import com.aliyuncs.ecs.model.v20140526.CreateInstanceRequest.DataDisk;
@@ -72,55 +74,48 @@ public class InstanceService {
         ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
 
         // Instantiate the CreateInstanceRequest object
-        final CreateInstanceRequest request = new CreateInstanceRequest();
-        request.setRegionId(regionId);
-        request.setDataDisks(dataDisks);
-        request.setAutoRenew(autoRenew);
-        request.setAutoRenewPeriod(autoRenewPeriod);
-        request.setClientToken(clientToken);
-        request.setClusterId(clusterId);
-        request.setDeploymentSetId(deploymentSetId);
-        request.setDescription(description);
-        request.setHostName(hostname);
-        request.setHpcClusterId(hpcClusterId);
-        request.setImageId(imageId);
-        request.setInstanceChargeType(instanceChargeType);
-        request.setInternetMaxBandwidthIn(internetMaxBandwidthIn);
-        request.setInternetMaxBandwidthOut(internetMaxBandwidthOut);
-        request.setInternetChargeType(internetChargeType);
-        request.setInstanceName(instanceName);
-        request.setInstanceType(instanceType);
-        request.setIoOptimized(isOptimized);
-        request.setKeyPairName(keyPairName);
-        request.setPassword(password);
-        request.setPasswordInherit(passwordInherit);
-        request.setPeriod(period);
-        request.setPeriodUnit(periodUnit);
-        request.setPrivateIpAddress(privateIpAddress);
-        request.setRamRoleName(ramRoleName);
-        request.setSecurityEnhancementStrategy(securityEnhancementStrategy);
-        request.setSecurityGroupId(securityGroupId);
-        request.setSpotPriceLimit(spotPriceLimit);
-        request.setSpotStrategy(spotStrategy);
-        request.setSystemDiskCategory(systemDiskCategory);
-        request.setSystemDiskDescription(systemDiskDescription);
-        request.setSystemDiskDiskName(systemDiskName);
-        request.setSystemDiskSize(systemDiskSize);
-        request.setUserData(userData);
-        request.setVSwitchId(vSwitchId);
-        request.setZoneId(zoneId);
-        setRequestTags(request, tagsKeys, tagsValues);
+        final CreateInstanceRequest createInstanceRequest = new CreateInstanceRequest();
+        createInstanceRequest.setRegionId(regionId);
+        createInstanceRequest.setDataDisks(dataDisks);
+        createInstanceRequest.setAutoRenew(autoRenew);
+        createInstanceRequest.setAutoRenewPeriod(autoRenewPeriod);
+        createInstanceRequest.setClientToken(clientToken);
+        createInstanceRequest.setClusterId(clusterId);
+        createInstanceRequest.setDeploymentSetId(deploymentSetId);
+        createInstanceRequest.setDescription(description);
+        createInstanceRequest.setHostName(hostname);
+        createInstanceRequest.setHpcClusterId(hpcClusterId);
+        createInstanceRequest.setImageId(imageId);
+        createInstanceRequest.setInstanceChargeType(instanceChargeType);
+        createInstanceRequest.setInternetMaxBandwidthIn(internetMaxBandwidthIn);
+        createInstanceRequest.setInternetMaxBandwidthOut(internetMaxBandwidthOut);
+        createInstanceRequest.setInternetChargeType(internetChargeType);
+        createInstanceRequest.setInstanceName(instanceName);
+        createInstanceRequest.setInstanceType(instanceType);
+        createInstanceRequest.setIoOptimized(isOptimized);
+        createInstanceRequest.setKeyPairName(keyPairName);
+        createInstanceRequest.setPassword(password);
+        createInstanceRequest.setPasswordInherit(passwordInherit);
+        createInstanceRequest.setPeriod(period);
+        createInstanceRequest.setPeriodUnit(periodUnit);
+        createInstanceRequest.setPrivateIpAddress(privateIpAddress);
+        createInstanceRequest.setRamRoleName(ramRoleName);
+        createInstanceRequest.setSecurityEnhancementStrategy(securityEnhancementStrategy);
+        createInstanceRequest.setSecurityGroupId(securityGroupId);
+        createInstanceRequest.setSpotPriceLimit(spotPriceLimit);
+        createInstanceRequest.setSpotStrategy(spotStrategy);
+        createInstanceRequest.setSystemDiskCategory(systemDiskCategory);
+        createInstanceRequest.setSystemDiskDescription(systemDiskDescription);
+        createInstanceRequest.setSystemDiskDiskName(systemDiskName);
+        createInstanceRequest.setSystemDiskSize(systemDiskSize);
+        createInstanceRequest.setUserData(userData);
+        createInstanceRequest.setVSwitchId(vSwitchId);
+        createInstanceRequest.setZoneId(zoneId);
+        setRequestTags(createInstanceRequest, tagsKeys, tagsValues);
 
         // Initiate the request and handle the response or exceptions
-        final CreateInstanceResponse response;
-        try {
-            response = client.getAcsResponse(request);
-            return response.getInstanceId();
-        } catch (ClientException e) {
-            throw new RuntimeException(e.getMessage());
-        } finally {
-            ProxyUtil.clearProxy();
-        }
+        return ((CreateInstanceResponse) getResponse(proxyHost, proxyPort, proxyUsername, proxyPassword,
+                client, createInstanceRequest)).getInstanceId();
     }
 
     public static String deleteInstance(final String proxyHost,
@@ -129,23 +124,13 @@ public class InstanceService {
                                         final String proxyPassword,
                                         final String instanceId,
                                         final IAcsClient client) throws RuntimeException {
-        // Set JVM proxies during runtime
-        ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
-
         // Initialize delete instance request
-        final DeleteInstanceRequest deleteRequest = new DeleteInstanceRequest();
-        deleteRequest.setInstanceId(instanceId);
+        final DeleteInstanceRequest deleteInstanceRequest = new DeleteInstanceRequest();
+        deleteInstanceRequest.setInstanceId(instanceId);
 
         // Initiate the request and handle the response or exceptions
-        final DeleteInstanceResponse deleteResponse;
-        try {
-            deleteResponse = client.getAcsResponse(deleteRequest);
-            return deleteResponse.getRequestId();
-        } catch (ClientException e) {
-            throw new RuntimeException(e.getMessage());
-        } finally {
-            ProxyUtil.clearProxy();
-        }
+        return ((DeleteInstanceResponse) getResponse(proxyHost, proxyPort, proxyUsername, proxyPassword,
+                client, deleteInstanceRequest)).getRequestId();
     }
 
     public static String startInstance(final String proxyHost,
@@ -155,22 +140,30 @@ public class InstanceService {
                                        final String instanceId,
                                        final Boolean initLocalDisk,
                                        final IAcsClient client) throws RuntimeException {
-        // Set JVM proxies during runtime
-        ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
-
-        // Initialize delete instance request
+        // Initialize start instance request
         final StartInstanceRequest startInstanceRequest = new StartInstanceRequest();
         startInstanceRequest.setInstanceId(instanceId);
         startInstanceRequest.setInitLocalDisk(initLocalDisk);
 
         // Initiate the request and handle the response or exceptions
-        final StartInstanceResponse startInstanceResponse;
+        return ((StartInstanceResponse) getResponse(proxyHost, proxyPort, proxyUsername, proxyPassword,
+                client, startInstanceRequest)).getRequestId();
+    }
+
+    private static AcsResponse getResponse(final String proxyHost,
+                                           final String proxyPort,
+                                           final String proxyUsername,
+                                           final String proxyPassword,
+                                           final IAcsClient client,
+                                           final AcsRequest request) {
+        // Set JVM proxies during runtime
+        ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
         try {
-            startInstanceResponse = client.getAcsResponse(startInstanceRequest);
-            return startInstanceResponse.getRequestId();
+            return client.getAcsResponse(request);
         } catch (ClientException e) {
             throw new RuntimeException(e.getMessage());
         } finally {
+            //Clear proxies
             ProxyUtil.clearProxy();
         }
     }

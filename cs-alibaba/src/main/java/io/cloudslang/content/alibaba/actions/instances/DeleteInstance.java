@@ -10,7 +10,6 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.alibaba.utils.ClientUtil;
 import io.cloudslang.content.alibaba.utils.Validator;
 import io.cloudslang.content.alibaba.utils.constants.Outputs;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -23,6 +22,7 @@ import static io.cloudslang.content.alibaba.utils.constants.Outputs.REQUEST_ID;
 import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.DELETE_INSTANCE_SUCCESS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class DeleteInstance {
@@ -58,10 +58,11 @@ public class DeleteInstance {
             return getFailureResultsMap(validator.getErrors());
         }
 
-        String proxyHostImp = defaultIfEmpty(proxyHost, StringUtils.EMPTY);
-        String proxyPortImp = defaultIfEmpty(proxyPort, StringUtils.EMPTY);
-        String proxyUsernameImp = defaultIfEmpty(proxyUsername, StringUtils.EMPTY);
-        String proxyPasswordImp = defaultIfEmpty(proxyPassword, StringUtils.EMPTY);
+        //Get default values and String conversions
+        final String proxyHostImp = defaultIfEmpty(proxyHost, EMPTY);
+        final String proxyPortImp = defaultIfEmpty(proxyPort, EMPTY);
+        final String proxyUsernameImp = defaultIfEmpty(proxyUsername, EMPTY);
+        final String proxyPasswordImp = defaultIfEmpty(proxyPassword, EMPTY);
 
         try {
             final IAcsClient client = ClientUtil.getClient(regionId, accessKeyId, accessKeySecret);

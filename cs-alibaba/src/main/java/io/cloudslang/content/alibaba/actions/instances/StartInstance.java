@@ -10,7 +10,6 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.alibaba.utils.ClientUtil;
 import io.cloudslang.content.alibaba.utils.Validator;
 import io.cloudslang.content.alibaba.utils.constants.Outputs;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -24,6 +23,8 @@ import static io.cloudslang.content.alibaba.utils.constants.Outputs.REQUEST_ID;
 import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.START_INSTANCE_SUCCESS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static java.lang.Boolean.valueOf;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class StartInstance {
@@ -59,11 +60,12 @@ public class StartInstance {
             return getFailureResultsMap(validator.getErrors());
         }
 
-        String proxyHostImp = defaultIfEmpty(proxyHost, StringUtils.EMPTY);
-        String proxyPortImp = defaultIfEmpty(proxyPort, StringUtils.EMPTY);
-        String proxyUsernameImp = defaultIfEmpty(proxyUsername, StringUtils.EMPTY);
-        String proxyPasswordImp = defaultIfEmpty(proxyPassword, StringUtils.EMPTY);
-        Boolean initLocalDiskImp = Boolean.valueOf(initLocalDisk);
+        //Get default values and String conversions
+        final String proxyHostImp = defaultIfEmpty(proxyHost, EMPTY);
+        final String proxyPortImp = defaultIfEmpty(proxyPort, EMPTY);
+        final String proxyUsernameImp = defaultIfEmpty(proxyUsername, EMPTY);
+        final String proxyPasswordImp = defaultIfEmpty(proxyPassword, EMPTY);
+        final Boolean initLocalDiskImp = valueOf(initLocalDisk);
 
         try {
             final IAcsClient client = ClientUtil.getClient(regionId, accessKeyId, accessKeySecret);
