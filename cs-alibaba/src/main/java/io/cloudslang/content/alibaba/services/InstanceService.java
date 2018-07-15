@@ -70,10 +70,7 @@ public class InstanceService {
                                         final List<String> tagsKeys,
                                         final List<String> tagsValues,
                                         final IAcsClient client) throws RuntimeException {
-        // Set JVM proxies during runtime
-        ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
-
-        // Instantiate the CreateInstanceRequest object
+        // Instantiate Create Instance request
         final CreateInstanceRequest createInstanceRequest = new CreateInstanceRequest();
         createInstanceRequest.setRegionId(regionId);
         createInstanceRequest.setDataDisks(dataDisks);
@@ -124,7 +121,7 @@ public class InstanceService {
                                         final String proxyPassword,
                                         final String instanceId,
                                         final IAcsClient client) throws RuntimeException {
-        // Initialize delete instance request
+        // Instantiate Delete Instance request
         final DeleteInstanceRequest deleteInstanceRequest = new DeleteInstanceRequest();
         deleteInstanceRequest.setInstanceId(instanceId);
 
@@ -140,7 +137,7 @@ public class InstanceService {
                                        final String instanceId,
                                        final Boolean initLocalDisk,
                                        final IAcsClient client) throws RuntimeException {
-        // Initialize start instance request
+        // Instantiate Start Instance request
         final StartInstanceRequest startInstanceRequest = new StartInstanceRequest();
         startInstanceRequest.setInstanceId(instanceId);
         startInstanceRequest.setInitLocalDisk(initLocalDisk);
@@ -148,6 +145,45 @@ public class InstanceService {
         // Initiate the request and handle the response or exceptions
         return ((StartInstanceResponse) getResponse(proxyHost, proxyPort, proxyUsername, proxyPassword,
                 client, startInstanceRequest)).getRequestId();
+    }
+
+    public static String stopInstance(final String proxyHost,
+                                      final String proxyPort,
+                                      final String proxyUsername,
+                                      final String proxyPassword,
+                                      final String instanceId,
+                                      final Boolean forceStop,
+                                      final Boolean confirmStop,
+                                      final String stoppedMode,
+                                      final IAcsClient client) throws RuntimeException {
+        // Instantiate Stop Instance request
+        final StopInstanceRequest stopInstanceRequest = new StopInstanceRequest();
+        stopInstanceRequest.setInstanceId(instanceId);
+        stopInstanceRequest.setForceStop(forceStop);
+        stopInstanceRequest.setConfirmStop(confirmStop);
+        stopInstanceRequest.setStoppedMode(stoppedMode);
+
+
+        // Initiate the request and handle the response or exceptions
+        return ((StopInstanceResponse) getResponse(proxyHost, proxyPort, proxyUsername, proxyPassword,
+                client, stopInstanceRequest)).getRequestId();
+    }
+
+    public static String restartInstance(final String proxyHost,
+                                         final String proxyPort,
+                                         final String proxyUsername,
+                                         final String proxyPassword,
+                                         final String instanceId,
+                                         final Boolean forceStop,
+                                         final IAcsClient client) throws RuntimeException {
+        // Instantiate Restart Instance request
+        final RebootInstanceRequest rebootInstanceRequest = new RebootInstanceRequest();
+        rebootInstanceRequest.setInstanceId(instanceId);
+        rebootInstanceRequest.setForceStop(forceStop);
+
+        // Initiate the request and handle the response or exceptions
+        return ((RebootInstanceResponse) getResponse(proxyHost, proxyPort, proxyUsername, proxyPassword,
+                client, rebootInstanceRequest)).getRequestId();
     }
 
     private static AcsResponse getResponse(final String proxyHost,
@@ -164,65 +200,6 @@ public class InstanceService {
             throw new RuntimeException(e.getMessage());
         } finally {
             //Clear proxies
-            ProxyUtil.clearProxy();
-        }
-    }
-
-    public static String stopInstance(final String proxyHost,
-                                      final String proxyPort,
-                                      final String proxyUsername,
-                                      final String proxyPassword,
-                                      final String instanceId,
-                                      final Boolean forceStop,
-                                      final Boolean confirmStop,
-                                      final String stoppedMode,
-                                      final IAcsClient client) throws RuntimeException {
-        // Set JVM proxies during runtime
-        ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
-
-        // Initialize delete instance request
-        final StopInstanceRequest stopInstanceRequest = new StopInstanceRequest();
-        stopInstanceRequest.setInstanceId(instanceId);
-        stopInstanceRequest.setForceStop(forceStop);
-        stopInstanceRequest.setConfirmStop(confirmStop);
-        stopInstanceRequest.setStoppedMode(stoppedMode);
-
-
-        // Initiate the request and handle the response or exceptions
-        final StopInstanceResponse stopInstanceResponse;
-        try {
-            stopInstanceResponse = client.getAcsResponse(stopInstanceRequest);
-            return stopInstanceResponse.getRequestId();
-        } catch (ClientException e) {
-            throw new RuntimeException(e.getMessage());
-        } finally {
-            ProxyUtil.clearProxy();
-        }
-    }
-
-    public static String restartInstance(final String proxyHost,
-                                         final String proxyPort,
-                                         final String proxyUsername,
-                                         final String proxyPassword,
-                                         final String instanceId,
-                                         final Boolean forceStop,
-                                         final IAcsClient client) throws RuntimeException {
-        // Set JVM proxies during runtime
-        ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
-
-        // Initialize delete instance request
-        final RebootInstanceRequest rebootInstanceRequest = new RebootInstanceRequest();
-        rebootInstanceRequest.setInstanceId(instanceId);
-        rebootInstanceRequest.setForceStop(forceStop);
-
-        // Initiate the request and handle the response or exceptions
-        final RebootInstanceResponse rebootInstanceResponse;
-        try {
-            rebootInstanceResponse = client.getAcsResponse(rebootInstanceRequest);
-            return rebootInstanceResponse.getRequestId();
-        } catch (ClientException e) {
-            throw new RuntimeException(e.getMessage());
-        } finally {
             ProxyUtil.clearProxy();
         }
     }
