@@ -28,10 +28,36 @@ import io.cloudslang.content.alibaba.utils.constants.Outputs;
 import java.util.Map;
 
 import static io.cloudslang.content.alibaba.services.InstanceService.stopInstance;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.*;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StopInstance.*;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.ACCESS_KEY_ID_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.ACCESS_KEY_SECRET_ID_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.EXCEPTION_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.FORCE_STOP_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.INSTANCE_ID_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.PROXY_HOST_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.PROXY_PASSWORD_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.PROXY_PORT_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.PROXY_USERNAME_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.REGION_ID_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.REQUEST_ID_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.RETURN_CODE_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.RETURN_RESULT_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StopInstance.CONFIRM_STOP_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StopInstance.FAILURE_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StopInstance.STOPPED_MODE_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StopInstance.STOP_INSTANCE_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StopInstance.SUCCESS_DESC;
 import static io.cloudslang.content.alibaba.utils.constants.ExceptionMessages.STOP_INSTANCE_EXCEPTION;
-import static io.cloudslang.content.alibaba.utils.constants.Inputs.*;
+import static io.cloudslang.content.alibaba.utils.constants.Inputs.ACCESS_KEY_ID;
+import static io.cloudslang.content.alibaba.utils.constants.Inputs.ACCESS_KEY_SECRET;
+import static io.cloudslang.content.alibaba.utils.constants.Inputs.CONFIRM_STOP;
+import static io.cloudslang.content.alibaba.utils.constants.Inputs.FORCE_STOP;
+import static io.cloudslang.content.alibaba.utils.constants.Inputs.INSTANCE_ID;
+import static io.cloudslang.content.alibaba.utils.constants.Inputs.PROXY_HOST;
+import static io.cloudslang.content.alibaba.utils.constants.Inputs.PROXY_PASSWORD;
+import static io.cloudslang.content.alibaba.utils.constants.Inputs.PROXY_PORT;
+import static io.cloudslang.content.alibaba.utils.constants.Inputs.PROXY_USERNAME;
+import static io.cloudslang.content.alibaba.utils.constants.Inputs.REGION_ID;
+import static io.cloudslang.content.alibaba.utils.constants.Inputs.STOPPED_MODE;
 import static io.cloudslang.content.alibaba.utils.constants.Outputs.REQUEST_ID;
 import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.STOP_INSTANCE_SUCCESS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -51,9 +77,9 @@ public class StopInstance {
             },
             responses = {
                     @Response(text = Outputs.SUCCESS, field = Outputs.RETURN_CODE, value = Outputs.SUCCESS_RETURN_CODE,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = Outputs.FAILURE, field = Outputs.RETURN_CODE, value = Outputs.FAILURE_RETURN_CODE,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             }
     )
     public Map<String, String> execute(@Param(value = ACCESS_KEY_ID, required = true, description = ACCESS_KEY_ID_DESC) final String accessKeyId,
