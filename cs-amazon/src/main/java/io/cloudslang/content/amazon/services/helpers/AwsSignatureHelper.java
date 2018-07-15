@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AWS_REQUEST_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DEFAULT_AMAZON_REGION;
@@ -34,6 +34,8 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.LINE_SEPARATOR;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMAZON_HOSTNAME;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
@@ -149,12 +151,25 @@ public class AwsSignatureHelper {
      * @param endpoint AWS request endpoint.
      * @return A (lowercase alphanumeric) string representing the AWS region.
      */
+    //todo does not recognize properly us-east-2.quicksight.amazonaws.com, us-west-1.queue.amazonaws.com types of hostname
     public String getAmazonRegion(String endpoint) {
-        if (isNotBlank(endpoint) && endpoint.contains(HYPHEN)) {
-            endpoint = endpoint.substring(3);
-            return endpoint.substring(START_INDEX, endpoint.indexOf(DOT_CHAR));
+        if (isBlank(endpoint)) {
+            return DEFAULT_AMAZON_REGION;
         }
-        return DEFAULT_AMAZON_REGION;
+        if (!endpoint.endsWith(DOT+AMAZON_HOSTNAME)) { //the hostname is not correct
+            return DEFAULT_AMAZON_REGION;
+        }
+        endpoint = endpoint.substring(0, endpoint.length()-AMAZON_HOSTNAME.length()-1);
+        if (endpoint.startsWith("https://")) {
+            endpoint = endpoint.substring("https://".length());
+        } else if (endpoint.startsWith("http://")) {
+            endpoint = endpoint.substring("http://".length());
+        }
+        int i = endpoint.lastIndexOf(DOT_CHAR); //search from the end
+        if (i < 0) {
+            return DEFAULT_AMAZON_REGION;
+        }
+        return endpoint.substring(i+1);
     }
 
     private String entryToQuery(Map.Entry<String, String> entry) {
