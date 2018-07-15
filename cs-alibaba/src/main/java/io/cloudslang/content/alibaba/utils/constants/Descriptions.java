@@ -26,6 +26,50 @@ public class Descriptions {
         public static final String PROXY_PASSWORD_DESC = "";
         public static final String INSTANCE_ID_DESC = "";
         public static final String FORCE_STOP_DESC = "";
+        public static final String IMAGE_ID_DESC = "";
+        public static final String INSTANCE_TYPE_DESC = "";
+        public static final String SECURITY_GROUP_ID_DESC = "";
+        public static final String ZONE_ID_DESC = "";
+        public static final String INSTANCE_NAME_DESC = "";
+        public static final String DESCRIPTION_DESC = "";
+        public static final String INTERNET_CHARGE_TYPE_DESC = "";
+        public static final String INTERNET_MAX_BANDWIDTH_IN_DESC = "";
+        public static final String INTERNET_MAX_BANDWIDTH_OUT_DESC = "";
+        public static final String HOSTNAME_DESC = "";
+        public static final String PASSWORD_DESC = "";
+        public static final String PASSWORD_INHERIT_DESC = "";
+        public static final String IS_OPTIMIZED_DESC = "";
+        public static final String SYSTEM_DISK_CATEGORY_DESC = "";
+        public static final String SYSTEM_DISK_SIZE_DESC = "";
+        public static final String SYSTEM_DISK_NAME_DESC = "";
+        public static final String SYSTEM_DISK_DESCRIPTION_DESC = "";
+        public static final String DELIMITER_DESC = "";
+        public static final String DATA_DISKS_SIZE_LIST_DESC = "";
+        public static final String DATA_DISKS_CATEGORY_LIST_DESC = "";
+        public static final String DATA_DISKS_ENCRYPTED_LIST_DESC = "";
+        public static final String DATA_DISKS_SNAPSHOT_ID_LIST_DESC = "";
+        public static final String DATA_DISKS_DISK_NAME_LIST_DESC = "";
+        public static final String DATA_DISKS_DESCRIPTION_LIST_DESC = "";
+        public static final String DATA_DISKS_DELETE_WITH_INSTANCE_LIST_DESC = "";
+        public static final String CLUSTER_ID_DESC = "";
+        public static final String HPC_CLUSTER_ID_DESC = "";
+        public static final String V_SWITCH_ID_DESC = "";
+        public static final String PRIVATE_IP_ADDRESS_DESC = "";
+        public static final String INSTANCE_CHARGE_TYPE_DESC = "";
+        public static final String SPOT_STRATEGY_DESC = "";
+        public static final String SPOT_PRICE_LIMIT_DESC = "";
+        public static final String PERIOD_DESC = "";
+        public static final String PERIOD_UNIT_DESC = "";
+        public static final String AUTO_RENEW_DESC = "";
+        public static final String AUTO_RENEW_PERIOD_DESC = "";
+        public static final String USER_DATA_DESC = "";
+        public static final String CLIENT_TOKEN_DESC = "";
+        public static final String KEY_PAIR_NAME_DESC = "";
+        public static final String DEPLOYMENT_SET_ID_DESC = "";
+        public static final String RAM_ROLE_NAME_DESC = "";
+        public static final String SECURITY_ENHANCEMENT_STRATEGY_DESC = "";
+        public static final String TAGS_KEY_LIST_DESC = "";
+        public static final String TAGS_VALUE_LIST_DESC = "";
 
         //Results
         public static final String RETURN_RESULT_DESC = "The authentication token in case of success, or an error" +
@@ -33,6 +77,10 @@ public class Descriptions {
         public static final String RETURN_CODE_DESC = "";
         public static final String REQUEST_ID_DESC = "";
         public static final String EXCEPTION_DESC = "";
+    }
+
+    public static class CreateInstance {
+        public static final String CREATE_INSTANCE_DESC = "Create an ECS instance.";
     }
 
     public static class DeleteInstance {

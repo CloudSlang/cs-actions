@@ -18,6 +18,7 @@ public class Outputs {
     public static final String RETURN_CODE = "returnCode";
     public static final String RETURN_RESULT = "returnResult";
     public static final String REQUEST_ID = "requestId";
+    public static final String INSTANCE_ID = "instanceId";
     public static final String EXCEPTION = "exception";
 
     public static final String SUCCESS = "success";

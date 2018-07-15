@@ -28,10 +28,10 @@ import io.cloudslang.content.alibaba.utils.constants.Outputs;
 import java.util.Map;
 
 import static io.cloudslang.content.alibaba.services.InstanceService.stopInstance;
-import static io.cloudslang.content.alibaba.utils.constants.CommonInputs.*;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.*;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StopInstance.*;
 import static io.cloudslang.content.alibaba.utils.constants.ExceptionMessages.STOP_INSTANCE_EXCEPTION;
+import static io.cloudslang.content.alibaba.utils.constants.Inputs.*;
 import static io.cloudslang.content.alibaba.utils.constants.Outputs.REQUEST_ID;
 import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.STOP_INSTANCE_SUCCESS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -56,17 +56,17 @@ public class StopInstance {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
-    public Map<String, String> execute(@Param(value = REGION_ID, required = true, description = REGION_ID_DESC) String regionId,
-                                       @Param(value = ACCESS_KEY_ID, required = true, description = ACCESS_KEY_ID_DESC) String accessKeyId,
-                                       @Param(value = ACCESS_KEY_SECRET, required = true, encrypted = true, description = ACCESS_KEY_SECRET_ID_DESC) String accessKeySecret,
-                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
-                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
-                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
-                                       @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) String instanceId,
-                                       @Param(value = FORCE_STOP, description = FORCE_STOP_DESC) String forceStop,
-                                       @Param(value = CONFIRM_STOP, description = CONFIRM_STOP_DESC) String confirmStop,
-                                       @Param(value = STOPPED_MODE, description = STOPPED_MODE_DESC) String stoppedMode) {
+    public Map<String, String> execute(@Param(value = ACCESS_KEY_ID, required = true, description = ACCESS_KEY_ID_DESC) final String accessKeyId,
+                                       @Param(value = ACCESS_KEY_SECRET, required = true, encrypted = true, description = ACCESS_KEY_SECRET_ID_DESC) final String accessKeySecret,
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) final String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) final String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) final String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) final String proxyPassword,
+                                       @Param(value = REGION_ID, required = true, description = REGION_ID_DESC) final String regionId,
+                                       @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) final String instanceId,
+                                       @Param(value = FORCE_STOP, description = FORCE_STOP_DESC) final String forceStop,
+                                       @Param(value = CONFIRM_STOP, description = CONFIRM_STOP_DESC) final String confirmStop,
+                                       @Param(value = STOPPED_MODE, description = STOPPED_MODE_DESC) final String stoppedMode) {
         //Validate Inputs
         Validator validator = new Validator()
                 .validatePort(proxyPort, PROXY_PORT);
