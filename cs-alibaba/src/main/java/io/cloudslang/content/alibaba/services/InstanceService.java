@@ -195,8 +195,9 @@ public class InstanceService {
         // Set JVM proxies during runtime
         ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
         try {
+            Thread.sleep(30000);
             return client.getAcsResponse(request);
-        } catch (ClientException e) {
+        } catch (ClientException | InterruptedException e) {
             throw new RuntimeException(e.getMessage());
         } finally {
             //Clear proxies
