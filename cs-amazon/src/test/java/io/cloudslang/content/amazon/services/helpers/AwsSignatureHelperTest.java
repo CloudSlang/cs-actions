@@ -43,7 +43,12 @@ public class AwsSignatureHelperTest {
             { "rekognition.us-east-1.amazonaws.com", "us-east-1" },
             { "rekognition-fips.us-east-1.amazonaws.com", "us-east-1" },
             { "s3.dualstack.us-east-1.amazonaws.com", "us-east-1" },
-            { "s3.amazonaws.com", "us-east-1" }
+            { "s3.amazonaws.com", "us-east-1" },
+
+            { "https://ec2.cn-north-1.amazonaws.com.cn", "cn-north-1" },
+            { "https://s3.cn-northwest-1.amazonaws.com.cn", "cn-northwest-1" },
+            { "https://cognito-identity.cn-north-1.amazonaws.com.cn", "cn-north-1" },
+            { "https://streams.dynamodb.cn-northwest-1.amazonaws.com.cn", "cn-northwest-1" },
 
     };
 

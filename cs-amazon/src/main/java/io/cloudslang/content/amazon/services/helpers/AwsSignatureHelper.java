@@ -36,6 +36,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMAZON_HOSTNAME;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.CN_AMAZON_HOSTNAME;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
@@ -156,10 +157,11 @@ public class AwsSignatureHelper {
         if (isBlank(endpoint)) {
             return DEFAULT_AMAZON_REGION;
         }
-        if (!endpoint.endsWith(DOT+AMAZON_HOSTNAME)) { //the hostname is not correct
-            return DEFAULT_AMAZON_REGION;
-        }
-        endpoint = endpoint.substring(0, endpoint.length()-AMAZON_HOSTNAME.length()-1);
+        if (endpoint.endsWith(DOT+AMAZON_HOSTNAME)) {
+            endpoint = endpoint.substring(0, endpoint.length()-(DOT+AMAZON_HOSTNAME).length());
+        } else if (endpoint.endsWith(DOT+CN_AMAZON_HOSTNAME)) {
+            endpoint = endpoint.substring(0, endpoint.length() - (DOT + CN_AMAZON_HOSTNAME).length());
+        } else return DEFAULT_AMAZON_REGION; //the hostname is not correct
         if (endpoint.startsWith("https://")) {
             endpoint = endpoint.substring("https://".length());
         } else if (endpoint.startsWith("http://")) {
