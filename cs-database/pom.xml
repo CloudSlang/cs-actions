@@ -96,6 +96,7 @@
         <maven.compiler.target>1.7</maven.compiler.target>
         <maven.sources.skip>true</maven.sources.skip>
         <custom.nexus>overwritten_by_ci</custom.nexus>
+        <vertica_driver_path>${cloudslang.maven.repo.local}\com\microfocus\vertica\vertica-jdbc\9.1.0-0\vertica-jdbc-9.1.0-0.jar</vertica_driver_path>
     </properties>
 
     <dependencies>
@@ -152,6 +153,7 @@
            <artifactId>vertica-jdbc</artifactId>
            <version>9.1.0-0</version>
            <scope>system</scope>
+           <systemPath>${vertica_driver_path}</systemPath>
         </dependency>
         <!-- Testing dependencies-->
         <dependency>
