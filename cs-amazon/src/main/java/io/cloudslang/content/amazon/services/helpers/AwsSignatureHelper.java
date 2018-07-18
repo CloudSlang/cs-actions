@@ -23,8 +23,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AWS_REQUEST_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DEFAULT_AMAZON_REGION;
@@ -34,6 +36,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.LINE_SEPARATOR;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMAZON_HOSTNAME;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
@@ -149,10 +152,15 @@ public class AwsSignatureHelper {
      * @param endpoint AWS request endpoint.
      * @return A (lowercase alphanumeric) string representing the AWS region.
      */
+    //todo does not recognize properly us-east-2.quicksight.amazonaws.com, us-west-1.queue.amazonaws.com types of hostname
     public String getAmazonRegion(String endpoint) {
-        if (isNotBlank(endpoint) && endpoint.contains(HYPHEN)) {
-            endpoint = endpoint.substring(3);
-            return endpoint.substring(START_INDEX, endpoint.indexOf(DOT_CHAR));
+        if (isBlank(endpoint)) {
+            return DEFAULT_AMAZON_REGION;
+        }
+        final Pattern pattern = Pattern.compile("(https://)?(.+)?\\.(.+)\\."+AMAZON_HOSTNAME+"(\\.cn)?");
+        final Matcher matcher = pattern.matcher(endpoint);
+        if (matcher.find()) {
+            return matcher.group(3);
         }
         return DEFAULT_AMAZON_REGION;
     }
