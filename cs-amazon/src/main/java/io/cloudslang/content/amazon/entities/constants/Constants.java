@@ -47,7 +47,6 @@ public class Constants {
 
     public static class Miscellaneous {
         public static final String AMAZON_HOSTNAME = "amazonaws.com";
-        public static final String CN_AMAZON_HOSTNAME = "amazonaws.com.cn";
         public static final String AMPERSAND = "&";
         public static final String COLON = ":";
         public static final String COMMA_DELIMITER = ",";

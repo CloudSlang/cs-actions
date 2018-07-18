@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -34,9 +36,7 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.LINE_SEPARATOR;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMAZON_HOSTNAME;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.CN_AMAZON_HOSTNAME;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
@@ -157,21 +157,12 @@ public class AwsSignatureHelper {
         if (isBlank(endpoint)) {
             return DEFAULT_AMAZON_REGION;
         }
-        if (endpoint.endsWith(DOT+AMAZON_HOSTNAME)) {
-            endpoint = endpoint.substring(0, endpoint.length()-(DOT+AMAZON_HOSTNAME).length());
-        } else if (endpoint.endsWith(DOT+CN_AMAZON_HOSTNAME)) {
-            endpoint = endpoint.substring(0, endpoint.length() - (DOT + CN_AMAZON_HOSTNAME).length());
-        } else return DEFAULT_AMAZON_REGION; //the hostname is not correct
-        if (endpoint.startsWith("https://")) {
-            endpoint = endpoint.substring("https://".length());
-        } else if (endpoint.startsWith("http://")) {
-            endpoint = endpoint.substring("http://".length());
+        final Pattern pattern = Pattern.compile("(https://)?(.+)?\\.(.+)\\."+AMAZON_HOSTNAME+"(\\.cn)?");
+        final Matcher matcher = pattern.matcher(endpoint);
+        if (matcher.find()) {
+            return matcher.group(3);
         }
-        int i = endpoint.lastIndexOf(DOT_CHAR); //search from the end
-        if (i < 0) {
-            return DEFAULT_AMAZON_REGION;
-        }
-        return endpoint.substring(i+1);
+        return DEFAULT_AMAZON_REGION;
     }
 
     private String entryToQuery(Map.Entry<String, String> entry) {
