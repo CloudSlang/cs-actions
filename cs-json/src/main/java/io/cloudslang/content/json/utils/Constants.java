@@ -23,6 +23,7 @@ public final class Constants {
 
     public static final class InputNames extends io.cloudslang.content.constants.InputNames {
         public static final String JSON_OBJECT = "jsonObject";
+        public static final String JSON = "json";
         public static final String NEW_PROPERTY_NAME = "newPropertyName";
         public static final String NEW_PROPERTY_VALUE = "newPropertyValue";
         public static final String OBJECT = "object";

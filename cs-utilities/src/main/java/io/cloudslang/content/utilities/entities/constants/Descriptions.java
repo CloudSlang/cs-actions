@@ -31,6 +31,7 @@ public class Descriptions {
     public static class OperationDescription {
         public static final String OPERATION_DESC = "This operation checks if a string is blank or empty and if it's true a default value will be assigned instead of the initial string.";
         public static final String FIND_TEXT_IN_PDF_OPERATION_DESC = "This operation checks if a text input is found in a PDF file.";
+        public static final String GENERATE_UUID_BY_VERSION = "This operation generate UUID by version, using a variable as an input";
     }
 
     public static class InputsDescription {
@@ -39,6 +40,9 @@ public class Descriptions {
         public static final String DEFAULT_VALUE_DESC = "The default value used to replace the initial string.";
         public static final String TRIM_DESC = "A variable used to check if the initial string is blank or empty.";
         public static final String PASSWORD_DESC = "Password used to decrypt the PDF file.";
+        public static final String VERSION_VALUE_DESC = "UUID Version which will be generated.";
+        public static final String NAME_VALUE_DESC = "A variable used to generate UUID Version 2.";
+
     }
 
     public static class OutputsDescription {
@@ -46,7 +50,9 @@ public class Descriptions {
         public static final String RETURN_RESULT_DESC = "This will contain the replaced string with the default value.";
         public static final String FIND_TEXT_IN_PDF_RETURN_RESULT_DESC = "The number of occurrences of the text in the PDF file.";
         public static final String EXCEPTION_DESC = "In case of success response, this result is empty. In case of failure response, this result contains the java stack trace of the runtime exception.";
+        public static final String RETURN_RESULT_DESCRIPTION = "This will contain the UUID.";
     }
+
 
     public static class ResultsDescription {
         public static final String SUCCESS_DESC = "The operation completed successfully.";
