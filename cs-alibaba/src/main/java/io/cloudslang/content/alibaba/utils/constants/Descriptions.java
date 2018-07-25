@@ -220,4 +220,10 @@ public class Descriptions {
         public static final String PUBLIC_IP_ADDRESS_DESC = "Public Ip Address of an ECS instance.";
     }
 
+    public static class GetInstanceStatus {
+        public static final String GET_INSTANCE_STATUS_DESC = "This operation is used to get status of an ECS instance.";
+        //Results
+        public static final String INSTANCE_STATUS_DESC = "Status of an ECS instance.";
+    }
+
 }

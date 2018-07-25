@@ -27,49 +27,35 @@ import io.cloudslang.content.alibaba.utils.constants.Outputs;
 
 import java.util.Map;
 
-import static io.cloudslang.content.alibaba.services.InstanceService.restartInstance;
+
+import static io.cloudslang.content.alibaba.services.InstanceService.getInstanceStatus;
 import static io.cloudslang.content.alibaba.utils.constants.Commons.DEFAULT_PROXY_PORT;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.ACCESS_KEY_ID_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.ACCESS_KEY_SECRET_ID_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.EXCEPTION_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.FORCE_STOP_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.*;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.INSTANCE_ID_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.PROXY_HOST_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.PROXY_PASSWORD_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.PROXY_PORT_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.PROXY_USERNAME_DESC;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.REGION_ID_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.REQUEST_ID_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.RETURN_CODE_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.RETURN_RESULT_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.RestartInstance.FAILURE_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.RestartInstance.RESTART_INSTANCE_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.Descriptions.RestartInstance.SUCCESS_DESC;
-import static io.cloudslang.content.alibaba.utils.constants.ExceptionMessages.RESTART_INSTANCE_EXCEPTION;
-import static io.cloudslang.content.alibaba.utils.constants.Inputs.ACCESS_KEY_ID;
-import static io.cloudslang.content.alibaba.utils.constants.Inputs.ACCESS_KEY_SECRET;
-import static io.cloudslang.content.alibaba.utils.constants.Inputs.FORCE_STOP;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.GetInstanceStatus.GET_INSTANCE_STATUS_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.GetInstanceStatus.INSTANCE_STATUS_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StartInstance.FAILURE_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.Descriptions.StartInstance.SUCCESS_DESC;
+import static io.cloudslang.content.alibaba.utils.constants.ExceptionMessages.GET_INSTANCE_STATUS_EXCEPTION;
+import static io.cloudslang.content.alibaba.utils.constants.Inputs.*;
 import static io.cloudslang.content.alibaba.utils.constants.Inputs.INSTANCE_ID;
-import static io.cloudslang.content.alibaba.utils.constants.Inputs.PROXY_HOST;
-import static io.cloudslang.content.alibaba.utils.constants.Inputs.PROXY_PASSWORD;
 import static io.cloudslang.content.alibaba.utils.constants.Inputs.PROXY_PORT;
-import static io.cloudslang.content.alibaba.utils.constants.Inputs.PROXY_USERNAME;
-import static io.cloudslang.content.alibaba.utils.constants.Inputs.REGION_ID;
-import static io.cloudslang.content.alibaba.utils.constants.Outputs.REQUEST_ID;
-import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.RESTART_INSTANCE_SUCCESS;
+import static io.cloudslang.content.alibaba.utils.constants.Outputs.INSTANCE_STATUS;
+import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.GET_INSTANCE_STATUS_SUCCESS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
-import static java.lang.Boolean.valueOf;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class RestartInstance {
-    @Action(name = "Restart Instance",
-            description = RESTART_INSTANCE_DESC,
+public class GetInstanceStatus {
+
+    @Action(name = "Get Instance Status ",
+            description = GET_INSTANCE_STATUS_DESC,
             outputs = {
                     @Output(value = Outputs.RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = Outputs.RETURN_RESULT, description = RETURN_RESULT_DESC),
-                    @Output(value = Outputs.REQUEST_ID, description = REQUEST_ID_DESC),
+                    @Output(value = Outputs.INSTANCE_STATUS, description = INSTANCE_STATUS_DESC),
                     @Output(value = Outputs.EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
@@ -79,22 +65,20 @@ public class RestartInstance {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             }
     )
-    public Map<String, String> execute(@Param(value = REGION_ID, required = true, description = REGION_ID_DESC) final String regionId,
-                                       @Param(value = ACCESS_KEY_ID, required = true, description = ACCESS_KEY_ID_DESC) final String accessKeyId,
+    public Map<String, String> execute(@Param(value = ACCESS_KEY_ID, required = true, description = ACCESS_KEY_ID_DESC) final String accessKeyId,
                                        @Param(value = ACCESS_KEY_SECRET, required = true, encrypted = true, description = ACCESS_KEY_SECRET_ID_DESC) final String accessKeySecret,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) final String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) final String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) final String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) final String proxyPassword,
-                                       @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) final String instanceId,
-                                       @Param(value = FORCE_STOP, description = FORCE_STOP_DESC) final String forceStop) {
+                                       @Param(value = REGION_ID, required = true, description = REGION_ID_DESC) final String regionId,
+                                       @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) final String instanceId) {
 
         //Get default values and String conversions
         final String proxyHostImp = defaultIfEmpty(proxyHost, EMPTY);
         final String proxyPortImp = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         final String proxyUsernameImp = defaultIfEmpty(proxyUsername, EMPTY);
         final String proxyPasswordImp = defaultIfEmpty(proxyPassword, EMPTY);
-        final Boolean forceStopImp = valueOf(forceStop);
 
         //Validate Inputs
         Validator validator = new Validator()
@@ -107,14 +91,15 @@ public class RestartInstance {
 
         try {
             final IAcsClient client = ClientUtil.getClient(regionId, accessKeyId, accessKeySecret);
-            final String requestId = restartInstance(proxyHostImp, proxyPortImp, proxyUsernameImp, proxyPasswordImp, instanceId, forceStopImp, client);
+            final String instanceStatus = getInstanceStatus(proxyHostImp, proxyPortImp, proxyUsernameImp, proxyPasswordImp, instanceId, regionId, client);
 
-            final Map<String, String> resultMap = getSuccessResultsMap(RESTART_INSTANCE_SUCCESS);
-            resultMap.put(REQUEST_ID, requestId);
+
+            final Map<String, String> resultMap = getSuccessResultsMap(GET_INSTANCE_STATUS_SUCCESS);
+            resultMap.put(INSTANCE_STATUS, instanceStatus);
 
             return resultMap;
         } catch (Exception e) {
-            return getFailureResultsMap(RESTART_INSTANCE_EXCEPTION, e);
+            return getFailureResultsMap(GET_INSTANCE_STATUS_EXCEPTION, e);
         }
     }
 }

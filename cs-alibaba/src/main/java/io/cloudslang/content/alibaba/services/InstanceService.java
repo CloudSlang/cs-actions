@@ -49,7 +49,6 @@ public class InstanceService {
                                         final Integer systemDiskSize,
                                         final String systemDiskName,
                                         final String systemDiskDescription,
-                                        final List<DataDisk> dataDisks,
                                         final String clusterId,
                                         final String hpcClusterId,
                                         final String vSwitchId,
@@ -67,13 +66,10 @@ public class InstanceService {
                                         final String deploymentSetId,
                                         final String ramRoleName,
                                         final String securityEnhancementStrategy,
-                                        final List<String> tagsKeys,
-                                        final List<String> tagsValues,
                                         final IAcsClient client) throws RuntimeException {
         // Instantiate Create Instance request
         final CreateInstanceRequest createInstanceRequest = new CreateInstanceRequest();
         createInstanceRequest.setRegionId(regionId);
-        createInstanceRequest.setDataDisks(dataDisks);
         createInstanceRequest.setAutoRenew(autoRenew);
         createInstanceRequest.setAutoRenewPeriod(autoRenewPeriod);
         createInstanceRequest.setClientToken(clientToken);
@@ -108,7 +104,6 @@ public class InstanceService {
         createInstanceRequest.setUserData(userData);
         createInstanceRequest.setVSwitchId(vSwitchId);
         createInstanceRequest.setZoneId(zoneId);
-        //setRequestTags(createInstanceRequest, tagsKeys, tagsValues);
 
         // Initiate the request and handle the response or exceptions
         return ((CreateInstanceResponse) getResponse(proxyHost, proxyPort, proxyUsername, proxyPassword,
@@ -143,6 +138,31 @@ public class InstanceService {
         // Initiate the request and handle the response or exceptions
         return ((AllocatePublicIpAddressResponse) getResponse(proxyHost, proxyPort, proxyUsername, proxyPassword,
                 client, allocatePublicIpAddressRequest)).getIpAddress();
+    }
+
+    public static String getInstanceStatus(final String proxyHost,
+                                           final String proxyPort,
+                                           final String proxyUsername,
+                                           final String proxyPassword,
+                                           final String instanceId,
+                                           final String regionId,
+                                           final IAcsClient client) throws RuntimeException {
+        // Instantiate getInstanceStatus request
+        String status = "";
+        final DescribeInstanceStatusRequest describeInstanceStatusRequest = new DescribeInstanceStatusRequest();
+        describeInstanceStatusRequest.setRegionId(regionId);
+
+        // Initiate the request and handle the response or exceptions
+        List<DescribeInstanceStatusResponse.InstanceStatus> instanceStatuses = ((DescribeInstanceStatusResponse) getResponse(proxyHost, proxyPort, proxyUsername, proxyPassword,
+                client, describeInstanceStatusRequest)).getInstanceStatuses();
+        for (DescribeInstanceStatusResponse.InstanceStatus instanceStatus : instanceStatuses) {
+            if ((instanceStatus.getInstanceId()).equalsIgnoreCase(instanceId)) {
+                status = instanceStatus.getStatus();
+                break;
+            }
+        }
+
+        return status;
     }
 
     public static String startInstance(final String proxyHost,
@@ -213,7 +233,7 @@ public class InstanceService {
             if (!isEmpty(proxyHost)) {
                 // Set JVM proxies during runtime
                 ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
-                Thread.sleep(30000);
+                //Thread.sleep(30000);
             }
             return client.getAcsResponse(request);
         } catch (ClientException | InterruptedException e) {

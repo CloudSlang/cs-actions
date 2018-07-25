@@ -28,6 +28,8 @@ import io.cloudslang.content.alibaba.utils.constants.Outputs;
 import java.util.Map;
 
 import static io.cloudslang.content.alibaba.services.InstanceService.stopInstance;
+import static io.cloudslang.content.alibaba.utils.constants.Commons.DEFAULT_FORCE_STOP;
+import static io.cloudslang.content.alibaba.utils.constants.Commons.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.ACCESS_KEY_ID_DESC;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.ACCESS_KEY_SECRET_ID_DESC;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.EXCEPTION_DESC;
@@ -90,22 +92,24 @@ public class StopInstance {
                                        @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) final String proxyPassword,
                                        @Param(value = REGION_ID, required = true, description = REGION_ID_DESC) final String regionId,
                                        @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) final String instanceId,
-                                       @Param(value = FORCE_STOP, description = FORCE_STOP_DESC) final String forceStop,
+                                       @Param(value = FORCE_STOP, description = FORCE_STOP_DESC) String forceStop,
                                        @Param(value = CONFIRM_STOP, description = CONFIRM_STOP_DESC) final String confirmStop,
                                        @Param(value = STOPPED_MODE, description = STOPPED_MODE_DESC) final String stoppedMode) {
+
+        //Get default values and String conversions
+        final String proxyHostImp = defaultIfEmpty(proxyHost, EMPTY);
+        final String proxyPortImp = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
+        final String proxyUsernameImp = defaultIfEmpty(proxyUsername, EMPTY);
+        final String proxyPasswordImp = defaultIfEmpty(proxyPassword, EMPTY);
+        forceStop = defaultIfEmpty(forceStop, DEFAULT_FORCE_STOP);
         //Validate Inputs
         Validator validator = new Validator()
-                .validatePort(proxyPort, PROXY_PORT);
+                .validatePort(proxyPortImp, PROXY_PORT);
 
         if (validator.hasErrors()) {
             return getFailureResultsMap(validator.getErrors());
         }
 
-        //Get default values and String conversions
-        final String proxyHostImp = defaultIfEmpty(proxyHost, EMPTY);
-        final String proxyPortImp = defaultIfEmpty(proxyPort, EMPTY);
-        final String proxyUsernameImp = defaultIfEmpty(proxyUsername, EMPTY);
-        final String proxyPasswordImp = defaultIfEmpty(proxyPassword, EMPTY);
         final Boolean forceStopImp = valueOf(forceStop);
         final Boolean confirmStopImp = valueOf(confirmStop);
 

@@ -24,11 +24,9 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.alibaba.utils.ClientUtil;
 import io.cloudslang.content.alibaba.utils.Validator;
 
-import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.alibaba.services.InstanceService.createInstance;
-import static io.cloudslang.content.alibaba.utils.ListUtil.getDataDiskList;
 import static io.cloudslang.content.alibaba.utils.constants.Commons.*;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.*;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.CreateInstance.*;
@@ -40,7 +38,6 @@ import static io.cloudslang.content.alibaba.utils.constants.SuccessMessages.CREA
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.Boolean.valueOf;
-import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -86,13 +83,6 @@ public class CreateInstance {
                                        @Param(value = SYSTEM_DISK_NAME, description = SYSTEM_DISK_NAME_DESC) final String systemDiskName,
                                        @Param(value = SYSTEM_DISK_DESCRIPTION, description = SYSTEM_DISK_DESCRIPTION_DESC) final String systemDiskDescription,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) final String delimiter,
-                                       @Param(value = DATA_DISKS_SIZE_LIST, description = DATA_DISKS_SIZE_LIST_DESC) final String dataDisksSizeList,
-                                       @Param(value = DATA_DISKS_CATEGORY_LIST, description = DATA_DISKS_CATEGORY_LIST_DESC) final String dataDisksCategoryList,
-                                       @Param(value = DATA_DISKS_ENCRYPTED_LIST, description = DATA_DISKS_ENCRYPTED_LIST_DESC) final String dataDisksEncryptedList,
-                                       @Param(value = DATA_DISKS_SNAPSHOT_ID_LIST, description = DATA_DISKS_SNAPSHOT_ID_LIST_DESC) final String dataDisksSnapshotIdList,
-                                       @Param(value = DATA_DISKS_DISK_NAME_LIST, description = DATA_DISKS_DISK_NAME_LIST_DESC) final String dataDisksDiskNameList,
-                                       @Param(value = DATA_DISKS_DESCRIPTION_LIST, description = DATA_DISKS_DESCRIPTION_LIST_DESC) final String dataDisksDescriptionList,
-                                       @Param(value = DATA_DISKS_DELETE_WITH_INSTANCE_LIST, description = DATA_DISKS_DELETE_WITH_INSTANCE_LIST_DESC) final String dataDisksDeleteWithInstanceList,
                                        @Param(value = CLUSTER_ID, description = CLUSTER_ID_DESC) final String clusterId,
                                        @Param(value = HPC_CLUSTER_ID, description = HPC_CLUSTER_ID_DESC) final String hpcClusterId,
                                        @Param(value = V_SWITCH_ID, description = V_SWITCH_ID_DESC) final String vSwitchId,
@@ -109,9 +99,8 @@ public class CreateInstance {
                                        @Param(value = KEY_PAIR_NAME, description = KEY_PAIR_NAME_DESC) final String keyPairName,
                                        @Param(value = DEPLOYMENT_SET_ID, description = DEPLOYMENT_SET_ID_DESC) final String deploymentSetId,
                                        @Param(value = RAM_ROLE_NAME, description = RAM_ROLE_NAME_DESC) final String ramRoleName,
-                                       @Param(value = SECURITY_ENHANCEMENT_STRATEGY, description = SECURITY_ENHANCEMENT_STRATEGY_DESC) final String securityEnhancementStrategy,
-                                       @Param(value = TAGS_KEY_LIST, description = TAGS_KEY_LIST_DESC) final String tagsKeyList,
-                                       @Param(value = TAGS_VALUE_LIST, description = TAGS_VALUE_LIST_DESC) final String tagsValueList) {
+                                       @Param(value = SECURITY_ENHANCEMENT_STRATEGY, description = SECURITY_ENHANCEMENT_STRATEGY_DESC) final String securityEnhancementStrategy
+                                        ) {
         //Get default values and String conversions
         final String proxyHostImp = defaultIfEmpty(proxyHost, EMPTY);
         final String proxyPortImp = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -123,11 +112,8 @@ public class CreateInstance {
         final String internetMaxBandwidthOutDef = defaultIfEmpty(internetMaxBandwidthOut, DEFAULT_INTERNET_MAX_BANDWIDTH_OUT);
         final String passwordInheritDef = defaultIfEmpty(passwordInherit, DEFAULT_PASSWORD_INHERIT);
         final String systemDiskSizeDef = defaultIfEmpty(systemDiskSize, DEFAULT_SYSTEM_DISK_SIZE);
-        final String dataDisksEncryptedListDef = defaultIfEmpty(dataDisksEncryptedList, DEFAULT_DATA_DISKS_ENCRYPTED_LIST);
         final String instanceChargeTypeDef = defaultIfEmpty(instanceChargeType, DEFAULT_INSTANCE_CHARGE_TYPE);
-        final String dataDisksDeleteWithInstanceListDef = defaultIfEmpty(dataDisksDeleteWithInstanceList, DEFAULT_DATA_DISKS_DELETE_WITH_INSTANCE_LIST);
         final String autoRenewDef = defaultIfEmpty(autoRenew, DEFAULT_AUTO_RENEW);
-        final String dataDisksSizeListDef = defaultIfEmpty(dataDisksSizeList, DEFAULT_DATA_DISKS_SIZE_LIST);
         final String autoRenewPeriodDef = defaultIfEmpty(autoRenewPeriod, DEFAULT_AUTO_RENEW_PERIOD);
         final String periodDef = defaultIfEmpty(period, DEFAULT_PERIOD);
         final String spotStrategyDef = defaultIfEmpty(spotStrategy, DEFAULT_SPOT_STRATEGY);
@@ -140,9 +126,6 @@ public class CreateInstance {
                 .validateBoolean(passwordInheritDef, PASSWORD_INHERIT)
                 .validateBoolean(autoRenewDef, AUTO_RENEW)
                 .validateInt(systemDiskSizeDef, SYSTEM_DISK_SIZE)
-                .validateIntList(dataDisksSizeListDef, DATA_DISKS_SIZE_LIST, delimiterImp)
-                .validateBooleanList(dataDisksEncryptedListDef, DATA_DISKS_ENCRYPTED_LIST, delimiterImp)
-                .validateBooleanList(dataDisksDeleteWithInstanceListDef, DATA_DISKS_DELETE_WITH_INSTANCE_LIST, delimiterImp)
                 .validateInt(periodDef, PERIOD)
                 .validateInt(internetMaxBandwidthInDef, INTERNET_MAX_BANDWIDTH_IN, 1, 200, true, true)
                 .validateInt(internetMaxBandwidthOutDef, INTERNET_MAX_BANDWIDTH_OUT, 1, 100, true, true)
@@ -150,19 +133,6 @@ public class CreateInstance {
                 .validateInt(autoRenewPeriodDef, AUTO_RENEW_PERIOD)
                 .validateFloat(spotPriceLimitDef, SPOT_PRICE_LIMIT);
 
-        final List<String> dataDisksSizeListImp = asList(dataDisksSizeListDef.split(delimiterImp));
-        final List<String> dataDisksCategoryListImp = asList(dataDisksCategoryList.split(delimiterImp));
-        final List<String> dataDisksSnapshotIdListImp = asList(dataDisksSnapshotIdList.split(delimiterImp));
-        final List<String> dataDisksNameListImp = asList(dataDisksDiskNameList.split(delimiterImp));
-        final List<String> dataDisksDescriptionListImp = asList(dataDisksDescriptionList.split(delimiterImp));
-        final List<String> dataDisksDeleteWithInstanceListImp = asList(dataDisksDeleteWithInstanceListDef.split(delimiterImp));
-        final List<String> dataDisksEncryptedListImp = asList(dataDisksEncryptedListDef.split(delimiterImp));
-        final List<String> tagsKeyListImp = asList(tagsKeyList.split(delimiterImp));
-        final List<String> tagsValueListImp = asList(tagsValueList.split(delimiterImp));
-
-        validator
-                .validateSameLengthSizeBound(16, dataDisksSizeListImp, dataDisksCategoryListImp, dataDisksSnapshotIdListImp, dataDisksNameListImp, dataDisksDescriptionListImp, dataDisksDeleteWithInstanceListImp, dataDisksEncryptedListImp)
-                .validateSameLengthSizeBound(5, tagsKeyListImp, tagsValueListImp);
 
         if (validator.hasErrors()) {
             return getFailureResultsMap(validator.getErrors());
@@ -180,7 +150,7 @@ public class CreateInstance {
 
         try {
             final IAcsClient client = ClientUtil.getClient(regionId, accessKeyId, accessKeySecret);
-            final String instanceId = createInstance(proxyHostImp, proxyPortImp, proxyUsernameImp, proxyPasswordImp, regionId, imageId, instanceType, securityGroupId, zoneId, instanceName, description, internetChargeTypeDef, internetMaxBandwidthInImp, internetMaxBandwidthOutImp, hostname, password, passwordInheritImp, isOptimized, systemDiskCategory, systemDiskSizeImp, systemDiskName, systemDiskDescription, getDataDiskList(dataDisksSizeListImp, dataDisksCategoryListImp, dataDisksSnapshotIdListImp, dataDisksNameListImp, dataDisksDescriptionListImp, dataDisksDeleteWithInstanceListImp, dataDisksEncryptedListImp), clusterId, hpcClusterId, vSwitchId, privateIpAddress, instanceChargeTypeDef, spotStrategyDef, spotPriceLimitImp, periodImp, periodUnit, autoRenewImp, autoRenewPeriodImp, userData, clientToken, keyPairName, deploymentSetId, ramRoleName, securityEnhancementStrategy, tagsKeyListImp, tagsValueListImp, client);
+            final String instanceId = createInstance(proxyHostImp, proxyPortImp, proxyUsernameImp, proxyPasswordImp, regionId, imageId, instanceType, securityGroupId, zoneId, instanceName, description, internetChargeTypeDef, internetMaxBandwidthInImp, internetMaxBandwidthOutImp, hostname, password, passwordInheritImp, isOptimized, systemDiskCategory, systemDiskSizeImp, systemDiskName, systemDiskDescription, clusterId, hpcClusterId, vSwitchId, privateIpAddress, instanceChargeTypeDef, spotStrategyDef, spotPriceLimitImp, periodImp, periodUnit, autoRenewImp, autoRenewPeriodImp, userData, clientToken, keyPairName, deploymentSetId, ramRoleName, securityEnhancementStrategy, client);
             final Map<String, String> resultMap = getSuccessResultsMap(CREATE_INSTANCE_SUCCESS);
             resultMap.put(INSTANCE_ID, instanceId);
 
