@@ -20,6 +20,6 @@ public class ExceptionMessages {
     public static final String START_INSTANCE_EXCEPTION = "Failed to start instance.";
     public static final String STOP_INSTANCE_EXCEPTION = "Failed to stop instance.";
     public static final String RESTART_INSTANCE_EXCEPTION = "Failed to restart instance.";
-    public static final String ALLOCATE_PUBLIC_IP_ADDRESS_EXCEPTION = "Failed to Allocate public Ip Address to an instance.";
+    public static final String ALLOCATE_PUBLIC_IP_ADDRESS_EXCEPTION = "Failed to Allocate public IP address to an instance.";
     public static final String GET_INSTANCE_STATUS_EXCEPTION = "Failed to get instance status.";
 }

@@ -215,9 +215,9 @@ public class Descriptions {
     }
 
     public static class AllocatePublicIP {
-        public static final String ALLOCATE_PUBLIC_IP_ADDRESS_DESC = "This operation is used to allocate public ip address to an ECS instance.";
+        public static final String ALLOCATE_PUBLIC_IP_ADDRESS_DESC = "This operation is used to allocate public IP address to an ECS instance.";
         //Results
-        public static final String PUBLIC_IP_ADDRESS_DESC = "Public Ip Address of an ECS instance.";
+        public static final String PUBLIC_IP_ADDRESS_DESC = "Public IP address of an ECS instance.";
     }
 
     public static class GetInstanceStatus {
