@@ -24,74 +24,80 @@
 
 package io.cloudslang.content.utilities.actions;
 
-import java.util.UUID;
-import java.util.Map;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import java.util.Map;
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
 
 public class UUIDGeneratorTest {
 
     /**
      * Test for time based UUID
      */
-    @org.junit.Test
+    @Test
     public void testTimeBasedGenerator() {
         UUIDGenerator uuidGenerator = new UUIDGenerator();
         Map<String, String> result = uuidGenerator.execute("", "1");
         String uuidInStr = result.get("returnResult");
         UUID uuid = UUID.fromString(uuidInStr);
         assertEquals(uuidInStr, uuid.toString());
-            }
+    }
 
     /**
      * Test for random based UUID 4
      */
-    @org.junit.Test
+    @Test
     public void test4RandomBasedGenerator() {
         UUIDGenerator uuidGenerator = new UUIDGenerator();
         Map<String, String> result = uuidGenerator.execute("", "4");
         String uuidInStr = result.get("returnResult");
         UUID uuid = UUID.fromString(uuidInStr);
         assertEquals(uuidInStr, uuid.toString());
-            }
-/**
- * Test for random based UUID 5
- */
-    @org.junit.Test
+    }
+
+    /**
+     * Test for random based UUID 5
+     */
+    @Test
     public void test5RandomBasedGenerator() {
         UUIDGenerator uuidGenerator = new UUIDGenerator();
         Map<String, String> result = uuidGenerator.execute("", "5");
         String uuidInStr = result.get("returnResult");
         UUID uuid = UUID.fromString(uuidInStr);
         assertEquals(uuidInStr, uuid.toString());
-            }
+    }
+
     /**
      * Test for name based UUID
      */
-    @org.junit.Test
+    @Test
     public void testNameBasedGenerator() {
         UUIDGenerator uuidGenerator = new UUIDGenerator();
         Map<String, String> result = uuidGenerator.execute("abc", "3");
         String uuidInStr = result.get("returnResult");
         UUID uuid = UUID.fromString(uuidInStr);
         assertEquals("a9993e36-4706-516a-ba3e-25717850c26c", uuid.toString());
-                    }
+    }
+
     /**
      * Test for no value
      */
-    @org.junit.Test
+    @Test
     public void testNoValue() {
         UUIDGenerator uuidGenerator = new UUIDGenerator();
         Map<String, String> result = uuidGenerator.execute("", "");
         String uuidInStr = result.get("returnResult");
         UUID uuid = UUID.fromString(uuidInStr);
         assertEquals(uuidInStr, uuid.toString());
-            }
+    }
 
     /**
      * Test for invalid version
      */
-    @org.junit.Test
+    @Test
     public void testInvalidVersion() {
         UUIDGenerator uuidGenerator = new UUIDGenerator();
         Map<String, String> result = uuidGenerator.execute("", "15");
