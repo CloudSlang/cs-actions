@@ -50,7 +50,7 @@ public class Descriptions {
                 "Value range: [1, 200]. Default: '200'";
         public static final String INTERNET_MAX_BANDWIDTH_OUT_DESC = "Maximum outbound bandwidth to the Internet, its unit of measurement is Mbit/s. " +
                 "If this parameter is not specified, an error is returned. " +
-                "Value range: PayByTraffic: [0,100]. Default: '0'";
+                "Value range: PayByTraffic: [0,100]. Default: '1'";
         public static final String HOSTNAME_DESC = "Host name of the ECS instance." +
                 "It cannot start or end with a period (.) or a hyphen (-) and it cannot have two or more consecutive periods (.) or hyphens (-)." +
                 "On Windows, the host name can contain [2, 15] characters in length. It can contain uppercase or lowercase letters, digits, periods (.), and hyphens (-). It cannot be only digits." +
@@ -60,7 +60,8 @@ public class Descriptions {
                 "Special characters such as ( ) ' ~ !  @ # $ % ^ & * - + = | { } [ ] : ; ‘ < > , . ? are allowed. /";
         public static final String PASSWORD_INHERIT_DESC = "Whether to use the password pre-configured in the image you select or not. " +
                 "When PasswordInherit is specified, the Password must be null. " +
-                "For a secure access, make sure that the selected image has password configured.";
+                "For a secure access, make sure that the selected image has password configured." +
+                "Default: false";
         public static final String IS_OPTIMIZED_DESC = "Whether it is an I/O-optimized instance or not. " +
                 "For phased-out instance types, the default value is none. For other instance types, the default value is optimized." +
                 "Valid values: none, optimized";
@@ -87,7 +88,8 @@ public class Descriptions {
                 "dataDisksEncryptedList, dataDisksSnapshotList, dataDisksNameList, dataDisksDescriptionList, dataDisksDeleteWithInstanceList, tagsKeyList, tagsValueList inputs. Default: ','";
         public static final String DATA_DISKS_SIZE_LIST_DESC = "Size of the n data disk in GBs, n starts from 1. Optional values:" +
                 "cloud: [5, 2000], cloud_efficiency: [20, 32768], cloud_ssd: [20, 32768], ephemeral_ssd: [5, 800]." +
-                "The value must be equal to or greater than the specific snapshot (SnapshotId).";
+                "The value must be equal to or greater than the specific snapshot (SnapshotId)." +
+                "Default value: 20, 32768";
         public static final String DATA_DISKS_CATEGORY_LIST_DESC = "Category of the data disk n, the valid range of n is [1, 16]. Optional values:" +
                 "cloud: Basic cloud disk, cloud_efficiency: Ultra cloud disk, cloud_ssd: Cloud SSD, ephemeral_ssd: Ephemeral SSD" +
                 "Default: cloud.";
@@ -128,7 +130,8 @@ public class Descriptions {
                 "Default: 'NoSpot'";
         public static final String SPOT_PRICE_LIMIT_DESC = "The hourly price threshold for a preemptible instance, " +
                 "and it takes effect only when parameter SpotStrategy is SpotWithPriceLimit. " +
-                "Three decimal places are allowed at most.";
+                "Three decimal places are allowed at most." +
+                "Default: 0.0";
         public static final String PERIOD_DESC = "Unit: month. This parameter is valid and mandatory only when InstanceChargeType is set to PrePaid. " +
                 "Valid values: '1-9', '12', '24', '36', '48', '60'";
         public static final String PERIOD_UNIT_DESC = "Value: Optional values: 'week', 'month'. Default: 'month'";
@@ -210,4 +213,11 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The instance has been successfully restarted.";
         public static final String FAILURE_DESC = "An error has occurred while trying to restart the instance.";
     }
+
+    public static class AllocatePublicIP {
+        public static final String ALLOCATE_PUBLIC_IP_ADDRESS_DESC = "This operation is used to allocate public ip address to an ECS instance.";
+        //Results
+        public static final String PUBLIC_IP_ADDRESS_DESC = "Public Ip Address of an ECS instance.";
+    }
+
 }

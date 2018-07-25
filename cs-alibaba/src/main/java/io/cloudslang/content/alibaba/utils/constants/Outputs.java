@@ -20,7 +20,8 @@ public class Outputs {
     public static final String REQUEST_ID = "requestId";
     public static final String INSTANCE_ID = "instanceId";
     public static final String EXCEPTION = "exception";
-
+    public static final String PUBLIC_IP_ADDRESS = "publicIpAddress";
+    public static final String INSTANCE_STATUS = "instanceStatus";
     public static final String SUCCESS = "success";
     public static final String FAILURE = "failure";
 

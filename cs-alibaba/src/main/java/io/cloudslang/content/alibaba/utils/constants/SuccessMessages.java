@@ -20,4 +20,6 @@ public class SuccessMessages {
     public static final String START_INSTANCE_SUCCESS = "The instance start request was successfully executed.";
     public static final String STOP_INSTANCE_SUCCESS = "The instance stop request was successfully executed.";
     public static final String RESTART_INSTANCE_SUCCESS = "The instance restart request was successfully executed.";
+    public static final String ALLOCATE_PUBLIC_IP_ADDRESS_SUCCESS = "Allocate public Ip Address to an instance request was successfully executed.";
+    public static final String GET_INSTANCE_STATUS_SUCCESS = "Get instance status request was successfully executed.";
 }

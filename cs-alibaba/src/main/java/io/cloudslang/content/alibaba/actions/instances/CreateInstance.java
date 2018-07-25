@@ -29,7 +29,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.alibaba.services.InstanceService.createInstance;
 import static io.cloudslang.content.alibaba.utils.ListUtil.getDataDiskList;
-import static io.cloudslang.content.alibaba.utils.constants.Commons.COMMA;
+import static io.cloudslang.content.alibaba.utils.constants.Commons.*;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.Common.*;
 import static io.cloudslang.content.alibaba.utils.constants.Descriptions.CreateInstance.*;
 import static io.cloudslang.content.alibaba.utils.constants.ExceptionMessages.CREATE_INSTANCE_EXCEPTION;
@@ -114,34 +114,49 @@ public class CreateInstance {
                                        @Param(value = TAGS_VALUE_LIST, description = TAGS_VALUE_LIST_DESC) final String tagsValueList) {
         //Get default values and String conversions
         final String proxyHostImp = defaultIfEmpty(proxyHost, EMPTY);
-        final String proxyPortImp = defaultIfEmpty(proxyPort, EMPTY);
+        final String proxyPortImp = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         final String proxyUsernameImp = defaultIfEmpty(proxyUsername, EMPTY);
         final String proxyPasswordImp = defaultIfEmpty(proxyPassword, EMPTY);
         final String delimiterImp = defaultIfEmpty(delimiter, COMMA);
+        final String internetChargeTypeDef = defaultIfEmpty(internetChargeType, DEFAULT_INTERNET_CHARGE_TYPE);
+        final String internetMaxBandwidthInDef = defaultIfEmpty(internetMaxBandwidthIn, DEFAULT_INTERNET_MAX_BANDWIDTH_IN);
+        final String internetMaxBandwidthOutDef = defaultIfEmpty(internetMaxBandwidthOut, DEFAULT_INTERNET_MAX_BANDWIDTH_OUT);
+        final String passwordInheritDef = defaultIfEmpty(passwordInherit, DEFAULT_PASSWORD_INHERIT);
+        final String systemDiskSizeDef = defaultIfEmpty(systemDiskSize, DEFAULT_SYSTEM_DISK_SIZE);
+        final String dataDisksEncryptedListDef = defaultIfEmpty(dataDisksEncryptedList, DEFAULT_DATA_DISKS_ENCRYPTED_LIST);
+        final String instanceChargeTypeDef = defaultIfEmpty(instanceChargeType, DEFAULT_INSTANCE_CHARGE_TYPE);
+        final String dataDisksDeleteWithInstanceListDef = defaultIfEmpty(dataDisksDeleteWithInstanceList, DEFAULT_DATA_DISKS_DELETE_WITH_INSTANCE_LIST);
+        final String autoRenewDef = defaultIfEmpty(autoRenew, DEFAULT_AUTO_RENEW);
+        final String dataDisksSizeListDef = defaultIfEmpty(dataDisksSizeList, DEFAULT_DATA_DISKS_SIZE_LIST);
+        final String autoRenewPeriodDef = defaultIfEmpty(autoRenewPeriod, DEFAULT_AUTO_RENEW_PERIOD);
+        final String periodDef = defaultIfEmpty(period, DEFAULT_PERIOD);
+        final String spotStrategyDef = defaultIfEmpty(spotStrategy, DEFAULT_SPOT_STRATEGY);
+        final String spotPriceLimitDef = defaultIfEmpty(spotPriceLimit, DEFAULT_SPOT_PRICE_LIMIT);
+
 
         //Validate Inputs
         Validator validator = new Validator()
-                .validatePort(proxyPort, PROXY_PORT)
-                .validateBoolean(passwordInherit, PASSWORD_INHERIT)
-                .validateBoolean(autoRenew, AUTO_RENEW)
-                .validateInt(systemDiskSize, SYSTEM_DISK_SIZE)
-                .validateIntList(dataDisksSizeList, DATA_DISKS_SIZE_LIST, delimiterImp)
-                .validateBooleanList(dataDisksEncryptedList, DATA_DISKS_ENCRYPTED_LIST, delimiterImp)
-                .validateBooleanList(dataDisksDeleteWithInstanceList, DATA_DISKS_DELETE_WITH_INSTANCE_LIST, delimiterImp)
-                .validateInt(period, PERIOD)
-                .validateInt(internetMaxBandwidthIn, INTERNET_MAX_BANDWIDTH_IN)
-                .validateInt(internetMaxBandwidthOut, INTERNET_MAX_BANDWIDTH_OUT)
-                .validateInt(systemDiskSize, SYSTEM_DISK_SIZE)
-                .validateInt(autoRenewPeriod, AUTO_RENEW_PERIOD)
-                .validateFloat(spotPriceLimit, SPOT_PRICE_LIMIT);
+                .validatePort(proxyPortImp, PROXY_PORT)
+                .validateBoolean(passwordInheritDef, PASSWORD_INHERIT)
+                .validateBoolean(autoRenewDef, AUTO_RENEW)
+                .validateInt(systemDiskSizeDef, SYSTEM_DISK_SIZE)
+                .validateIntList(dataDisksSizeListDef, DATA_DISKS_SIZE_LIST, delimiterImp)
+                .validateBooleanList(dataDisksEncryptedListDef, DATA_DISKS_ENCRYPTED_LIST, delimiterImp)
+                .validateBooleanList(dataDisksDeleteWithInstanceListDef, DATA_DISKS_DELETE_WITH_INSTANCE_LIST, delimiterImp)
+                .validateInt(periodDef, PERIOD)
+                .validateInt(internetMaxBandwidthInDef, INTERNET_MAX_BANDWIDTH_IN, 1, 200, true, true)
+                .validateInt(internetMaxBandwidthOutDef, INTERNET_MAX_BANDWIDTH_OUT, 1, 100, true, true)
+                .validateInt(systemDiskSizeDef, SYSTEM_DISK_SIZE)
+                .validateInt(autoRenewPeriodDef, AUTO_RENEW_PERIOD)
+                .validateFloat(spotPriceLimitDef, SPOT_PRICE_LIMIT);
 
-        final List<String> dataDisksSizeListImp = asList(dataDisksSizeList.split(delimiterImp));
+        final List<String> dataDisksSizeListImp = asList(dataDisksSizeListDef.split(delimiterImp));
         final List<String> dataDisksCategoryListImp = asList(dataDisksCategoryList.split(delimiterImp));
         final List<String> dataDisksSnapshotIdListImp = asList(dataDisksSnapshotIdList.split(delimiterImp));
         final List<String> dataDisksNameListImp = asList(dataDisksDiskNameList.split(delimiterImp));
         final List<String> dataDisksDescriptionListImp = asList(dataDisksDescriptionList.split(delimiterImp));
-        final List<String> dataDisksDeleteWithInstanceListImp = asList(dataDisksDeleteWithInstanceList.split(delimiterImp));
-        final List<String> dataDisksEncryptedListImp = asList(dataDisksEncryptedList.split(delimiterImp));
+        final List<String> dataDisksDeleteWithInstanceListImp = asList(dataDisksDeleteWithInstanceListDef.split(delimiterImp));
+        final List<String> dataDisksEncryptedListImp = asList(dataDisksEncryptedListDef.split(delimiterImp));
         final List<String> tagsKeyListImp = asList(tagsKeyList.split(delimiterImp));
         final List<String> tagsValueListImp = asList(tagsValueList.split(delimiterImp));
 
@@ -154,21 +169,20 @@ public class CreateInstance {
         }
 
         //Other type conversions
-        final Boolean passwordInheritImp = valueOf(passwordInherit);
-        final Boolean autoRenewImp = valueOf(autoRenew);
-        final Float spotPriceLimitImp = Float.valueOf(spotPriceLimit);
-        final Integer internetMaxBandwidthInImp = Integer.valueOf(internetMaxBandwidthIn);
-        final Integer internetMaxBandwidthOutImp = Integer.valueOf(internetMaxBandwidthOut);
-        final Integer systemDiskSizeImp = Integer.valueOf(systemDiskSize);
-        final Integer periodImp = Integer.valueOf(period);
-        final Integer autoRenewPeriodImp = Integer.valueOf(autoRenewPeriod);
+        final Boolean passwordInheritImp = valueOf(passwordInheritDef);
+        final Boolean autoRenewImp = valueOf(autoRenewDef);
+        final Float spotPriceLimitImp = Float.valueOf(spotPriceLimitDef);
+        final Integer internetMaxBandwidthInImp = Integer.valueOf(internetMaxBandwidthInDef);
+        final Integer internetMaxBandwidthOutImp = Integer.valueOf(internetMaxBandwidthOutDef);
+        final Integer systemDiskSizeImp = Integer.valueOf(systemDiskSizeDef);
+        final Integer periodImp = Integer.valueOf(periodDef);
+        final Integer autoRenewPeriodImp = Integer.valueOf(autoRenewPeriodDef);
 
         try {
             final IAcsClient client = ClientUtil.getClient(regionId, accessKeyId, accessKeySecret);
-            final String requestId = createInstance(proxyHostImp, proxyPortImp, proxyUsernameImp, proxyPasswordImp, regionId, imageId, instanceType, securityGroupId, zoneId, instanceName, description, internetChargeType, internetMaxBandwidthInImp, internetMaxBandwidthOutImp, hostname, password, passwordInheritImp, isOptimized, systemDiskCategory, systemDiskSizeImp, systemDiskName, systemDiskDescription, getDataDiskList(dataDisksSizeListImp, dataDisksCategoryListImp, dataDisksSnapshotIdListImp, dataDisksNameListImp, dataDisksDescriptionListImp, dataDisksDeleteWithInstanceListImp, dataDisksEncryptedListImp), clusterId, hpcClusterId, vSwitchId, privateIpAddress, instanceChargeType, spotStrategy, spotPriceLimitImp, periodImp, periodUnit, autoRenewImp, autoRenewPeriodImp, userData, clientToken, keyPairName, deploymentSetId, ramRoleName, securityEnhancementStrategy, tagsKeyListImp, tagsValueListImp, client);
-
+            final String instanceId = createInstance(proxyHostImp, proxyPortImp, proxyUsernameImp, proxyPasswordImp, regionId, imageId, instanceType, securityGroupId, zoneId, instanceName, description, internetChargeTypeDef, internetMaxBandwidthInImp, internetMaxBandwidthOutImp, hostname, password, passwordInheritImp, isOptimized, systemDiskCategory, systemDiskSizeImp, systemDiskName, systemDiskDescription, getDataDiskList(dataDisksSizeListImp, dataDisksCategoryListImp, dataDisksSnapshotIdListImp, dataDisksNameListImp, dataDisksDescriptionListImp, dataDisksDeleteWithInstanceListImp, dataDisksEncryptedListImp), clusterId, hpcClusterId, vSwitchId, privateIpAddress, instanceChargeTypeDef, spotStrategyDef, spotPriceLimitImp, periodImp, periodUnit, autoRenewImp, autoRenewPeriodImp, userData, clientToken, keyPairName, deploymentSetId, ramRoleName, securityEnhancementStrategy, tagsKeyListImp, tagsValueListImp, client);
             final Map<String, String> resultMap = getSuccessResultsMap(CREATE_INSTANCE_SUCCESS);
-            resultMap.put(REQUEST_ID, requestId);
+            resultMap.put(INSTANCE_ID, instanceId);
 
             return resultMap;
         } catch (Exception e) {

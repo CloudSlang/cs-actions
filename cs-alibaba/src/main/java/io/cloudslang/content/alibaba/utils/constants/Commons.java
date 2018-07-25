@@ -16,4 +16,20 @@ package io.cloudslang.content.alibaba.utils.constants;
 
 public class Commons {
     public static final String COMMA = ",";
+    public static final String DEFAULT_INTERNET_CHARGE_TYPE = "PayByTraffic";
+    public static final String DEFAULT_INTERNET_MAX_BANDWIDTH_IN = "200";
+    public static final String DEFAULT_INTERNET_MAX_BANDWIDTH_OUT = "1";
+    public static final String DEFAULT_FORCE_STOP = "false";
+    public static final String DEFAULT_PASSWORD_INHERIT = "false";
+    public static final String DEFAULT_SYSTEM_DISK_SIZE = "40";
+    public static final String DEFAULT_DATA_DISKS_ENCRYPTED_LIST = "false";
+    public static final String DEFAULT_INSTANCE_CHARGE_TYPE = "PostPaid";
+    public static final String DEFAULT_DATA_DISKS_DELETE_WITH_INSTANCE_LIST = "true";
+    public static final String DEFAULT_AUTO_RENEW = "false";
+    public static final String DEFAULT_PROXY_PORT = "8080";
+    public static final String DEFAULT_DATA_DISKS_SIZE_LIST = "20, 32768";
+    public static final String DEFAULT_AUTO_RENEW_PERIOD = "0";
+    public static final String DEFAULT_PERIOD = "0";
+    public static final String DEFAULT_SPOT_STRATEGY = "NoSpot";
+    public static final String DEFAULT_SPOT_PRICE_LIMIT = "0.0";
 }

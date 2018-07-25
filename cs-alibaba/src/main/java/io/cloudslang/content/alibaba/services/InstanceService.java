@@ -108,7 +108,7 @@ public class InstanceService {
         createInstanceRequest.setUserData(userData);
         createInstanceRequest.setVSwitchId(vSwitchId);
         createInstanceRequest.setZoneId(zoneId);
-        setRequestTags(createInstanceRequest, tagsKeys, tagsValues);
+        //setRequestTags(createInstanceRequest, tagsKeys, tagsValues);
 
         // Initiate the request and handle the response or exceptions
         return ((CreateInstanceResponse) getResponse(proxyHost, proxyPort, proxyUsername, proxyPassword,
@@ -128,6 +128,21 @@ public class InstanceService {
         // Initiate the request and handle the response or exceptions
         return ((DeleteInstanceResponse) getResponse(proxyHost, proxyPort, proxyUsername, proxyPassword,
                 client, deleteInstanceRequest)).getRequestId();
+    }
+
+    public static String allocatePublicIpAddress(final String proxyHost,
+                                                 final String proxyPort,
+                                                 final String proxyUsername,
+                                                 final String proxyPassword,
+                                                 final String instanceId,
+                                                 final IAcsClient client) throws RuntimeException {
+        // Instantiate Allocate Public Ip Address request
+        final AllocatePublicIpAddressRequest allocatePublicIpAddressRequest = new AllocatePublicIpAddressRequest();
+        allocatePublicIpAddressRequest.setInstanceId(instanceId);
+
+        // Initiate the request and handle the response or exceptions
+        return ((AllocatePublicIpAddressResponse) getResponse(proxyHost, proxyPort, proxyUsername, proxyPassword,
+                client, allocatePublicIpAddressRequest)).getIpAddress();
     }
 
     public static String startInstance(final String proxyHost,
@@ -192,16 +207,22 @@ public class InstanceService {
                                            final String proxyPassword,
                                            final IAcsClient client,
                                            final AcsRequest request) {
-        // Set JVM proxies during runtime
-        ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
+
+
         try {
-            Thread.sleep(30000);
+            if (!isEmpty(proxyHost)) {
+                // Set JVM proxies during runtime
+                ProxyUtil.setProxies(proxyHost, proxyPort, proxyUsername, proxyPassword);
+                Thread.sleep(30000);
+            }
             return client.getAcsResponse(request);
         } catch (ClientException | InterruptedException e) {
             throw new RuntimeException(e.getMessage());
         } finally {
-            //Clear proxies
-            ProxyUtil.clearProxy();
+            if (!isEmpty(proxyHost)) {
+                //Clear proxies
+                ProxyUtil.clearProxy();
+            }
         }
     }
 

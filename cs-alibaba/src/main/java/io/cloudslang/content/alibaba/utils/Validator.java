@@ -76,6 +76,17 @@ public class Validator {
         return this;
     }
 
+    public Validator validateInt(@NotNull final String intValue, @NotNull final String inputName, @NotNull final int lowerBound, @NotNull final int upperBound, @NotNull final boolean includeLowerBound, @NotNull final boolean includeUpperBound) {
+        if (!isValidInt(intValue)) {
+            errorList.add(format("[%s]: Invalid integer value.", inputName));
+        } else {
+            if (!isValidInt(intValue, lowerBound, upperBound, includeLowerBound, includeUpperBound)) {
+                errorList.add(format("[%s]: Invalid integer range [" + lowerBound + " , " + upperBound + "].", inputName));
+            }
+        }
+        return this;
+    }
+
     public Validator validateFloat(@NotNull final String floatValue, @NotNull final String inputName) {
         if (!isValidFloat(floatValue)) {
             errorList.add(format("[%s]: Invalid float value.", inputName));
