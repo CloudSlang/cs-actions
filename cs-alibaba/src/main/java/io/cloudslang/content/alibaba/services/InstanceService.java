@@ -236,7 +236,7 @@ public class InstanceService {
                 //Thread.sleep(30000);
             }
             return client.getAcsResponse(request);
-        } catch (ClientException | InterruptedException e) {
+        } catch (ClientException e) {
             throw new RuntimeException(e.getMessage());
         } finally {
             if (!isEmpty(proxyHost)) {
