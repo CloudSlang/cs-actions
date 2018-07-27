@@ -16,6 +16,7 @@ package io.cloudslang.content.alibaba.utils.constants;
 
 public class Commons {
     public static final String COMMA = ",";
+    public static final String DOT = ".";
     public static final String DEFAULT_INTERNET_CHARGE_TYPE = "PayByTraffic";
     public static final String DEFAULT_INTERNET_MAX_BANDWIDTH_IN = "200";
     public static final String DEFAULT_INTERNET_MAX_BANDWIDTH_OUT = "1";

@@ -151,7 +151,7 @@ public class CreateInstance {
         try {
             final IAcsClient client = ClientUtil.getClient(regionId, accessKeyId, accessKeySecret);
             final String instanceId = createInstance(proxyHostImp, proxyPortImp, proxyUsernameImp, proxyPasswordImp, regionId, imageId, instanceType, securityGroupId, zoneId, instanceName, description, internetChargeTypeDef, internetMaxBandwidthInImp, internetMaxBandwidthOutImp, hostname, password, passwordInheritImp, isOptimized, systemDiskCategory, systemDiskSizeImp, systemDiskName, systemDiskDescription, clusterId, hpcClusterId, vSwitchId, privateIpAddress, instanceChargeTypeDef, spotStrategyDef, spotPriceLimitImp, periodImp, periodUnit, autoRenewImp, autoRenewPeriodImp, userData, clientToken, keyPairName, deploymentSetId, ramRoleName, securityEnhancementStrategy, client);
-            final Map<String, String> resultMap = getSuccessResultsMap(CREATE_INSTANCE_SUCCESS);
+            final Map<String, String> resultMap = getSuccessResultsMap(CREATE_INSTANCE_SUCCESS + instanceId + DOT);
             resultMap.put(INSTANCE_ID, instanceId);
 
             return resultMap;
