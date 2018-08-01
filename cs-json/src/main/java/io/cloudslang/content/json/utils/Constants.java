@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2018 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.cloudslang.content.json.utils;
 
 /**
@@ -48,6 +47,9 @@ public final class Constants {
         public static final String PROXY_PORT_DESC = "The proxy port for the Get request.";
         public static final String PROXY_USERNAME_DESC = "The username for connecting via proxy.";
         public static final String PROXY_PASSWORD_DESC = "The password for connecting via proxy.";
+        public static final String VALIDATE_JSON_DESC = "Checks if a JSON is valid and, optionally, if it validates against a JSON SCHEMA.";
+        public static final String VALIDATE_JSON_SUCCESS_DESC = "JSON is valid (return_code == '0').";
+        public static final String VALIDATE_JSON_FAILURE_DESC = "An error has occurred while trying to validate the given JSON object.";
     }
 
     public static final class ValidationMessages {

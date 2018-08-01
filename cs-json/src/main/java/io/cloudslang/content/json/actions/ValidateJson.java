@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2018 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -46,15 +46,15 @@ public class ValidateJson {
      * Checks if a string is a valid JSON object and, optionally, if it validates against a JSON schema.
      */
 
-    @Action(name = "Validate JSON", description = "Checks if a JSON is valid."
+    @Action(name = "Validate JSON", description = VALIDATE_JSON_DESC
             , outputs = {
             @Output(OutputNames.RETURN_RESULT),
             @Output(OutputNames.RETURN_CODE),
             @Output(OutputNames.EXCEPTION)
     },
             responses = {
-                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = "JSON is valid (return_code == '0')."),
-                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true, description = "An error has occurred while trying to validate the given JSON object.")
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = VALIDATE_JSON_SUCCESS_DESC),
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true, description = VALIDATE_JSON_FAILURE_DESC)
             })
     public Map<String, String> execute(
             @Param(value = JSON_OBJECT, required = true, description = JSON_OBJECT_DESC) String jsonObject,
