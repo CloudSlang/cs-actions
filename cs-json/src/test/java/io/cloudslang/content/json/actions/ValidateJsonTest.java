@@ -1,39 +1,18 @@
-/*
- * (c) Copyright 2018 EntIT Software LLC, a Micro Focus company, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.cloudslang.content.json.actions;
 
 import io.cloudslang.content.constants.OtherValues;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.json.utils.ValidationUtils;
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 import static io.cloudslang.content.json.utils.Constants.ValidationMessages.*;
@@ -46,6 +25,31 @@ import static org.junit.Assert.*;
 public class ValidateJsonTest {
 
     private static ValidateJson validateJson = new ValidateJson();
+
+    URI resource1;
+    String validJson;
+    URI resource2;
+    String invalidJson;
+
+    @Before
+    public void setUp() throws Exception{
+        resource1 = getClass().getResource("/test_valid_json_schema.json").toURI();
+        validJson = FileUtils.readFileToString(new File(resource1));
+        resource2 = getClass().getResource("/test_invalid_json_schema.json").toURI();
+        invalidJson = FileUtils.readFileToString(new File(resource2));
+    }
+
+    @After
+    public void tearDown(){
+        resource1 = null;
+        resource2 = null;
+        validJson = null;
+        invalidJson = null;
+    }
+
+
+    public ValidateJsonTest() throws URISyntaxException, IOException {
+    }
 
     @Test
     public void testValidateJsonSimpleSuccess() {
@@ -256,8 +260,7 @@ public class ValidateJsonTest {
                 "  }\n" +
                 "}";
 
-        String jsonSchemaFilePath = System.getProperty("user.dir") + "\\src\\test\\java\\resources\\test_valid_json_schema.json";
-        final Map<String, String> result = validateJson.execute(jsonObject, jsonSchemaFilePath, null, null, null, null);
+        final Map<String, String> result = validateJson.execute(jsonObject, validJson, null, null, null, null);
         assertEquals(VALID_JSON_AGAINST_SCHEMA, result.get(OutputNames.RETURN_RESULT));
         assertEquals(ReturnCodes.SUCCESS, result.get(OutputNames.RETURN_CODE));
         assertNull(result.get(OutputNames.EXCEPTION));
@@ -277,8 +280,7 @@ public class ValidateJsonTest {
                 "  }\n" +
                 "}";
 
-        String jsonSchemaFilePath = System.getProperty("user.dir") + "\\src\\test\\java\\resources\\test_invalid_json_schema.json";
-        final Map<String, String> result = validateJson.execute(jsonObject, jsonSchemaFilePath, null, null, null, null);
+        final Map<String, String> result = validateJson.execute(jsonObject, invalidJson, null, null, null, null);
         assertEquals(ReturnCodes.FAILURE, result.get(OutputNames.RETURN_CODE));
         assertTrue(result.get(OutputNames.EXCEPTION).contains("invalid JSON Schema"));
         assertEquals(result.get(OutputNames.RETURN_RESULT), result.get(OutputNames.EXCEPTION));
