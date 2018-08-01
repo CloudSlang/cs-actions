@@ -12,16 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.json.exceptions;
 
-package io.cloudslang.content.json.utils;
+public class JsonSchemaValidationException extends Exception {
 
-import io.cloudslang.content.constants.ExceptionValues;
+    public JsonSchemaValidationException(String message) {
+        super(message);
+    }
 
-/**
- * Created by victor on 9/12/16.
- */
-public final class JsonExceptionValues extends ExceptionValues {
-    public static final String INVALID_JSONOBJECT = "Invalid jsonObject provided!";
-    public static final String INVALID_JSONPATH = "Invalid jsonPath provided!";
-    public static final String INVALID_JSONSCHEMA = "Invalid jsonSchema provided!";
+    public JsonSchemaValidationException(Exception ex) {
+        super(ex);
+    }
 }
+

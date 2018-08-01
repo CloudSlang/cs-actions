@@ -15,26 +15,43 @@
 
 package io.cloudslang.content.json.services;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonschema.main.JsonSchema;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.internal.JsonContext;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
+import io.cloudslang.content.constants.OtherValues;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.json.exceptions.JsonSchemaValidationException;
 import io.cloudslang.content.json.exceptions.RemoveEmptyElementException;
 import io.cloudslang.content.json.utils.JsonUtils;
 import io.cloudslang.content.json.utils.StringUtils;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONStyle;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+
+import static io.cloudslang.content.json.utils.Constants.InputNames.HTTP_GET;
+import static io.cloudslang.content.json.utils.Constants.ValidationMessages.*;
+import static io.cloudslang.content.json.utils.ValidationUtils.*;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 
 /**
  * Created by Folea Ilie Cristian on 2/3/2016.
@@ -119,7 +136,6 @@ public class JsonService {
     }
 
     private void removeEmptyElementFromJsonArray(JSONArray jsonArray) {
-
         Iterator jsonArrayIterator = jsonArray.iterator();
         while (jsonArrayIterator.hasNext()) {
             Object jsonArrayElement = jsonArrayIterator.next();
@@ -166,4 +182,104 @@ public class JsonService {
         final JsonPath path = JsonUtils.getValidJsonPath(jsonPath);
         return jsonContext.read(path);
     }
+
+    public static String replaceSingleQuotesWithDoubleQuotes(String jsonObject) {
+        return jsonObject.replace("\'", "\"");
+    }
+
+    public static String getJsonFromURL(String Url, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword) {
+        HttpClientInputs httpClientInputs = new HttpClientInputs();
+        httpClientInputs.setUrl(Url);
+        httpClientInputs.setMethod(HTTP_GET);
+
+        if (proxyHost != null && !proxyHost.equals(OtherValues.EMPTY_STRING)) {
+            httpClientInputs.setProxyHost(proxyHost);
+            httpClientInputs.setProxyPort(proxyPort);
+            httpClientInputs.setProxyUsername(proxyUsername);
+            httpClientInputs.setProxyPassword(proxyPassword);
+        }
+
+        HttpClientService httpClientService = new HttpClientService();
+        Map<String, String> resultMap = httpClientService.execute(httpClientInputs);
+        return resultMap.get(OutputNames.RETURN_RESULT);
+    }
+
+    public static Map<String, String> validateJsonResultMap(String jsonObject) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION);
+
+        try {
+            mapper.readTree(jsonObject);
+            getJsonNode(jsonObject);
+
+            return getSuccessResultsMap(VALID_JSON);
+        } catch (IOException exception) {
+            return getFailureResultsMap(exception.getMessage());
+        }
+    }
+
+    public static Map<String, String> validateJsonAgainstSchemaResultMap(String jsonObject, String jsonSchemaObject) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION);
+
+        JsonNode jsonNode;
+        JsonSchema jsonSchemaNode;
+
+        try {
+            mapper.readTree(jsonSchemaObject);
+            jsonSchemaNode = getSchemaNode(jsonSchemaObject);
+            jsonNode = getJsonNode(jsonObject);
+
+            if (isJsonValid(jsonSchemaNode, jsonNode)) {
+                return getSuccessResultsMap(VALID_JSON_AGAINST_SCHEMA);
+            } else
+                return getFailureResultsMap(INVALID_JSON_AGAINST_SCHEMA);
+        } catch (Exception exception) {
+            return getFailureResultsMap(exception.getMessage());
+        }
+    }
+
+    /**
+     * Returns a valid JSON schema retrieved from a GET request or from a file. If the given parameter is a valid JSON
+     * schema, it is returned as it is.
+     *
+     * @param jsonSchema    the JSON schema to retrieve; can be an URL, a file or a string representation of a JSON schema
+     * @param proxyHost     the proxy host for the GET request
+     * @param proxyPort     the proxy port for the GET request
+     * @param proxyUsername the username for connecting via proxy
+     * @param proxyPassword the password for connecting via proxy
+     * @return a valid JSON schema represented as a string
+     * @throws JsonSchemaValidationException the exception thrown if the schema validation failed
+     */
+    public static String getJsonSchemaFromResource(
+            String jsonSchema,
+            String proxyHost,
+            String proxyPort,
+            String proxyUsername,
+            String proxyPassword)
+            throws JsonSchemaValidationException {
+        String jsonSchemaObject;
+        final File jsonSchemaFile = new File(jsonSchema);
+
+        if (jsonSchemaFile.exists() && !jsonSchemaFile.isDirectory()) {
+            try {
+                jsonSchemaObject = FileUtils.readFileToString(jsonSchemaFile, "UTF-8");
+            } catch (IOException exception) {
+                throw new JsonSchemaValidationException(exception);
+            }
+        } else if (isValidUrl(jsonSchema)) {
+            jsonSchemaObject = getJsonFromURL(jsonSchema, proxyHost, proxyPort, proxyUsername, proxyPassword);
+
+            if (isJsonSchemaEmpty(jsonSchemaObject)) {
+                throw new JsonSchemaValidationException(EMPTY_SCHEMA_URL);
+            }
+        } else {
+            jsonSchemaObject = jsonSchema;
+        }
+
+        return jsonSchemaObject;
+    }
+
 }
