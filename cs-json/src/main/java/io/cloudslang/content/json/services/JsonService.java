@@ -166,4 +166,11 @@ public class JsonService {
         final JsonPath path = JsonUtils.getValidJsonPath(jsonPath);
         return jsonContext.read(path);
     }
+
+    @NotNull
+    public static JsonNode evaluateJsonPathQueryWithoutDup(@Nullable final String jsonObject, @Nullable final String jsonPath) {
+        final JsonContext jsonContext = JsonUtils.getValidJsonContextWithoutDup(jsonObject);
+        final JsonPath path = JsonUtils.getValidJsonPath(jsonPath);
+        return jsonContext.read(path);
+    }
 }

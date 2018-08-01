@@ -12,10 +12,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*
+ * (c) Copyright 2018 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package io.cloudslang.content.json.utils;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
@@ -73,10 +88,10 @@ public class JsonUtils {
         final String actionString = action.toLowerCase().trim();
 
         boolean exists = false;
-        String actionEnumValues = "";
+        StringBuilder actionEnumValues = new StringBuilder();
         for (ActionsEnum actionsEnum : ActionsEnum.values()) {
             final String actionEnumValue = actionsEnum.getValue();
-            actionEnumValues += actionEnumValue + " ";
+            actionEnumValues.append(actionEnumValue).append(" ");
             if (actionString.equals(actionEnumValue)) {
                 exists = true;
             }
@@ -124,6 +139,23 @@ public class JsonUtils {
         } catch (IllegalArgumentException iae) {
             throw hammerIllegalArgumentExceptionWithMessage(INVALID_JSONOBJECT, iae);
         }
+    }
+
+    @NotNull
+    public static JsonContext getValidJsonContextWithoutDup(final String jsonObject) {
+        try {
+            final ObjectMapper objectMapper = new ObjectMapper().configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+            objectMapper.enable(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY);
+            final AbstractJsonProvider provider = new JacksonJsonNodeJsonProvider(objectMapper);
+            final Configuration configuration = Configuration.defaultConfiguration()
+                    .jsonProvider(provider);
+            final JsonContext jsonContext = new JsonContext(configuration);
+            jsonContext.parse(jsonObject);
+            return jsonContext;
+        } catch (IllegalArgumentException iae) {
+            throw hammerIllegalArgumentExceptionWithMessage(INVALID_JSONOBJECT, iae);
+        }
+
     }
 
     public static boolean parseBooleanWithDefault(String booleanValue, boolean defaultValue) {
