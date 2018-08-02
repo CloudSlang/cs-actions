@@ -48,9 +48,9 @@ public class ValidateJson {
 
     @Action(name = "Validate JSON", description = VALIDATE_JSON_DESC
             , outputs = {
-            @Output(OutputNames.RETURN_RESULT),
-            @Output(OutputNames.RETURN_CODE),
-            @Output(OutputNames.EXCEPTION)
+            @Output(value = OutputNames.RETURN_RESULT, description = VALIDATE_JSON_RETURN_RESULT_DESC),
+            @Output(value = OutputNames.RETURN_CODE, description = VALIDATE_JSON_RETURN_CODE_DESC),
+            @Output(value = OutputNames.EXCEPTION, description = VALIDATE_JSON_EXCEPTION_DESC)
     },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = VALIDATE_JSON_SUCCESS_DESC),

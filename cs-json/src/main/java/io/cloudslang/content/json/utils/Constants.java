@@ -50,6 +50,9 @@ public final class Constants {
         public static final String VALIDATE_JSON_DESC = "Checks if a JSON is valid and, optionally, if it validates against a JSON SCHEMA.";
         public static final String VALIDATE_JSON_SUCCESS_DESC = "JSON is valid (return_code == '0').";
         public static final String VALIDATE_JSON_FAILURE_DESC = "An error has occurred while trying to validate the given JSON object.";
+        public static final String VALIDATE_JSON_RETURN_RESULT_DESC = "JSON was valid or not (optionally, against a JSON schema). Same as exception if an exception was thrown during execution.";
+        public static final String VALIDATE_JSON_RETURN_CODE_DESC = "\"0\" if validation was successful, \"-1\" otherwise.";
+        public static final String VALIDATE_JSON_EXCEPTION_DESC = "Exception message if an exception was thrown during execution, empty otherwise.";
     }
 
     public static final class ValidationMessages {
