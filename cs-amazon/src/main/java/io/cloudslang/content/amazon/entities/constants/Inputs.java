@@ -40,6 +40,7 @@ public class Inputs {
         public static final String REGION = "region";
         public static final String CONNECT_TIMEOUT = "connectTimeout";
         public static final String EXECUTION_TIMEOUT = "executionTimeout";
+        public static final String ASYNC = "async";
     }
 
     public static class CustomInputs {
@@ -276,6 +277,18 @@ public class Inputs {
 
     public static class SNSInputs {
         public static final String TOPIC_NAME = "topicName";
+    }
+
+    public static class ServiceCatalogInputs {
+        public static final String PRODUCT_ID = "productId";
+        public static final String PROVISIONED_PRODUCT_NAME = "provisionedProductName";
+        public static final String PROVISIONING_ARTIFACT_ID = "provisioningArtifactId";
+        public static final String PROVISIONING_PARAMETERS = "provisioningParameters";
+        public static final String TAGS = "tags";
+        public static final String PROVISION_TOKEN = "provisionToken";
+        public static final String ACCEPT_LANGUAGE = "acceptLanguage";
+        public static final String NOTIFICATION_ARNS = "notificationArns";
+        public static final String PATH_ID = "pathId";
     }
 
 }

@@ -35,6 +35,20 @@ public class Outputs {
     public static final String STACK_OUTPUTS_RESULT = "stackOutputs";
     public static final String STACK_RESOURCES_RESULT = "stackResources";
 
+    //Service Catalog outputs
+    public static final String CREATED_TIME = "createdTime";
+    public static final String PATH_ID = "pathId";
+    public static final String PRODUCT_ID = "productId";
+    public static final String PROVISIONED_PRODUCT_ID = "provisionedProductId";
+    public static final String PROVISIONED_PRODUCT_NAME = "provisionedProductName";
+    public static final String PROVISIONED_PRODUCT_TYPE = "provisionedProductType";
+    public static final String PROVISIONED_ARTIFACT_ID = "provisionedArtifactId";
+    public static final String STATUS = "status";
+    public static final String STACK_ID = "stackId";
+    public static final String STACK_NAME = "stackName";
+    public static final String STACK_OUTPUTS = "stackOutputs";
+    public static final String STACK_RESOURCES = "stackResources";
+
     public static final String SUCCESS = "success";
     public static final String FAILURE = "failure";
 
