@@ -65,7 +65,7 @@ public class Inputs {
     public static final String AUTO_RENEW_PERIOD = "autoRenewPeriod";
     public static final String USER_DATA = "userData";
     public static final String CLIENT_TOKEN = "clientToken";
-    public static final String KEY_PAIR_NAME = "clientToken";
+    public static final String KEY_PAIR_NAME = "keyPairName";
     public static final String DEPLOYMENT_SET_ID = "deploymentSetId";
     public static final String RAM_ROLE_NAME = "ramRoleName";
     public static final String SECURITY_ENHANCEMENT_STRATEGY = "securityEnhancementStrategy";
