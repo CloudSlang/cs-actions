@@ -290,6 +290,7 @@ public class ListProcessor {
 
     /**
      * This method check if all elements of an array are null.
+     *
      * @param uncontainedArray element in array
      * @return any element that is found to be empty
      */
@@ -321,7 +322,7 @@ public class ListProcessor {
             }
         }
         String[] newUncontainedArray = new String[index];
-         System.arraycopy(uncontainedArray, 0, newUncontainedArray, 0, index);
+        System.arraycopy(uncontainedArray, 0, newUncontainedArray, 0, index);
 
         return newUncontainedArray;
     }
