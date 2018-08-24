@@ -14,20 +14,16 @@ import java.util.Map;
 public class ListIteratorAction {
 
     /**
-     * This operation is used to retrieve a value from a list. When the index of an element from a list is known,
-     * this operation can be used to extract the element.
+     * This operation is used to iterate a list of values with the help of GlobalSessionObject in order to keep track of the last index. It is not recommended to modify the value of the "list" and "separator" inputs during the iteration process.
      *
-     * @param list      The list to get the value from.
-     * @param delimiter The delimiter that separates values in the list.
-     * @param index     The index of the value (starting with 0) to retrieve from the list.
-     * @return It returns the value found at the specified index in the list, if the value specified for
-     * the @index parameter is positive and less than the size of the list. Otherwise, it returns
-     * the value specified for @index.
+     * @param list      The list to iterate through.
+     * @param separator A delimiter separating the list elements. This may be single character, multi-characters or special characters.
+     *                  Default value: ‘,’ (comma).
+     * @return resultString The current list element (if the response is "has more").
      */
     @Action(name = "List Iterator",
             outputs = {
-                    @Output("resultString"),
-                    @Output("result")},
+                    @Output("resultString")},
             responses = {
                     @Response(text = "has more", field = "result", value = "has more", matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
                     @Response(text = "no more", field = "result", value = "no more", matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
