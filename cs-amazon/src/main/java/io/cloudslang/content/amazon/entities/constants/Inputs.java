@@ -283,7 +283,9 @@ public class Inputs {
         public static final String PRODUCT_ID = "productId";
         public static final String PROVISIONED_PRODUCT_NAME = "provisionedProductName";
         public static final String PROVISIONING_ARTIFACT_ID = "provisioningArtifactId";
-        public static final String PROVISIONING_PARAMETERS = "provisioningParameters";
+        public static final String PARAM_KEY_NAME = "paramKeyName";
+        public static final String PARAM_SSH_LOCATION = "paramSshLocation";
+        public static final String PARAM_INSTANCE_TYPE = "paramInstanceType";
         public static final String TAGS = "tags";
         public static final String PROVISION_TOKEN = "provisionToken";
         public static final String ACCEPT_LANGUAGE = "acceptLanguage";

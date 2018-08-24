@@ -5,6 +5,7 @@ import com.amazonaws.services.servicecatalog.model.ProvisionProductRequest;
 import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
 import com.amazonaws.services.servicecatalog.model.ProvisioningParameter;
 import com.amazonaws.services.servicecatalog.model.Tag;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -28,9 +29,15 @@ public class AmazonServiceCatalogService {
                 .withProvisioningArtifactId(provisioningArtifactId)
                 .withTags(tags)
                 .withAcceptLanguage(acceptLanguage)
-                .withNotificationArns(notificationArns)
                 .withPathId(pathId);
 
+        if(StringUtils.isEmpty(notificationArns)) {
+            provisionProductRequest.withNotificationArns(notificationArns);
+        }
+
+        if(StringUtils.isEmpty(pathId)){
+            provisionProductRequest.withPathId(pathId);
+        }
         return serviceCatalogClient.provisionProduct(provisionProductRequest);
     }
 
