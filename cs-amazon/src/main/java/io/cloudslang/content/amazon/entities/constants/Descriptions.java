@@ -26,7 +26,7 @@ public class Descriptions {
                 "Example: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'";
         public static final String PROXY_HOST_DESC = "Proxy server used to connect to Amazon API. If empty no proxy will be used."+
                 "Default value: ''";
-        public static final String PROXY_PORT_DESC = "Proxy server port. You must either specify values for both proxyHost and" +
+        public static final String PROXY_PORT_DESC = "Proxy server port. You must either specify values for both proxyHost and " +
                 "proxyPort inputs or leave them both empty." +
                 "Default: ''";
         public static final String PROXY_USERNAME_DESC = "Proxy server user name."+
@@ -49,6 +49,9 @@ public class Descriptions {
     }
 
     public static class ProvisionProductAction{
+        public static final String PROVISION_PRODUCT_DESCRIPTION = "Provisions the specified product.\n" +
+                "A provisioned product is a resourced instance of a product. For example, provisioning a product based on " +
+                "a CloudFormation template launches a CloudFormation stack and its underlying resources.";
         public static final String PRODUCT_ID_DESC = "The product identifier."+
                 "Example: 'prod-n3frsv3vnznzo'";
         public static final String PROVISIONED_PRODUCT_NAME_DESC = "A user-friendly name for the provisioned product."+
@@ -56,7 +59,7 @@ public class Descriptions {
         public static final String PROVISIONING_ARTIFACT_ID_DESC = "The identifier of the provisioning artifact also known as version Id." +
                 "Example: 'pa-o5nvsxzzyuzjk'";
         public static final String PROVISIONING_PARAM_KEY_NAME = "Name of an existing EC2 KeyPair to enable SSH access to the instances.";
-        public static final String PROVISIONING_PARAM_SSH_LOCATION = "The IP address range that can be used to SSH to the EC2 instances";
+        public static final String PROVISIONING_PARAM_SSH_LOCATION = "The IP address range that can be used to SSH to the EC2 instances.";
         public static final String PROVISIONING_PARAM_INSTANCE_TYPE = "WebServer EC2 instance type.";
         public static final String TAGS_DESC = "One or more tags.";
         public static final String PROVISION_TOKEN_DESC = "An idempotency token that uniquely identifies the provisioning request.";

@@ -43,7 +43,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class ProvisionProductAction {
 
-    @Action(name = "Provision Product",
+    @Action(name = "Provision Product", description = PROVISION_PRODUCT_DESCRIPTION,
             outputs = {
                     @Output(value = Outputs.RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = Outputs.RETURN_RESULT, description = RETURN_RESULT_DESC),
