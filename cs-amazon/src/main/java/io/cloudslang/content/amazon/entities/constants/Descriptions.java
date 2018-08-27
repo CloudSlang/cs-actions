@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.amazon.entities.constants;
 
 /**
@@ -58,7 +72,7 @@ public class Descriptions {
         public static final String CREATED_TIME_DESC = "The UTC time stamp of the creation time.";
         public static final String PROVISIONED_PRODUCT_ID_DESC = "The identifier of the provisioned product.";
         public static final String PROVISIONED_PRODUCT_TYPE_DESC = "The type of provisioned product. The supported value is 'CFN_STACK'.";
-        public static final String PROVISIONED_ARTIFACT_ID_DESC = "The identifier of the provisioned artifact.";
+        public static final String PROVISIONING_ARTIFACT_ID_OUT_DESC = "The identifier of the provisioned artifact.";
         public static final String STATUS_DESC = "The status of the provisioned product."+
                 "Valid values: 'CREATED' - The request was created but the operation has not started."+
                 "              'IN_PROGRESS' - The requested operation is in progress."+

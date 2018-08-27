@@ -42,7 +42,7 @@ public class Outputs {
     public static final String PROVISIONED_PRODUCT_ID = "provisionedProductId";
     public static final String PROVISIONED_PRODUCT_NAME = "provisionedProductName";
     public static final String PROVISIONED_PRODUCT_TYPE = "provisionedProductType";
-    public static final String PROVISIONED_ARTIFACT_ID = "provisionedArtifactId";
+    public static final String PROVISIONING_ARTIFACT_ID = "provisioningArtifactId";
     public static final String STATUS = "status";
     public static final String STACK_ID = "stackId";
     public static final String STACK_NAME = "stackName";

@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.amazon.actions.servicecatalog;
 
 import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
@@ -40,7 +54,7 @@ public class ProvisionProductAction {
                     @Output(value = Outputs.PROVISIONED_PRODUCT_ID, description = PROVISIONED_PRODUCT_ID_DESC),
                     @Output(value = Outputs.PROVISIONED_PRODUCT_NAME, description = PROVISIONED_PRODUCT_NAME_DESC),
                     @Output(value = Outputs.PROVISIONED_PRODUCT_TYPE, description = PROVISIONED_PRODUCT_TYPE_DESC),
-                    @Output(value = Outputs.PROVISIONED_ARTIFACT_ID, description = PROVISIONED_ARTIFACT_ID_DESC),
+                    @Output(value = Outputs.PROVISIONING_ARTIFACT_ID, description = PROVISIONING_ARTIFACT_ID_OUT_DESC),
                     @Output(value = Outputs.STATUS, description = STATUS_DESC),
                     @Output(value = Outputs.STACK_ID, description = STACK_ID_DESC),
                     @Output(value = Outputs.STACK_NAME, description = STACK_NAME_DESC),

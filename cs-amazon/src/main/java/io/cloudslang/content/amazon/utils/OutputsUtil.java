@@ -48,6 +48,19 @@ public class OutputsUtil {
 
     private static final String XMLNS = "xmlns";
     private static final String WORKAROUND = "workaround";
+    public static final String CREATED_TIME = "createdTime";
+    public static final String PATH_ID = "pathId";
+    public static final String PRODUCT_ID = "productId";
+    public static final String PROVISIONED_PRODUCT_ID = "provisionedProductId";
+    public static final String PROVISIONED_PRODUCT_NAME = "provisionedProductName";
+    public static final String PROVISIONED_PRODUCT_TYPE = "provisionedProductType";
+    public static final String PROVISIONING_ARTIFACT_ID = "provisioningArtifactId";
+    public static final String RECORD_ERRORS = "recordErrors";
+    public static final String RECORD_ID = "recordId";
+    public static final String RECORD_TAGS = "recordTags";
+    public static final String RECORD_TYPE = "recordType";
+    public static final String STATUS = "status";
+    public static final String UPDATED_TIME = "updatedTime";
 
     private OutputsUtil() {
     }
@@ -110,19 +123,14 @@ public class OutputsUtil {
 
         Map<String, String> results = getSuccessResultsMap(result.toString());
 
-        results.put("createdTime", result.getRecordDetail().getCreatedTime().toString());
-        results.put("pathId", result.getRecordDetail().getPathId());
-        results.put("productId", result.getRecordDetail().getProductId());
-        results.put("provisionedProductId", result.getRecordDetail().getProvisionedProductId());
-        results.put("provisionedProductName", result.getRecordDetail().getProvisionedProductName());
-        results.put("provisionedProductType", result.getRecordDetail().getProvisionedProductType());
-        results.put("provisioningArtifactId", result.getRecordDetail().getProvisioningArtifactId());
-        results.put("recordErrors", result.getRecordDetail().getRecordErrors().toString());
-        results.put("recordId", result.getRecordDetail().getRecordId());
-        results.put("recordTags", result.getRecordDetail().getRecordTags().toString());
-        results.put("recordType", result.getRecordDetail().getRecordType());
-        results.put("status", result.getRecordDetail().getStatus());
-        results.put("updatedTime", result.getRecordDetail().getUpdatedTime().toString());
+        results.put(CREATED_TIME, result.getRecordDetail().getCreatedTime().toString());
+        results.put(PATH_ID, result.getRecordDetail().getPathId());
+        results.put(PRODUCT_ID, result.getRecordDetail().getProductId());
+        results.put(PROVISIONED_PRODUCT_ID, result.getRecordDetail().getProvisionedProductId());
+        results.put(PROVISIONED_PRODUCT_NAME, result.getRecordDetail().getProvisionedProductName());
+        results.put(PROVISIONED_PRODUCT_TYPE, result.getRecordDetail().getProvisionedProductType());
+        results.put(PROVISIONING_ARTIFACT_ID, result.getRecordDetail().getProvisioningArtifactId());
+        results.put(STATUS, result.getRecordDetail().getStatus());
 
         return results;
     }
