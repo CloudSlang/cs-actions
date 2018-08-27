@@ -1,4 +1,4 @@
-package io.cloudslang.content.amazon.utils.constants;
+package io.cloudslang.content.amazon.entities.constants;
 
 /**
  * Created by moldovai on 21-Aug-18.
@@ -41,7 +41,9 @@ public class Descriptions {
                 "This value must be unique for the AWS account and cannot be updated after the product is provisioned.";
         public static final String PROVISIONING_ARTIFACT_ID_DESC = "The identifier of the provisioning artifact also known as version Id." +
                 "Example: 'pa-o5nvsxzzyuzjk'";
-        public static final String PROVISIONING_PARAMETERS_DESC = "Parameters specified by the administrator that are required for provisioning the product.";
+        public static final String PROVISIONING_PARAM_KEY_NAME = "Name of an existing EC2 KeyPair to enable SSH access to the instances.";
+        public static final String PROVISIONING_PARAM_SSH_LOCATION = "The IP address range that can be used to SSH to the EC2 instances";
+        public static final String PROVISIONING_PARAM_INSTANCE_TYPE = "WebServer EC2 instance type.";
         public static final String TAGS_DESC = "One or more tags.";
         public static final String PROVISION_TOKEN_DESC = "An idempotency token that uniquely identifies the provisioning request.";
         public static final String ACCEPT_LANGUAGE_DESC = "String that contains the language code."+

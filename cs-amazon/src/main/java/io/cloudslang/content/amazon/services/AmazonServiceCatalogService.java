@@ -25,19 +25,22 @@ public class AmazonServiceCatalogService {
                 .withProvisionedProductName(provisionedProductName)
                 .withProvisioningParameters(provisioningParameters)
                 .withProductId(productId)
-                .withProvisionToken(provisionToken)
                 .withProvisioningArtifactId(provisioningArtifactId)
                 .withTags(tags)
-                .withAcceptLanguage(acceptLanguage)
-                .withPathId(pathId);
+                .withAcceptLanguage(acceptLanguage);
 
-        if(StringUtils.isEmpty(notificationArns)) {
+        if (!StringUtils.isEmpty(notificationArns)) {
             provisionProductRequest.withNotificationArns(notificationArns);
         }
 
-        if(StringUtils.isEmpty(pathId)){
+        if (!StringUtils.isEmpty(pathId)) {
             provisionProductRequest.withPathId(pathId);
         }
+
+        if (!StringUtils.isEmpty(provisionToken)) {
+            provisionProductRequest.withProvisionToken(provisionToken);
+        }
+
         return serviceCatalogClient.provisionProduct(provisionProductRequest);
     }
 

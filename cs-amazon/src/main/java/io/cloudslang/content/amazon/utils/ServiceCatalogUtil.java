@@ -14,12 +14,12 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
  */
 
 public class ServiceCatalogUtil {
-
     private final static int SPLIT_LIMIT = 2;
     private final static int KEY_IDX = 0;
     private final static int VAL_IDX = 1;
     private final String lineOfText;
     public String object = "key = key \n value : value";
+
 
     public ServiceCatalogUtil(String line) {
         lineOfText = line;
@@ -63,6 +63,28 @@ public class ServiceCatalogUtil {
 
     }
 
+    public static List<ProvisioningParameter> setProvisionParameters(String paramKeyName, String paramSshLocation, String paramInstanceType) {
+
+        List<ProvisioningParameter> params = new ArrayList<>();
+        if (!StringUtils.isEmpty(paramKeyName)) {
+            params.add(setProvisionParameter("KeyName", paramKeyName));
+        }
+        if (!StringUtils.isEmpty(paramSshLocation)) {
+            params.add(setProvisionParameter("SSHLocation", paramSshLocation));
+        }
+        if (!StringUtils.isEmpty(paramInstanceType)) {
+            params.add(setProvisionParameter("InstanceType", paramInstanceType));
+        }
+        return params;
+    }
+
+    private static ProvisioningParameter setProvisionParameter(String key, String value) {
+        ProvisioningParameter parameter = new ProvisioningParameter();
+        parameter.setKey(key);
+        parameter.setValue(value);
+        return parameter;
+    }
+
     public boolean isValid() {
         if (StringUtils.isEmpty(lineOfText)) {
             return false;
@@ -93,20 +115,5 @@ public class ServiceCatalogUtil {
 
         return lineOfText.split(EQUAL, SPLIT_LIMIT)[VAL_IDX];
     }
-
-    public ProvisioningParameter setProvisionParams(String paramKeyName, String paramSshLocation, String paramInstanceType){
-        ProvisioningParameter params = new ProvisioningParameter();
-
-        if (StringUtils.isEmpty(paramKeyName)){
-
-        }
-
-        params.setKey("KeyName");
-        params.setValue(paramKeyName);
-
-        return params;
-
-    }
-
 
 }

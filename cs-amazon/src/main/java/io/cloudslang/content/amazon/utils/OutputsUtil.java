@@ -15,6 +15,7 @@
 
 package io.cloudslang.content.amazon.utils;
 
+import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.xml.actions.XpathQuery;
@@ -28,6 +29,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static io.cloudslang.content.xml.utils.Constants.Defaults.DELIMITER;
 import static io.cloudslang.content.xml.utils.Constants.Defaults.XML_DOCUMENT_SOURCE;
 import static io.cloudslang.content.xml.utils.Constants.Outputs.ERROR_MESSAGE;
@@ -100,6 +102,27 @@ public class OutputsUtil {
         Map<String, String> results = new HashMap<>();
         results.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
         results.put(Outputs.RETURN_RESULT, returnResult);
+
+        return results;
+    }
+
+    public static Map<String, String> getSuccessResultMapProvisionProduct(ProvisionProductResult result){
+
+        Map<String, String> results = getSuccessResultsMap(result.toString());
+
+        results.put("createdTime", result.getRecordDetail().getCreatedTime().toString());
+        results.put("pathId", result.getRecordDetail().getPathId());
+        results.put("productId", result.getRecordDetail().getProductId());
+        results.put("provisionedProductId", result.getRecordDetail().getProvisionedProductId());
+        results.put("provisionedProductName", result.getRecordDetail().getProvisionedProductName());
+        results.put("provisionedProductType", result.getRecordDetail().getProvisionedProductType());
+        results.put("provisioningArtifactId", result.getRecordDetail().getProvisioningArtifactId());
+        results.put("recordErrors", result.getRecordDetail().getRecordErrors().toString());
+        results.put("recordId", result.getRecordDetail().getRecordId());
+        results.put("recordTags", result.getRecordDetail().getRecordTags().toString());
+        results.put("recordType", result.getRecordDetail().getRecordType());
+        results.put("status", result.getRecordDetail().getStatus());
+        results.put("updatedTime", result.getRecordDetail().getUpdatedTime().toString());
 
         return results;
     }

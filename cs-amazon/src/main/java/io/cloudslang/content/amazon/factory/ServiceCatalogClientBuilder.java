@@ -25,22 +25,22 @@ public class ServiceCatalogClientBuilder {
         clientConfiguration.setConnectionTimeout(connectTimeoutMs);
         clientConfiguration.setClientExecutionTimeout(executionTimeoutMs);
 
-        if(!StringUtils.isEmpty(proxyHost)){
+        if (!StringUtils.isEmpty(proxyHost)) {
             clientConfiguration.setProxyHost(proxyHost);
             clientConfiguration.setProxyPort(proxyPort);
-            if(!StringUtils.isEmpty(proxyUsername)){
+            if (!StringUtils.isEmpty(proxyUsername)) {
                 clientConfiguration.setProxyUsername(proxyUsername);
                 clientConfiguration.setProxyPassword(proxyPassword);
             }
         }
-        if(!async) {
-            return AWSServiceCatalogAsyncClientBuilder.standard()
+        if (!async) {
+            return AWSServiceCatalogClientBuilder.standard()
                     .withRegion(region)
                     .withClientConfiguration(clientConfiguration)
                     .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, secretAccessKey)))
                     .build();
         }
-        return AWSServiceCatalogClientBuilder.standard()
+        return AWSServiceCatalogAsyncClientBuilder.standard()
                 .withRegion(region)
                 .withClientConfiguration(clientConfiguration)
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, secretAccessKey)))

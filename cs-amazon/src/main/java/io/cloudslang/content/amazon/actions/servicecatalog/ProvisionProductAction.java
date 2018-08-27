@@ -2,9 +2,6 @@ package io.cloudslang.content.amazon.actions.servicecatalog;
 
 import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
 import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
-import com.amazonaws.services.servicecatalog.model.RecordError;
-import com.amazonaws.services.servicecatalog.model.RecordTag;
-import com.amazonaws.services.servicecatalog.model.Tag;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -16,20 +13,17 @@ import io.cloudslang.content.amazon.entities.validators.Validator;
 import io.cloudslang.content.amazon.factory.ServiceCatalogClientBuilder;
 import io.cloudslang.content.amazon.services.AmazonServiceCatalogService;
 import io.cloudslang.content.constants.DefaultValues;
-import io.cloudslang.content.utils.OutputUtilities;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.*;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.*;
-import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.toArrayOfProvisioningParameters;
+import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapProvisionProduct;
+import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.setProvisionParameters;
 import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.toArrayOfTags;
-import static io.cloudslang.content.amazon.utils.constants.Descriptions.Common.*;
-import static io.cloudslang.content.amazon.utils.constants.Descriptions.ProvisionProductAction.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 
@@ -73,9 +67,9 @@ public class ProvisionProductAction {
                                        @Param(value = PRODUCT_ID, required = true, description = PRODUCT_ID_DESC) String productId,
                                        @Param(value = PROVISIONED_PRODUCT_NAME, required = true, description = PROVISIONED_PRODUCT_NAME_DESC) String provisionedProductName,
                                        @Param(value = PROVISIONING_ARTIFACT_ID, required = true, description = PROVISIONING_ARTIFACT_ID_DESC) String provisioningArtifactId,
-                                       @Param(value = PARAM_KEY_NAME, description = PROVISIONING_PARAMETERS_DESC) String paramKeyName,
-                                       @Param(value = PARAM_SSH_LOCATION, description = PROVISIONING_PARAMETERS_DESC) String paramSshLocation,
-                                       @Param(value = PARAM_INSTANCE_TYPE, description = PROVISIONING_PARAMETERS_DESC) String paramInstanceType,
+                                       @Param(value = PARAM_KEY_NAME, required = true, description = PROVISIONING_PARAM_KEY_NAME) String paramKeyName,
+                                       @Param(value = PARAM_SSH_LOCATION, description = PROVISIONING_PARAM_SSH_LOCATION) String paramSshLocation,
+                                       @Param(value = PARAM_INSTANCE_TYPE, description = PROVISIONING_PARAM_INSTANCE_TYPE) String paramInstanceType,
                                        @Param(value = TAGS, description = TAGS_DESC) String tags,
                                        @Param(value = PROVISION_TOKEN, description = PROVISION_TOKEN_DESC) String provisionTokens,
                                        @Param(value = ACCEPT_LANGUAGE, description = ACCEPT_LANGUAGE_DESC) String acceptLanguage,
@@ -87,6 +81,7 @@ public class ProvisionProductAction {
         final String connectTimeoutVal = defaultIfEmpty(connectTimeout, DefaultValues.CONNECT_TIMEOUT);
         final String execTimeoutVal = defaultIfEmpty(execTimeout, DefaultValues.EXEC_TIMEOUT);
         final String asyncVal = defaultIfEmpty(async, DefaultValues.ASYNC);
+
 
         //Validate inputs
         Validator validator = new Validator()
@@ -108,65 +103,18 @@ public class ProvisionProductAction {
         try {
 
             final AWSServiceCatalog awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
-                    proxyHost, proxyPortImp, proxyUsername, proxyUsername, connectTimeoutImp, execTimeoutImp, region, asyncImp);
+                    proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region, asyncImp);
             final ProvisionProductResult result = AmazonServiceCatalogService.provisionProduct(provisionedProductName,
-                    productId, provisionTokens, provisioningArtifactId, toArrayOfTags(tags), acceptLanguage, notificationArns, pathId, awsServiceCatalog);
+                    setProvisionParameters(paramKeyName, paramSshLocation, paramInstanceType), productId, provisionTokens, provisioningArtifactId,
+                    toArrayOfTags(tags), acceptLanguage, notificationArns, pathId, awsServiceCatalog);
 
-            System.out.println(result.toString());
-
-            Map<String, String> results = getSuccessResultsMap(result.toString());
-
-            results.put("createdTime", result.getRecordDetail().getCreatedTime().toString());
-            results.put("pathId", result.getRecordDetail().getPathId());
-            results.put("productId", result.getRecordDetail().getProductId());
-            results.put("provisionedProductId", result.getRecordDetail().getProvisionedProductId());
-            results.put("provisionedProductName", result.getRecordDetail().getProvisionedProductName());
-            results.put("provisionedProductType", result.getRecordDetail().getProvisionedProductType());
-            results.put("provisioningArtifactId", result.getRecordDetail().getProvisioningArtifactId());
-            results.put("recordErrors", result.getRecordDetail().getRecordErrors().toString());
-            results.put("recordId", result.getRecordDetail().getRecordId());
-            results.put("recordTags", result.getRecordDetail().getRecordTags().toString());
-            results.put("recordType", result.getRecordDetail().getRecordType());
-            results.put("status", result.getRecordDetail().getStatus());
-            results.put("updatedTime", result.getRecordDetail().getUpdatedTime().toString());
-
-            return results;
+            return getSuccessResultMapProvisionProduct(result);
 
         } catch (Exception e) {
 
             return getFailureResultsMap(e);
 
         }
-
-    }
-
-    public static void main(String[] args) {
-
-        //List<String> notification = new ArrayList<>(Arrays.asList("));
-        //List<String> notification = new ArrayList<>(Arrays.asList(""));
-        String notification = "arn:aws2:cloudformation2:us-east-2:1stack:z";
-        // {"arn","aws","cloudformation","us-east-1"};
-        ProvisionProductAction provisionProductAction = new ProvisionProductAction();
-        Map<String, String> map = provisionProductAction.execute(
-                "AKIAIU3ZPEUPUMY6YQJQ",
-                "2If2OS3s6jXqcz3fb1wbAaRbdlOzC49slKWAg1H9",
-                "web-proxy.corp.hpecorp.net",
-                "8080",
-                "",
-                "",
-                "2000000",
-                "20000000",
-                null,
-                "prod-6ohw45brkm67i",
-                "TestWithoutReg",
-                "pa-bdebkntsiqoda",
-                "KeyName=revnic",
-                "",
-                null,
-                null,
-                "arn",
-                null,
-                "us-east-1");
 
     }
 }
