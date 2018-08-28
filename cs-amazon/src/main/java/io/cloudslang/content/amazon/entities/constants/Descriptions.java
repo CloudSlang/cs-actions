@@ -24,25 +24,23 @@ public class Descriptions {
                 "Example: 'AKIAIOSFODNN7EXAMPLE'";
         public static final String CREDENTIAL_DESC = "Secret access key associated with your Amazon AWS or IAM account." +
                 "Example: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'";
-        public static final String PROXY_HOST_DESC = "Proxy server used to connect to Amazon API. If empty no proxy will be used."+
-                "Default value: ''";
+        public static final String PROXY_HOST_DESC = "Proxy server used to connect to Amazon API. If empty no proxy will be used.";
         public static final String PROXY_PORT_DESC = "Proxy server port. You must either specify values for both proxyHost and " +
                 "proxyPort inputs or leave them both empty." +
-                "Default: ''";
-        public static final String PROXY_USERNAME_DESC = "Proxy server user name."+
-                "Default: ''";
-        public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxyUsername input value."+
-                "Default: ''";
-        public static final String CONNECT_TIMEOUT_DESC = "String containing the headers to use for the request separated by new line (CRLF)."+
-                "The header name-value pair will be separated by ':'."+
-                "Format: Conforming with HTTP standard for headers (RFC 2616)"+
-                "Examples: 'Accept:text/plain'"+
-                "Default: '' ";
-        public static final String EXECUTION_TIMEOUT_DESC = "Value for how long a test run should execute before stopping each device from running a test.";
-        public static final String ASYNC_DESC = "Whether to run the operation is async mode.";
+                "Default: '8080'";
+        public static final String PROXY_USERNAME_DESC = "Proxy server user name.";
+        public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxyUsername input value.";
+        public static final String CONNECT_TIMEOUT_DESC = "The amount of time to wait (in milliseconds) when initially establishing " +
+                "a connection before giving up and timing out. " +
+                "Default: '10000'";
+        public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in milliseconds) to allow the client to complete the execution " +
+                "of an API call. A value of '0' disables this feature." +
+                "Default: '60000'";
+        public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
+                "Default: 'false'";
 
         //Results
-        public static final String RETURN_RESULT_DESC = "The authentication token in case of success, or an error" +
+        public static final String RETURN_RESULT_DESC = "The full API response in case of success, or an error" +
                 " message in case of failure.";
         public static final String RETURN_CODE_DESC = "\"0\" if operation was successfully executed, \"-1\" otherwise.";
         public static final String EXCEPTION_DESC = "Exception if there was an error when executing, empty otherwise.";
@@ -96,7 +94,7 @@ public class Descriptions {
                 "Logical ID - The logical ID must be alphanumeric (A-Za-z0-9) and unique within the template."+
                 "Resource type - The resource type identifies the type of resource that you are declaring."+
                 "Resource properties - Resource properties are additional options that you can specify for a resource.";
-    public static final String SUCCESS_DESC = "The product was successfully provisioned";
-    public static final String FAILURE_DESC = "An error has occurred while trying to provision the product";
+    public static final String SUCCESS_DESC = "The product was successfully provisioned.";
+    public static final String FAILURE_DESC = "An error has occurred while trying to provision the product.";
     }
 }
