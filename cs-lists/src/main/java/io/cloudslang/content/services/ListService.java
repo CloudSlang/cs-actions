@@ -12,24 +12,24 @@ public class ListService {
 
         IteratorProcessor iterator = new IteratorProcessor();
         Map<String, String> returnResult = new HashMap<String, String>();
-        returnResult.put("result", "Failed");
+        returnResult.put("result", "failed");
 
         try {
             iterator.init(list, separator, globalSessionObject);
             if (iterator.hasNext()) {
-                returnResult.put("Index", Integer.toString(iterator.getIndex()));
-                returnResult.put("ResultString", iterator.getNext(globalSessionObject));
+                returnResult.put("index", Integer.toString(iterator.getIndex()));
+                returnResult.put("resultString", iterator.getNext(globalSessionObject));
                 if (iterator.hasNext()) {
-                    returnResult.put("result", "HasMore");
+                    returnResult.put("result", "has more");
                 } else {
-                    returnResult.put("ResultString", "");
+                    returnResult.put("resultString", "");
                     iterator.setStepSessionEnd(globalSessionObject);
-                    returnResult.put("result", "NoMore");
+                    returnResult.put("result", "no more");
                 }
             }
         } catch (IteratorProcessorException e) {
-            returnResult.put("result", "Failed");
-            returnResult.put("ResultString", e.getMessage());
+            returnResult.put("result", "failed");
+            returnResult.put("resultString", e.getMessage());
         }
         return returnResult;
     }
