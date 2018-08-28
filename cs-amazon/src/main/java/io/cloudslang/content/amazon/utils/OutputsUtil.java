@@ -48,19 +48,14 @@ public class OutputsUtil {
 
     private static final String XMLNS = "xmlns";
     private static final String WORKAROUND = "workaround";
-    public static final String CREATED_TIME = "createdTime";
-    public static final String PATH_ID = "pathId";
-    public static final String PRODUCT_ID = "productId";
-    public static final String PROVISIONED_PRODUCT_ID = "provisionedProductId";
-    public static final String PROVISIONED_PRODUCT_NAME = "provisionedProductName";
-    public static final String PROVISIONED_PRODUCT_TYPE = "provisionedProductType";
-    public static final String PROVISIONING_ARTIFACT_ID = "provisioningArtifactId";
-    public static final String RECORD_ERRORS = "recordErrors";
-    public static final String RECORD_ID = "recordId";
-    public static final String RECORD_TAGS = "recordTags";
-    public static final String RECORD_TYPE = "recordType";
+    private static final String CREATED_TIME = "createdTime";
+    private static final String PATH_ID = "pathId";
+    private static final String PRODUCT_ID = "productId";
+    private static final String PROVISIONED_PRODUCT_ID = "provisionedProductId";
+    private static final String PROVISIONED_PRODUCT_NAME = "provisionedProductName";
+    private static final String PROVISIONED_PRODUCT_TYPE = "provisionedProductType";
+    private static final String PROVISIONING_ARTIFACT_ID = "provisioningArtifactId";
     public static final String STATUS = "status";
-    public static final String UPDATED_TIME = "updatedTime";
 
     private OutputsUtil() {
     }
