@@ -28,44 +28,14 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
  */
 
 public class ServiceCatalogUtil {
-    private final static int SPLIT_LIMIT = 2;
-    private final static int KEY_IDX = 0;
-    private final static int VAL_IDX = 1;
-    private final String lineOfText;
-    public String object = "key = key \n value : value";
-
-
-    public ServiceCatalogUtil(String line) {
-        lineOfText = line;
-    }
-
-    public static List<ProvisioningParameter> toArrayOfProvisioningParameters(final String provisioningParameters) {
-        if (StringUtils.isEmpty(provisioningParameters)) {
-            return new ArrayList<>();
-        }
-
-        final List<ProvisioningParameter> param = new ArrayList<>();
-        for (String line : provisioningParameters.split(StringUtils.LF)) {
-            final ServiceCatalogUtil parameterLine = new ServiceCatalogUtil(line);
-            if (parameterLine.isValid()) {
-                final ProvisioningParameter parameter = new ProvisioningParameter();
-                parameter.setKey(parameterLine.getKey());
-                parameter.setValue(parameterLine.getValue());
-                param.add(parameter);
-            }
-        }
-        return param;
-
-    }
 
     public static List<Tag> toArrayOfTags(final String provisioningTags) {
         if (StringUtils.isEmpty(provisioningTags)) {
             return new ArrayList<>();
         }
-
         final List<Tag> tags = new ArrayList<>();
         for (String line : provisioningTags.split(StringUtils.LF)) {
-            final ServiceCatalogUtil tagLine = new ServiceCatalogUtil(line);
+            final ParametersLine tagLine = new ParametersLine(line);
             if (tagLine.isValid()) {
                 final Tag tag = new Tag();
                 tag.setKey(tagLine.getKey());
@@ -74,7 +44,6 @@ public class ServiceCatalogUtil {
             }
         }
         return tags;
-
     }
 
     public static List<ProvisioningParameter> setProvisionParameters(String paramKeyName, String paramSshLocation, String paramInstanceType) {
@@ -98,36 +67,4 @@ public class ServiceCatalogUtil {
         parameter.setValue(value);
         return parameter;
     }
-
-    public boolean isValid() {
-        if (StringUtils.isEmpty(lineOfText)) {
-            return false;
-        }
-
-        if (lineOfText.contains("=")) {
-
-            String keyValueArr[] = lineOfText.split(EQUAL, SPLIT_LIMIT);
-
-            return keyValueArr.length >= SPLIT_LIMIT &&
-                    (!StringUtils.isEmpty(keyValueArr[KEY_IDX])) &&
-                    (!StringUtils.isEmpty(keyValueArr[VAL_IDX]));
-        }
-        return false;
-    }
-
-    public String getKey() {
-        if (StringUtils.isEmpty(lineOfText)) {
-            return StringUtils.EMPTY;
-        }
-        return lineOfText.split(EQUAL, SPLIT_LIMIT)[KEY_IDX];
-    }
-
-    public String getValue() {
-        if (StringUtils.isEmpty(lineOfText)) {
-            return StringUtils.EMPTY;
-        }
-
-        return lineOfText.split(EQUAL, SPLIT_LIMIT)[VAL_IDX];
-    }
-
 }
