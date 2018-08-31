@@ -21,8 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EQUAL;
-
 /**
  * Created by moldovai on 20-Aug-18.
  */

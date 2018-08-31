@@ -40,6 +40,7 @@ public class Inputs {
         public static final String REGION = "region";
         public static final String CONNECT_TIMEOUT = "connectTimeout";
         public static final String EXECUTION_TIMEOUT = "executionTimeout";
+        public static final String POOLING_INTERVAL = "poolingInterval";
         public static final String ASYNC = "async";
     }
 
@@ -269,10 +270,10 @@ public class Inputs {
     }
 
     public static class CloudFormationInputs {
-        public static final String STACK_NAME    = "stackName";
+        public static final String STACK_NAME = "stackName";
         public static final String TEMPLATE_BODY = "templateBody";
-        public static final String PARAMETERS    = "parameters";
-        public static final String CAPABILITIES  = "capabilities";
+        public static final String PARAMETERS = "parameters";
+        public static final String CAPABILITIES = "capabilities";
     }
 
     public static class SNSInputs {

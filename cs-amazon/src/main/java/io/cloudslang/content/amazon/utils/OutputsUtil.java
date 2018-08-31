@@ -25,6 +25,15 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SIGNATURE_RESULT;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_TYPE;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.STATUS;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONING_ARTIFACT_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PRODUCT_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PATH_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.CREATED_TIME;
+
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
@@ -48,14 +57,7 @@ public class OutputsUtil {
 
     private static final String XMLNS = "xmlns";
     private static final String WORKAROUND = "workaround";
-    private static final String CREATED_TIME = "createdTime";
-    private static final String PATH_ID = "pathId";
-    private static final String PRODUCT_ID = "productId";
-    private static final String PROVISIONED_PRODUCT_ID = "provisionedProductId";
-    private static final String PROVISIONED_PRODUCT_NAME = "provisionedProductName";
-    private static final String PROVISIONED_PRODUCT_TYPE = "provisionedProductType";
-    private static final String PROVISIONING_ARTIFACT_ID = "provisioningArtifactId";
-    public static final String STATUS = "status";
+
 
     private OutputsUtil() {
     }
@@ -114,7 +116,7 @@ public class OutputsUtil {
         return results;
     }
 
-    public static Map<String, String> getSuccessResultMapProvisionProduct(ProvisionProductResult result){
+    public static Map<String, String> getSuccessResultMapProvisionProduct(ProvisionProductResult result) {
 
         Map<String, String> results = getSuccessResultsMap(result.toString());
 

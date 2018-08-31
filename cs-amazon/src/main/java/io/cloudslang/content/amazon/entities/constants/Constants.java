@@ -177,4 +177,8 @@ public class Constants {
     public static class S3QueryApiActions {
         public static final String GET_BUCKET = "GET Bucket";
     }
+
+    public static class ServiceCatalogActions {
+        public static final String CREATE_IN_PROGRESS = "CREATE_IN_PROGRESS";
+    }
 }

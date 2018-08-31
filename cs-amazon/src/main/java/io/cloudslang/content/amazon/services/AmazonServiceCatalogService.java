@@ -14,16 +14,22 @@
  */
 package io.cloudslang.content.amazon.services;
 
+import com.amazonaws.services.cloudformation.AmazonCloudFormation;
+import com.amazonaws.services.cloudformation.model.DescribeStackResourcesRequest;
+import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
+import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
+import com.amazonaws.services.cloudformation.model.Stack;
 import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
-import com.amazonaws.services.servicecatalog.model.ProvisionProductRequest;
-import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
-import com.amazonaws.services.servicecatalog.model.ProvisioningParameter;
-import com.amazonaws.services.servicecatalog.model.Tag;
+import com.amazonaws.services.servicecatalog.model.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AmazonServiceCatalogService {
+
+    public static final String CLOUD_FORMATION_STACK_NAME_REGEX = "(SC)-[0-9]{0,63}-[a-z]{0,63}-[a-z0-9]{0,63}";
 
     public static ProvisionProductResult provisionProduct(final String provisionedProductName,
                                                           final List<ProvisioningParameter> provisioningParameters,
@@ -58,5 +64,38 @@ public class AmazonServiceCatalogService {
         return serviceCatalogClient.provisionProduct(provisionProductRequest);
     }
 
+    public static DescribeRecordResult describeRecord(final String recordId, final AWSServiceCatalog serviceCatalogClient) {
+        DescribeRecordRequest describeRecordRequest = new DescribeRecordRequest()
+                .withId(recordId);
+        return serviceCatalogClient.describeRecord(describeRecordRequest);
+    }
 
+    public static List<Stack> describeCloudFormationStack(final String stackName, final AmazonCloudFormation cloudFormationClient) {
+        DescribeStacksRequest describeStacksRequest = new DescribeStacksRequest()
+                .withStackName(stackName);
+        return cloudFormationClient.describeStacks(describeStacksRequest).getStacks();
+    }
+
+    public static String describeStackResources(final String stackName, final AmazonCloudFormation cloudFormationClient) {
+        return describeStackResourcesResult(stackName, cloudFormationClient).getStackResources().toString();
+    }
+
+    private static DescribeStackResourcesResult describeStackResourcesResult(final String stackName, final AmazonCloudFormation cloudFormationClient) {
+        DescribeStackResourcesRequest stackResourceRequest = new DescribeStackResourcesRequest()
+                .withStackName(stackName);
+        return cloudFormationClient.describeStackResources(stackResourceRequest);
+    }
+
+    public static String getCloudFormationStackName(String recordId, AWSServiceCatalog serviceCatalogClient, Long poolingInterval) throws InterruptedException {
+        DescribeRecordResult recordResult = AmazonServiceCatalogService.describeRecord(recordId, serviceCatalogClient);
+        Pattern stackNamePattern = Pattern.compile(CLOUD_FORMATION_STACK_NAME_REGEX);
+        Matcher stackNameMatcher = stackNamePattern.matcher(recordResult.getRecordOutputs().toString());
+        while (!stackNameMatcher.find()) {
+            Thread.sleep(poolingInterval);
+            recordResult = AmazonServiceCatalogService.describeRecord(recordId, serviceCatalogClient);
+            stackNameMatcher = stackNamePattern.matcher(recordResult.getRecordOutputs().toString());
+        }
+        String recordOutputs = recordResult.getRecordOutputs().toString();
+        return recordOutputs.split("/")[1];
+    }
 }
