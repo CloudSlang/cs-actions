@@ -180,5 +180,6 @@ public class Constants {
 
     public static class ServiceCatalogActions {
         public static final String CREATE_IN_PROGRESS = "CREATE_IN_PROGRESS";
+        public static final String CREATE_COMPLETE = "CREATE_COMPLETE";
     }
 }

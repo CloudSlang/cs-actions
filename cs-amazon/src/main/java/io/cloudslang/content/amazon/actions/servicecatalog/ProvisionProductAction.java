@@ -34,6 +34,7 @@ import io.cloudslang.content.amazon.utils.DefaultValues;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceCatalogActions.CREATE_COMPLETE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceCatalogActions.CREATE_IN_PROGRESS;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.*;
@@ -44,11 +45,11 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCata
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.PROVISIONED_PRODUCT_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.PROVISIONING_ARTIFACT_ID;
 import static io.cloudslang.content.amazon.entities.constants.Outputs.*;
-import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.describeCloudFormationStack;
-import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.describeStackResources;
-import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.getCloudFormationStackName;
-import static io.cloudslang.content.amazon.utils.OutputsUtil.*;
-import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.*;
+import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.*;
+import static io.cloudslang.content.amazon.utils.DefaultValues.COMMA;
+import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapProvisionProduct;
+import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.toArrayOfParameters;
+import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.toArrayOfTags;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -94,9 +95,8 @@ public class ProvisionProductAction {
                                        @Param(value = PRODUCT_ID, required = true, description = PRODUCT_ID_DESC) String productId,
                                        @Param(value = PROVISIONED_PRODUCT_NAME, required = true, description = PROVISIONED_PRODUCT_NAME_DESC) String provisionedProductName,
                                        @Param(value = PROVISIONING_ARTIFACT_ID, required = true, description = PROVISIONING_ARTIFACT_ID_DESC) String provisioningArtifactId,
-                                       @Param(value = PARAM_KEY_NAME, required = true, description = PROVISIONING_PARAM_KEY_NAME) String paramKeyName,
-                                       @Param(value = PARAM_SSH_LOCATION, description = PROVISIONING_PARAM_SSH_LOCATION) String paramSshLocation,
-                                       @Param(value = PARAM_INSTANCE_TYPE, description = PROVISIONING_PARAM_INSTANCE_TYPE) String paramInstanceType,
+                                       @Param(value = PROVISIONING_PARAMETERS, description = PROVISIONING_PARAMETERS_DESC) String provisioningParameters,
+                                       @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
                                        @Param(value = TAGS, description = TAGS_DESC) String tags,
                                        @Param(value = PROVISION_TOKEN, description = PROVISION_TOKEN_DESC) String provisionTokens,
                                        @Param(value = ACCEPT_LANGUAGE, description = ACCEPT_LANGUAGE_DESC) String acceptLanguage,
@@ -109,7 +109,7 @@ public class ProvisionProductAction {
         final String execTimeoutVal = defaultIfEmpty(execTimeout, DefaultValues.EXEC_TIMEOUT);
         final String asyncVal = defaultIfEmpty(async, DefaultValues.ASYNC);
         final String poolingIntervalVal = defaultIfEmpty(poolingInterval, DefaultValues.POOLING_INTERVAL_DEFAULT);
-
+        final String delimiterVal = defaultIfEmpty(delimiter, COMMA);
 
         //Validate inputs
         Validator validator = new Validator()
@@ -133,32 +133,38 @@ public class ProvisionProductAction {
 
             final AWSServiceCatalog awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region, asyncImp);
-            final ProvisionProductResult result = AmazonServiceCatalogService.provisionProduct(provisionedProductName,
-                    setProvisionParameters(paramKeyName, paramSshLocation, paramInstanceType), productId, provisionTokens, provisioningArtifactId,
-                    toArrayOfTags(tags), acceptLanguage, notificationArns, pathId, awsServiceCatalog);
 
-            Map<String, String> results = getSuccessResultMapProvisionProduct(result);
+            final ProvisionProductResult result = AmazonServiceCatalogService.provisionProduct(provisionedProductName,
+                    toArrayOfParameters(provisioningParameters, delimiterVal), productId, provisionTokens, provisioningArtifactId,
+                    toArrayOfTags(tags, delimiterVal), acceptLanguage, notificationArns, pathId, awsServiceCatalog);
+
+
             final String cloudFormationStackName = getCloudFormationStackName(result.getRecordDetail().getRecordId(), awsServiceCatalog, poolingIntervalImp);
 
             final AmazonCloudFormation awsCloudFormation = CloudFormationClientBuilder.getCloudFormationClient(identity, credential,
                     proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutVal, execTimeoutVal, region);
+
             List<Stack> stacks = describeCloudFormationStack(cloudFormationStackName, awsCloudFormation);
+
             while (stacks.get(0).getStackStatus().equals(CREATE_IN_PROGRESS)) {
                 Thread.sleep(poolingIntervalImp);
                 stacks = describeCloudFormationStack(cloudFormationStackName, awsCloudFormation);
             }
+
+            if (!stacks.get(0).getStackStatus().equals(CREATE_COMPLETE)) {
+                throw new RuntimeException("Stack creation failure. Reason: " + stacks.get(0).getStackStatusReason());
+            }
+
+            Map<String, String> results = getSuccessResultMapProvisionProduct(result);
 
             results.put(STACK_NAME, stacks.get(0).getStackName());
             results.put(STACK_ID, stacks.get(0).getStackId());
             results.put(STACK_OUTPUTS, stacks.get(0).getOutputs().toString());
             results.put(STACK_RESOURCES, describeStackResources(cloudFormationStackName, awsCloudFormation));
 
-
             return results;
         } catch (Exception e) {
-
             return getFailureResultsMap(e);
-
         }
     }
 }

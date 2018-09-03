@@ -38,9 +38,9 @@ public class Outputs {
     //Service Catalog outputs
     public static final String CREATED_TIME = "createdTime";
     public static final String PATH_ID = "pathId";
-    public static final String PRODUCT_ID = "productId";
+    public static final String PRODUCT_ID = "productIdOutput";
     public static final String PROVISIONED_PRODUCT_ID = "provisionedProductId";
-    public static final String PROVISIONED_PRODUCT_NAME = "provisionedProductName";
+    public static final String PROVISIONED_PRODUCT_NAME = "provisionedProductNameOutput";
     public static final String PROVISIONED_PRODUCT_TYPE = "provisionedProductType";
     public static final String PROVISIONING_ARTIFACT_ID = "provisioningArtifactId";
     public static final String STATUS = "status";

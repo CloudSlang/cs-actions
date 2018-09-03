@@ -95,7 +95,6 @@ public class AmazonServiceCatalogService {
             recordResult = AmazonServiceCatalogService.describeRecord(recordId, serviceCatalogClient);
             stackNameMatcher = stackNamePattern.matcher(recordResult.getRecordOutputs().toString());
         }
-        String recordOutputs = recordResult.getRecordOutputs().toString();
-        return recordOutputs.split("/")[1];
+        return recordResult.getRecordOutputs().toString().split("/")[1];
     }
 }

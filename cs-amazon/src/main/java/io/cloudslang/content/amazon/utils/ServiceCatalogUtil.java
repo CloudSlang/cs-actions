@@ -27,12 +27,12 @@ import java.util.List;
 
 public class ServiceCatalogUtil {
 
-    public static List<Tag> toArrayOfTags(final String provisioningTags) {
+    public static List<Tag> toArrayOfTags(final String provisioningTags, final String delimiter) {
         if (StringUtils.isEmpty(provisioningTags)) {
             return new ArrayList<>();
         }
         final List<Tag> tags = new ArrayList<>();
-        for (String line : provisioningTags.split(StringUtils.LF)) {
+        for (String line : provisioningTags.split(delimiter)) {
             final ParametersLine tagLine = new ParametersLine(line);
             if (tagLine.isValid()) {
                 final Tag tag = new Tag();
@@ -44,25 +44,21 @@ public class ServiceCatalogUtil {
         return tags;
     }
 
-    public static List<ProvisioningParameter> setProvisionParameters(String paramKeyName, String paramSshLocation, String paramInstanceType) {
+    public static List<ProvisioningParameter> toArrayOfParameters(final String parameters, final String delimiter) {
+        if (StringUtils.isEmpty(parameters)) {
+            return new ArrayList<>();
+        }
 
-        List<ProvisioningParameter> params = new ArrayList<>();
-        if (!StringUtils.isEmpty(paramKeyName)) {
-            params.add(setProvisionParameter("KeyName", paramKeyName));
+        final List<ProvisioningParameter> parametersList = new ArrayList<>();
+        for (String line : parameters.split(delimiter)) {
+            final ParametersLine paramLine = new ParametersLine(line);
+            if (paramLine.isValid()) {
+                final ProvisioningParameter parameter = new ProvisioningParameter();
+                parameter.setKey(paramLine.getKey());
+                parameter.setValue(paramLine.getValue());
+                parametersList.add(parameter);
+            }
         }
-        if (!StringUtils.isEmpty(paramSshLocation)) {
-            params.add(setProvisionParameter("SSHLocation", paramSshLocation));
-        }
-        if (!StringUtils.isEmpty(paramInstanceType)) {
-            params.add(setProvisionParameter("InstanceType", paramInstanceType));
-        }
-        return params;
-    }
-
-    private static ProvisioningParameter setProvisionParameter(String key, String value) {
-        ProvisioningParameter parameter = new ProvisioningParameter();
-        parameter.setKey(key);
-        parameter.setValue(value);
-        return parameter;
+        return parametersList;
     }
 }
