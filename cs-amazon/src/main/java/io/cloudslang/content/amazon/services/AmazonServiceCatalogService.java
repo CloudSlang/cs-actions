@@ -27,9 +27,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AmazonServiceCatalogService {
+import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceCatalogActions.CLOUD_FORMATION_STACK_NAME_REGEX;
+import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceCatalogActions.FAILED;
 
-    public static final String CLOUD_FORMATION_STACK_NAME_REGEX = "(SC)-[0-9]{0,63}-[a-z]{0,63}-[a-z0-9]{0,63}";
+public class AmazonServiceCatalogService {
 
     public static ProvisionProductResult provisionProduct(final String provisionedProductName,
                                                           final List<ProvisioningParameter> provisioningParameters,
@@ -91,6 +92,9 @@ public class AmazonServiceCatalogService {
         Pattern stackNamePattern = Pattern.compile(CLOUD_FORMATION_STACK_NAME_REGEX);
         Matcher stackNameMatcher = stackNamePattern.matcher(recordResult.getRecordOutputs().toString());
         while (!stackNameMatcher.find()) {
+            if ((recordResult.getRecordDetail().getStatus().equals(FAILED))) {
+                throw new RuntimeException(recordResult.getRecordDetail().getRecordErrors().toString());
+            }
             Thread.sleep(poolingInterval);
             recordResult = AmazonServiceCatalogService.describeRecord(recordId, serviceCatalogClient);
             stackNameMatcher = stackNamePattern.matcher(recordResult.getRecordOutputs().toString());
