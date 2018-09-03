@@ -177,4 +177,12 @@ public class Constants {
     public static class S3QueryApiActions {
         public static final String GET_BUCKET = "GET Bucket";
     }
+
+    public static class ServiceCatalogActions {
+        public static final String CREATE_IN_PROGRESS = "CREATE_IN_PROGRESS";
+        public static final String CREATE_COMPLETE = "CREATE_COMPLETE";
+        public static final String FAILED = "FAILED";
+        public static final String CLOUD_FORMATION_STACK_NAME_REGEX = "(SC)-[0-9]{0,63}-[a-z]{0,63}-[a-z0-9]{0,63}";
+
+    }
 }
