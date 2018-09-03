@@ -40,7 +40,7 @@ public class Inputs {
         public static final String REGION = "region";
         public static final String CONNECT_TIMEOUT = "connectTimeout";
         public static final String EXECUTION_TIMEOUT = "executionTimeout";
-        public static final String POOLING_INTERVAL = "poolingInterval";
+        public static final String POLLING_INTERVAL = "pollingInterval";
         public static final String ASYNC = "async";
     }
 

@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.amazon.utils;
 
+import com.amazonaws.services.cloudformation.model.Stack;
 import com.amazonaws.services.servicecatalog.model.ProvisioningParameter;
 import com.amazonaws.services.servicecatalog.model.Tag;
 import org.apache.commons.lang3.StringUtils;
@@ -60,5 +61,9 @@ public class ServiceCatalogUtil {
             }
         }
         return parametersList;
+    }
+
+    public static Stack getStack(List<Stack> stacks) {
+        return stacks.get(0);
     }
 }

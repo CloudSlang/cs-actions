@@ -47,7 +47,7 @@ public class Descriptions {
     }
 
     public static class ProvisionProductAction {
-        public static final String POOLING_INTERVAL_DESC = "The time, in seconds, to wait before a new request that verifies if the operation finished\n" +
+        public static final String POLLING_INTERVAL_DESC = "The time, in seconds, to wait before a new request that verifies if the operation finished\n" +
                 "is executed." +
                 "Default: '1000'";
         public static final String PROVISION_PRODUCT_DESCRIPTION = "Provisions the specified product.\n" +

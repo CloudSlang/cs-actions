@@ -87,7 +87,7 @@ public class AmazonServiceCatalogService {
         return cloudFormationClient.describeStackResources(stackResourceRequest);
     }
 
-    public static String getCloudFormationStackName(String recordId, AWSServiceCatalog serviceCatalogClient, Long poolingInterval) throws InterruptedException {
+    public static String getCloudFormationStackName(String recordId, AWSServiceCatalog serviceCatalogClient, Long pollingInterval) throws InterruptedException {
         DescribeRecordResult recordResult = AmazonServiceCatalogService.describeRecord(recordId, serviceCatalogClient);
         Pattern stackNamePattern = Pattern.compile(CLOUD_FORMATION_STACK_NAME_REGEX);
         Matcher stackNameMatcher = stackNamePattern.matcher(recordResult.getRecordOutputs().toString());
@@ -95,7 +95,7 @@ public class AmazonServiceCatalogService {
             if ((recordResult.getRecordDetail().getStatus().equals(FAILED))) {
                 throw new RuntimeException(recordResult.getRecordDetail().getRecordErrors().toString());
             }
-            Thread.sleep(poolingInterval);
+            Thread.sleep(pollingInterval);
             recordResult = AmazonServiceCatalogService.describeRecord(recordId, serviceCatalogClient);
             stackNameMatcher = stackNamePattern.matcher(recordResult.getRecordOutputs().toString());
         }
