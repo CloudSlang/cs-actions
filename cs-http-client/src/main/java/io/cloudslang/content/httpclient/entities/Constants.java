@@ -17,6 +17,7 @@ package io.cloudslang.content.httpclient.entities;
 public class Constants {
 
     public static final String URL = "url";
+    public static final String TEXT = "text";
     public static final String CHARACTER_SET = "characterSet";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String CHANGEIT = "changeit";

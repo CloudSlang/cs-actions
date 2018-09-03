@@ -34,11 +34,8 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.Constants.CHARACTER_SET;
-import static io.cloudslang.content.httpclient.entities.Constants.URL;
-import static io.cloudslang.content.httpclient.utils.Descriptions.Commons.CHARACTER_SET_DESC;
-import static io.cloudslang.content.httpclient.utils.Descriptions.Commons.EXCEPTION_DESC;
-import static io.cloudslang.content.httpclient.utils.Descriptions.Commons.RETURN_CODE_DESC;
-import static io.cloudslang.content.httpclient.utils.Descriptions.Commons.URL_DESC;
+import static io.cloudslang.content.httpclient.entities.Constants.TEXT;
+import static io.cloudslang.content.httpclient.utils.Descriptions.Commons.*;
 import static io.cloudslang.content.httpclient.utils.Descriptions.UrlEncoder.RETURN_RESULT_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.UrlEncoder.URL_ENCODER_DESC;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -61,7 +58,7 @@ public class URLEncoderAction {
             }
     )
     public Map<String, String> execute(
-            @Param(value = URL, required = true, description = URL_DESC) String text,
+            @Param(value = TEXT, required = true, description = URL_DESC) String text,
             @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet) {
 
         try {

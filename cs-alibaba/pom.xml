@@ -21,9 +21,9 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-alibaba</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
+   
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Alibaba cloud integration</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
@@ -39,7 +39,7 @@
         <connection>scm:git:https://CloudSlang/cs-actions.git</connection>
         <developerConnection>scm:git:git@github.com:CloudSlang/cs-actions.git</developerConnection>
         <url>https://github.com/CloudSlang/cs-actions.git</url>
-        <tag>master</tag>
+        <tag>cs-alibaba-0.0.1</tag>
     </scm>
 
     <distributionManagement>
