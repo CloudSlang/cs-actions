@@ -15,6 +15,7 @@
 
 package io.cloudslang.content.amazon.utils;
 
+import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.xml.actions.XpathQuery;
@@ -24,10 +25,20 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SIGNATURE_RESULT;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_TYPE;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.STATUS;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONING_ARTIFACT_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PRODUCT_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PATH_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.CREATED_TIME;
+
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static io.cloudslang.content.xml.utils.Constants.Defaults.DELIMITER;
 import static io.cloudslang.content.xml.utils.Constants.Defaults.XML_DOCUMENT_SOURCE;
 import static io.cloudslang.content.xml.utils.Constants.Outputs.ERROR_MESSAGE;
@@ -46,6 +57,7 @@ public class OutputsUtil {
 
     private static final String XMLNS = "xmlns";
     private static final String WORKAROUND = "workaround";
+
 
     private OutputsUtil() {
     }
@@ -100,6 +112,22 @@ public class OutputsUtil {
         Map<String, String> results = new HashMap<>();
         results.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
         results.put(Outputs.RETURN_RESULT, returnResult);
+
+        return results;
+    }
+
+    public static Map<String, String> getSuccessResultMapProvisionProduct(ProvisionProductResult result) {
+
+        Map<String, String> results = getSuccessResultsMap(result.toString());
+
+        results.put(CREATED_TIME, result.getRecordDetail().getCreatedTime().toString());
+        results.put(PATH_ID, result.getRecordDetail().getPathId());
+        results.put(PRODUCT_ID, result.getRecordDetail().getProductId());
+        results.put(PROVISIONED_PRODUCT_ID, result.getRecordDetail().getProvisionedProductId());
+        results.put(PROVISIONED_PRODUCT_NAME, result.getRecordDetail().getProvisionedProductName());
+        results.put(PROVISIONED_PRODUCT_TYPE, result.getRecordDetail().getProvisionedProductType());
+        results.put(PROVISIONING_ARTIFACT_ID, result.getRecordDetail().getProvisioningArtifactId());
+        results.put(STATUS, result.getRecordDetail().getStatus());
 
         return results;
     }
