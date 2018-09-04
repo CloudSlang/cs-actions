@@ -26,7 +26,7 @@ import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.validators.Validator;
 import io.cloudslang.content.amazon.factory.ServiceCatalogClientBuilder;
 import io.cloudslang.content.amazon.services.AmazonServiceCatalogService;
-import io.cloudslang.content.constants.DefaultValues;
+import io.cloudslang.content.amazon.utils.DefaultValues;
 
 import java.util.Map;
 
@@ -79,6 +79,8 @@ public class DescribeProvisionedProductAction {
         final String connectTimeoutVal = defaultIfEmpty(connectTimeout, DefaultValues.CONNECT_TIMEOUT);
         final String execTimeoutVal = defaultIfEmpty(execTimeout, DefaultValues.EXEC_TIMEOUT);
         final String asyncVal = defaultIfEmpty(async, DefaultValues.ASYNC);
+        final String acceptedLanguageVal = defaultIfEmpty(acceptedLanguage, DefaultValues.ACCEPTED_LANGUAGE);
+        final String regionVal = defaultIfEmpty(region, DefaultValues.REGION);
 
         //Validate inputs
         Validator validator = new Validator()
@@ -100,9 +102,9 @@ public class DescribeProvisionedProductAction {
         try {
             //The client
             final AWSServiceCatalog awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
-                    proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region, asyncImp);
+                    proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, regionVal, asyncImp);
             //The result
-            final DescribeProvisionedProductResult result = AmazonServiceCatalogService.describeProvisionProduct(acceptedLanguage,
+            final DescribeProvisionedProductResult result = AmazonServiceCatalogService.describeProvisionProduct(acceptedLanguageVal,
                     productId, awsServiceCatalog);
 
             return getSuccessResultMapDescribedProvisionedProduct(result);
