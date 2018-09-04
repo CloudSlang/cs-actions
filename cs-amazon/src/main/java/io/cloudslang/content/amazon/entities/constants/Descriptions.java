@@ -108,9 +108,11 @@ public class Descriptions {
                 "Example: en (English), jp (Japanese), zh(Chinese)" +
                 "Default: 'en'";
         public static final String PROVISIONED_PRODUCT_ID_DESCRIPTION = "The provisioned product identifier.";
-        public static final String PROVISIONED_PRODUCT_ARN_DESC = "The ARN of the provisioned product.";
+        public static final String PROVISIONED_PRODUCT_ARN_DESC = "The ARN of the provisioned product.\n" +
+                "Pattern: '[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}|arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}'";
         public static final String PROVISIONED_PRODUCT_CREATED_TIME_DESC = "The UTC time stamp of the creation time.";
-        public static final String PROVISIONED_PRODUCT_ID_DESC = "The identifier of the provisioned product.";
+        public static final String PROVISIONED_PRODUCT_ID_DESC = "The identifier of the provisioned product.\n" +
+                "Example: 'pp-almi4aq6ylmoa'";
         public static final String PROVISIONED_PRODUCT_STATUS_DESC = "The current status of the provisioned product.\n" +
                 "AVAILABLE - Stable state, ready to perform any operation. The most recent operation succeeded and completed. " +
                 "UNDER_CHANGE - Transitive state, operations performed might not have valid results. Wait for an AVAILABLE status before performing operations." +
