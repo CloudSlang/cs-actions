@@ -111,26 +111,4 @@ public class DescribeProvisionedProductAction {
             return getFailureResultsMap(e);
         }
     }
-
-    public static void main(String[] args) {
-        DescribeProvisionedProductAction describeProvisionedProductAction = new DescribeProvisionedProductAction();
-        Map<String, String> execute = describeProvisionedProductAction.execute(
-                "AKIAJVEQ7YUFWE2NONHQ",
-                "dYKuGq1JLmdJiRKkjDuQYZiSS5t3ub4atUXGl3x2",
-                "web-proxy.corp.hpecorp.net",
-                "8080",
-                "",
-                "",
-                "2000000",
-                "2000000",
-                "true",
-                "us-east-1",
-                "en",
-                "pp-ilmi2aq3ylqoe"
-        );
-        for (Map.Entry<String, String> entry : execute.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
-    }
-
 }
