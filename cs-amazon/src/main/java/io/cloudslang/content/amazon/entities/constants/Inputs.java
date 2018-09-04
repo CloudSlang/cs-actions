@@ -290,6 +290,7 @@ public class Inputs {
         public static final String ACCEPT_LANGUAGE = "acceptLanguage";
         public static final String NOTIFICATION_ARNS = "notificationArns";
         public static final String PATH_ID = "pathId";
+        public static final String ACCEPTED_LANGUAGE = "acceptedLanguage";
     }
 
 }

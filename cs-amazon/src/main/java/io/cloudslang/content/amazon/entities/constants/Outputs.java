@@ -49,6 +49,10 @@ public class Outputs {
     public static final String STACK_OUTPUTS = "stackOutputs";
     public static final String STACK_RESOURCES = "stackResources";
 
+    public static final String PROVISIONED_PRODUCT_ARN = "provisionedProductArn";
+    public static final String PROVISIONED_PRODUCT_CREATED_TIME = "provisionedProductCreatedTime";
+    public static final String PROVISIONED_PRODUCT_STATUS = "provisionedProductStatus";
+
     public static final String SUCCESS = "success";
     public static final String FAILURE = "failure";
 

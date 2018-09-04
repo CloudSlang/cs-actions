@@ -20,7 +20,14 @@ import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
 import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
 import com.amazonaws.services.cloudformation.model.Stack;
 import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
-import com.amazonaws.services.servicecatalog.model.*;
+import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductRequest;
+import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
+import com.amazonaws.services.servicecatalog.model.DescribeRecordRequest;
+import com.amazonaws.services.servicecatalog.model.DescribeRecordResult;
+import com.amazonaws.services.servicecatalog.model.ProvisionProductRequest;
+import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
+import com.amazonaws.services.servicecatalog.model.ProvisioningParameter;
+import com.amazonaws.services.servicecatalog.model.Tag;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -63,6 +70,15 @@ public class AmazonServiceCatalogService {
         }
 
         return serviceCatalogClient.provisionProduct(provisionProductRequest);
+    }
+
+    public static DescribeProvisionedProductResult describeProvisionProduct(final String acceptedLanguage,
+                                                                            final String productId,
+                                                                            final AWSServiceCatalog serviceCatalogClient) {
+        DescribeProvisionedProductRequest describeProvisionProductRequest = new DescribeProvisionedProductRequest()
+                .withAcceptLanguage(acceptedLanguage)
+                .withId(productId);
+        return serviceCatalogClient.describeProvisionedProduct(describeProvisionProductRequest);
     }
 
     public static DescribeRecordResult describeRecord(final String recordId, final AWSServiceCatalog serviceCatalogClient) {
