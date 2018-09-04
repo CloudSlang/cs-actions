@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2018 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -290,6 +290,7 @@ public class ListProcessor {
 
     /**
      * This method check if all elements of an array are null.
+     *
      * @param uncontainedArray element in array
      * @return any element that is found to be empty
      */
@@ -321,7 +322,7 @@ public class ListProcessor {
             }
         }
         String[] newUncontainedArray = new String[index];
-         System.arraycopy(uncontainedArray, 0, newUncontainedArray, 0, index);
+        System.arraycopy(uncontainedArray, 0, newUncontainedArray, 0, index);
 
         return newUncontainedArray;
     }
