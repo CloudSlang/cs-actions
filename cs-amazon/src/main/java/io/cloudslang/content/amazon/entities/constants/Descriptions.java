@@ -100,4 +100,26 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The product was successfully provisioned.";
         public static final String FAILURE_DESC = "An error has occurred while trying to provision the product.";
     }
+
+    public static class DescribeProvisionedProductAction {
+        //Inputs
+        public static final String DESCRIBE_PROVISIONED_PRODUCT_DESCRIPTION = "Gets information about the specified provisioned product.";
+        public static final String PROVISIONED_PRODUCT_ACCEPTED_LANGUAGE_DESCRIPTION = "The language code.\n" +
+                "Example: en (English), jp (Japanese), zh(Chinese)" +
+                "Default: 'en'";
+        public static final String PROVISIONED_PRODUCT_ID_DESCRIPTION = "The provisioned product identifier.";
+        public static final String PROVISIONED_PRODUCT_ARN_DESC = "The ARN of the provisioned product.";
+        public static final String PROVISIONED_PRODUCT_CREATED_TIME_DESC = "The UTC time stamp of the creation time.";
+        public static final String PROVISIONED_PRODUCT_ID_DESC = "The identifier of the provisioned product.";
+        public static final String PROVISIONED_PRODUCT_STATUS_DESC = "The current status of the provisioned product.\n" +
+                "AVAILABLE - Stable state, ready to perform any operation. The most recent operation succeeded and completed. " +
+                "UNDER_CHANGE - Transitive state, operations performed might not have valid results. Wait for an AVAILABLE status before performing operations." +
+                "TAINTED - Stable state, ready to perform any operation. The stack has completed the requested operation but is not exactly what was requested. For example, a request to update to a new version failed and the stack rolled back to the current version." +
+                "ERROR - An unexpected error occurred, the provisioned product exists but the stack is not running. For example, CloudFormation received a parameter value that was not valid and could not launch the stack.";
+        public static final String PROVISIONED_PRODUCT_NAME_DESC = "The user-friendly name of the provisioned product.";
+        public static final String PROVISIONED_PRODUCT_TYPE_DESC = "The type of provisioned product. The supported value is CFN_STACK. ";
+        //Results
+        public static final String SUCCESS_DESC = "The action ended successfully.";
+        public static final String FAILURE_DESC = "An error has occurred while trying to get details about the product.";
+    }
 }
