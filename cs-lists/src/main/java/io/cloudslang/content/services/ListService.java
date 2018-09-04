@@ -37,8 +37,10 @@ public class ListService {
                 returnResult.put("resultString", iterator.getNext(globalSessionObject));
                 if (iterator.hasNext()) {
                     returnResult.put("result", "has more");
+                    returnResult.put("returnCode", "0");
                 } else {
                     returnResult.put("resultString", "");
+                    returnResult.put("returnCode", "1");
                     iterator.setStepSessionEnd(globalSessionObject);
                     returnResult.put("result", "no more");
                 }
@@ -46,6 +48,7 @@ public class ListService {
         } catch (IteratorProcessorException e) {
             returnResult.put("result", "failed");
             returnResult.put("resultString", e.getMessage());
+            returnResult.put("returnCode", "-1");
         }
         return returnResult;
     }

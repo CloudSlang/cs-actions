@@ -61,6 +61,6 @@ public class Constants {
         public static final String LIST = "list";
         public static final String SEPARATOR = "separator";
         public static final String RETURN_RESULT_DESC = "The current list element (if the response is \"has more\")";
-        public static final String RETURN_CODE_DESC = "\"0\" if operation was successfully executed, \"-1\" otherwise.";
+        public static final String RETURN_CODE_DESC = "\"0\" if has more, \"1\" if no more values, and \"-1\" if failed.";
     }
 }
