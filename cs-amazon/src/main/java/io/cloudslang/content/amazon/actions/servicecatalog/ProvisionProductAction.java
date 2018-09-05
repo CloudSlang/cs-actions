@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2018 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -109,6 +109,8 @@ public class ProvisionProductAction {
         final String asyncVal = defaultIfEmpty(async, DefaultValues.ASYNC);
         final String pollingIntervalVal = defaultIfEmpty(pollingInterval, DefaultValues.POLLING_INTERVAL_DEFAULT);
         final String delimiterVal = defaultIfEmpty(delimiter, COMMA);
+        final String regionVal = defaultIfEmpty(region, DefaultValues.REGION);
+        final String acceptLanguageVal = defaultIfEmpty(acceptLanguage, DefaultValues.ACCEPTED_LANGUAGE);
 
         //Validate inputs
         Validator validator = new Validator()
@@ -131,17 +133,17 @@ public class ProvisionProductAction {
         try {
 
             final AWSServiceCatalog awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
-                    proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region, asyncImp);
+                    proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, regionVal, asyncImp);
 
             final ProvisionProductResult result = AmazonServiceCatalogService.provisionProduct(provisionedProductName,
                     toArrayOfParameters(provisioningParameters, delimiterVal), productId, provisionTokens, provisioningArtifactId,
-                    toArrayOfTags(tags, delimiterVal), acceptLanguage, notificationArns, pathId, awsServiceCatalog);
+                    toArrayOfTags(tags, delimiterVal), acceptLanguageVal, notificationArns, pathId, awsServiceCatalog);
 
 
             final String cloudFormationStackName = getCloudFormationStackName(result.getRecordDetail().getRecordId(), awsServiceCatalog, pollingIntervalImp);
 
             final AmazonCloudFormation awsCloudFormation = CloudFormationClientBuilder.getCloudFormationClient(identity, credential,
-                    proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutVal, execTimeoutVal, region);
+                    proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutVal, execTimeoutVal, regionVal);
 
             List<Stack> stacks = describeCloudFormationStack(cloudFormationStackName, awsCloudFormation);
 
