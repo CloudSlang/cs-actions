@@ -17,6 +17,7 @@ package io.cloudslang.content.amazon.utils;
 
 import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
 import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
+import com.amazonaws.services.servicecatalog.model.TerminateProvisionedProductResult;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.xml.actions.XpathQuery;
@@ -148,6 +149,13 @@ public class OutputsUtil {
         results.put(PROVISIONED_PRODUCT_NAME, result.getProvisionedProductDetail().getName());
         results.put(PROVISIONED_PRODUCT_TYPE, result.getProvisionedProductDetail().getType());
 
+        return results;
+    }
+
+    public static Map<String, String> getSuccessResultMapTerminateProvisionedProduct(TerminateProvisionedProductResult result) {
+        Map<String, String> results = new HashMap<>();
+        results.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
+        results.put(Outputs.RETURN_RESULT, result.toString());
         return results;
     }
 }
