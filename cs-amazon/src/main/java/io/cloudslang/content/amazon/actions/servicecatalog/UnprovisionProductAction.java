@@ -31,10 +31,9 @@ import io.cloudslang.content.amazon.utils.DefaultValues;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.*;
-import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.*;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.ACCEPT_LANGUAGE_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.REGION_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.UnprovisionProductAction.*;
-import static io.cloudslang.content.amazon.entities.constants.Descriptions.UnprovisionProductAction.FAILURE_DESC;
-import static io.cloudslang.content.amazon.entities.constants.Descriptions.UnprovisionProductAction.SUCCESS_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_ID;
