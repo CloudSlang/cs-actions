@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2018 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2018 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -38,8 +38,8 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInput
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_ID;
 import static io.cloudslang.content.amazon.utils.DefaultValues.IGNORE_ERRORS;
-import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapTerminateProvisionedProduct;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class UnprovisionProductAction {
@@ -108,8 +108,7 @@ public class UnprovisionProductAction {
 
             final TerminateProvisionedProductResult result = AmazonServiceCatalogService.terminateProvisionedProduct(acceptLanguageVal, ignoreErrorsImp, provisionedProductId, provisionedProductName, terminateToken, awsServiceCatalog);
 
-            return getSuccessResultMapTerminateProvisionedProduct(result);
-
+            return getSuccessResultsMap(result.toString());
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }

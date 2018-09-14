@@ -151,11 +151,4 @@ public class OutputsUtil {
 
         return results;
     }
-
-    public static Map<String, String> getSuccessResultMapTerminateProvisionedProduct(TerminateProvisionedProductResult result) {
-        Map<String, String> results = new HashMap<>();
-        results.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
-        results.put(Outputs.RETURN_RESULT, result.toString());
-        return results;
-    }
 }
