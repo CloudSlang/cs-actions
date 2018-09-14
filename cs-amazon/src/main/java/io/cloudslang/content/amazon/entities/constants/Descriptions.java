@@ -124,4 +124,19 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The action ended successfully.";
         public static final String FAILURE_DESC = "An error has occurred while trying to get details about the product.";
     }
+
+    public static class UnprovisionProductAction
+    {
+        public static final String UNPROVISION_PRODUCT_DESCRIPTION = "Terminates the specified provisioned product.";
+        public static final String PROVISIONED_PRODUCT_ID_DESC = "The identifier of the provisioned product. You cannot specify both ProvisionedProductName and ProvisionedProductId inputs.\n" +
+                                                                 "Example: 'pp-almi4aq6ylmoa'";
+        public static final String PROVISIONED_PRODUCT_NAME_DESC = "The user-friendly name of the provisioned product. You cannot specify both ProvisionedProductName and ProvisionedProductId inputs.";
+        public static final String IGNORE_ERRORS_DESC = "If set to 'true', AWS Service Catalog stops managing the specified provisioned product even if it cannot delete the underlying resources.\n"+
+                                                        "Default: 'false'";
+        public static final String TERMINATE_TOKEN_DESC = "An idempotency token that uniquely identifies the termination request. This token is only valid during the termination process. "+
+                "After the provisioned product is terminated, subsequent requests to terminate the same provisioned product always return ResourceNotFound"+
+                "Pattern: [a-zA-Z0-9][a-zA-Z0-9_-]*";
+        public static final String SUCCESS_DESC = "The product was successfully unprovisioned.";
+        public static final String FAILURE_DESC = "An error has occurred while trying to unprovision the product.";
+    }
 }

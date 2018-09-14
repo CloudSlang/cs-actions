@@ -20,17 +20,11 @@ import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
 import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
 import com.amazonaws.services.cloudformation.model.Stack;
 import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
-import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductRequest;
-import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
-import com.amazonaws.services.servicecatalog.model.DescribeRecordRequest;
-import com.amazonaws.services.servicecatalog.model.DescribeRecordResult;
-import com.amazonaws.services.servicecatalog.model.ProvisionProductRequest;
-import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
-import com.amazonaws.services.servicecatalog.model.ProvisioningParameter;
-import com.amazonaws.services.servicecatalog.model.Tag;
+import com.amazonaws.services.servicecatalog.model.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -116,5 +110,29 @@ public class AmazonServiceCatalogService {
             stackNameMatcher = stackNamePattern.matcher(recordResult.getRecordOutputs().toString());
         }
         return recordResult.getRecordOutputs().toString().split("/")[1];
+    }
+
+    public static TerminateProvisionedProductResult terminateProvisionedProduct(String acceptLanguage,
+                                                                                Boolean ignoreErrors,
+                                                                                String provisionedProductId,
+                                                                                String provisionedProductName,
+                                                                                String terminateToken,
+                                                                                final AWSServiceCatalog serviceCatalogClient){
+        TerminateProvisionedProductRequest terminateProvisionedProductRequest = new TerminateProvisionedProductRequest()
+                .withIgnoreErrors(ignoreErrors)
+                .withAcceptLanguage(acceptLanguage);
+        if (!StringUtils.isEmpty(provisionedProductId)) {
+            terminateProvisionedProductRequest.withProvisionedProductId(provisionedProductId);
+        }
+        if (!StringUtils.isEmpty(provisionedProductName)) {
+            terminateProvisionedProductRequest.withProvisionedProductId(provisionedProductName);
+        }
+        if (!StringUtils.isEmpty(terminateToken))
+        {
+            terminateToken = UUID.randomUUID().toString();
+            terminateProvisionedProductRequest.withTerminateToken(terminateToken);
+        }
+
+        return serviceCatalogClient.terminateProvisionedProduct(terminateProvisionedProductRequest);
     }
 }

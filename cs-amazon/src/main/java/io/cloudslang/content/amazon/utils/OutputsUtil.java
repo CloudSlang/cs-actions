@@ -17,6 +17,7 @@ package io.cloudslang.content.amazon.utils;
 
 import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
 import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
+import com.amazonaws.services.servicecatalog.model.TerminateProvisionedProductResult;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.xml.actions.XpathQuery;

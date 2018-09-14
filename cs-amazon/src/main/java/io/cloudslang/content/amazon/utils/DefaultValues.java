@@ -20,5 +20,6 @@ public class DefaultValues extends io.cloudslang.content.constants.DefaultValues
     public static final String COMMA = ",";
     public static final String REGION = "us-east-1";
     public static final String ACCEPTED_LANGUAGE = "en";
+    public static final String IGNORE_ERRORS = "false";
 
 }
