@@ -20,14 +20,7 @@ import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
 import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
 import com.amazonaws.services.cloudformation.model.Stack;
 import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
-import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductRequest;
-import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
-import com.amazonaws.services.servicecatalog.model.DescribeRecordRequest;
-import com.amazonaws.services.servicecatalog.model.DescribeRecordResult;
-import com.amazonaws.services.servicecatalog.model.ProvisionProductRequest;
-import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
-import com.amazonaws.services.servicecatalog.model.ProvisioningParameter;
-import com.amazonaws.services.servicecatalog.model.Tag;
+import com.amazonaws.services.servicecatalog.model.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -79,6 +72,28 @@ public class AmazonServiceCatalogService {
                 .withAcceptLanguage(acceptedLanguage)
                 .withId(productId);
         return serviceCatalogClient.describeProvisionedProduct(describeProvisionProductRequest);
+    }
+
+    public static UpdateProvisionedProductResult updateProvisionedProduct(final String acceptedLanguage,
+                                                                         final String pathId,
+                                                                         final String productId,
+                                                                         final String provisionedProductId,
+                                                                         final List<UpdateProvisioningParameter> provisioningParameters,
+                                                                         final String provisionedProductName,
+                                                                         final String provisioningArtifactId,
+                                                                         final String updateToken,
+                                                                         final AWSServiceCatalog serviceCatalogclient){
+        UpdateProvisionedProductRequest updateProvisionedProductRequest = new UpdateProvisionedProductRequest()
+                .withAcceptLanguage(acceptedLanguage)
+                .withPathId(pathId)
+                .withProductId(productId)
+                .withProvisionedProductId(provisionedProductId)
+                .withProvisioningParameters(provisioningParameters)
+                .withProvisionedProductName(provisionedProductName)
+                .withProvisioningArtifactId(provisioningArtifactId)
+                .withUpdateToken(updateToken);
+
+        return serviceCatalogclient.updateProvisionedProduct(updateProvisionedProductRequest);
     }
 
     public static DescribeRecordResult describeRecord(final String recordId, final AWSServiceCatalog serviceCatalogClient) {

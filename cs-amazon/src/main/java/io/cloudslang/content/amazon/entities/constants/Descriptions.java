@@ -124,4 +124,19 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The action ended successfully.";
         public static final String FAILURE_DESC = "An error has occurred while trying to get details about the product.";
     }
+
+    public static class UpdateProvisionedProductDescriptions {
+
+        public static final String UPDATE_PROVISIONED_PRODUCT_DESCRIPTION = "Requests updates to the configuration of the specified provisioned product.";
+        //Inputs
+        public static final String PROVISIONED_PRODUCT_NAME_DESCRIPTION = "The updated name of the provisioned product. You cannot specify both ProvisionedP" +
+                "roductName and ProvisionedProductId.";
+        public static final String UPDATE_TOKEN_DESCRIPTION = "The idempotency token that uniquely identifies the provisioning update request.";
+
+        //results
+        public static final String SUCCESS_DESCRIPTION = "The specified product was successfully update.";
+        public static final String FAILURE_DESCRIPTION = "An error has occured while trying to update the specified product.";
+    }
+
+
 }

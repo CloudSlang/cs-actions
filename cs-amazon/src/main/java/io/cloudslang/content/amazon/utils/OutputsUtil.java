@@ -17,6 +17,7 @@ package io.cloudslang.content.amazon.utils;
 
 import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
 import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
+import com.amazonaws.services.servicecatalog.model.UpdateProvisionedProductResult;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.xml.actions.XpathQuery;
@@ -26,17 +27,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SIGNATURE_RESULT;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.CREATED_TIME;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PATH_ID;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PRODUCT_ID;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_ARN;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_CREATED_TIME;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_ID;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_NAME;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_STATUS;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_TYPE;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONING_ARTIFACT_ID;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.STATUS;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.*;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -147,6 +138,14 @@ public class OutputsUtil {
         results.put(PROVISIONED_PRODUCT_STATUS, result.getProvisionedProductDetail().getStatus());
         results.put(PROVISIONED_PRODUCT_NAME, result.getProvisionedProductDetail().getName());
         results.put(PROVISIONED_PRODUCT_TYPE, result.getProvisionedProductDetail().getType());
+
+        return results;
+    }
+
+    public static Map<String, String> getSuccessResultMapUpdateProvisionedProduct(UpdateProvisionedProductResult result) {
+
+        Map<String, String> results = getSuccessResultsMap(result.toString());
+        results.put("productId", result.getRecordDetail().getProductId());
 
         return results;
     }

@@ -291,6 +291,8 @@ public class Inputs {
         public static final String NOTIFICATION_ARNS = "notificationArns";
         public static final String PATH_ID = "pathId";
         public static final String ACCEPTED_LANGUAGE = "acceptedLanguage";
+        public static final String PROVISIONED_PRODUCT_ID = "provisionedProductId";
+        public static final String UPDATE_TOKEN = "updateToken";
     }
 
 }
