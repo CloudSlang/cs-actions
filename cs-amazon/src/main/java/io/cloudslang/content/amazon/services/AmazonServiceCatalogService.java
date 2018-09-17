@@ -125,7 +125,7 @@ public class AmazonServiceCatalogService {
             terminateProvisionedProductRequest.withProvisionedProductId(provisionedProductId);
         }
         if (!StringUtils.isEmpty(provisionedProductName)) {
-            terminateProvisionedProductRequest.withProvisionedProductId(provisionedProductName);
+            terminateProvisionedProductRequest.withProvisionedProductName(provisionedProductName);
         }
         if (!StringUtils.isEmpty(terminateToken))
         {
