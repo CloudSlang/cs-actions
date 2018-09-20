@@ -135,4 +135,38 @@ public class AmazonServiceCatalogService {
 
         return serviceCatalogClient.terminateProvisionedProduct(terminateProvisionedProductRequest);
     }
+
+    public static UpdateProvisionedProductResult updateProvisionedProduct(final String acceptedLanguage,
+                                                                          final String pathId,
+                                                                          final String productId,
+                                                                          String provisionedProductId,
+                                                                          final List<UpdateProvisioningParameter> provisioningParameters,
+                                                                          String provisionedProductName,
+                                                                          final String provisioningArtifactId,
+                                                                          String updateToken,
+                                                                          final AWSServiceCatalog serviceCatalogclient){
+        UpdateProvisionedProductRequest updateProvisionedProductRequest = new UpdateProvisionedProductRequest()
+                .withAcceptLanguage(acceptedLanguage)
+                .withProductId(productId)
+                .withProvisioningParameters(provisioningParameters)
+                .withProvisioningArtifactId(provisioningArtifactId);
+
+        if (!StringUtils.isEmpty(updateToken)) {
+            updateToken = UUID.randomUUID().toString();
+            updateProvisionedProductRequest.withUpdateToken(updateToken);
+        }
+        if(!StringUtils.isEmpty(pathId)){
+            updateProvisionedProductRequest.withPathId(pathId);
+        }
+        if(!StringUtils.isEmpty(provisionedProductId)) {
+            updateProvisionedProductRequest.withProvisionedProductId(provisionedProductId);
+        }
+        if(!StringUtils.isEmpty(provisionedProductName)){
+            updateProvisionedProductRequest.withProvisionedProductName(provisionedProductName);
+        }
+
+
+
+        return serviceCatalogclient.updateProvisionedProduct(updateProvisionedProductRequest);
+    }
 }

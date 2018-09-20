@@ -48,6 +48,12 @@ public class Outputs {
     public static final String STACK_NAME = "stackName";
     public static final String STACK_OUTPUTS = "stackOutputs";
     public static final String STACK_RESOURCES = "stackResources";
+    public static final String UPDATE_TIME = "updateTime";
+    public static final String RECORD_ID = "recordId";
+    public static final String RECORD_ERRORS = "recordErrors";
+    public static final String RECORD_TAGS = "recordTags";
+    public static final String RECORD_TYPE = "recordType";
+
 
     public static final String PROVISIONED_PRODUCT_ARN = "provisionedProductArn";
     public static final String PROVISIONED_PRODUCT_CREATED_TIME = "provisionedProductCreatedTime";

@@ -293,6 +293,9 @@ public class Inputs {
         public static final String ACCEPTED_LANGUAGE = "acceptedLanguage";
         public static final String IGNORE_ERRORS = "ignoreErrors";
         public static final String TERMINATE_TOKEN = "terminateToken";
+        public static final String UPDATE_TOKEN = "updateToken";
+        public static final String PROVISIONING_USE_PREVIOUS_VALUE = "usePreviousValue";
+
     }
 
 }
