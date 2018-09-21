@@ -96,7 +96,7 @@ public class UpdateProvisionedProduct {
                                        @Param(value = PROVISIONING_PARAMETERS, description = PROVISIONING_PARAMETERS_DESC) String provisioningParameters,
                                        @Param(value = PROVISIONING_USE_PREVIOUS_VALUE, description = PROVISIONING_USE_PREVIOUS_VALUE_DES) String usePreviousValue,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
-                                       @Param(value = UPDATE_TOKEN, required = true, description = UPDATE_TOKEN_DESCRIPTION) String updateToken)
+                                       @Param(value = UPDATE_TOKEN, description = UPDATE_TOKEN_DESCRIPTION) String updateToken)
 
 
     {
