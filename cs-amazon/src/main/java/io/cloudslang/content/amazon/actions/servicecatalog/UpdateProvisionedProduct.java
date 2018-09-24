@@ -41,8 +41,6 @@ import static io.cloudslang.content.amazon.entities.constants.Descriptions.Updat
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.UpdateProvisionedProductDescriptions.PROVISIONING_PARAMETERS_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.*;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_ID;
-import static io.cloudslang.content.amazon.utils.DefaultValues.COMMA;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapUpdateProvioningProduct;
 import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.toArrayOfUpdateParameters;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -57,7 +55,7 @@ public class UpdateProvisionedProduct {
                     @Output(value = Outputs.CREATED_TIME, description = CREATED_TIME_DESC),
                     @Output(value = Outputs.PATH_ID, description = PATH_ID_DESC),
                     @Output(value = Outputs.PRODUCT_ID, description = PRODUCT_ID_DESC),
-                    @Output(value = PROVISIONED_PRODUCT_ID, description = PROVISIONED_PRODUCT_ID_DESC),
+                    @Output(value = Outputs.PROVISIONED_PRODUCT_ID, description = PROVISIONED_PRODUCT_ID_DESC),
                     @Output(value = Outputs.PROVISIONED_PRODUCT_NAME, description = PROVISIONED_PRODUCT_NAME_DESCRIPTION),
                     @Output(value = Outputs.PROVISIONED_PRODUCT_TYPE, description = PROVISIONED_PRODUCT_TYPE_DESC),
                     @Output(value = Outputs.PROVISIONING_ARTIFACT_ID, description = PROVISIONING_ARTIFACT_ID_DESC),

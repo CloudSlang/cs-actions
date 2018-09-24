@@ -65,13 +65,13 @@ public class ServiceCatalogUtil {
     }
 
     public static List<UpdateProvisioningParameter> toArrayOfUpdateParameters(final String updateParameters, final String delimiter, final boolean usePreviousValue) {
-        if(StringUtils.isEmpty(updateParameters)) {
+        if (StringUtils.isEmpty(updateParameters)) {
             return new ArrayList<>();
         }
         final List<UpdateProvisioningParameter> updateParametersList = new ArrayList<>();
-        for (String line : updateParameters.split(delimiter)){
+        for (String line : updateParameters.split(delimiter)) {
             final ParametersLine paramLine = new ParametersLine(line);
-            if(paramLine.isValid()){
+            if (paramLine.isValid()) {
                 final UpdateProvisioningParameter updateParamter = new UpdateProvisioningParameter();
                 updateParamter.setKey(paramLine.getKey());
                 updateParamter.setValue(paramLine.getValue());

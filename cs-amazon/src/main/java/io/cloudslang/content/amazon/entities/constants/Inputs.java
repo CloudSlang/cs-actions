@@ -283,6 +283,7 @@ public class Inputs {
     public static class ServiceCatalogInputs {
         public static final String PRODUCT_ID = "productId";
         public static final String PROVISIONED_PRODUCT_NAME = "provisionedProductName";
+        public static final String PROVISIONED_PRODUCT_ID = "provisionedProductId";
         public static final String PROVISIONING_ARTIFACT_ID = "provisioningArtifactId";
         public static final String PROVISIONING_PARAMETERS = "provisioningParameters";
         public static final String TAGS = "tags";
