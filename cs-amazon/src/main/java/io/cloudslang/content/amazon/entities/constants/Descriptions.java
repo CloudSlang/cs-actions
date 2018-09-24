@@ -125,16 +125,44 @@ public class Descriptions {
         public static final String FAILURE_DESC = "An error has occurred while trying to get details about the product.";
     }
 
-    public static class UnprovisionProductAction
-    {
+    public static class UpdateProvisionedProductDescriptions {
+
+        //Inputs
+        public static final String PATH_ID_DESC = "The new path identifier. This value is optional if the product has a default path, and required if the product has more than one path.";
+        public static final String UPDATE_PROVISIONED_PRODUCT_DESCRIPTION = "Requests updates to the configuration of the specified provisioned product.";
+        public static final String PROVISIONING_ARTIFACT_ID_DESC = "The identifier of the provisioning artifact.";
+        public static final String PRODUCT_ID_DESC = "The product identifier." +
+                "Example: 'prod-n3frsv3vnznzo'";
+        public static final String PROVISIONING_PARAMETERS_DESC = "The new parameters.";
+        public static final String RECORD_ID_DESC = "The identifier of the record.";
+        public static final String RECORD_ERRORS_DESC = "The errors that occurred.";
+        public static final String RECORD_TAGS_DESC = "One or more tags.";
+        public static final String UPDATE_TIME_DESC = "The time when the record was last updated.";
+        public static final String RECORD_TYPE_DESC = "The record type.\n" +
+                "PROVISION_PRODUCT\n" +
+                "UPDATE_PROVISIONED_PRODUCT\n" +
+                "TERMINATE_PROVISIONED_PRODUCT";
+        public static final String PROVISIONED_PRODUCT_ID_DESCRIPTION = "The identifier of the provisioned product. You cannot specify both ProvisionedProductName and ProvisionedProductId.";
+        public static final String PROVISIONING_USE_PREVIOUS_VALUE_DES = "If set to true, The new parameters are ignored and the previous parameter value is kept." +
+                "Default: 'false'";
+        public static final String PROVISIONED_PRODUCT_NAME_DESCRIPTION = "The updated name of the provisioned product. You cannot specify both ProvisionedP" +
+                "roductName and ProvisionedProductId.";
+        public static final String UPDATE_TOKEN_DESCRIPTION = "The idempotency token that uniquely identifies the provisioning update request.";
+
+        //Results
+        public static final String SUCCESS_DESCRIPTION = "The specified product was successfully update.";
+        public static final String FAILURE_DESCRIPTION = "An error has occured while trying to update the specified product.";
+    }
+
+    public static class UnprovisionProductAction {
         public static final String UNPROVISION_PRODUCT_DESCRIPTION = "Terminates the specified provisioned product.";
         public static final String PROVISIONED_PRODUCT_ID_DESC = "The identifier of the provisioned product. You cannot specify both ProvisionedProductName and ProvisionedProductId inputs.\n" +
-                                                                 "Example: 'pp-almi4aq6ylmoa'";
+                "Example: 'pp-almi4aq6ylmoa'";
         public static final String PROVISIONED_PRODUCT_NAME_DESC = "The user-friendly name of the provisioned product. You cannot specify both ProvisionedProductName and ProvisionedProductId inputs.";
-        public static final String IGNORE_ERRORS_DESC = "If set to 'true', AWS Service Catalog stops managing the specified provisioned product even if it cannot delete the underlying resources.\n"+
-                                                        "Default: 'false'";
-        public static final String TERMINATE_TOKEN_DESC = "An idempotency token that uniquely identifies the termination request. This token is only valid during the termination process. "+
-                "After the provisioned product is terminated, subsequent requests to terminate the same provisioned product always return ResourceNotFound"+
+        public static final String IGNORE_ERRORS_DESC = "If set to 'true', AWS Service Catalog stops managing the specified provisioned product even if it cannot delete the underlying resources.\n" +
+                "Default: 'false'";
+        public static final String TERMINATE_TOKEN_DESC = "An idempotency token that uniquely identifies the termination request. This token is only valid during the termination process. " +
+                "After the provisioned product is terminated, subsequent requests to terminate the same provisioned product always return ResourceNotFound" +
                 "Pattern: [a-zA-Z0-9][a-zA-Z0-9_-]*";
         public static final String SUCCESS_DESC = "The product was successfully unprovisioned.";
         public static final String FAILURE_DESC = "An error has occurred while trying to unprovision the product.";

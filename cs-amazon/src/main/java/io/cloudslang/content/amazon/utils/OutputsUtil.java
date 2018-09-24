@@ -18,6 +18,7 @@ package io.cloudslang.content.amazon.utils;
 import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
 import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
 import com.amazonaws.services.servicecatalog.model.TerminateProvisionedProductResult;
+import com.amazonaws.services.servicecatalog.model.UpdateProvisionedProductResult;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.xml.actions.XpathQuery;
@@ -27,17 +28,8 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SIGNATURE_RESULT;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.CREATED_TIME;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PATH_ID;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PRODUCT_ID;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_ARN;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_CREATED_TIME;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_ID;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_NAME;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_STATUS;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_TYPE;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONING_ARTIFACT_ID;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.STATUS;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.*;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.RECORD_TAGS;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -133,6 +125,27 @@ public class OutputsUtil {
         results.put(PROVISIONED_PRODUCT_NAME, result.getRecordDetail().getProvisionedProductName());
         results.put(PROVISIONED_PRODUCT_TYPE, result.getRecordDetail().getProvisionedProductType());
         results.put(PROVISIONING_ARTIFACT_ID, result.getRecordDetail().getProvisioningArtifactId());
+        results.put(STATUS, result.getRecordDetail().getStatus());
+
+        return results;
+    }
+
+    public static Map<String, String> getSuccessResultMapUpdateProvioningProduct(UpdateProvisionedProductResult result) {
+
+        Map<String, String> results = getSuccessResultsMap(result.toString());
+
+        results.put(CREATED_TIME, result.getRecordDetail().getCreatedTime().toString());
+        results.put(PATH_ID, result.getRecordDetail().getPathId());
+        results.put(PRODUCT_ID, result.getRecordDetail().getProductId());
+        results.put(PROVISIONED_PRODUCT_ID, result.getRecordDetail().getProvisionedProductId());
+        results.put(PROVISIONED_PRODUCT_NAME, result.getRecordDetail().getProvisionedProductName());
+        results.put(PROVISIONED_PRODUCT_TYPE, result.getRecordDetail().getProvisionedProductType());
+        results.put(PROVISIONING_ARTIFACT_ID, result.getRecordDetail().getProvisioningArtifactId());
+        results.put(UPDATE_TIME, result.getRecordDetail().getUpdatedTime().toString());
+        results.put(RECORD_ID, result.getRecordDetail().getRecordId());
+        results.put(RECORD_TYPE, result.getRecordDetail().getRecordType());
+        results.put(RECORD_ERRORS, result.getRecordDetail().getRecordErrors().toString());
+        results.put(RECORD_TAGS, result.getRecordDetail().getRecordErrors().toString());
         results.put(STATUS, result.getRecordDetail().getStatus());
 
         return results;

@@ -17,6 +17,7 @@ package io.cloudslang.content.amazon.utils;
 import com.amazonaws.services.cloudformation.model.Stack;
 import com.amazonaws.services.servicecatalog.model.ProvisioningParameter;
 import com.amazonaws.services.servicecatalog.model.Tag;
+import com.amazonaws.services.servicecatalog.model.UpdateProvisioningParameter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -61,6 +62,24 @@ public class ServiceCatalogUtil {
             }
         }
         return parametersList;
+    }
+
+    public static List<UpdateProvisioningParameter> toArrayOfUpdateParameters(final String updateParameters, final String delimiter, final boolean usePreviousValue) {
+        if (StringUtils.isEmpty(updateParameters)) {
+            return new ArrayList<>();
+        }
+        final List<UpdateProvisioningParameter> updateParametersList = new ArrayList<>();
+        for (String line : updateParameters.split(delimiter)) {
+            final ParametersLine paramLine = new ParametersLine(line);
+            if (paramLine.isValid()) {
+                final UpdateProvisioningParameter updateParamter = new UpdateProvisioningParameter();
+                updateParamter.setKey(paramLine.getKey());
+                updateParamter.setValue(paramLine.getValue());
+                updateParamter.setUsePreviousValue(usePreviousValue);
+                updateParametersList.add(updateParamter);
+            }
+        }
+        return updateParametersList;
     }
 
     public static Stack getStack(List<Stack> stacks) {
