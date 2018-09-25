@@ -36,19 +36,77 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceCatalogActions.CREATE_COMPLETE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceCatalogActions.CREATE_IN_PROGRESS;
-import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.*;
-import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.*;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.*;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.ASYNC_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.CONNECT_TIMEOUT_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.CREDENTIAL_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.EXCEPTION_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.EXECUTION_TIMEOUT_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.IDENTITY_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.PROXY_HOST_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.PROXY_PASSWORD_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.PROXY_PORT_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.PROXY_USERNAME_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.RETURN_CODE_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.RETURN_RESULT_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.ACCEPT_LANGUAGE_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.CREATED_TIME_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.DELIMITER_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.FAILURE_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.NOTIFICATION_ARNS_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.PATH_ID_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.POLLING_INTERVAL_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.PRODUCT_ID_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.PROVISIONED_PRODUCT_ID_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.PROVISIONED_PRODUCT_NAME_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.PROVISIONED_PRODUCT_TYPE_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.PROVISIONING_ARTIFACT_ID_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.PROVISIONING_ARTIFACT_ID_OUT_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.PROVISIONING_PARAMETERS_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.PROVISION_PRODUCT_DESCRIPTION;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.PROVISION_TOKEN_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.REGION_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.STACK_ID_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.STACK_NAME_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.STACK_OUTPUTS_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.STACK_RESOURCES_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.STATUS_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.SUCCESS_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.TAGS_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ASYNC;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.DELIMITER;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.EXECUTION_TIMEOUT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.POLLING_INTERVAL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.REGION;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.ACCEPT_LANGUAGE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.NOTIFICATION_ARNS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.PATH_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.PRODUCT_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.PROVISIONED_PRODUCT_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.PROVISIONING_ARTIFACT_ID;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.*;
-import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.*;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.PROVISIONING_PARAMETERS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.PROVISION_TOKEN;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.TAGS;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.STACK_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.STACK_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.STACK_OUTPUTS;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.STACK_RESOURCES;
+import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.describeCloudFormationStack;
+import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.describeStackResources;
+import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.getCloudFormationStackName;
 import static io.cloudslang.content.amazon.utils.DefaultValues.COMMA;
+import static io.cloudslang.content.amazon.utils.OutputsUtil.getFormattedOutputJson;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapProvisionProduct;
-import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.*;
+import static io.cloudslang.content.amazon.utils.OutputsUtil.isValidJson;
+import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.getStack;
+import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.toArrayOfParameters;
+import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.toArrayOfTags;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -156,12 +214,19 @@ public class ProvisionProductAction {
                 throw new RuntimeException("Stack creation failure. Reason: " + stacks.get(0).getStackStatusReason());
             }
 
+            String stackOutputs = getFormattedOutputJson(getStack(stacks).getOutputs().toString());
+            String stackResources = getFormattedOutputJson(describeStackResources(cloudFormationStackName, awsCloudFormation));
+
+            if (!isValidJson(stackOutputs) || !isValidJson(stackResources)) {
+                throw new RuntimeException("JSON output(s) could not be formatted.");
+            }
+
             Map<String, String> results = getSuccessResultMapProvisionProduct(result);
 
             results.put(STACK_NAME, getStack(stacks).getStackName());
             results.put(STACK_ID, getStack(stacks).getStackId());
-            results.put(STACK_OUTPUTS, getStack(stacks).getOutputs().toString());
-            results.put(STACK_RESOURCES, describeStackResources(cloudFormationStackName, awsCloudFormation));
+            results.put(STACK_OUTPUTS, stackOutputs);
+            results.put(STACK_RESOURCES, stackResources);
 
             return results;
         } catch (Exception e) {
