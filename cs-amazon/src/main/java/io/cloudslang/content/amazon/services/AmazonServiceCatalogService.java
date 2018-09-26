@@ -87,11 +87,7 @@ public class AmazonServiceCatalogService {
         return cloudFormationClient.describeStacks(describeStacksRequest).getStacks();
     }
 
-    public static String describeStackResources(final String stackName, final AmazonCloudFormation cloudFormationClient) {
-        return describeStackResourcesResult(stackName, cloudFormationClient).getStackResources().toString();
-    }
-
-    private static DescribeStackResourcesResult describeStackResourcesResult(final String stackName, final AmazonCloudFormation cloudFormationClient) {
+    public static DescribeStackResourcesResult describeStackResourcesResult(final String stackName, final AmazonCloudFormation cloudFormationClient) {
         DescribeStackResourcesRequest stackResourceRequest = new DescribeStackResourcesRequest()
                 .withStackName(stackName);
         return cloudFormationClient.describeStackResources(stackResourceRequest);

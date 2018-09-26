@@ -15,6 +15,8 @@
 
 package io.cloudslang.content.amazon.utils;
 
+import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
+import com.amazonaws.services.cloudformation.model.Stack;
 import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
 import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
 import com.amazonaws.services.servicecatalog.model.UpdateProvisionedProductResult;
@@ -23,6 +25,7 @@ import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.xml.actions.XpathQuery;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,10 +33,6 @@ import java.util.Map;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SIGNATURE_RESULT;
 import static io.cloudslang.content.amazon.entities.constants.Outputs.*;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.RECORD_TAGS;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.RECORD_TYPE;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.STATUS;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.UPDATE_TIME;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -59,25 +58,8 @@ public class OutputsUtil {
 
     private static final String XMLNS = "xmlns";
     private static final String WORKAROUND = "workaround";
-    private static final String COMMA_REGEX = ",\\s*\\n?\\s*";
-    private static final String RIGHT_SQUARE_BRACKET = "]";
-    private static final String RIGHT_CURLY_BRACKET = "}";
 
     private OutputsUtil() {
-    }
-
-    public static String getFormattedOutputJson(String jsonAsString) {
-        return jsonAsString.replaceAll(COMMA_REGEX + RIGHT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET)
-                .replaceAll(COMMA_REGEX + RIGHT_CURLY_BRACKET, RIGHT_CURLY_BRACKET);
-    }
-
-    public static boolean isValidJson(String jsonAsString) {
-        try {
-            new ObjectMapper().readTree(jsonAsString);
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
     }
 
     public static Map<String, String> populateSignatureResultsMap(AuthorizationHeader authorizationHeader) {
@@ -183,5 +165,23 @@ public class OutputsUtil {
         results.put(PROVISIONED_PRODUCT_TYPE, result.getProvisionedProductDetail().getType());
 
         return results;
+    }
+
+    public static String getStackResourcesToJson(DescribeStackResourcesResult describeStackResources) throws IOException {
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(out, describeStackResources.getStackResources());
+        final byte[] stackResources = out.toByteArray();
+
+        return new String(stackResources);
+    }
+
+    public static String getStackOutputsToJson(Stack stack) throws IOException {
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(out, stack.getOutputs());
+        final byte[] stackOutputs = out.toByteArray();
+
+        return new String(stackOutputs);
     }
 }

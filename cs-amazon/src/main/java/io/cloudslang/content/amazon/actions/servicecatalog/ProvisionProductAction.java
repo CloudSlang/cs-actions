@@ -47,9 +47,7 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCata
 import static io.cloudslang.content.amazon.entities.constants.Outputs.*;
 import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.*;
 import static io.cloudslang.content.amazon.utils.DefaultValues.COMMA;
-import static io.cloudslang.content.amazon.utils.OutputsUtil.getFormattedOutputJson;
-import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapProvisionProduct;
-import static io.cloudslang.content.amazon.utils.OutputsUtil.isValidJson;
+import static io.cloudslang.content.amazon.utils.OutputsUtil.*;
 import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -157,12 +155,8 @@ public class ProvisionProductAction {
                 throw new RuntimeException("Stack creation failure. Reason: " + stacks.get(0).getStackStatusReason());
             }
 
-            String stackOutputs = getFormattedOutputJson(getStack(stacks).getOutputs().toString());
-            String stackResources = getFormattedOutputJson(describeStackResources(cloudFormationStackName, awsCloudFormation));
-
-            if (!isValidJson(stackOutputs) || !isValidJson(stackResources)) {
-                throw new RuntimeException("JSON output(s) could not be formatted.");
-            }
+            String stackOutputs = getStackOutputsToJson(getStack(stacks));
+            String stackResources = getStackResourcesToJson(describeStackResourcesResult(cloudFormationStackName, awsCloudFormation));
 
             Map<String, String> results = getSuccessResultMapProvisionProduct(result);
 
