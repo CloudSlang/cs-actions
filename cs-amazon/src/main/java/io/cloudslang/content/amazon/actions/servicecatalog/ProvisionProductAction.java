@@ -47,11 +47,10 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCata
 import static io.cloudslang.content.amazon.entities.constants.Outputs.*;
 import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.*;
 import static io.cloudslang.content.amazon.utils.DefaultValues.COMMA;
-import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapProvisionProduct;
+import static io.cloudslang.content.amazon.utils.OutputsUtil.*;
 import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-
 
 public class ProvisionProductAction {
 
@@ -156,12 +155,15 @@ public class ProvisionProductAction {
                 throw new RuntimeException("Stack creation failure. Reason: " + stacks.get(0).getStackStatusReason());
             }
 
+            String stackOutputs = getStackOutputsToJson(getStack(stacks));
+            String stackResources = getStackResourcesToJson(describeStackResourcesResult(cloudFormationStackName, awsCloudFormation));
+
             Map<String, String> results = getSuccessResultMapProvisionProduct(result);
 
             results.put(STACK_NAME, getStack(stacks).getStackName());
             results.put(STACK_ID, getStack(stacks).getStackId());
-            results.put(STACK_OUTPUTS, getStack(stacks).getOutputs().toString());
-            results.put(STACK_RESOURCES, describeStackResources(cloudFormationStackName, awsCloudFormation));
+            results.put(STACK_OUTPUTS, stackOutputs);
+            results.put(STACK_RESOURCES, stackResources);
 
             return results;
         } catch (Exception e) {

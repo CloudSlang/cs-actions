@@ -41,7 +41,7 @@ import static io.cloudslang.content.amazon.entities.constants.Descriptions.Updat
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.UpdateProvisionedProductDescriptions.PROVISIONING_PARAMETERS_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.*;
-import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapUpdateProvioningProduct;
+import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapUpdateProvisioningProduct;
 import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.toArrayOfUpdateParameters;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -135,7 +135,7 @@ public class UpdateProvisionedProduct {
             final UpdateProvisionedProductResult result = AmazonServiceCatalogService.updateProvisionedProduct(acceptedLanguageVal, pathId,
                     productId, provisionedProductId, toArrayOfUpdateParameters(provisioningParameters, delimiterVal, usePreviousValueImp), provisionedProductName, provisioningArtifactId, updateToken, awsServiceCatalog);
 
-            Map<String, String> results = getSuccessResultMapUpdateProvioningProduct(result);
+            Map<String, String> results = getSuccessResultMapUpdateProvisioningProduct(result);
             return results;
 
         } catch (Exception e) {
