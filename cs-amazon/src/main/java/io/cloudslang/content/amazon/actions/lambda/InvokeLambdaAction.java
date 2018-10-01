@@ -30,6 +30,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.utils.DefaultValues;
 import io.cloudslang.content.utils.OutputUtilities;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -97,12 +98,18 @@ public class InvokeLambdaAction {
         execTimeoutMs = defaultIfBlank(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
         qualifier = defaultIfBlank(qualifier, DefaultValues.DEFAULT_FUNCTION_QUALIFIER);
 
-        ClientConfiguration clientConf = new ClientConfiguration()
-                .withConnectionTimeout(Integer.parseInt(connectTimeoutMs))
-                .withProxyHost(proxyHost)
-                .withProxyPort(Integer.parseInt(proxyPort))
-                .withProxyUsername(proxyUsername)
-                .withProxyPassword(proxyPassword);
+        ClientConfiguration clientConf;
+        if (StringUtils.isEmpty(proxyHost)) {
+            clientConf = new ClientConfiguration()
+                    .withConnectionTimeout(Integer.parseInt(connectTimeoutMs));
+        } else {
+            clientConf = new ClientConfiguration()
+                    .withConnectionTimeout(Integer.parseInt(connectTimeoutMs))
+                    .withProxyHost(proxyHost)
+                    .withProxyPort(Integer.parseInt(proxyPort))
+                    .withProxyUsername(proxyUsername)
+                    .withProxyPassword(proxyPassword);
+        }
 
         AWSLambdaAsyncClient client = (AWSLambdaAsyncClient) AWSLambdaAsyncClientBuilder.standard()
                 .withClientConfiguration(clientConf)
