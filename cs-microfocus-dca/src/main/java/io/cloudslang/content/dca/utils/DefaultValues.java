@@ -25,4 +25,6 @@ public class DefaultValues {
     public static final String DEFAULT_TIMEOUT = "1200";
     public static final String DEFAULT_POLLING_INTERVAL = "30";
     public static final String COMMA = ",";
+    public static final String DEFAULT_CM_HOST = "dca-credential-manager";
+    public static final String DEFAULT_CM_PORT = "5333";
 }

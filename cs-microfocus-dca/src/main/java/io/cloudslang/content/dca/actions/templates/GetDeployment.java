@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.dca.actions.templates;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -22,8 +23,8 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.dca.utils.Validator;
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 import java.util.Map;
 
@@ -33,22 +34,20 @@ import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.dca.utils.Constants.GET;
-import static io.cloudslang.content.dca.utils.Constants.HTTPS;
+import static io.cloudslang.content.dca.utils.Constants.*;
 import static io.cloudslang.content.dca.utils.DefaultValues.*;
 import static io.cloudslang.content.dca.utils.Descriptions.Common.*;
 import static io.cloudslang.content.dca.utils.Descriptions.GetDeployment.*;
 import static io.cloudslang.content.dca.utils.InputNames.*;
 import static io.cloudslang.content.dca.utils.OutputNames.STATUS;
 import static io.cloudslang.content.dca.utils.Utilities.*;
-import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
-import static io.cloudslang.content.httpclient.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
-import static java.lang.System.lineSeparator;
+import static java.lang.Integer.parseInt;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.apache.commons.lang3.StringUtils.join;
 
 public class GetDeployment {
 
@@ -102,12 +101,12 @@ public class GetDeployment {
         final String keystorePassword = defaultIfEmpty(keystorePasswordInp, DEFAULT_JAVA_KEYSTORE_PASSWORD);
 
         // validation
-        final Validator validator = new Validator();
-        validator.validatePort(port);
-        validator.validateProtocol(protocol);
+        final Validator validator = new Validator()
+                .validatePort(port, DCA_PORT)
+                .validateProtocol(protocol, PROTOCOL);
 
-        if (!validator.getValidationErrorList().isEmpty()) {
-            return getFailureResultsMap(join(validator.getValidationErrorList(), lineSeparator()));
+        if (validator.hasErrors()) {
+            return getFailureResultsMap(validator.getErrors());
         }
 
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
@@ -130,16 +129,16 @@ public class GetDeployment {
         try {
             final ObjectMapper mapper = new ObjectMapper();
 
-            final Map<String, String> httpClientResult = new CSHttpClient().execute(httpClientInputs);
+            final Map<String, String> httpClientResult = new HttpClientService().execute(httpClientInputs);
 
-            final Map resultMap = mapper.readValue(httpClientResult.get(RETURN_RESULT), Map.class);
+            final JsonNode result = mapper.readTree(httpClientResult.get(RETURN_RESULT));
 
-            if (Integer.parseInt(httpClientResult.get(STATUS_CODE)) != HTTP_OK) {
-                return getFailureResultsMap(resultMap.get("message").toString());
+            if (parseInt(httpClientResult.get(STATUS_CODE)) != HTTP_OK) {
+                return getFailureResultsMap(result.toString());
             }
 
             final Map<String, String> successResultsMap = getSuccessResultsMap(httpClientResult.get(RETURN_RESULT));
-            successResultsMap.put(STATUS, resultMap.get(STATUS).toString());
+            successResultsMap.put(STATUS, result.get(STATUS).asText());
             return successResultsMap;
         } catch (Exception e) {
             return getFailureResultsMap(e);

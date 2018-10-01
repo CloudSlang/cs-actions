@@ -44,6 +44,13 @@ public class SunOsPingCommandTest {
             "5 packets transmitted, 4 packets received, 20% packet loss\n" +
             "round-trip (ms)  min/avg/max/stddev = 185.389/186.122/186.562/0.542\n";
 
+    private static final String OUTPUT_COMMAND_WITHOUT_ROUND_TRIP_TIMES = "11 bytes from solaris (::1): icmp_seq=0.\n" +
+            "11 bytes from solaris (::1): icmp_seq=1.\n" +
+            "11 bytes from solaris (::1): icmp_seq=2.\n" +
+            "\n" +
+            "----localhost PING Statistics----\n" +
+            "3 packets transmitted, 3 packets received, 0% packet loss\n";
+
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
@@ -125,5 +132,17 @@ public class SunOsPingCommandTest {
         assertEquals("185.389", resultsMap.get(TRANSMISSION_TIME_MIN));
         assertEquals("186.122", resultsMap.get(TRANSMISSION_TIME_AVG));
         assertEquals("186.562", resultsMap.get(TRANSMISSION_TIME_MAX));
+    }
+
+    @Test
+    public void testParseOutputWithoutRoundTripTimes() {
+        Map<String, String> resultsMap = new SunOsPingCommand().parseOutput(OUTPUT_COMMAND_WITHOUT_ROUND_TRIP_TIMES);
+
+        assertEquals("3", resultsMap.get(PACKETS_SENT));
+        assertEquals("3", resultsMap.get(PACKETS_RECEIVED));
+        assertEquals("0", resultsMap.get(PERCENTAGE_PACKETS_LOST));
+        assertEquals("", resultsMap.get(TRANSMISSION_TIME_MIN));
+        assertEquals("", resultsMap.get(TRANSMISSION_TIME_AVG));
+        assertEquals("", resultsMap.get(TRANSMISSION_TIME_MAX));
     }
 }

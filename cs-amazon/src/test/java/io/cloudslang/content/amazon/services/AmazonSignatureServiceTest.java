@@ -38,7 +38,7 @@ public class AmazonSignatureServiceTest {
             "x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\r\n" +
             "x-amz-date:20130524T000000Z";
 
-    private static final String EXPECTED_SIGNATURE = "f0e8bdb87c964420e857bd35b5d6ed310bd44f0170aba48dd91039c6036bdb41";
+    private static final String EXPECTED_SIGNATURE = "f0c1f1706f0378773c039781a41807b53d135bca4a0e1d5c824f9e14ae514078";
 
     @Test
     public void testSignature() throws SignatureException, MalformedURLException {
@@ -48,16 +48,16 @@ public class AmazonSignatureServiceTest {
         assertTrue(authorizationHeader.getAuthorizationHeader().contains("Authorization:AWS4-HMAC-SHA256 " +
                 "Credential=AKIAIOSFODNN7EXAMPLE/20130524/us-east-1/s3/aws4_request, " +
                 "SignedHeaders=host;range;x-amz-content-sha256;x-amz-date, " +
-                "Signature=f0e8bdb87c964420e857bd35b5d6ed310bd44f0170aba48dd91039c6036bdb41"));
+                "Signature=f0c1f1706f0378773c039781a41807b53d135bca4a0e1d5c824f9e14ae514078"));
         assertTrue(authorizationHeader.getAuthorizationHeader().contains("x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"));
         assertTrue(authorizationHeader.getAuthorizationHeader().contains("x-amz-date:20130524T000000Z"));
-        assertTrue(authorizationHeader.getAuthorizationHeader().contains("host:examplebucket.s3.amazonaws.com"));
+        assertTrue(authorizationHeader.getAuthorizationHeader().contains("host:s3.amazonaws.com"));
         assertTrue(authorizationHeader.getAuthorizationHeader().contains("range:bytes=0-9"));
     }
 
     private CommonInputs getCommonInputs() throws MalformedURLException {
         return new CommonInputs.Builder()
-                .withEndpoint("https://examplebucket.s3.amazonaws.com", "s3", "")
+                .withEndpoint("https://s3.amazonaws.com", "s3", "")
                 .withIdentity("AKIAIOSFODNN7EXAMPLE")
                 .withCredential("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
                 .withApiService(API_SERVICE)

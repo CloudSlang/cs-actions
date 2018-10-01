@@ -15,7 +15,7 @@
 package io.cloudslang.content.dca.utils;
 
 import io.cloudslang.content.dca.models.DcaAuthModel;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +24,9 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import static io.cloudslang.content.dca.utils.Constants.*;
 import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.splitPreserveAllTokens;
 
 public class Utilities {
@@ -34,7 +36,7 @@ public class Utilities {
                                    @NotNull final String idmHostInp,
                                    @NotNull final String idmPort) {
         final URIBuilder uriBuilder = getUriBuilder(protocol, idmHostInp, idmPort);
-        uriBuilder.setPath(Constants.IDM_TOKENS_PATH);
+        uriBuilder.setPath(IDM_TOKENS_PATH);
 
         try {
             return uriBuilder.build().toURL().toString();
@@ -48,7 +50,7 @@ public class Utilities {
                                          @NotNull final String dcaHost,
                                          @NotNull final String dcaPort) {
         final URIBuilder uriBuilder = getUriBuilder(protocol, dcaHost, dcaPort);
-        uriBuilder.setPath(Constants.DCA_DEPLOYMENT_PATH);
+        uriBuilder.setPath(DCA_DEPLOYMENT_PATH);
 
         try {
             return uriBuilder.build().toURL().toString();
@@ -63,7 +65,37 @@ public class Utilities {
                                              @NotNull final String dcaPort,
                                              @NotNull final String deploymentUuid) {
         final URIBuilder uriBuilder = getUriBuilder(protocol, dcaHost, dcaPort);
-        uriBuilder.setPath(String.format("%s/%s", Constants.DCA_DEPLOYMENT_PATH, deploymentUuid));
+        uriBuilder.setPath(String.format("%s/%s", DCA_DEPLOYMENT_PATH, deploymentUuid));
+
+        try {
+            return uriBuilder.build().toURL().toString();
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NotNull
+    public static String getDcaCMCredentialUrl(@NotNull final String protocol,
+                                               @NotNull final String dcaHost,
+                                               @NotNull final String dcaPort,
+                                               @NotNull final String credentialUuid) {
+        final URIBuilder uriBuilder = getUriBuilder(protocol, dcaHost, dcaPort);
+        uriBuilder.setPath(String.format("%s/%s/%s", DCA_CM_CREDENTIAL_PATH, credentialUuid, DATA_PATH));
+
+        try {
+            return uriBuilder.build().toURL().toString();
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NotNull
+    public static String getDcaResourceUrl(@NotNull final String protocol,
+                                           @NotNull final String dcaHost,
+                                           @NotNull final String dcaPort,
+                                           @NotNull final String resourceUuid) {
+        final URIBuilder uriBuilder = getUriBuilder(protocol, dcaHost, dcaPort);
+        uriBuilder.setPath(String.format("%s/%s", DCA_RESOURCE_PATH, resourceUuid));
 
         try {
             return uriBuilder.build().toURL().toString();
@@ -145,16 +177,21 @@ public class Utilities {
 
     @NotNull
     public static List<String> splitToList(@NotNull final String string, @NotNull final String delimiter) {
-        return asList(splitPreserveAllTokens(string, delimiter));
+        final List<String> tokens = asList(splitPreserveAllTokens(string, delimiter));
+        if (tokens.isEmpty()) {
+            // to make sure that if empty string is added it will be put in the array
+            return asList(EMPTY);
+        }
+        return tokens;
     }
 
     @NotNull
     public static String getAuthHeaders(@NotNull final String authToken, @NotNull final String refreshToken) {
         final StringBuilder headerBuilder = new StringBuilder();
-        headerBuilder.append(Constants.X_AUTH_TOKEN_HEADER).append(authToken).append(Constants.HEADERS_DELIMITER);
+        headerBuilder.append(X_AUTH_TOKEN_HEADER).append(authToken).append(HEADERS_DELIMITER);
 //        headerBuilder.append("Content-Type:").append(APPLICATION_JSON).append(Constants.HEADERS_DELIMITER);
         if (StringUtils.isNotEmpty(refreshToken)) {
-            headerBuilder.append(Constants.REFRESH_TOKEN_HEADER).append(refreshToken).append(Constants.HEADERS_DELIMITER);
+            headerBuilder.append(REFRESH_TOKEN_HEADER).append(refreshToken).append(HEADERS_DELIMITER);
         }
         return headerBuilder.toString();
     }

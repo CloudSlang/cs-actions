@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2018 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -176,5 +176,13 @@ public class Constants {
 
     public static class S3QueryApiActions {
         public static final String GET_BUCKET = "GET Bucket";
+    }
+
+    public static class ServiceCatalogActions {
+        public static final String CREATE_IN_PROGRESS = "CREATE_IN_PROGRESS";
+        public static final String CREATE_COMPLETE = "CREATE_COMPLETE";
+        public static final String FAILED = "FAILED";
+        public static final String CLOUD_FORMATION_STACK_NAME_REGEX = "(SC)-[0-9]{0,63}-[a-z]{0,63}-[a-z0-9]{0,63}";
+
     }
 }

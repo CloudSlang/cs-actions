@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.amazon.entities.inputs;
 
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.aws.AmazonApi;
 import org.jetbrains.annotations.NotNull;
 

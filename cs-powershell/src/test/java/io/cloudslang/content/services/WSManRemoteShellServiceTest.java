@@ -17,8 +17,8 @@ package io.cloudslang.content.services;
 
 import io.cloudslang.content.entities.OutputStream;
 import io.cloudslang.content.entities.WSManRequestInputs;
-import io.cloudslang.content.httpclient.HttpClientInputs;
-import io.cloudslang.content.httpclient.CSHttpClient;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.utils.WSManUtils;
 import io.cloudslang.content.utils.XMLUtils;
 import org.junit.After;
@@ -104,7 +104,7 @@ public class WSManRemoteShellServiceTest {
 
     private WSManRequestInputs wsManRequestInputs;
     @Mock
-    private CSHttpClient csHttpClientMock;
+    private HttpClientService csHttpClientMock;
     @Mock
     private HttpClientInputs httpClientInputsMock;
     @Mock
@@ -150,19 +150,19 @@ public class WSManRemoteShellServiceTest {
 
     @Test
     public void testRunCommand() throws Exception {
-        PowerMockito.doReturn(SHELL_UUID).when(wsManRemoteShellServiceSpy, CREATE_SHELL_METHOD, any(CSHttpClient.class), any(HttpClientInputs.class),
+        PowerMockito.doReturn(SHELL_UUID).when(wsManRemoteShellServiceSpy, CREATE_SHELL_METHOD, any(HttpClientService.class), any(HttpClientInputs.class),
                 any(WSManRequestInputs.class));
 
-        PowerMockito.doReturn(COMMAND_UUID).when(wsManRemoteShellServiceSpy, EXECUTE_COMMAND_METHOD, any(CSHttpClient.class),
+        PowerMockito.doReturn(COMMAND_UUID).when(wsManRemoteShellServiceSpy, EXECUTE_COMMAND_METHOD, any(HttpClientService.class),
                 any(HttpClientInputs.class), any(String.class), any(WSManRequestInputs.class), any(String.class));
 
-        PowerMockito.doReturn(resultMock).when(wsManRemoteShellServiceSpy, RECEIVE_COMMAND_RESULT_METHOD, any(CSHttpClient.class), any(HttpClientInputs.class),
+        PowerMockito.doReturn(resultMock).when(wsManRemoteShellServiceSpy, RECEIVE_COMMAND_RESULT_METHOD, any(HttpClientService.class), any(HttpClientInputs.class),
                 any(String.class), any(String.class), any(WSManRequestInputs.class));
 
-        PowerMockito.doNothing().when(wsManRemoteShellServiceSpy, DELETE_SHELL_METHOD, any(CSHttpClient.class), any(HttpClientInputs.class),
+        PowerMockito.doNothing().when(wsManRemoteShellServiceSpy, DELETE_SHELL_METHOD, any(HttpClientService.class), any(HttpClientInputs.class),
                 any(String.class), any(WSManRequestInputs.class));
 
-        PowerMockito.whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
+        PowerMockito.whenNew(HttpClientService.class).withNoArguments().thenReturn(csHttpClientMock);
         PowerMockito.whenNew(HttpClientInputs.class).withNoArguments().thenReturn(httpClientInputsMock);
         PowerMockito.mockStatic(WSManUtils.class);
         PowerMockito.doNothing().when(WSManUtils.class);
@@ -171,7 +171,7 @@ public class WSManRemoteShellServiceTest {
 
         Map<String, String> result = wsManRemoteShellServiceSpy.runCommand(wsManRequestInputs);
 
-        PowerMockito.verifyNew(CSHttpClient.class).withNoArguments();
+        PowerMockito.verifyNew(HttpClientService.class).withNoArguments();
         PowerMockito.verifyNew(HttpClientInputs.class).withNoArguments();
         verifyStatic();
         WSManUtils.validateUUID(SHELL_UUID, SHELL_ID);
@@ -182,12 +182,12 @@ public class WSManRemoteShellServiceTest {
     @Test
     public void testRunCommandThrowsException() throws Exception {
         PowerMockito.doThrow(new RuntimeException(SHELL_ID_NOT_RETRIEVED)).when(wsManRemoteShellServiceSpy,
-                CREATE_SHELL_METHOD, any(CSHttpClient.class), any(HttpClientInputs.class), any(WSManRequestInputs.class));
+                CREATE_SHELL_METHOD, any(HttpClientService.class), any(HttpClientInputs.class), any(WSManRequestInputs.class));
 
         thrownException.expectMessage(SHELL_ID_NOT_RETRIEVED);
         wsManRemoteShellServiceSpy.runCommand(wsManRequestInputs);
 
-        PowerMockito.verifyNew(CSHttpClient.class).withNoArguments();
+        PowerMockito.verifyNew(HttpClientService.class).withNoArguments();
         PowerMockito.verifyNew(HttpClientInputs.class).withNoArguments();
     }
 

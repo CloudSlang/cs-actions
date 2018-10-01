@@ -60,13 +60,12 @@ public class SQLInputsUtils {
     }
 
     @NotNull
-    public static GlobalSessionObject<Map<String, Object>> getOrDefaultGlobalSessionObj(final GlobalSessionObject<Map<String, Object>> globalSessionObject) {
-        if (globalSessionObject != null && globalSessionObject.get() != null) {
+    public static GlobalSessionObject<Map<String, Object>> getOrDefaultGlobalSessionObj(@NotNull final GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+        if (globalSessionObject.get() != null) {
             return globalSessionObject;
         }
-        final GlobalSessionObject<Map<String, Object>> newGlobalSessionObject = new GlobalSessionObject<>();
-        newGlobalSessionObject.setResource(new SQLSessionResource(new HashMap<String, Object>()));
-        return newGlobalSessionObject;
+        globalSessionObject.setResource(new SQLSessionResource(new HashMap<String, Object>()));
+        return globalSessionObject;
     }
 
     @NotNull

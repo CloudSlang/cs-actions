@@ -13,10 +13,12 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.httpclient;
+package io.cloudslang.content.httpclient.services;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.components.HttpComponents;
 import io.cloudslang.content.httpclient.build.*;
 import io.cloudslang.content.httpclient.build.auth.AuthSchemeProviderLookupBuilder;
 import io.cloudslang.content.httpclient.build.auth.AuthTypes;
@@ -59,7 +61,7 @@ import java.util.Map;
  * User: davidmih
  * Date: 7/15/14
  */
-public class CSHttpClient {
+public class HttpClientService {
     public static final String RETURN_CODE = "returnCode";
     public static final String SUCCESS = "0";
     //outputs

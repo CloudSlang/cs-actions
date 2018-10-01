@@ -18,7 +18,7 @@ package io.cloudslang.content.dropbox.factory;
 import io.cloudslang.content.dropbox.entities.inputs.CommonInputs;
 import io.cloudslang.content.dropbox.entities.inputs.FolderInputs;
 import io.cloudslang.content.dropbox.entities.inputs.InputsWrapper;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 import static io.cloudslang.content.dropbox.entities.constants.Constants.ErrorMessages.UNKNOWN_BUILDER_TYPE;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.Values.INIT_INDEX;

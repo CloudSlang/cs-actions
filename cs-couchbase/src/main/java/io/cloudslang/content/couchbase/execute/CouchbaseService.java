@@ -17,8 +17,8 @@ package io.cloudslang.content.couchbase.execute;
 
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 import java.net.MalformedURLException;
 import java.util.Map;
@@ -43,6 +43,6 @@ public class CouchbaseService {
         buildHeaders(wrapper);
         buildPayload(wrapper);
 
-        return new CSHttpClient().execute(httpClientInputs);
+        return new HttpClientService().execute(httpClientInputs);
     }
 }

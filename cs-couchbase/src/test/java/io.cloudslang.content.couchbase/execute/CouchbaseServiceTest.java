@@ -19,8 +19,8 @@ import io.cloudslang.content.couchbase.entities.inputs.BucketInputs;
 import io.cloudslang.content.couchbase.entities.inputs.ClusterInputs;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.entities.inputs.NodeInputs;
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,20 +52,20 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CSHttpClient.class, CouchbaseService.class})
+@PrepareForTest({HttpClientService.class, CouchbaseService.class})
 public class CouchbaseServiceTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     @Mock
-    private CSHttpClient csHttpClientMock;
+    private HttpClientService csHttpClientMock;
 
     private CouchbaseService toTest;
     private HttpClientInputs httpClientInputs;
 
     @Before
     public void init() throws Exception {
-        whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
+        whenNew(HttpClientService.class).withNoArguments().thenReturn(csHttpClientMock);
         when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(new HashMap<String, String>());
         toTest = new CouchbaseService();
     }

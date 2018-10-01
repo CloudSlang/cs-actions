@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.amazon.factory;
 
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.inputs.*;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;

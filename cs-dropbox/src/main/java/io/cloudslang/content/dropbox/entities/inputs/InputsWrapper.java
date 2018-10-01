@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.dropbox.entities.inputs;
 
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 /**
  * Created by TusaM

@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.couchbase.entities.inputs;
 
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 /**
  * Created by Mihai Tusa

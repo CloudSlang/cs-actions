@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-database</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -87,7 +87,7 @@
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <score-content-sdk.version>1.10.6</score-content-sdk.version>
+        <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <cs-commons.version>0.0.5</cs-commons.version>
         <junit.version>4.12</junit.version>
         <!--Misc properties-->
