@@ -98,17 +98,13 @@ public class InvokeLambdaAction {
         execTimeoutMs = defaultIfBlank(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
         qualifier = defaultIfBlank(qualifier, DefaultValues.DEFAULT_FUNCTION_QUALIFIER);
 
-        ClientConfiguration clientConf;
-        if (StringUtils.isEmpty(proxyHost)) {
-            clientConf = new ClientConfiguration()
-                    .withConnectionTimeout(Integer.parseInt(connectTimeoutMs));
-        } else {
-            clientConf = new ClientConfiguration()
-                    .withConnectionTimeout(Integer.parseInt(connectTimeoutMs))
-                    .withProxyHost(proxyHost)
-                    .withProxyPort(Integer.parseInt(proxyPort))
-                    .withProxyUsername(proxyUsername)
-                    .withProxyPassword(proxyPassword);
+        ClientConfiguration clientConf = new ClientConfiguration().withConnectionTimeout(Integer.parseInt(connectTimeoutMs));
+
+        if (!StringUtils.isEmpty(proxyHost)) {
+            clientConf.setProxyHost(proxyHost);
+            clientConf.setProxyPort(Integer.parseInt(proxyPort));
+            clientConf.setProxyUsername(proxyUsername);
+            clientConf.setProxyPassword(proxyPassword);
         }
 
         AWSLambdaAsyncClient client = (AWSLambdaAsyncClient) AWSLambdaAsyncClientBuilder.standard()
