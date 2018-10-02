@@ -28,6 +28,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
+import io.cloudslang.content.amazon.utils.AmazonWebServiceClientUtil;
 import io.cloudslang.content.amazon.utils.DefaultValues;
 import io.cloudslang.content.utils.OutputUtilities;
 
@@ -97,15 +98,10 @@ public class InvokeLambdaAction {
         execTimeoutMs = defaultIfBlank(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
         qualifier = defaultIfBlank(qualifier, DefaultValues.DEFAULT_FUNCTION_QUALIFIER);
 
-        ClientConfiguration clientConf = new ClientConfiguration()
-                .withConnectionTimeout(Integer.parseInt(connectTimeoutMs))
-                .withProxyHost(proxyHost)
-                .withProxyPort(Integer.parseInt(proxyPort))
-                .withProxyUsername(proxyUsername)
-                .withProxyPassword(proxyPassword);
+        ClientConfiguration lambdaClientConf = AmazonWebServiceClientUtil.getClientConfiguration(proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs);
 
         AWSLambdaAsyncClient client = (AWSLambdaAsyncClient) AWSLambdaAsyncClientBuilder.standard()
-                .withClientConfiguration(clientConf)
+                .withClientConfiguration(lambdaClientConf)
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(identity, credential)))
                 .withRegion(region)
                 .build();
