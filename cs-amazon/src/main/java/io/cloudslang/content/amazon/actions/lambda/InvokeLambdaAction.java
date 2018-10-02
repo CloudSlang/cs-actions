@@ -98,17 +98,17 @@ public class InvokeLambdaAction {
         execTimeoutMs = defaultIfBlank(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
         qualifier = defaultIfBlank(qualifier, DefaultValues.DEFAULT_FUNCTION_QUALIFIER);
 
-        ClientConfiguration clientConf = new ClientConfiguration().withConnectionTimeout(Integer.parseInt(connectTimeoutMs));
+        ClientConfiguration lambaClientConf = new ClientConfiguration().withConnectionTimeout(Integer.parseInt(connectTimeoutMs));
 
         if (!StringUtils.isEmpty(proxyHost)) {
-            clientConf.setProxyHost(proxyHost);
-            clientConf.setProxyPort(Integer.parseInt(proxyPort));
-            clientConf.setProxyUsername(proxyUsername);
-            clientConf.setProxyPassword(proxyPassword);
+            lambaClientConf.setProxyHost(proxyHost);
+            lambaClientConf.setProxyPort(Integer.parseInt(proxyPort));
+            lambaClientConf.setProxyUsername(proxyUsername);
+            lambaClientConf.setProxyPassword(proxyPassword);
         }
 
         AWSLambdaAsyncClient client = (AWSLambdaAsyncClient) AWSLambdaAsyncClientBuilder.standard()
-                .withClientConfiguration(clientConf)
+                .withClientConfiguration(lambaClientConf)
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(identity, credential)))
                 .withRegion(region)
                 .build();
