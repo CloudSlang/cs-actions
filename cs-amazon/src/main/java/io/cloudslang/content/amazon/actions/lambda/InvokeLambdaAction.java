@@ -28,9 +28,9 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
+import io.cloudslang.content.amazon.utils.AmazonWebServiceClientUtil;
 import io.cloudslang.content.amazon.utils.DefaultValues;
 import io.cloudslang.content.utils.OutputUtilities;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -98,14 +98,7 @@ public class InvokeLambdaAction {
         execTimeoutMs = defaultIfBlank(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
         qualifier = defaultIfBlank(qualifier, DefaultValues.DEFAULT_FUNCTION_QUALIFIER);
 
-        ClientConfiguration lambaClientConf = new ClientConfiguration().withConnectionTimeout(Integer.parseInt(connectTimeoutMs));
-
-        if (!StringUtils.isEmpty(proxyHost)) {
-            lambaClientConf.setProxyHost(proxyHost);
-            lambaClientConf.setProxyPort(Integer.parseInt(proxyPort));
-            lambaClientConf.setProxyUsername(proxyUsername);
-            lambaClientConf.setProxyPassword(proxyPassword);
-        }
+        ClientConfiguration lambaClientConf = AmazonWebServiceClientUtil.getClientConfiguration(proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs);
 
         AWSLambdaAsyncClient client = (AWSLambdaAsyncClient) AWSLambdaAsyncClientBuilder.standard()
                 .withClientConfiguration(lambaClientConf)
