@@ -98,10 +98,10 @@ public class InvokeLambdaAction {
         execTimeoutMs = defaultIfBlank(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
         qualifier = defaultIfBlank(qualifier, DefaultValues.DEFAULT_FUNCTION_QUALIFIER);
 
-        ClientConfiguration lambaClientConf = AmazonWebServiceClientUtil.getClientConfiguration(proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs);
+        ClientConfiguration lambdaClientConf = AmazonWebServiceClientUtil.getClientConfiguration(proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs);
 
         AWSLambdaAsyncClient client = (AWSLambdaAsyncClient) AWSLambdaAsyncClientBuilder.standard()
-                .withClientConfiguration(lambaClientConf)
+                .withClientConfiguration(lambdaClientConf)
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(identity, credential)))
                 .withRegion(region)
                 .build();
