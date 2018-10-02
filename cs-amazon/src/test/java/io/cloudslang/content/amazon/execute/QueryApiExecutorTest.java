@@ -34,8 +34,8 @@ import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
 import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.amazon.utils.MockingHelper;
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -67,7 +67,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
  * 9/7/2016.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CSHttpClient.class, AmazonSignatureService.class, QueryApiExecutor.class, ParamsMapBuilder.class, InputsUtil.class})
+@PrepareForTest({HttpClientService.class, AmazonSignatureService.class, QueryApiExecutor.class, ParamsMapBuilder.class, InputsUtil.class})
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
     private static final String ALL_RESOURCE_TYPES = "customer-gateway,dhcp-options,image,instance,internet-gateway,network-acl,network-interface,reserved-instances,route-table,security-group,snapshot,spot-instances-request,subnet,volume,vpc,vpn-connection,vpn-gateway";
@@ -76,7 +76,7 @@ public class QueryApiExecutorTest {
     public ExpectedException exception = ExpectedException.none();
 
     @Mock
-    private CSHttpClient csHttpClientMock;
+    private HttpClientService csHttpClientMock;
 
     @Mock
     private AmazonSignatureService amazonSignatureServiceMock;
@@ -710,13 +710,13 @@ public class QueryApiExecutorTest {
                 .thenReturn(authorizationHeaderMock);
         when(authorizationHeaderMock.getAuthorizationHeader()).thenReturn("");
         when(authorizationHeaderMock.getSignature()).thenReturn("");
-        whenNew(CSHttpClient.class).withNoArguments().thenReturn(csHttpClientMock);
+        whenNew(HttpClientService.class).withNoArguments().thenReturn(csHttpClientMock);
         when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(null);
     }
 
     private void runCommonVerifiersForQueryApi() throws Exception {
         verifyNew(AmazonSignatureService.class).withNoArguments();
-        verifyNew(CSHttpClient.class).withNoArguments();
+        verifyNew(HttpClientService.class).withNoArguments();
         verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
         verifyNoMoreInteractions(amazonSignatureServiceMock);
         verifyNoMoreInteractions(csHttpClientMock);

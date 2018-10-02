@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.dca.actions.templates;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -24,9 +25,10 @@ import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.dca.models.DcaDeploymentModel;
 import io.cloudslang.content.dca.models.DcaResourceModel;
+import io.cloudslang.content.dca.utils.OutputNames;
 import io.cloudslang.content.dca.utils.Validator;
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 import java.util.List;
 import java.util.Map;
@@ -44,15 +46,15 @@ import static io.cloudslang.content.dca.utils.Descriptions.DeployTemplate.*;
 import static io.cloudslang.content.dca.utils.Descriptions.GetDeployment.RETURN_RESULT_DESC;
 import static io.cloudslang.content.dca.utils.Descriptions.GetDeployment.STATUS_DESC;
 import static io.cloudslang.content.dca.utils.InputNames.*;
+import static io.cloudslang.content.dca.utils.OutputNames.DEPLOYMENT_JSON;
 import static io.cloudslang.content.dca.utils.OutputNames.STATUS;
 import static io.cloudslang.content.dca.utils.Utilities.*;
-import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
-import static io.cloudslang.content.httpclient.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.System.currentTimeMillis;
-import static java.lang.System.lineSeparator;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -66,7 +68,8 @@ public class DeployTemplate {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = STATUS, description = STATUS_DESC)
+                    @Output(value = STATUS, description = STATUS_DESC),
+                    @Output(value = DEPLOYMENT_JSON, description = STATUS_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_RESPONSE_DESC),
@@ -122,16 +125,15 @@ public class DeployTemplate {
         final String keystorePassword = defaultIfEmpty(keystorePasswordInp, DEFAULT_JAVA_KEYSTORE_PASSWORD);
 
         // validation
-        final Validator validator = new Validator();
-        validator.validatePort(port);
-        validator.validateProtocol(protocol);
+        final Validator validator = new Validator()
+                .validatePort(port, DCA_PORT)
+                .validateProtocol(protocol, PROTOCOL)
+                .validateBoolean(asyncStr, ASYNC)
+                .validateInt(timeoutStr, TIMEOUT)
+                .validateInt(pollingIntervalStr, POLLING_INTERVAL);
 
-        validator.validateBoolean(asyncStr);
-        validator.validateInt(timeoutStr);
-        validator.validateInt(pollingIntervalStr);
-
-        if (!validator.getValidationErrorList().isEmpty()) {
-            return getFailureResultsMap(join(validator.getValidationErrorList(), lineSeparator()));
+        if (validator.hasErrors()) {
+            return getFailureResultsMap(validator.getErrors());
         }
 
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
@@ -161,12 +163,12 @@ public class DeployTemplate {
                     new DcaDeploymentModel(deploymentName, deploymentDesc, deploymentTemplateId, resources);
             httpClientInputs.setBody(dcaDeploymentModel.toJson());
 
-            final Map<String, String> httpClientResult = new CSHttpClient().execute(httpClientInputs);
+            final Map<String, String> httpClientResult = new HttpClientService().execute(httpClientInputs);
 
-            final Map resultMap = mapper.readValue(httpClientResult.get(RETURN_RESULT), Map.class);
+            final JsonNode result = mapper.readTree(httpClientResult.get(RETURN_RESULT));
 
             if (Integer.parseInt(httpClientResult.get(STATUS_CODE)) != HTTP_OK) {
-                return getFailureResultsMap(resultMap.get("message").toString());
+                return getFailureResultsMap(result.toString());
             }
 
             final boolean async = toBoolean(asyncStr);
@@ -178,7 +180,7 @@ public class DeployTemplate {
             } else {
 
                 final long finishTime = currentTimeMillis() + SECONDS.toMillis(timeout);
-                final String deploymentUuid = resultMap.get("uuid").toString();
+                final String deploymentUuid = result.get("uuid").asText();
 
                 while (true) {
                     Thread.sleep(SECONDS.toMillis(pollingInterval));
@@ -193,7 +195,8 @@ public class DeployTemplate {
                     final String status = getDeploymentMap.get(STATUS);
 
                     if (status.equalsIgnoreCase("SUCCESS")) {
-                        final Map<String, String> successResultsMap = getSuccessResultsMap(getDeploymentResult);
+                        final Map<String, String> successResultsMap = getSuccessResultsMap("Successfully deployed template.");
+                        successResultsMap.put(DEPLOYMENT_JSON, getDeploymentResult);
                         successResultsMap.put(STATUS, status);
                         return successResultsMap;
                     }

@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2018 Micro Focus, L.P.
+ * (c) Copyright 2018 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,7 +12,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.dca;
+package io.cloudslang.content.utils;
 
-public class PLACEHOLDER_TEST {
+import com.hp.oo.sdk.content.plugin.SessionResource;
+
+import java.util.Map;
+
+public class IteratorSessionResource extends SessionResource<Map<String, Object>> {
+
+    private Map<String, Object> iteratorMap;
+
+    IteratorSessionResource(final Map<String, Object> iteratorMap) {
+        this.iteratorMap = iteratorMap;
+    }
+
+    @Override
+    public Map<String, Object> get() {
+        return iteratorMap;
+    }
+
+    @Override
+    public void release() {
+        iteratorMap = null;
+    }
 }
+

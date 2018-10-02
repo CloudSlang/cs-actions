@@ -15,7 +15,6 @@
 
 package io.cloudslang.content.amazon.entities.aws;
 
-import io.cloudslang.content.amazon.entities.aws.VolumeStatus;
 import org.junit.Test;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;

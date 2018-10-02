@@ -14,8 +14,6 @@
  */
 package io.cloudslang.content.dca.utils;
 
-import io.cloudslang.content.utils.BooleanUtilities;
-import io.cloudslang.content.utils.NumberUtilities;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -23,54 +21,82 @@ import java.util.List;
 
 import static io.cloudslang.content.dca.utils.Constants.HTTP;
 import static io.cloudslang.content.dca.utils.Constants.HTTPS;
+import static io.cloudslang.content.utils.BooleanUtilities.isValid;
+import static io.cloudslang.content.utils.NumberUtilities.isValidInt;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.join;
 
 public class Validator {
-    private final List<String> validationErrorList;
+    private final List<String> errorList;
 
     public Validator() {
-        validationErrorList = new ArrayList<>();
+        errorList = new ArrayList<>();
     }
 
-    public List<String> getValidationErrorList() {
-        return validationErrorList;
+    public boolean hasErrors() {
+        return !errorList.isEmpty();
     }
 
-    public void validatePort(@NotNull final String port) {
-        if (!isValidIpPort(port)) {
-            validationErrorList.add("Invalid port value!");
+    public String getErrors() {
+        return getErrors(System.lineSeparator());
+    }
+
+    public String getErrors(@NotNull final String delimiter) {
+        return join(errorList, delimiter);
+    }
+
+    public Validator validatePort(@NotNull final String value, @NotNull final String inputName) {
+        if (!isValidIpPort(value)) {
+            errorList.add(format("[%s]: Invalid port value [%s]!", inputName, value));
         }
+        return this;
     }
 
-    public void validateProtocol(String protocol) {
-        if (!(HTTPS.equalsIgnoreCase(protocol) || HTTP.equalsIgnoreCase(protocol))) {
-            validationErrorList.add("Invalid protocol. Valid values: 'http' and 'https'.");
+
+    public Validator validateProtocol(@NotNull final String value, @NotNull final String inputName,
+                                      @NotNull final List<String> validValues) {
+        if (!validValues.contains(value)) {
+            errorList.add(format("[%s]: Invalid protocol [%s]. Valid values are [%s]",
+                    inputName, value, join(validValues, ", ")));
         }
+        return this;
     }
 
-    public void validateInt(@NotNull final String intValue) {
-        if (!NumberUtilities.isValidInt(intValue)) {
-            validationErrorList.add("Invalid integer.");
-        }
+    public Validator validateProtocol(@NotNull final String value, @NotNull final String inputName) {
+        return validateProtocol(value, inputName, asList(HTTP, HTTPS));
     }
 
-    public void validateBoolean(@NotNull final String booleanValue) {
-        if (!BooleanUtilities.isValid(booleanValue)) {
-            validationErrorList.add("Invalid boolean.");
+    public Validator validateInt(@NotNull final String intValue, @NotNull final String inputName) {
+        if (!isValidInt(intValue)) {
+            errorList.add(format("[%s]: Invalid integer value.", inputName));
         }
+        return this;
+    }
+
+    public Validator validateBoolean(@NotNull final String booleanValue, @NotNull final String inputName) {
+        if (!isValid(booleanValue)) {
+            errorList.add(format("[%s]: Invalid boolean value!", inputName));
+        }
+        return this;
     }
 
     @SafeVarargs
-    public final void validateSameLength(List<String>... args) {
+    public final Validator validateSameLength(@NotNull final List<String> listNames,
+                                              @NotNull final List<String>... args) {
         if (args.length < 1) {
-            return;
+            return this;
         }
 
         final List<String> firstList = args[0];
         for (final List<String> list : args) {
             if (list.size() != firstList.size()) {
-                validationErrorList.add("Lists are of not equal size!");
+                errorList.add(format("The lists [%s] are not the same length!",
+                        join(listNames, ", ")));
             }
         }
+
+        return this;
     }
 }

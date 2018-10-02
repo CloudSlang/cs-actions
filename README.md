@@ -38,6 +38,7 @@ CloudSlang Actions
 
 | Module | Release | Description |
 | ----- | ----- | ----- |
+| cs-alibaba | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-alibaba/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-alibaba) | Integration with Alibaba Cloud |
 | cs-amazon | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-amazon/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-amazon) | Integration with Amazon AWS |
 | cs-azure | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-azure/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-azure) | Integration with Microsoft Azure |
 | cs-commons | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-commons/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.cloudslang.content/cs-commons) | Common constants and utilities (numbers, collections, strings) |

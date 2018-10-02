@@ -22,8 +22,8 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.dca.utils.Validator;
-import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.httpclient.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -42,13 +42,12 @@ import static io.cloudslang.content.dca.utils.InputNames.*;
 import static io.cloudslang.content.dca.utils.OutputNames.AUTH_TOKEN;
 import static io.cloudslang.content.dca.utils.OutputNames.REFRESH_TOKEN;
 import static io.cloudslang.content.dca.utils.Utilities.*;
-import static io.cloudslang.content.httpclient.CSHttpClient.STATUS_CODE;
-import static io.cloudslang.content.httpclient.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.Integer.parseInt;
-import static java.lang.System.lineSeparator;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -119,12 +118,12 @@ public class GetAuthenticationToken {
         final String keystorePassword = defaultIfEmpty(keystorePasswordInp, DEFAULT_JAVA_KEYSTORE_PASSWORD);
 
         // VALIDATION
-        final Validator validator = new Validator();
-        validator.validatePort(idmPortStr);
-        validator.validateProtocol(protocolStr);
+        final Validator validator = new Validator()
+                .validatePort(idmPortStr, IDM_PORT)
+                .validateProtocol(protocolStr, PROTOCOL);
 
-        if (!validator.getValidationErrorList().isEmpty()) {
-            return getFailureResultsMap(join(validator.getValidationErrorList(), lineSeparator()));
+        if (validator.hasErrors()) {
+            return getFailureResultsMap(validator.getErrors());
         }
 
         // SETUP HTTP INPUTS
@@ -151,7 +150,7 @@ public class GetAuthenticationToken {
         httpClientInputs.setMethod(POST);
 
         try {
-            final Map<String, String> httpClientResultMap = new CSHttpClient().execute(httpClientInputs);
+            final Map<String, String> httpClientResultMap = new HttpClientService().execute(httpClientInputs);
             final ObjectMapper mapper = new ObjectMapper();
             final Map responseMap = mapper.readValue(httpClientResultMap.get(RETURN_RESULT), Map.class);
 

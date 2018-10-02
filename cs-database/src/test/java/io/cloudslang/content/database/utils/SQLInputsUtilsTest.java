@@ -18,6 +18,7 @@ package io.cloudslang.content.database.utils;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.database.services.databases.*;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -74,7 +75,10 @@ public class SQLInputsUtilsTest {
        assertThat(getOrDefaultDBClass("a", ORACLE_DB_TYPE), is("a"));
     }
 
+    //GlobalSessionObject was implemented
+    //In CloudSlang the object is instantiated by default and cannot be null
     @Test
+    @Ignore
     public void getOrDefaultGlobalSessionObjNull() throws Exception {
         final GlobalSessionObject<Map<String, Object>> globalSessionObj = getOrDefaultGlobalSessionObj(null);
         assertThat(globalSessionObj, instanceOf(GlobalSessionObject.class));

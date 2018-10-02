@@ -17,15 +17,21 @@ package io.cloudslang.content.dca.utils;
 public class Constants {
     public static final String IDM_TOKENS_PATH = "/idm-service/v2.0/tokens";
     public static final String DCA_DEPLOYMENT_PATH = "/urest/v1/deployment";
+    public static final String DCA_RESOURCE_PATH = "/urest/v1/resource";
     public static final String HTTPS = "https";
     public static final String HTTP = "http";
     public static final String APPLICATION_JSON = "application/json";
     public static final String POST = "POST";
     public static final String GET = "GET";
+    public static final String VALUE = "value";
+    public static final String ATTRIBUTES = "attributes";
 
     public static final String NEW_LINE = System.lineSeparator();
 
     public static final String X_AUTH_TOKEN_HEADER = "X-Auth-Token:";
     public static final String REFRESH_TOKEN_HEADER = "Refresh-Token:";
     public static final String HEADERS_DELIMITER = "\r\n";
+    public static final String MESSAGE = "message";
+    public static final String DATA_PATH = "data";
+    public static final String DCA_CM_CREDENTIAL_PATH = "/credential";
 }

@@ -40,6 +40,8 @@ public class Inputs {
         public static final String REGION = "region";
         public static final String CONNECT_TIMEOUT = "connectTimeout";
         public static final String EXECUTION_TIMEOUT = "executionTimeout";
+        public static final String POLLING_INTERVAL = "pollingInterval";
+        public static final String ASYNC = "async";
     }
 
     public static class CustomInputs {
@@ -266,4 +268,35 @@ public class Inputs {
         public static final String FILTER_RESOURCE_TYPE = "filterResourceType";
         public static final String FILTER_VALUE = "filterValue";
     }
+
+    public static class CloudFormationInputs {
+        public static final String STACK_NAME = "stackName";
+        public static final String TEMPLATE_BODY = "templateBody";
+        public static final String PARAMETERS = "parameters";
+        public static final String CAPABILITIES = "capabilities";
+    }
+
+    public static class SNSInputs {
+        public static final String TOPIC_NAME = "topicName";
+    }
+
+    public static class ServiceCatalogInputs {
+        public static final String PRODUCT_ID = "productId";
+        public static final String PROVISIONED_PRODUCT_NAME = "provisionedProductName";
+        public static final String PROVISIONED_PRODUCT_ID = "provisionedProductId";
+        public static final String PROVISIONING_ARTIFACT_ID = "provisioningArtifactId";
+        public static final String PROVISIONING_PARAMETERS = "provisioningParameters";
+        public static final String TAGS = "tags";
+        public static final String PROVISION_TOKEN = "provisionToken";
+        public static final String ACCEPT_LANGUAGE = "acceptLanguage";
+        public static final String NOTIFICATION_ARNS = "notificationArns";
+        public static final String PATH_ID = "pathId";
+        public static final String ACCEPTED_LANGUAGE = "acceptedLanguage";
+        public static final String IGNORE_ERRORS = "ignoreErrors";
+        public static final String TERMINATE_TOKEN = "terminateToken";
+        public static final String UPDATE_TOKEN = "updateToken";
+        public static final String PROVISIONING_USE_PREVIOUS_VALUE = "usePreviousValue";
+
+    }
+
 }
