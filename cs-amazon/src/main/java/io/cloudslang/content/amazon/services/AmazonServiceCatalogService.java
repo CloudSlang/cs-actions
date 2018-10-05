@@ -36,20 +36,26 @@ public class AmazonServiceCatalogService {
     public static ProvisionProductResult provisionProduct(final String provisionedProductName,
                                                           final List<ProvisioningParameter> provisioningParameters,
                                                           final String productId,
-                                                          final String provisionToken,
+                                                          String provisionToken,
                                                           final String provisioningArtifactId,
                                                           final List<Tag> tags,
                                                           final String acceptLanguage,
                                                           final String notificationArns,
                                                           final String pathId,
                                                           final AWSServiceCatalog serviceCatalogClient) {
+
+        if (StringUtils.isEmpty(provisionToken)) {
+            provisionToken = generateRandomToken();
+        }
+
         ProvisionProductRequest provisionProductRequest = new ProvisionProductRequest()
                 .withProvisionedProductName(provisionedProductName)
                 .withProvisioningParameters(provisioningParameters)
                 .withProductId(productId)
                 .withProvisioningArtifactId(provisioningArtifactId)
                 .withTags(tags)
-                .withAcceptLanguage(acceptLanguage);
+                .withAcceptLanguage(acceptLanguage)
+                .withProvisionToken(provisionToken);
 
         if (!StringUtils.isEmpty(notificationArns)) {
             provisionProductRequest.withNotificationArns(notificationArns);
@@ -57,10 +63,6 @@ public class AmazonServiceCatalogService {
 
         if (!StringUtils.isEmpty(pathId)) {
             provisionProductRequest.withPathId(pathId);
-        }
-
-        if (!StringUtils.isEmpty(provisionToken)) {
-            provisionProductRequest.withProvisionToken(provisionToken);
         }
 
         return serviceCatalogClient.provisionProduct(provisionProductRequest);
@@ -165,5 +167,9 @@ public class AmazonServiceCatalogService {
 
 
         return serviceCatalogclient.updateProvisionedProduct(updateProvisionedProductRequest);
+    }
+
+    private static String generateRandomToken(){
+        return UUID.randomUUID().toString();
     }
 }
