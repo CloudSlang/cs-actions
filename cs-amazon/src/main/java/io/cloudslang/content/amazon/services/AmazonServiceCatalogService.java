@@ -36,20 +36,26 @@ public class AmazonServiceCatalogService {
     public static ProvisionProductResult provisionProduct(final String provisionedProductName,
                                                           final List<ProvisioningParameter> provisioningParameters,
                                                           final String productId,
-                                                          final String provisionToken,
+                                                          String provisionToken,
                                                           final String provisioningArtifactId,
                                                           final List<Tag> tags,
                                                           final String acceptLanguage,
                                                           final String notificationArns,
                                                           final String pathId,
                                                           final AWSServiceCatalog serviceCatalogClient) {
+
+        if (StringUtils.isEmpty(provisionToken)) {
+            provisionToken = generateRandomToken();
+        }
+
         ProvisionProductRequest provisionProductRequest = new ProvisionProductRequest()
                 .withProvisionedProductName(provisionedProductName)
                 .withProvisioningParameters(provisioningParameters)
                 .withProductId(productId)
                 .withProvisioningArtifactId(provisioningArtifactId)
                 .withTags(tags)
-                .withAcceptLanguage(acceptLanguage);
+                .withAcceptLanguage(acceptLanguage)
+                .withProvisionToken(provisionToken);
 
         if (!StringUtils.isEmpty(notificationArns)) {
             provisionProductRequest.withNotificationArns(notificationArns);
@@ -57,10 +63,6 @@ public class AmazonServiceCatalogService {
 
         if (!StringUtils.isEmpty(pathId)) {
             provisionProductRequest.withPathId(pathId);
-        }
-
-        if (!StringUtils.isEmpty(provisionToken)) {
-            provisionProductRequest.withProvisionToken(provisionToken);
         }
 
         return serviceCatalogClient.provisionProduct(provisionProductRequest);
@@ -114,18 +116,19 @@ public class AmazonServiceCatalogService {
                                                                                 String provisionedProductName,
                                                                                 String terminateToken,
                                                                                 final AWSServiceCatalog serviceCatalogClient) {
+        if (StringUtils.isEmpty(terminateToken)) {
+            terminateToken = generateRandomToken();
+        }
+
         TerminateProvisionedProductRequest terminateProvisionedProductRequest = new TerminateProvisionedProductRequest()
                 .withIgnoreErrors(ignoreErrors)
-                .withAcceptLanguage(acceptLanguage);
+                .withAcceptLanguage(acceptLanguage)
+                .withTerminateToken(terminateToken);
         if (!StringUtils.isEmpty(provisionedProductId)) {
             terminateProvisionedProductRequest.withProvisionedProductId(provisionedProductId);
         }
         if (!StringUtils.isEmpty(provisionedProductName)) {
             terminateProvisionedProductRequest.withProvisionedProductName(provisionedProductName);
-        }
-        if (!StringUtils.isEmpty(terminateToken)) {
-            terminateToken = UUID.randomUUID().toString();
-            terminateProvisionedProductRequest.withTerminateToken(terminateToken);
         }
 
         return serviceCatalogClient.terminateProvisionedProduct(terminateProvisionedProductRequest);
@@ -140,16 +143,18 @@ public class AmazonServiceCatalogService {
                                                                           final String provisioningArtifactId,
                                                                           String updateToken,
                                                                           final AWSServiceCatalog serviceCatalogclient) {
+
+        if (StringUtils.isEmpty(updateToken)) {
+            updateToken = generateRandomToken();
+        }
+
         UpdateProvisionedProductRequest updateProvisionedProductRequest = new UpdateProvisionedProductRequest()
                 .withAcceptLanguage(acceptedLanguage)
                 .withProductId(productId)
                 .withProvisioningParameters(provisioningParameters)
-                .withProvisioningArtifactId(provisioningArtifactId);
+                .withProvisioningArtifactId(provisioningArtifactId)
+                .withUpdateToken(updateToken);
 
-        if (StringUtils.isEmpty(updateToken)) {
-            updateToken = UUID.randomUUID().toString();
-            updateProvisionedProductRequest.withUpdateToken(updateToken);
-        }
         if (!StringUtils.isEmpty(pathId)) {
             updateProvisionedProductRequest.withPathId(pathId);
         }
@@ -162,5 +167,9 @@ public class AmazonServiceCatalogService {
 
 
         return serviceCatalogclient.updateProvisionedProduct(updateProvisionedProductRequest);
+    }
+
+    private static String generateRandomToken(){
+        return UUID.randomUUID().toString();
     }
 }
