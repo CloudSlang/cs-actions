@@ -123,7 +123,7 @@ public class AmazonServiceCatalogService {
         if (!StringUtils.isEmpty(provisionedProductName)) {
             terminateProvisionedProductRequest.withProvisionedProductName(provisionedProductName);
         }
-        if (!StringUtils.isEmpty(terminateToken)) {
+        if (StringUtils.isEmpty(terminateToken)) {
             terminateToken = UUID.randomUUID().toString();
             terminateProvisionedProductRequest.withTerminateToken(terminateToken);
         }
