@@ -114,18 +114,19 @@ public class AmazonServiceCatalogService {
                                                                                 String provisionedProductName,
                                                                                 String terminateToken,
                                                                                 final AWSServiceCatalog serviceCatalogClient) {
+        if (StringUtils.isEmpty(terminateToken)) {
+            terminateToken = generateRandomToken();
+        }
+
         TerminateProvisionedProductRequest terminateProvisionedProductRequest = new TerminateProvisionedProductRequest()
                 .withIgnoreErrors(ignoreErrors)
-                .withAcceptLanguage(acceptLanguage);
+                .withAcceptLanguage(acceptLanguage)
+                .withTerminateToken(terminateToken);
         if (!StringUtils.isEmpty(provisionedProductId)) {
             terminateProvisionedProductRequest.withProvisionedProductId(provisionedProductId);
         }
         if (!StringUtils.isEmpty(provisionedProductName)) {
             terminateProvisionedProductRequest.withProvisionedProductName(provisionedProductName);
-        }
-        if (StringUtils.isEmpty(terminateToken)) {
-            terminateToken = UUID.randomUUID().toString();
-            terminateProvisionedProductRequest.withTerminateToken(terminateToken);
         }
 
         return serviceCatalogClient.terminateProvisionedProduct(terminateProvisionedProductRequest);
@@ -140,16 +141,18 @@ public class AmazonServiceCatalogService {
                                                                           final String provisioningArtifactId,
                                                                           String updateToken,
                                                                           final AWSServiceCatalog serviceCatalogclient) {
+
+        if (StringUtils.isEmpty(updateToken)) {
+            updateToken = generateRandomToken();
+        }
+
         UpdateProvisionedProductRequest updateProvisionedProductRequest = new UpdateProvisionedProductRequest()
                 .withAcceptLanguage(acceptedLanguage)
                 .withProductId(productId)
                 .withProvisioningParameters(provisioningParameters)
-                .withProvisioningArtifactId(provisioningArtifactId);
+                .withProvisioningArtifactId(provisioningArtifactId)
+                .withUpdateToken(updateToken);
 
-        if (StringUtils.isEmpty(updateToken)) {
-            updateToken = UUID.randomUUID().toString();
-            updateProvisionedProductRequest.withUpdateToken(updateToken);
-        }
         if (!StringUtils.isEmpty(pathId)) {
             updateProvisionedProductRequest.withPathId(pathId);
         }
