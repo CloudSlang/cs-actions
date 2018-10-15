@@ -71,7 +71,7 @@ public class UnprovisionProductAction {
                                        @Param(value = PROVISIONED_PRODUCT_NAME, description = PROVISIONED_PRODUCT_NAME_DESC) String provisionedProductName,
                                        @Param(value = ACCEPT_LANGUAGE, description = ACCEPT_LANGUAGE_DESC) String acceptLanguage,
                                        @Param(value = IGNORE_ERRORS, description = IGNORE_ERRORS_DESC) String ignoreErrors,
-                                       @Param(value = TERMINATE_TOKEN, required = true, description = TERMINATE_TOKEN_DESC) String terminateToken
+                                       @Param(value = TERMINATE_TOKEN, description = TERMINATE_TOKEN_DESC) String terminateToken
     ) {
         //Assign default values to inputs
         final String proxyPortVal = defaultIfEmpty(proxyPort, DefaultValues.PROXY_PORT);
