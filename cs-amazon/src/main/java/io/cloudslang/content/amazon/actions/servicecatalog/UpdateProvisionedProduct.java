@@ -15,6 +15,7 @@
 package io.cloudslang.content.amazon.actions.servicecatalog;
 
 import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
+import com.amazonaws.services.servicecatalog.model.DescribeRecordResult;
 import com.amazonaws.services.servicecatalog.model.UpdateProvisionedProductResult;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -31,6 +32,7 @@ import io.cloudslang.content.amazon.utils.DefaultValues;
 
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceCatalogActions.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.DescribeProvisionedProductAction.PROVISIONED_PRODUCT_ACCEPTED_LANGUAGE_DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.*;
@@ -41,6 +43,7 @@ import static io.cloudslang.content.amazon.entities.constants.Descriptions.Updat
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.UpdateProvisionedProductDescriptions.PROVISIONING_PARAMETERS_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.*;
+import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.getUpdatedProductStatus;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapUpdateProvisioningProduct;
 import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.toArrayOfUpdateParameters;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -84,6 +87,7 @@ public class UpdateProvisionedProduct {
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String execTimeout,
                                        @Param(value = ASYNC, description = ASYNC_DESC) String async,
+                                       @Param(value = POLLING_INTERVAL, description = POLLING_INTERVAL_DESC) String pollingInterval,
                                        @Param(value = REGION, description = REGION_DESC) String region,
                                        @Param(value = ACCEPTED_LANGUAGE, description = PROVISIONED_PRODUCT_ACCEPTED_LANGUAGE_DESCRIPTION) String acceptedLanguage,
                                        @Param(value = PATH_ID, description = PATH_ID_DESC) String pathId,
@@ -103,6 +107,7 @@ public class UpdateProvisionedProduct {
         final String connectTimeoutVal = defaultIfEmpty(connectTimeout, DefaultValues.CONNECT_TIMEOUT);
         final String execTimeoutVal = defaultIfEmpty(execTimeout, DefaultValues.EXEC_TIMEOUT);
         final String acceptedLanguageVal = defaultIfEmpty(acceptedLanguage, DefaultValues.ACCEPTED_LANGUAGE);
+        final String pollingIntervalVal = defaultIfEmpty(pollingInterval, DefaultValues.POLLING_INTERVAL_DEFAULT);
         final String regionVal = defaultIfEmpty(region, DefaultValues.REGION);
         final String asyncVal = defaultIfEmpty(async, DefaultValues.ASYNC);
         final String delimiterVal = defaultIfEmpty(delimiter, DefaultValues.COMMA);
@@ -126,6 +131,7 @@ public class UpdateProvisionedProduct {
         final Integer execTimeoutImp = Integer.valueOf(execTimeoutVal);
         final Boolean asyncImp = Boolean.valueOf(asyncVal);
         final Boolean usePreviousValueImp = Boolean.valueOf(usePreviousVal);
+        final Long pollingIntervalImp = Long.valueOf(pollingIntervalVal);
 
         try {
             //The client
@@ -133,10 +139,20 @@ public class UpdateProvisionedProduct {
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, regionVal, asyncImp);
             //The result
             final UpdateProvisionedProductResult result = AmazonServiceCatalogService.updateProvisionedProduct(acceptedLanguageVal, pathId,
-                    productId, provisionedProductId, toArrayOfUpdateParameters(provisioningParameters, delimiterVal, usePreviousValueImp), provisionedProductName, provisioningArtifactId, updateToken, awsServiceCatalog);
+                    productId, provisionedProductId, toArrayOfUpdateParameters(provisioningParameters, delimiterVal, usePreviousValueImp),
+                    provisionedProductName, provisioningArtifactId, updateToken, awsServiceCatalog);
+            String updateStatus = result.getRecordDetail().getStatus();
+            while (UPDATE_STATUSES.contains(updateStatus)) {
+                Thread.sleep(pollingIntervalImp);
+                updateStatus = getUpdatedProductStatus(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+            }
+            if (updateStatus.equals(SUCCEEDED)) {
 
-            Map<String, String> results = getSuccessResultMapUpdateProvisioningProduct(result);
-            return results;
+                return getSuccessResultMapUpdateProvisioningProduct(result);
+            }
+            final DescribeRecordResult recordResult = AmazonServiceCatalogService.describeRecord(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+
+            throw new RuntimeException(UPDATE_PROVISIONED_PRODUCT_FAILED_REASON + recordResult.getRecordDetail().getRecordErrors().toString());
 
         } catch (Exception e) {
             return getFailureResultsMap(e);
