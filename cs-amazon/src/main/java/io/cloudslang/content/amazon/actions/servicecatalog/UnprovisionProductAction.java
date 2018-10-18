@@ -15,6 +15,7 @@
 package io.cloudslang.content.amazon.actions.servicecatalog;
 
 import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
+import com.amazonaws.services.servicecatalog.model.DescribeRecordResult;
 import com.amazonaws.services.servicecatalog.model.TerminateProvisionedProductResult;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -30,13 +31,16 @@ import io.cloudslang.content.amazon.utils.DefaultValues;
 
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceCatalogActions.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.ACCEPT_LANGUAGE_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.POLLING_INTERVAL_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.REGION_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.UnprovisionProductAction.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_ID;
+import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.getUpdatedProductStatus;
 import static io.cloudslang.content.amazon.utils.DefaultValues.IGNORE_ERRORS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -66,6 +70,7 @@ public class UnprovisionProductAction {
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String execTimeout,
                                        @Param(value = ASYNC, description = ASYNC_DESC) String async,
+                                       @Param(value = POLLING_INTERVAL, description = POLLING_INTERVAL_DESC) String pollingInterval,
                                        @Param(value = REGION, description = REGION_DESC) String region,
                                        @Param(value = PROVISIONED_PRODUCT_ID, description = PROVISIONED_PRODUCT_ID_DESC) String provisionedProductId,
                                        @Param(value = PROVISIONED_PRODUCT_NAME, description = PROVISIONED_PRODUCT_NAME_DESC) String provisionedProductName,
@@ -81,6 +86,7 @@ public class UnprovisionProductAction {
         final String acceptLanguageVal = defaultIfEmpty(acceptLanguage, DefaultValues.ACCEPTED_LANGUAGE);
         final String ignoreErrorsVal = defaultIfEmpty(ignoreErrors, IGNORE_ERRORS);
         final String regionVal = defaultIfEmpty(region, DefaultValues.REGION);
+        final String pollingIntervalVal = defaultIfEmpty(pollingInterval, DefaultValues.POLLING_INTERVAL_DEFAULT);
 
         //Validate inputs
         Validator validator = new Validator()
@@ -100,6 +106,8 @@ public class UnprovisionProductAction {
         final Integer execTimeoutImp = Integer.valueOf(execTimeoutVal);
         final Boolean asyncImp = Boolean.valueOf(asyncVal);
         final Boolean ignoreErrorsImp = Boolean.valueOf(ignoreErrorsVal);
+        final Long pollingIntervalImp = Long.valueOf(pollingIntervalVal);
+
 
         try {
 
@@ -108,7 +116,19 @@ public class UnprovisionProductAction {
 
             final TerminateProvisionedProductResult result = AmazonServiceCatalogService.terminateProvisionedProduct(acceptLanguageVal, ignoreErrorsImp, provisionedProductId, provisionedProductName, terminateToken, awsServiceCatalog);
 
-            return getSuccessResultsMap(result.toString());
+            String undeployStatus = result.getRecordDetail().getStatus();
+
+            while (UPDATE_STATUSES.contains(undeployStatus)) {
+                Thread.sleep(pollingIntervalImp);
+                undeployStatus = getUpdatedProductStatus(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+            }
+            if (undeployStatus.equals(SUCCEEDED)) {
+                return getSuccessResultsMap(result.toString());
+            }
+
+            final DescribeRecordResult recordResult = AmazonServiceCatalogService.describeRecord(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+
+            throw new RuntimeException(UNPROVISION_PROVISIONED_PRODUCT_FAILED_REASON + recordResult.getRecordDetail().getRecordErrors().toString());
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }
