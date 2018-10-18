@@ -77,6 +77,12 @@ public class AmazonServiceCatalogService {
         return serviceCatalogClient.describeProvisionedProduct(describeProvisionProductRequest);
     }
 
+    public static String getUpdatedProductStatus(final String recordId,
+                                                 final AWSServiceCatalog serviceCatalogClient){
+        final DescribeRecordResult result = describeRecord(recordId, serviceCatalogClient);
+        return result.getRecordDetail().getStatus();
+    }
+
     public static DescribeRecordResult describeRecord(final String recordId, final AWSServiceCatalog serviceCatalogClient) {
         DescribeRecordRequest describeRecordRequest = new DescribeRecordRequest()
                 .withId(recordId);
