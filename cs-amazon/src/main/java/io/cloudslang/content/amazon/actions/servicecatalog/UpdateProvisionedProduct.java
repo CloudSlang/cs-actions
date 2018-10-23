@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.amazon.actions.servicecatalog;
 
+import com.amazonaws.services.cloudformation.AmazonCloudFormation;
+import com.amazonaws.services.cloudformation.model.Stack;
 import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
 import com.amazonaws.services.servicecatalog.model.DescribeRecordResult;
 import com.amazonaws.services.servicecatalog.model.UpdateProvisionedProductResult;
@@ -26,10 +28,12 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Descriptions;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.validators.Validator;
+import io.cloudslang.content.amazon.factory.CloudFormationClientBuilder;
 import io.cloudslang.content.amazon.factory.ServiceCatalogClientBuilder;
 import io.cloudslang.content.amazon.services.AmazonServiceCatalogService;
 import io.cloudslang.content.amazon.utils.DefaultValues;
 
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceCatalogActions.*;
@@ -43,8 +47,11 @@ import static io.cloudslang.content.amazon.entities.constants.Descriptions.Updat
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.UpdateProvisionedProductDescriptions.PROVISIONING_PARAMETERS_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ServiceCatalogInputs.*;
-import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.getUpdatedProductStatus;
-import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapUpdateProvisioningProduct;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.STACK_OUTPUTS;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.STACK_RESOURCES;
+import static io.cloudslang.content.amazon.services.AmazonServiceCatalogService.*;
+import static io.cloudslang.content.amazon.utils.OutputsUtil.*;
+import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.getStack;
 import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.toArrayOfUpdateParameters;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -146,13 +153,23 @@ public class UpdateProvisionedProduct {
                 Thread.sleep(pollingIntervalImp);
                 updateStatus = getUpdatedProductStatus(result.getRecordDetail().getRecordId(), awsServiceCatalog);
             }
-            if (updateStatus.equals(SUCCEEDED)) {
-
-                return getSuccessResultMapUpdateProvisioningProduct(result);
+            if (updateStatus.equals(FAILED)) {
+                final DescribeRecordResult recordResult = AmazonServiceCatalogService.describeRecord(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+                throw new RuntimeException(UPDATE_PROVISIONED_PRODUCT_FAILED_REASON + recordResult.getRecordDetail().getRecordErrors().toString());
             }
-            final DescribeRecordResult recordResult = AmazonServiceCatalogService.describeRecord(result.getRecordDetail().getRecordId(), awsServiceCatalog);
 
-            throw new RuntimeException(UPDATE_PROVISIONED_PRODUCT_FAILED_REASON + recordResult.getRecordDetail().getRecordErrors().toString());
+            final AmazonCloudFormation awsCloudFormation = CloudFormationClientBuilder.getCloudFormationClient(identity, credential,
+                    proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutVal, execTimeoutVal, regionVal);
+            final String cloudFormationStackName = getCloudFormationStackName(result.getRecordDetail().getRecordId(), awsServiceCatalog, pollingIntervalImp);
+            List<Stack> stacks = describeCloudFormationStack(cloudFormationStackName, awsCloudFormation);
+            String stackOutputs = getStackOutputsToJson(getStack(stacks));
+            String stackResources = getStackResourcesToJson(describeStackResourcesResult(cloudFormationStackName, awsCloudFormation));
+
+            Map<String, String> results = getSuccessResultMapUpdateProvisioningProduct(result);
+            results.put(STACK_OUTPUTS, stackOutputs);
+            results.put(STACK_RESOURCES, stackResources);
+
+            return results;
 
         } catch (Exception e) {
             return getFailureResultsMap(e);
