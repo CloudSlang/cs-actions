@@ -17,6 +17,7 @@ package io.cloudslang.content.amazon.actions.servicecatalog;
 import com.amazonaws.services.cloudformation.AmazonCloudFormation;
 import com.amazonaws.services.cloudformation.model.Stack;
 import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
+import com.amazonaws.services.servicecatalog.model.DescribeRecordResult;
 import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -34,8 +35,7 @@ import io.cloudslang.content.amazon.utils.DefaultValues;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceCatalogActions.CREATE_COMPLETE;
-import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceCatalogActions.CREATE_IN_PROGRESS;
+import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceCatalogActions.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
@@ -138,22 +138,20 @@ public class ProvisionProductAction {
                     toArrayOfParameters(provisioningParameters, delimiterVal), productId, provisionTokens, provisioningArtifactId,
                     toArrayOfTags(tags, delimiterVal), acceptLanguageVal, notificationArns, pathId, awsServiceCatalog);
 
-
-            final String cloudFormationStackName = getCloudFormationStackName(result.getRecordDetail().getRecordId(), awsServiceCatalog, pollingIntervalImp);
+            String provisionStatus = result.getRecordDetail().getStatus();
+            while (UPDATE_STATUSES.contains(provisionStatus)) {
+                Thread.sleep(pollingIntervalImp);
+                provisionStatus = getUpdatedProductStatus(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+            }
+            if (provisionStatus.equals(FAILED)) {
+                final DescribeRecordResult recordResult = AmazonServiceCatalogService.describeRecord(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+                throw new RuntimeException(PROVISION_PRODUCT_FAILED_REASON + recordResult.getRecordDetail().getRecordErrors().toString());
+            }
 
             final AmazonCloudFormation awsCloudFormation = CloudFormationClientBuilder.getCloudFormationClient(identity, credential,
                     proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutVal, execTimeoutVal, regionVal);
-
+            final String cloudFormationStackName = getCloudFormationStackName(result.getRecordDetail().getRecordId(), awsServiceCatalog, pollingIntervalImp);
             List<Stack> stacks = describeCloudFormationStack(cloudFormationStackName, awsCloudFormation);
-
-            while (getStack(stacks).getStackStatus().equals(CREATE_IN_PROGRESS)) {
-                Thread.sleep(pollingIntervalImp);
-                stacks = describeCloudFormationStack(cloudFormationStackName, awsCloudFormation);
-            }
-
-            if (!getStack(stacks).getStackStatus().equals(CREATE_COMPLETE)) {
-                throw new RuntimeException("Stack creation failure. Reason: " + stacks.get(0).getStackStatusReason());
-            }
 
             String stackOutputs = getStackOutputsToJson(getStack(stacks));
             String stackResources = getStackResourcesToJson(describeStackResourcesResult(cloudFormationStackName, awsCloudFormation));

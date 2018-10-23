@@ -184,11 +184,10 @@ public class Constants {
     }
 
     public static class ServiceCatalogActions {
-        public static final String CREATE_IN_PROGRESS = "CREATE_IN_PROGRESS";
-        public static final String CREATE_COMPLETE = "CREATE_COMPLETE";
         public static final String FAILED = "FAILED";
         public static final String CLOUD_FORMATION_STACK_NAME_REGEX = "(SC)-[0-9]{0,63}-[a-z]{0,63}-[a-z0-9]{0,63}";
         public static final String SUCCEEDED = "SUCCEEDED";
+        public static final String PROVISION_PRODUCT_FAILED_REASON = "ProvisionProduct failed. Reason: ";
         public static final String UPDATE_PROVISIONED_PRODUCT_FAILED_REASON = "UpdateProvisionedProduct failed. Reason: ";
         public static final String UNPROVISION_PROVISIONED_PRODUCT_FAILED_REASON = "TerminateProvisionedProduct failed. Reason: ";
         public static final Set<String> UPDATE_STATUSES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("CREATED", "IN_PROGRESS", "IN_PROGRESS_IN_ERROR")));
