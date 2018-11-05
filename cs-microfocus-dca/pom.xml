@@ -77,6 +77,7 @@
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <commons-collection.version>4.1</commons-collection.version>
         <cs-commons.version>0.0.5</cs-commons.version>
+        <cs-xml.version>0.0.11</cs-xml.version>
         <cs-http-client.version>0.1.74</cs-http-client.version>
         <jackson.version>2.9.0</jackson.version>
         <!--Misc properties-->
@@ -107,6 +108,11 @@
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-commons</artifactId>
             <version>${cs-commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-xml</artifactId>
+            <version>${cs-xml.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

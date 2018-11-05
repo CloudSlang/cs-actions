@@ -174,4 +174,33 @@ public class Descriptions {
         public static final String RETURN_RESULT_DESC = "In case of success, a JSON representation of the credential " +
                 "data, otherwise an error message.";
     }
+
+    public static class GetSubscriptionParams {
+        public static final String URL_DESC = "public static final String GET_CREDENTIAL_FROM_MANAGER_DESC = This " +
+                "operation can be used to retrieve a credential from DCA credential manager.";
+        public static final String AUTH_DESC = " The type of authentication used by this operation when trying to" +
+                "execute the request on the target server. The authentication is not preemptive: a plain request not " +
+                "including authentication info will be made and only when the server responds with a" +
+                " 'WWW-Authenticate' header, the client sends the required headers. If the server needs no" +
+                " authentication but you specify one in this input the request will still be valid but the client " +
+                "cannot choose the authentication method and there is no fallback so you have to know which one you" +
+                " need. If the web application and proxy use different authentication types, these must be specified" +
+                " as shown in the example." +
+                "Default value: Basic" +
+                "Valid values: Basic, digest, ntlm, kerberos, any, anonymous, or a list of valid values separated" +
+                " by comma." +
+                "Example: Basic,digest";
+        public static final String USERNAME_DESC = "The user name used for authentication. For NTLM authentication, " +
+                "the required format is \"domain\\user\". If you only specify the user, a period is added in the " +
+                "format \".\\user\" so that a local user on the target machine can be used. The username is required " +
+                "for all authentication schemes except Kerberos.";
+        public static final String PASSWORD_DESC = "The password used for authentication.";
+        public static final String QUERY_PARAMS_DESC = "The list containing query parameters to append to the URL." +
+                " The names and the values must not be URL encoded unless you specify queryParamsAreURLEncoded=true " +
+                "because if they are encoded and queryParamsAreURLEncoded =false they will get double encoded.The " +
+                "separator between name-value pairs is &. The query name will be separated from query value by =. " +
+                "Note that you need to URL encode at least & to %26 and = to %3D and set queryParamsAreURLEncoded=" +
+                " true if you leave the other special URL characters un-encoded they will be encoded by the HTTP " +
+                "Client. Examples: parameterName1=parameterValue1&parameterName2=parameterValue2;";
+    }
 }

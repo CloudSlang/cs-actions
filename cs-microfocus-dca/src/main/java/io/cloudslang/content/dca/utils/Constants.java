@@ -25,6 +25,11 @@ public class Constants {
     public static final String GET = "GET";
     public static final String VALUE = "value";
     public static final String ATTRIBUTES = "attributes";
+    public static final String XML_DOCUMENT_SOURCE = "";
+    public static final String X_PATH_QUERY_PROPERTY_NAME = "//options/property/*[name()=\"name\"]/text()";
+    public static final String QUERY_TYPE = "nodelist";
+    public static final String DELIMITER = ",";
+    public static final String SECURE_PROCESSING = "true";
 
     public static final String NEW_LINE = System.lineSeparator();
 
