@@ -20,6 +20,9 @@ public class DefaultValues {
     public static final String DEFAULT_TENANT = "PROVIDER";
 
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
+    public static final String DEFAULT_TRUST_ALL_ROOTS = "true";
+    public static final String DEFAULT_X_509_HOSTNAME_VERIFIER = "allow_all";
+    public static final String DEFAULT_PROXY_PORT = "8080";
     public static final String DEFAULT_JAVA_KEYSTORE_PASSWORD = "changeit";
     public static final String DEFAULT_DCA_PORT = "443";
     public static final String DEFAULT_TIMEOUT = "1200";

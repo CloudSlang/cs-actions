@@ -30,6 +30,8 @@ public class Constants {
     public static final String QUERY_TYPE = "nodelist";
     public static final String DELIMITER = ",";
     public static final String SECURE_PROCESSING = "true";
+    public static final String QUERY = "//options/property[name=\"";
+    public static final String QUERY_PART = "\"]/values/*[name()=\"value\" ]/text()";
 
     public static final String NEW_LINE = System.lineSeparator();
 
