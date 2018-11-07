@@ -78,9 +78,9 @@ public class GetSubscriptionParamsServices {
 
                 arrayProp[i] = arrayProp[i].replaceAll(param, EMPTY);
 
-                if (i < nr && nr > 1) {
+                if (i < nr && nr > 1)
                     finalList.add(arrayProp[i] + EQUALS + queryChild.get(SELECTED_VALUE) + AND);
-                } else
+                else
                     finalList.add(arrayProp[i] + EQUALS + queryChild.get(SELECTED_VALUE));
 
             }

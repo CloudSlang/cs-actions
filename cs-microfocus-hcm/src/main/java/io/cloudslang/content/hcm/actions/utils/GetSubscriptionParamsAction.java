@@ -18,7 +18,6 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
@@ -26,12 +25,12 @@ import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.hcm.services.GetSubscriptionParamsServices.createInstance;
-import static io.cloudslang.content.hcm.utils.Constants.*;
 import static io.cloudslang.content.hcm.utils.Constants.CONTENT_TYPE;
+import static io.cloudslang.content.hcm.utils.Constants.GET;
 import static io.cloudslang.content.hcm.utils.DefaultValues.*;
 import static io.cloudslang.content.hcm.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hcm.utils.Descriptions.GetSubscriptionParams.*;
@@ -48,8 +47,8 @@ public class GetSubscriptionParamsAction {
             description = GET_SUBSCRIPTION_PARAMS_DESC,
             outputs = {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = OutputNames.RETURN_RESULT),
-                    @Output(value = OutputNames.EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = RETURN_RESULT),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = PARAM_LIST, description = PARAM_LIST_DESC)
             },
             responses = {
