@@ -71,8 +71,7 @@ public class Descriptions {
         public static final String GET_SUBSCRIPTION_PARAMS_DESC = "This operation can be used to retrieve a list of" +
                 " all properties that contain in the property name the string \"param_\" and all the values " +
                 "associated with the selected items";
-        public static final String URL_DESC = "public static final String GET_CREDENTIAL_FROM_MANAGER_DESC = This " +
-                "operation can be used to retrieve a credential from DCA credential manager.";
+        public static final String URL_DESC = "The web address to make the request to";
         public static final String AUTH_DESC = " The type of authentication used by this operation when trying to" +
                 "execute the request on the target server. The authentication is not preemptive: a plain request not " +
                 "including authentication info will be made and only when the server responds with a" +
