@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.dca.utils;
+package io.cloudslang.content.hcm.utils;
 
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
@@ -21,22 +21,19 @@ public class CustomInput {
 
     public CommonInputs getCommonInputs(String xmlDocument, String xmlDocumentSource, String xPathQuery, String secureProcessing) {
 
-        final CommonInputs commonInputs = new CommonInputs.CommonInputsBuilder()
+        return new CommonInputs.CommonInputsBuilder()
                 .withXmlDocument(xmlDocument)
                 .withXmlDocumentSource(xmlDocumentSource)
                 .withXpathQuery(xPathQuery)
                 .withSecureProcessing(secureProcessing)
                 .build();
-
-        return commonInputs;
     }
 
     public CustomInputs getCustomInputs(String queryType, String delimiter) {
-        final CustomInputs customInputs = new CustomInputs.CustomInputsBuilder()
+
+        return new CustomInputs.CustomInputsBuilder()
                 .withQueryType(queryType)
                 .withDelimiter(delimiter)
                 .build();
-
-        return customInputs;
     }
 }

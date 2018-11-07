@@ -12,46 +12,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.dca.actions.utils;
+package io.cloudslang.content.hcm.actions.utils;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
+import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.dca.utils.CustomInput;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
-import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.xml.services.XpathQueryService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
-import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static io.cloudslang.content.dca.utils.Constants.*;
-import static io.cloudslang.content.dca.utils.DefaultValues.*;
-import static io.cloudslang.content.dca.utils.Descriptions.Common.*;
-import static io.cloudslang.content.dca.utils.Descriptions.GetSubscriptionParams.*;
-import static io.cloudslang.content.dca.utils.Utilities.setProxy;
-import static io.cloudslang.content.dca.utils.Utilities.setSecurityInputs;
+import static io.cloudslang.content.hcm.services.GetSubscriptionParamsServices.createInstance;
+import static io.cloudslang.content.hcm.utils.Constants.*;
+import static io.cloudslang.content.hcm.utils.Constants.CONTENT_TYPE;
+import static io.cloudslang.content.hcm.utils.DefaultValues.*;
+import static io.cloudslang.content.hcm.utils.Descriptions.Common.*;
+import static io.cloudslang.content.hcm.utils.Descriptions.GetSubscriptionParams.*;
+import static io.cloudslang.content.hcm.utils.OutputNames.PARAM_LIST;
+import static io.cloudslang.content.hcm.utils.Utilities.setInput;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetSubscriptionParams {
+
+public class GetSubscriptionParamsAction {
 
     @Action(name = "Get Subscription Params",
-            description = "",
+            description = GET_SUBSCRIPTION_PARAMS_DESC,
             outputs = {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = RETURN_RESULT),
-                    @Output(value = EXCEPTION, description = EXCEPTION_DESC)},
+                    @Output(value = OutputNames.RETURN_RESULT),
+                    @Output(value = OutputNames.EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = PARAM_LIST, description = PARAM_LIST_DESC)
+            },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = SUCCESS, matchType = COMPARE_EQUAL),
                     @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = FAILURE, matchType = COMPARE_EQUAL, isDefault = true, isOnFail = true)})
@@ -75,7 +75,6 @@ public class GetSubscriptionParams {
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) final String keepAlive,
                                        @Param(value = QUERY_PARAMS, description = QUERY_PARAMS_DESC) String queryParams) {
 
-
         final String trustKeystore = defaultIfEmpty(trustKeystoreInp, DEFAULT_JAVA_KEYSTORE);
         final String trustPassword = defaultIfEmpty(trustPasswordInp, DEFAULT_JAVA_KEYSTORE_PASSWORD);
         final String keystore = defaultIfEmpty(keystoreInp, DEFAULT_JAVA_KEYSTORE);
@@ -86,68 +85,12 @@ public class GetSubscriptionParams {
 
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
 
-        setProxy(httpClientInputs, proxyHost, proxyPort, proxyUsername, proxyPassword);
-        setSecurityInputs(httpClientInputs, trustAllRoots, x509HostnameVerifier,
-                trustKeystore, trustPassword, keystore, keystorePassword);
-
-        httpClientInputs.setUrl(url);
-        httpClientInputs.setAuthType(authType);
-        httpClientInputs.setUsername(username);
-        httpClientInputs.setPassword(password);
-        httpClientInputs.setConnectTimeout(connectTimeout);
-        httpClientInputs.setSocketTimeout(socketTimeout);
-        httpClientInputs.setUseCookies(useCookies);
-        httpClientInputs.setKeepAlive(keepAlive);
-        httpClientInputs.setQueryParams(queryParams);
-        httpClientInputs.setContentType("text/plain");
-        httpClientInputs.setFollowRedirects(TRUE);
-        httpClientInputs.setMethod(GET);
+        setInput(httpClientInputs, url, authType, username, password, connectTimeout, socketTimeout, useCookies,
+                keepAlive, queryParams, CONTENT_TYPE, TRUE, GET, proxyHost, proxyPort, proxyUsername, proxyPassword,
+                trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, keystore, keystorePassword);
 
         try {
-            final Map<String, String> httpResponse = new HttpClientService().execute(httpClientInputs);
-
-            CustomInput customInput = new CustomInput();
-
-            Map<String, String> query_Property_Name = new XpathQueryService().execute(customInput.getCommonInputs(httpResponse.get("returnResult"), XML_DOCUMENT_SOURCE, X_PATH_QUERY_PROPERTY_NAME, SECURE_PROCESSING),
-                    customInput.getCustomInputs(QUERY_TYPE, DELIMITER));
-
-            List<String> finalList = new ArrayList<>();
-
-            String[] arrayProp = query_Property_Name.get("selectedValue").split(",");
-
-            int nr = 0;
-            for (int j = 0; j < arrayProp.length; j++)
-                if (arrayProp[j].contains("param_"))
-                    nr++;
-
-            for (int i = 0; i < arrayProp.length; i++) {
-
-                if (arrayProp[i].contains("param_")) {
-
-                    String xPathQueryChild = QUERY + arrayProp[i] + QUERY_PART;
-                    Map<String, String> query_Child = new XpathQueryService().execute(customInput.getCommonInputs(httpResponse.get("returnResult"), XML_DOCUMENT_SOURCE, xPathQueryChild, SECURE_PROCESSING),
-                            customInput.getCustomInputs(QUERY_TYPE, DELIMITER));
-
-                    query_Child.put("selectedValue", query_Child.get("selectedValue").toString().replaceAll(" ", ""));
-
-                    arrayProp[i] = arrayProp[i].replaceAll("param_", "");
-
-                    if (i < nr && nr > 1) {
-                        finalList.add(arrayProp[i] + "=" + query_Child.get("selectedValue") + "&");
-                    } else
-                        finalList.add(arrayProp[i] + "=" + query_Child.get("selectedValue"));
-
-                }
-
-            }
-
-            String finalResponse = "";
-            for (int j = 0; j < finalList.size(); j++)
-                finalResponse = finalResponse + finalList.get(j);
-
-            Map<String, String> result = getSuccessResultsMap("The operation was executed with success");
-            result.put("paramList", finalResponse);
-            return result;
+            return createInstance(httpClientInputs);
         } catch (Exception e) {
             return getFailureResultsMap(e.getMessage());
         }
