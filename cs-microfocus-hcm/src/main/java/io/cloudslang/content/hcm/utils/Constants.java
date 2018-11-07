@@ -12,19 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.dca.utils;
+package io.cloudslang.content.hcm.utils;
 
 public class Constants {
-    public static final String IDM_TOKENS_PATH = "/idm-service/v2.0/tokens";
-    public static final String DCA_DEPLOYMENT_PATH = "/urest/v1/deployment";
-    public static final String DCA_RESOURCE_PATH = "/urest/v1/resource";
-    public static final String HTTPS = "https";
-    public static final String HTTP = "http";
-    public static final String APPLICATION_JSON = "application/json";
-    public static final String POST = "POST";
+
     public static final String GET = "GET";
-    public static final String VALUE = "value";
-    public static final String ATTRIBUTES = "attributes";
     public static final String XML_DOCUMENT_SOURCE = "";
     public static final String X_PATH_QUERY_PROPERTY_NAME = "//options/property/*[name()=\"name\"]/text()";
     public static final String QUERY_TYPE = "nodelist";
@@ -32,13 +24,16 @@ public class Constants {
     public static final String SECURE_PROCESSING = "true";
     public static final String QUERY = "//options/property[name=\"";
     public static final String QUERY_PART = "\"]/values/*[name()=\"value\" ]/text()";
-
+    public static final String CONTENT_TYPE = "text/plain";
+    public static final String SELECTED_VALUE = "selectedValue";
+    public static final String PARAM = "param_";
+    public static final String EXCEPTION = "exception";
+    public static final String RETURN_RESULT_MESSAGE = "The operation was executed with success";
+    public static final String PARAM_LIST = "paramList";
     public static final String NEW_LINE = System.lineSeparator();
+    public static final String COMMA = ",";
+    public static final String AND = "&";
+    public static final String EQUALS = "=";
+    public static final String WHITESPACE = " ";
 
-    public static final String X_AUTH_TOKEN_HEADER = "X-Auth-Token:";
-    public static final String REFRESH_TOKEN_HEADER = "Refresh-Token:";
-    public static final String HEADERS_DELIMITER = "\r\n";
-    public static final String MESSAGE = "message";
-    public static final String DATA_PATH = "data";
-    public static final String DCA_CM_CREDENTIAL_PATH = "/credential";
 }

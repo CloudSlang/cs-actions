@@ -20,12 +20,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.cloudslang.content</groupId>
-    <artifactId>cs-microfocus-dca</artifactId>
-    <version>1.1.2-SNAPSHOT</version>
+    <artifactId>cs-microfocus-hcm</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
 
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Micro Focus DCA Integration</description>
+    <description>Micro Focus HCM Integration</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
 
     <licenses>
@@ -57,8 +57,8 @@
 
     <developers>
         <developer>
-            <name>Robert Sandor</name>
-            <email>robert.sandor@microfocus.com</email>
+            <name>Matei Ioana</name>
+            <email>ioana.matei@microfocus.com</email>
             <organization>Micro Focus</organization>
             <organizationUrl>https://software.microfocus.com/en-us/home</organizationUrl>
         </developer>
@@ -75,28 +75,19 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
-        <commons-collection.version>4.1</commons-collection.version>
-        <cs-commons.version>0.0.5</cs-commons.version>
         <cs-xml.version>0.0.11</cs-xml.version>
         <cs-http-client.version>0.1.74</cs-http-client.version>
-        <jackson.version>2.9.0</jackson.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <maven.sources.skip>true</maven.sources.skip>
         <custom.nexus>overwritten_by_ci</custom.nexus>
-        <lombok.version>1.16.20</lombok.version>
     </properties>
 
     <dependencies>
-        <!--JACKSON-->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
 
+        <!-- SDK -->
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
@@ -106,38 +97,15 @@
         <!-- Utils -->
         <dependency>
             <groupId>io.cloudslang.content</groupId>
-            <artifactId>cs-commons</artifactId>
-            <version>${cs-commons.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-xml</artifactId>
             <version>${cs-xml.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>${commons-collection.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-        </dependency>
 
-        <!--HTTP CLIENT-->
+        <!-- HTTP CLIENT -->
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-http-client</artifactId>
             <version>${cs-http-client.version}</version>
-        </dependency>
-
-        <!-- Testing -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>
