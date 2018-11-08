@@ -57,7 +57,7 @@ public class GetSubscriptionParamsAction {
     public Map<String, String> execute(@Param(value = URL, required = true, description = URL_DESC) String url,
                                        @Param(value = AUTH_TYPE, description = AUTH_DESC) String authType,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
-                                       @Param(value = PASSWORD, description = PASSWORD_DESC) String password,
+                                       @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) final String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) final String proxyPortInp,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USER_DESC) final String proxyUsername,
