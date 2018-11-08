@@ -15,5 +15,5 @@
 package io.cloudslang.content.hcm.utils;
 
 public class OutputNames {
-    public static final String PARAM_LIST = "finalList";
+    public static final String PARAM_LIST = "param_list";
 }
