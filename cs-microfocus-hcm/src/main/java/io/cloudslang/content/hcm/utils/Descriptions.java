@@ -19,10 +19,10 @@ public class Descriptions {
     public static class Common {
         // Inputs
         public static final String PROXY_HOST_DESC = "The proxy server used to access the web site.";
-        public static final String PROXY_PORT_DESC = "The proxy server port. Default value: 8080. Valid values: -1 " +
-                "and integer values greater than 0. The value '-1' indicates that the proxy port is not set and the " +
-                "protocol default port will be used. If the protocol is 'http' and the 'proxyPort' is set to '-1'" +
-                " then port '80' will be used.";
+        public static final String PROXY_PORT_DESC = "The proxy server port. Default value: 8080. " +
+                "Valid values: -1 and integer values greater than 0. " +
+                "The value '-1' indicates that the proxy port is not set and the protocol default port will be used. " +
+                "If the protocol is 'http' and the 'proxyPort' is set to '-1' then port '80' will be used.";
         public static final String PROXY_USER_DESC = "The user name used when connecting to the proxy.";
         public static final String PROXY_PASS_DESC = "The proxy server password associated with the proxyUsername " +
                 "input value.";
@@ -68,9 +68,8 @@ public class Descriptions {
 
 
     public static class GetSubscriptionParams {
-        public static final String GET_SUBSCRIPTION_PARAMS_DESC = "This operation can be used to retrieve a list of" +
-                " all properties that contain in the property name the string \"param_\" and all the values " +
-                "associated with the selected items";
+        public static final String GET_SUBSCRIPTION_PARAMS_DESC = "This operation is used to retrieve a list of" +
+                " properties from a subscription used in brokering capability in HCM. ";
         public static final String URL_DESC = "The web address to make the request to";
         public static final String AUTH_DESC = " The type of authentication used by this operation when trying to" +
                 "execute the request on the target server. The authentication is not preemptive: a plain request not " +
@@ -84,10 +83,7 @@ public class Descriptions {
                 "Valid values: Basic, digest, ntlm, kerberos, any, anonymous, or a list of valid values separated" +
                 " by comma." +
                 "Example: Basic,digest";
-        public static final String USERNAME_DESC = "The user name used for authentication. For NTLM authentication, " +
-                "the required format is \"domain\\user\". If you only specify the user, a period is added in the " +
-                "format \".\\user\" so that a local user on the target machine can be used. The username is required " +
-                "for all authentication schemes except Kerberos.";
+        public static final String USERNAME_DESC = "The user name used for authentication.";
         public static final String PASSWORD_DESC = "The password used for authentication.";
         public static final String QUERY_PARAMS_DESC = "The list containing query parameters to append to the URL." +
                 " The names and the values must not be URL encoded unless you specify queryParamsAreURLEncoded=true " +
