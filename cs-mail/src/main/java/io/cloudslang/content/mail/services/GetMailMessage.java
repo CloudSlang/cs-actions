@@ -27,39 +27,20 @@ import org.bouncycastle.cms.RecipientInformationStore;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnveloped;
 
-import javax.mail.Authenticator;
-import javax.mail.BodyPart;
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Part;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.URLName;
+import javax.mail.*;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.cert.X509Certificate;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
@@ -97,10 +78,6 @@ public class GetMailMessage {
     public static final String SPECIFY_PROTOCOL_FOR_GIVEN_PORT = "Please specify the protocol for the indicated port.";
     public static final String TEXT_PLAIN = "text/plain";
     public static final String TEXT_HTML = "text/html";
-
-    private static final String MULTIPART_MIXED = "multipart/mixed";
-    private static final String MULTIPART_RELATED = "multipart/related";
-
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String SSL = "SSL";
     public static final String STR_FALSE = "false";
@@ -114,17 +91,18 @@ public class GetMailMessage {
     public static final String UNRECOGNIZED_SSL_MESSAGE_PLAINTEXT_CONNECTION = "Unrecognized SSL message, plaintext " +
             "connection?";
     public static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
-    private static final String HOST_NOT_SPECIFIED = "The required host input is not specified!";
-    private static final String MESSAGE_NUMBER_NOT_SPECIFIED = "The required messageNumber input is not specified!";
-    private static final String USERNAME_NOT_SPECIFIED = "The required username input is not specified!";
-    private static final String FOLDER_NOT_SPECIFIED = "The required folder input is not specified!";
     public static final String PKCS_KEYSTORE_TYPE = "PKCS12";
     public static final String BOUNCY_CASTLE_PROVIDER = "BC";
     public static final String ENCRYPTED_CONTENT_TYPE = "application/pkcs7-mime; name=\"smime.p7m\"; " +
             "smime-type=enveloped-data";
     public static final String SECURE_SUFFIX_FOR_POP3_AND_IMAP = "s";
     public static final int ONE_SECOND = 1000;
-
+    private static final String MULTIPART_MIXED = "multipart/mixed";
+    private static final String MULTIPART_RELATED = "multipart/related";
+    private static final String HOST_NOT_SPECIFIED = "The required host input is not specified!";
+    private static final String MESSAGE_NUMBER_NOT_SPECIFIED = "The required messageNumber input is not specified!";
+    private static final String USERNAME_NOT_SPECIFIED = "The required username input is not specified!";
+    private static final String FOLDER_NOT_SPECIFIED = "The required folder input is not specified!";
     //Operation inputs
     private String host;
     private String port;
@@ -155,6 +133,7 @@ public class GetMailMessage {
 
     private RecipientId recId = null;
     private KeyStore ks = null;
+    private Store store;
 
     public Map<String, String> execute(GetMailMessageInputs getMailMessageInputs) throws Exception {
         Map<String, String> result = new HashMap<>();
@@ -231,6 +210,9 @@ public class GetMailMessage {
             try {
                 message.getFolder().close(true);
             } catch (Throwable ignore) {
+            } finally {
+                if (store != null)
+                    store.close();
             }
 
             result.put(RETURN_CODE, SUCCESS_RETURN_CODE);
@@ -245,7 +227,7 @@ public class GetMailMessage {
     }
 
     protected Message getMessage() throws Exception {
-        Store store = createMessageStore();
+        store = createMessageStore();
         Folder folder = store.getFolder(this.folder);
         if (!folder.exists()) {
             throw new Exception(THE_SPECIFIED_FOLDER_DOES_NOT_EXIST_ON_THE_REMOTE_SERVER);
@@ -403,7 +385,7 @@ public class GetMailMessage {
         Security.addProvider(new BouncyCastleProvider());
         ks = KeyStore.getInstance(PKCS_KEYSTORE_TYPE, BOUNCY_CASTLE_PROVIDER);
 
-        InputStream decryptionStream  = new URL(decryptionKeystore).openStream();
+        InputStream decryptionStream = new URL(decryptionKeystore).openStream();
         try {
             ks.load(decryptionStream, smimePw);
         } finally {
@@ -429,7 +411,7 @@ public class GetMailMessage {
         // find the certificate for the private key and generate a
         // suitable recipient identifier.
         //
-        X509Certificate cert = (X509Certificate)ks.getCertificate(decryptionKeyAlias);
+        X509Certificate cert = (X509Certificate) ks.getCertificate(decryptionKeyAlias);
         if (null == cert) {
             throw new Exception("Can't find a key pair with alias \"" + decryptionKeyAlias +
                     "\" in the given keystore");
@@ -590,7 +572,7 @@ public class GetMailMessage {
 
                 if (decryptMessage && part.getContentType() != null &&
                         part.getContentType().equals(ENCRYPTED_CONTENT_TYPE)) {
-                    part = decryptPart((MimeBodyPart)part);
+                    part = decryptPart((MimeBodyPart) part);
                 }
 
                 String disposition = part.getDisposition();
@@ -646,7 +628,7 @@ public class GetMailMessage {
             Part part = mpart.getBodyPart(i);
             if (decryptMessage && part.getContentType() != null &&
                     part.getContentType().equals(ENCRYPTED_CONTENT_TYPE)) {
-                part = decryptPart((MimeBodyPart)part);
+                part = decryptPart((MimeBodyPart) part);
             }
             String disposition = part.getDisposition();
 
@@ -681,7 +663,7 @@ public class GetMailMessage {
 
     private String processMultipart(Part part) throws IOException,
             MessagingException {
-        Multipart relatedparts = (Multipart)part.getContent();
+        Multipart relatedparts = (Multipart) part.getContent();
 
         for (int j = 0; j < relatedparts.getCount(); j++) {
 
@@ -701,7 +683,7 @@ public class GetMailMessage {
     }
 
     private String extractAlternativeContent(Part part) throws IOException, MessagingException {
-        Multipart alternatives = (Multipart)part.getContent();
+        Multipart alternatives = (Multipart) part.getContent();
 
         Object content = "";
 
