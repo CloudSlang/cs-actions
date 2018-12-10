@@ -312,6 +312,7 @@
         <module>cs-utilities</module>
         <module>cs-vmware</module>
         <module>cs-xml</module>
+        <module>cs-office-365</module>
     </modules>
 
 </project>
