@@ -40,6 +40,7 @@ import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizatio
 import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.*;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyAuthorizationInputs;
+import static io.cloudslang.content.office365.utils.Outputs.AuthorizationOutputs.AUTH_TOKEN_TYPE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -71,6 +72,7 @@ public class GetAuthorizationToken {
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = AUTH_TOKEN_TYPE, description = AUTH_TOKEN_TYPE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
@@ -117,7 +119,10 @@ public class GetAuthorizationToken {
                     .proxyUsername(proxyUsername)
                     .proxyPassword(proxyPassword)
                     .build());
-            return getSuccessResultsMap(result.getAccessToken());
+
+            final Map<String, String> successResultsMap = getSuccessResultsMap(result.getAccessToken());
+            successResultsMap.put(AUTH_TOKEN_TYPE, result.getAccessTokenType());
+            return successResultsMap;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
