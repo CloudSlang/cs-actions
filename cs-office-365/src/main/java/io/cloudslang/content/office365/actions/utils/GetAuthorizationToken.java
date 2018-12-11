@@ -34,12 +34,16 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.office365.utils.AuthorizationInputNames.*;
 import static io.cloudslang.content.office365.utils.Constants.*;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
+import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.*;
+import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.*;
+import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyAuthorizationInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class GetAuthorizationToken {
 
@@ -65,25 +69,25 @@ public class GetAuthorizationToken {
      */
     @Action(name = "Get the authorization token for Office 365",
             outputs = {
-                    @Output(RETURN_RESULT),
-                    @Output(RETURN_CODE),
-                    @Output(EXCEPTION)
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = LOGIN_TYPE) String loginType,
-                                       @Param(value = CLIENT_ID, required = true) String clientId,
-                                       @Param(value = CLIENT_SECRET, encrypted = true) String clientSecret,
-                                       @Param(value = USERNAME) String username,
-                                       @Param(value = PASSWORD, encrypted = true) String password,
-                                       @Param(value = LOGIN_AUTHORITY, required = true) String loginAuthority,
-                                       @Param(value = RESOURCE) String resource,
-                                       @Param(value = PROXY_HOST) String proxyHost,
-                                       @Param(value = PROXY_PORT) String proxyPort,
-                                       @Param(value = PROXY_USERNAME) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword) {
+    public Map<String, String> execute(@Param(value = LOGIN_TYPE, description = LOGIN_TYPE_DESC) String loginType,
+                                       @Param(value = CLIENT_ID, required = true, description = CLIENT_ID_DESC) String clientId,
+                                       @Param(value = CLIENT_SECRET, encrypted = true, description = CLIENT_SECRET_DESC) String clientSecret,
+                                       @Param(value = USERNAME, description = USERNAME_DESC) String username,
+                                       @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
+                                       @Param(value = LOGIN_AUTHORITY, required = true, description = LOGIN_AUTHORITY_DESC) String loginAuthority,
+                                       @Param(value = RESOURCE, description = RESOURCES_DESC) String resource,
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword) {
         loginType = defaultIfEmpty(loginType, DEFAULT_LOGIN_TYPE);
         clientId = defaultIfEmpty(clientId, EMPTY);
         clientSecret = defaultIfEmpty(clientSecret, EMPTY);

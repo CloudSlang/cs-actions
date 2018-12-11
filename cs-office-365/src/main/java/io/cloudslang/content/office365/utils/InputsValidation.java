@@ -21,8 +21,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.office365.utils.AuthorizationInputNames.*;
 import static io.cloudslang.content.office365.utils.Constants.*;
+import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.*;
+import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 
 public final class InputsValidation {
