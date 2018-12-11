@@ -73,7 +73,7 @@ public class GetAuthorizationToken {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR)
             })
-    public Map<String, String> execute(@Param(value = LOGIN_TYPE, required = true) String loginType,
+    public Map<String, String> execute(@Param(value = LOGIN_TYPE) String loginType,
                                        @Param(value = CLIENT_ID, required = true) String clientId,
                                        @Param(value = CLIENT_SECRET, encrypted = true) String clientSecret,
                                        @Param(value = USERNAME) String username,
