@@ -113,7 +113,7 @@ public class GetAuthorizationToken {
                     .proxyUsername(proxyUsername)
                     .proxyPassword(proxyPassword)
                     .build());
-            return getSuccessResultsMap(result.getAccessTokenType() + SPACE + result.getAccessToken());
+            return getSuccessResultsMap(result.getAccessToken());
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
