@@ -24,4 +24,16 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port";
+    public static final String ANONYMOUS = "anonymous";
+    public static final String GET = "GET";
+    public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
+    public static final String CHANGEIT = "changeit";
+    public static final String AUTHORIZATION = "Authorization:";
+    public static final String BEARER = "Bearer ";
+    public static final String GRAPH_HOST = "graph.microsoft.com";
+    public static final String BASE_GRAPH_PATH = "/v1.0/users/";
+    public static final String MESSAGES_PATH = "/messages/";
+    public static final String MAIL_FOLDERS_PATH = "/mailFolders/";
+    public static final String DATA_QUERY = "$select=";
+    public static final String HTTPS = "https";
 }
