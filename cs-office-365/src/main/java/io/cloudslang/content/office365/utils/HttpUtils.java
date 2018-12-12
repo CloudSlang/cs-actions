@@ -56,15 +56,38 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static String getMessagePath(@NotNull final String userPrincipalName,
-                                        @NotNull final String userId,
-                                        @NotNull final String messageId) {
+    public static String getMessagesPath(@NotNull final String userPrincipalName,
+                                         @NotNull final String userId) {
 
         StringBuilder pathString = new StringBuilder()
                 .append(BASE_GRAPH_PATH)
                 .append(getLoginType(userPrincipalName, userId))
-                .append(MESSAGES_PATH)
+                .append(MESSAGES_PATH);
+        return pathString.toString();
+    }
+
+    @NotNull
+    public static String getMessagePath(@NotNull final String userPrincipalName,
+                                        @NotNull final String userId,
+                                        @NotNull final String messageId) {
+        StringBuilder messagepathString = new StringBuilder()
+                .append(getMessagesPath(userPrincipalName, userId))
                 .append(messageId);
+        return messagepathString.toString();
+    }
+
+
+    @NotNull
+    public static String getMessagesPath(@NotNull final String userPrincipalName,
+                                         @NotNull final String userId,
+                                         @NotNull final String folderId) {
+
+        StringBuilder pathString = new StringBuilder()
+                .append(BASE_GRAPH_PATH)
+                .append(getLoginType(userPrincipalName, userId))
+                .append(MAIL_FOLDERS_PATH)
+                .append(folderId)
+                .append(MESSAGES_PATH);
         return pathString.toString();
     }
 
@@ -75,11 +98,7 @@ public class HttpUtils {
                                         @NotNull final String folderId) {
 
         StringBuilder pathString = new StringBuilder()
-                .append(BASE_GRAPH_PATH)
-                .append(getLoginType(userPrincipalName, userId))
-                .append(MAIL_FOLDERS_PATH)
-                .append(folderId)
-                .append(MESSAGES_PATH)
+                .append(getMessagesPath(userPrincipalName, userId, folderId))
                 .append(messageId);
         return pathString.toString();
     }
