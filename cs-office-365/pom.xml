@@ -47,6 +47,12 @@
             <organization>Micro Focus</organization>
             <organizationUrl>https://www.microfocus.com/about/</organizationUrl>
         </developer>
+        <developer>
+            <name>Graur Liviu</name>
+            <email>liviu.graur@microfocus.com</email>
+            <organization>Micro Focus</organization>
+            <organizationUrl>https://www.microfocus.com/about/</organizationUrl>
+        </developer>
     </developers>
 
     <distributionManagement>
@@ -75,6 +81,8 @@
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <cs-commons.version>0.0.5</cs-commons.version>
         <junit.version>4.12</junit.version>
+        <common-codec.version>1.10</common-codec.version>
+        <adal4j.version>1.1.3</adal4j.version>
         <cs-http-client.version>0.1.74</cs-http-client.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -98,12 +106,12 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.10</version>
+            <version>${common-codec.version}</version>
         </dependency>
         <dependency>
             <groupId>com.microsoft.azure</groupId>
             <artifactId>adal4j</artifactId>
-            <version>1.1.3</version>
+            <version>${adal4j.version}</version>
         </dependency>
 
         <!--HTTP CLIENT-->
@@ -112,7 +120,6 @@
             <artifactId>cs-http-client</artifactId>
             <version>${cs-http-client.version}</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -143,7 +150,6 @@
                             </goals>
                         </execution>
                     </executions>
-                    <!--Disabled doclint due to javadoc changes in Java 8 -->
                     <configuration>
                         <additionalparam>-Xdoclint:none</additionalparam>
                     </configuration>
@@ -157,42 +163,6 @@
         </pluginManagement>
 
         <plugins>
-            <!-- Checkstyle plugin, should be run only locally
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.17</version>
-                <executions>
-                    <execution>
-                        <id>checkstyle-for-java-sources</id>
-                        <phase>validate</phase>
-                        <configuration>
-                            <configLocation>checkstyle.xml</configLocation>
-                            <encoding>UTF-8</encoding>
-                            <consoleOutput>false</consoleOutput>
-                            <failsOnError>true</failsOnError>
-                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                            <maxAllowedViolations>28</maxAllowedViolations>
-                            <logViolationsToConsole>true</logViolationsToConsole>
-                            <violationSeverity>warning</violationSeverity>
-                            <includeResources>false</includeResources>
-                            <includeTestResources>false</includeTestResources>
-                        </configuration>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        &lt;!&ndash; Do not update this version because it is not compatible with java 7 &ndash;&gt;
-                        <version>6.19</version>
-                    </dependency>
-                </dependencies>
-            </plugin>-->
-            <!--License checker for build-->
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
@@ -206,11 +176,9 @@
                         <include>**/*.java</include>
                         <include>pom.xml</include>
                     </includes>
-                    <!--Pass arguments using ${var} syntax in license.template file-->
                     <properties>
                         <copyright.year>2019</copyright.year>
                     </properties>
-                    <!--Custom mapping for java extensions-->
                     <useDefaultMapping>false</useDefaultMapping>
                     <mapping>
                         <java>cs-actions-java-header</java>

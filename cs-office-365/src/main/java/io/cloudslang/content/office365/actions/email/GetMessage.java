@@ -36,39 +36,42 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.office365.services.EmailServiceImpl.getMessage;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyGetMessageInputs;
+import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class GetMessage {
-
-    @Action(name = "Retrieve the properties and relationships of a message object.",
+    @Action(name = "Get message from Office 365",
             outputs = {
-                    @Output(RETURN_RESULT),
-                    @Output(RETURN_CODE),
-                    @Output(EXCEPTION)
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = DOCUMENT, description = DOCUMENT_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true) String authToken,
-                                       @Param(value = USER_PRINCIPAL_NAME) String userPrincipalName,
-                                       @Param(value = USER_ID) String userId,
-                                       @Param(value = MESSAGE_ID, required = true) String messageId,
-                                       @Param(value = FOLDER_ID) String folderId,
-                                       @Param(value = O_DATA_QUERY) String oDataQuery,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
+                                       @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
+                                       @Param(value = USER_ID, description = USER_ID_DESC) String userId,
+                                       @Param(value = MESSAGE_ID, required = true, description = MESSAGE_ID_DESC) String messageId,
+                                       @Param(value = FOLDER_ID, description = FOLDER_ID_DESC) String folderId,
+                                       @Param(value = O_DATA_QUERY, description = O_DATA_QUERY_DESC) String oDataQuery,
 
-                                       @Param(value = PROXY_HOST) String proxyHost,
-                                       @Param(value = PROXY_PORT) String proxyPort,
-                                       @Param(value = PROXY_USERNAME) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
 
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,
@@ -80,7 +83,7 @@ public class GetMessage {
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
+                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSC_CHARACTER_SET_DESC) String responseCharacterSet) {
 
         userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         userId = defaultIfEmpty(userId, EMPTY);
@@ -97,8 +100,8 @@ public class GetMessage {
         connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
-        connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, "2");
-        connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, "20");
+        connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
+        connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
         final List<String> exceptionMessages = verifyGetMessageInputs(messageId, proxyPort, trustAllRoots, userPrincipalName, userId, connectTimeout,
@@ -108,7 +111,7 @@ public class GetMessage {
         }
 
         try {
-            return getMessage(GetMessageInputs.builder()
+            final Map<String, String> result = getSuccessResultsMap(getMessage(GetMessageInputs.builder()
                     .messageId(messageId)
                     .folderId(folderId)
                     .oDataQuery(oDataQuery)
@@ -132,7 +135,9 @@ public class GetMessage {
                             .trustKeystore(trustKeystore)
                             .trustPassword(trustPassword)
                             .build())
-                    .build());
+                    .build()));
+            result.put(DOCUMENT, result.get(RETURN_RESULT));
+            return result;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
