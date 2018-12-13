@@ -27,8 +27,8 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port.";
-    public static final String EXCEPTION_INVALID_BOOLEAN = "The %s is not a valid boolean value.";
-    public static final String EXCEPTION_INVALID_NUMBER = "The %s is not a valid number value.";
+    public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
+    public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
     public static final String ANONYMOUS = "anonymous";
     public static final String GET = "GET";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
