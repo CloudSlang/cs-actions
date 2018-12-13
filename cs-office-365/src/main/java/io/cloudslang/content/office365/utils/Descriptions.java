@@ -89,6 +89,8 @@ public class Descriptions {
                 "Default: 'https://graph.microsoft.com'";
 
         public static final String RETURN_RESULT_DESC = "The authorization token for Office 365.";
+        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
+        public static final String AUTH_TOKEN_TYPE_DESC = "The returned authentication token type.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while generating the token.";
 
         public static final String SUCCESS_DESC = "Token generated successfully.";
