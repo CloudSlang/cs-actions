@@ -23,13 +23,29 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.office365.utils.Constants.*;
-import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.*;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_TOTAL;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.SOCKET_TIMEOUT;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.office365.utils.Constants.API;
+import static io.cloudslang.content.office365.utils.Constants.EXCEPTION_INVALID_BOOLEAN;
+import static io.cloudslang.content.office365.utils.Constants.EXCEPTION_INVALID_LOGIN_TYPE;
+import static io.cloudslang.content.office365.utils.Constants.EXCEPTION_INVALID_LOGIN_TYPE_REST;
+import static io.cloudslang.content.office365.utils.Constants.EXCEPTION_INVALID_NUMBER;
+import static io.cloudslang.content.office365.utils.Constants.EXCEPTION_INVALID_PROXY;
+import static io.cloudslang.content.office365.utils.Constants.EXCEPTION_NULL_EMPTY;
+import static io.cloudslang.content.office365.utils.Constants.NATIVE;
+import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.CLIENT_ID;
+import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.CLIENT_SECRET;
+import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.LOGIN_TYPE;
 import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.USERNAME;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.MESSAGE_ID;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.USER_ID;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.USER_PRINCIPAL_NAME;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 
@@ -59,6 +75,25 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyUserInputs(exceptionMessages, userPrincipalName, userId);
         addVerifyNotNullOrEmpty(exceptionMessages, messageId, MESSAGE_ID);
+        addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
+        addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
+        addVerifyNumber(exceptionMessages, connectTimeout, CONNECT_TIMEOUT);
+        addVerifyNumber(exceptionMessages, socketTimeout, SOCKET_TIMEOUT);
+        addVerifyBoolean(exceptionMessages, keepAlive, KEEP_ALIVE);
+        addVerifyNumber(exceptionMessages, connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE);
+        addVerifyNumber(exceptionMessages, connectionsMaxTotal, CONNECTIONS_MAX_TOTAL);
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyListMessagesInputs(@Nullable final String userPrincipalName, @Nullable final String userId,
+                                                        @Nullable final String proxyPort, @Nullable final String trust_all_roots,
+                                                        @Nullable final String connectTimeout,
+                                                        @Nullable final String socketTimeout, @Nullable final String keepAlive,
+                                                        @Nullable final String connectionsMaxPerRoute,
+                                                        @Nullable final String connectionsMaxTotal) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyUserInputs(exceptionMessages, userPrincipalName, userId);
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
         addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
         addVerifyNumber(exceptionMessages, connectTimeout, CONNECT_TIMEOUT);

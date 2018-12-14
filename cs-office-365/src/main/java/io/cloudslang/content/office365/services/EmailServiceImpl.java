@@ -17,14 +17,25 @@ package io.cloudslang.content.office365.services;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.GetMessageInputs;
+import io.cloudslang.content.office365.entities.ListMessagesInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import static io.cloudslang.content.httpclient.services.HttpClientService.RETURN_RESULT;
-import static io.cloudslang.content.office365.utils.Constants.*;
-import static io.cloudslang.content.office365.utils.HttpUtils.*;
+import static io.cloudslang.content.office365.utils.Constants.ANONYMOUS;
+import static io.cloudslang.content.office365.utils.Constants.CHANGEIT;
+import static io.cloudslang.content.office365.utils.Constants.DEFAULT_JAVA_KEYSTORE;
+import static io.cloudslang.content.office365.utils.Constants.GET;
+import static io.cloudslang.content.office365.utils.HttpUtils.getAuthHeaders;
+import static io.cloudslang.content.office365.utils.HttpUtils.getMessagePath;
+import static io.cloudslang.content.office365.utils.HttpUtils.getQueryParams;
+import static io.cloudslang.content.office365.utils.HttpUtils.getUriBuilder;
+import static io.cloudslang.content.office365.utils.HttpUtils.listMessagesPath;
+import static io.cloudslang.content.office365.utils.HttpUtils.setConnectionParameters;
+import static io.cloudslang.content.office365.utils.HttpUtils.setProxy;
+import static io.cloudslang.content.office365.utils.HttpUtils.setSecurityInputs;
 
 public class EmailServiceImpl {
 
@@ -49,6 +60,25 @@ public class EmailServiceImpl {
         if (!StringUtils.isEmpty(getMessageInputs.getoDataQuery())) {
             httpClientInputs.setQueryParams(getQueryParams(getMessageInputs.getoDataQuery()));
         }
+
+        return new HttpClientService().execute(httpClientInputs).get(RETURN_RESULT);
+    }
+
+    @NotNull
+    public static String listMessages(@NotNull final ListMessagesInputs listMessagesInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = listMessagesInputs.getCommonInputs();
+        httpClientInputs.setUrl(listMessagesUrl(commonInputs.getUserPrincipalName(),
+                commonInputs.getUserId()));
+
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
         return new HttpClientService().execute(httpClientInputs).get(RETURN_RESULT);
     }
@@ -87,6 +117,16 @@ public class EmailServiceImpl {
             uriBuilder.setPath(getMessagePath(userPrincipalName, userId, messageId));
         } else
             uriBuilder.setPath(getMessagePath(userPrincipalName, userId, messageId, folderId));
+
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    private static String listMessagesUrl(@NotNull final String userPrincipalName,
+                                          @NotNull final String userId) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder();
+
+            uriBuilder.setPath(listMessagesPath(userPrincipalName, userId));
 
         return uriBuilder.build().toURL().toString();
     }
