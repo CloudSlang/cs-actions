@@ -16,12 +16,16 @@ package io.cloudslang.content.office365.entities;
 
 import org.jetbrains.annotations.NotNull;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 public class ListMessagesInputs {
 
+    private final String folderId;
     private final Office365CommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"commonInputs"})
-    public ListMessagesInputs(Office365CommonInputs commonInputs) {
+    @java.beans.ConstructorProperties({"folderId", "commonInputs"})
+    public ListMessagesInputs(String folderId, Office365CommonInputs commonInputs) {
+        this.folderId = folderId;
         this.commonInputs = commonInputs;
     }
 
@@ -31,14 +35,27 @@ public class ListMessagesInputs {
     }
 
     @NotNull
+    public String getFolderId() {
+        return folderId;
+    }
+
+    @NotNull
     public Office365CommonInputs getCommonInputs() {
         return this.commonInputs;
     }
 
     public static class ListMessagesInputsBuilder {
+
+        private String folderId = EMPTY;
         private Office365CommonInputs commonInputs;
 
         ListMessagesInputsBuilder() {
+        }
+
+        @NotNull
+        public ListMessagesInputs.ListMessagesInputsBuilder folderId(@NotNull final String folderId) {
+            this.folderId = folderId;
+            return this;
         }
 
         @NotNull
@@ -48,7 +65,7 @@ public class ListMessagesInputs {
         }
 
         public ListMessagesInputs build() {
-            return new ListMessagesInputs(commonInputs);
+            return new ListMessagesInputs(folderId, commonInputs);
         }
     }
 

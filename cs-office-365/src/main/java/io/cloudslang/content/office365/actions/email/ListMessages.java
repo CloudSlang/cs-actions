@@ -57,6 +57,7 @@ import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_KE
 import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_PASSWORD_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.X509_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.RETURN_CODE_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.FOLDER_ID_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.AUTH_TOKEN;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.EXCEPTION_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.FAILURE_DESC;
@@ -64,6 +65,7 @@ import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.RE
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.SUCCESS_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.USER_ID;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.USER_PRINCIPAL_NAME;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.FOLDER_ID;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyListMessagesInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -86,6 +88,7 @@ public class ListMessages {
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, description = AUTH_TOKEN) String authToken,
                                        @Param(value = USER_PRINCIPAL_NAME, required = true, description = USER_PRINCIPAL_NAME) String userPrincipalName,
                                        @Param(value = USER_ID, encrypted = true, description = USER_ID) String userId,
+                                       @Param(value = FOLDER_ID, description = FOLDER_ID_DESC) String folderId,
 
                                        @Param(value = Inputs.CommonInputs.PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = Inputs.CommonInputs.PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -106,6 +109,7 @@ public class ListMessages {
 
         userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         userId = defaultIfEmpty(userId, EMPTY);
+        folderId = defaultIfEmpty(folderId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -130,6 +134,7 @@ public class ListMessages {
 
         try {
             final Map<String, String> result = getSuccessResultsMap(listMessages(ListMessagesInputs.builder()
+                    .folderId(folderId)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
                             .connectionsMaxPerRoute(connectionsMaxPerRoute)
