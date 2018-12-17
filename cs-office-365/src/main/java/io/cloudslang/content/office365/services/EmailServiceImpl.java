@@ -18,6 +18,7 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.GetMessageInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
+import io.cloudslang.content.office365.entities.PostMessageInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +51,28 @@ public class EmailServiceImpl {
         if (!StringUtils.isEmpty(getMessageInputs.getoDataQuery())) {
             httpClientInputs.setQueryParams(getQueryParams(getMessageInputs.getoDataQuery()));
         }
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static Map<String, String> postSendMessage(@NotNull final PostMessageInputs postMessageInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+
+        final Office365CommonInputs commonInputs = postMessageInputs.getCommonInputs();
+        httpClientInputs.setUrl(postMessageUrl(commonInputs.getUserPrincipalName(),
+                commonInputs.getUserId(),
+                postMessageInputs.getMessageId()));
+
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(POST);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setBody(postMessageInputs.getBody());
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()) + HEADERS_DELIMITER + CONTENT_LENGTH);
 
         return new HttpClientService().execute(httpClientInputs);
     }
@@ -89,6 +112,15 @@ public class EmailServiceImpl {
         } else
             uriBuilder.setPath(getMessagePath(userPrincipalName, userId, messageId, folderId));
 
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    private static String postMessageUrl(@NotNull final String userPrincipalName,
+                                        @NotNull final String userId,
+                                        @NotNull final String messageId) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder();
+        uriBuilder.setPath(postMessagePath(userPrincipalName, userId, messageId));
         return uriBuilder.build().toURL().toString();
     }
 }

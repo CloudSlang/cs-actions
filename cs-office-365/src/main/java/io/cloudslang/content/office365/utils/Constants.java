@@ -31,6 +31,7 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_NUMBER = "The %s is not a valid number value.";
     public static final String ANONYMOUS = "anonymous";
     public static final String GET = "GET";
+    public static final String POST = "POST";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String CHANGEIT = "changeit";
     public static final String ZERO = "0";
@@ -43,4 +44,6 @@ public final class Constants {
     public static final String MAIL_FOLDERS_PATH = "/mailFolders/";
     public static final String DATA_QUERY = "$select=";
     public static final String HTTPS = "https";
+    public static final String CONTENT_LENGTH = "Content-Length:0";
+    public static final String HEADERS_DELIMITER = "\r\n";
 }
