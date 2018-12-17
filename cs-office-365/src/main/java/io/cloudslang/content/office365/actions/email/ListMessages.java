@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2019 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.office365.actions.email;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -7,7 +21,6 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.office365.entities.ListMessagesInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
-import io.cloudslang.content.office365.utils.Inputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -57,15 +70,22 @@ import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_KE
 import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_PASSWORD_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.X509_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.RETURN_CODE_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.FOLDER_ID_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.AUTH_TOKEN;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.USER_ID_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.USER_PRINCIPAL_NAME_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.EXCEPTION_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.FAILURE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.RETURN_RESULT_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.SUCCESS_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.USER_ID;
-import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.USER_PRINCIPAL_NAME;
+import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.AUTH_TOKEN;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.FOLDER_ID;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.USER_ID;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.USER_PRINCIPAL_NAME;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyListMessagesInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -75,7 +95,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class ListMessages {
 
-    @Action(name = "Get the messages in the signed-in user's mailbox (including the Deleted Items and Clutter folders).",
+    @Action(name = "Get the messages from Office 365",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -85,15 +105,15 @@ public class ListMessages {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, description = AUTH_TOKEN) String authToken,
-                                       @Param(value = USER_PRINCIPAL_NAME, required = true, description = USER_PRINCIPAL_NAME) String userPrincipalName,
-                                       @Param(value = USER_ID, encrypted = true, description = USER_ID) String userId,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC) String authToken,
+                                       @Param(value = USER_PRINCIPAL_NAME, required = true, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
+                                       @Param(value = USER_ID, encrypted = true, description = USER_ID_DESC) String userId,
                                        @Param(value = FOLDER_ID, description = FOLDER_ID_DESC) String folderId,
 
-                                       @Param(value = Inputs.CommonInputs.PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
-                                       @Param(value = Inputs.CommonInputs.PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
-                                       @Param(value = Inputs.CommonInputs.PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
-                                       @Param(value = Inputs.CommonInputs.PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
 
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,
@@ -126,8 +146,8 @@ public class ListMessages {
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
         final List<String> exceptionMessages = verifyListMessagesInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
-                                                                        connectTimeout, socketTimeout, keepAlive,
-                                                                        connectionsMaxPerRoute, connectionsMaxTotal);
+                connectTimeout, socketTimeout, keepAlive,
+                connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }

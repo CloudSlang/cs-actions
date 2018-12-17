@@ -98,10 +98,6 @@ public class Descriptions {
     }
 
     public static class ListMessages {
-        public static final String AUTH_TOKEN = "The authorization token for Office 365.";
-        public static final String USER_PRINCIPAL_NAME = "The email address of the user to perform the action on. The input is mutually exclusive with the userId input.";
-        public static final String USER_ID = "The ID of the user to perform the action on.";
-
         public static final String RETURN_RESULT_DESC = "If successful, returns the message bodies.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
         public static final String FAILURE_DESC = "There was an error while trying to get the messages.";
