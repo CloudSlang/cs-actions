@@ -109,7 +109,7 @@ public final class InputsValidation {
         if (StringUtilities.isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!isValid(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_BOOLEAN, input));
+            exceptions.add(String.format(EXCEPTION_INVALID_BOOLEAN, input, inputName));
         }
         return exceptions;
     }
@@ -119,7 +119,7 @@ public final class InputsValidation {
         if (StringUtilities.isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!NumberUtilities.isValidInt(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, inputName));
+            exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
         }
         return exceptions;
     }

@@ -27,8 +27,8 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port.";
-    public static final String EXCEPTION_INVALID_BOOLEAN = "The %s is not a valid boolean value.";
-    public static final String EXCEPTION_INVALID_NUMBER = "The %s is not a valid number value.";
+    public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
+    public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
     public static final String ANONYMOUS = "anonymous";
     public static final String GET = "GET";
     public static final String POST = "POST";
@@ -36,6 +36,8 @@ public final class Constants {
     public static final String CHANGEIT = "changeit";
     public static final String ZERO = "0";
     public static final String UTF8 = "UTF-8";
+    public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
+    public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
     public static final String AUTHORIZATION = "Authorization:";
     public static final String BEARER = "Bearer ";
     public static final String GRAPH_HOST = "graph.microsoft.com";
