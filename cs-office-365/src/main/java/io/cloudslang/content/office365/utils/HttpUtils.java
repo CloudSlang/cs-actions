@@ -123,13 +123,15 @@ public class HttpUtils {
 
     @NotNull
     public static String listMessagesPath(@NotNull final String userPrincipalName,
-                                          @NotNull final String userId, @NotNull final String folderId) {
+                                         @NotNull final String userId,
+                                         @NotNull final String folderId) {
 
         StringBuilder pathString = new StringBuilder()
                 .append(BASE_GRAPH_PATH)
                 .append(getLoginType(userPrincipalName, userId))
                 .append(MAIL_FOLDERS_PATH)
-                .append(folderId);
+                .append(folderId)
+                .append(MESSAGES_PATH);
         return pathString.toString();
     }
 

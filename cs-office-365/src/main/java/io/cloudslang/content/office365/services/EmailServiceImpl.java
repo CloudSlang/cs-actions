@@ -69,8 +69,8 @@ public class EmailServiceImpl {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = listMessagesInputs.getCommonInputs();
         httpClientInputs.setUrl(listMessagesUrl(commonInputs.getUserPrincipalName(),
-                                                commonInputs.getUserId(),
-                                                listMessagesInputs.getFolderId()));
+                commonInputs.getUserId(),
+                listMessagesInputs.getFolderId()));
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
@@ -124,7 +124,9 @@ public class EmailServiceImpl {
 
     @NotNull
     private static String listMessagesUrl(@NotNull final String userPrincipalName,
-                                          @NotNull final String userId, @NotNull final String folderId) throws Exception {
+                                          @NotNull final String userId,
+                                          @NotNull final String folderId) throws Exception {
+
         final URIBuilder uriBuilder = getUriBuilder();
 
         if (StringUtils.isEmpty(folderId)) {
