@@ -55,7 +55,7 @@ public class EmailServiceImpl {
     }
 
     @NotNull
-    public static String listMessages(@NotNull final ListMessagesInputs listMessagesInputs) throws Exception {
+    public static Map<String, String> listMessages(@NotNull final ListMessagesInputs listMessagesInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = listMessagesInputs.getCommonInputs();
         httpClientInputs.setUrl(listMessagesUrl(commonInputs.getUserPrincipalName(),
@@ -71,7 +71,7 @@ public class EmailServiceImpl {
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
-        return new HttpClientService().execute(httpClientInputs).get(RETURN_RESULT);
+        return new HttpClientService().execute(httpClientInputs);
     }
 
     @NotNull

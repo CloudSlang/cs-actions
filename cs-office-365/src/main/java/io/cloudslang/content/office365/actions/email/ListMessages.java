@@ -42,6 +42,7 @@ import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.EX
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.FAILURE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.RETURN_RESULT_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.SUCCESS_DESC;
+import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
@@ -50,7 +51,6 @@ import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -61,7 +61,8 @@ public class ListMessages {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = DOCUMENT, description = DOCUMENT_DESC)
+                    @Output(value = DOCUMENT, description = DOCUMENT_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -116,7 +117,7 @@ public class ListMessages {
         }
 
         try {
-            final Map<String, String> result = getSuccessResultsMap(listMessages(ListMessagesInputs.builder()
+            final Map<String, String> result = listMessages(ListMessagesInputs.builder()
                     .folderId(folderId)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
@@ -139,9 +140,9 @@ public class ListMessages {
                             .trustKeystore(trustKeystore)
                             .trustPassword(trustPassword)
                             .build())
-                    .build()));
-            result.put(DOCUMENT, result.get(RETURN_RESULT));
-            return result;
+                    .build());
+
+            return getOperationResults(result);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
