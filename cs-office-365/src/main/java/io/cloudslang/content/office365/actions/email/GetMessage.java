@@ -37,6 +37,7 @@ import static io.cloudslang.content.office365.services.EmailServiceImpl.getMessa
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
+import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
@@ -45,7 +46,6 @@ import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyGetMessageInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -55,7 +55,8 @@ public class GetMessage {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = DOCUMENT, description = DOCUMENT_DESC)
+                    @Output(value = DOCUMENT, description = DOCUMENT_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -111,7 +112,7 @@ public class GetMessage {
         }
 
         try {
-            final Map<String, String> result = getSuccessResultsMap(getMessage(GetMessageInputs.builder()
+            final Map<String, String> result = getMessage(GetMessageInputs.builder()
                     .messageId(messageId)
                     .folderId(folderId)
                     .oDataQuery(oDataQuery)
@@ -136,9 +137,9 @@ public class GetMessage {
                             .trustKeystore(trustKeystore)
                             .trustPassword(trustPassword)
                             .build())
-                    .build()));
-            result.put(DOCUMENT, result.get(RETURN_RESULT));
-            return result;
+                    .build());
+
+            return getOperationResults(result);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

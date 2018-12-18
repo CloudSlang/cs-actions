@@ -45,4 +45,5 @@ public final class Constants {
     public static final String MAIL_FOLDERS_PATH = "/mailFolders/";
     public static final String DATA_QUERY = "$select=";
     public static final String HTTPS = "https";
+    public static final String STATUS_CODE = "statusCode";
 }

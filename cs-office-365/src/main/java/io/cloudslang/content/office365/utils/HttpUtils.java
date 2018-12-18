@@ -23,14 +23,17 @@ import java.net.Authenticator;
 import java.net.InetSocketAddress;
 import java.net.PasswordAuthentication;
 import java.net.Proxy;
+import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.office365.utils.Constants.*;
+import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class HttpUtils {
-
-
     @NotNull
     public static Proxy getProxy(@NotNull final String proxyHost, final int proxyPort, @NotNull final String proxyUser, @NotNull final String proxyPassword) {
         if (StringUtilities.isBlank(proxyHost)) {
@@ -159,5 +162,22 @@ public class HttpUtils {
             return userPrincipalName;
         return userId;
     }
+
+    @NotNull
+    public static Map<String, String> getOperationResults(Map<String, String> result) {
+        final Map<String, String> results;
+        final String statusCode = result.get(STATUS_CODE);
+        if (Integer.parseInt(statusCode) >= 200 && Integer.parseInt(statusCode) < 300) {
+            results = getSuccessResultsMap(result.get(RETURN_RESULT));
+        } else {
+            results = getFailureResultsMap(result.get(RETURN_RESULT));
+        }
+
+        results.put(STATUS_CODE, statusCode);
+        results.put(DOCUMENT, result.get(RETURN_RESULT));
+
+        return results;
+    }
+
 
 }
