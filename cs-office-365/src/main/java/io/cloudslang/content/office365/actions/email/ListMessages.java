@@ -71,6 +71,7 @@ import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_PA
 import static io.cloudslang.content.office365.utils.Descriptions.Common.X509_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.RETURN_CODE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.AUTH_TOKEN_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.DOCUMENT_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.FOLDER_ID_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.USER_ID_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.USER_PRINCIPAL_NAME_DESC;
@@ -99,7 +100,8 @@ public class ListMessages {
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = EXCEPTION, description = EXCEPTION_DESC)
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = DOCUMENT, description = DOCUMENT_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
