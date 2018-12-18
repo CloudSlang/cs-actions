@@ -86,7 +86,7 @@ import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.AUTH_TOKE
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.FOLDER_ID;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.USER_ID;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.USER_PRINCIPAL_NAME;
-import static io.cloudslang.content.office365.utils.InputsValidation.verifyListMessagesInputs;
+import static io.cloudslang.content.office365.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -145,9 +145,10 @@ public class ListMessages {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessages = verifyListMessagesInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
+        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive,
                 connectionsMaxPerRoute, connectionsMaxTotal);
+
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
