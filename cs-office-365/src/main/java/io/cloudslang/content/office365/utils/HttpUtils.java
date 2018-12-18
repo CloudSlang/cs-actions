@@ -165,17 +165,16 @@ public class HttpUtils {
 
     @NotNull
     public static Map<String, String> getOperationResults(Map<String, String> result) {
-        Map<String, String> results;
+        final Map<String, String> results;
         final String statusCode = result.get(STATUS_CODE);
         if (Integer.parseInt(statusCode) >= 200 && Integer.parseInt(statusCode) < 300) {
             results = getSuccessResultsMap(result.get(RETURN_RESULT));
-            results.put(STATUS_CODE, statusCode);
-            results.put(DOCUMENT, result.get(RETURN_RESULT));
         } else {
             results = getFailureResultsMap(result.get(RETURN_RESULT));
-            results.put(STATUS_CODE, statusCode);
-            results.put(DOCUMENT, result.get(RETURN_RESULT));
         }
+
+        results.put(STATUS_CODE, statusCode);
+        results.put(DOCUMENT, result.get(RETURN_RESULT));
 
         return results;
     }
