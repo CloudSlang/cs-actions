@@ -160,4 +160,47 @@ public class HttpUtils {
         return userId;
     }
 
+    @NotNull
+    public static String createMessagesPath(@NotNull final String userPrincipalName,
+                                            @NotNull final String userId) {
+
+        StringBuilder pathString = new StringBuilder()
+                .append(BASE_GRAPH_PATH)
+                .append(getLoginType(userPrincipalName, userId))
+                .append(MESSAGES_PATH);
+        return pathString.toString();
+    }
+
+    @NotNull
+    public static String createMessagePath(@NotNull final String userPrincipalName,
+                                           @NotNull final String userId){
+        StringBuilder messagepathString = new StringBuilder()
+                .append(createMessagesPath(userPrincipalName, userId));
+        return messagepathString.toString();
+    }
+
+
+    @NotNull
+    public static String createMessagesInFolderPath(@NotNull final String userPrincipalName,
+                                                    @NotNull final String userId,
+                                                    @NotNull final String folderId) {
+
+        StringBuilder pathString = new StringBuilder()
+                .append(BASE_GRAPH_PATH)
+                .append(getLoginType(userPrincipalName, userId))
+                .append(MAIL_FOLDERS_PATH)
+                .append(folderId)
+                .append(MESSAGES_PATH);
+        return pathString.toString();
+    }
+
+    @NotNull
+    public static String createMessageInFolderPath(@NotNull final String userPrincipalName,
+                                                   @NotNull final String userId,
+                                                   @NotNull final String folderId) {
+
+        StringBuilder pathString = new StringBuilder()
+                .append(createMessagesInFolderPath(userPrincipalName, userId, folderId));
+        return pathString.toString();
+    }
 }

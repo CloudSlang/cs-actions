@@ -40,5 +40,22 @@ public final class Inputs extends InputNames {
         public static final String FOLDER_ID = "folderId";
         public static final String O_DATA_QUERY = "oDataQuery";
     }
+    public static class CreateMessage {
+        public static final String BCC_RECIPIENTS = "bccRecipients";
+        public static final String CATEGORIES = "categories";
+        public static final String CC_RECIPIENTS = "ccRecipients";
+        public static final String FROM = "from";
+        public static final String IMPORTANCE ="importance";
+        public static final String INFERENCE_CLASSIFICATION = "inferenceClassification";
+        public static final String INTERNET_MESSAGE_ID = "internetMessageId";
+        public static final String IS_READ ="isRead";
+        public static final String REPLY_TO = "replyTo";
+        public static final String SENDER = "sender";
+        public static final String TO_RECIPIENTS = "toRecipients";
+        public static final String BODY = "body";
+        public static final String IS_DELIVERY_RECEIPT_REQUESTED = "isDeliveryReceiptRequested";
+        public static final String IS_READ_RECEIPT_REQUESTED = "isReadReceiptRequested";
+        public static final String SUBJECT = "subject";
+    }
 }
 

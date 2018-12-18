@@ -22,6 +22,7 @@ public final class Constants {
     public static final String DEFAULT_RESOURCE = "https://graph.microsoft.com";
     public static final String DEFAULT_PROXY_PORT = "8080";
     public static final String BOOLEAN_FALSE = "false";
+    public static final String BOOLEAN_TRUE = "true";
     public static final String STRICT = "strict";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
@@ -31,6 +32,7 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
     public static final String ANONYMOUS = "anonymous";
     public static final String GET = "GET";
+    public static final String POST = "POST";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String CHANGEIT = "changeit";
     public static final String ZERO = "0";
@@ -45,4 +47,7 @@ public final class Constants {
     public static final String MAIL_FOLDERS_PATH = "/mailFolders/";
     public static final String DATA_QUERY = "$select=";
     public static final String HTTPS = "https";
+    public static final String APPLICATION_JSON = "application/json";
+    public static final String DEFAULT_IMPORTANCE = "low";
+    public static final String DEFAULT_INFERENCE_CLASSIFICATION = "other";
 }
