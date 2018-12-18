@@ -177,6 +177,7 @@ public class GetMessage {
                             .connectionsMaxTotal(connectionsMaxTotal)
                             .connectionsMaxPerRoute(connectionsMaxPerRoute)
                             .keepAlive(keepAlive)
+                            .socketTimeout(socketTimeout)
                             .responseCharacterSet(responseCharacterSet)
                             .connectTimeout(connectTimeout)
                             .trustAllRoots(trustAllRoots)
