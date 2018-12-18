@@ -50,4 +50,6 @@ public final class Constants {
     public static final String APPLICATION_JSON = "application/json";
     public static final String DEFAULT_IMPORTANCE = "low";
     public static final String DEFAULT_INFERENCE_CLASSIFICATION = "other";
+    public static final String DELIMITER = ",";
+    public static final String CONTENT_TYPE = "HTML";
 }

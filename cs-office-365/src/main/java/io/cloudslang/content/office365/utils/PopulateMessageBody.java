@@ -22,6 +22,8 @@ import io.cloudslang.content.office365.entities.createMessageModels.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.cloudslang.content.office365.utils.Constants.CONTENT_TYPE;
+
 public class PopulateMessageBody {
 
     public static String populateMessageBody(Office365CommonInputs commonInputs, CreateMessageInputs createMessageInputs, String delimiter) {
@@ -105,7 +107,7 @@ public class PopulateMessageBody {
         messageBody.setToRecipients(toList);
 
 
-        body.setContentType("HTML");
+        body.setContentType(CONTENT_TYPE);
         body.setContent(createMessageInputs.getBody());
         messageBody.setBody(body);
 

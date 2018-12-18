@@ -110,8 +110,7 @@ public class EmailServiceImpl {
         httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
         httpClientInputs.setKeystorePassword(CHANGEIT);
         httpClientInputs.setContentType(APPLICATION_JSON);
-        httpClientInputs.setBody(PopulateMessageBody.populateMessageBody(commonInputs,createMessageInputs, ","));
-
+        httpClientInputs.setBody(PopulateMessageBody.populateMessageBody(commonInputs,createMessageInputs, DELIMITER));
 
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));

@@ -161,7 +161,7 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static String createMessagesPath(@NotNull final String userPrincipalName,
+    public static String buildCreateMessagesPath(@NotNull final String userPrincipalName,
                                             @NotNull final String userId) {
 
         StringBuilder pathString = new StringBuilder()
@@ -175,13 +175,13 @@ public class HttpUtils {
     public static String createMessagePath(@NotNull final String userPrincipalName,
                                            @NotNull final String userId){
         StringBuilder messagepathString = new StringBuilder()
-                .append(createMessagesPath(userPrincipalName, userId));
+                .append(buildCreateMessagesPath(userPrincipalName, userId));
         return messagepathString.toString();
     }
 
 
     @NotNull
-    public static String createMessagesInFolderPath(@NotNull final String userPrincipalName,
+    public static String buildCreateMessagesInFolderPath(@NotNull final String userPrincipalName,
                                                     @NotNull final String userId,
                                                     @NotNull final String folderId) {
 
@@ -200,7 +200,7 @@ public class HttpUtils {
                                                    @NotNull final String folderId) {
 
         StringBuilder pathString = new StringBuilder()
-                .append(createMessagesInFolderPath(userPrincipalName, userId, folderId));
+                .append(buildCreateMessagesInFolderPath(userPrincipalName, userId, folderId));
         return pathString.toString();
     }
 }

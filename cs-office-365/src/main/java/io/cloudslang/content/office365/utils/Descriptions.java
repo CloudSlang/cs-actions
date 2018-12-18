@@ -101,7 +101,8 @@ public class Descriptions {
         public static final String AUTH_TOKEN_DESC = "The Office 365 authorization token.";
         public static final String USER_PRINCIPAL_NAME_DESC = "The email address of the user to perform the action on." +
                 "The input is mutually exclusive with the 'userId' input.";
-        public static final String USER_ID_DESC = "The ID of the user to perform the action on.";
+        public static final String USER_ID_DESC = "The ID of the user to perform the action on. The input is mutually exclusive with the " +
+                "'userPrincipalName' input.";
         public static final String FOLDER_ID_DESC = "The ID of the folder to perform the action on.";
         public static final String BCCC_RECIPIENTS_DESC = "The Bcc recipients for the message. Updatable only if 'isDraft' = true.";
         public static final String CATEGORIES_DESC = "The categories associated with the message.";

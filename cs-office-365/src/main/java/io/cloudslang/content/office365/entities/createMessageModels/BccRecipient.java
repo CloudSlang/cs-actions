@@ -17,10 +17,6 @@ package io.cloudslang.content.office365.entities.createMessageModels;
 
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.Generated;
-
-@Generated("net.hexar.json2pojo")
-@SuppressWarnings("unused")
 public class BccRecipient {
 
     @SerializedName("emailAddress")

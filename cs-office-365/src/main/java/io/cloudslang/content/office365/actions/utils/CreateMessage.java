@@ -21,7 +21,6 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.office365.entities.CreateMessageInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
-import io.cloudslang.content.office365.services.EmailServiceImpl;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -55,35 +54,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateMessage {
-
-    /**
-     * @param userPrincipalName          The email address of the user to perform the action on. The input is mutually exclusive
-     *                                   with the 'userId' input.
-     * @param userId                     The ID of the user to perform the action on.
-     * @param folderId                   The ID of the folder to perform the action on.
-     * @param bccRecipients              The Bcc recipients for the message. Updatable only if 'isDraft' = true.
-     * @param categories                 The categories associated with the message.
-     * @param ccRecipients               The Cc recipients for the message. Updatable only if 'isDraft' = true.
-     * @param from                       The mailbox owner and sender of the message. Updatable only if isDraft = true. Must
-     *                                   correspond to the actual mailbox used.
-     * @param importance                 The importance of the message. The possible values are: 'Low', 'Normal', 'High'.
-     * @param inferenceClassification    The classification of the message for the user, based on inferred relevance or
-     *                                   importance, or on an explicit override. The possible values are: 'focused' or 'other'.
-     * @param internetMessageId          The message ID in the format specified by RFC2822. Updatable only if 'isDraft' = true.
-     * @param isRead                     Indicates whether the message has been read.
-     * @param replyTo                    The email addresses to use when replying. Updatable only if 'isDraft' = true.
-     * @param sender                     The account that is actually used to generate the message. Updatable only if 'isDraft' = true,
-     *                                   and when sending a message from a shared mailbox, or sending a message as a delegate.
-     *                                   In any case, the value must correspond to the actual mailbox used.
-     * @param toRecipients               The 'To recipients' for the message. Updatable only if 'isDraft' = true.
-     * @param body                       The body of the message. Updatable only if 'isDraft' = true.
-     * @param isDeliveryReceiptRequested Indicates whether a delivery receipt is requested for the message.
-     * @param isReadReceiptRequested     Indicates whether a read receipt is requested for the message.
-     * @param subject                    The subject of the message. Updatable only if 'isDraft' = true.
-     * @return A document that contains the response body.
-     */
-
-    @Action(name = "Get the authorization token for Office 365",
+    @Action(name = "Create a draft of a new message for Office 365",
             outputs = {
                     @Output(value = RETURN_RESULT, description = CREATE_MESSAGE_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
