@@ -28,26 +28,13 @@ public class PopulateMessageBody {
 
     public static String populateMessageBody(Office365CommonInputs commonInputs, CreateMessageInputs createMessageInputs, String delimiter) {
 
-        CreateMessageBody messageBody = new CreateMessageBody();
-        List<String> categoriesList = new ArrayList<>();
-        List<BccRecipient> bccList = new ArrayList<>();
-        List<CcRecipient> ccList = new ArrayList<>();
-        List<ToRecipient> toList = new ArrayList<>();
-        List<ReplyTo> replyToList = new ArrayList<>();
-        Body body = new Body();
-        From fromVal = new From();
-        Sender senderVal = new Sender();
-        ToRecipient toRecipient = new ToRecipient();
-        EmailAddress toEmailAddress = new EmailAddress();
-        EmailAddress senderEmailAddress = new EmailAddress();
-        EmailAddress emailAddress = new EmailAddress();
-        EmailAddress bccemailAddress = new EmailAddress();
-        EmailAddress ccemailAddress = new EmailAddress();
-        EmailAddress replyEmailAddress = new EmailAddress();
-        BccRecipient bccRecipient = new BccRecipient();
-        CcRecipient ccRecipient = new CcRecipient();
-        ReplyTo replyTo = new ReplyTo();
-
+        final CreateMessageBody messageBody = new CreateMessageBody();
+        final List<String> categoriesList = new ArrayList<>();
+        final Body body = new Body();
+        final From fromVal = new From();
+        final Sender senderVal = new Sender();
+        final EmailAddress senderEmailAddress = new EmailAddress();
+        final EmailAddress emailAddress = new EmailAddress();
 
         messageBody.setImportance(createMessageInputs.getImportance());
         messageBody.setInferenceClassification(createMessageInputs.getInferenceClassification());
@@ -58,54 +45,26 @@ public class PopulateMessageBody {
         messageBody.setSubject(createMessageInputs.getSubject());
         messageBody.setId(commonInputs.getUserId());
 
-
         String[] categoryList = createMessageInputs.getCategories().split(delimiter);
         for (String category : categoryList) {
             categoriesList.add(category);
         }
         messageBody.setCategories(categoriesList);
 
-        String[] list = createMessageInputs.getBccRecipients().split(delimiter);
-        for (String item : list) {
-            bccemailAddress.setAddress(item);
-            bccRecipient.setEmailAddress(bccemailAddress);
-            bccList.add(bccRecipient);
-        }
-        messageBody.setBccRecipients(bccList);
-
-        String[] array = createMessageInputs.getCcRecipients().split(delimiter);
-        for (String item : array) {
-            ccemailAddress.setAddress(item);
-            ccRecipient.setEmailAddress(ccemailAddress);
-            ccList.add(ccRecipient);
-        }
-        messageBody.setCcRecipients(ccList);
+         messageBody.setBccRecipients(PopulateMessageBodyService.recipientsCollection(createMessageInputs.getBccRecipients(), delimiter));
+         messageBody.setCcRecipients(PopulateMessageBodyService.recipientsCollection(createMessageInputs.getCcRecipients(), delimiter));
 
         emailAddress.setAddress(createMessageInputs.getFrom());
         fromVal.setEmailAddress(emailAddress);
         messageBody.setFrom(fromVal);
 
-        String[] replyParts = createMessageInputs.getReplyTo().split(delimiter);
-        for (String item : replyParts) {
-            replyEmailAddress.setAddress(item);
-            replyTo.setEmailAddress(replyEmailAddress);
-            replyToList.add(replyTo);
-        }
-        messageBody.setReplyTo(replyToList);
+        messageBody.setReplyTo(PopulateMessageBodyService.recipientsCollection(createMessageInputs.getReplyTo(), delimiter));
 
         senderEmailAddress.setAddress(createMessageInputs.getSender());
         senderVal.setEmailAddress(senderEmailAddress);
         messageBody.setSender(senderVal);
 
-
-        String[] toParts = createMessageInputs.getToRecipients().split(delimiter);
-        for (String item : toParts) {
-            toEmailAddress.setAddress(item);
-            toRecipient.setEmailAddress(toEmailAddress);
-            toList.add(toRecipient);
-        }
-        messageBody.setToRecipients(toList);
-
+        messageBody.setToRecipients(PopulateMessageBodyService.recipientsCollection(createMessageInputs.getToRecipients(), delimiter));
 
         body.setContentType(CONTENT_TYPE);
         body.setContent(createMessageInputs.getBody());

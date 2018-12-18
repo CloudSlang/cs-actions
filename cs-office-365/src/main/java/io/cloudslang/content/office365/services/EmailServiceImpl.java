@@ -27,8 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import static io.cloudslang.content.httpclient.services.HttpClientService.RETURN_RESULT;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
-import static io.cloudslang.content.office365.utils.HttpUtils.createMessageInFolderPath;
-import static io.cloudslang.content.office365.utils.HttpUtils.createMessagePath;
 
 public class EmailServiceImpl {
 
@@ -111,6 +109,7 @@ public class EmailServiceImpl {
         httpClientInputs.setKeystorePassword(CHANGEIT);
         httpClientInputs.setContentType(APPLICATION_JSON);
         httpClientInputs.setBody(PopulateMessageBody.populateMessageBody(commonInputs,createMessageInputs, DELIMITER));
+        System.out.println(httpClientInputs.getBody().toString());
 
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
@@ -124,9 +123,9 @@ public class EmailServiceImpl {
                                            @NotNull final String folderId) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
         if (StringUtils.isEmpty(folderId)) {
-            uriBuilder.setPath(createMessagePath(userPrincipalName, userId));
+            uriBuilder.setPath(getMessagesPath(userPrincipalName, userId));
         } else
-            uriBuilder.setPath(createMessageInFolderPath(userPrincipalName, userId, folderId));
+            uriBuilder.setPath(getMessagesPath(userPrincipalName, userId, folderId));
 
         return uriBuilder.build().toURL().toString();
     }

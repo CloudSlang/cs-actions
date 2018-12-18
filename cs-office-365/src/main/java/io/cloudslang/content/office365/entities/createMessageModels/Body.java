@@ -15,29 +15,25 @@
 
 package io.cloudslang.content.office365.entities.createMessageModels;
 
-import com.google.gson.annotations.SerializedName;
-
 public class Body {
 
-    @SerializedName("content")
-    private String mContent;
-    @SerializedName("contentType")
-    private String mContentType;
+    private String content;
+    private String contentType;
 
     public String getContent() {
-        return mContent;
+        return content;
     }
 
     public void setContent(String content) {
-        mContent = content;
+        this.content = content;
     }
 
     public String getContentType() {
-        return mContentType;
+        return contentType;
     }
 
     public void setContentType(String contentType) {
-        mContentType = contentType;
+        this.contentType = contentType;
     }
 
 }

@@ -14,181 +14,162 @@
  */
 package io.cloudslang.content.office365.entities.createMessageModels;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class CreateMessageBody {
 
-    @SerializedName("bccRecipients")
-    private List<BccRecipient> mBccRecipients;
-    @SerializedName("body")
-    private Body mBody;
-    @SerializedName("categories")
-    private List<String> mCategories;
-    @SerializedName("ccRecipients")
-    private List<CcRecipient> mCcRecipients;
-    @SerializedName("from")
-    private From mFrom;
-    @SerializedName("id")
-    private String mId;
-    @SerializedName("importance")
-    private String mImportance;
-    @SerializedName("inferenceClassification")
-    private String mInferenceClassification;
-    @SerializedName("internetMessageId")
-    private String mInternetMessageId;
-    @SerializedName("isDeliveryReceiptRequested")
-    private Boolean mIsDeliveryReceiptRequested;
-    @SerializedName("isDraft")
-    private Boolean mIsDraft;
-    @SerializedName("isRead")
-    private Boolean mIsRead;
-    @SerializedName("isReadReceiptRequested")
-    private Boolean mIsReadReceiptRequested;
-    @SerializedName("replyTo")
-    private List<ReplyTo> mReplyTo;
-    @SerializedName("sender")
-    private Sender mSender;
-    @SerializedName("subject")
-    private String mSubject;
-    @SerializedName("toRecipients")
-    private List<ToRecipient> mToRecipients;
+    private List<Recipient> bccRecipients;
+    private Body body;
+    private List<String> categories;
+    private List<Recipient> ccRecipients;
+    private From from;
+    private String id;
+    private String importance;
+    private String inferenceClassification;
+    private String internetMessageId;
+    private Boolean isDeliveryReceiptRequested;
+    private Boolean isDraft;
+    private Boolean isRead;
+    private Boolean isReadReceiptRequested;
+    private List<Recipient> replyTo;
+    private Sender sender;
+    private String subject;
+    private List<Recipient> toRecipients;
 
-    public List<BccRecipient> getBccRecipients() {
-        return mBccRecipients;
+    public List<Recipient> getBccRecipients() {
+        return bccRecipients;
     }
 
-    public void setBccRecipients(List<BccRecipient> bccRecipients) {
-        mBccRecipients = bccRecipients;
+    public void setBccRecipients(List<Recipient> bccRecipients) {
+        this.bccRecipients = bccRecipients;
     }
 
     public Body getBody() {
-        return mBody;
+        return body;
     }
 
     public void setBody(Body body) {
-        mBody = body;
+        this.body = body;
     }
 
     public List<String> getCategories() {
-        return mCategories;
+        return categories;
     }
 
     public void setCategories(List<String> categories) {
-        mCategories = categories;
+        this.categories = categories;
     }
 
-    public List<CcRecipient> getCcRecipients() {
-        return mCcRecipients;
+    public List<Recipient> getCcRecipients() {
+        return ccRecipients;
     }
 
-    public void setCcRecipients(List<CcRecipient> ccRecipients) {
-        mCcRecipients = ccRecipients;
+    public void setCcRecipients(List<Recipient> ccRecipients) {
+        this.ccRecipients = ccRecipients;
     }
 
     public From getFrom() {
-        return mFrom;
+        return from;
     }
 
     public void setFrom(From from) {
-        mFrom = from;
+        this.from = from;
     }
 
     public String getId() {
-        return mId;
+        return id;
     }
 
     public void setId(String id) {
-        mId = id;
+        this.id = id;
     }
 
     public String getImportance() {
-        return mImportance;
+        return importance;
     }
 
     public void setImportance(String importance) {
-        mImportance = importance;
+        this.importance = importance;
     }
 
     public String getInferenceClassification() {
-        return mInferenceClassification;
+        return inferenceClassification;
     }
 
     public void setInferenceClassification(String inferenceClassification) {
-        mInferenceClassification = inferenceClassification;
+        this.inferenceClassification = inferenceClassification;
     }
 
     public String getInternetMessageId() {
-        return mInternetMessageId;
+        return internetMessageId;
     }
 
     public void setInternetMessageId(String internetMessageId) {
-        mInternetMessageId = internetMessageId;
+        this.internetMessageId = internetMessageId;
     }
 
     public Boolean getIsDeliveryReceiptRequested() {
-        return mIsDeliveryReceiptRequested;
+        return isDeliveryReceiptRequested;
     }
 
     public void setIsDeliveryReceiptRequested(Boolean isDeliveryReceiptRequested) {
-        mIsDeliveryReceiptRequested = isDeliveryReceiptRequested;
+        this.isDeliveryReceiptRequested = isDeliveryReceiptRequested;
     }
 
     public Boolean getIsDraft() {
-        return mIsDraft;
+        return isDraft;
     }
 
     public void setIsDraft(Boolean isDraft) {
-        mIsDraft = isDraft;
+        this.isDraft = isDraft;
     }
 
     public Boolean getIsRead() {
-        return mIsRead;
+        return isRead;
     }
 
     public void setIsRead(Boolean isRead) {
-        mIsRead = isRead;
+        this.isRead = isRead;
     }
 
     public Boolean getIsReadReceiptRequested() {
-        return mIsReadReceiptRequested;
+        return isReadReceiptRequested;
     }
 
     public void setIsReadReceiptRequested(Boolean isReadReceiptRequested) {
-        mIsReadReceiptRequested = isReadReceiptRequested;
+        this.isReadReceiptRequested = isReadReceiptRequested;
     }
 
-    public List<ReplyTo> getReplyTo() {
-        return mReplyTo;
+    public List<Recipient> getReplyTo() {
+        return replyTo;
     }
 
-    public void setReplyTo(List<ReplyTo> replyTo) {
-        mReplyTo = replyTo;
+    public void setReplyTo(List<Recipient> replyTo) {
+        this.replyTo = replyTo;
     }
 
     public Sender getSender() {
-        return mSender;
+        return sender;
     }
 
     public void setSender(Sender sender) {
-        mSender = sender;
+        this.sender = sender;
     }
 
     public String getSubject() {
-        return mSubject;
+        return subject;
     }
 
     public void setSubject(String subject) {
-        mSubject = subject;
+        this.subject = subject;
     }
 
-    public List<ToRecipient> getToRecipients() {
-        return mToRecipients;
+    public List<Recipient> getToRecipients() {
+        return toRecipients;
     }
 
-    public void setToRecipients(List<ToRecipient> toRecipients) {
-        mToRecipients = toRecipients;
+    public void setToRecipients(List<Recipient> toRecipients) {
+        this.toRecipients = toRecipients;
     }
 
 }

@@ -15,19 +15,16 @@
 
 package io.cloudslang.content.office365.entities.createMessageModels;
 
-import com.google.gson.annotations.SerializedName;
-
 public class EmailAddress {
 
-    @SerializedName("address")
-    private String mAddress;
+    private String address;
 
     public String getAddress() {
-        return mAddress;
+        return address;
     }
 
     public void setAddress(String address) {
-        mAddress = address;
+        this.address = address;
     }
 
 }
