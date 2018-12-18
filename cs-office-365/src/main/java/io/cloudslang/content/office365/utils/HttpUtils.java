@@ -110,23 +110,6 @@ public class HttpUtils {
         return pathString.toString();
     }
 
-    @NotNull
-    public static String listMessagesPath(@NotNull final String userPrincipalName,
-                                          @NotNull final String userId) {
-        StringBuilder pathString = new StringBuilder()
-                .append(getMessagesPath(userPrincipalName, userId));
-        return pathString.toString();
-    }
-
-    @NotNull
-    public static String listMessagesPath(@NotNull final String userPrincipalName,
-                                          @NotNull final String userId,
-                                          @NotNull final String folderId) {
-        StringBuilder pathString = new StringBuilder()
-                .append(getMessagesPath(userPrincipalName, userId, folderId));
-        return pathString.toString();
-    }
-
     public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,
                                 @NotNull final String proxyHost,
                                 @NotNull final String proxyPort,
