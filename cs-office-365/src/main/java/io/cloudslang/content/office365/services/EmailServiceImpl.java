@@ -23,6 +23,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+
 import static io.cloudslang.content.httpclient.services.HttpClientService.RETURN_RESULT;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
