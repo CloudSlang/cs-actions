@@ -19,9 +19,8 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.office365.entities.GetMessageInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
-import io.cloudslang.content.office365.entities.PostMessageInputs;
+import io.cloudslang.content.office365.entities.SendMessageInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -37,6 +36,7 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.office365.services.EmailServiceImpl.postSendMessage;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
@@ -50,35 +50,27 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class SendMessage {
 
-    /**
-     * Default: 'https://graph.microsoft.com'
-     *
-     * @param proxyHost     Proxy server used to access the web site
-     * @param proxyPort     Proxy server port
-     *                      Default: '8080'
-     * @param proxyUsername User name used when connecting to the proxy
-     * @param proxyPassword The proxy server password associated with the proxyUsername input value
-     */
+
 
     @Action(name = "Send message based on an ID",
             outputs = {
-                    @Output(RETURN_RESULT),
-                    @Output(RETURN_CODE),
-                    @Output(EXCEPTION)
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC ),
+                    @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true) String authToken,
-                                       @Param(value = USER_PRINCIPAL_NAME) String userPrincipalName,
-                                       @Param(value = USER_ID) String userId,
-                                       @Param(value = MESSAGE_ID, required = true) String messageId,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
+                                       @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
+                                       @Param(value = USER_ID, description = USER_ID_DESC) String userId,
+                                       @Param(value = MESSAGE_ID, required = true, description = MESSAGE_ID_DESC) String messageId,
 
-                                       @Param(value = PROXY_HOST) String proxyHost,
-                                       @Param(value = PROXY_PORT) String proxyPort,
-                                       @Param(value = PROXY_USERNAME) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(value = PROXY_HOST, description = MESSAGE_ID_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME,description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true,description = PROXY_PASSWORD_DESC) String proxyPassword,
 
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,
@@ -105,8 +97,8 @@ public class SendMessage {
         connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
-        connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, "2");
-        connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, "20");
+        connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
+        connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
         final List<String> exceptionMessages = verifyGetMessageInputs(messageId, proxyPort, trustAllRoots, userPrincipalName, userId, connectTimeout,
@@ -116,7 +108,7 @@ public class SendMessage {
         }
 
         try {
-            return postSendMessage(PostMessageInputs.builder()
+            return postSendMessage(SendMessageInputs.builder()
                     .messageId(messageId)
                     .body(EMPTY)
                     .commonInputs(Office365CommonInputs.builder()

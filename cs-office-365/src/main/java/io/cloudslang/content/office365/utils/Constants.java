@@ -49,4 +49,5 @@ public final class Constants {
     public static final String CONTENT_LENGTH = "Content-Length:0";
     public static final String HEADERS_DELIMITER = "\r\n";
     public static final String STATUS_CODE = "statusCode";
+    public static final String SEND = "/send";
 }

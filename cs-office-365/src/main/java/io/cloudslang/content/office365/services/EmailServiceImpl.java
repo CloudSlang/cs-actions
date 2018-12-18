@@ -18,7 +18,7 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.GetMessageInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
-import io.cloudslang.content.office365.entities.PostMessageInputs;
+import io.cloudslang.content.office365.entities.SendMessageInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -55,11 +55,11 @@ public class EmailServiceImpl {
     }
 
     @NotNull
-    public static Map<String, String> postSendMessage(@NotNull final PostMessageInputs postMessageInputs) throws Exception {
+    public static Map<String, String> postSendMessage(@NotNull final SendMessageInputs postMessageInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
 
         final Office365CommonInputs commonInputs = postMessageInputs.getCommonInputs();
-        httpClientInputs.setUrl(postMessageUrl(commonInputs.getUserPrincipalName(),
+        httpClientInputs.setUrl(sendMessageUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
                 postMessageInputs.getMessageId()));
 
@@ -115,11 +115,11 @@ public class EmailServiceImpl {
     }
 
     @NotNull
-    private static String postMessageUrl(@NotNull final String userPrincipalName,
+    private static String sendMessageUrl(@NotNull final String userPrincipalName,
                                         @NotNull final String userId,
                                         @NotNull final String messageId) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
-        uriBuilder.setPath(postMessagePath(userPrincipalName, userId, messageId));
+        uriBuilder.setPath(sendMessagePath(userPrincipalName, userId, messageId));
         return uriBuilder.build().toURL().toString();
     }
 }

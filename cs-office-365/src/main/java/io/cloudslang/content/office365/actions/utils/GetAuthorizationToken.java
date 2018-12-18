@@ -49,6 +49,26 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class GetAuthorizationToken {
 
+    /**
+     * @param loginType      Login method according to application type
+     *                       Valid values: 'API', 'Native'
+     *                       Default: 'API'
+     * @param clientId       Service Client ID
+     * @param clientSecret   Service Client Secret
+     * @param username       Office 365 username
+     * @param password       Office 365 password
+     * @param loginAuthority The authority URL. Usually, the format for this input is:
+     *                       'https://login.windows.net/TENANT_NAME/oauth2/token' where TENANT_NAME is your application
+     *                       tenant.
+     * @param resource       The resource URL
+     *                       Default: 'https://graph.microsoft.com'
+     * @param proxyHost      Proxy server used to access the web site
+     * @param proxyPort      Proxy server port
+     *                       Default: '8080'
+     * @param proxyUsername  User name used when connecting to the proxy
+     * @param proxyPassword  The proxy server password associated with the proxyUsername input value
+     * @return The authorization token for Office 365
+     */
     @Action(name = "Get the authorization token for Office 365",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
