@@ -23,6 +23,7 @@ public final class Inputs extends InputNames {
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
     }
+
     public static class AuthorizationInputs {
         public static final String LOGIN_TYPE = "loginType";
         public static final String CLIENT_ID = "clientId";
@@ -32,6 +33,7 @@ public final class Inputs extends InputNames {
         public static final String LOGIN_AUTHORITY = "loginAuthority";
         public static final String RESOURCE = "resource";
     }
+
     public static class EmailInputs {
         public static final String AUTH_TOKEN = "authToken";
         public static final String USER_PRINCIPAL_NAME = "userPrincipalName";
