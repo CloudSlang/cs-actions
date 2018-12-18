@@ -22,14 +22,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import static io.cloudslang.content.httpclient.services.HttpClientService.RETURN_RESULT;
+import java.util.Map;
+
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
 
 public class EmailServiceImpl {
 
     @NotNull
-    public static String getMessage(@NotNull final GetMessageInputs getMessageInputs) throws Exception {
+    public static Map<String, String> getMessage(@NotNull final GetMessageInputs getMessageInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = getMessageInputs.getCommonInputs();
         httpClientInputs.setUrl(getMessageUrl(commonInputs.getUserPrincipalName(),
@@ -49,8 +50,7 @@ public class EmailServiceImpl {
         if (!StringUtils.isEmpty(getMessageInputs.getoDataQuery())) {
             httpClientInputs.setQueryParams(getQueryParams(getMessageInputs.getoDataQuery()));
         }
-
-        return new HttpClientService().execute(httpClientInputs).get(RETURN_RESULT);
+        return new HttpClientService().execute(httpClientInputs);
     }
 
     @NotNull
