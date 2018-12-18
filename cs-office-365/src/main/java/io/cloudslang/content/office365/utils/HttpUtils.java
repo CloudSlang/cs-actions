@@ -24,14 +24,7 @@ import java.net.InetSocketAddress;
 import java.net.PasswordAuthentication;
 import java.net.Proxy;
 
-import static io.cloudslang.content.office365.utils.Constants.AUTHORIZATION;
-import static io.cloudslang.content.office365.utils.Constants.BASE_GRAPH_PATH;
-import static io.cloudslang.content.office365.utils.Constants.BEARER;
-import static io.cloudslang.content.office365.utils.Constants.DATA_QUERY;
-import static io.cloudslang.content.office365.utils.Constants.GRAPH_HOST;
-import static io.cloudslang.content.office365.utils.Constants.HTTPS;
-import static io.cloudslang.content.office365.utils.Constants.MAIL_FOLDERS_PATH;
-import static io.cloudslang.content.office365.utils.Constants.MESSAGES_PATH;
+import static io.cloudslang.content.office365.utils.Constants.*;
 import static java.net.Proxy.Type.HTTP;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -123,8 +116,8 @@ public class HttpUtils {
 
     @NotNull
     public static String listMessagesPath(@NotNull final String userPrincipalName,
-                                         @NotNull final String userId,
-                                         @NotNull final String folderId) {
+                                          @NotNull final String userId,
+                                          @NotNull final String folderId) {
 
         StringBuilder pathString = new StringBuilder()
                 .append(BASE_GRAPH_PATH)
