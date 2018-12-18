@@ -24,18 +24,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import static io.cloudslang.content.httpclient.services.HttpClientService.RETURN_RESULT;
-import static io.cloudslang.content.office365.utils.Constants.ANONYMOUS;
-import static io.cloudslang.content.office365.utils.Constants.CHANGEIT;
-import static io.cloudslang.content.office365.utils.Constants.DEFAULT_JAVA_KEYSTORE;
-import static io.cloudslang.content.office365.utils.Constants.GET;
-import static io.cloudslang.content.office365.utils.HttpUtils.getAuthHeaders;
-import static io.cloudslang.content.office365.utils.HttpUtils.getMessagePath;
-import static io.cloudslang.content.office365.utils.HttpUtils.getMessagesPath;
-import static io.cloudslang.content.office365.utils.HttpUtils.getQueryParams;
-import static io.cloudslang.content.office365.utils.HttpUtils.getUriBuilder;
-import static io.cloudslang.content.office365.utils.HttpUtils.setConnectionParameters;
-import static io.cloudslang.content.office365.utils.HttpUtils.setProxy;
-import static io.cloudslang.content.office365.utils.HttpUtils.setSecurityInputs;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
 
