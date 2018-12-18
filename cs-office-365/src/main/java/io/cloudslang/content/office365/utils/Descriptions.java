@@ -67,6 +67,7 @@ public class Descriptions {
 
         public static final String RETURN_RESULT_DESC = "The full API response in case of success, or error message in case of failure.";
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for Office 365 API request.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the message.";
 
         public static final String SUCCESS_DESC = "Email message retrieved successfully.";
