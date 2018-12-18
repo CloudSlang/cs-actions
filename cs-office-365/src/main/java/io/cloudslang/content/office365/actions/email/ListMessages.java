@@ -38,6 +38,11 @@ import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.RETURN_CODE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.AUTH_TOKEN_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.DOCUMENT_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.FOLDER_ID_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.USER_ID_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.USER_PRINCIPAL_NAME_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.EXCEPTION_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.FAILURE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.RETURN_RESULT_DESC;
@@ -48,6 +53,11 @@ import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PO
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyListMessagesInputs;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.AUTH_TOKEN;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.FOLDER_ID;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.USER_ID;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.USER_PRINCIPAL_NAME;
+import static io.cloudslang.content.office365.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -60,15 +70,16 @@ public class ListMessages {
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = EXCEPTION, description = EXCEPTION_DESC)
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = DOCUMENT, description = DOCUMENT_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = USER_PRINCIPAL_NAME, required = true, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
-                                       @Param(value = USER_ID, encrypted = true, description = USER_ID_DESC) String userId,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
+                                       @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
+                                       @Param(value = USER_ID, description = USER_ID_DESC) String userId,
                                        @Param(value = FOLDER_ID, description = FOLDER_ID_DESC) String folderId,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
@@ -106,9 +117,10 @@ public class ListMessages {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessages = verifyListMessagesInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
+        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive,
                 connectionsMaxPerRoute, connectionsMaxTotal);
+
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }

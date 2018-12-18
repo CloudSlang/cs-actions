@@ -29,19 +29,68 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_TOTAL;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.SOCKET_TIMEOUT;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.office365.services.EmailServiceImpl.getMessage;
-import static io.cloudslang.content.office365.utils.Constants.*;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
-import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
+import static io.cloudslang.content.office365.utils.Constants.BOOLEAN_FALSE;
+import static io.cloudslang.content.office365.utils.Constants.CHANGEIT;
+import static io.cloudslang.content.office365.utils.Constants.CONNECTIONS_MAX_PER_ROUTE_CONST;
+import static io.cloudslang.content.office365.utils.Constants.CONNECTIONS_MAX_TOTAL_CONST;
+import static io.cloudslang.content.office365.utils.Constants.DEFAULT_JAVA_KEYSTORE;
+import static io.cloudslang.content.office365.utils.Constants.DEFAULT_PROXY_PORT;
+import static io.cloudslang.content.office365.utils.Constants.NEW_LINE;
+import static io.cloudslang.content.office365.utils.Constants.STRICT;
+import static io.cloudslang.content.office365.utils.Constants.UTF8;
+import static io.cloudslang.content.office365.utils.Constants.ZERO;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.CONNECT_TIMEOUT_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.CONN_MAX_ROUTE_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.KEEP_ALIVE_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.PROXY_HOST_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.PROXY_PASSWORD_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.PROXY_PORT_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.PROXY_USERNAME_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.RESPONSC_CHARACTER_SET_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.RETURN_CODE_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.SOCKET_TIMEOUT_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_ALL_ROOTS_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_KEYSTORE_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_PASSWORD_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.X509_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.AUTH_TOKEN_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.DOCUMENT_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.EXCEPTION_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.FAILURE_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.FOLDER_ID_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.MESSAGE_ID_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.O_DATA_QUERY_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.RETURN_RESULT_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.SUCCESS_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.USER_ID_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.USER_PRINCIPAL_NAME_DESC;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.AUTH_TOKEN;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.FOLDER_ID;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.MESSAGE_ID;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.O_DATA_QUERY;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.USER_ID;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.USER_PRINCIPAL_NAME;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyGetMessageInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -104,8 +153,10 @@ public class GetMessage {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessages = verifyGetMessageInputs(messageId, proxyPort, trustAllRoots, userPrincipalName, userId, connectTimeout,
-                socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        final List<String> exceptionMessages = verifyGetMessageInputs(messageId, userPrincipalName, userId, proxyPort,
+                trustAllRoots, connectTimeout, socketTimeout, keepAlive,
+                connectionsMaxPerRoute, connectionsMaxTotal);
+
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -126,6 +177,7 @@ public class GetMessage {
                             .connectionsMaxTotal(connectionsMaxTotal)
                             .connectionsMaxPerRoute(connectionsMaxPerRoute)
                             .keepAlive(keepAlive)
+                            .socketTimeout(socketTimeout)
                             .responseCharacterSet(responseCharacterSet)
                             .connectTimeout(connectTimeout)
                             .trustAllRoots(trustAllRoots)
