@@ -111,4 +111,35 @@ public class Descriptions {
         public static final String FAILURE_DESC = "There was an error while trying to get the messages.";
         public static final String SUCCESS_DESC = "The request was successfully executed.";
     }
+
+    public static class CreateMessage {
+        public static final String AUTH_TOKEN_DESC = "The Office 365 authorization token.";
+        public static final String USER_PRINCIPAL_NAME_DESC = "The email address of the user to perform the action on." +
+                "The input is mutually exclusive with the 'userId' input.";
+        public static final String USER_ID_DESC = "The ID of the user to perform the action on. The input is mutually exclusive with the " +
+                "'userPrincipalName' input.";
+        public static final String FOLDER_ID_DESC = "The ID of the folder to perform the action on.";
+        public static final String BCCC_RECIPIENTS_DESC = "The Bcc recipients for the message. Updatable only if 'isDraft' = true.";
+        public static final String CATEGORIES_DESC = "The categories associated with the message.";
+        public static final String CC_RECIPIENTS_DESC = "The Cc recipients for the message. Updatable only if 'isDraft' = true.";
+        public static final String FROM_DESC = "The mailbox owner and sender of the message. Updatable only if isDraft = true. Must" +
+                "correspond to the actual mailbox used.";
+        public static final String IMPORTANCE_DESC = "The importance of the message. The possible values are: 'Low', 'Normal', 'High'.";
+        public static final String INFERENCE_CLASSIFICATION_DESC = "The classification of the message for the user, based on inferred relevance or\n" +
+                "importance, or on an explicit override. The possible values are: 'focused' or 'other'.";
+        public static final String INTERNET_MESSAGE_ID_DESC = "The message ID in the format specified by RFC2822. Updatable only if 'isDraft' = true.";
+        public static final String IS_READ_DESC = "Indicates whether the message has been read.";
+        public static final String REPLY_TO_DESC = "The email addresses to use when replying. Updatable only if 'isDraft' = true.";
+        public static final String SENDER_DESC = "The account that is actually used to generate the message. Updatable only if 'isDraft' = true,\n" +
+                "and when sending a message from a shared mailbox, or sending a message as a delegate.\n" +
+                "In any case, the value must correspond to the actual mailbox used.";
+        public static final String TO_RECIPIENTS_DESC = "The 'To recipients' for the message. Updatable only if 'isDraft' = true.";
+        public static final String BODY_DESC = "The body of the message. Updatable only if 'isDraft' = true.";
+        public static final String IS_DELIVERY_RECEIPT_REQUESTED_DESC = "Indicates whether a delivery receipt is requested for the message.";
+        public static final String IS_READ_RECEIPT_REQUESTED_DESC = "Indicates whether a read receipt is requested for the message.";
+        public static final String SUBJECT_DESC = "The subject of the message. Updatable only if 'isDraft' = true.";
+        public static final String CREATE_MESSAGE_EXCEPTION_DESC = "An error message in case there was an error while creating the message.";
+        public static final String CREATE_MESSAGE_RETURN_RESULT_DESC = "The body of the created message.";
+        public static final String DOCUMENT_DESC = "The body of the created message.";
+    }
 }
