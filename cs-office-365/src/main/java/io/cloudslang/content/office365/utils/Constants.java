@@ -50,4 +50,5 @@ public final class Constants {
     public static final String HEADERS_DELIMITER = "\r\n";
     public static final String STATUS_CODE = "statusCode";
     public static final String SEND = "/send";
+    public static final String SEND_MESSAGE = "Email sent. For the delivery status please check the Delivery Report Email.";
 }
