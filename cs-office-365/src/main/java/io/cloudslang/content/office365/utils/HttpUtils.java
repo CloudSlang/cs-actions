@@ -16,6 +16,7 @@ package io.cloudslang.content.office365.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +26,6 @@ import java.net.PasswordAuthentication;
 import java.net.Proxy;
 import java.util.Map;
 
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -164,20 +164,20 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static Map<String, String> getOperationResults(Map<String, String> result) {
+    public static Map<String, String> getOperationResults(@NotNull final Map<String, String> result,
+                                                          @NotNull final String successMessage,
+                                                          @NotNull final String failureMessage,
+                                                          @NotNull final String document) {
         final Map<String, String> results;
         final String statusCode = result.get(STATUS_CODE);
         if (Integer.parseInt(statusCode) >= 200 && Integer.parseInt(statusCode) < 300) {
-            results = getSuccessResultsMap(result.get(RETURN_RESULT));
+            results = getSuccessResultsMap(successMessage);
+            if(!isEmpty(document))
+                results.put(DOCUMENT, document);
         } else {
-            results = getFailureResultsMap(result.get(RETURN_RESULT));
+            results = getFailureResultsMap(failureMessage);
         }
-
         results.put(STATUS_CODE, statusCode);
-        results.put(DOCUMENT, result.get(RETURN_RESULT));
-
         return results;
     }
-
-
 }
