@@ -19,7 +19,7 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.office365.entities.GetMessageInputs;
+import io.cloudslang.content.office365.entities.ListMessagesInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -33,24 +33,30 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.office365.services.EmailServiceImpl.getMessage;
+import static io.cloudslang.content.office365.services.EmailServiceImpl.listMessages;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
+import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.RETURN_CODE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
+import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.EXCEPTION_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.FAILURE_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.RETURN_RESULT_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.SUCCESS_DESC;
 import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
-import static io.cloudslang.content.office365.utils.InputsValidation.verifyGetMessageInputs;
+import static io.cloudslang.content.office365.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetMessage {
-    @Action(name = "Get message from Office 365",
+public class ListMessages {
+
+    @Action(name = "Get the messages from Office 365",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -65,9 +71,7 @@ public class GetMessage {
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = USER_ID, description = USER_ID_DESC) String userId,
-                                       @Param(value = MESSAGE_ID, required = true, description = MESSAGE_ID_DESC) String messageId,
                                        @Param(value = FOLDER_ID, description = FOLDER_ID_DESC) String folderId,
-                                       @Param(value = O_DATA_QUERY, description = O_DATA_QUERY_DESC) String oDataQuery,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -89,7 +93,6 @@ public class GetMessage {
         userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         userId = defaultIfEmpty(userId, EMPTY);
         folderId = defaultIfEmpty(folderId, EMPTY);
-        oDataQuery = defaultIfEmpty(oDataQuery, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -105,8 +108,8 @@ public class GetMessage {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessages = verifyGetMessageInputs(messageId, userPrincipalName, userId, proxyPort,
-                trustAllRoots, connectTimeout, socketTimeout, keepAlive,
+        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
+                connectTimeout, socketTimeout, keepAlive,
                 connectionsMaxPerRoute, connectionsMaxTotal);
 
         if (!exceptionMessages.isEmpty()) {
@@ -114,10 +117,8 @@ public class GetMessage {
         }
 
         try {
-            final Map<String, String> result = getMessage(GetMessageInputs.builder()
-                    .messageId(messageId)
+            final Map<String, String> result = listMessages(ListMessagesInputs.builder()
                     .folderId(folderId)
-                    .oDataQuery(oDataQuery)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
                             .connectionsMaxPerRoute(connectionsMaxPerRoute)
@@ -140,8 +141,8 @@ public class GetMessage {
                             .trustPassword(trustPassword)
                             .build())
                     .build());
-            final String returnMessage = result.get(RETURN_RESULT);
-            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
+
+            return getOperationResults(result);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
