@@ -306,6 +306,7 @@
         <module>cs-mail</module>
         <module>cs-microfocus-dca</module>
         <module>cs-microfocus-hcm</module>
+        <module>cs-office-365</module>
         <module>cs-powershell</module>
         <module>cs-rft</module>
         <module>cs-ssh</module>
