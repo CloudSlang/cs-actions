@@ -16,7 +16,6 @@ package io.cloudslang.content.office365.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -172,7 +171,7 @@ public class HttpUtils {
         final String statusCode = result.get(STATUS_CODE);
         if (Integer.parseInt(statusCode) >= 200 && Integer.parseInt(statusCode) < 300) {
             results = getSuccessResultsMap(successMessage);
-            if(!isEmpty(document))
+            if (!isEmpty(document))
                 results.put(DOCUMENT, document);
         } else {
             results = getFailureResultsMap(failureMessage);
