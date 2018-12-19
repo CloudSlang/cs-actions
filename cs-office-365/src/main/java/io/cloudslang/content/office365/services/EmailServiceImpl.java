@@ -27,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-import static io.cloudslang.content.httpclient.services.HttpClientService.RETURN_RESULT;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
 
@@ -131,7 +130,7 @@ public class EmailServiceImpl {
     }
 
     @NotNull
-    public static String createMessage(@NotNull final CreateMessageInputs createMessageInputs) throws Exception {
+    public static Map<String, String> createMessage(@NotNull final CreateMessageInputs createMessageInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = createMessageInputs.getCommonInputs();
         httpClientInputs.setUrl(createMessageUrl(commonInputs.getUserPrincipalName(),
@@ -146,12 +145,11 @@ public class EmailServiceImpl {
         httpClientInputs.setKeystorePassword(CHANGEIT);
         httpClientInputs.setContentType(APPLICATION_JSON);
         httpClientInputs.setBody(PopulateMessageBody.populateMessageBody(commonInputs,createMessageInputs, DELIMITER));
-        System.out.println(httpClientInputs.getBody().toString());
 
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
-        return new HttpClientService().execute(httpClientInputs).get(RETURN_RESULT);
+        return new HttpClientService().execute(httpClientInputs);
     }
 
     @NotNull

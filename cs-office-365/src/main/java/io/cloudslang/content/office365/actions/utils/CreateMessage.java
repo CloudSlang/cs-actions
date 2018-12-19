@@ -22,8 +22,10 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.office365.entities.CreateMessageInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
+
 import java.util.List;
 import java.util.Map;
+
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
@@ -37,6 +39,8 @@ import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.*;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.FAILURE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.SUCCESS_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.STATUS_CODE_DESC;
+import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
@@ -47,7 +51,6 @@ import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyCreateMessageInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -57,7 +60,8 @@ public class CreateMessage {
                     @Output(value = RETURN_RESULT, description = CREATE_MESSAGE_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = DOCUMENT, description = DOCUMENT_DESC),
-                    @Output(value = EXCEPTION, description = CREATE_MESSAGE_EXCEPTION_DESC)
+                    @Output(value = EXCEPTION, description = CREATE_MESSAGE_EXCEPTION_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -138,7 +142,7 @@ public class CreateMessage {
         }
 
         try {
-            final Map<String, String> result = getSuccessResultsMap(createMessage(CreateMessageInputs.builder()
+            final Map<String, String> result = createMessage(CreateMessageInputs.builder()
                     .folderId(folderId)
                     .bccRecipients(bccRecipients)
                     .categories(categories)
@@ -175,9 +179,8 @@ public class CreateMessage {
                             .trustKeystore(trustKeystore)
                             .trustPassword(trustPassword)
                             .build())
-                    .build()));
-            result.put(DOCUMENT, result.get(RETURN_RESULT));
-            return result;
+                    .build());
+            return getOperationResults(result);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
