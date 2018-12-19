@@ -47,10 +47,14 @@ public final class Constants {
     public static final String MAIL_FOLDERS_PATH = "/mailFolders/";
     public static final String DATA_QUERY = "$select=";
     public static final String HTTPS = "https";
+    public static final String CONTENT_LENGTH = "Content-Length:0";
+    public static final String HEADERS_DELIMITER = "\r\n";
     public static final String STATUS_CODE = "statusCode";
     public static final String APPLICATION_JSON = "application/json";
     public static final String DEFAULT_IMPORTANCE = "low";
     public static final String DEFAULT_INFERENCE_CLASSIFICATION = "other";
     public static final String DELIMITER = ",";
     public static final String CONTENT_TYPE = "HTML";
+    public static final String SEND = "/send";
+    public static final String SEND_MESSAGE = "Email sent. For the delivery status please check the Delivery Report Email.";
 }
