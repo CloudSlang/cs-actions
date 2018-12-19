@@ -20,6 +20,7 @@ import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.office365.entities.createMessageModels.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static io.cloudslang.content.office365.utils.Constants.CONTENT_TYPE;
@@ -31,10 +32,44 @@ public class PopulateMessageBody {
         final CreateMessageBody messageBody = new CreateMessageBody();
         final List<String> categoriesList = new ArrayList<>();
         final Body body = new Body();
+
+        String[] categoryList = createMessageInputs.getCategories().split(delimiter);
+        Collections.addAll(categoriesList, categoryList);
+        messageBody.setCategories(categoriesList);
+
+        messageBody.setBccRecipients(recipientsCollection(createMessageInputs.getBccRecipients(), delimiter));
+        messageBody.setCcRecipients(recipientsCollection(createMessageInputs.getCcRecipients(), delimiter));
+        messageBody.setReplyTo(recipientsCollection(createMessageInputs.getReplyTo(), delimiter));
+        messageBody.setToRecipients(recipientsCollection(createMessageInputs.getToRecipients(), delimiter));
+
+        body.setContentType(CONTENT_TYPE);
+        body.setContent(createMessageInputs.getBody());
+        messageBody.setBody(body);
+
+        populateMessage(messageBody, createMessageInputs, commonInputs);
+
+        return new Gson().toJson(messageBody);
+    }
+
+    private static List<Recipient> recipientsCollection(String emailInput, String delimiter) {
+        final List<Recipient> finalList = new ArrayList<>();
+        String[] list = emailInput.split(delimiter);
+
+        for (String item : list) {
+            final EmailAddress emailAddress = new EmailAddress();
+            final Recipient recipient = new Recipient();
+            emailAddress.setAddress(item);
+            recipient.setEmailAddress(emailAddress);
+            finalList.add(recipient);
+        }
+        return finalList;
+    }
+
+    private static void populateMessage(CreateMessageBody messageBody, CreateMessageInputs createMessageInputs, Office365CommonInputs commonInputs) {
+
+        final EmailAddress emailAddress = new EmailAddress();
         final From fromVal = new From();
         final Sender senderVal = new Sender();
-        final EmailAddress senderEmailAddress = new EmailAddress();
-        final EmailAddress emailAddress = new EmailAddress();
 
         messageBody.setImportance(createMessageInputs.getImportance());
         messageBody.setInferenceClassification(createMessageInputs.getInferenceClassification());
@@ -45,31 +80,13 @@ public class PopulateMessageBody {
         messageBody.setSubject(createMessageInputs.getSubject());
         messageBody.setId(commonInputs.getUserId());
 
-        String[] categoryList = createMessageInputs.getCategories().split(delimiter);
-        for (String category : categoryList) {
-            categoriesList.add(category);
-        }
-        messageBody.setCategories(categoriesList);
-
-         messageBody.setBccRecipients(PopulateMessageBodyService.recipientsCollection(createMessageInputs.getBccRecipients(), delimiter));
-         messageBody.setCcRecipients(PopulateMessageBodyService.recipientsCollection(createMessageInputs.getCcRecipients(), delimiter));
-
         emailAddress.setAddress(createMessageInputs.getFrom());
         fromVal.setEmailAddress(emailAddress);
         messageBody.setFrom(fromVal);
 
-        messageBody.setReplyTo(PopulateMessageBodyService.recipientsCollection(createMessageInputs.getReplyTo(), delimiter));
-
-        senderEmailAddress.setAddress(createMessageInputs.getSender());
-        senderVal.setEmailAddress(senderEmailAddress);
+        emailAddress.setAddress(createMessageInputs.getSender());
+        senderVal.setEmailAddress(emailAddress);
         messageBody.setSender(senderVal);
 
-        messageBody.setToRecipients(PopulateMessageBodyService.recipientsCollection(createMessageInputs.getToRecipients(), delimiter));
-
-        body.setContentType(CONTENT_TYPE);
-        body.setContent(createMessageInputs.getBody());
-        messageBody.setBody(body);
-
-        return new Gson().toJson(messageBody);
     }
 }
