@@ -68,6 +68,7 @@ public class PopulateMessageBody {
     private static void populateMessage(CreateMessageBody messageBody, CreateMessageInputs createMessageInputs, Office365CommonInputs commonInputs) {
 
         final EmailAddress emailAddress = new EmailAddress();
+        final EmailAddress senderEmailAddress = new EmailAddress();
         final From fromVal = new From();
         final Sender senderVal = new Sender();
 
@@ -84,8 +85,8 @@ public class PopulateMessageBody {
         fromVal.setEmailAddress(emailAddress);
         messageBody.setFrom(fromVal);
 
-        emailAddress.setAddress(createMessageInputs.getSender());
-        senderVal.setEmailAddress(emailAddress);
+        senderEmailAddress.setAddress(createMessageInputs.getSender());
+        senderVal.setEmailAddress(senderEmailAddress);
         messageBody.setSender(senderVal);
 
     }

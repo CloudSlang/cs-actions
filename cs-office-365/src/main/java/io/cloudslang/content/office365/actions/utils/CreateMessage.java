@@ -180,7 +180,8 @@ public class CreateMessage {
                             .trustPassword(trustPassword)
                             .build())
                     .build());
-            return getOperationResults(result);
+            final String returnMessage = result.get(RETURN_RESULT);
+            return getOperationResults(result,returnMessage, returnMessage, returnMessage);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
