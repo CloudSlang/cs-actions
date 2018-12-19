@@ -17,6 +17,7 @@ package io.cloudslang.content.office365.services;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.GetMessageInputs;
+import io.cloudslang.content.office365.entities.ListMessagesInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.office365.entities.SendMessageInputs;
 import org.apache.commons.lang3.StringUtils;
@@ -77,6 +78,26 @@ public class EmailServiceImpl {
     }
 
     @NotNull
+    public static Map<String, String> listMessages(@NotNull final ListMessagesInputs listMessagesInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = listMessagesInputs.getCommonInputs();
+        httpClientInputs.setUrl(listMessagesUrl(commonInputs.getUserPrincipalName(),
+                commonInputs.getUserId(),
+                listMessagesInputs.getFolderId()));
+
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
     private static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
                                             @NotNull final Office365CommonInputs commonInputs) {
         setProxy(httpClientInputs,
@@ -110,6 +131,21 @@ public class EmailServiceImpl {
             uriBuilder.setPath(getMessagePath(userPrincipalName, userId, messageId));
         } else
             uriBuilder.setPath(getMessagePath(userPrincipalName, userId, messageId, folderId));
+
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    private static String listMessagesUrl(@NotNull final String userPrincipalName,
+                                          @NotNull final String userId,
+                                          @NotNull final String folderId) throws Exception {
+
+        final URIBuilder uriBuilder = getUriBuilder();
+
+        if (StringUtils.isEmpty(folderId)) {
+            uriBuilder.setPath(getMessagesPath(userPrincipalName, userId));
+        } else
+            uriBuilder.setPath(getMessagesPath(userPrincipalName, userId, folderId));
 
         return uriBuilder.build().toURL().toString();
     }

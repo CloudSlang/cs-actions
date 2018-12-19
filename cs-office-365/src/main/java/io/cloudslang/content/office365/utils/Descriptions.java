@@ -97,4 +97,11 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "Token generated successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
     }
+
+    public static class ListMessages {
+        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response containing the messages.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
+        public static final String FAILURE_DESC = "There was an error while trying to get the messages.";
+        public static final String SUCCESS_DESC = "The request was successfully executed.";
+    }
 }
