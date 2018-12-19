@@ -104,11 +104,6 @@ public class HttpUtilsTest {
         assertEquals(header, expectedHeader);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getAuthHeaderNullTest() {
-        getAuthHeaders(null);
-    }
-
     @Test
     public void getQueryParamsTest() {
         String expectedQueryParams = "$select=param1,param2";
