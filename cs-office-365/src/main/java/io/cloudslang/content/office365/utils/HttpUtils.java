@@ -79,6 +79,18 @@ public class HttpUtils {
     }
 
 
+
+    @NotNull
+    public static String sendMessagePath(@NotNull final String userPrincipalName,
+                                        @NotNull final String userId,
+                                        @NotNull final String messageId) {
+        StringBuilder messagepathString = new StringBuilder()
+                .append(getMessagePath(userPrincipalName, userId, messageId))
+                .append(SEND);
+        return messagepathString.toString();
+    }
+
+
     @NotNull
     public static String getMessagesPath(@NotNull final String userPrincipalName,
                                          @NotNull final String userId,
