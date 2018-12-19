@@ -46,11 +46,10 @@ import static io.cloudslang.content.office365.utils.InputsValidation.verifyGetMe
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static io.cloudslang.content.office365.utils.HttpUtils.getSendMessageOperationResults;
 
 
 public class SendMessage {
-
-
 
     @Action(name = "Send message based on an ID",
             outputs = {
@@ -108,7 +107,7 @@ public class SendMessage {
         }
 
         try {
-            return postSendMessage(SendMessageInputs.builder()
+            final Map<String, String> result = postSendMessage(SendMessageInputs.builder()
                     .messageId(messageId)
                     .body(EMPTY)
                     .commonInputs(Office365CommonInputs.builder()
@@ -132,6 +131,8 @@ public class SendMessage {
                             .trustPassword(trustPassword)
                             .build())
                     .build());
+
+            return getSendMessageOperationResults(result);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

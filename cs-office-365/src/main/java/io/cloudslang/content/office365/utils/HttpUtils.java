@@ -192,5 +192,20 @@ public class HttpUtils {
         return results;
     }
 
+    @NotNull
+    public static Map<String, String> getSendMessageOperationResults (Map<String, String> result) {
+        final Map<String, String> results;
+        final String statusCode = result.get(STATUS_CODE);
+        if (Integer.parseInt(statusCode) >= 200 && Integer.parseInt(statusCode) < 300) {
+            results = getSuccessResultsMap("Message sent successfully.");
+        } else {
+            results = getFailureResultsMap(result.get(RETURN_RESULT));
+        }
+
+        results.put(STATUS_CODE, statusCode);
+
+        return results;
+    }
+
 
 }
