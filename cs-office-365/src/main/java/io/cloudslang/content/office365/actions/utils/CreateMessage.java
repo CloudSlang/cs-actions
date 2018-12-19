@@ -48,6 +48,7 @@ import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_US
 import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.*;
 import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.BODY;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
+import static io.cloudslang.content.office365.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyCreateMessageInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -135,8 +136,13 @@ public class CreateMessage {
         importance = defaultIfEmpty(importance, DEFAULT_IMPORTANCE);
         inferenceClassification = defaultIfEmpty(inferenceClassification, DEFAULT_INFERENCE_CLASSIFICATION);
 
-        final List<String> exceptionMessages = verifyCreateMessageInputs(sender, proxyPort, trustAllRoots, userPrincipalName, userId, connectTimeout,
-                toRecipients, isRead, isDeliveryReceiptRequested, isReadReceiptRequested, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        final List<String> exceptionMessage = verifyCommonInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        if (!exceptionMessage.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
+        }
+        final List<String> exceptionMessages = verifyCreateMessageInputs(sender, importance, toRecipients, isRead,
+                isDeliveryReceiptRequested, isReadReceiptRequested, inferenceClassification);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
