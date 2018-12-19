@@ -37,6 +37,7 @@ import static io.cloudslang.content.office365.services.EmailServiceImpl.postSend
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
+import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
@@ -46,7 +47,6 @@ import static io.cloudslang.content.office365.utils.InputsValidation.verifyGetMe
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static io.cloudslang.content.office365.utils.HttpUtils.getSendMessageOperationResults;
 
 
 public class SendMessage {
@@ -132,7 +132,8 @@ public class SendMessage {
                             .build())
                     .build());
 
-            return getSendMessageOperationResults(result);
+            final String returnMessage = result.get(RETURN_RESULT);
+            return getOperationResults(result, SEND_MESSAGE, returnMessage, EMPTY);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
