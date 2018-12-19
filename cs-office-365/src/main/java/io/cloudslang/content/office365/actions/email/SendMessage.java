@@ -33,10 +33,12 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.office365.services.EmailServiceImpl.postSendMessage;
+import static io.cloudslang.content.office365.services.EmailServiceImpl.sendMessage;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
+import static io.cloudslang.content.office365.utils.Descriptions.SendMessage.MESSAGE_ID_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.SendMessage.RETURN_RESULT_DESC;
 import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -107,7 +109,7 @@ public class SendMessage {
         }
 
         try {
-            final Map<String, String> result = postSendMessage(SendMessageInputs.builder()
+            final Map<String, String> result = sendMessage(SendMessageInputs.builder()
                     .messageId(messageId)
                     .body(EMPTY)
                     .commonInputs(Office365CommonInputs.builder()

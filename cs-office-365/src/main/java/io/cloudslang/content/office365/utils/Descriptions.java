@@ -98,6 +98,13 @@ public class Descriptions {
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
     }
 
+    public static class SendMessage {
+
+        public static final String MESSAGE_ID_DESC = "The ID of the message to send.";
+        public static final String RETURN_RESULT_DESC = "A message is returned in case of success, an error message is returned in case of failure.";
+
+    }
+
     public static class ListMessages {
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response containing the messages.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";

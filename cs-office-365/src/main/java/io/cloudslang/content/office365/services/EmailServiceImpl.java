@@ -56,7 +56,7 @@ public class EmailServiceImpl {
     }
 
     @NotNull
-    public static Map<String, String> postSendMessage(@NotNull final SendMessageInputs postMessageInputs) throws Exception {
+    public static Map<String, String> sendMessage(@NotNull final SendMessageInputs postMessageInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
 
         final Office365CommonInputs commonInputs = postMessageInputs.getCommonInputs();
