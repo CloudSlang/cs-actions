@@ -29,6 +29,8 @@ import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.*
 import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.USERNAME;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.*;
+import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.IS_READ_RECEIPT_REQUESTED;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
@@ -92,6 +94,23 @@ public final class InputsValidation {
         addVerifyNumber(exceptionMessages, connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE);
         addVerifyNumber(exceptionMessages, connectionsMaxTotal, CONNECTIONS_MAX_TOTAL);
 
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyCreateMessageInputs(@Nullable final String sender, @Nullable final String importance,
+                                                         @Nullable final String toRecipients, @Nullable final String isRead,
+                                                         @Nullable final String isDeliveryReceiptRequested,
+                                                         @Nullable final String isReadReceiptRequested,
+                                                         @Nullable final String inferenceClassification) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyNotNullOrEmpty(exceptionMessages, sender, SENDER);
+        addVerifyNotNullOrEmpty(exceptionMessages, importance, IMPORTANCE);
+        addVerifyNotNullOrEmpty(exceptionMessages, inferenceClassification, INFERENCE_CLASSIFICATION);
+        addVerifyNotNullOrEmpty(exceptionMessages, toRecipients, TO_RECIPIENTS);
+        addVerifyBoolean(exceptionMessages, isRead, IS_READ);
+        addVerifyBoolean(exceptionMessages, isDeliveryReceiptRequested, IS_DELIVERY_RECEIPT_REQUESTED);
+        addVerifyBoolean(exceptionMessages, isReadReceiptRequested, IS_READ_RECEIPT_REQUESTED);
         return exceptionMessages;
     }
 

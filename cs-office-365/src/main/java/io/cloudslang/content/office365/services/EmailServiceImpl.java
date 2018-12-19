@@ -16,9 +16,11 @@ package io.cloudslang.content.office365.services;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.office365.entities.CreateMessageInputs;
 import io.cloudslang.content.office365.entities.GetMessageInputs;
 import io.cloudslang.content.office365.entities.ListMessagesInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
+import io.cloudslang.content.office365.utils.PopulateMessageBody;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -119,6 +121,42 @@ public class EmailServiceImpl {
 
         final URIBuilder uriBuilder = getUriBuilder();
 
+        if (StringUtils.isEmpty(folderId)) {
+            uriBuilder.setPath(getMessagesPath(userPrincipalName, userId));
+        } else
+            uriBuilder.setPath(getMessagesPath(userPrincipalName, userId, folderId));
+
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    public static Map<String, String> createMessage(@NotNull final CreateMessageInputs createMessageInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = createMessageInputs.getCommonInputs();
+        httpClientInputs.setUrl(createMessageUrl(commonInputs.getUserPrincipalName(),
+                commonInputs.getUserId(),
+                createMessageInputs.getFolderId()));
+
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(POST);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setContentType(APPLICATION_JSON);
+        httpClientInputs.setBody(PopulateMessageBody.populateMessageBody(commonInputs,createMessageInputs, DELIMITER));
+
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    private static String createMessageUrl(@NotNull final String userPrincipalName,
+                                           @NotNull final String userId,
+                                           @NotNull final String folderId) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder();
         if (StringUtils.isEmpty(folderId)) {
             uriBuilder.setPath(getMessagesPath(userPrincipalName, userId));
         } else
