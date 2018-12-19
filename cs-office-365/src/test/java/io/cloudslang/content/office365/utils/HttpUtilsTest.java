@@ -6,37 +6,57 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.httpclient.services.HttpClientService.*;
+import static io.cloudslang.content.office365.utils.Constants.ZERO;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class HttpUtilsTest {
 
+    private static final String SUCCESS_CODE = "200";
+    private static final String RETURNED_RESULT = "returned result";
+    private static final String FAILURE_RETURN_CODE = "-1";
+    private static final String FAILURE_CODE = "401";
+    private static final String GET_MESSAGES_EXPECTED = "/v1.0/users/test@test.onmicrosoft.com/messages/";
+    private static final String USER_PRINCIPAL_NAME = "test@test.onmicrosoft.com";
+    private static final String GET_MESSAGE_FOLDER_EXPECTED = "/v1.0/users/test@test.onmicrosoft.com/mailFolders/folderId/messages/";
+    private static final String FOLDER_ID = "folderId";
+    private static final String USER_ID = "userId";
+    private static final String MESSAGE_ID = "messageId";
+    private static final String AUTH_TOKEN = "authToken";
+    private static final String O_DATA_QUERY = "param1,param2";
+    private static final String EXPECTED_QUERY_PARAMS = "$select=param1,param2";
+    private static final String EXPECTED_HEADER = "Authorization:Bearer authToken";
+    private static final String EXPECTED_PATH = "/v1.0/users/test@test.onmicrosoft.com/mailFolders/folderId/messages/messageId";
+    private static final String EXPECTED_PATH_WITH_USER_PRINCIPAL_NAME = "/v1.0/users/test@test.onmicrosoft.com/messages/messageId";
+    private static final String EXPECTED_PATH_BOTH_OPTIONS_USER = "/v1.0/users/userId/mailFolders/folderId/messages/";
+
     private Map<String, String> initializeSuccessResult() {
         final Map<String, String> result = new HashMap<>();
-        result.put(RETURN_RESULT, "returned result");
-        result.put(RETURN_CODE, "0");
-        result.put(STATUS_CODE, "200");
+        result.put(RETURN_RESULT, RETURNED_RESULT);
+        result.put(RETURN_CODE, ZERO);
+        result.put(STATUS_CODE, SUCCESS_CODE);
         return result;
     }
 
     private Map<String, String> initializeFailureResult() {
         final Map<String, String> result = new HashMap<>();
-        result.put(RETURN_RESULT, "returned result");
-        result.put(RETURN_CODE, "-1");
-        result.put(STATUS_CODE, "401");
+        result.put(RETURN_RESULT, RETURNED_RESULT);
+        result.put(RETURN_CODE, FAILURE_RETURN_CODE);
+        result.put(STATUS_CODE, FAILURE_CODE);
         return result;
     }
 
     @Test
     public void getOperationResultsValidTest() {
         final Map<String, String> expectedResult = new HashMap<>();
-        expectedResult.put(RETURN_RESULT, "returned result");
-        expectedResult.put(RETURN_CODE, "0");
-        expectedResult.put(DOCUMENT, "returned result");
-        expectedResult.put(STATUS_CODE, "200");
+        expectedResult.put(RETURN_RESULT, RETURNED_RESULT);
+        expectedResult.put(RETURN_CODE, ZERO);
+        expectedResult.put(DOCUMENT, RETURNED_RESULT);
+        expectedResult.put(STATUS_CODE, SUCCESS_CODE);
 
         String returnedResult = initializeSuccessResult().get(RETURN_RESULT);
         Map<String, String> results = HttpUtils.getOperationResults(initializeSuccessResult(), returnedResult,
@@ -49,10 +69,10 @@ public class HttpUtilsTest {
     @Test
     public void getOperationResultsInvalidTest() {
         final Map<String, String> expectedResult = new HashMap<>();
-        expectedResult.put(RETURN_RESULT, "returned result");
-        expectedResult.put(RETURN_CODE, "-1");
-        expectedResult.put(STATUS_CODE, "401");
-        expectedResult.put(EXCEPTION, "returned result");
+        expectedResult.put(RETURN_RESULT, RETURNED_RESULT);
+        expectedResult.put(RETURN_CODE, FAILURE_RETURN_CODE);
+        expectedResult.put(STATUS_CODE, FAILURE_CODE);
+        expectedResult.put(EXCEPTION, RETURNED_RESULT);
 
         String returnedResult = initializeFailureResult().get(RETURN_RESULT);
         Map<String, String> results = HttpUtils.getOperationResults(initializeFailureResult(), returnedResult,
@@ -64,50 +84,43 @@ public class HttpUtilsTest {
 
     @Test
     public void getMessagesPathTest() {
-        final String expectedPath = "/v1.0/users/test@test.onmicrosoft.com/messages/";
-        final String path = getMessagesPath("test@test.onmicrosoft.com", "");
-        assertEquals(path, expectedPath);
+        final String path = getMessagesPath(USER_PRINCIPAL_NAME, EMPTY);
+        assertEquals(GET_MESSAGES_EXPECTED, path);
     }
 
     @Test
     public void getMessagesPathFolderTest() {
-        final String expectedPath = "/v1.0/users/test@test.onmicrosoft.com/mailFolders/folderId/messages/";
-        final String path = getMessagesPath("test@test.onmicrosoft.com", "", "folderId");
-        assertEquals(path, expectedPath);
+        final String path = getMessagesPath(USER_PRINCIPAL_NAME, EMPTY, FOLDER_ID);
+        assertEquals(GET_MESSAGE_FOLDER_EXPECTED, path);
     }
 
     @Test
     public void getMessagesPathBothUserOptionsTest() {
-        final String expectedPath = "/v1.0/users/userId/mailFolders/folderId/messages/";
-        final String path = getMessagesPath("test@test.onmicrosoft.com", "userId", "folderId");
-        assertEquals(path, expectedPath);
+        final String path = getMessagesPath(USER_PRINCIPAL_NAME, USER_ID, FOLDER_ID);
+        assertEquals(EXPECTED_PATH_BOTH_OPTIONS_USER, path);
     }
 
     @Test
     public void getMessagePathTest() {
-        final String expectedPath = "/v1.0/users/test@test.onmicrosoft.com/messages/messageId";
-        final String path = getMessagePath("test@test.onmicrosoft.com", "", "messageId");
-        assertEquals(path, expectedPath);
+        final String path = getMessagePath(USER_PRINCIPAL_NAME, EMPTY, MESSAGE_ID);
+        assertEquals(EXPECTED_PATH_WITH_USER_PRINCIPAL_NAME, path);
     }
 
     @Test
     public void getMessagePathFolderTest() {
-        final String expectedPath = "/v1.0/users/test@test.onmicrosoft.com/mailFolders/folderId/messages/messageId";
-        final String path = getMessagePath("test@test.onmicrosoft.com", "", "messageId", "folderId");
-        assertEquals(path, expectedPath);
+        final String path = getMessagePath(USER_PRINCIPAL_NAME, EMPTY, MESSAGE_ID, FOLDER_ID);
+        assertEquals(EXPECTED_PATH, path);
     }
 
     @Test
     public void getAuthHeaderTest() {
-        final String expectedHeader = "Authorization:Bearer authToken";
-        final String header = getAuthHeaders("authToken");
-        assertEquals(header, expectedHeader);
+        final String header = getAuthHeaders(AUTH_TOKEN);
+        assertEquals(EXPECTED_HEADER, header);
     }
 
     @Test
     public void getQueryParamsTest() {
-        String expectedQueryParams = "$select=param1,param2";
-        String queryParams = getQueryParams("param1,param2");
-        assertEquals(expectedQueryParams, queryParams);
+        String queryParams = getQueryParams(O_DATA_QUERY);
+        assertEquals(EXPECTED_QUERY_PARAMS, queryParams);
     }
 }
