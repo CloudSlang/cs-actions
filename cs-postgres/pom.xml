@@ -25,6 +25,34 @@
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>PostgreSQL</description>
+    <url>https://github.com/CloudSlang/cs-actions</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://CloudSlang/cs-actions.git</connection>
+        <developerConnection>scm:git:git@github.com:CloudSlang/cs-actions.git</developerConnection>
+        <url>https://github.com/CloudSlang/cs-actions.git</url>
+        <tag>master</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>Maven Central staging repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>Maven Central snapshots repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <properties>
         <!--Maven versions-->
@@ -45,7 +73,6 @@
         <maven.compiler.target>1.7</maven.compiler.target>
         <maven.sources.skip>true</maven.sources.skip>
     </properties>
-
 
     <dependencies>
         <dependency>
