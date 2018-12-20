@@ -167,6 +167,7 @@ public class HttpUtils {
         return oDataQueryParam.toString();
     }
 
+    @NotNull
     private static String getLoginType(@NotNull final String userPrincipalName,
                                        @NotNull final String userId) {
         if (isEmpty(userId))

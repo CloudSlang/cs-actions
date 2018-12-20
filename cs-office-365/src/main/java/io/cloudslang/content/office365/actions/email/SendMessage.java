@@ -103,8 +103,7 @@ public class SendMessage {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessages = verifyGetMessageInputs(messageId, proxyPort, trustAllRoots, userPrincipalName, userId, connectTimeout,
-                socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        final List<String> exceptionMessages = verifyGetMessageInputs(messageId, userPrincipalName, userId, proxyPort, trustAllRoots, connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute ,connectionsMaxTotal);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
