@@ -55,14 +55,22 @@ public class PopulateMessageBody {
         final List<Recipient> finalList = new ArrayList<>();
         String[] list = emailInput.split(delimiter);
 
-        for (String item : list) {
-            final EmailAddress emailAddress = new EmailAddress();
-            final Recipient recipient = new Recipient();
-            emailAddress.setAddress(item);
-            recipient.setEmailAddress(emailAddress);
-            finalList.add(recipient);
+        if (!emailInput.contains(delimiter)){
+            setEmailAddress(finalList, emailInput);
+        } else {
+            for (String item : list) {
+                setEmailAddress(finalList, item);
+            }
         }
         return finalList;
+    }
+
+    private static void setEmailAddress(List<Recipient> finalList, String email){
+        final EmailAddress emailAddress = new EmailAddress();
+        final Recipient recipient = new Recipient();
+        emailAddress.setAddress(email);
+        recipient.setEmailAddress(emailAddress);
+        finalList.add(recipient);
     }
 
     private static void populateMessage(CreateMessageBody messageBody, CreateMessageInputs createMessageInputs, Office365CommonInputs commonInputs) {
