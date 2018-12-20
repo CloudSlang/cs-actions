@@ -22,6 +22,7 @@ public final class Outputs extends OutputNames {
     }
 
     public static class AuthorizationOutputs {
+        public static final String AUTH_TOKEN = "authToken";
         public static final String AUTH_TOKEN_TYPE = "authTokenType";
     }
 }
