@@ -192,4 +192,43 @@ public class EmailServiceImpl {
         uriBuilder.setPath(sendMessagePath(userPrincipalName, userId, messageId));
         return uriBuilder.build().toURL().toString();
     }
+
+    @NotNull
+    private static String deleteMessageUrl(@NotNull final String userPrincipalName,
+                                           @NotNull final String userId,
+                                           @NotNull final String messageId) throws Exception {
+
+        final URIBuilder uriBuilder = getUriBuilder();
+        if (StringUtils.isEmpty(messageId)) {
+            uriBuilder.setPath(getMessagePath(userPrincipalName, userId, messageId));
+        } else
+            uriBuilder.setPath(getMessagePath(userPrincipalName, userId, messageId));
+
+        return uriBuilder.build().toURL().toString();
+    }
+
+
+    @NotNull
+    public static Map<String, String> deleteMessage(@NotNull final DeleteMessageInputs deleteMessageInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = deleteMessageInputs.getCommonInputs();
+        httpClientInputs.setUrl(getMessageUrl(commonInputs.getUserPrincipalName(),
+                commonInputs.getUserId(),
+                deleteMessageInputs.getMessageId(),
+                deleteMessageInputs.getFolderId()));
+
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        if (!StringUtils.isEmpty(deleteMessageInputs.getMessageId())) {
+            httpClientInputs.setQueryParams(getQueryParams(deleteMessageInputs.getMessageId()));
+        }
+        return new HttpClientService().execute(httpClientInputs);
+    }
 }
