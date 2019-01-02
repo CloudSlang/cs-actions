@@ -192,4 +192,26 @@ public class EmailServiceImpl {
         uriBuilder.setPath(sendMessagePath(userPrincipalName, userId, messageId));
         return uriBuilder.build().toURL().toString();
     }
+
+
+    @NotNull
+    public static Map<String, String> deleteMessage(@NotNull final DeleteMessageInputs deleteMessageInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = deleteMessageInputs.getCommonInputs();
+        httpClientInputs.setUrl(getMessageUrl(commonInputs.getUserPrincipalName(),
+                commonInputs.getUserId(),
+                deleteMessageInputs.getMessageId(),
+                deleteMessageInputs.getFolderId()));
+
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(DELETE);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
 }
