@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 package io.cloudslang.content.google-drive.entities.utils;
-
+//de updatat
 public class Descriptions {
     public static class Common {
         public static final String PROXY_HOST_DESC = "Proxy server used to access the Office 365 service.";
@@ -55,27 +55,7 @@ public class Descriptions {
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
     }
 
-    public static class GetEmail {
-        public static final String AUTH_TOKEN_DESC = "The authorization token for Office 365.";
-        public static final String USER_PRINCIPAL_NAME_DESC = "The email address of the user to perform the action on. " +
-                "The input is mutually exclusive with the userId input.";
-        public static final String USER_ID_DESC = "The ID of the user to perform the action on.";
-        public static final String O_DATA_QUERY_DESC = "A list of query parameters in the form of a coma delimited list. " +
-                "Example: id,internetMessageHeaders";
-        public static final String MESSAGE_ID_DESC = "The ID of the message to retrieve.";
-        public static final String FOLDER_ID_DESC = "The ID of the folder which contains the message to retrieve.";
-
-        public static final String RETURN_RESULT_DESC = "The full API response in case of success, or error message in case of failure.";
-        public static final String DOCUMENT_DESC = "The full API response in case of success.";
-        public static final String STATUS_CODE_DESC = "The HTTP status code for Office 365 API request.";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the message.";
-
-        public static final String SUCCESS_DESC = "Email message retrieved successfully.";
-        public static final String FAILURE_DESC = "There was an error while trying to retrieve the email message.";
-
-    }
-
-    public static class GetAuthorizationToken {
+       public static class GetAuthorizationToken {
         public static final String LOGIN_TYPE_DESC = "Login method according to application type\n" +
                 "Valid values: 'API', 'Native'\n" +
                 "Default: 'API'";
@@ -99,48 +79,80 @@ public class Descriptions {
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
     }
 
-    public static class SendMessage {
+    public static class GetFile {
 
-        public static final String MESSAGE_ID_DESC = "The ID of the message to send.";
+        public static final String FILE_ID_DESC = "The ID of the file.";
+        public static final String ACKNOWLEDGE_ABUSE_DESC = "Whether the user is acknowledging the risk of downloading known malware or other abusive files.\n" +
+                "This is only applicable when alt=media. Default: false";
+        public static final String SUPPORTS_TEAM_DRIVES_DESC = "Whether the requesting application supports Team Drives. Default: false";
+
         public static final String RETURN_RESULT_DESC = "A message is returned in case of success, an error message is returned in case of failure.";
-
+        public static final String DOCUMENT_DESC = "The full API response in case of success.";
+        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
     }
 
-    public static class ListMessages {
-        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response containing the messages.";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
-        public static final String FAILURE_DESC = "There was an error while trying to get the messages.";
-        public static final String SUCCESS_DESC = "The request was successfully executed.";
+    public static class DeleteFile {
+
+        public static final String FILE_ID_DESC = "The ID of the file.";
+        public static final String SUPPORTS_TEAM_DRIVES_DESC = "Whether the requesting application supports Team Drives.";
+
+        public static final String RETURN_RESULT_DESC = "A message is returned in case of success, an error message is returned in case of failure.";
+        public static final String DOCUMENT_DESC = "The full API response in case of success.";
+        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
     }
 
-    public static class CreateMessage {
-        public static final String AUTH_TOKEN_DESC = "The Office 365 authorization token.";
-        public static final String USER_PRINCIPAL_NAME_DESC = "The email address of the user to perform the action on." +
-                "The input is mutually exclusive with the 'userId' input.";
-        public static final String USER_ID_DESC = "The ID of the user to perform the action on. The input is mutually exclusive with the " +
-                "'userPrincipalName' input.";
-        public static final String FOLDER_ID_DESC = "The ID of the folder to perform the action on.";
-        public static final String BCCC_RECIPIENTS_DESC = "The Bcc recipients for the message. Updatable only if 'isDraft' = true.";
-        public static final String CATEGORIES_DESC = "The categories associated with the message.";
-        public static final String CC_RECIPIENTS_DESC = "The Cc recipients for the message. Updatable only if 'isDraft' = true.";
-        public static final String FROM_DESC = "The mailbox owner and sender of the message. Updatable only if isDraft = true. Must" +
-                "correspond to the actual mailbox used.";
-        public static final String IMPORTANCE_DESC = "The importance of the message. The possible values are: 'Low', 'Normal', 'High'.";
-        public static final String INFERENCE_CLASSIFICATION_DESC = "The classification of the message for the user, based on inferred relevance or\n" +
-                "importance, or on an explicit override. The possible values are: 'focused' or 'other'.";
-        public static final String INTERNET_MESSAGE_ID_DESC = "The message ID in the format specified by RFC2822. Updatable only if 'isDraft' = true.";
-        public static final String IS_READ_DESC = "Indicates whether the message has been read.";
-        public static final String REPLY_TO_DESC = "The email addresses to use when replying. Updatable only if 'isDraft' = true.";
-        public static final String SENDER_DESC = "The account that is actually used to generate the message. Updatable only if 'isDraft' = true,\n" +
-                "and when sending a message from a shared mailbox, or sending a message as a delegate.\n" +
-                "In any case, the value must correspond to the actual mailbox used.";
-        public static final String TO_RECIPIENTS_DESC = "The 'To recipients' for the message. Updatable only if 'isDraft' = true.";
-        public static final String BODY_DESC = "The body of the message. Updatable only if 'isDraft' = true.";
-        public static final String IS_DELIVERY_RECEIPT_REQUESTED_DESC = "Indicates whether a delivery receipt is requested for the message.";
-        public static final String IS_READ_RECEIPT_REQUESTED_DESC = "Indicates whether a read receipt is requested for the message.";
-        public static final String SUBJECT_DESC = "The subject of the message. Updatable only if 'isDraft' = true.";
-        public static final String CREATE_MESSAGE_EXCEPTION_DESC = "An error message in case there was an error while creating the message.";
-        public static final String CREATE_MESSAGE_RETURN_RESULT_DESC = "The body of the created message.";
-        public static final String DOCUMENT_DESC = "The body of the created message.";
+
+    public static class CreateFile {
+       public static final String UPLOAD_TYPE = "The type of upload request to the /upload URI. Acceptable values are:\n"+
+               "media - Simple upload. Upload the media only, without any metadata.\n" +
+               "multipart - Multipart upload. Upload both the media and its metadata, in a single request.\n"+
+               "resumable - Resumable upload. Upload the file in a resumable fashion, using a series of at least two requests where the first request includes the metadata.";
+        public static final String IGNORE_DEFAULT_VISIILITY = "Whether to ignore the domain's default visibility settings for the created file.\n"+
+                "Domain administrators can choose to make all uploaded files visible to the domain by default; this parameter bypasses that behavior for the request.\n" +
+                "Permissions are still inherited from parent folders. Defaul: false";
+        public static final String KEEP_REVISION_FOREVER = "Whether to set the 'keepForever' field in the new head revision. Defaul: false";
+        public static final String OCR_LANGUAGE = "A language hint for OCR processing during image import (ISO 639-1 code).";
+        public static final String SUPPORTS_TEAM_DRIVES = "Whether the requesting application supports Team Drives. Default: false";
+        public static final String USE_CONTENT_AS_INDEXABLE_TEXT = "Whether to use the uploaded content as indexable text. Default: false";
+        public static final String APP_PROPERTIES = "A collection of arbitrary key-value pairs which are private to the requesting app.\n" +
+                "Entries with null values are cleared in update and copy requests.";
+        public static final String CONTENT_HINTS_INDEXABLE_TEXT = "Text to be indexed for the file to improve fullText queries.\n" +
+                "This is limited to 128KB in length and may contain HTML elements.";
+        public static final String CONTENT_HINTS_THUMBNAIL_MIME_TYPE = "The thumbnail data encoded with URL-safe Base64 (RFC 4648 section 5).";
+        public static final String CONTENT_HINTS_THUMBNAIL_MIME_TYPE = "The MIME type of the thumbnail.";
+        public static final String COPY_REQUIERS_WRITER_PERMISSION = "Whether the options to copy, print, or download this file, should be disabled for readers and commenters.";
+        public static final String CREATED_TIME = "The time at which the file was created (RFC 3339 date-time).";
+        public static final String DESCRIPTION = "A short description of the file.";
+        public static final String FOLDER_COLOR_RGB = "The color for a folder as an RGB hex string. The supported colors are published in the folderColorPalette field of the About resource.\n" +
+                "If an unsupported color is specified, the closest color in the palette will be used instead.";
+        public static final String id = "The ID of the file.";
+        public static final String MIME_TYPE = "The MIME type of the file.\n" +
+                "Drive will attempt to automatically detect an appropriate value from uploaded content if no value is provided. The value cannot be changed unless a new revision is uploaded.\n" +
+                "\n" +
+                "If a file is created with a Google Doc MIME type, the uploaded content will be imported if possible.\n" +
+                "The supported import formats are published in the About resource.";
+        public static final String MODIFIED_TIME = "The last time the file was modified by anyone (RFC 3339 date-time).\n" +
+                "Note that setting modifiedTime will also update modifiedByMeTime for the user.";
+        public static final String NAME = "The name of the file. This is not necessarily unique within a folder.\n"+
+                "Note that for immutable items such as the top level folders of Team Drives, My Drive root folder, and Application Data folder the name is constant.";
+        public static final String ORIGINAL_FILENAME = "The original filename of the uploaded content if available, or else the original value of the name field. This is only available for files with binary content in Drive.";
+        public static final String PARENTS = "The IDs of the parent folders which contain the file.\n" +
+                "If not specified as part of a create request, the file will be placed directly in the user's My Drive folder. If not specified as part of a copy request, the file will inherit any discoverable parents of the source file.\n"+
+                "Update requests must use the addParents and removeParents parameters to modify the parents list.";
+        public static final String PROPERTIES = "A collection of arbitrary key-value pairs which are visible to all apps.\n" +
+                "Entries with null values are cleared in update and copy requests.";
+        public static final String STARRERD = "Whether the user has starred the file.";
+        public static final String VIEWED_BY_ME_TIME = "The last time the file was viewed by the user (RFC 3339 date-time).";
+        public static final String WRITERS_CAN_SHARE = "Whether users with only writer permission can modify the file's permissions. Not populated for Team Drive files.";
+
+        public static final String RETURN_RESULT_DESC = "The full API response in case of success, or error message in case of failure.";
+        public static final String DOCUMENT_DESC = "The full API response in case of success.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for Google Drive API request.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the message.";
+        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
+
+        public static final String SUCCESS_DESC = "Email message retrieved successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the email message.";
+
     }
 }

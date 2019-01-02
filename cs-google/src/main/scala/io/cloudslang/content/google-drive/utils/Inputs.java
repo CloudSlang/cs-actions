@@ -51,7 +51,7 @@ public final class Inputs extends InputNames {
         public static final String IGNORE_DEFAULT_VISIILITY = "ignoreDefaultVisibility";
         public static final String KEEP_REVISION_FOREVER = "keepRevisionForever";
         public static final String OCR_LANGUAGE = "ocrLanguage";
-        public static final String SUPPORTS_TEAMD_RIVES = "supportsTeamDrives";
+        public static final String SUPPORTS_TEAM_DRIVES = "supportsTeamDrives";
         public static final String USE_CONTENT_AS_INDEXABLE_TEXT = "useContentAsIndexableText";
         public static final String APP_PROPERTIES = "appProperties";
         public static final String CONTENT_HINTS_INDEXABLE_TEXT = "contentHintsIndexableText";
