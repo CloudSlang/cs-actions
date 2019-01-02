@@ -68,7 +68,7 @@ public class CreateFileInputs {
         this.contentHintsThumbnailMimeType= contentHintsThumbnailMimeType;
         this.copyRequiresWriterPermission= copyRequiresWriterPermission;
         this.createdTime= createdTime;
-        this.description=description;
+        this.description= description;
         this.folderColorRgb= folderColorRgb;
         this.id= id;
         this.mimeType= mimeType;
@@ -162,8 +162,188 @@ public class CreateFileInputs {
         return this.commonInputs;
     }
 
+    public static class CreateFileInputsBuilder {
+        private String uploadType = EMPTY;
+        private String ignoreDefaultVisibility = EMPTY;
+        private String keepRevisionForever = EMPTY;
+        private String ocrLanguage = EMPTY;
+        private String supportsTeamDrives = EMPTY;
+        private String useContentAsIndexableText = EMPTY;
+        private String appProperties = EMPTY;
+        private String contentHintsIndexableText = EMPTY;
+        private String contentHintsThumbnailImage = EMPTY;
+        private String contentHintsThumbnailMimeType = EMPTY;
+        private String copyRequiresWriterPermission = EMPTY;
+        private String createdTime = EMPTY;
+        private String description = EMPTY;
+        private String folderColorRgb = EMPTY;
+        private String id = EMPTY;
+        private String mimeType = EMPTY;
+        private String modifiedTime = EMPTY;
+        private String name = EMPTY;
+        private String originalFilename = EMPTY;
+        private String parents = EMPTY;
+        private String properties = EMPTY;
+        private String starred = EMPTY;
+        private String viewedByMeTime = EMPTY;
+        private String writersCanShare = EMPTY;
+        private GoogleDriveCommonInputs commonInputs;
+        CreateFileInputsBuilder(){
+        }
 
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder uploadType(@NotNull final String uploadType) {
+            this.uploadType = uploadType;
+            return this;
+        }
 
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder ignoreDefaultVisibility(@NotNull final String ignoreDefaultVisibility) {
+            this.ignoreDefaultVisibility = ignoreDefaultVisibility;
+            return this;
+        }
 
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder keepRevisionForever(@NotNull final String keepRevisionForever) {
+            this.keepRevisionForever = keepRevisionForever;
+            return this;
+        }
 
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder ocrLanguage(@NotNull final String ocrLanguage) {
+            this.ocrLanguage = ocrLanguage;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder supportsTeamDrives(@NotNull final String supportsTeamDrives) {
+            this.supportsTeamDrives = supportsTeamDrives;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder useContentAsIndexableText(@NotNull final String useContentAsIndexableText) {
+            this.useContentAsIndexableText = useContentAsIndexableText;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder appProperties(@NotNull final String appProperties) {
+            this.appProperties = appProperties;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder contentHintsIndexableText(@NotNull final String contentHintsIndexableText) {
+            this.contentHintsIndexableText = contentHintsIndexableText;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder contentHintsThumbnailImage(@NotNull final String contentHintsThumbnailImage) {
+            this.contentHintsThumbnailImage = contentHintsThumbnailImage;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder contentHintsThumbnailMimeType(@NotNull final String contentHintsThumbnailMimeType) {
+            this.contentHintsThumbnailMimeType = contentHintsThumbnailMimeType;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder copyRequiresWriterPermission(@NotNull final String copyRequiresWriterPermission) {
+            this.copyRequiresWriterPermission = copyRequiresWriterPermission;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder createdTime(@NotNull final String createdTime) {
+            this.createdTime = createdTime;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder description(@NotNull final String description) {
+            this.description = description;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder folderColorRgb(@NotNull final String folderColorRgb) {
+            this.folderColorRgb = folderColorRgb;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder id(@NotNull final String id) {
+            this.id = id;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder mimeType(@NotNull final String mimeType) {
+            this.mimeType = mimeType;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder modifiedTime(@NotNull final String modifiedTime) {
+            this.modifiedTime = modifiedTime;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder name(@NotNull final String name) {
+            this.name = name;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder originalFilename(@NotNull final String originalFilename) {
+            this.originalFilename = originalFilename;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder parents(@NotNull final String parents) {
+            this.parents = parents;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder properties(@NotNull final String properties) {
+            this.properties = properties;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder starred(@NotNull final String starred) {
+            this.starred = starred;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder viewedByMeTime(@NotNull final String viewedByMeTime) {
+            this.viewedByMeTime = viewedByMeTime;
+            return this;
+        }
+
+        public CreateFileInputs.CreateFileInputsBuilder commonInputs(@NotNull final GoogleDriveCommonInputs commonInputs) {
+            this.commonInputs = commonInputs;
+            return this;
+        }
+
+        @NotNull
+        public CreateFileInputs.CreateFileInputsBuilder writersCanShare(@NotNull final String writersCanShare) {
+            this.writersCanShare = writersCanShare;
+            return this;
+        }
+    }
+    public CreateFileInputs build() {
+        return new CreateFileInputs(uploadType, ignoreDefaultVisibility, keepRevisionForever, ocrLanguage, supportsTeamDrives,
+                useContentAsIndexableText, appProperties, contentHintsIndexableText, contentHintsThumbnailImage,
+                contentHintsThumbnailMimeType, copyRequiresWriterPermission, createdTime, description, folderColorRgb,
+                id, mimeType, modifiedTime, name, originalFilename, parents, properties, starred, viewedByMeTime, writersCanShare);
+    }
 }
