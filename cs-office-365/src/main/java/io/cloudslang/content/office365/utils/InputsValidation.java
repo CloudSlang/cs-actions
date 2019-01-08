@@ -30,7 +30,6 @@ import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.P
 import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.USERNAME;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.*;
-import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.IS_READ_RECEIPT_REQUESTED;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;

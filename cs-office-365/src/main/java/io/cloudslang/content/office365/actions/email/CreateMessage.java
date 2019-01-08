@@ -189,9 +189,9 @@ public class CreateMessage {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
-           // final String returnMessageId = JsonService.evaluateJsonPathQuery(returnMessage, "id").toString();
+            final String returnMessageId = JsonService.evaluateJsonPathQuery(returnMessage, "id").toString();
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-        //    results.put(MESSAGE_ID, returnMessageId);
+            results.put(MESSAGE_ID, returnMessageId);
             return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
