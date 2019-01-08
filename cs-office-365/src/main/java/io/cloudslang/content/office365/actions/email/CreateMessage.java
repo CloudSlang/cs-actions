@@ -19,6 +19,7 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.json.services.JsonService;
 import io.cloudslang.content.office365.entities.CreateMessageInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
@@ -62,7 +63,8 @@ public class CreateMessage {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = DOCUMENT, description = DOCUMENT_DESC),
                     @Output(value = EXCEPTION, description = CREATE_MESSAGE_EXCEPTION_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = MESSAGE_ID, description = MESSAGE_ID_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -187,7 +189,10 @@ public class CreateMessage {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
-            return getOperationResults(result,returnMessage, returnMessage, returnMessage);
+           // final String returnMessageId = JsonService.evaluateJsonPathQuery(returnMessage, "id").toString();
+            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+        //    results.put(MESSAGE_ID, returnMessageId);
+            return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

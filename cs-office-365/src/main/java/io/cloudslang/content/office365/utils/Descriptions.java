@@ -142,5 +142,6 @@ public class Descriptions {
         public static final String CREATE_MESSAGE_EXCEPTION_DESC = "An error message in case there was an error while creating the message.";
         public static final String CREATE_MESSAGE_RETURN_RESULT_DESC = "The body of the created message.";
         public static final String DOCUMENT_DESC = "The body of the created message.";
+        public static final String MESSAGE_ID_DESC = "The Id of the created message";
     }
 }
