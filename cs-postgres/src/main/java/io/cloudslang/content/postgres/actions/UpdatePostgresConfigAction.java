@@ -1,6 +1,18 @@
+/*
+ * (c) Copyright 2019 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.postgres.actions;
-
-import java.util.Map;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -11,12 +23,14 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.postgres.services.ConfigService;
 
+import java.util.Map;
+
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.postgres.utils.Constants.*;
-import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 
 
 public class UpdatePostgresConfigAction {
@@ -24,20 +38,19 @@ public class UpdatePostgresConfigAction {
     /**
      * Updates the Postgres config postgresql.conf
      *
-     * @param installationPath     The full path to the PostgreSQL configuration file in the local machine to be updated
-     * @param listenAddresses     The list of addresses where the PostgreSQL database listens
-     * @param port                 The port the PostgreSQL database should listen.
-     * @param ssl                  Enable SSL connections.
-     * @param sslCaFile            Name of the file containing the SSL server certificate authority (CA).
-     * @param sslCertFile          Name of the file containing the SSL server certificate.
-     * @param sslKeyFile           Name of the file containing the SSL server private key.
-     * @param maxConnections       The maximum number of client connections allowed.
-     * @param sharedBuffers        Determines how much memory is dedicated to PostgreSQL to use for caching data.
-     * @param effectiveCacheSize   Effective cache size.
-     * @param autovacuum           Enable/disable autovacuum. The autovacuum process takes care of several maintenance
-     *                             chores inside your database that you really need.
-     * @param workMem              Memory used for sorting and queries.
-     *
+     * @param installationPath   The full path to the PostgreSQL configuration file in the local machine to be updated
+     * @param listenAddresses    The list of addresses where the PostgreSQL database listens
+     * @param port               The port the PostgreSQL database should listen.
+     * @param ssl                Enable SSL connections.
+     * @param sslCaFile          Name of the file containing the SSL server certificate authority (CA).
+     * @param sslCertFile        Name of the file containing the SSL server certificate.
+     * @param sslKeyFile         Name of the file containing the SSL server private key.
+     * @param maxConnections     The maximum number of client connections allowed.
+     * @param sharedBuffers      Determines how much memory is dedicated to PostgreSQL to use for caching data.
+     * @param effectiveCacheSize Effective cache size.
+     * @param autovacuum         Enable/disable autovacuum. The autovacuum process takes care of several maintenance
+     *                           chores inside your database that you really need.
+     * @param workMem            Memory used for sorting and queries.
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */

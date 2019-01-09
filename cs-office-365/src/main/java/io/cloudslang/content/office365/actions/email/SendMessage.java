@@ -55,7 +55,7 @@ public class SendMessage {
 
     @Action(name = "Send message based on an ID",
             outputs = {
-                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC ),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
@@ -71,8 +71,8 @@ public class SendMessage {
 
                                        @Param(value = PROXY_HOST, description = MESSAGE_ID_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
-                                       @Param(value = PROXY_USERNAME,description = PROXY_USERNAME_DESC) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, encrypted = true,description = PROXY_PASSWORD_DESC) String proxyPassword,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
 
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,
@@ -103,7 +103,7 @@ public class SendMessage {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessages = verifyGetMessageInputs(messageId, userPrincipalName, userId, proxyPort, trustAllRoots, connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute ,connectionsMaxTotal);
+        final List<String> exceptionMessages = verifyGetMessageInputs(messageId, userPrincipalName, userId, proxyPort, trustAllRoots, connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }

@@ -19,8 +19,7 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.json.services.JsonService;
-import io.cloudslang.content.office365.entities.CreateMessageInputs;
+import io.cloudslang.content.office365.entities.DeleteMessageInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -34,37 +33,31 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.office365.services.EmailServiceImpl.createMessage;
+import static io.cloudslang.content.office365.services.EmailServiceImpl.deleteMessage;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
-import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.*;
-import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.FAILURE_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.SUCCESS_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.STATUS_CODE_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.*;
-import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.BODY;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
-import static io.cloudslang.content.office365.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.office365.utils.InputsValidation.verifyCreateMessageInputs;
+import static io.cloudslang.content.office365.utils.InputsValidation.verifyGetMessageInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class CreateMessage {
-    @Action(name = "Create a draft of a new message for Office 365",
+
+public class DeleteMessage {
+    @Action(name = "Delete message from Office 365",
             outputs = {
-                    @Output(value = RETURN_RESULT, description = CREATE_MESSAGE_RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = DOCUMENT, description = DOCUMENT_DESC),
-                    @Output(value = EXCEPTION, description = CREATE_MESSAGE_EXCEPTION_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = MESSAGE_ID, description = MESSAGE_ID_DESC)
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -73,54 +66,29 @@ public class CreateMessage {
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = USER_ID, description = USER_ID_DESC) String userId,
+                                       @Param(value = MESSAGE_ID, required = true, description = MESSAGE_ID_DESC) String messageId,
                                        @Param(value = FOLDER_ID, description = FOLDER_ID_DESC) String folderId,
-                                       @Param(value = BCC_RECIPIENTS, description = BCCC_RECIPIENTS_DESC) String bccRecipients,
-                                       @Param(value = CATEGORIES, description = CATEGORIES_DESC) String categories,
-                                       @Param(value = CC_RECIPIENTS, description = CC_RECIPIENTS_DESC) String ccRecipients,
-                                       @Param(value = FROM, required = true, description = FROM_DESC) String from,
-                                       @Param(value = IMPORTANCE, description = IMPORTANCE_DESC) String importance,
-                                       @Param(value = INFERENCE_CLASSIFICATION, description = INFERENCE_CLASSIFICATION_DESC) String inferenceClassification,
-                                       @Param(value = INTERNET_MESSAGE_ID, description = INTERNET_MESSAGE_ID_DESC) String internetMessageId,
-                                       @Param(value = IS_READ, description = IS_READ_DESC) String isRead,
-                                       @Param(value = REPLY_TO, description = REPLY_TO_DESC) String replyTo,
-                                       @Param(value = SENDER, required = true, description = SENDER_DESC) String sender,
-                                       @Param(value = TO_RECIPIENTS, required = true, description = TO_RECIPIENTS_DESC) String toRecipients,
-                                       @Param(value = BODY, description = BODY_DESC) String body,
-                                       @Param(value = IS_DELIVERY_RECEIPT_REQUESTED, description = IS_DELIVERY_RECEIPT_REQUESTED_DESC) String isDeliveryReceiptRequested,
-                                       @Param(value = IS_READ_RECEIPT_REQUESTED, description = IS_READ_RECEIPT_REQUESTED_DESC) String isReadReceiptRequested,
-                                       @Param(value = SUBJECT, description = SUBJECT_DESC) String subject,
-                                       @Param(value = PROXY_HOST) String proxyHost,
-                                       @Param(value = PROXY_PORT) String proxyPort,
-                                       @Param(value = PROXY_USERNAME) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
+
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,
                                        @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
                                        @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
+
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
+                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSC_CHARACTER_SET_DESC) String responseCharacterSet) {
+
         userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         userId = defaultIfEmpty(userId, EMPTY);
         folderId = defaultIfEmpty(folderId, EMPTY);
-        bccRecipients = defaultIfEmpty(bccRecipients, EMPTY);
-        categories = defaultIfEmpty(categories, EMPTY);
-        ccRecipients = defaultIfEmpty(ccRecipients, EMPTY);
-        from = defaultIfEmpty(from, EMPTY);
-        importance = defaultIfEmpty(importance, EMPTY);
-        inferenceClassification = defaultIfEmpty(inferenceClassification, EMPTY);
-        internetMessageId = defaultIfEmpty(internetMessageId, EMPTY);
-        isRead = defaultIfEmpty(isRead, BOOLEAN_TRUE);
-        replyTo = defaultIfEmpty(replyTo, EMPTY);
-        sender = defaultIfEmpty(sender, EMPTY);
-        toRecipients = defaultIfEmpty(toRecipients, EMPTY);
-        body = defaultIfEmpty(body, EMPTY);
-        isDeliveryReceiptRequested = defaultIfEmpty(isDeliveryReceiptRequested, BOOLEAN_FALSE);
-        isReadReceiptRequested = defaultIfEmpty(isReadReceiptRequested, BOOLEAN_FALSE);
-        subject = defaultIfEmpty(subject, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -135,38 +103,19 @@ public class CreateMessage {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
-        importance = defaultIfEmpty(importance, DEFAULT_IMPORTANCE);
-        inferenceClassification = defaultIfEmpty(inferenceClassification, DEFAULT_INFERENCE_CLASSIFICATION);
+        final List<String> exceptionMessages = verifyGetMessageInputs(messageId, userPrincipalName, userId, proxyPort,
+                trustAllRoots, connectTimeout, socketTimeout, keepAlive,
+                connectionsMaxPerRoute, connectionsMaxTotal);
 
-        final List<String> exceptionMessage = verifyCommonInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
-                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        if (!exceptionMessage.isEmpty()) {
-            return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
-        }
-        final List<String> exceptionMessages = verifyCreateMessageInputs(sender, importance, toRecipients, isRead,
-                isDeliveryReceiptRequested, isReadReceiptRequested, inferenceClassification);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
+
         try {
-            final Map<String, String> result = createMessage(CreateMessageInputs.builder()
+            final Map<String, String> result = deleteMessage(DeleteMessageInputs.builder()
+                    .messageId(messageId)
                     .folderId(folderId)
-                    .bccRecipients(bccRecipients)
-                    .categories(categories)
-                    .ccRecipients(ccRecipients)
-                    .from(from)
-                    .importance(importance)
-                    .inferenceClassification(inferenceClassification)
-                    .internetMessageId(internetMessageId)
-                    .isRead(isRead)
-                    .replyTo(replyTo)
-                    .sender(sender)
-                    .toRecipients(toRecipients)
-                    .body(body)
-                    .isDeliveryReceiptRequested(isDeliveryReceiptRequested)
-                    .isReadReceiptRequested(isReadReceiptRequested)
-                    .subject(subject)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
                             .connectionsMaxPerRoute(connectionsMaxPerRoute)
@@ -178,6 +127,7 @@ public class CreateMessage {
                             .connectionsMaxTotal(connectionsMaxTotal)
                             .connectionsMaxPerRoute(connectionsMaxPerRoute)
                             .keepAlive(keepAlive)
+                            .socketTimeout(socketTimeout)
                             .responseCharacterSet(responseCharacterSet)
                             .connectTimeout(connectTimeout)
                             .trustAllRoots(trustAllRoots)
@@ -189,12 +139,13 @@ public class CreateMessage {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
-            final String returnMessageId = JsonService.evaluateJsonPathQuery(returnMessage, "id").toString();
-            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            results.put(MESSAGE_ID, returnMessageId);
-            return results;
+            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
     }
 }
+
+
+
+

@@ -91,7 +91,8 @@ public class Descriptions {
 
         public static final String RETURN_RESULT_DESC = "The authorization token for Office 365.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
-        public static final String AUTH_TOKEN_TYPE_DESC = "The returned authentication token type.";
+        public static final String AUTH_TOKEN_DESC = "The authentication token.";
+        public static final String AUTH_TOKEN_TYPE_DESC = "The authentication token type.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while generating the token.";
 
         public static final String SUCCESS_DESC = "Token generated successfully.";
@@ -141,5 +142,6 @@ public class Descriptions {
         public static final String CREATE_MESSAGE_EXCEPTION_DESC = "An error message in case there was an error while creating the message.";
         public static final String CREATE_MESSAGE_RETURN_RESULT_DESC = "The body of the created message.";
         public static final String DOCUMENT_DESC = "The body of the created message.";
+        public static final String MESSAGE_ID_DESC = "The Id of the created message";
     }
 }
