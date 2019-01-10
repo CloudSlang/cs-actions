@@ -96,8 +96,8 @@ public class EmailServiceImpl {
     }
 
     @NotNull
-    private static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
-                                            @NotNull final Office365CommonInputs commonInputs) {
+    static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
+                                    @NotNull final Office365CommonInputs commonInputs) {
         setProxy(httpClientInputs,
                 commonInputs.getProxyHost(),
                 commonInputs.getProxyPort(),

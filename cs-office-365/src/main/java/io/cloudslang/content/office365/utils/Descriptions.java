@@ -143,4 +143,17 @@ public class Descriptions {
         public static final String CREATE_MESSAGE_RETURN_RESULT_DESC = "The body of the created message.";
         public static final String DOCUMENT_DESC = "The body of the created message.";
     }
+
+    public static class CreateUser {
+        public static final String ACCOUNT_ENABLED_DESC = "true if the account is enabled; otherwise, false.";
+        public static final String DISPLAY_NAME_DESC = "The name to display in the address book for the user.";
+        public static final String ON_PREMISES_IMMUTABLE_ID_DESC = "Only needs to be specified when creating a new user account if you are using " +
+                "a federated domain for the user's userPrincipalName (UPN) property.";
+        public static final String MAIL_NICKNAME_DESC = "The mail alias for the user.";
+        public static final String CREATE_USER_PRINCIPAL_NAME_DESC = "The user principal name (someuser@contoso.com).";
+        public static final String FORCE_CHANGE_PASSWORD_DESC = "true if the user must change her password on the next login; otherwise false.";
+        public static final String CREATE_USER_PASSWORD_DESC = "The password for the user. This property is required when a user is created." +
+                " It can be updated, but the user will be required to change the password on the next login." +
+                " The password must satisfy minimum requirements as specified by the user’s passwordPolicies property. By default, a strong password is required.";
+    }
 }

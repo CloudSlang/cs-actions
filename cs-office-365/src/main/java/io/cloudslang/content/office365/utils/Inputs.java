@@ -42,6 +42,7 @@ public final class Inputs extends InputNames {
         public static final String FOLDER_ID = "folderId";
         public static final String O_DATA_QUERY = "oDataQuery";
     }
+
     public static class CreateMessage {
         public static final String BCC_RECIPIENTS = "bccRecipients";
         public static final String CATEGORIES = "categories";
@@ -58,6 +59,14 @@ public final class Inputs extends InputNames {
         public static final String IS_DELIVERY_RECEIPT_REQUESTED = "isDeliveryReceiptRequested";
         public static final String IS_READ_RECEIPT_REQUESTED = "isReadReceiptRequested";
         public static final String SUBJECT = "subject";
+    }
+
+    public static class CreateUser {
+        public static final String ACCOUNT_ENABLED = "accountEnabled";
+        public static final String DISPLAY_NAME = "displayName";
+        public static final String ON_PREMISES_IMMUTABLE_ID = "onPremisesImmutableId";
+        public static final String MAIL_NICKNAME = "mailNickname";
+        public static final String FORCE_CHANGE_PASSWORD = "forceChangePasswordNextSignIn";
     }
 }
 
