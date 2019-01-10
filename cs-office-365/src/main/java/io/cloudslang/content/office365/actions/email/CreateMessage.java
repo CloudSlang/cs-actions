@@ -193,7 +193,7 @@ public class CreateMessage {
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
 
             if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(STATUS_CODE) < 300) {
-                final String returnMessageId = JsonService.evaluateJsonPathQuery(returnMessage, "id").toString();
+                final String returnMessageId = JsonService.evaluateJsonPathQuery(returnMessage, ID).toString();
                 results.put(MESSAGE_ID, returnMessageId);
             }
 
