@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.office365.actions.user;
+package io.cloudslang.content.office365.actions.userManagement;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -74,12 +74,12 @@ public class CreateUser {
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
 
-                                       @Param(value = ACCOUNT_ENABLED, required = true, description = ACCOUNT_ENABLED_DESC) String accountEnabled,
+                                       @Param(value = ACCOUNT_ENABLED, description = ACCOUNT_ENABLED_DESC) String accountEnabled,
                                        @Param(value = DISPLAY_NAME, required = true, description = DISPLAY_NAME_DESC) String displayName,
-                                       @Param(value = ON_PREMISES_IMMUTABLE_ID, required = true, description = ON_PREMISES_IMMUTABLE_ID_DESC) String onPremisesImmutableId,
+                                       @Param(value = ON_PREMISES_IMMUTABLE_ID, description = ON_PREMISES_IMMUTABLE_ID_DESC) String onPremisesImmutableId,
                                        @Param(value = MAIL_NICKNAME, required = true, description = MAIL_NICKNAME_DESC) String mailNickname,
                                        @Param(value = USER_PRINCIPAL_NAME, required = true, description = CREATE_USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
-                                       @Param(value = FORCE_CHANGE_PASSWORD, required = true, description = FORCE_CHANGE_PASSWORD_DESC) String forceChangePassword,
+                                       @Param(value = FORCE_CHANGE_PASSWORD, description = FORCE_CHANGE_PASSWORD_DESC) String forceChangePassword,
                                        @Param(value = PASSWORD, required = true, description = CREATE_USER_PASSWORD_DESC) String password,
 
                                        @Param(value = PROXY_HOST) String proxyHost,
