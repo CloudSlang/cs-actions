@@ -18,11 +18,7 @@ import com.google.gson.Gson;
 import io.cloudslang.content.office365.entities.CreateMessageInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.office365.entities.createMessageModels.*;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import java.util.*;
 import static io.cloudslang.content.office365.utils.Constants.CONTENT_TYPE;
 
 public class PopulateMessageBody {
@@ -32,14 +28,38 @@ public class PopulateMessageBody {
         final CreateMessageBody messageBody = new CreateMessageBody();
         final List<String> categoriesList = new ArrayList<>();
         final Body body = new Body();
+        String bccRecipients;
+        String ccRecipients;
+        String replyTo;
 
         String[] categoryList = createMessageInputs.getCategories().split(delimiter);
         Collections.addAll(categoriesList, categoryList);
         messageBody.setCategories(categoriesList);
 
-        messageBody.setBccRecipients(recipientsCollection(createMessageInputs.getBccRecipients(), delimiter));
-        messageBody.setCcRecipients(recipientsCollection(createMessageInputs.getCcRecipients(), delimiter));
-        messageBody.setReplyTo(recipientsCollection(createMessageInputs.getReplyTo(), delimiter));
+        bccRecipients = createMessageInputs.getBccRecipients();
+        if (bccRecipients.isEmpty()){
+            messageBody.setBccRecipients(null);
+        }
+        else {
+        messageBody.setBccRecipients(recipientsCollection(bccRecipients, delimiter));
+        }
+
+        ccRecipients = createMessageInputs.getCcRecipients();
+        if (ccRecipients.isEmpty()){
+            messageBody.setCcRecipients(null);
+        }
+        else{
+        messageBody.setCcRecipients(recipientsCollection(ccRecipients, delimiter));
+        }
+
+        replyTo = createMessageInputs.getReplyTo();
+        if (replyTo.isEmpty()){
+            messageBody.setReplyTo(null);
+        }
+        else {
+        messageBody.setReplyTo(recipientsCollection(replyTo, delimiter));
+        }
+
         messageBody.setToRecipients(recipientsCollection(createMessageInputs.getToRecipients(), delimiter));
 
         body.setContentType(CONTENT_TYPE);
