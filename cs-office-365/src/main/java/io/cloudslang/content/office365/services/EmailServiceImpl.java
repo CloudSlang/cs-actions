@@ -38,7 +38,7 @@ public class EmailServiceImpl {
                 getMessageInputs.getMessageId(),
                 getMessageInputs.getFolderId()));
 
-        setCommonHttpInputs(httpClientInputs, commonInputs);
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
@@ -62,7 +62,7 @@ public class EmailServiceImpl {
                 commonInputs.getUserId(),
                 postMessageInputs.getMessageId()));
 
-        setCommonHttpInputs(httpClientInputs, commonInputs);
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
@@ -83,7 +83,7 @@ public class EmailServiceImpl {
                 commonInputs.getUserId(),
                 listMessagesInputs.getFolderId()));
 
-        setCommonHttpInputs(httpClientInputs, commonInputs);
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
@@ -94,30 +94,6 @@ public class EmailServiceImpl {
 
         return new HttpClientService().execute(httpClientInputs);
     }
-
-    @NotNull
-    private static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
-                                            @NotNull final Office365CommonInputs commonInputs) {
-        setProxy(httpClientInputs,
-                commonInputs.getProxyHost(),
-                commonInputs.getProxyPort(),
-                commonInputs.getProxyUsername(),
-                commonInputs.getProxyPassword());
-
-        setSecurityInputs(httpClientInputs,
-                commonInputs.getTrustAllRoots(),
-                commonInputs.getX509HostnameVerifier(),
-                commonInputs.getTrustKeystore(),
-                commonInputs.getTrustPassword());
-
-        setConnectionParameters(httpClientInputs,
-                commonInputs.getConnectTimeout(),
-                commonInputs.getSocketTimeout(),
-                commonInputs.getKeepAlive(),
-                commonInputs.getConnectionsMaxPerRoute(),
-                commonInputs.getConnectionsMaxTotal());
-    }
-
 
     @NotNull
     private static String getMessageUrl(@NotNull final String userPrincipalName,
@@ -156,7 +132,7 @@ public class EmailServiceImpl {
                 commonInputs.getUserId(),
                 createMessageInputs.getFolderId()));
 
-        setCommonHttpInputs(httpClientInputs, commonInputs);
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
@@ -203,7 +179,7 @@ public class EmailServiceImpl {
                 deleteMessageInputs.getMessageId(),
                 deleteMessageInputs.getFolderId()));
 
-        setCommonHttpInputs(httpClientInputs, commonInputs);
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(DELETE);

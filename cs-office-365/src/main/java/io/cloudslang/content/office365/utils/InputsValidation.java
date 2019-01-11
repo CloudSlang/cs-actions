@@ -30,6 +30,7 @@ import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.P
 import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.USERNAME;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.*;
+import static io.cloudslang.content.office365.utils.Inputs.CreateUser.*;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
@@ -92,6 +93,57 @@ public final class InputsValidation {
         addVerifyBoolean(exceptionMessages, keepAlive, KEEP_ALIVE);
         addVerifyNumber(exceptionMessages, connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE);
         addVerifyNumber(exceptionMessages, connectionsMaxTotal, CONNECTIONS_MAX_TOTAL);
+
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyCommonUserInputs(@Nullable final String proxyPort,
+                                                      @Nullable final String trust_all_roots,
+                                                      @Nullable final String connectTimeout,
+                                                      @Nullable final String socketTimeout,
+                                                      @Nullable final String keepAlive,
+                                                      @Nullable final String connectionsMaxPerRoute,
+                                                      @Nullable final String connectionsMaxTotal) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
+        addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
+        addVerifyNumber(exceptionMessages, connectTimeout, CONNECT_TIMEOUT);
+        addVerifyNumber(exceptionMessages, socketTimeout, SOCKET_TIMEOUT);
+        addVerifyBoolean(exceptionMessages, keepAlive, KEEP_ALIVE);
+        addVerifyNumber(exceptionMessages, connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE);
+        addVerifyNumber(exceptionMessages, connectionsMaxTotal, CONNECTIONS_MAX_TOTAL);
+
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyCreateUserInputs(@Nullable final String accountEnabled,
+                                                      @Nullable final String displayName,
+                                                      @Nullable final String mailNickname,
+                                                      @Nullable final String userPrincipalName,
+                                                      @Nullable final String forceChangePassword,
+                                                      @Nullable final String password,
+                                                      @Nullable final String proxyPort,
+                                                      @Nullable final String trust_all_roots,
+                                                      @Nullable final String connectTimeout,
+                                                      @Nullable final String socketTimeout,
+                                                      @Nullable final String keepAlive,
+                                                      @Nullable final String connectionsMaxPerRoute,
+                                                      @Nullable final String connectionsMaxTotal) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyNotNullOrEmpty(exceptionMessages, accountEnabled, ACCOUNT_ENABLED);
+        addVerifyBoolean(exceptionMessages, accountEnabled, ACCOUNT_ENABLED);
+        addVerifyNotNullOrEmpty(exceptionMessages, displayName, DISPLAY_NAME);
+        addVerifyNotNullOrEmpty(exceptionMessages, mailNickname, MAIL_NICKNAME);
+        addVerifyNotNullOrEmpty(exceptionMessages, userPrincipalName, USER_PRINCIPAL_NAME);
+        addVerifyNotNullOrEmpty(exceptionMessages, forceChangePassword, FORCE_CHANGE_PASSWORD);
+        addVerifyBoolean(exceptionMessages, forceChangePassword, FORCE_CHANGE_PASSWORD);
+        addVerifyNotNullOrEmpty(exceptionMessages, password, PASSWORD);
+
+        exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
 
         return exceptionMessages;
     }
