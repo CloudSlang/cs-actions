@@ -19,10 +19,6 @@ public class CreateUserBodyWithImmutableId extends CreateUserBody{
 
     private String onPremisesImmutableId;
 
-    public String getOnPremisesImmutableId() {
-        return onPremisesImmutableId;
-    }
-
     public void setOnPremisesImmutableId(String onPremisesImmutableId) {
         this.onPremisesImmutableId = onPremisesImmutableId;
     }

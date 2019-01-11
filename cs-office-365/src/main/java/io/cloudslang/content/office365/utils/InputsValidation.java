@@ -124,14 +124,27 @@ public final class InputsValidation {
                                                       @Nullable final String mailNickname,
                                                       @Nullable final String userPrincipalName,
                                                       @Nullable final String forceChangePassword,
-                                                      @Nullable final String password) {
+                                                      @Nullable final String password,
+                                                      @Nullable final String proxyPort,
+                                                      @Nullable final String trust_all_roots,
+                                                      @Nullable final String connectTimeout,
+                                                      @Nullable final String socketTimeout,
+                                                      @Nullable final String keepAlive,
+                                                      @Nullable final String connectionsMaxPerRoute,
+                                                      @Nullable final String connectionsMaxTotal) {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyNotNullOrEmpty(exceptionMessages, accountEnabled, ACCOUNT_ENABLED);
+        addVerifyBoolean(exceptionMessages, accountEnabled, ACCOUNT_ENABLED);
         addVerifyNotNullOrEmpty(exceptionMessages, displayName, DISPLAY_NAME);
         addVerifyNotNullOrEmpty(exceptionMessages, mailNickname, MAIL_NICKNAME);
         addVerifyNotNullOrEmpty(exceptionMessages, userPrincipalName, USER_PRINCIPAL_NAME);
         addVerifyNotNullOrEmpty(exceptionMessages, forceChangePassword, FORCE_CHANGE_PASSWORD);
+        addVerifyBoolean(exceptionMessages, forceChangePassword, FORCE_CHANGE_PASSWORD);
         addVerifyNotNullOrEmpty(exceptionMessages, password, PASSWORD);
+
+        exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
+
         return exceptionMessages;
     }
 

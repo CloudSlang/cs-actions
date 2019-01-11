@@ -28,16 +28,16 @@ import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Constants.APPLICATION_JSON;
 import static io.cloudslang.content.office365.utils.HttpUtils.getAuthHeaders;
 
-public class UserServiceImpl extends EmailServiceImpl{
+public class UserServiceImpl{
 
 
     @NotNull
     public static Map<String, String> createUser(@NotNull final CreateUserInputs createUserInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = createUserInputs.getCommonInputs();
-        httpClientInputs.setUrl("https://graph.microsoft.com/v1.0/users");
+        httpClientInputs.setUrl(CREATE_USER_REQUEST_URL);
 
-        setCommonHttpInputs(httpClientInputs, commonInputs);
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
