@@ -39,20 +39,23 @@ public class RemoteSecureCopyService {
 
             SCPCopier copier = new SCPCopier(remoteSecureCopyInputs);
 
-            boolean successfullyCopied;
-            if (StringUtils.isEmpty(remoteSecureCopyInputs.getSrcHost())){
+            boolean successfullyCopied = false;
+            boolean srcHostEmpty = StringUtils.isEmpty(remoteSecureCopyInputs.getSrcHost());
+            boolean destHostEmpty = StringUtils.isEmpty(remoteSecureCopyInputs.getDestHost());
+            if (srcHostEmpty && !destHostEmpty){
                 successfullyCopied = copier.copyFromLocalToRemote();
-            }
-            else {
+            } else if (!srcHostEmpty && destHostEmpty) {
+                successfullyCopied = copier.copyFromRemoteToLocal();
+            } else if (!srcHostEmpty && !destHostEmpty) {
                 successfullyCopied = copier.copyFromRemoteToRemote();
             }
-            if(successfullyCopied){
+            if (successfullyCopied) {
                 resultMessage = "File " + remoteSecureCopyInputs.getSrcPath() + " successfully copied to path " +
                         remoteSecureCopyInputs.getDestPath() + " on " + remoteSecureCopyInputs.getDestHost();
                 errorMessage = Constants.EMPTY_STRING;
                 returnCode = Constants.ReturnCodes.RETURN_CODE_SUCCESS;
 
-            }else{
+            } else {
                 resultMessage = Constants.NO_ACK_RECEIVED;
                 errorMessage = Constants.NO_ACK_RECEIVED;
                 returnCode = Constants.ReturnCodes.RETURN_CODE_FAILURE;

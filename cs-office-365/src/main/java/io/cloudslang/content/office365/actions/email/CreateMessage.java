@@ -188,10 +188,16 @@ public class CreateMessage {
                             .trustPassword(trustPassword)
                             .build())
                     .build());
+
             final String returnMessage = result.get(RETURN_RESULT);
-            final String returnMessageId = JsonService.evaluateJsonPathQuery(returnMessage, "id").toString();
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            results.put(MESSAGE_ID, returnMessageId);
+            final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+
+            if (statusCode >= 200 && statusCode < 300) {
+                final String returnMessageId = JsonService.evaluateJsonPathQuery(returnMessage, ID).toString();
+                results.put(MESSAGE_ID, returnMessageId);
+            }
+
             return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
