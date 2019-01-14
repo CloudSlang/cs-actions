@@ -79,7 +79,7 @@ public class CreateUser {
                                        @Param(value = DISPLAY_NAME, required = true, description = DISPLAY_NAME_DESC) String displayName,
                                        @Param(value = ON_PREMISES_IMMUTABLE_ID, description = ON_PREMISES_IMMUTABLE_ID_DESC) String onPremisesImmutableId,
                                        @Param(value = MAIL_NICKNAME, required = true, description = MAIL_NICKNAME_DESC) String mailNickname,
-                                       @Param(value = USER_PRINCIPAL_NAME, required = true, description = CREATE_USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
+                                       @Param(value = USER_PRINCIPAL_NAME_TO_CREATE, required = true, description = CREATE_USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = FORCE_CHANGE_PASSWORD, description = FORCE_CHANGE_PASSWORD_DESC) String forceChangePassword,
                                        @Param(value = PASSWORD, required = true, description = CREATE_USER_PASSWORD_DESC) String password,
 
