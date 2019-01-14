@@ -63,10 +63,10 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class CreateUser {
     @Action(name = "Create a new user for Office 365",
             outputs = {
-                    @Output(value = RETURN_RESULT, description = CREATE_MESSAGE_RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = CREATE_USER_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = DOCUMENT, description = DOCUMENT_DESC),
-                    @Output(value = EXCEPTION, description = CREATE_MESSAGE_EXCEPTION_DESC),
+                    @Output(value = DOCUMENT, description = CREATE_USER_DOCUMENT_DESC),
+                    @Output(value = EXCEPTION, description = CREATE_USER_EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
