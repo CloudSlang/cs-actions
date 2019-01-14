@@ -156,5 +156,8 @@ public class Descriptions {
         public static final String CREATE_USER_PASSWORD_DESC = "The password for the user. This property is required when a user is created." +
                 " It can be updated, but the user will be required to change the password on the next login." +
                 " The password must satisfy minimum requirements as specified by the user’s passwordPolicies property. By default, a strong password is required.";
+        public static final String CREATE_USER_RETURN_RESULT_DESC = "If successful, returns the complete API response.";
+        public static final String CREATE_USER_DOCUMENT_DESC = "The full API response in case of success";
+        public static final String CREATE_USER_EXCEPTION_DESC = "An error message in case there was an error while creating the user.";
     }
 }
