@@ -157,4 +157,10 @@ public class Descriptions {
                 " It can be updated, but the user will be required to change the password on the next login." +
                 " The password must satisfy minimum requirements as specified by the user’s passwordPolicies property. By default, a strong password is required.";
     }
+
+    public static class GetUser {
+        public static final String GET_USER_RETURN_RESULT_DESC = "The body of the created message.";
+        public static final String GET_USER_EXCEPTION_DESC = "An error message in case there was an error while retrieving the user properties and relationships.";
+    }
+
 }

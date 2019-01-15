@@ -60,4 +60,6 @@ public final class Constants {
     public static final String SEND_MESSAGE = "Email sent. For the delivery status please check the Delivery Report Email.";
     public static final String ID = "id";
     public static final String CREATE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users";
+    public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
+    public static final String $SELECT = "?$select=";
 }

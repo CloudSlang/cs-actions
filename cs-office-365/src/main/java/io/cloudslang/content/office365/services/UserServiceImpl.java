@@ -18,17 +18,18 @@ package io.cloudslang.content.office365.services;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.CreateUserInputs;
+import io.cloudslang.content.office365.entities.GetUserInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.office365.utils.PopulateUserBody;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 import static io.cloudslang.content.office365.utils.Constants.*;
-import static io.cloudslang.content.office365.utils.Constants.APPLICATION_JSON;
 import static io.cloudslang.content.office365.utils.HttpUtils.getAuthHeaders;
 
-public class UserServiceImpl{
+public class UserServiceImpl {
 
 
     @NotNull
@@ -50,5 +51,41 @@ public class UserServiceImpl{
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
         return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static Map<String, String> getUser(@NotNull final GetUserInputs getUserInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = getUserInputs.getCommonInputs();
+        httpClientInputs.setUrl(getUserUrl(getUserInputs));
+
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setContentType(APPLICATION_JSON);
+
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        return new HttpClientService().execute(httpClientInputs);
+
+    }
+
+    @NotNull
+    private static String getUserUrl(@NotNull final GetUserInputs getUserInputs) throws Exception {
+        String finalUrl;
+        if (!StringUtils.isEmpty(getUserInputs.getCommonInputs().getUserPrincipalName()))
+            finalUrl = GET_USER_REQUEST_URL + getUserInputs.getCommonInputs().getUserPrincipalName();
+        else
+            finalUrl = GET_USER_REQUEST_URL + getUserInputs.getCommonInputs().getUserId();
+
+        if (!StringUtils.isEmpty(getUserInputs.getoDataQuery()))
+            finalUrl = finalUrl + $SELECT + getUserInputs.getoDataQuery().replaceAll("\\s+","");
+
+        System.out.println(finalUrl);
+        return finalUrl;
     }
 }
