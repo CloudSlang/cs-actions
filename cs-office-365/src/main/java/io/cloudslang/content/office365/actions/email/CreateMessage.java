@@ -36,6 +36,7 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.office365.services.EmailServiceImpl.createMessage;
 import static io.cloudslang.content.office365.utils.Constants.*;
+import static io.cloudslang.content.office365.utils.Constants.USER_PRINCIPAL_NAME;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.*;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.FAILURE_DESC;

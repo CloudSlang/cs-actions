@@ -62,4 +62,5 @@ public final class Constants {
     public static final String CREATE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String $SELECT = "?$select=";
+    public static final String USER_PRINCIPAL_NAME = "userPrincipalName";
 }
