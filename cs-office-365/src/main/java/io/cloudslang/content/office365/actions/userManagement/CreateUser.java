@@ -81,12 +81,12 @@ public class CreateUser {
                                        @Param(value = MAIL_NICKNAME, required = true, description = MAIL_NICKNAME_DESC) String mailNickname,
                                        @Param(value = USER_PRINCIPAL_NAME_TO_CREATE, required = true, description = CREATE_USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = FORCE_CHANGE_PASSWORD, description = FORCE_CHANGE_PASSWORD_DESC) String forceChangePassword,
-                                       @Param(value = PASSWORD, required = true, description = CREATE_USER_PASSWORD_DESC) String password,
+                                       @Param(value = PASSWORD, encrypted = true, required = true, description = CREATE_USER_PASSWORD_DESC) String password,
 
-                                       @Param(value = PROXY_HOST) String proxyHost,
-                                       @Param(value = PROXY_PORT) String proxyPort,
-                                       @Param(value = PROXY_USERNAME) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
 
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,

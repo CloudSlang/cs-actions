@@ -74,17 +74,18 @@ public class UpdateUser {
                                        @Param(value = USER_PRINCIPAL_NAME_TO_UPDATE, description = UPDATE_USER_PRINCIPAL_NAME_TO_UPDATE_DESC) String userPrincipalNameToUpdate,
 
                                        @Param(value = ACCOUNT_ENABLED, description = ACCOUNT_ENABLED_DESC) String accountEnabled,
-                                       @Param(value = DISPLAY_NAME, required = true, description = DISPLAY_NAME_DESC) String displayName,
+                                       @Param(value = DISPLAY_NAME, description = DISPLAY_NAME_DESC) String displayName,
                                        @Param(value = ON_PREMISES_IMMUTABLE_ID, description = UPDATE_USER_ON_PREMISES_IMMUTABLE_ID_DESC) String onPremisesImmutableId,
-                                       @Param(value = MAIL_NICKNAME, required = true, description = MAIL_NICKNAME_DESC) String mailNickname,
-                                       @Param(value = USER_PRINCIPAL_NAME_TO_UPDATE_WITH, required = true, description = CREATE_USER_PRINCIPAL_NAME_TO_UPDATE_WITH_DESC) String userPrincipalNameToUpdateWith,
+                                       @Param(value = MAIL_NICKNAME, description = MAIL_NICKNAME_DESC) String mailNickname,
+                                       @Param(value = USER_PRINCIPAL_NAME_TO_UPDATE_WITH, description = CREATE_USER_PRINCIPAL_NAME_TO_UPDATE_WITH_DESC) String userPrincipalNameToUpdateWith,
                                        @Param(value = FORCE_CHANGE_PASSWORD, description = FORCE_CHANGE_PASSWORD_DESC) String forceChangePassword,
-                                       @Param(value = PASSWORD, required = true, description = UPDATE_USER_PASSWORD_DESC) String password,
+                                       @Param(value = PASSWORD, encrypted = true, description = UPDATE_USER_PASSWORD_DESC) String password,
 
-                                       @Param(value = PROXY_HOST) String proxyHost,
-                                       @Param(value = PROXY_PORT) String proxyPort,
-                                       @Param(value = PROXY_USERNAME) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
+
 
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,
