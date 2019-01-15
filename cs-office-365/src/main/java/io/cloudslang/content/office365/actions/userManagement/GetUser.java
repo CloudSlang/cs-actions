@@ -36,7 +36,6 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.office365.services.UserServiceImpl.getUser;
 import static io.cloudslang.content.office365.utils.Constants.*;
-import static io.cloudslang.content.office365.utils.Constants.USER_PRINCIPAL_NAME;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.DOCUMENT_DESC;
@@ -44,8 +43,7 @@ import static io.cloudslang.content.office365.utils.Descriptions.CreateUser.CREA
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.FAILURE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.SUCCESS_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
-import static io.cloudslang.content.office365.utils.Descriptions.GetUser.GET_USER_EXCEPTION_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetUser.GET_USER_RETURN_RESULT_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetUser.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -66,8 +64,8 @@ public class GetUser {
                     @Output(value = RETURN_RESULT, description = GET_USER_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE),
                     @Output(value = DOCUMENT, description = DOCUMENT_DESC),
-                    @Output(value = USER_PRINCIPAL_NAME_OUTPUT, description = DOCUMENT_DESC),
-                    @Output(value = ID_OUTPUT, description = DOCUMENT_DESC),
+                    @Output(value = USER_PRINCIPAL_NAME_OUTPUT, description = USER_PRINCIPAL_NAME_OUTPUT_DESC),
+                    @Output(value = ID_OUTPUT, description = ID_OUTPUT_DESC),
                     @Output(value = EXCEPTION, description = GET_USER_EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
             },
