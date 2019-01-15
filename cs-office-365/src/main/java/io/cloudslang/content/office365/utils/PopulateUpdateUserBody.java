@@ -1,6 +1,5 @@
 package io.cloudslang.content.office365.utils;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import io.cloudslang.content.office365.entities.CreateUserInputs;
@@ -11,7 +10,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class PopulateUpdateUserBody {
 
     public static String populateUpdateUserBody(CreateUserInputs createUserInputs) {
-        JsonObject updateUserBody = new JsonObject();
+        final JsonObject updateUserBody = new JsonObject();
         updateUserBody.addProperty(ACCOUNT_ENABLED_BODY, Boolean.getBoolean(createUserInputs.getAccountEnabled()));
         updateUserBody.add(PASSWORD_PROFILE_BODY, updatePasswordProfile(createUserInputs.getForceChangePassword(), createUserInputs.getPassword()));
 
@@ -24,12 +23,11 @@ public class PopulateUpdateUserBody {
         if (!isEmpty(createUserInputs.getOnPremisesImmutableId()))
             updateUserBody.addProperty(ON_PREMISES_IMMUTABLE_ID_BODY, createUserInputs.getOnPremisesImmutableId());
 
-        Gson gson = new GsonBuilder().create();
-        return gson.toJson(updateUserBody);
+        return new GsonBuilder().create().toJson(updateUserBody);
     }
 
     private static JsonObject updatePasswordProfile(String forceChangePassword, String password) {
-        JsonObject passwordProfile = new JsonObject();
+        final JsonObject passwordProfile = new JsonObject();
         passwordProfile.addProperty(FORCE_CHANGE_PASSWORD_NEXT_SIGN_IN_BODY, Boolean.getBoolean(forceChangePassword));
         if (!isEmpty(password)) {
             passwordProfile.addProperty(PASSWORD_BODY, password);

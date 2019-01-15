@@ -74,7 +74,7 @@ public class UserServiceImpl {
         return new HttpClientService().execute(httpClientInputs);
     }
 
-    private static String updateUserUrl(String userPrincipalNameToUpdate, String userIdToUpdate) throws Exception {
+    private static String updateUserUrl(@NotNull final String userPrincipalNameToUpdate, @NotNull final String userIdToUpdate) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
         uriBuilder.setPath(updateUserPath(userPrincipalNameToUpdate, userIdToUpdate));
 
