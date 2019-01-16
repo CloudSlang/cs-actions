@@ -18,9 +18,11 @@ package io.cloudslang.content.office365.services;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.CreateUserInputs;
+import io.cloudslang.content.office365.entities.GetUserInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.office365.utils.PopulateUpdateUserBody;
 import io.cloudslang.content.office365.utils.PopulateUserBody;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,6 +53,38 @@ public class UserServiceImpl {
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
         return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static Map<String, String> getUser(@NotNull final GetUserInputs getUserInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = getUserInputs.getCommonInputs();
+        httpClientInputs.setUrl(getUserUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(), getUserInputs.getoDataQuery()));
+
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setContentType(APPLICATION_JSON);
+
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    private static String getUserUrl(String userPrincipalName, String userId, String oDataQuery) throws Exception {
+        String finalUrl;
+        if (!StringUtils.isEmpty(userPrincipalName))
+            finalUrl = GET_USER_REQUEST_URL + userPrincipalName;
+        else
+            finalUrl = GET_USER_REQUEST_URL + userId;
+        if (!StringUtils.isEmpty(oDataQuery))
+            finalUrl = finalUrl + SELECT_PATH + oDataQuery.replaceAll("\\s+", "");
+        return finalUrl;
     }
 
     @NotNull

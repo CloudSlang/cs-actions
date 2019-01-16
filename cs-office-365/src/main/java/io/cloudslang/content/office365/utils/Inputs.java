@@ -48,10 +48,10 @@ public final class Inputs extends InputNames {
         public static final String CATEGORIES = "categories";
         public static final String CC_RECIPIENTS = "ccRecipients";
         public static final String FROM = "from";
-        public static final String IMPORTANCE ="importance";
+        public static final String IMPORTANCE = "importance";
         public static final String INFERENCE_CLASSIFICATION = "inferenceClassification";
         public static final String INTERNET_MESSAGE_ID = "internetMessageId";
-        public static final String IS_READ ="isRead";
+        public static final String IS_READ = "isRead";
         public static final String REPLY_TO = "replyTo";
         public static final String SENDER = "sender";
         public static final String TO_RECIPIENTS = "toRecipients";
@@ -70,7 +70,7 @@ public final class Inputs extends InputNames {
         public static final String USER_PRINCIPAL_NAME_TO_CREATE = "userPrincipalNameToCreate";
     }
 
-    public static class UpdateUser{
+    public static class UpdateUser {
         public static final String USER_ID_TO_UPDATE = "userIdToUpdate";
         public static final String USER_PRINCIPAL_NAME_TO_UPDATE = "userPrincipalNameToUpdate";
         public static final String USER_PRINCIPAL_NAME_TO_UPDATE_WITH = "userPrincipalNameToUpdateWith";
