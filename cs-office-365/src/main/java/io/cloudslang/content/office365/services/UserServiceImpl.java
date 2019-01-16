@@ -80,11 +80,9 @@ public class UserServiceImpl {
             finalUrl = GET_USER_REQUEST_URL + getUserInputs.getCommonInputs().getUserPrincipalName();
         else
             finalUrl = GET_USER_REQUEST_URL + getUserInputs.getCommonInputs().getUserId();
-
         if (!StringUtils.isEmpty(getUserInputs.getoDataQuery()))
-            finalUrl = finalUrl + $SELECT + getUserInputs.getoDataQuery().replaceAll("\\s+","");
+            finalUrl = finalUrl + $SELECT + getUserInputs.getoDataQuery().replaceAll("\\s+", "");
 
-        System.out.println(finalUrl);
         return finalUrl;
     }
 }
