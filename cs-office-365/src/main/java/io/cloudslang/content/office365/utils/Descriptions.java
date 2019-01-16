@@ -60,7 +60,7 @@ public class Descriptions {
         public static final String USER_PRINCIPAL_NAME_DESC = "The email address of the user to perform the action on. " +
                 "The input is mutually exclusive with the userId input.";
         public static final String USER_ID_DESC = "The ID of the user to perform the action on.";
-        public static final String O_DATA_QUERY_DESC = "A list of query parameters in the form of a coma delimited list. " +
+        public static final String O_DATA_QUERY_DESC = "A list of valid query parameters in the form of a coma delimited list. " +
                 "Example: id,internetMessageHeaders";
         public static final String MESSAGE_ID_DESC = "The ID of the message to retrieve.";
         public static final String FOLDER_ID_DESC = "The ID of the folder which contains the message to retrieve.";
@@ -159,5 +159,11 @@ public class Descriptions {
         public static final String CREATE_USER_RETURN_RESULT_DESC = "If successful, returns the complete API response.";
         public static final String CREATE_USER_DOCUMENT_DESC = "The full API response in case of success";
         public static final String CREATE_USER_EXCEPTION_DESC = "An error message in case there was an error while creating the user.";
+    }
+
+    public static class ListUser{
+        public static final String LIST_USERS_RESULT_DESC = "If successful, returns the complete API response.";
+        public static final String LIST_USERS_DOCUMENT_DESC = "The full API response in case of success";
+        public static final String LIST_USERS_EXCEPTION_DESC = "An error message in case there was an error while retrieving the list of user objects.";
     }
 }
