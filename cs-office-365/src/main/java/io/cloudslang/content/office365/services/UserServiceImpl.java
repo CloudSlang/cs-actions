@@ -18,6 +18,7 @@ package io.cloudslang.content.office365.services;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.CreateUserInputs;
+import io.cloudslang.content.office365.entities.DeleteUserInputs;
 import io.cloudslang.content.office365.entities.GetUserInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.office365.utils.PopulateUpdateUserBody;
@@ -30,6 +31,15 @@ import java.util.Map;
 
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
+import static io.cloudslang.content.office365.utils.Constants.ANONYMOUS;
+import static io.cloudslang.content.office365.utils.Constants.APPLICATION_JSON;
+import static io.cloudslang.content.office365.utils.Constants.CHANGEIT;
+import static io.cloudslang.content.office365.utils.Constants.CREATE_USER_REQUEST_URL;
+import static io.cloudslang.content.office365.utils.Constants.DEFAULT_JAVA_KEYSTORE;
+import static io.cloudslang.content.office365.utils.Constants.DELETE;
+import static io.cloudslang.content.office365.utils.Constants.DELETE_USER_REQUEST_URL;
+import static io.cloudslang.content.office365.utils.Constants.POST;
+import static io.cloudslang.content.office365.utils.HttpUtils.getAuthHeaders;
 
 public class UserServiceImpl {
 
@@ -115,4 +125,36 @@ public class UserServiceImpl {
         return uriBuilder.build().toURL().toString();
     }
 
+
+    @NotNull
+    public static Map<String, String> deleteUser(@NotNull final DeleteUserInputs deleteUserInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = deleteUserInputs.getCommonInputs();
+        httpClientInputs.setUrl(getDeleteUserUrl(deleteUserInputs));
+
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(DELETE);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setContentType(APPLICATION_JSON);
+
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static String getDeleteUserUrl(@NotNull final DeleteUserInputs deleteUserInputs) {
+        String finalUrl = DELETE_USER_REQUEST_URL;
+
+        if (!deleteUserInputs.getCommonInputs().getUserPrincipalName().isEmpty())
+            finalUrl = finalUrl + deleteUserInputs.getCommonInputs().getUserPrincipalName();
+        else
+            finalUrl = finalUrl + deleteUserInputs.getCommonInputs().getUserId();
+
+        return finalUrl;
+    }
 }
