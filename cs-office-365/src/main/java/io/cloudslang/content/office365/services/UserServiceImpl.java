@@ -29,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 import static io.cloudslang.content.office365.utils.Constants.*;
-import static io.cloudslang.content.office365.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
 
 public class UserServiceImpl {
@@ -85,7 +84,6 @@ public class UserServiceImpl {
             finalUrl = GET_USER_REQUEST_URL + getUserInputs.getCommonInputs().getUserId();
         if (!StringUtils.isEmpty(getUserInputs.getoDataQuery()))
             finalUrl = finalUrl + $SELECT + getUserInputs.getoDataQuery().replaceAll("\\s+", "");
-
         return finalUrl;
     }
 

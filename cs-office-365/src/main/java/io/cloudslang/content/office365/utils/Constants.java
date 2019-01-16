@@ -62,6 +62,7 @@ public final class Constants {
     public static final String UPDATE_USER = "User updated successfully.";
     public static final String ID = "id";
     public static final String CREATE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users";
+    public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String ACCOUNT_ENABLED_BODY = "accountEnabled";
     public static final String PASSWORD_PROFILE_BODY = "passwordProfile";
     public static final String MAIL_NICKNAME_BODY = "mailNickname";
@@ -70,4 +71,5 @@ public final class Constants {
     public static final String ON_PREMISES_IMMUTABLE_ID_BODY = "onPremisesImmutableId";
     public static final String FORCE_CHANGE_PASSWORD_NEXT_SIGN_IN_BODY = "forceChangePasswordNextSignIn";
     public static final String PASSWORD_BODY = "password";
+    public static final String $SELECT = "?$select=";
 }
