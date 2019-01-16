@@ -149,6 +149,28 @@ public final class InputsValidation {
     }
 
     @NotNull
+    public static List<String> verifyUpdateUserInputs(@Nullable final String accountEnabled,
+                                                      @Nullable final String userIdToUpdate,
+                                                      @Nullable final String userPrincipalNameToUpdate,
+                                                      @Nullable final String forceChangePassword,
+                                                      @Nullable final String proxyPort,
+                                                      @Nullable final String trust_all_roots,
+                                                      @Nullable final String connectTimeout,
+                                                      @Nullable final String socketTimeout,
+                                                      @Nullable final String keepAlive,
+                                                      @Nullable final String connectionsMaxPerRoute,
+                                                      @Nullable final String connectionsMaxTotal) {
+
+        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalNameToUpdate, userIdToUpdate, proxyPort, trust_all_roots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+
+        addVerifyBoolean(exceptionMessages, accountEnabled, ACCOUNT_ENABLED);
+        addVerifyBoolean(exceptionMessages, forceChangePassword, FORCE_CHANGE_PASSWORD);
+
+        return exceptionMessages;
+    }
+
+    @NotNull
     public static List<String> verifyCreateMessageInputs(@Nullable final String sender, @Nullable final String importance,
                                                          @Nullable final String toRecipients, @Nullable final String isRead,
                                                          @Nullable final String isDeliveryReceiptRequested,
