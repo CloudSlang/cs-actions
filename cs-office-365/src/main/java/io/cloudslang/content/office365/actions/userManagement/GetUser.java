@@ -60,7 +60,7 @@ public class GetUser {
     @Action(name = "Get user from Office 365",
             outputs = {
                     @Output(value = RETURN_RESULT, description = GET_USER_RETURN_RESULT_DESC),
-                    @Output(value = RETURN_CODE, description = RETURN_CODE),
+                    @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = DOCUMENT, description = DOCUMENT_DESC),
                     @Output(value = USER_PRINCIPAL_NAME, description = CREATE_USER_PRINCIPAL_NAME_DESC),
                     @Output(value = ID, description = ID_OUTPUT_DESC),
@@ -77,10 +77,10 @@ public class GetUser {
                                        @Param(value = USER_ID, description = USER_ID_DESC) String userId,
                                        @Param(value = O_DATA_QUERY, description = O_DATA_QUERY_DESC) String oDataQuery,
 
-                                       @Param(value = PROXY_HOST) String proxyHost,
-                                       @Param(value = PROXY_PORT) String proxyPort,
-                                       @Param(value = PROXY_USERNAME) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, encrypted = true) String proxyPassword,
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
 
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,

@@ -141,7 +141,7 @@ public class Descriptions {
         public static final String SUBJECT_DESC = "The subject of the message. Updatable only if 'isDraft' = true.";
         public static final String CREATE_MESSAGE_EXCEPTION_DESC = "An error message in case there was an error while creating the message.";
         public static final String CREATE_MESSAGE_RETURN_RESULT_DESC = "The body of the created message.";
-        public static final String DOCUMENT_DESC = "The body of the created message.";
+        public static final String DOCUMENT_DESC = "The full API response in case of success";
         public static final String MESSAGE_ID_DESC = "The Id of the created message";
     }
 
@@ -173,7 +173,7 @@ public class Descriptions {
     }
 
     public static class GetUser {
-        public static final String GET_USER_RETURN_RESULT_DESC = "The body of the created message.";
+        public static final String GET_USER_RETURN_RESULT_DESC = "A message is returned in case of success, an error message is returned in case of failure.";
         public static final String GET_USER_EXCEPTION_DESC = "An error message in case there was an error while retrieving the user properties and relationships.";
         public static final String ID_OUTPUT_DESC = "The ID of the user";
     }
