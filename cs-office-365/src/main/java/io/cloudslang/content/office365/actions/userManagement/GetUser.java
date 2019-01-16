@@ -149,10 +149,16 @@ public class GetUser {
             final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                final String userPrincipalNameOutput = JsonService.evaluateJsonPathQuery(returnMessage, USER_PRINCIPAL_NAME).toString();
-                results.put(USER_PRINCIPAL_NAME_OUTPUT, userPrincipalNameOutput);
-                final String idOutput = JsonService.evaluateJsonPathQuery(returnMessage, ID).toString();
-                results.put(ID_OUTPUT, idOutput);
+                if (returnMessage.contains(USER_PRINCIPAL_NAME)) {
+                    final String userPrincipalNameOutput = JsonService.evaluateJsonPathQuery(returnMessage, USER_PRINCIPAL_NAME).toString();
+                    results.put(USER_PRINCIPAL_NAME_OUTPUT, userPrincipalNameOutput);
+                } else
+                    results.put(USER_PRINCIPAL_NAME_OUTPUT, EMPTY);
+                if (returnMessage.contains(ID)) {
+                    final String idOutput = JsonService.evaluateJsonPathQuery(returnMessage, ID).toString();
+                    results.put(ID_OUTPUT, idOutput);
+                } else
+                    results.put(ID_OUTPUT, EMPTY);
             }
 
             return results;

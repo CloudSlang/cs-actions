@@ -71,7 +71,6 @@ public class UserServiceImpl {
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
         return new HttpClientService().execute(httpClientInputs);
-
     }
 
     @NotNull
