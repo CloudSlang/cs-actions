@@ -59,7 +59,7 @@ public class UserServiceImpl {
     public static Map<String, String> getUser(@NotNull final GetUserInputs getUserInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = getUserInputs.getCommonInputs();
-        httpClientInputs.setUrl(getUserUrl(getUserInputs));
+        httpClientInputs.setUrl(getUserUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(), getUserInputs.getoDataQuery()));
 
         HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
@@ -76,14 +76,14 @@ public class UserServiceImpl {
     }
 
     @NotNull
-    private static String getUserUrl(@NotNull final GetUserInputs getUserInputs) throws Exception {
+    private static String getUserUrl(String userPrincipalName, String userId, String oDataQuery) throws Exception {
         String finalUrl;
-        if (!StringUtils.isEmpty(getUserInputs.getCommonInputs().getUserPrincipalName()))
-            finalUrl = GET_USER_REQUEST_URL + getUserInputs.getCommonInputs().getUserPrincipalName();
+        if (!StringUtils.isEmpty(userPrincipalName))
+            finalUrl = GET_USER_REQUEST_URL + userPrincipalName;
         else
-            finalUrl = GET_USER_REQUEST_URL + getUserInputs.getCommonInputs().getUserId();
-        if (!StringUtils.isEmpty(getUserInputs.getoDataQuery()))
-            finalUrl = finalUrl + SELECT_PATH + getUserInputs.getoDataQuery().replaceAll("\\s+", "");
+            finalUrl = GET_USER_REQUEST_URL + userId;
+        if (!StringUtils.isEmpty(oDataQuery))
+            finalUrl = finalUrl + SELECT_PATH + oDataQuery.replaceAll("\\s+", "");
         return finalUrl;
     }
 
