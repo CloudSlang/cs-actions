@@ -50,8 +50,6 @@ import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PA
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
-import static io.cloudslang.content.office365.utils.Inputs.GetUser.ID_OUTPUT;
-import static io.cloudslang.content.office365.utils.Inputs.GetUser.USER_PRINCIPAL_NAME_OUTPUT;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -64,8 +62,8 @@ public class GetUser {
                     @Output(value = RETURN_RESULT, description = GET_USER_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE),
                     @Output(value = DOCUMENT, description = DOCUMENT_DESC),
-                    @Output(value = USER_PRINCIPAL_NAME_OUTPUT, description = USER_PRINCIPAL_NAME_OUTPUT_DESC),
-                    @Output(value = ID_OUTPUT, description = ID_OUTPUT_DESC),
+                    @Output(value = USER_PRINCIPAL_NAME, description = CREATE_USER_PRINCIPAL_NAME_DESC),
+                    @Output(value = ID, description = ID_OUTPUT_DESC),
                     @Output(value = EXCEPTION, description = GET_USER_EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
             },
@@ -151,14 +149,14 @@ public class GetUser {
             if (statusCode >= 200 && statusCode < 300) {
                 if (returnMessage.contains(USER_PRINCIPAL_NAME)) {
                     final String userPrincipalNameOutput = JsonService.evaluateJsonPathQuery(returnMessage, USER_PRINCIPAL_NAME).toString();
-                    results.put(USER_PRINCIPAL_NAME_OUTPUT, userPrincipalNameOutput);
+                    results.put(USER_PRINCIPAL_NAME, userPrincipalNameOutput);
                 } else
-                    results.put(USER_PRINCIPAL_NAME_OUTPUT, EMPTY);
+                    results.put(USER_PRINCIPAL_NAME, EMPTY);
                 if (returnMessage.contains(ID)) {
                     final String idOutput = JsonService.evaluateJsonPathQuery(returnMessage, ID).toString();
-                    results.put(ID_OUTPUT, idOutput);
+                    results.put(ID, idOutput);
                 } else
-                    results.put(ID_OUTPUT, EMPTY);
+                    results.put(ID, EMPTY);
             }
 
             return results;

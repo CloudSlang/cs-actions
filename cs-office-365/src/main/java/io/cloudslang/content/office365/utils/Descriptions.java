@@ -176,7 +176,6 @@ public class Descriptions {
         public static final String GET_USER_RETURN_RESULT_DESC = "The body of the created message.";
         public static final String GET_USER_EXCEPTION_DESC = "An error message in case there was an error while retrieving the user properties and relationships.";
         public static final String ID_OUTPUT_DESC = "The ID of the user";
-        public static final String USER_PRINCIPAL_NAME_OUTPUT_DESC = "The user principal name";
     }
 
 }
