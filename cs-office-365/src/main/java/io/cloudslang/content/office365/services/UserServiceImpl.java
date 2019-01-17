@@ -34,12 +34,12 @@ import static io.cloudslang.content.office365.utils.HttpUtils.*;
 import static io.cloudslang.content.office365.utils.Constants.ANONYMOUS;
 import static io.cloudslang.content.office365.utils.Constants.APPLICATION_JSON;
 import static io.cloudslang.content.office365.utils.Constants.CHANGEIT;
-import static io.cloudslang.content.office365.utils.Constants.CREATE_USER_REQUEST_URL;
 import static io.cloudslang.content.office365.utils.Constants.DEFAULT_JAVA_KEYSTORE;
 import static io.cloudslang.content.office365.utils.Constants.DELETE;
 import static io.cloudslang.content.office365.utils.Constants.DELETE_USER_REQUEST_URL;
 import static io.cloudslang.content.office365.utils.Constants.POST;
 import static io.cloudslang.content.office365.utils.HttpUtils.getAuthHeaders;
+import static io.cloudslang.content.office365.utils.HttpUtils.getQueryParams;
 
 public class UserServiceImpl {
 
@@ -48,7 +48,7 @@ public class UserServiceImpl {
     public static Map<String, String> createUser(@NotNull final CreateUserInputs createUserInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = createUserInputs.getCommonInputs();
-        httpClientInputs.setUrl(CREATE_USER_REQUEST_URL);
+        httpClientInputs.setUrl(MANAGE_USER_REQUEST_URL);
 
         HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
@@ -61,6 +61,30 @@ public class UserServiceImpl {
 
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static Map<String, String> listUsers(@NotNull final CreateUserInputs createUserInputs) {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = createUserInputs.getCommonInputs();
+        httpClientInputs.setUrl(MANAGE_USER_REQUEST_URL);
+
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setContentType(APPLICATION_JSON);
+
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        if (!StringUtils.isEmpty(createUserInputs.getoDataQuery())) {
+            httpClientInputs.setQueryParams(getQueryParams(createUserInputs.getoDataQuery().replaceAll("\\s+", "")));
+        }
 
         return new HttpClientService().execute(httpClientInputs);
     }
