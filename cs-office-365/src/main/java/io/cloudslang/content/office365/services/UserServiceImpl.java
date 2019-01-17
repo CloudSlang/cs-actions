@@ -18,14 +18,27 @@ package io.cloudslang.content.office365.services;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.CreateUserInputs;
+import io.cloudslang.content.office365.entities.DeleteUserInputs;
+import io.cloudslang.content.office365.entities.GetUserInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
+import io.cloudslang.content.office365.utils.PopulateUpdateUserBody;
 import io.cloudslang.content.office365.utils.PopulateUserBody;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 import static io.cloudslang.content.office365.utils.Constants.*;
+import static io.cloudslang.content.office365.utils.HttpUtils.*;
+import static io.cloudslang.content.office365.utils.Constants.ANONYMOUS;
+import static io.cloudslang.content.office365.utils.Constants.APPLICATION_JSON;
+import static io.cloudslang.content.office365.utils.Constants.CHANGEIT;
+import static io.cloudslang.content.office365.utils.Constants.CREATE_USER_REQUEST_URL;
+import static io.cloudslang.content.office365.utils.Constants.DEFAULT_JAVA_KEYSTORE;
+import static io.cloudslang.content.office365.utils.Constants.DELETE;
+import static io.cloudslang.content.office365.utils.Constants.DELETE_USER_REQUEST_URL;
+import static io.cloudslang.content.office365.utils.Constants.POST;
 import static io.cloudslang.content.office365.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.office365.utils.HttpUtils.getQueryParams;
 
@@ -75,5 +88,98 @@ public class UserServiceImpl {
         }
 
         return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static Map<String, String> getUser(@NotNull final GetUserInputs getUserInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = getUserInputs.getCommonInputs();
+        httpClientInputs.setUrl(getUserUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(), getUserInputs.getoDataQuery()));
+
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setContentType(APPLICATION_JSON);
+
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    private static String getUserUrl(String userPrincipalName, String userId, String oDataQuery) throws Exception {
+        String finalUrl;
+        if (!StringUtils.isEmpty(userPrincipalName))
+            finalUrl = GET_USER_REQUEST_URL + userPrincipalName;
+        else
+            finalUrl = GET_USER_REQUEST_URL + userId;
+        if (!StringUtils.isEmpty(oDataQuery))
+            finalUrl = finalUrl + SELECT_PATH + oDataQuery.replaceAll("\\s+", "");
+        return finalUrl;
+    }
+
+    @NotNull
+    public static Map<String, String> updateUser(@NotNull final CreateUserInputs createUserInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = createUserInputs.getCommonInputs();
+        httpClientInputs.setUrl(updateUserUrl(createUserInputs.getCommonInputs().getUserPrincipalName(), createUserInputs.getCommonInputs().getUserId()));
+
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(PATCH);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setContentType(APPLICATION_JSON);
+        httpClientInputs.setBody(PopulateUpdateUserBody.populateUpdateUserBody(createUserInputs));
+
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    private static String updateUserUrl(@NotNull final String userPrincipalNameToUpdate, @NotNull final String userIdToUpdate) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder();
+        uriBuilder.setPath(updateUserPath(userPrincipalNameToUpdate, userIdToUpdate));
+
+        return uriBuilder.build().toURL().toString();
+    }
+
+
+    @NotNull
+    public static Map<String, String> deleteUser(@NotNull final DeleteUserInputs deleteUserInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = deleteUserInputs.getCommonInputs();
+        httpClientInputs.setUrl(getDeleteUserUrl(deleteUserInputs));
+
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(DELETE);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setContentType(APPLICATION_JSON);
+
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static String getDeleteUserUrl(@NotNull final DeleteUserInputs deleteUserInputs) {
+        String finalUrl = DELETE_USER_REQUEST_URL;
+
+        if (!deleteUserInputs.getCommonInputs().getUserPrincipalName().isEmpty())
+            finalUrl = finalUrl + deleteUserInputs.getCommonInputs().getUserPrincipalName();
+        else
+            finalUrl = finalUrl + deleteUserInputs.getCommonInputs().getUserId();
+
+        return finalUrl;
     }
 }

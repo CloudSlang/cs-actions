@@ -69,6 +69,14 @@ public class HttpUtils {
     }
 
     @NotNull
+    public static String updateUserPath(String userPrincipalName, String userId) {
+        StringBuilder pathString = new StringBuilder()
+                .append(BASE_GRAPH_PATH)
+                .append(getLoginType(userPrincipalName, userId));
+        return pathString.toString();
+    }
+
+    @NotNull
     public static String getMessagePath(@NotNull final String userPrincipalName,
                                         @NotNull final String userId,
                                         @NotNull final String messageId) {
@@ -82,8 +90,8 @@ public class HttpUtils {
 
     @NotNull
     public static String sendMessagePath(@NotNull final String userPrincipalName,
-                                        @NotNull final String userId,
-                                        @NotNull final String messageId) {
+                                         @NotNull final String userId,
+                                         @NotNull final String messageId) {
         StringBuilder messagepathString = new StringBuilder()
                 .append(getMessagePath(userPrincipalName, userId, messageId))
                 .append(SEND);
@@ -178,8 +186,8 @@ public class HttpUtils {
     @NotNull
     public static Map<String, String> getOperationResults(@NotNull final Map<String, String> result,
                                                           @NotNull final String successMessage,
-                                                          @NotNull final String failureMessage,
-                                                          @NotNull final String document) {
+                                                          final String failureMessage,
+                                                          final String document) {
         final Map<String, String> results;
         final String statusCode = result.get(STATUS_CODE);
         if (Integer.parseInt(statusCode) >= 200 && Integer.parseInt(statusCode) < 300) {

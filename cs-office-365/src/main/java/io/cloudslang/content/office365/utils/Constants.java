@@ -33,6 +33,7 @@ public final class Constants {
     public static final String ANONYMOUS = "anonymous";
     public static final String GET = "GET";
     public static final String POST = "POST";
+    public static final String PATCH = "PATCH";
     public static final String DELETE = "DELETE";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String CHANGEIT = "changeit";
@@ -58,7 +59,19 @@ public final class Constants {
     public static final String CONTENT_TYPE = "HTML";
     public static final String SEND = "/send";
     public static final String SEND_MESSAGE = "Email sent. For the delivery status please check the Delivery Report Email.";
+    public static final String UPDATE_USER = "User updated successfully.";
     public static final String ID = "id";
     public static final String CREATE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String LIST_USERS_REQUEST_URL = "https://graph.microsoft.com/v1.0/users";
+    public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
+    public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
+    public static final String ACCOUNT_ENABLED_BODY = "accountEnabled";
+    public static final String PASSWORD_PROFILE_BODY = "passwordProfile";
+    public static final String MAIL_NICKNAME_BODY = "mailNickname";
+    public static final String DISPLAY_NAME_BODY = "displayName";
+    public static final String USER_PRINCIPAL_NAME_BODY = "userPrincipalName";
+    public static final String ON_PREMISES_IMMUTABLE_ID_BODY = "onPremisesImmutableId";
+    public static final String FORCE_CHANGE_PASSWORD_NEXT_SIGN_IN_BODY = "forceChangePasswordNextSignIn";
+    public static final String PASSWORD_BODY = "password";
+    public static final String SELECT_PATH = "?$select=";
 }

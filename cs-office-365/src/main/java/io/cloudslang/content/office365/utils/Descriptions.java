@@ -141,7 +141,7 @@ public class Descriptions {
         public static final String SUBJECT_DESC = "The subject of the message. Updatable only if 'isDraft' = true.";
         public static final String CREATE_MESSAGE_EXCEPTION_DESC = "An error message in case there was an error while creating the message.";
         public static final String CREATE_MESSAGE_RETURN_RESULT_DESC = "The body of the created message.";
-        public static final String DOCUMENT_DESC = "The body of the created message.";
+        public static final String DOCUMENT_DESC = "The full API response in case of success";
         public static final String MESSAGE_ID_DESC = "The Id of the created message";
     }
 
@@ -152,13 +152,37 @@ public class Descriptions {
                 "a federated domain for the user's userPrincipalName (UPN) property.";
         public static final String MAIL_NICKNAME_DESC = "The mail alias for the user.";
         public static final String CREATE_USER_PRINCIPAL_NAME_DESC = "The user principal name (someuser@contoso.com).";
-        public static final String FORCE_CHANGE_PASSWORD_DESC = "true if the user must change her password on the next login; otherwise false.";
+        public static final String FORCE_CHANGE_PASSWORD_DESC = "A boolean value to specify if the user must change his password on the next login.";
         public static final String CREATE_USER_PASSWORD_DESC = "The password for the user. This property is required when a user is created." +
                 " It can be updated, but the user will be required to change the password on the next login." +
                 " The password must satisfy minimum requirements as specified by the user’s passwordPolicies property. By default, a strong password is required.";
         public static final String CREATE_USER_RETURN_RESULT_DESC = "If successful, returns the complete API response.";
         public static final String CREATE_USER_DOCUMENT_DESC = "The full API response in case of success";
         public static final String CREATE_USER_EXCEPTION_DESC = "An error message in case there was an error while creating the user.";
+    }
+
+    public static class UpdateUser {
+        public static final String UPDATE_USER_RETURN_RESULT_DESC = "A message is returned in case of success, an error message is returned in case of failure.";
+        public static final String UPDATE_USER_EXCEPTION_DESC = "An error message in case there was an error while updating the user.";
+        public static final String UPDATE_USER_PASSWORD_DESC = "The new password for the user.";
+        public static final String UPDATE_USER_ON_PREMISES_IMMUTABLE_ID_DESC = "Only needs to be specified when updating a user account if you are using " +
+                "a federated domain for the user's userPrincipalName (UPN) property.";
+        public static final String UPDATE_USER_ID_TO_UPDATE_DESC = "The ID of the user to perform the action on.";
+        public static final String UPDATE_USER_PRINCIPAL_NAME_TO_UPDATE_DESC = "The userPrincipalName of the user to perform the action on.";
+        public static final String CREATE_USER_PRINCIPAL_NAME_TO_UPDATE_WITH_DESC = "The new userPrincipalName fot the user.";
+    }
+
+    public static class GetUser {
+        public static final String GET_USER_RETURN_RESULT_DESC = "A message is returned in case of success, an error message is returned in case of failure.";
+        public static final String GET_USER_EXCEPTION_DESC = "An error message in case there was an error while retrieving the user properties and relationships.";
+        public static final String ID_OUTPUT_DESC = "The ID of the user";
+    }
+
+
+    public static class DeleteUser {
+        public static final String DELETE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content response code. It does not return anything in the response body.";
+        public static final String DELETE_USER_EXCEPTION_DESC = "An error message in case there was an error while deleting the user.";
+        public static final String SUCCESS_RETURN_RESULT_DESC = "The user was successfully deleted.";
     }
 
     public static class ListUser{
