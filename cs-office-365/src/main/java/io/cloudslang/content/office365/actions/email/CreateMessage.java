@@ -14,12 +14,13 @@
  */
 package io.cloudslang.content.office365.actions.email;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.json.services.JsonService;
 import io.cloudslang.content.office365.entities.CreateMessageInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
@@ -194,8 +195,13 @@ public class CreateMessage {
             final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                final String returnMessageId = JsonService.evaluateJsonPathQuery(returnMessage, ID).toString();
-                results.put(MESSAGE_ID, returnMessageId);
+                final JsonParser parser = new JsonParser();
+                final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
+                if (responseJson.has(ID)) {
+                    final String returnMessageId = responseJson.get(ID).toString();
+                    results.put(MESSAGE_ID, returnMessageId);
+                } else
+                    results.put(ID, EMPTY);
             }
 
             return results;
