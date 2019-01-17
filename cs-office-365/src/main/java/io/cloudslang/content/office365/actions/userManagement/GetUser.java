@@ -14,12 +14,13 @@
  */
 package io.cloudslang.content.office365.actions.userManagement;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.json.services.JsonService;
 import io.cloudslang.content.office365.entities.GetUserInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
@@ -147,13 +148,15 @@ public class GetUser {
             final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                if (returnMessage.contains(USER_PRINCIPAL_NAME)) {
-                    final String userPrincipalNameOutput = JsonService.evaluateJsonPathQuery(returnMessage, USER_PRINCIPAL_NAME).toString();
+                final JsonParser parser = new JsonParser();
+                final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
+                if (responseJson.has(USER_PRINCIPAL_NAME)) {
+                    final String userPrincipalNameOutput = responseJson.get(USER_PRINCIPAL_NAME).toString();
                     results.put(USER_PRINCIPAL_NAME, userPrincipalNameOutput);
                 } else
                     results.put(USER_PRINCIPAL_NAME, EMPTY);
-                if (returnMessage.contains(ID)) {
-                    final String idOutput = JsonService.evaluateJsonPathQuery(returnMessage, ID).toString();
+                if (responseJson.has(ID)) {
+                    final String idOutput = responseJson.get(ID).toString();
                     results.put(ID, idOutput);
                 } else
                     results.put(ID, EMPTY);
