@@ -61,8 +61,7 @@ public final class Constants {
     public static final String SEND_MESSAGE = "Email sent. For the delivery status please check the Delivery Report Email.";
     public static final String UPDATE_USER = "User updated successfully.";
     public static final String ID = "id";
-    public static final String CREATE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users";
-    public static final String LIST_USERS_REQUEST_URL = "https://graph.microsoft.com/v1.0/users";
+    public static final String MANAGE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String ACCOUNT_ENABLED_BODY = "accountEnabled";

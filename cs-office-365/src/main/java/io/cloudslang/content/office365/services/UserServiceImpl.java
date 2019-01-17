@@ -34,7 +34,6 @@ import static io.cloudslang.content.office365.utils.HttpUtils.*;
 import static io.cloudslang.content.office365.utils.Constants.ANONYMOUS;
 import static io.cloudslang.content.office365.utils.Constants.APPLICATION_JSON;
 import static io.cloudslang.content.office365.utils.Constants.CHANGEIT;
-import static io.cloudslang.content.office365.utils.Constants.CREATE_USER_REQUEST_URL;
 import static io.cloudslang.content.office365.utils.Constants.DEFAULT_JAVA_KEYSTORE;
 import static io.cloudslang.content.office365.utils.Constants.DELETE;
 import static io.cloudslang.content.office365.utils.Constants.DELETE_USER_REQUEST_URL;
@@ -49,7 +48,7 @@ public class UserServiceImpl {
     public static Map<String, String> createUser(@NotNull final CreateUserInputs createUserInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = createUserInputs.getCommonInputs();
-        httpClientInputs.setUrl(CREATE_USER_REQUEST_URL);
+        httpClientInputs.setUrl(MANAGE_USER_REQUEST_URL);
 
         HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
@@ -70,7 +69,7 @@ public class UserServiceImpl {
     public static Map<String, String> listUsers(@NotNull final CreateUserInputs createUserInputs) {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = createUserInputs.getCommonInputs();
-        httpClientInputs.setUrl(LIST_USERS_REQUEST_URL);
+        httpClientInputs.setUrl(MANAGE_USER_REQUEST_URL);
 
         HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
