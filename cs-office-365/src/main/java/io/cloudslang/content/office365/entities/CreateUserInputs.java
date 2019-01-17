@@ -28,13 +28,14 @@ public class CreateUserInputs {
     private final String userPrincipalName;
     private final String forceChangePassword;
     private final String password;
+    private final String oDataQuery;
 
     private final Office365CommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"accountEnabled", "displayName", "onPremisesImmutableId", "mailNickname",
-            "userPrincipalName", "forceChangePassword", "password", "commonInputs"})
-    public CreateUserInputs (String accountEnabled, String displayName, String onPremisesImmutableId, String mailNickname,
-                             String userPrincipalName, String forceChangePassword, String password, Office365CommonInputs commonInputs) {
+            "userPrincipalName", "forceChangePassword", "password", "commonInputs", "oDataQuery"})
+    public CreateUserInputs(String accountEnabled, String displayName, String onPremisesImmutableId, String mailNickname,
+                            String userPrincipalName, String forceChangePassword, String password, Office365CommonInputs commonInputs, String oDataQuery) {
         this.accountEnabled = accountEnabled;
         this.displayName = displayName;
         this.onPremisesImmutableId = onPremisesImmutableId;
@@ -43,6 +44,7 @@ public class CreateUserInputs {
         this.forceChangePassword = forceChangePassword;
         this.password = password;
         this.commonInputs = commonInputs;
+        this.oDataQuery = oDataQuery;
     }
 
     @NotNull
@@ -90,6 +92,11 @@ public class CreateUserInputs {
         return commonInputs;
     }
 
+    @NotNull
+    public String getoDataQuery() {
+        return oDataQuery;
+    }
+
     public static class CreateUserInputsBuilder {
         private String accountEnabled = EMPTY;
         private String displayName = EMPTY;
@@ -99,6 +106,7 @@ public class CreateUserInputs {
         private String forceChangePassword = EMPTY;
         private String password = EMPTY;
         private Office365CommonInputs commonInputs;
+        private String oDataQuery = EMPTY;
 
         CreateUserInputsBuilder() {
         }
@@ -151,9 +159,15 @@ public class CreateUserInputs {
             return this;
         }
 
+        @NotNull
+        public CreateUserInputs.CreateUserInputsBuilder oDataQuery(@NotNull final String oDataQuery) {
+            this.oDataQuery = oDataQuery;
+            return this;
+        }
+
         public CreateUserInputs build() {
             return new CreateUserInputs(accountEnabled, displayName, onPremisesImmutableId, mailNickname,
-                    userPrincipalName, forceChangePassword, password, commonInputs);
+                    userPrincipalName, forceChangePassword, password, commonInputs, oDataQuery);
         }
     }
 }
