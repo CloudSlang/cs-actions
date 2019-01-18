@@ -79,7 +79,7 @@ public class UpdateUser {
                                        @Param(value = MAIL_NICKNAME, description = MAIL_NICKNAME_DESC) String mailNickname,
                                        @Param(value = USER_PRINCIPAL_NAME_TO_UPDATE_WITH, description = CREATE_USER_PRINCIPAL_NAME_TO_UPDATE_WITH_DESC) String userPrincipalNameToUpdateWith,
                                        @Param(value = FORCE_CHANGE_PASSWORD, description = FORCE_CHANGE_PASSWORD_DESC) String forceChangePassword,
-                                       @Param(value = PASSWORD, encrypted = true, description = UPDATE_USER_PASSWORD_DESC) String password,
+                                       @Param(value = ASSIGNED_PASSWORD, encrypted = true, description = UPDATE_USER_PASSWORD_DESC) String assignedPassword,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -107,7 +107,7 @@ public class UpdateUser {
         userPrincipalNameToUpdate = defaultIfEmpty(userPrincipalNameToUpdate, EMPTY);
         userPrincipalNameToUpdateWith = defaultIfEmpty(userPrincipalNameToUpdateWith, EMPTY);
         forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_TRUE);
-        password = defaultIfEmpty(password, EMPTY);
+        assignedPassword = defaultIfEmpty(assignedPassword, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -138,7 +138,7 @@ public class UpdateUser {
                     .mailNickname(mailNickname)
                     .userPrincipalName(userPrincipalNameToUpdateWith)
                     .forceChangePassword(forceChangePassword)
-                    .password(password)
+                    .assignedPassword(assignedPassword)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
                             .userPrincipalName(userPrincipalNameToUpdate)

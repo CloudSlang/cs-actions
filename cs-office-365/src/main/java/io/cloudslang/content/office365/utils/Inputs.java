@@ -68,6 +68,7 @@ public final class Inputs extends InputNames {
         public static final String MAIL_NICKNAME = "mailNickname";
         public static final String FORCE_CHANGE_PASSWORD = "forceChangePasswordNextSignIn";
         public static final String USER_PRINCIPAL_NAME_TO_CREATE = "userPrincipalNameToCreate";
+        public static final String ASSIGNED_PASSWORD = "assignedPassword";
     }
 
     public static class UpdateUser {
