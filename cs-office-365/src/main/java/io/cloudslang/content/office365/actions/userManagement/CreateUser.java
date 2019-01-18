@@ -81,7 +81,7 @@ public class CreateUser {
                                        @Param(value = MAIL_NICKNAME, required = true, description = MAIL_NICKNAME_DESC) String mailNickname,
                                        @Param(value = USER_PRINCIPAL_NAME_TO_CREATE, required = true, description = CREATE_USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = FORCE_CHANGE_PASSWORD, description = FORCE_CHANGE_PASSWORD_DESC) String forceChangePassword,
-                                       @Param(value = PASSWORD, encrypted = true, required = true, description = CREATE_USER_PASSWORD_DESC) String password,
+                                       @Param(value = ASSIGNED_PASSWORD, encrypted = true, required = true, description = CREATE_USER_PASSWORD_DESC) String assignedPassword,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -105,7 +105,7 @@ public class CreateUser {
         mailNickname = defaultIfEmpty(mailNickname, EMPTY);
         userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_TRUE);
-        password = defaultIfEmpty(password, EMPTY);
+        assignedPassword = defaultIfEmpty(assignedPassword, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -122,7 +122,7 @@ public class CreateUser {
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
         final List<String> exceptionMessages = verifyCreateUserInputs(accountEnabled, displayName, mailNickname,
-                userPrincipalName, forceChangePassword, password, proxyPort, trustAllRoots,
+                userPrincipalName, forceChangePassword, assignedPassword, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
@@ -136,7 +136,7 @@ public class CreateUser {
                     .mailNickname(mailNickname)
                     .userPrincipalName(userPrincipalName)
                     .forceChangePassword(forceChangePassword)
-                    .password(password)
+                    .assignedPassword(assignedPassword)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
                             .connectionsMaxPerRoute(connectionsMaxPerRoute)
