@@ -198,7 +198,7 @@ public class CreateMessage {
                 final JsonParser parser = new JsonParser();
                 final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
                 if (responseJson.has(ID)) {
-                    final String returnMessageId = responseJson.get(ID).toString();
+                    final String returnMessageId = responseJson.get(ID).getAsString();
                     results.put(MESSAGE_ID, returnMessageId);
                 } else
                     results.put(ID, EMPTY);

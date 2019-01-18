@@ -151,12 +151,12 @@ public class GetUser {
                 final JsonParser parser = new JsonParser();
                 final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
                 if (responseJson.has(USER_PRINCIPAL_NAME)) {
-                    final String userPrincipalNameOutput = responseJson.get(USER_PRINCIPAL_NAME).toString();
+                    final String userPrincipalNameOutput = responseJson.get(USER_PRINCIPAL_NAME).getAsString();
                     results.put(USER_PRINCIPAL_NAME, userPrincipalNameOutput);
                 } else
                     results.put(USER_PRINCIPAL_NAME, EMPTY);
                 if (responseJson.has(ID)) {
-                    final String idOutput = responseJson.get(ID).toString();
+                    final String idOutput = responseJson.get(ID).getAsString();
                     results.put(ID, idOutput);
                 } else
                     results.put(ID, EMPTY);
