@@ -111,6 +111,7 @@ public class Descriptions {
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
         public static final String FAILURE_DESC = "There was an error while trying to get the messages.";
         public static final String SUCCESS_DESC = "The request was successfully executed.";
+        public static final String MESSAGE_ID_LIST_DESC = "The comma-separated list of message IDs from the retrieved document.";
     }
 
     public static class CreateMessage {

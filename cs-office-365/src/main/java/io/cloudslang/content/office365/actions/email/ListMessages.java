@@ -18,6 +18,7 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
+import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.office365.entities.ListMessagesInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
@@ -41,6 +42,7 @@ import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.EXCEPTION_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.FAILURE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.RETURN_RESULT_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.*;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.SUCCESS_DESC;
 import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
@@ -51,8 +53,7 @@ import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class ListMessages {
 
@@ -62,7 +63,8 @@ public class ListMessages {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = DOCUMENT, description = DOCUMENT_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = MESSAGE_ID_LIST, description = MESSAGE_ID_LIST_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -142,7 +144,22 @@ public class ListMessages {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
-            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
+
+            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
+
+            if (statusCode >= 200 && statusCode < 300) {
+                final List<String> messageIdList = JsonPath.read(returnMessage, MESSAGE_ID_LIST_JSON_PATH);
+
+                if (!messageIdList.isEmpty()) {
+                    final String messageIdListAsString = join(messageIdList.toArray(), DELIMITER);
+                    results.put(MESSAGE_ID_LIST, messageIdListAsString);
+                } else {
+                    results.put(MESSAGE_ID_LIST, EMPTY);
+                }
+            }
+
+            return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
