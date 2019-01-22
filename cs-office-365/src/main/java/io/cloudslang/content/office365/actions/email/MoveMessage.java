@@ -80,7 +80,7 @@ public class MoveMessage {
                                        @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = USER_ID, description = USER_ID_DESC) String userId,
                                        @Param(value = MESSAGE_ID, required = true, description = MESSAGE_ID_DESC) String messageId,
-                                       @Param(value = DESTINATION_ID, description = DESTINATION_ID_DESC) String destinationId,
+                                       @Param(value = DESTINATION_ID, required = true, description = DESTINATION_ID_DESC) String destinationId,
 
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
