@@ -18,6 +18,7 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.*;
 import io.cloudslang.content.office365.utils.PopulateMessageBody;
+import io.cloudslang.content.office365.utils.PopulateMoveMessageBody;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -110,6 +111,15 @@ public class EmailServiceImpl {
     }
 
     @NotNull
+    private static String moveMessageUrl(@NotNull final String userPrincipalName,
+                                        @NotNull final String userId,
+                                        @NotNull final String messageId) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder().setPath(moveMessagePath(userPrincipalName, userId, messageId));
+
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
     private static String listMessagesUrl(@NotNull final String userPrincipalName,
                                           @NotNull final String userId,
                                           @NotNull final String folderId) throws Exception {
@@ -169,7 +179,6 @@ public class EmailServiceImpl {
         return uriBuilder.build().toURL().toString();
     }
 
-
     @NotNull
     public static Map<String, String> deleteMessage(@NotNull final DeleteMessageInputs deleteMessageInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
@@ -187,6 +196,28 @@ public class EmailServiceImpl {
         httpClientInputs.setKeystorePassword(CHANGEIT);
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static Map<String, String> moveMessage(@NotNull final MoveMessageInputs moveMessageInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = moveMessageInputs.getCommonInputs();
+        httpClientInputs.setUrl(moveMessageUrl(commonInputs.getUserPrincipalName(),
+                commonInputs.getUserId(),
+                moveMessageInputs.getMessageId()));
+
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(POST);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setContentType(APPLICATION_JSON);
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.setBody(PopulateMoveMessageBody.populateMoveMessageBody(moveMessageInputs.getDestinationId()));
 
         return new HttpClientService().execute(httpClientInputs);
     }
