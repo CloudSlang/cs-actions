@@ -16,6 +16,7 @@
 package io.cloudslang.content.office365.services;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
@@ -27,6 +28,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.office365.utils.Constants.*;
@@ -206,25 +209,19 @@ public class UserServiceImpl {
         return finalUrl;
     }
 
-    public static String retrieveAttachmentIdList(String returnMessage){
-        String attachmentIdList = "";
+    public static String retrieveAttachmentIdList(String returnMessage) {
+        final List<JsonElement> attachmentIdList = new ArrayList();
         final JsonParser parser = new JsonParser();
         final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
-        if (responseJson.has("value")) {
-            final JsonArray valueList = responseJson.getAsJsonArray("value");
-            for (int i = 0; i<valueList.size(); i++) {
-                JsonObject valueObject = (JsonObject) valueList.get(i);
-                if (valueObject.has("id") ){
-                    if(valueList.size() == 1 || (i == valueList.size() -1))
-                        attachmentIdList = attachmentIdList + valueObject.get("id") ;
-                    else {
-                        attachmentIdList = attachmentIdList + valueObject.get("id") + ",";
-                    }
+        if (responseJson.has(VALUE)) {
+            final JsonArray valueList = responseJson.getAsJsonArray(VALUE);
+            for (int i = 0; i < valueList.size(); i++) {
+                final JsonObject valueObject = (JsonObject) valueList.get(i);
+                if (valueObject.has(ID)) {
+                    attachmentIdList.add(valueObject.get(ID));
                 }
             }
         }
-        return attachmentIdList;
+        return StringUtils.join(attachmentIdList, ",");
     }
-
-
 }

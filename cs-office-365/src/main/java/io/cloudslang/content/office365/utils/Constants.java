@@ -75,4 +75,5 @@ public final class Constants {
     public static final String PASSWORD_BODY = "password";
     public static final String SELECT_PATH = "?$select=";
     public static final String ATTACHMENTS = "/attachments";
+    public static final String VALUE= "value";
 }
