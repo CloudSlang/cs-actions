@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.office365.actions.userManagement;
+package io.cloudslang.content.office365.actions.email;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.office365.entities.CreateUserInputs;
+import io.cloudslang.content.office365.entities.MoveMessageInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -36,31 +36,34 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.office365.services.UserServiceImpl.createUser;
+import static io.cloudslang.content.office365.services.EmailServiceImpl.moveMessage;
 import static io.cloudslang.content.office365.utils.Constants.*;
-import static io.cloudslang.content.office365.utils.Constants.NEW_LINE;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.*;
+import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.AUTH_TOKEN_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.USER_ID_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.USER_PRINCIPAL_NAME_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.CreateUser.*;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.FAILURE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.SUCCESS_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.MESSAGE_ID_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.STATUS_CODE_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.MoveMessage.DESTINATION_ID_DESC;
 import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.office365.utils.Inputs.CreateUser.*;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
-import static io.cloudslang.content.office365.utils.InputsValidation.*;
+import static io.cloudslang.content.office365.utils.Inputs.MoveMessage.DESTINATION_ID;
+import static io.cloudslang.content.office365.utils.InputsValidation.verifyMoveMessageInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class CreateUser {
-    @Action(name = "Create a new user for Office 365",
+public class MoveMessage {
+    @Action(name = "Move a message to a folder in Office 365",
             outputs = {
                     @Output(value = RETURN_RESULT, description = CREATE_USER_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -74,13 +77,11 @@ public class CreateUser {
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
 
-                                       @Param(value = ACCOUNT_ENABLED, description = ACCOUNT_ENABLED_DESC) String accountEnabled,
-                                       @Param(value = DISPLAY_NAME, required = true, description = DISPLAY_NAME_DESC) String displayName,
-                                       @Param(value = ON_PREMISES_IMMUTABLE_ID, description = ON_PREMISES_IMMUTABLE_ID_DESC) String onPremisesImmutableId,
-                                       @Param(value = MAIL_NICKNAME, required = true, description = MAIL_NICKNAME_DESC) String mailNickname,
-                                       @Param(value = USER_PRINCIPAL_NAME_TO_CREATE, required = true, description = CREATE_USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
-                                       @Param(value = FORCE_CHANGE_PASSWORD, description = FORCE_CHANGE_PASSWORD_DESC) String forceChangePassword,
-                                       @Param(value = ASSIGNED_PASSWORD, encrypted = true, required = true, description = CREATE_USER_PASSWORD_DESC) String assignedPassword,
+                                       @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
+                                       @Param(value = USER_ID, description = USER_ID_DESC) String userId,
+                                       @Param(value = MESSAGE_ID, required = true, description = MESSAGE_ID_DESC) String messageId,
+                                       @Param(value = DESTINATION_ID, required = true, description = DESTINATION_ID_DESC) String destinationId,
+
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -98,13 +99,10 @@ public class CreateUser {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
-        accountEnabled = defaultIfEmpty(accountEnabled, BOOLEAN_TRUE);
-        displayName = defaultIfEmpty(displayName, EMPTY);
-        onPremisesImmutableId = defaultIfEmpty(onPremisesImmutableId, EMPTY);
-        mailNickname = defaultIfEmpty(mailNickname, EMPTY);
         userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
-        forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_TRUE);
-        assignedPassword = defaultIfEmpty(assignedPassword, EMPTY);
+        userId = defaultIfEmpty(userId, EMPTY);
+        messageId = defaultIfEmpty(messageId, EMPTY);
+        destinationId = defaultIfEmpty(destinationId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -120,24 +118,21 @@ public class CreateUser {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessages = verifyCreateUserInputs(accountEnabled, displayName, mailNickname,
-                userPrincipalName, forceChangePassword, assignedPassword, proxyPort, trustAllRoots,
-                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        final List<String> exceptionMessages = verifyMoveMessageInputs(userPrincipalName, userId, messageId,
+                destinationId, proxyPort, trustAllRoots, connectTimeout, socketTimeout, keepAlive,
+                connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
         try {
-            final Map<String, String> result = createUser(CreateUserInputs.builder()
-                    .accountEnabled(accountEnabled)
-                    .displayName(displayName)
-                    .onPremisesImmutableId(onPremisesImmutableId)
-                    .mailNickname(mailNickname)
-                    .userPrincipalName(userPrincipalName)
-                    .forceChangePassword(forceChangePassword)
-                    .assignedPassword(assignedPassword)
+            final Map<String, String> result = moveMessage(MoveMessageInputs.builder()
+                    .messageId(messageId)
+                    .destinationId(destinationId)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
+                            .userPrincipalName(userPrincipalName)
+                            .userId(userId)
                             .connectionsMaxPerRoute(connectionsMaxPerRoute)
                             .connectionsMaxTotal(connectionsMaxTotal)
                             .proxyHost(proxyHost)
@@ -162,4 +157,3 @@ public class CreateUser {
         }
     }
 }
-
