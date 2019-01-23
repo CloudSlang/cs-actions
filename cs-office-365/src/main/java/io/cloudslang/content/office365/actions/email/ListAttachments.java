@@ -142,6 +142,8 @@ public class ListAttachments {
 
             if (statusCode >= 200 && statusCode < 300) {
                 results.put(ATTACHMENT_ID, UserServiceImpl.retrieveAttachmentIdList(returnMessage));
+            } else {
+                result.put(ATTACHMENT_ID, EMPTY);
             }
             return results;
         } catch (Exception exception) {
