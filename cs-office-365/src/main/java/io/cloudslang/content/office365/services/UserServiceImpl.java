@@ -15,6 +15,9 @@
 
 package io.cloudslang.content.office365.services;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.*;
@@ -201,6 +204,26 @@ public class UserServiceImpl {
             finalUrl = finalUrl + MESSAGES_PATH + messageId;
         finalUrl = finalUrl + ATTACHMENTS;
         return finalUrl;
+    }
+
+    public static String retrieveAttachmentIdList(String returnMessage){
+        String attachmentIdList = "";
+        final JsonParser parser = new JsonParser();
+        final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
+        if (responseJson.has("value")) {
+            final JsonArray valueList = responseJson.getAsJsonArray("value");
+            for (int i = 0; i<valueList.size(); i++) {
+                JsonObject valueObject = (JsonObject) valueList.get(i);
+                if (valueObject.has("id") ){
+                    if(valueList.size() == 1 || (i == valueList.size() -1))
+                        attachmentIdList = attachmentIdList + valueObject.get("id") ;
+                    else {
+                        attachmentIdList = attachmentIdList + valueObject.get("id") + ",";
+                    }
+                }
+            }
+        }
+        return attachmentIdList;
     }
 
 

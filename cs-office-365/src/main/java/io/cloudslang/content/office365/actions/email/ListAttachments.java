@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2019 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.office365.actions.email;
 
 import com.google.gson.JsonArray;
@@ -11,6 +25,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.office365.entities.ListAttachmentsInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
+import io.cloudslang.content.office365.services.UserServiceImpl;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -130,23 +145,7 @@ public class ListAttachments {
             final  Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                String attachmentIdList = "";
-                final JsonParser parser = new JsonParser();
-                final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
-                if (responseJson.has("value")) {
-                    final JsonArray valueList = responseJson.getAsJsonArray("value");
-                    for (int i = 0; i<valueList.size(); i++) {
-                        JsonObject valueObject = (JsonObject) valueList.get(i);
-                        if (valueObject.has("id") ){
-                            if(valueList.size() == 1 || (i == valueList.size() -1))
-                            attachmentIdList = attachmentIdList + valueObject.get("id") ;
-                            else {
-                                attachmentIdList = attachmentIdList + valueObject.get("id") + ",";
-                            }
-                        }
-                    }
-                }
-                results.put(ATTACHMENT_ID, attachmentIdList);
+                results.put(ATTACHMENT_ID, UserServiceImpl.retrieveAttachmentIdList(returnMessage));
                 }
             return results;
         } catch (Exception exception) {
