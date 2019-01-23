@@ -61,6 +61,10 @@ public final class Inputs extends InputNames {
         public static final String SUBJECT = "subject";
     }
 
+    public static class MoveMessage {
+        public static final String DESTINATION_ID = "destinationId";
+    }
+
     public static class CreateUser {
         public static final String ACCOUNT_ENABLED = "accountEnabled";
         public static final String DISPLAY_NAME = "displayName";
