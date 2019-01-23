@@ -50,7 +50,7 @@ public class PopulateUserBody {
 
         PasswordProfile passwordProfile = new PasswordProfile();
         passwordProfile.setForceChangePasswordNextSignIn(Boolean.parseBoolean(createUserInputs.getForceChangePassword()));
-        passwordProfile.setPassword(createUserInputs.getPassword());
+        passwordProfile.setPassword(createUserInputs.getAssignedPassword());
 
         userBody.setPasswordProfile(passwordProfile);
     }

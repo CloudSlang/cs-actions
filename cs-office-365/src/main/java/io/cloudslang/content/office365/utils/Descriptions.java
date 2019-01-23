@@ -146,6 +146,10 @@ public class Descriptions {
         public static final String MESSAGE_ID_DESC = "The Id of the created message";
     }
 
+    public static class MoveMessage {
+        public static final String DESTINATION_ID_DESC = "The destination folder ID, or a well-known folder name.";
+    }
+
     public static class CreateUser {
         public static final String ACCOUNT_ENABLED_DESC = "true if the account is enabled; otherwise, false.";
         public static final String DISPLAY_NAME_DESC = "The name to display in the address book for the user.";

@@ -27,22 +27,23 @@ public class CreateUserInputs {
     private final String mailNickname;
     private final String userPrincipalName;
     private final String forceChangePassword;
-    private final String password;
+    private final String assignedPassword;
     private final String oDataQuery;
 
     private final Office365CommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"accountEnabled", "displayName", "onPremisesImmutableId", "mailNickname",
-            "userPrincipalName", "forceChangePassword", "password", "commonInputs", "oDataQuery"})
+            "userPrincipalName", "forceChangePassword", "assignedPassword", "commonInputs", "oDataQuery"})
+
     public CreateUserInputs(String accountEnabled, String displayName, String onPremisesImmutableId, String mailNickname,
-                            String userPrincipalName, String forceChangePassword, String password, Office365CommonInputs commonInputs, String oDataQuery) {
+                            String userPrincipalName, String forceChangePassword, String assignedPassword, Office365CommonInputs commonInputs, String oDataQuery) {
         this.accountEnabled = accountEnabled;
         this.displayName = displayName;
         this.onPremisesImmutableId = onPremisesImmutableId;
         this.mailNickname = mailNickname;
         this.userPrincipalName = userPrincipalName;
         this.forceChangePassword = forceChangePassword;
-        this.password = password;
+        this.assignedPassword = assignedPassword;
         this.commonInputs = commonInputs;
         this.oDataQuery = oDataQuery;
     }
@@ -83,8 +84,8 @@ public class CreateUserInputs {
     }
 
     @NotNull
-    public String getPassword() {
-        return password;
+    public String getAssignedPassword() {
+        return assignedPassword;
     }
 
     @NotNull
@@ -104,7 +105,7 @@ public class CreateUserInputs {
         private String mailNickname = EMPTY;
         private String userPrincipalName = EMPTY;
         private String forceChangePassword = EMPTY;
-        private String password = EMPTY;
+        private String assignedPassword = EMPTY;
         private Office365CommonInputs commonInputs;
         private String oDataQuery = EMPTY;
 
@@ -148,8 +149,8 @@ public class CreateUserInputs {
         }
 
         @NotNull
-        public CreateUserInputs.CreateUserInputsBuilder password(@NotNull final String password) {
-            this.password = password;
+        public CreateUserInputs.CreateUserInputsBuilder assignedPassword(@NotNull final String assignedPassword) {
+            this.assignedPassword = assignedPassword;
             return this;
         }
 
@@ -167,7 +168,8 @@ public class CreateUserInputs {
 
         public CreateUserInputs build() {
             return new CreateUserInputs(accountEnabled, displayName, onPremisesImmutableId, mailNickname,
-                    userPrincipalName, forceChangePassword, password, commonInputs, oDataQuery);
+                    userPrincipalName, forceChangePassword, assignedPassword, commonInputs, oDataQuery);
+
         }
     }
 }

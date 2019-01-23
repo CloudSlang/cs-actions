@@ -26,7 +26,7 @@ public class PopulateUpdateUserBody {
     public static String populateUpdateUserBody(CreateUserInputs createUserInputs) {
         final JsonObject updateUserBody = new JsonObject();
         updateUserBody.addProperty(ACCOUNT_ENABLED_BODY, Boolean.getBoolean(createUserInputs.getAccountEnabled()));
-        updateUserBody.add(PASSWORD_PROFILE_BODY, updatePasswordProfile(createUserInputs.getForceChangePassword(), createUserInputs.getPassword()));
+        updateUserBody.add(PASSWORD_PROFILE_BODY, updatePasswordProfile(createUserInputs.getForceChangePassword(), createUserInputs.getAssignedPassword()));
 
         if (!isEmpty(createUserInputs.getMailNickname()))
             updateUserBody.addProperty(MAIL_NICKNAME_BODY, createUserInputs.getMailNickname());
