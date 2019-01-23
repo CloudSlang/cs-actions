@@ -19,6 +19,7 @@ import io.cloudslang.content.constants.OutputNames;
 public final class Outputs extends OutputNames {
     public static class CommonOutputs {
         public static final String DOCUMENT = "document";
+        public static final String ATTACHMENT_ID = "attachment_id";
     }
 
     public static class AuthorizationOutputs {

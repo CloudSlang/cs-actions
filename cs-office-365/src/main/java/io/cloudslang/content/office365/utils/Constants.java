@@ -73,4 +73,5 @@ public final class Constants {
     public static final String FORCE_CHANGE_PASSWORD_NEXT_SIGN_IN_BODY = "forceChangePasswordNextSignIn";
     public static final String PASSWORD_BODY = "password";
     public static final String SELECT_PATH = "?$select=";
+    public static final String ATTACHMENTS = "/attachments";
 }

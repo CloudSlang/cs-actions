@@ -76,5 +76,9 @@ public final class Inputs extends InputNames {
         public static final String USER_PRINCIPAL_NAME_TO_UPDATE = "userPrincipalNameToUpdate";
         public static final String USER_PRINCIPAL_NAME_TO_UPDATE_WITH = "userPrincipalNameToUpdateWith";
     }
+
+    public static class ListAttachments {
+        public static final String ATTACHMENT_ID = "attachmentId";
+    }
 }
 

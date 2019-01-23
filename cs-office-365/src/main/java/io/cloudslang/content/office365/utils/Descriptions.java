@@ -190,4 +190,10 @@ public class Descriptions {
         public static final String LIST_USERS_DOCUMENT_DESC = "The full API response in case of success";
         public static final String LIST_USERS_EXCEPTION_DESC = "An error message in case there was an error while retrieving the list of user objects.";
     }
+
+    public static class ListAttachments{
+        public static final String ATTACHMENT_ID_DESC = "A list of attachment id's delimited by a comma";
+        public static final String SUCCESS_DESC = "Attachment ID retrieved successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the attachment id of the message.";
+    }
 }
