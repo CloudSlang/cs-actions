@@ -14,10 +14,6 @@
  */
 package io.cloudslang.content.office365.actions.email;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -73,7 +69,7 @@ public class ListAttachments {
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = USER_ID, description = USER_ID_DESC) String userId,
-                                       @Param(value = MESSAGE_ID, description = MESSAGE_ID_DESC) String messageId,
+                                       @Param(value = MESSAGE_ID, required = true, description = MESSAGE_ID_DESC) String messageId,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -142,11 +138,11 @@ public class ListAttachments {
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            final  Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
                 results.put(ATTACHMENT_ID, UserServiceImpl.retrieveAttachmentIdList(returnMessage));
-                }
+            }
             return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
