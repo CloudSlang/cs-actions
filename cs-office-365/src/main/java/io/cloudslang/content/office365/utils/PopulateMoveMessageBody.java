@@ -22,7 +22,7 @@ public class PopulateMoveMessageBody {
 
     public static String populateMoveMessageBody (String destinationId) {
 
-        JsonObject body = new JsonObject();
+        final JsonObject body = new JsonObject();
         body.addProperty("destinationId", destinationId);
 
         return new Gson().toJson(body);
