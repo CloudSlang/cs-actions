@@ -76,4 +76,5 @@ public final class Constants {
     public static final String SELECT_PATH = "?$select=";
     public static final String ATTACHMENTS = "/attachments";
     public static final String VALUE= "value";
+    public static final String MESSAGE_ID_LIST_JSON_PATH = "$.value[*].id";
 }

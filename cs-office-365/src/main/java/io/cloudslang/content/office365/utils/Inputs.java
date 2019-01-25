@@ -39,6 +39,7 @@ public final class Inputs extends InputNames {
         public static final String USER_PRINCIPAL_NAME = "userPrincipalName";
         public static final String USER_ID = "userId";
         public static final String MESSAGE_ID = "messageId";
+        public static final String MESSAGE_ID_LIST = "messageIdList";
         public static final String FOLDER_ID = "folderId";
         public static final String O_DATA_QUERY = "oDataQuery";
     }

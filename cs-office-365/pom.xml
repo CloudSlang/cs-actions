@@ -114,6 +114,12 @@
             <version>${adal4j.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+
         <!--HTTP CLIENT-->
         <dependency>
             <groupId>io.cloudslang.content</groupId>
