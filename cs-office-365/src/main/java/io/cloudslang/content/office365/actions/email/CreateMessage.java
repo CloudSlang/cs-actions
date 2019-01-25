@@ -201,7 +201,7 @@ public class CreateMessage {
                     final String returnMessageId = responseJson.get(ID).getAsString();
                     results.put(MESSAGE_ID, returnMessageId);
                 } else
-                    results.put(ID, EMPTY);
+                    results.put(MESSAGE_ID, EMPTY);
             }
 
             return results;
