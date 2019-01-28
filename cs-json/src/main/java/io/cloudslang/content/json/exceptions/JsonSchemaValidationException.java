@@ -14,16 +14,14 @@
  */
 package io.cloudslang.content.json.exceptions;
 
-/**
- * Created by Folea Ilie Cristian on 2/4/2016.
- */
-public class RemoveEmptyElementException extends Exception {
+public class JsonSchemaValidationException extends Exception {
 
-    public RemoveEmptyElementException(String message) {
+    public JsonSchemaValidationException(String message) {
         super(message);
     }
 
-    public RemoveEmptyElementException(Exception ex) {
+    public JsonSchemaValidationException(Exception ex) {
         super(ex);
     }
 }
+
