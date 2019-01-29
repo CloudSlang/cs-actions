@@ -23,10 +23,15 @@ import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.*;
 import io.cloudslang.content.office365.utils.PopulateMessageBody;
 import io.cloudslang.content.office365.utils.PopulateMoveMessageBody;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +39,11 @@ import java.util.Map;
 import static io.cloudslang.content.office365.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
+import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.CONTENT_TYPE;
+import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.*;
 import static io.cloudslang.content.office365.utils.PopulateAttachmentBody.populateAddAttachmentBody;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class EmailServiceImpl {
 
@@ -114,6 +123,17 @@ public class EmailServiceImpl {
             uriBuilder.setPath(getMessagePath(userPrincipalName, userId, messageId));
         } else
             uriBuilder.setPath(getMessagePath(userPrincipalName, userId, messageId, folderId));
+
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    private static String getAttachmentsUrl(@NotNull final String userPrincipalName,
+                                            @NotNull final String userId,
+                                            @NotNull final String messageId,
+                                            @NotNull final String attachmentId) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder();
+        uriBuilder.setPath(getAttachmentsPath(userPrincipalName, userId, messageId, attachmentId));
 
         return uriBuilder.build().toURL().toString();
     }
@@ -265,6 +285,58 @@ public class EmailServiceImpl {
     }
 
     @NotNull
+    public static Map<String, String> getAttachments(@NotNull final GetAttachmentsInputs getAttachmentsInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = getAttachmentsInputs.getCommonInputs();
+        httpClientInputs.setUrl(getAttachmentsUrl(commonInputs.getUserPrincipalName(),
+                commonInputs.getUserId(),
+                getAttachmentsInputs.getMessageId(),
+                getAttachmentsInputs.getAttachmentId()));
+
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    private static void downloadAttachment(String filePath, String contentBytes, String contentName) throws IOException {
+        byte[] data = Base64.decodeBase64(contentBytes);
+        final String finalPath = filePath + File.separator + contentName;
+        try (OutputStream stream = new FileOutputStream(finalPath)) {
+            stream.write(data);
+        }
+    }
+
+    public static void addAditionalOutputs(Map<String, String> results, Map<String, String> result, String returnMessage, String filePath) throws IOException {
+        final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+
+        if (statusCode >= 200 && statusCode < 300) {
+            final JsonParser parser = new JsonParser();
+            final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
+            addOutput(results, responseJson, NAME, CONTENT_NAME);
+            addOutput(results, responseJson, CONTENT_TYPE, CONTENT_TYPE);
+            addOutput(results, responseJson, CONTENT_BYTES, CONTENT_BYTES);
+            addOutput(results, responseJson, SIZE, CONTENT_SIZE);
+
+            if (!isEmpty(filePath))
+                downloadAttachment(filePath, responseJson.get(CONTENT_BYTES).getAsString(), responseJson.get(NAME).getAsString());
+        }
+    }
+
+    public static void addOutput(Map<String, String> results, JsonObject responseJson, String key, String keyToAdd) {
+        if (responseJson.has(key))
+            results.put(keyToAdd, responseJson.get(key).getAsString());
+        else
+            results.put(keyToAdd, EMPTY);
+    }
+
+    @NotNull
     public static Map<String, String> ListAttachment(@NotNull final ListAttachmentsInputs getListAttachmentInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = getListAttachmentInputs.getCommonInputs();
@@ -310,6 +382,6 @@ public class EmailServiceImpl {
                 }
             }
         }
-        return StringUtils.join(attachmentIdList, ",");
+        return StringUtils.join(attachmentIdList, COMMA);
     }
 }

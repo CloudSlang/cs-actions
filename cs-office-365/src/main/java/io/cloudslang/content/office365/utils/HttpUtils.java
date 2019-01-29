@@ -15,7 +15,6 @@
 package io.cloudslang.content.office365.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
-import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -98,6 +97,21 @@ public class HttpUtils {
         return addAttachmentString.toString();
     }
 
+    @NotNull
+    public static String getAttachmentsPath(@NotNull final String userPrincipalName,
+                                            @NotNull final String userId,
+                                            @NotNull final String messageId,
+                                            @NotNull final String attachmentId) {
+        StringBuilder messagepathString = new StringBuilder()
+                .append(BASE_GRAPH_PATH)
+                .append(getLoginType(userPrincipalName, userId))
+                .append(MESSAGES_PATH)
+                .append(messageId)
+                .append(ATTACHMENTS_PATH)
+                .append(attachmentId);
+        return messagepathString.toString();
+    }
+
 
     @NotNull
     public static String sendMessagePath(@NotNull final String userPrincipalName,
@@ -108,7 +122,6 @@ public class HttpUtils {
                 .append(SEND);
         return messagepathString.toString();
     }
-
 
     @NotNull
     public static String getMessagesPath(@NotNull final String userPrincipalName,
