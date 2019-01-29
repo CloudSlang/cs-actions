@@ -24,8 +24,6 @@ import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.AddAttachment.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.*;
-import static io.cloudslang.content.office365.utils.Descriptions.CreateUser.CREATE_USER_DOCUMENT_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.CreateUser.CREATE_USER_EXCEPTION_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.FAILURE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.SUCCESS_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.MESSAGE_ID_DESC;
@@ -49,8 +47,8 @@ public class AddAttachment {
             outputs = {
                     @Output(value = RETURN_RESULT, description = ADD_ATTACHMENT_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = DOCUMENT, description = CREATE_USER_DOCUMENT_DESC),
-                    @Output(value = EXCEPTION, description = CREATE_USER_EXCEPTION_DESC),
+                    @Output(value = DOCUMENT, description = ADD_ATTACHMENT_DOCUMENT_DESC),
+                    @Output(value = EXCEPTION, description = ADD_ATTACHMENT_EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
@@ -65,7 +63,7 @@ public class AddAttachment {
                                        @Param(value = FILE_PATH, description = FILE_PATH_DESC) String filePath,
                                        @Param(value = CONTENT_NAME, description = CONTENT_NAME_DESC) String contentName,
                                        @Param(value = CONTENT_BYTES, description = CONTENT_BYTES_DESC) String contentBytes,
-                                       
+
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,

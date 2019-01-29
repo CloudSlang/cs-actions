@@ -201,6 +201,8 @@ public class Descriptions {
         public static final String CONTENT_NAME_DESC = "The name of the file that will be attached.";
         public static final String CONTENT_BYTES_DESC = "The representation in bytes of the file that will be attached.";
         public static final String ADD_ATTACHMENT_RETURN_RESULT_DESC = "If the attachment is successful, returns the complete API response.";
+        public static final String ADD_ATTACHMENT_DOCUMENT_DESC = "The full API response in case of success.";
+        public static final String ADD_ATTACHMENT_EXCEPTION_DESC = "An error message in case there was an error adding the attachment.";
     }
 
     public static class ListAttachments{
