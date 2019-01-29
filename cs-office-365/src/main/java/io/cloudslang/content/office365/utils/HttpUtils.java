@@ -15,6 +15,7 @@
 package io.cloudslang.content.office365.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -87,16 +88,15 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static String moveMessagePath(@NotNull final String userPrincipalName,
-                                         @NotNull final String userId,
-                                         @NotNull final String messageId) {
-        StringBuilder messagepathString = new StringBuilder()
+    public static String addAttachmentPath(@NotNull final String userPrincipalName,
+                                           @NotNull final String userId,
+                                           @NotNull final String messageId) {
+        StringBuilder addAttachmentString = new StringBuilder()
                 .append(getMessagesPath(userPrincipalName, userId))
                 .append(messageId)
-                .append(MOVE);
-        return messagepathString.toString();
+                .append(ATTACHMENTS);
+        return addAttachmentString.toString();
     }
-
 
 
     @NotNull
@@ -134,6 +134,17 @@ public class HttpUtils {
                 .append(getMessagesPath(userPrincipalName, userId, folderId))
                 .append(messageId);
         return pathString.toString();
+    }
+
+    @NotNull
+    public static String moveMessagePath(@NotNull final String userPrincipalName,
+                                         @NotNull final String userId,
+                                         @NotNull final String messageId) {
+        StringBuilder messagepathString = new StringBuilder()
+                .append(getMessagesPath(userPrincipalName, userId))
+                .append(messageId)
+                .append(MOVE);
+        return messagepathString.toString();
     }
 
     public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,

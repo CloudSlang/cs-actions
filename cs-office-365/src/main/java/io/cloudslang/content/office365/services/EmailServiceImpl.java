@@ -25,8 +25,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+import static io.cloudslang.content.office365.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
+import static io.cloudslang.content.office365.utils.PopulateAttachmentBody.populateAddAttachmentBody;
 
 public class EmailServiceImpl {
 
@@ -39,7 +41,7 @@ public class EmailServiceImpl {
                 getMessageInputs.getMessageId(),
                 getMessageInputs.getFolderId()));
 
-        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
@@ -63,7 +65,7 @@ public class EmailServiceImpl {
                 commonInputs.getUserId(),
                 postMessageInputs.getMessageId()));
 
-        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
@@ -84,7 +86,7 @@ public class EmailServiceImpl {
                 commonInputs.getUserId(),
                 listMessagesInputs.getFolderId()));
 
-        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
@@ -112,9 +114,19 @@ public class EmailServiceImpl {
 
     @NotNull
     private static String moveMessageUrl(@NotNull final String userPrincipalName,
-                                        @NotNull final String userId,
-                                        @NotNull final String messageId) throws Exception {
+                                         @NotNull final String userId,
+                                         @NotNull final String messageId) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder().setPath(moveMessagePath(userPrincipalName, userId, messageId));
+
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    private static String addAttachmentUrl(
+            @NotNull final String userPrincipalName,
+            @NotNull final String userId,
+            @NotNull final String messageId) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder().setPath(addAttachmentPath(userPrincipalName, userId, messageId));
 
         return uriBuilder.build().toURL().toString();
     }
@@ -142,7 +154,7 @@ public class EmailServiceImpl {
                 commonInputs.getUserId(),
                 createMessageInputs.getFolderId()));
 
-        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
@@ -188,7 +200,7 @@ public class EmailServiceImpl {
                 deleteMessageInputs.getMessageId(),
                 deleteMessageInputs.getFolderId()));
 
-        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(DELETE);
@@ -208,7 +220,7 @@ public class EmailServiceImpl {
                 commonInputs.getUserId(),
                 moveMessageInputs.getMessageId()));
 
-        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
@@ -218,6 +230,30 @@ public class EmailServiceImpl {
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
         httpClientInputs.setBody(PopulateMoveMessageBody.populateMoveMessageBody(moveMessageInputs.getDestinationId()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static Map<String, String> addAttachment(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = addAttachmentInputs.getCommonInputs();
+        httpClientInputs.setUrl(addAttachmentUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(),
+                addAttachmentInputs.getMessageId()));
+
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(POST);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setContentType(APPLICATION_JSON);
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.setBody(populateAddAttachmentBody(
+                addAttachmentInputs.getFilePath(),
+                addAttachmentInputs.getContentName(),
+                addAttachmentInputs.getContentBytes()));
 
         return new HttpClientService().execute(httpClientInputs);
     }

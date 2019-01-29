@@ -30,6 +30,8 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port.";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
+    public static final String EXCEPTION_EMPTY_FILE_PATH_AND_CONTENT_BYTES = "The filePath or both contentName and contentBytes inputs are required.";
+    public static final String EXCEPTION_INVALID_FILE = "The value '%s' for %s input is not a valid file path.";
     public static final String ANONYMOUS = "anonymous";
     public static final String GET = "GET";
     public static final String POST = "POST";
@@ -77,4 +79,8 @@ public final class Constants {
     public static final String ATTACHMENTS = "/attachments";
     public static final String VALUE= "value";
     public static final String MESSAGE_ID_LIST_JSON_PATH = "$.value[*].id";
+    public static final String FILE_PATH = "filePath";
+    public static final String NAME = "name";
+    public static final String ODATA_TYPE = "@odata.type";
+    public static final String MICROSOFT_GRAPH_FILE_ATTACHMENT = "#microsoft.graph.fileAttachment";
 }
