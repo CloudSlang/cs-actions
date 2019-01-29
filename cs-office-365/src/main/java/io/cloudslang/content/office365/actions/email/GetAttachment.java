@@ -30,21 +30,19 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.office365.services.EmailServiceImpl.addAditionalOutputs;
 import static io.cloudslang.content.office365.services.EmailServiceImpl.getAttachments;
-import static io.cloudslang.content.office365.utils.Constants.*;
+import static io.cloudslang.content.office365.utils.Constants.CONTENT_TYPE;
 import static io.cloudslang.content.office365.utils.Constants.FILE_PATH;
+import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.RESPONSC_CHARACTER_SET_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetAttachments.ATTACHMENT_ID_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetAttachments.FILE_PATH_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetAttachments.FAILURE_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetAttachments.SUCCESS_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetAttachments.*;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
@@ -54,6 +52,7 @@ import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_US
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyGetAttachmentInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
+import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -65,7 +64,11 @@ public class GetAttachment {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = DOCUMENT, description = DOCUMENT_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = CONTENT_NAME, description = CONTENT_NAME_DESC),
+                    @Output(value = CONTENT_TYPE, description = CONTENT_TYPE_DESC),
+                    @Output(value = CONTENT_BYTES, description = CONTENT_BYTES_DESC),
+                    @Output(value = CONTENT_SIZE, description = CONTENT_SIZE_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),

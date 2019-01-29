@@ -39,8 +39,6 @@ import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.AddAttachment.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.*;
-import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.FAILURE_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.SUCCESS_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.MESSAGE_ID_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.STATUS_CODE_DESC;
 import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
@@ -62,7 +60,7 @@ public class AddAttachment {
             outputs = {
                     @Output(value = RETURN_RESULT, description = ADD_ATTACHMENT_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = DOCUMENT, description = ADD_ATTACHMENT_DOCUMENT_DESC),
+                    @Output(value = DOCUMENT, description = DOCUMENT_DESC),
                     @Output(value = EXCEPTION, description = ADD_ATTACHMENT_EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
