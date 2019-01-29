@@ -91,7 +91,7 @@ public class HttpUtils {
     public static String addAttachmentPath(@NotNull final String userPrincipalName,
                                            @NotNull final String userId,
                                            @NotNull final String messageId) {
-        StringBuilder addAttachmentString = new StringBuilder()
+        final StringBuilder addAttachmentString = new StringBuilder()
                 .append(getMessagesPath(userPrincipalName, userId))
                 .append(messageId)
                 .append(ATTACHMENTS);
