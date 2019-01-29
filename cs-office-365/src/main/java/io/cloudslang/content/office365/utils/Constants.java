@@ -51,7 +51,6 @@ public final class Constants {
     public static final String MESSAGES_PATH = "/messages";
     public static final String PATH_SEPARATOR = "/";
     public static final String MAIL_FOLDERS_PATH = "/mailFolders/";
-    public static final String DATA_QUERY = "$select=";
     public static final String TOP_QUERY = "$top=";
     public static final String SELECT_PATH = "$select=";
     public static final String AND = "&";
