@@ -51,7 +51,6 @@ public final class Constants {
     public static final String MESSAGES_PATH = "/messages";
     public static final String PATH_SEPARATOR = "/";
     public static final String MAIL_FOLDERS_PATH = "/mailFolders/";
-    public static final String DATA_QUERY = "$select=";
     public static final String TOP_QUERY = "$top=";
     public static final String SELECT_PATH = "$select=";
     public static final String AND = "&";
@@ -84,10 +83,9 @@ public final class Constants {
     public static final String ON_PREMISES_IMMUTABLE_ID_BODY = "onPremisesImmutableId";
     public static final String FORCE_CHANGE_PASSWORD_NEXT_SIGN_IN_BODY = "forceChangePasswordNextSignIn";
     public static final String PASSWORD_BODY = "password";
-    public static final String SELECT_PATH = "?$select=";
     public static final String ATTACHMENTS = "/attachments";
     public static final String ATTACHMENTS_PATH = "/attachments/";
-    public static final String VALUE= "value";
+    public static final String VALUE = "value";
     public static final String MESSAGE_ID_LIST_JSON_PATH = "$.value[*].id";
     public static final String FILE_PATH = "filePath";
     public static final String ODATA_TYPE = "@odata.type";

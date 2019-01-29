@@ -39,11 +39,10 @@ import java.util.Map;
 import static io.cloudslang.content.office365.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
-import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.CONTENT_TYPE;
 import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.*;
+import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.CONTENT_TYPE;
 import static io.cloudslang.content.office365.utils.PopulateAttachmentBody.populateAddAttachmentBody;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class EmailServiceImpl {
