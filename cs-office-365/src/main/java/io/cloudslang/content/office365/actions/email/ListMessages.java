@@ -72,6 +72,9 @@ public class ListMessages {
                                        @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = USER_ID, description = USER_ID_DESC) String userId,
                                        @Param(value = FOLDER_ID, description = FOLDER_ID_DESC) String folderId,
+                                       @Param(value = TOP_QUERY_INPUT, description = TOP_QUERY_DESC) String topQuery,
+                                       @Param(value = SELECT_QUERY, description = SELECT_QUERY_DESC) String selectQuery,
+                                       @Param(value = O_DATA_QUERY, description = O_DATA_QUERY_DESC) String oDataQuery,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -107,6 +110,9 @@ public class ListMessages {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
+        topQuery = defaultIfEmpty(topQuery, TOP_QUERY_CONST);
+        selectQuery = defaultIfEmpty(selectQuery, EMPTY);
+        oDataQuery = defaultIfEmpty(oDataQuery, EMPTY);
 
         final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive,
@@ -119,10 +125,11 @@ public class ListMessages {
         try {
             final Map<String, String> result = listMessages(ListMessagesInputs.builder()
                     .folderId(folderId)
+                    .topQuery(topQuery)
+                    .selectQuery(selectQuery)
+                    .oDataQuery(oDataQuery)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
-                            .connectionsMaxPerRoute(connectionsMaxPerRoute)
-                            .connectionsMaxTotal(connectionsMaxTotal)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)

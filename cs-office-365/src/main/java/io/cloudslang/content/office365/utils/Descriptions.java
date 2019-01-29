@@ -60,8 +60,14 @@ public class Descriptions {
         public static final String USER_PRINCIPAL_NAME_DESC = "The email address of the user to perform the action on. " +
                 "The input is mutually exclusive with the userId input.";
         public static final String USER_ID_DESC = "The ID of the user to perform the action on.";
-        public static final String O_DATA_QUERY_DESC = "A list of valid query parameters in the form of a coma delimited list. " +
-                "Example: id,internetMessageHeaders";
+        public static final String O_DATA_QUERY_DESC = "Query parameters which can be used to specify and control the amount of data returned " +
+                "in a response specified in '&key1=val1&key2=val2' format. $top and $select options should be not passed for this input because the values" +
+                "for these options can be passed in topQuery and selectQuery inputs." +
+                " Example: &format=json";
+        public static final String TOP_QUERY_DESC = "Query parameter use to specify the number of results. Default value: 10";
+        public static final String SELECT_QUERY_DESC = "A list of query parameters in the form of a comma delimited list." +
+                " Example: id,internetMessageHeaders";
+
         public static final String MESSAGE_ID_DESC = "The ID of the message to retrieve.";
         public static final String FOLDER_ID_DESC = "The ID of the folder which contains the message to retrieve.";
 

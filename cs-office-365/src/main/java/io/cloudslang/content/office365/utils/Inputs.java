@@ -41,6 +41,8 @@ public final class Inputs extends InputNames {
         public static final String MESSAGE_ID = "messageId";
         public static final String FOLDER_ID = "folderId";
         public static final String O_DATA_QUERY = "oDataQuery";
+        public static final String TOP_QUERY_INPUT = "topQuery";
+        public static final String SELECT_QUERY = "selectQuery";
     }
 
     public static class CreateMessage {

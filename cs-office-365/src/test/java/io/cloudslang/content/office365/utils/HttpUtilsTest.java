@@ -30,23 +30,28 @@ import static org.junit.Assert.assertThat;
 
 public class HttpUtilsTest {
 
+    public static final String FORMAT_JSON = "$format=json";
+    public static final String GET_QUERY_PARAMS = "$select=id,name&$format=json";
     private static final String SUCCESS_CODE = "200";
     private static final String RETURNED_RESULT = "returned result";
     private static final String FAILURE_RETURN_CODE = "-1";
     private static final String FAILURE_CODE = "401";
-    private static final String GET_MESSAGES_EXPECTED = "/v1.0/users/test@test.onmicrosoft.com/messages/";
+    private static final String GET_MESSAGES_EXPECTED = "/v1.0/users/test@test.onmicrosoft.com/messages";
     private static final String USER_PRINCIPAL_NAME = "test@test.onmicrosoft.com";
-    private static final String GET_MESSAGE_FOLDER_EXPECTED = "/v1.0/users/test@test.onmicrosoft.com/mailFolders/folderId/messages/";
+    private static final String GET_MESSAGE_FOLDER_EXPECTED = "/v1.0/users/test@test.onmicrosoft.com/mailFolders/folderId/messages";
     private static final String FOLDER_ID = "folderId";
     private static final String USER_ID = "userId";
     private static final String MESSAGE_ID = "messageId";
     private static final String AUTH_TOKEN = "authToken";
-    private static final String O_DATA_QUERY = "param1,param2";
-    private static final String EXPECTED_QUERY_PARAMS = "$select=param1,param2";
+    private static final String EXPECTED_QUERY_PARAMS = "$top=2&$select=id,name&$format=json";
     private static final String EXPECTED_HEADER = "Authorization:Bearer authToken";
     private static final String EXPECTED_PATH = "/v1.0/users/test@test.onmicrosoft.com/mailFolders/folderId/messages/messageId";
     private static final String EXPECTED_PATH_WITH_USER_PRINCIPAL_NAME = "/v1.0/users/test@test.onmicrosoft.com/messages/messageId";
-    private static final String EXPECTED_PATH_BOTH_OPTIONS_USER = "/v1.0/users/userId/mailFolders/folderId/messages/";
+    private static final String EXPECTED_PATH_BOTH_OPTIONS_USER = "/v1.0/users/userId/mailFolders/folderId/messages";
+    private static final String TOP_QUERY = "2";
+    private static final String SELECT_QUERY = "id,name";
+    private static final String O_DATA_QUERY = "?$format=json";
+    private static final String O_DATA_QUERY2 = "&$format=json";
 
     private Map<String, String> initializeSuccessResult() {
         final Map<String, String> result = new HashMap<>();
@@ -133,8 +138,28 @@ public class HttpUtilsTest {
     }
 
     @Test
-    public void getQueryParamsTest() {
-        String queryParams = getQueryParams(O_DATA_QUERY);
+    public void getQueryParamsTest2() {
+        String queryParams = getQueryParams(TOP_QUERY, SELECT_QUERY, O_DATA_QUERY);
         assertEquals(EXPECTED_QUERY_PARAMS, queryParams);
     }
+
+    @Test
+    public void getQueryParamsTestTwoArgs() {
+        String queryParams = getQueryParams(SELECT_QUERY, O_DATA_QUERY);
+        assertEquals(GET_QUERY_PARAMS, queryParams);
+    }
+
+    @Test
+    public void getQueryParamsTestTwoArgsEmptySelectQuery() {
+        String queryParams = getQueryParams(EMPTY, O_DATA_QUERY);
+        assertEquals(FORMAT_JSON, queryParams);
+    }
+
+
+    @Test
+    public void getQueryParamsTestTwoArgsEmptySelectQuery2() {
+        String queryParams = getQueryParams(EMPTY, O_DATA_QUERY2);
+        assertEquals(FORMAT_JSON, queryParams);
+    }
+
 }

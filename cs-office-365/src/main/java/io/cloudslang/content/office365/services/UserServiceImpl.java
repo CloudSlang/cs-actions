@@ -31,15 +31,6 @@ import java.util.Map;
 
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
-import static io.cloudslang.content.office365.utils.Constants.ANONYMOUS;
-import static io.cloudslang.content.office365.utils.Constants.APPLICATION_JSON;
-import static io.cloudslang.content.office365.utils.Constants.CHANGEIT;
-import static io.cloudslang.content.office365.utils.Constants.DEFAULT_JAVA_KEYSTORE;
-import static io.cloudslang.content.office365.utils.Constants.DELETE;
-import static io.cloudslang.content.office365.utils.Constants.DELETE_USER_REQUEST_URL;
-import static io.cloudslang.content.office365.utils.Constants.POST;
-import static io.cloudslang.content.office365.utils.HttpUtils.getAuthHeaders;
-import static io.cloudslang.content.office365.utils.HttpUtils.getQueryParams;
 
 public class UserServiceImpl {
 
@@ -83,7 +74,7 @@ public class UserServiceImpl {
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
         if (!StringUtils.isEmpty(createUserInputs.getoDataQuery())) {
-            httpClientInputs.setQueryParams(getQueryParams(createUserInputs.getoDataQuery().replaceAll("\\s+", "")));
+            httpClientInputs.setQueryParams(createUserInputs.getoDataQuery());
         }
 
         return new HttpClientService().execute(httpClientInputs);

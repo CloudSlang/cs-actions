@@ -18,7 +18,6 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.*;
 import io.cloudslang.content.office365.utils.PopulateMessageBody;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,6 +25,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class EmailServiceImpl {
 
@@ -47,8 +47,8 @@ public class EmailServiceImpl {
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
-        if (!StringUtils.isEmpty(getMessageInputs.getoDataQuery())) {
-            httpClientInputs.setQueryParams(getQueryParams(getMessageInputs.getoDataQuery()));
+        if (!isEmpty(getMessageInputs.getSelectQuery()) || !isEmpty(getMessageInputs.getoDataQuery())) {
+            httpClientInputs.setQueryParams(getQueryParams(getMessageInputs.getSelectQuery(), getMessageInputs.getoDataQuery()));
         }
         return new HttpClientService().execute(httpClientInputs);
     }
@@ -91,6 +91,7 @@ public class EmailServiceImpl {
         httpClientInputs.setKeystorePassword(CHANGEIT);
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.setQueryParams(getQueryParams(listMessagesInputs.getTopQuery(), listMessagesInputs.getSelectQuery(), listMessagesInputs.getoDataQuery()));
 
         return new HttpClientService().execute(httpClientInputs);
     }
@@ -101,7 +102,7 @@ public class EmailServiceImpl {
                                         @NotNull final String messageId,
                                         @NotNull final String folderId) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
-        if (StringUtils.isEmpty(folderId)) {
+        if (isEmpty(folderId)) {
             uriBuilder.setPath(getMessagePath(userPrincipalName, userId, messageId));
         } else
             uriBuilder.setPath(getMessagePath(userPrincipalName, userId, messageId, folderId));
@@ -116,7 +117,7 @@ public class EmailServiceImpl {
 
         final URIBuilder uriBuilder = getUriBuilder();
 
-        if (StringUtils.isEmpty(folderId)) {
+        if (isEmpty(folderId)) {
             uriBuilder.setPath(getMessagesPath(userPrincipalName, userId));
         } else
             uriBuilder.setPath(getMessagesPath(userPrincipalName, userId, folderId));
@@ -152,7 +153,7 @@ public class EmailServiceImpl {
                                            @NotNull final String userId,
                                            @NotNull final String folderId) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
-        if (StringUtils.isEmpty(folderId)) {
+        if (isEmpty(folderId)) {
             uriBuilder.setPath(getMessagesPath(userPrincipalName, userId));
         } else
             uriBuilder.setPath(getMessagesPath(userPrincipalName, userId, folderId));
