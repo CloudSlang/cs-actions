@@ -43,7 +43,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class AddAttachment {
-    @Action(name = "Add an attachment to an email in Office 365",
+    @Action(name = "Add an attachment to a message in Office 365",
             outputs = {
                     @Output(value = RETURN_RESULT, description = ADD_ATTACHMENT_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
