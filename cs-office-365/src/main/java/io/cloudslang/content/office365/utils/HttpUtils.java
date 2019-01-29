@@ -101,13 +101,10 @@ public class HttpUtils {
     public static String getAttachmentsPath(@NotNull final String userPrincipalName,
                                          @NotNull final String userId,
                                          @NotNull final String messageId,
-                                         @NotNull final String parentFolderId,
                                          @NotNull final String attachmentId) {
         StringBuilder messagepathString = new StringBuilder()
                 .append(BASE_GRAPH_PATH)
                 .append(getLoginType(userPrincipalName, userId))
-                .append(MAIL_FOLDERS_PATH)
-                .append(parentFolderId)
                 .append(MESSAGES_PATH)
                 .append(messageId)
                 .append(ATTACHMENTS_PATH)

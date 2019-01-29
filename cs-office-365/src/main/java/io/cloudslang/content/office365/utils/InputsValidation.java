@@ -133,12 +133,11 @@ public final class InputsValidation {
                                                   @Nullable final String connectionsMaxPerRoute,
                                                   @Nullable final String connectionsMaxTotal) {
 
-        final List<String> exceptionMessages = new ArrayList<>();
+        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trust_all_roots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+
         addVerifyNotNullOrEmpty(exceptionMessages, messageId, MESSAGE_ID);
         addVerifyNotNullOrEmpty(exceptionMessages, destinationId, DESTINATION_ID);
-
-        exceptionMessages.addAll(verifyCommonInputs(userPrincipalName, userId, proxyPort, trust_all_roots,
-                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
 
         return exceptionMessages;
     }
