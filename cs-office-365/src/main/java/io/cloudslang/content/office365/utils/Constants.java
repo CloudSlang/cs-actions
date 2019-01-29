@@ -62,6 +62,9 @@ public final class Constants {
     public static final String SEND_MESSAGE = "Email sent. For the delivery status please check the Delivery Report Email.";
     public static final String UPDATE_USER = "User updated successfully.";
     public static final String ID = "id";
+    public static final String COMMA = ",";
+    public static final String NAME = "name";
+    public static final String SIZE = "size";
     public static final String MANAGE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
@@ -75,6 +78,7 @@ public final class Constants {
     public static final String PASSWORD_BODY = "password";
     public static final String SELECT_PATH = "?$select=";
     public static final String ATTACHMENTS = "/attachments";
+    public static final String ATTACHMENTS_PATH = "/attachments/";
     public static final String VALUE= "value";
     public static final String MESSAGE_ID_LIST_JSON_PATH = "$.value[*].id";
 }

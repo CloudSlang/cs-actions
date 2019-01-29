@@ -201,4 +201,9 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "Attachment ID retrieved successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the attachment id of the message.";
     }
+
+    public static class GetAttachments{
+        public static final String ATTACHMENT_ID_DESC = "The ID of the attachment to be retrieved.";
+        public static final String FILE_PATH_DESC = "The file path under which the attachment will be downloaded. The attachment will not be downloaded if a path is not provided.";
+    }
 }
