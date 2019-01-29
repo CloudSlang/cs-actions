@@ -129,7 +129,7 @@ public class HttpClientAction {
      *                                           The default will create no more than 2 concurrent connections per given route. Default value: 2
      * @param connectionsMaxTotal                The maximum limit of connections in total.
      *                                           The default will create no more than 2 concurrent connections in total. Default value: 20
-     * @param headers                            The list containing the headers to use for the request separated by new line "\n" (CRLF).
+     * @param headers                            The list containing the headers to use for the request separated by new line (CRLF).
      *                                           The header name - value pair will be separated by ":". Format: According to HTTP standard for headers (RFC 2616).
      *                                           Examples: Accept:text/plain
      *                                           header1:value1 \n header2:value2
