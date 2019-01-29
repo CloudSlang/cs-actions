@@ -36,10 +36,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.office365.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
-import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.*;
 import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.CONTENT_TYPE;
+import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.*;
+import static io.cloudslang.content.office365.utils.PopulateAttachmentBody.populateAddAttachmentBody;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -54,7 +56,7 @@ public class EmailServiceImpl {
                 getMessageInputs.getMessageId(),
                 getMessageInputs.getFolderId()));
 
-        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
@@ -78,7 +80,7 @@ public class EmailServiceImpl {
                 commonInputs.getUserId(),
                 postMessageInputs.getMessageId()));
 
-        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
@@ -99,7 +101,7 @@ public class EmailServiceImpl {
                 commonInputs.getUserId(),
                 listMessagesInputs.getFolderId()));
 
-        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
@@ -127,20 +129,30 @@ public class EmailServiceImpl {
 
     @NotNull
     private static String getAttachmentsUrl(@NotNull final String userPrincipalName,
-                                        @NotNull final String userId,
-                                        @NotNull final String messageId,
-                                        @NotNull final String attachmentId) throws Exception {
+                                            @NotNull final String userId,
+                                            @NotNull final String messageId,
+                                            @NotNull final String attachmentId) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
-            uriBuilder.setPath(getAttachmentsPath(userPrincipalName, userId, messageId, attachmentId));
+        uriBuilder.setPath(getAttachmentsPath(userPrincipalName, userId, messageId, attachmentId));
 
         return uriBuilder.build().toURL().toString();
     }
 
     @NotNull
     private static String moveMessageUrl(@NotNull final String userPrincipalName,
-                                        @NotNull final String userId,
-                                        @NotNull final String messageId) throws Exception {
+                                         @NotNull final String userId,
+                                         @NotNull final String messageId) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder().setPath(moveMessagePath(userPrincipalName, userId, messageId));
+
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    private static String addAttachmentUrl(
+            @NotNull final String userPrincipalName,
+            @NotNull final String userId,
+            @NotNull final String messageId) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder().setPath(addAttachmentPath(userPrincipalName, userId, messageId));
 
         return uriBuilder.build().toURL().toString();
     }
@@ -168,7 +180,7 @@ public class EmailServiceImpl {
                 commonInputs.getUserId(),
                 createMessageInputs.getFolderId()));
 
-        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
@@ -214,7 +226,7 @@ public class EmailServiceImpl {
                 deleteMessageInputs.getMessageId(),
                 deleteMessageInputs.getFolderId()));
 
-        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(DELETE);
@@ -234,7 +246,7 @@ public class EmailServiceImpl {
                 commonInputs.getUserId(),
                 moveMessageInputs.getMessageId()));
 
-        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
@@ -249,13 +261,37 @@ public class EmailServiceImpl {
     }
 
     @NotNull
+    public static Map<String, String> addAttachment(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = addAttachmentInputs.getCommonInputs();
+        httpClientInputs.setUrl(addAttachmentUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(),
+                addAttachmentInputs.getMessageId()));
+
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(POST);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setContentType(APPLICATION_JSON);
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.setBody(populateAddAttachmentBody(
+                addAttachmentInputs.getFilePath(),
+                addAttachmentInputs.getContentName(),
+                addAttachmentInputs.getContentBytes()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
     public static Map<String, String> getAttachments(@NotNull final GetAttachmentsInputs getAttachmentsInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = getAttachmentsInputs.getCommonInputs();
         httpClientInputs.setUrl(getAttachmentsUrl(commonInputs.getUserPrincipalName(),
-                                                    commonInputs.getUserId(),
-                                                    getAttachmentsInputs.getMessageId(),
-                                                    getAttachmentsInputs.getAttachmentId()));
+                commonInputs.getUserId(),
+                getAttachmentsInputs.getMessageId(),
+                getAttachmentsInputs.getAttachmentId()));
 
         HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
@@ -283,17 +319,17 @@ public class EmailServiceImpl {
         if (statusCode >= 200 && statusCode < 300) {
             final JsonParser parser = new JsonParser();
             final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
-            addOutput(results,responseJson, NAME, CONTENT_NAME);
-            addOutput(results,responseJson, CONTENT_TYPE, CONTENT_TYPE);
-            addOutput(results,responseJson, CONTENT_BYTES, CONTENT_BYTES);
-            addOutput(results,responseJson, SIZE, CONTENT_SIZE);
+            addOutput(results, responseJson, NAME, CONTENT_NAME);
+            addOutput(results, responseJson, CONTENT_TYPE, CONTENT_TYPE);
+            addOutput(results, responseJson, CONTENT_BYTES, CONTENT_BYTES);
+            addOutput(results, responseJson, SIZE, CONTENT_SIZE);
 
             if (!isEmpty(filePath))
                 downloadAttachment(filePath, responseJson.get(CONTENT_BYTES).getAsString(), responseJson.get(NAME).getAsString());
         }
     }
 
-    public static void addOutput (Map<String, String> results, JsonObject responseJson, String key, String keyToAdd) {
+    public static void addOutput(Map<String, String> results, JsonObject responseJson, String key, String keyToAdd) {
         if (responseJson.has(key))
             results.put(keyToAdd, responseJson.get(key).getAsString());
         else

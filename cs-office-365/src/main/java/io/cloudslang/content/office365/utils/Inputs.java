@@ -84,6 +84,12 @@ public final class Inputs extends InputNames {
         public static final String USER_PRINCIPAL_NAME_TO_UPDATE_WITH = "userPrincipalNameToUpdateWith";
     }
 
+    public static class AddAttachment {
+        public static final String FILE_PATH = "filePath";
+        public static final String CONTENT_NAME = "contentName";
+        public static final String CONTENT_BYTES = "contentBytes";
+    }
+
     public static class ListAttachments {
         public static final String ATTACHMENT_ID = "attachmentId";
     }

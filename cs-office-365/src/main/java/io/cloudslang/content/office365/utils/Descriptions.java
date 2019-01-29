@@ -196,6 +196,16 @@ public class Descriptions {
         public static final String LIST_USERS_EXCEPTION_DESC = "An error message in case there was an error while retrieving the list of user objects.";
     }
 
+    public static class AddAttachment{
+        public static final String FILE_PATH_DESC = "The absolute path to the file that will be attached.";
+        public static final String CONTENT_NAME_DESC = "The name of the file that will be attached.";
+        public static final String CONTENT_BYTES_DESC = "The representation in bytes of the file that will be attached.";
+        public static final String ADD_ATTACHMENT_RETURN_RESULT_DESC = "If the attachment is successful, returns the complete API response.";
+        public static final String ADD_ATTACHMENT_EXCEPTION_DESC = "An error message in case there was an error adding the attachment.";
+        public static final String SUCCESS_DESC = "Attachment was added successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to add the attachment.";
+    }
+
     public static class ListAttachments{
         public static final String ATTACHMENT_ID_DESC = "A list of attachment id's delimited by a comma";
         public static final String SUCCESS_DESC = "Attachment ID retrieved successfully.";
@@ -205,5 +215,13 @@ public class Descriptions {
     public static class GetAttachments{
         public static final String ATTACHMENT_ID_DESC = "The ID of the attachment to be retrieved.";
         public static final String FILE_PATH_DESC = "The file path under which the attachment will be downloaded. The attachment will not be downloaded if a path is not provided.";
+
+        public static final String CONTENT_NAME_DESC = "The name of the attachment.";
+        public static final String CONTENT_TYPE_DESC = "The content type of the attachment.";
+        public static final String CONTENT_BYTES_DESC = "The bytes contained in the attachment.";
+        public static final String CONTENT_SIZE_DESC = "The size of the attachment.";
+
+        public static final String SUCCESS_DESC = "Attachment was retrieved successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the attachment.";
     }
 }
