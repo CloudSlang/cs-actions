@@ -89,6 +89,31 @@ public class HttpUtils {
         return messagepathString.toString();
     }
 
+    @NotNull
+    public static String addAttachmentPath(@NotNull final String userPrincipalName,
+                                           @NotNull final String userId,
+                                           @NotNull final String messageId) {
+        final StringBuilder addAttachmentString = new StringBuilder()
+                .append(getMessagesPath(userPrincipalName, userId))
+                .append(messageId)
+                .append(ATTACHMENTS);
+        return addAttachmentString.toString();
+    }
+
+    @NotNull
+    public static String getAttachmentsPath(@NotNull final String userPrincipalName,
+                                            @NotNull final String userId,
+                                            @NotNull final String messageId,
+                                            @NotNull final String attachmentId) {
+        StringBuilder messagepathString = new StringBuilder()
+                .append(BASE_GRAPH_PATH)
+                .append(getLoginType(userPrincipalName, userId))
+                .append(MESSAGES_PATH)
+                .append(messageId)
+                .append(ATTACHMENTS_PATH)
+                .append(attachmentId);
+        return messagepathString.toString();
+    }
 
 
     @NotNull
@@ -100,7 +125,6 @@ public class HttpUtils {
                 .append(SEND);
         return messagepathString.toString();
     }
-
 
     @NotNull
     public static String getMessagesPath(@NotNull final String userPrincipalName,
@@ -127,6 +151,17 @@ public class HttpUtils {
                 .append(PATH_SEPARATOR)
                 .append(messageId);
         return pathString.toString();
+    }
+
+    @NotNull
+    public static String moveMessagePath(@NotNull final String userPrincipalName,
+                                         @NotNull final String userId,
+                                         @NotNull final String messageId) {
+        StringBuilder messagepathString = new StringBuilder()
+                .append(getMessagesPath(userPrincipalName, userId))
+                .append(messageId)
+                .append(MOVE);
+        return messagepathString.toString();
     }
 
     public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,

@@ -15,18 +15,21 @@
 
 package io.cloudslang.content.office365.services;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.office365.entities.CreateUserInputs;
-import io.cloudslang.content.office365.entities.DeleteUserInputs;
-import io.cloudslang.content.office365.entities.GetUserInputs;
-import io.cloudslang.content.office365.entities.Office365CommonInputs;
+import io.cloudslang.content.office365.entities.*;
 import io.cloudslang.content.office365.utils.PopulateUpdateUserBody;
 import io.cloudslang.content.office365.utils.PopulateUserBody;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.office365.utils.Constants.*;

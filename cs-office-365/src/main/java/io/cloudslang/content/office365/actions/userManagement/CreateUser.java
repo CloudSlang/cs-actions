@@ -47,7 +47,6 @@ import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizatio
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.SUCCESS_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.STATUS_CODE_DESC;
 import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
