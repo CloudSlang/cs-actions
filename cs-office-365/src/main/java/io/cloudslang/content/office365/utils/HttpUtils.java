@@ -97,7 +97,23 @@ public class HttpUtils {
         return messagepathString.toString();
     }
 
-
+    @NotNull
+    public static String getAttachmentsPath(@NotNull final String userPrincipalName,
+                                         @NotNull final String userId,
+                                         @NotNull final String messageId,
+                                         @NotNull final String parentFolderId,
+                                         @NotNull final String attachmentId) {
+        StringBuilder messagepathString = new StringBuilder()
+                .append(BASE_GRAPH_PATH)
+                .append(getLoginType(userPrincipalName, userId))
+                .append(MAIL_FOLDERS_PATH)
+                .append(parentFolderId)
+                .append(MESSAGES_PATH)
+                .append(messageId)
+                .append(ATTACHMENTS_PATH)
+                .append(attachmentId);
+        return messagepathString.toString();
+    }
 
     @NotNull
     public static String sendMessagePath(@NotNull final String userPrincipalName,
@@ -108,7 +124,6 @@ public class HttpUtils {
                 .append(SEND);
         return messagepathString.toString();
     }
-
 
     @NotNull
     public static String getMessagesPath(@NotNull final String userPrincipalName,

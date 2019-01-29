@@ -75,6 +75,28 @@ public final class InputsValidation {
     }
 
     @NotNull
+    public static List<String> verifyGetAttachmentInputs(@Nullable final String messageId,
+                                                         @Nullable final String userPrincipalName,
+                                                         @Nullable final String attachmentId,
+                                                         @Nullable final String userId,
+                                                         @Nullable final String proxyPort,
+                                                         @Nullable final String trust_all_roots,
+                                                         @Nullable final String connectTimeout,
+                                                         @Nullable final String socketTimeout,
+                                                         @Nullable final String keepAlive,
+                                                         @Nullable final String connectionsMaxPerRoute,
+                                                         @Nullable final String connectionsMaxTotal) {
+
+        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trust_all_roots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+
+        addVerifyNotNullOrEmpty(exceptionMessages, messageId, MESSAGE_ID);
+        addVerifyNotNullOrEmpty(exceptionMessages, attachmentId, ATTACHMENT_ID);
+
+        return exceptionMessages;
+    }
+
+    @NotNull
     public static List<String> verifyCommonInputs(@Nullable final String userPrincipalName,
                                                   @Nullable final String userId,
                                                   @Nullable final String proxyPort,

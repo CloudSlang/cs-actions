@@ -42,6 +42,8 @@ public final class Inputs extends InputNames {
         public static final String MESSAGE_ID_LIST = "messageIdList";
         public static final String FOLDER_ID = "folderId";
         public static final String O_DATA_QUERY = "oDataQuery";
+        public static final String ATTACHMENT_ID = "attachmentId";
+        public static final String FILE_PATH = "filePath";
     }
 
     public static class CreateMessage {

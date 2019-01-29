@@ -14,19 +14,36 @@
  */
 package io.cloudslang.content.office365.services;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.*;
 import io.cloudslang.content.office365.utils.PopulateMessageBody;
 import io.cloudslang.content.office365.utils.PopulateMoveMessageBody;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
+import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
+import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.*;
+import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.CONTENT_BYTES;
+import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.CONTENT_SIZE;
+import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.CONTENT_TYPE;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class EmailServiceImpl {
 
@@ -106,6 +123,18 @@ public class EmailServiceImpl {
             uriBuilder.setPath(getMessagePath(userPrincipalName, userId, messageId));
         } else
             uriBuilder.setPath(getMessagePath(userPrincipalName, userId, messageId, folderId));
+
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    private static String getAttachmentsUrl(@NotNull final String userPrincipalName,
+                                        @NotNull final String userId,
+                                        @NotNull final String messageId,
+                                        @NotNull final String parentFolderId,
+                                        @NotNull final String attachmentId) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder();
+            uriBuilder.setPath(getAttachmentsPath(userPrincipalName, userId, messageId, parentFolderId, attachmentId));
 
         return uriBuilder.build().toURL().toString();
     }
@@ -220,5 +249,99 @@ public class EmailServiceImpl {
         httpClientInputs.setBody(PopulateMoveMessageBody.populateMoveMessageBody(moveMessageInputs.getDestinationId()));
 
         return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static Map<String, String> getAttachments(@NotNull final GetAttachmentsInputs getAttachmentsInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365CommonInputs commonInputs = getAttachmentsInputs.getCommonInputs();
+        final String parentFolderId = getParentFolderId(getAttachmentsInputs);
+        httpClientInputs.setUrl(getAttachmentsUrl(commonInputs.getUserPrincipalName(),
+                                                    commonInputs.getUserId(),
+                                                    getAttachmentsInputs.getMessageId(),
+                                                    parentFolderId,
+                                                    getAttachmentsInputs.getAttachmentId()));
+
+        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
+
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    private static String getParentFolderId(final GetAttachmentsInputs getAttachmentsInputs) throws Exception {
+        final Map <String, String> getMessageResponse = getMessage(GetMessageInputs.builder()
+                .messageId(getAttachmentsInputs.getMessageId())
+                .commonInputs(Office365CommonInputs.builder()
+                        .authToken(getAttachmentsInputs.getCommonInputs().getAuthToken())
+                        .connectionsMaxPerRoute(getAttachmentsInputs.getCommonInputs().getConnectionsMaxPerRoute())
+                        .connectionsMaxTotal(getAttachmentsInputs.getCommonInputs().getConnectionsMaxTotal())
+                        .proxyHost(getAttachmentsInputs.getCommonInputs().getProxyHost())
+                        .proxyPort(getAttachmentsInputs.getCommonInputs().getProxyPort())
+                        .proxyUsername(getAttachmentsInputs.getCommonInputs().getProxyUsername())
+                        .proxyPassword(getAttachmentsInputs.getCommonInputs().getProxyPassword())
+                        .keepAlive(getAttachmentsInputs.getCommonInputs().getKeepAlive())
+                        .socketTimeout(getAttachmentsInputs.getCommonInputs().getSocketTimeout())
+                        .responseCharacterSet(getAttachmentsInputs.getCommonInputs().getResponseCharacterSet())
+                        .connectTimeout(getAttachmentsInputs.getCommonInputs().getConnectTimeout())
+                        .trustAllRoots(getAttachmentsInputs.getCommonInputs().getTrustAllRoots())
+                        .userId(getAttachmentsInputs.getCommonInputs().getUserId())
+                        .userPrincipalName(getAttachmentsInputs.getCommonInputs().getUserPrincipalName())
+                        .x509HostnameVerifier(getAttachmentsInputs.getCommonInputs().getX509HostnameVerifier())
+                        .trustKeystore(getAttachmentsInputs.getCommonInputs().getTrustKeystore())
+                        .trustPassword(getAttachmentsInputs.getCommonInputs().getTrustPassword())
+                        .build())
+                .build());
+
+        final String getMessageDocument = getMessageResponse.get(RETURN_RESULT);
+        final Map<String, String> result = getOperationResults(getMessageResponse, getMessageDocument, getMessageDocument, getMessageDocument);
+        if (Integer.parseInt(result.get(RETURN_CODE)) == 1)
+            throw new Exception(result.get(EXCEPTION));
+        else {
+            final JsonParser parser = new JsonParser();
+            final JsonObject responseJson = parser.parse(result.get(DOCUMENT)).getAsJsonObject();
+            return responseJson.get(ID).getAsString();
+        }
+    }
+
+    private static void downloadAttachment(String filePath, String contentBytes, String contentName) throws IOException {
+        byte[] data = Base64.decodeBase64(contentBytes);
+        final String finalPath = filePath + File.separator + contentName;
+        try (OutputStream stream = new FileOutputStream(finalPath)) {
+            stream.write(data);
+        }
+    }
+
+    public static void addAditionalOutputs(Map<String, String> results, Map<String, String> result, String returnMessage, String filePath) throws IOException {
+        final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+
+        if (statusCode >= 200 && statusCode < 300) {
+            final JsonParser parser = new JsonParser();
+            final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
+            if (responseJson.has(NAME))
+                results.put(CONTENT_NAME, responseJson.get(NAME).getAsString());
+            else
+                results.put(CONTENT_NAME, EMPTY);
+            if (responseJson.has(CONTENT_TYPE))
+                results.put(CONTENT_TYPE, responseJson.get(CONTENT_TYPE).getAsString());
+            else
+                results.put(CONTENT_TYPE, EMPTY);
+            if (responseJson.has(CONTENT_BYTES))
+                results.put(CONTENT_BYTES, responseJson.get(CONTENT_BYTES).getAsString());
+            else
+                results.put(CONTENT_BYTES, EMPTY);
+            if (responseJson.has(SIZE))
+                results.put(CONTENT_SIZE, responseJson.get(SIZE).getAsString());
+            else
+                results.put(CONTENT_SIZE, EMPTY);
+
+            if (!isEmpty(filePath))
+                downloadAttachment(filePath, responseJson.get(CONTENT_BYTES).getAsString(), responseJson.get(NAME).getAsString());
+        }
     }
 }
