@@ -21,7 +21,6 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.office365.entities.ListAttachmentsInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
-import io.cloudslang.content.office365.services.UserServiceImpl;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -34,7 +33,8 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.office365.services.UserServiceImpl.ListAttachment;
+import static io.cloudslang.content.office365.services.EmailServiceImpl.ListAttachment;
+import static io.cloudslang.content.office365.services.EmailServiceImpl.retrieveAttachmentIdList;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.RETURN_CODE_DESC;
@@ -141,7 +141,7 @@ public class ListAttachments {
             final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                results.put(ATTACHMENT_ID, UserServiceImpl.retrieveAttachmentIdList(returnMessage));
+                results.put(ATTACHMENT_ID, retrieveAttachmentIdList(returnMessage));
             } else {
                 result.put(ATTACHMENT_ID, EMPTY);
             }
