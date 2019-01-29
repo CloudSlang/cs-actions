@@ -43,13 +43,19 @@ public final class Constants {
     public static final String UTF8 = "UTF-8";
     public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
     public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
+    public static final String TOP_QUERY_CONST = "10";
     public static final String AUTHORIZATION = "Authorization:";
     public static final String BEARER = "Bearer ";
     public static final String GRAPH_HOST = "graph.microsoft.com";
     public static final String BASE_GRAPH_PATH = "/v1.0/users/";
-    public static final String MESSAGES_PATH = "/messages/";
+    public static final String MESSAGES_PATH = "/messages";
+    public static final String PATH_SEPARATOR = "/";
     public static final String MAIL_FOLDERS_PATH = "/mailFolders/";
     public static final String DATA_QUERY = "$select=";
+    public static final String TOP_QUERY = "$top=";
+    public static final String SELECT_PATH = "$select=";
+    public static final String AND = "&";
+    public static final String QUERY = "?";
     public static final String HTTPS = "https";
     public static final String CONTENT_LENGTH = "Content-Length:0";
     public static final String HEADERS_DELIMITER = "\r\n";
@@ -78,7 +84,6 @@ public final class Constants {
     public static final String ON_PREMISES_IMMUTABLE_ID_BODY = "onPremisesImmutableId";
     public static final String FORCE_CHANGE_PASSWORD_NEXT_SIGN_IN_BODY = "forceChangePasswordNextSignIn";
     public static final String PASSWORD_BODY = "password";
-    public static final String SELECT_PATH = "?$select=";
     public static final String ATTACHMENTS = "/attachments";
     public static final String ATTACHMENTS_PATH = "/attachments/";
     public static final String VALUE= "value";

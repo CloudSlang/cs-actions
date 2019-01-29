@@ -77,7 +77,7 @@ public class UserServiceImpl {
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
         if (!StringUtils.isEmpty(createUserInputs.getoDataQuery())) {
-            httpClientInputs.setQueryParams(getQueryParams(createUserInputs.getoDataQuery().replaceAll("\\s+", "")));
+            httpClientInputs.setQueryParams(createUserInputs.getoDataQuery());
         }
 
         return new HttpClientService().execute(httpClientInputs);

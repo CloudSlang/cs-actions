@@ -67,6 +67,7 @@ public class GetMessage {
                                        @Param(value = USER_ID, description = USER_ID_DESC) String userId,
                                        @Param(value = MESSAGE_ID, required = true, description = MESSAGE_ID_DESC) String messageId,
                                        @Param(value = FOLDER_ID, description = FOLDER_ID_DESC) String folderId,
+                                       @Param(value = SELECT_QUERY, description = SELECT_QUERY_DESC) String selectQuery,
                                        @Param(value = O_DATA_QUERY, description = O_DATA_QUERY_DESC) String oDataQuery,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
@@ -104,6 +105,7 @@ public class GetMessage {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
+        selectQuery = defaultIfEmpty(selectQuery, EMPTY);
 
         final List<String> exceptionMessages = verifyGetMessageInputs(messageId, userPrincipalName, userId, proxyPort,
                 trustAllRoots, connectTimeout, socketTimeout, keepAlive,
@@ -117,6 +119,7 @@ public class GetMessage {
             final Map<String, String> result = getMessage(GetMessageInputs.builder()
                     .messageId(messageId)
                     .folderId(folderId)
+                    .selectQuery(selectQuery)
                     .oDataQuery(oDataQuery)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
