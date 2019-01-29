@@ -395,6 +395,6 @@ public class EmailServiceImpl {
                 }
             }
         }
-        return StringUtils.join(attachmentIdList, ",");
+        return StringUtils.join(attachmentIdList, COMMA);
     }
 }
