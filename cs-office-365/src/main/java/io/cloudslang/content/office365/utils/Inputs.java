@@ -44,6 +44,8 @@ public final class Inputs extends InputNames {
         public static final String O_DATA_QUERY = "oDataQuery";
         public static final String ATTACHMENT_ID = "attachmentId";
         public static final String FILE_PATH = "filePath";
+        public static final String TOP_QUERY_INPUT = "topQuery";
+        public static final String SELECT_QUERY = "selectQuery";
     }
 
     public static class CreateMessage {

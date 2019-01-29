@@ -16,6 +16,7 @@ package io.cloudslang.content.office365.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,6 +31,7 @@ import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUME
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
+import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class HttpUtils {
@@ -82,6 +84,7 @@ public class HttpUtils {
                                         @NotNull final String messageId) {
         StringBuilder messagepathString = new StringBuilder()
                 .append(getMessagesPath(userPrincipalName, userId))
+                .append(PATH_SEPARATOR)
                 .append(messageId);
         return messagepathString.toString();
     }
@@ -145,6 +148,7 @@ public class HttpUtils {
 
         StringBuilder pathString = new StringBuilder()
                 .append(getMessagesPath(userPrincipalName, userId, folderId))
+                .append(PATH_SEPARATOR)
                 .append(messageId);
         return pathString.toString();
     }
@@ -203,10 +207,51 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static String getQueryParams(@NotNull final String oDataQuery) {
+    public static String getQueryParams(@NotNull final String topQuery,
+                                        @NotNull final String selectQuery,
+                                        @NotNull String oDataQuery) {
         final StringBuilder oDataQueryParam = new StringBuilder()
-                .append(DATA_QUERY)
-                .append(oDataQuery);
+                .append(TOP_QUERY)
+                .append(topQuery);
+        if (!isEmpty(selectQuery)) {
+            oDataQueryParam.append(AND)
+                    .append(SELECT_PATH)
+                    .append(selectQuery);
+        }
+        if (!isEmpty(oDataQuery)) {
+            if (oDataQuery.startsWith(QUERY)) {
+                oDataQuery = oDataQuery.substring(1, oDataQuery.length());
+            }
+            if (!oDataQuery.startsWith(AND)) {
+                oDataQuery = AND + oDataQuery;
+            }
+            oDataQueryParam.append(oDataQuery);
+        }
+
+        return oDataQueryParam.toString();
+    }
+
+    @NotNull
+    public static String getQueryParams(@NotNull final String selectQuery,
+                                        @NotNull String oDataQuery) {
+        final StringBuilder oDataQueryParam = new StringBuilder();
+        if (!isEmpty(selectQuery)) {
+            oDataQueryParam.append(SELECT_PATH)
+                    .append(selectQuery);
+        }
+        if (!isEmpty(oDataQuery)) {
+            if (oDataQuery.startsWith(QUERY)) {
+                oDataQuery = oDataQuery.substring(1, oDataQuery.length());
+            }
+            if (oDataQuery.startsWith(AND) && isEmpty(selectQuery)){
+                oDataQuery = oDataQuery.substring(1, oDataQuery.length());
+            }
+            if (!oDataQuery.startsWith(AND) && !isEmpty(selectQuery)) {
+                oDataQuery = AND + oDataQuery;
+            }
+            oDataQueryParam.append(oDataQuery);
+        }
+
         return oDataQueryParam.toString();
     }
 
