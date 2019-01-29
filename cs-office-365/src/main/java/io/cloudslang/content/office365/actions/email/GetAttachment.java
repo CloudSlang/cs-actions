@@ -74,7 +74,7 @@ public class GetAttachment {
                                        @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = USER_ID, description = USER_ID_DESC) String userId,
                                        @Param(value = MESSAGE_ID, required = true, description = MESSAGE_ID_DESC) String messageId,
-                                       @Param(value = ATTACHMENT_ID, description = ATTACHMENT_ID_DESC) String attachmentId,
+                                       @Param(value = ATTACHMENT_ID, required = true, description = ATTACHMENT_ID_DESC) String attachmentId,
                                        @Param(value = FILE_PATH, description = FILE_PATH_DESC) String filePath,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
