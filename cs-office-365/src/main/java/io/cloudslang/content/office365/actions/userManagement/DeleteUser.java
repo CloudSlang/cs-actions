@@ -147,8 +147,6 @@ public class DeleteUser {
             final Map<String, String> result = deleteUser(DeleteUserInputs.builder()
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
-                            .connectionsMaxPerRoute(connectionsMaxPerRoute)
-                            .connectionsMaxTotal(connectionsMaxTotal)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
