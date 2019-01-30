@@ -14,7 +14,6 @@
  */
 package io.cloudslang.content.office365.actions.email;
 
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -36,6 +35,7 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.office365.services.EmailServiceImpl.addAttachment;
+import static io.cloudslang.content.office365.services.EmailServiceImpl.addOutput;
 import static io.cloudslang.content.office365.utils.Constants.FILE_PATH;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.AddAttachment.FAILURE_DESC;
@@ -156,13 +156,7 @@ public class AddAttachment {
             final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                final JsonObject responseJson = new JsonParser().parse(returnMessage).getAsJsonObject();
-                if (responseJson.has(ID)) {
-                    final String attachmentId = responseJson.get(ID).getAsString();
-                    results.put(ATTACHMENT_ID, attachmentId);
-                } else {
-                    results.put(ATTACHMENT_ID, EMPTY);
-                }
+                addOutput(results, new JsonParser().parse(returnMessage).getAsJsonObject(), ID, ATTACHMENT_ID);
             }
 
             return results;
