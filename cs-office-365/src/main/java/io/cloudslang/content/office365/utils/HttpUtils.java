@@ -108,6 +108,7 @@ public class HttpUtils {
                 .append(BASE_GRAPH_PATH)
                 .append(getLoginType(userPrincipalName, userId))
                 .append(MESSAGES_PATH)
+                .append(PATH_SEPARATOR)
                 .append(messageId)
                 .append(ATTACHMENTS_PATH)
                 .append(attachmentId);
