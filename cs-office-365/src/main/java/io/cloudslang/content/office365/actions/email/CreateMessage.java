@@ -170,8 +170,6 @@ public class CreateMessage {
                     .subject(subject)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
-                            .connectionsMaxPerRoute(connectionsMaxPerRoute)
-                            .connectionsMaxTotal(connectionsMaxTotal)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)

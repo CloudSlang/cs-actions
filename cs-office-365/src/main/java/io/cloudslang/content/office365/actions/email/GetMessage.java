@@ -123,8 +123,6 @@ public class GetMessage {
                     .oDataQuery(oDataQuery)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
-                            .connectionsMaxPerRoute(connectionsMaxPerRoute)
-                            .connectionsMaxTotal(connectionsMaxTotal)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)

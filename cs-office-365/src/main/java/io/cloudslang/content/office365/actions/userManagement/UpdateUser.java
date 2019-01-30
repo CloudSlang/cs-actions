@@ -143,8 +143,6 @@ public class UpdateUser {
                             .authToken(authToken)
                             .userPrincipalName(userPrincipalNameToUpdate)
                             .userId(userIdToUpdate)
-                            .connectionsMaxPerRoute(connectionsMaxPerRoute)
-                            .connectionsMaxTotal(connectionsMaxTotal)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)

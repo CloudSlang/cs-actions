@@ -133,8 +133,6 @@ public class MoveMessage {
                             .authToken(authToken)
                             .userPrincipalName(userPrincipalName)
                             .userId(userId)
-                            .connectionsMaxPerRoute(connectionsMaxPerRoute)
-                            .connectionsMaxTotal(connectionsMaxTotal)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
