@@ -366,7 +366,7 @@ public class EmailServiceImpl {
         else
             finalUrl = GET_USER_REQUEST_URL + userId;
         if (!StringUtils.isEmpty(messageId))
-            finalUrl = finalUrl + MESSAGES_PATH + messageId;
+            finalUrl = finalUrl + MESSAGES_PATH + PATH_SEPARATOR + messageId;
         finalUrl = finalUrl + ATTACHMENTS;
         return finalUrl;
     }
