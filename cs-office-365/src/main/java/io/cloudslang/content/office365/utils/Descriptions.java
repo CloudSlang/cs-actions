@@ -75,6 +75,7 @@ public class Descriptions {
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Office 365 API request.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the message.";
+        public static final String ATTACHMENT_ID_DESC = "The ID of the added attachment.";
 
         public static final String SUCCESS_DESC = "Email message retrieved successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the email message.";
@@ -196,13 +197,13 @@ public class Descriptions {
         public static final String SUCCESS_RETURN_RESULT_DESC = "The user was successfully deleted.";
     }
 
-    public static class ListUser{
+    public static class ListUser {
         public static final String LIST_USERS_RESULT_DESC = "If successful, returns the complete API response.";
         public static final String LIST_USERS_DOCUMENT_DESC = "The full API response in case of success";
         public static final String LIST_USERS_EXCEPTION_DESC = "An error message in case there was an error while retrieving the list of user objects.";
     }
 
-    public static class AddAttachment{
+    public static class AddAttachment {
         public static final String FILE_PATH_DESC = "The absolute path to the file that will be attached.";
         public static final String CONTENT_NAME_DESC = "The name of the file that will be attached.";
         public static final String CONTENT_BYTES_DESC = "The representation in bytes of the file that will be attached.";
@@ -212,13 +213,13 @@ public class Descriptions {
         public static final String FAILURE_DESC = "There was an error while trying to add the attachment.";
     }
 
-    public static class ListAttachments{
+    public static class ListAttachments {
         public static final String ATTACHMENT_ID_DESC = "A list of attachment id's delimited by a comma";
         public static final String SUCCESS_DESC = "Attachment ID retrieved successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the attachment id of the message.";
     }
 
-    public static class GetAttachments{
+    public static class GetAttachments {
         public static final String ATTACHMENT_ID_DESC = "The ID of the attachment to be retrieved.";
         public static final String FILE_PATH_DESC = "The file path under which the attachment will be downloaded. The attachment will not be downloaded if a path is not provided.";
 

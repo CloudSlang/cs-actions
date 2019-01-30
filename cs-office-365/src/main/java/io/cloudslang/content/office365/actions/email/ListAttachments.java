@@ -39,7 +39,7 @@ import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.RETURN_CODE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
-import static io.cloudslang.content.office365.utils.Descriptions.ListAttachments.*;
+import static io.cloudslang.content.office365.utils.Descriptions.ListAttachments.ATTACHMENT_ID_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListAttachments.FAILURE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListAttachments.SUCCESS_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.EXCEPTION_DESC;

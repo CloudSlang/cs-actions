@@ -90,6 +90,7 @@ public final class Inputs extends InputNames {
         public static final String FILE_PATH = "filePath";
         public static final String CONTENT_NAME = "contentName";
         public static final String CONTENT_BYTES = "contentBytes";
+        public static final String ATTACHMENT_ID = "attachmentId";
     }
 
     public static class ListAttachments {

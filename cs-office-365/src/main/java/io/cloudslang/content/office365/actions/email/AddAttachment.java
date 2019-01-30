@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.office365.actions.email;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -36,11 +38,11 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.office365.services.EmailServiceImpl.addAttachment;
 import static io.cloudslang.content.office365.utils.Constants.FILE_PATH;
 import static io.cloudslang.content.office365.utils.Constants.*;
+import static io.cloudslang.content.office365.utils.Descriptions.AddAttachment.FAILURE_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.AddAttachment.SUCCESS_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.AddAttachment.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
-import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.*;
-import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.MESSAGE_ID_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.STATUS_CODE_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.office365.utils.Inputs.AddAttachment.CONTENT_BYTES;
 import static io.cloudslang.content.office365.utils.Inputs.AddAttachment.CONTENT_NAME;
@@ -62,7 +64,8 @@ public class AddAttachment {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = DOCUMENT, description = DOCUMENT_DESC),
                     @Output(value = EXCEPTION, description = ADD_ATTACHMENT_EXCEPTION_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = ATTACHMENT_ID, description = ATTACHMENT_ID_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -147,8 +150,22 @@ public class AddAttachment {
                             .trustPassword(trustPassword)
                             .build())
                     .build());
+
             final String returnMessage = result.get(RETURN_RESULT);
-            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+
+            if (statusCode >= 200 && statusCode < 300) {
+                final JsonObject responseJson = new JsonParser().parse(returnMessage).getAsJsonObject();
+                if (responseJson.has(ID)) {
+                    final String attachmentId = responseJson.get(ID).getAsString();
+                    results.put(ATTACHMENT_ID, attachmentId);
+                } else {
+                    results.put(ATTACHMENT_ID, EMPTY);
+                }
+            }
+
+            return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
