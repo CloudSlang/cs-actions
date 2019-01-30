@@ -16,7 +16,6 @@ package io.cloudslang.content.office365.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +30,6 @@ import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUME
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
-import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class HttpUtils {
@@ -95,6 +93,7 @@ public class HttpUtils {
                                            @NotNull final String messageId) {
         final StringBuilder addAttachmentString = new StringBuilder()
                 .append(getMessagesPath(userPrincipalName, userId))
+                .append(PATH_SEPARATOR)
                 .append(messageId)
                 .append(ATTACHMENTS);
         return addAttachmentString.toString();
@@ -221,7 +220,7 @@ public class HttpUtils {
         }
         if (!isEmpty(oDataQuery)) {
             if (oDataQuery.startsWith(QUERY)) {
-                oDataQuery = oDataQuery.substring(1, oDataQuery.length());
+                oDataQuery = oDataQuery.substring(1);
             }
             if (!oDataQuery.startsWith(AND)) {
                 oDataQuery = AND + oDataQuery;
@@ -242,10 +241,10 @@ public class HttpUtils {
         }
         if (!isEmpty(oDataQuery)) {
             if (oDataQuery.startsWith(QUERY)) {
-                oDataQuery = oDataQuery.substring(1, oDataQuery.length());
+                oDataQuery = oDataQuery.substring(1);
             }
-            if (oDataQuery.startsWith(AND) && isEmpty(selectQuery)){
-                oDataQuery = oDataQuery.substring(1, oDataQuery.length());
+            if (oDataQuery.startsWith(AND) && isEmpty(selectQuery)) {
+                oDataQuery = oDataQuery.substring(1);
             }
             if (!oDataQuery.startsWith(AND) && !isEmpty(selectQuery)) {
                 oDataQuery = AND + oDataQuery;

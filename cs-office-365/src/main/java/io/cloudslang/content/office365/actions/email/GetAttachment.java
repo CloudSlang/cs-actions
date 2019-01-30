@@ -39,6 +39,7 @@ import static io.cloudslang.content.office365.services.EmailServiceImpl.getAttac
 import static io.cloudslang.content.office365.utils.Constants.FILE_PATH;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
+import static io.cloudslang.content.office365.utils.Descriptions.GetAttachments.ATTACHMENT_ID_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAttachments.FAILURE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAttachments.SUCCESS_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAttachments.*;
