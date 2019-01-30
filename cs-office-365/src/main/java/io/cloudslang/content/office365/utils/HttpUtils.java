@@ -159,6 +159,7 @@ public class HttpUtils {
                                          @NotNull final String messageId) {
         StringBuilder messagepathString = new StringBuilder()
                 .append(getMessagesPath(userPrincipalName, userId))
+                .append(PATH_SEPARATOR)
                 .append(messageId)
                 .append(MOVE);
         return messagepathString.toString();
