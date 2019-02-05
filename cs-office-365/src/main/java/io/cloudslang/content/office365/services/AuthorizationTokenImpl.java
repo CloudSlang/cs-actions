@@ -14,17 +14,21 @@
  */
 package io.cloudslang.content.office365.services;
 
+import com.microsoft.aad.adal4j.AsymmetricKeyCredential;
 import com.microsoft.aad.adal4j.AuthenticationContext;
 import com.microsoft.aad.adal4j.AuthenticationResult;
 import com.microsoft.aad.adal4j.ClientCredential;
 import io.cloudslang.content.office365.entities.AuthorizationTokenInputs;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.FileInputStream;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static io.cloudslang.content.office365.utils.Constants.API;
+import static io.cloudslang.content.office365.utils.Constants.CERTIFICATE;
 import static io.cloudslang.content.office365.utils.HttpUtils.getProxy;
 
 public class AuthorizationTokenImpl {
@@ -40,7 +44,11 @@ public class AuthorizationTokenImpl {
             final ClientCredential credential = new ClientCredential(inputs.getClientId(), inputs.getClientSecret());
             return acquireToken(context, inputs, credential, service);
         }
-
+        if (inputs.getLoginType().equalsIgnoreCase(CERTIFICATE)) {
+            final AsymmetricKeyCredential asymmetricKeyCredential = AsymmetricKeyCredential.create(inputs.getClientId(),
+                    new FileInputStream(inputs.getCertificatePath()), inputs.getCertificatePassword());
+            return acquireToken(context, inputs, asymmetricKeyCredential);
+        }
         //Otherwise, the loginType is Native since the verification was already made in the @Action
         return acquireToken(context, inputs, service);
     }
@@ -56,6 +64,13 @@ public class AuthorizationTokenImpl {
     private static AuthenticationResult acquireToken(@NotNull final AuthenticationContext context, @NotNull final AuthorizationTokenInputs inputs, @NotNull ExecutorService service) throws Exception {
         final Future<AuthenticationResult> future = context.acquireToken(inputs.getResource(), inputs.getClientId(), inputs.getUsername(), inputs.getPassword(), null);
         service.shutdown();
+        return future.get();
+    }
+
+    @NotNull
+    private static AuthenticationResult acquireToken(@NotNull final AuthenticationContext context, @NotNull final AuthorizationTokenInputs inputs,
+                                                     @NotNull final AsymmetricKeyCredential asymmetricKeyCredential) throws ExecutionException, InterruptedException {
+        final Future<AuthenticationResult> future = context.acquireToken(inputs.getResource(), asymmetricKeyCredential, null);
         return future.get();
     }
 }

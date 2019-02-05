@@ -95,6 +95,9 @@ public class Descriptions {
                 "tenant.";
         public static final String RESOURCES_DESC = "The resource URL\n" +
                 "Default: 'https://graph.microsoft.com'";
+        public static final String CERTIFICATE_PATH_DESC = "The path to Office 365 certificate.";
+        public static final String CERTIFICATE_PASSWORD_DESC = "Password for Office 365 certificate.";
+
 
         public static final String RETURN_RESULT_DESC = "The authorization token for Office 365.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";

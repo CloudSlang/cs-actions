@@ -87,6 +87,8 @@ public class GetAuthorizationToken {
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = LOGIN_AUTHORITY, required = true, description = LOGIN_AUTHORITY_DESC) String loginAuthority,
+                                       @Param(value = CERTIFICATE_PATH, description = CERTIFICATE_PATH_DESC) String certificatePath,
+                                       @Param(value = CERTIFICATE_PASSWORD, description = CERTIFICATE_PASSWORD_DESC) String certificatePassword,
                                        @Param(value = RESOURCE, description = RESOURCES_DESC) String resource,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -102,7 +104,9 @@ public class GetAuthorizationToken {
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
-        final List<String> exceptionMessages = verifyAuthorizationInputs(loginType, clientId, clientSecret, username, password, proxyPort);
+        certificatePath = defaultIfEmpty(certificatePath, EMPTY);
+        certificatePassword = defaultIfEmpty(certificatePassword, EMPTY);
+        final List<String> exceptionMessages = verifyAuthorizationInputs(loginType, clientId, clientSecret, username, password, proxyPort, certificatePath, certificatePassword);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -120,6 +124,8 @@ public class GetAuthorizationToken {
                     .proxyPort(NumberUtilities.toInteger(proxyPort))
                     .proxyUsername(proxyUsername)
                     .proxyPassword(proxyPassword)
+                    .certificatePath(certificatePath)
+                    .certificatePassword(certificatePassword)
                     .build());
 
             final Map<String, String> successResultsMap = getSuccessResultsMap(result.getAccessToken());

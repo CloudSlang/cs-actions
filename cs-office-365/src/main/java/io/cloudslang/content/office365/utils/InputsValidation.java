@@ -41,7 +41,15 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public final class InputsValidation {
 
     @NotNull
-    public static List<String> verifyAuthorizationInputs(@Nullable final String loginType, @Nullable final String clientId, @Nullable final String clientSecret, @Nullable final String username, @Nullable final String password, @NotNull final String proxyPort) {
+    public static List<String> verifyAuthorizationInputs(@Nullable final String loginType,
+                                                         @Nullable final String clientId,
+                                                         @Nullable final String clientSecret,
+                                                         @Nullable final String username,
+                                                         @Nullable final String password,
+                                                         @NotNull final String proxyPort,
+                                                         @Nullable final String certificatePath,
+                                                         @Nullable final String certificatePassword) {
+
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyLoginType(exceptionMessages, loginType, LOGIN_TYPE);
         addVerifyNotNullOrEmpty(exceptionMessages, clientId, CLIENT_ID);
@@ -51,6 +59,10 @@ public final class InputsValidation {
         }
         if (StringUtilities.equalsIgnoreCase(loginType, API)) {
             addVerifyNotNullOrEmpty(exceptionMessages, clientSecret, CLIENT_SECRET);
+        }
+        if(StringUtilities.equalsIgnoreCase(loginType, CERTIFICATE)){
+            addVerifyNotNullOrEmpty(exceptionMessages, certificatePath, CERTIFICATE_PATH);
+            addVerifyNotNullOrEmpty(exceptionMessages, certificatePassword, CERTIFICATE_PASSWORD);
         }
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
         return exceptionMessages;
@@ -269,7 +281,7 @@ public final class InputsValidation {
 
     @NotNull
     private static List<String> addVerifyLoginType(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
-        if (!(StringUtilities.equalsIgnoreCase(input, API) || StringUtilities.equalsIgnoreCase(input, NATIVE))) {
+        if (!(StringUtilities.equalsIgnoreCase(input, API) || StringUtilities.equalsIgnoreCase(input, NATIVE) || StringUtilities.equalsIgnoreCase(input, CERTIFICATE))) {
             exceptions.add(String.format(EXCEPTION_INVALID_LOGIN_TYPE, inputName));
         }
         return exceptions;
