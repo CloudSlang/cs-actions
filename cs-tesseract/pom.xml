@@ -76,7 +76,8 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <cs-commons.version>0.0.6</cs-commons.version>
-        <junit-jupiter-api.version>5.4.0</junit-jupiter-api.version>
+        <cs-commons.version>0.0.6</cs-commons.version>
+        <tesseract.version>4.0.0-1.4.4</tesseract.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -96,7 +97,11 @@
             <artifactId>cs-commons</artifactId>
             <version>${cs-commons.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <artifactId>tesseract</artifactId>
+            <version>${tesseract.version}</version>
+        </dependency>
         <!-- Testing dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
