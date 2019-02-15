@@ -316,9 +316,11 @@
         <module>cs-powershell</module>
         <module>cs-rft</module>
         <module>cs-ssh</module>
+        <module>cs-tesseract</module>
         <module>cs-utilities</module>
         <module>cs-vmware</module>
         <module>cs-xml</module>
+        <module>cs-tesseract</module>
     </modules>
 
 </project>
