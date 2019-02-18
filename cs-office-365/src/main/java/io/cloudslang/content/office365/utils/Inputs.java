@@ -42,6 +42,10 @@ public final class Inputs extends InputNames {
         public static final String MESSAGE_ID_LIST = "messageIdList";
         public static final String FOLDER_ID = "folderId";
         public static final String O_DATA_QUERY = "oDataQuery";
+        public static final String ATTACHMENT_ID = "attachmentId";
+        public static final String FILE_PATH = "filePath";
+        public static final String TOP_QUERY_INPUT = "topQuery";
+        public static final String SELECT_QUERY = "selectQuery";
     }
 
     public static class CreateMessage {
@@ -80,6 +84,13 @@ public final class Inputs extends InputNames {
         public static final String USER_ID_TO_UPDATE = "userIdToUpdate";
         public static final String USER_PRINCIPAL_NAME_TO_UPDATE = "userPrincipalNameToUpdate";
         public static final String USER_PRINCIPAL_NAME_TO_UPDATE_WITH = "userPrincipalNameToUpdateWith";
+    }
+
+    public static class AddAttachment {
+        public static final String FILE_PATH = "filePath";
+        public static final String CONTENT_NAME = "contentName";
+        public static final String CONTENT_BYTES = "contentBytes";
+        public static final String ATTACHMENT_ID = "attachmentId";
     }
 
     public static class ListAttachments {

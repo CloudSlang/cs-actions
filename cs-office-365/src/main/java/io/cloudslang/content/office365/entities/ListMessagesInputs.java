@@ -21,17 +21,39 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class ListMessagesInputs {
 
     private final String folderId;
+    private final String topQuery;
+    private final String selectQuery;
+    private final String oDataQuery;
+
     private final Office365CommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"folderId", "commonInputs"})
-    public ListMessagesInputs(String folderId, Office365CommonInputs commonInputs) {
+    @java.beans.ConstructorProperties({"folderId", "topQuery", "selectQuery", "oDataQuery", "commonInputs"})
+    public ListMessagesInputs(String folderId, String topQuery, String selectQuery, String oDataQuery, Office365CommonInputs commonInputs) {
         this.folderId = folderId;
+        this.topQuery = topQuery;
+        this.selectQuery = selectQuery;
+        this.oDataQuery = oDataQuery;
         this.commonInputs = commonInputs;
     }
 
     @NotNull
     public static ListMessagesInputsBuilder builder() {
         return new ListMessagesInputsBuilder();
+    }
+
+    @NotNull
+    public String getTopQuery() {
+        return topQuery;
+    }
+
+    @NotNull
+    public String getSelectQuery() {
+        return selectQuery;
+    }
+
+    @NotNull
+    public String getoDataQuery() {
+        return oDataQuery;
     }
 
     @NotNull
@@ -47,9 +69,30 @@ public class ListMessagesInputs {
     public static class ListMessagesInputsBuilder {
 
         private String folderId = EMPTY;
+        private String topQuery = EMPTY;
+        private String selectQuery = EMPTY;
+        private String oDataQuery = EMPTY;
         private Office365CommonInputs commonInputs;
 
         ListMessagesInputsBuilder() {
+        }
+
+        @NotNull
+        public ListMessagesInputs.ListMessagesInputsBuilder topQuery(@NotNull final String topQuery) {
+            this.topQuery = topQuery;
+            return this;
+        }
+
+        @NotNull
+        public ListMessagesInputs.ListMessagesInputsBuilder selectQuery(@NotNull final String selectQuery) {
+            this.selectQuery = selectQuery;
+            return this;
+        }
+
+        @NotNull
+        public ListMessagesInputs.ListMessagesInputsBuilder oDataQuery(@NotNull final String oDataQuery) {
+            this.oDataQuery = oDataQuery;
+            return this;
         }
 
         @NotNull
@@ -65,7 +108,7 @@ public class ListMessagesInputs {
         }
 
         public ListMessagesInputs build() {
-            return new ListMessagesInputs(folderId, commonInputs);
+            return new ListMessagesInputs(folderId, topQuery, selectQuery, oDataQuery, commonInputs);
         }
     }
 

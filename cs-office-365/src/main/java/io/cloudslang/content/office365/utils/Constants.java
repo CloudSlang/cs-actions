@@ -30,6 +30,8 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port.";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
+    public static final String EXCEPTION_EMPTY_FILE_PATH_AND_CONTENT_BYTES = "The filePath or both contentName and contentBytes inputs are required.";
+    public static final String EXCEPTION_INVALID_FILE = "The value '%s' for %s input is not a valid file path.";
     public static final String ANONYMOUS = "anonymous";
     public static final String GET = "GET";
     public static final String POST = "POST";
@@ -41,13 +43,18 @@ public final class Constants {
     public static final String UTF8 = "UTF-8";
     public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
     public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
+    public static final String TOP_QUERY_CONST = "10";
     public static final String AUTHORIZATION = "Authorization:";
     public static final String BEARER = "Bearer ";
     public static final String GRAPH_HOST = "graph.microsoft.com";
     public static final String BASE_GRAPH_PATH = "/v1.0/users/";
-    public static final String MESSAGES_PATH = "/messages/";
+    public static final String MESSAGES_PATH = "/messages";
+    public static final String PATH_SEPARATOR = "/";
     public static final String MAIL_FOLDERS_PATH = "/mailFolders/";
-    public static final String DATA_QUERY = "$select=";
+    public static final String TOP_QUERY = "$top=";
+    public static final String SELECT_PATH = "$select=";
+    public static final String AND = "&";
+    public static final String QUERY = "?";
     public static final String HTTPS = "https";
     public static final String CONTENT_LENGTH = "Content-Length:0";
     public static final String HEADERS_DELIMITER = "\r\n";
@@ -62,6 +69,9 @@ public final class Constants {
     public static final String SEND_MESSAGE = "Email sent. For the delivery status please check the Delivery Report Email.";
     public static final String UPDATE_USER = "User updated successfully.";
     public static final String ID = "id";
+    public static final String COMMA = ",";
+    public static final String NAME = "name";
+    public static final String SIZE = "size";
     public static final String MANAGE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
@@ -73,8 +83,11 @@ public final class Constants {
     public static final String ON_PREMISES_IMMUTABLE_ID_BODY = "onPremisesImmutableId";
     public static final String FORCE_CHANGE_PASSWORD_NEXT_SIGN_IN_BODY = "forceChangePasswordNextSignIn";
     public static final String PASSWORD_BODY = "password";
-    public static final String SELECT_PATH = "?$select=";
     public static final String ATTACHMENTS = "/attachments";
+    public static final String ATTACHMENTS_PATH = "/attachments/";
     public static final String VALUE= "value";
     public static final String MESSAGE_ID_LIST_JSON_PATH = "$.value[*].id";
+    public static final String FILE_PATH = "filePath";
+    public static final String ODATA_TYPE = "@odata.type";
+    public static final String MICROSOFT_GRAPH_FILE_ATTACHMENT = "#microsoft.graph.fileAttachment";
 }

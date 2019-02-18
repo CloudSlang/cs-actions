@@ -14,7 +14,6 @@
  */
 package io.cloudslang.content.office365.actions.email;
 
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -35,6 +34,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.office365.services.EmailServiceImpl.addOutput;
 import static io.cloudslang.content.office365.services.EmailServiceImpl.createMessage;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
@@ -47,8 +47,8 @@ import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HO
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.*;
 import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.BODY;
+import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.*;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyCreateMessageInputs;
@@ -170,8 +170,6 @@ public class CreateMessage {
                     .subject(subject)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
-                            .connectionsMaxPerRoute(connectionsMaxPerRoute)
-                            .connectionsMaxTotal(connectionsMaxTotal)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
@@ -195,13 +193,7 @@ public class CreateMessage {
             final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                final JsonParser parser = new JsonParser();
-                final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
-                if (responseJson.has(ID)) {
-                    final String returnMessageId = responseJson.get(ID).getAsString();
-                    results.put(MESSAGE_ID, returnMessageId);
-                } else
-                    results.put(MESSAGE_ID, EMPTY);
+                addOutput(results, new JsonParser().parse(returnMessage).getAsJsonObject(), ID, MESSAGE_ID);
             }
 
             return results;

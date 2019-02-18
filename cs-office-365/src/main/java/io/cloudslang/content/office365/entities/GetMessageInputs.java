@@ -21,14 +21,16 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class GetMessageInputs {
     private final String messageId;
     private final String folderId;
+    private final String selectQuery;
     private final String oDataQuery;
 
     private final Office365CommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"messageId", "folderId", "oDataQuery", "commonInputs"})
-    public GetMessageInputs(String messageId, String folderId, String oDataQuery, Office365CommonInputs commonInputs) {
+    @java.beans.ConstructorProperties({"messageId", "folderId", "selectQuery", "oDataQuery", "commonInputs"})
+    public GetMessageInputs(String messageId, String folderId, String selectQuery, String oDataQuery, Office365CommonInputs commonInputs) {
         this.messageId = messageId;
         this.folderId = folderId;
+        this.selectQuery = selectQuery;
         this.oDataQuery = oDataQuery;
         this.commonInputs = commonInputs;
     }
@@ -49,6 +51,11 @@ public class GetMessageInputs {
     }
 
     @NotNull
+    public String getSelectQuery() {
+        return selectQuery;
+    }
+
+    @NotNull
     public String getoDataQuery() {
         return this.oDataQuery;
     }
@@ -61,6 +68,7 @@ public class GetMessageInputs {
     public static class GetMessageInputsBuilder {
         private String messageId = EMPTY;
         private String folderId = EMPTY;
+        private String selectQuery = EMPTY;
         private String oDataQuery = EMPTY;
         private Office365CommonInputs commonInputs;
 
@@ -78,6 +86,11 @@ public class GetMessageInputs {
             return this;
         }
         @NotNull
+        public GetMessageInputs.GetMessageInputsBuilder selectQuery(@NotNull final String selectQuery) {
+            this.selectQuery = selectQuery;
+            return this;
+        }
+        @NotNull
         public GetMessageInputs.GetMessageInputsBuilder oDataQuery(@NotNull final String oDataQuery) {
             this.oDataQuery = oDataQuery;
             return this;
@@ -90,7 +103,7 @@ public class GetMessageInputs {
         }
 
         public GetMessageInputs build() {
-            return new GetMessageInputs(messageId, folderId, oDataQuery, commonInputs);
+            return new GetMessageInputs(messageId, folderId, selectQuery, oDataQuery, commonInputs);
         }
     }
 

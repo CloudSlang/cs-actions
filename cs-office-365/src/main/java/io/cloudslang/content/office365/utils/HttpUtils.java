@@ -82,21 +82,38 @@ public class HttpUtils {
                                         @NotNull final String messageId) {
         StringBuilder messagepathString = new StringBuilder()
                 .append(getMessagesPath(userPrincipalName, userId))
+                .append(PATH_SEPARATOR)
                 .append(messageId);
         return messagepathString.toString();
     }
 
     @NotNull
-    public static String moveMessagePath(@NotNull final String userPrincipalName,
-                                         @NotNull final String userId,
-                                         @NotNull final String messageId) {
-        StringBuilder messagepathString = new StringBuilder()
+    public static String addAttachmentPath(@NotNull final String userPrincipalName,
+                                           @NotNull final String userId,
+                                           @NotNull final String messageId) {
+        final StringBuilder addAttachmentString = new StringBuilder()
                 .append(getMessagesPath(userPrincipalName, userId))
+                .append(PATH_SEPARATOR)
                 .append(messageId)
-                .append(MOVE);
-        return messagepathString.toString();
+                .append(ATTACHMENTS);
+        return addAttachmentString.toString();
     }
 
+    @NotNull
+    public static String getAttachmentsPath(@NotNull final String userPrincipalName,
+                                            @NotNull final String userId,
+                                            @NotNull final String messageId,
+                                            @NotNull final String attachmentId) {
+        StringBuilder messagepathString = new StringBuilder()
+                .append(BASE_GRAPH_PATH)
+                .append(getLoginType(userPrincipalName, userId))
+                .append(MESSAGES_PATH)
+                .append(PATH_SEPARATOR)
+                .append(messageId)
+                .append(ATTACHMENTS_PATH)
+                .append(attachmentId);
+        return messagepathString.toString();
+    }
 
 
     @NotNull
@@ -108,7 +125,6 @@ public class HttpUtils {
                 .append(SEND);
         return messagepathString.toString();
     }
-
 
     @NotNull
     public static String getMessagesPath(@NotNull final String userPrincipalName,
@@ -132,8 +148,21 @@ public class HttpUtils {
 
         StringBuilder pathString = new StringBuilder()
                 .append(getMessagesPath(userPrincipalName, userId, folderId))
+                .append(PATH_SEPARATOR)
                 .append(messageId);
         return pathString.toString();
+    }
+
+    @NotNull
+    public static String moveMessagePath(@NotNull final String userPrincipalName,
+                                         @NotNull final String userId,
+                                         @NotNull final String messageId) {
+        StringBuilder messagepathString = new StringBuilder()
+                .append(getMessagesPath(userPrincipalName, userId))
+                .append(PATH_SEPARATOR)
+                .append(messageId)
+                .append(MOVE);
+        return messagepathString.toString();
     }
 
     public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,
@@ -179,10 +208,51 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static String getQueryParams(@NotNull final String oDataQuery) {
+    public static String getQueryParams(@NotNull final String topQuery,
+                                        @NotNull final String selectQuery,
+                                        @NotNull String oDataQuery) {
         final StringBuilder oDataQueryParam = new StringBuilder()
-                .append(DATA_QUERY)
-                .append(oDataQuery);
+                .append(TOP_QUERY)
+                .append(topQuery);
+        if (!isEmpty(selectQuery)) {
+            oDataQueryParam.append(AND)
+                    .append(SELECT_PATH)
+                    .append(selectQuery);
+        }
+        if (!isEmpty(oDataQuery)) {
+            if (oDataQuery.startsWith(QUERY)) {
+                oDataQuery = oDataQuery.substring(1);
+            }
+            if (!oDataQuery.startsWith(AND)) {
+                oDataQuery = AND + oDataQuery;
+            }
+            oDataQueryParam.append(oDataQuery);
+        }
+
+        return oDataQueryParam.toString();
+    }
+
+    @NotNull
+    public static String getQueryParams(@NotNull final String selectQuery,
+                                        @NotNull String oDataQuery) {
+        final StringBuilder oDataQueryParam = new StringBuilder();
+        if (!isEmpty(selectQuery)) {
+            oDataQueryParam.append(SELECT_PATH)
+                    .append(selectQuery);
+        }
+        if (!isEmpty(oDataQuery)) {
+            if (oDataQuery.startsWith(QUERY)) {
+                oDataQuery = oDataQuery.substring(1);
+            }
+            if (oDataQuery.startsWith(AND) && isEmpty(selectQuery)) {
+                oDataQuery = oDataQuery.substring(1);
+            }
+            if (!oDataQuery.startsWith(AND) && !isEmpty(selectQuery)) {
+                oDataQuery = AND + oDataQuery;
+            }
+            oDataQueryParam.append(oDataQuery);
+        }
+
         return oDataQueryParam.toString();
     }
 

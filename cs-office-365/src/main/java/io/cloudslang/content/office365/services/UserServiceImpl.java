@@ -15,21 +15,18 @@
 
 package io.cloudslang.content.office365.services;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.office365.entities.*;
+import io.cloudslang.content.office365.entities.CreateUserInputs;
+import io.cloudslang.content.office365.entities.DeleteUserInputs;
+import io.cloudslang.content.office365.entities.GetUserInputs;
+import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.office365.utils.PopulateUpdateUserBody;
 import io.cloudslang.content.office365.utils.PopulateUserBody;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.office365.utils.Constants.*;
@@ -77,7 +74,7 @@ public class UserServiceImpl {
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
         if (!StringUtils.isEmpty(createUserInputs.getoDataQuery())) {
-            httpClientInputs.setQueryParams(getQueryParams(createUserInputs.getoDataQuery().replaceAll("\\s+", "")));
+            httpClientInputs.setQueryParams(createUserInputs.getoDataQuery());
         }
 
         return new HttpClientService().execute(httpClientInputs);
@@ -87,7 +84,7 @@ public class UserServiceImpl {
     public static Map<String, String> getUser(@NotNull final GetUserInputs getUserInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = getUserInputs.getCommonInputs();
-        httpClientInputs.setUrl(getUserUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(), getUserInputs.getoDataQuery()));
+        httpClientInputs.setUrl(getUserUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId()));
 
         HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
@@ -100,18 +97,20 @@ public class UserServiceImpl {
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
+        if (!StringUtils.isEmpty(getUserInputs.getoDataQuery())) {
+            httpClientInputs.setQueryParams(getUserInputs.getoDataQuery());
+        }
+
         return new HttpClientService().execute(httpClientInputs);
     }
 
     @NotNull
-    private static String getUserUrl(String userPrincipalName, String userId, String oDataQuery) throws Exception {
+    private static String getUserUrl(String userPrincipalName, String userId) {
         String finalUrl;
         if (!StringUtils.isEmpty(userPrincipalName))
             finalUrl = GET_USER_REQUEST_URL + userPrincipalName;
         else
             finalUrl = GET_USER_REQUEST_URL + userId;
-        if (!StringUtils.isEmpty(oDataQuery))
-            finalUrl = finalUrl + SELECT_PATH + oDataQuery.replaceAll("\\s+", "");
         return finalUrl;
     }
 
@@ -174,54 +173,5 @@ public class UserServiceImpl {
             finalUrl = finalUrl + deleteUserInputs.getCommonInputs().getUserId();
 
         return finalUrl;
-    }
-
-    @NotNull
-    public static Map<String, String> ListAttachment(@NotNull final ListAttachmentsInputs getListAttachmentInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final Office365CommonInputs commonInputs = getListAttachmentInputs.getCommonInputs();
-        httpClientInputs.setUrl(ListAttachmentsUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(), getListAttachmentInputs.getMessageId()));
-
-        HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
-
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
-        httpClientInputs.setContentType(APPLICATION_JSON);
-
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-
-        return new HttpClientService().execute(httpClientInputs);
-    }
-
-    @NotNull
-    private static String ListAttachmentsUrl(String userPrincipalName, String userId, String messageId) throws Exception {
-        String finalUrl;
-        if (!StringUtils.isEmpty(userPrincipalName))
-            finalUrl = GET_USER_REQUEST_URL + userPrincipalName;
-        else
-            finalUrl = GET_USER_REQUEST_URL + userId;
-        if (!StringUtils.isEmpty(messageId))
-            finalUrl = finalUrl + MESSAGES_PATH + messageId;
-        finalUrl = finalUrl + ATTACHMENTS;
-        return finalUrl;
-    }
-
-    public static String retrieveAttachmentIdList(String returnMessage) {
-        final List<JsonElement> attachmentIdList = new ArrayList();
-        final JsonParser parser = new JsonParser();
-        final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
-        if (responseJson.has(VALUE)) {
-            final JsonArray valueList = responseJson.getAsJsonArray(VALUE);
-            for (int i = 0; i < valueList.size(); i++) {
-                final JsonObject valueObject = (JsonObject) valueList.get(i);
-                if (valueObject.has(ID)) {
-                    attachmentIdList.add(valueObject.get(ID));
-                }
-            }
-        }
-        return StringUtils.join(attachmentIdList, ",");
     }
 }

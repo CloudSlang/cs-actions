@@ -60,8 +60,14 @@ public class Descriptions {
         public static final String USER_PRINCIPAL_NAME_DESC = "The email address of the user to perform the action on. " +
                 "The input is mutually exclusive with the userId input.";
         public static final String USER_ID_DESC = "The ID of the user to perform the action on.";
-        public static final String O_DATA_QUERY_DESC = "A list of valid query parameters in the form of a coma delimited list. " +
-                "Example: id,internetMessageHeaders";
+        public static final String O_DATA_QUERY_DESC = "Query parameters which can be used to specify and control the amount of data returned " +
+                "in a response specified in 'key1=val1&key2=val2' format. $top and $select options should be not passed for this input because the values" +
+                "for these options can be passed in topQuery and selectQuery inputs." +
+                " Example: $format=json";
+        public static final String TOP_QUERY_DESC = "Query parameter use to specify the number of results. Default value: 10";
+        public static final String SELECT_QUERY_DESC = "A list of query parameters in the form of a comma delimited list." +
+                " Example: id,internetMessageHeaders";
+
         public static final String MESSAGE_ID_DESC = "The ID of the message to retrieve.";
         public static final String FOLDER_ID_DESC = "The ID of the folder which contains the message to retrieve.";
 
@@ -69,6 +75,7 @@ public class Descriptions {
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Office 365 API request.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the message.";
+        public static final String ATTACHMENT_ID_DESC = "The ID of the added attachment.";
 
         public static final String SUCCESS_DESC = "Email message retrieved successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the email message.";
@@ -190,15 +197,38 @@ public class Descriptions {
         public static final String SUCCESS_RETURN_RESULT_DESC = "The user was successfully deleted.";
     }
 
-    public static class ListUser{
+    public static class ListUser {
         public static final String LIST_USERS_RESULT_DESC = "If successful, returns the complete API response.";
         public static final String LIST_USERS_DOCUMENT_DESC = "The full API response in case of success";
         public static final String LIST_USERS_EXCEPTION_DESC = "An error message in case there was an error while retrieving the list of user objects.";
     }
 
-    public static class ListAttachments{
+    public static class AddAttachment {
+        public static final String FILE_PATH_DESC = "The absolute path to the file that will be attached.";
+        public static final String CONTENT_NAME_DESC = "The name of the file that will be attached.";
+        public static final String CONTENT_BYTES_DESC = "The representation in bytes of the file that will be attached.";
+        public static final String ADD_ATTACHMENT_RETURN_RESULT_DESC = "If the attachment is successful, returns the complete API response.";
+        public static final String ADD_ATTACHMENT_EXCEPTION_DESC = "An error message in case there was an error adding the attachment.";
+        public static final String SUCCESS_DESC = "Attachment was added successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to add the attachment.";
+    }
+
+    public static class ListAttachments {
         public static final String ATTACHMENT_ID_DESC = "A list of attachment id's delimited by a comma";
         public static final String SUCCESS_DESC = "Attachment ID retrieved successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the attachment id of the message.";
+    }
+
+    public static class GetAttachments {
+        public static final String ATTACHMENT_ID_DESC = "The ID of the attachment to be retrieved.";
+        public static final String FILE_PATH_DESC = "The file path under which the attachment will be downloaded. The attachment will not be downloaded if a path is not provided.";
+
+        public static final String CONTENT_NAME_DESC = "The name of the attachment.";
+        public static final String CONTENT_TYPE_DESC = "The content type of the attachment.";
+        public static final String CONTENT_BYTES_DESC = "The bytes contained in the attachment.";
+        public static final String CONTENT_SIZE_DESC = "The size of the attachment.";
+
+        public static final String SUCCESS_DESC = "Attachment was retrieved successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the attachment.";
     }
 }
