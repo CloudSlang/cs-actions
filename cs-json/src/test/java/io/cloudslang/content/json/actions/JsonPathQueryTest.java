@@ -38,11 +38,6 @@ public class JsonPathQueryTest {
             "{\"title\":\"The Lord of the Rings\",\"price\":22.99}]}," +
             "\"expensive\":10}";
 
-    private static final String BOOKSTORE_JSON2 = "[{\"store\":{\"book\":[{\"title\":\"Sayings of the Century\",\"price\":8.95}," +
-            "{\"title\":\"Sword of Honour\",\"price\":12.99},{\"title\":\"Moby Dick\",\"price\":8.99}," +
-            "{\"title\":\"The Lord of the Rings\",\"price\":22.99}]}," +
-            "\"expensive\":10}]";
-
     @Before
     public void setUp() {
         jsonPathQuery = new JsonPathQuery();
@@ -79,12 +74,6 @@ public class JsonPathQueryTest {
     @Test
     public void executeComplexJsonPath() {
         final Map<String, String> resultMap = jsonPathQuery.execute(BOOKSTORE_JSON, "$..book[?(@.price <= $['expensive'])]");
-        assertEquals(resultMap.get(OutputNames.RETURN_CODE), ReturnCodes.SUCCESS);
-        assertEquals(resultMap.get(OutputNames.RETURN_RESULT), "[{\"title\":\"Sayings of the Century\",\"price\":8.95},{\"title\":\"Moby Dick\",\"price\":8.99}]");
-    }
-    @Test
-    public void executeComplexJsonPath2() {
-        final Map<String, String> resultMap = jsonPathQuery.execute(BOOKSTORE_JSON2, "$..store.");
         assertEquals(resultMap.get(OutputNames.RETURN_CODE), ReturnCodes.SUCCESS);
         assertEquals(resultMap.get(OutputNames.RETURN_RESULT), "[{\"title\":\"Sayings of the Century\",\"price\":8.95},{\"title\":\"Moby Dick\",\"price\":8.99}]");
     }
