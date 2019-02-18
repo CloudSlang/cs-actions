@@ -304,6 +304,7 @@
         <module>cs-database</module>
         <module>cs-date-time</module>
         <module>cs-dropbox</module>
+        <module>cs-excel</module>
         <module>cs-google</module>
         <module>cs-http-client</module>
         <module>cs-json</module>
@@ -319,6 +320,7 @@
         <module>cs-utilities</module>
         <module>cs-vmware</module>
         <module>cs-xml</module>
+        <module>cs-excel</module>
     </modules>
 
 </project>
