@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
 
-public class GetRowIndexbyConditionInputs {
+public class GetRowIndexByConditionInputs {
     private final ExcelCommonInputs commonInputs;
     private final String hasHeader;
     private final String firstRowIndex;
@@ -14,7 +14,7 @@ public class GetRowIndexbyConditionInputs {
 
 
     @ConstructorProperties({"commonInputs", "hasHeader", "firstRowIndex", "columnIndexToQuery", "operator", "value"})
-    private GetRowIndexbyConditionInputs(ExcelCommonInputs commonInputs, String hasHeader, String firstRowIndex, String columnIndexToQuery, String operator, String value) {
+    private GetRowIndexByConditionInputs(ExcelCommonInputs commonInputs, String hasHeader, String firstRowIndex, String columnIndexToQuery, String operator, String value) {
         this.commonInputs = commonInputs;
         this.hasHeader = hasHeader;
         this.firstRowIndex = firstRowIndex;
@@ -106,5 +106,9 @@ public class GetRowIndexbyConditionInputs {
             return this;
         }
 
+        @NotNull
+        public GetRowIndexByConditionInputs build() {
+            return new GetRowIndexByConditionInputs(commonInputs, hasHeader, firstRowIndex, columnIndextoQuery, operator, value);
+        }
     }
 }

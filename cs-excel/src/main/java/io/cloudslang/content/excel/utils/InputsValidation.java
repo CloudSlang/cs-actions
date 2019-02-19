@@ -28,6 +28,7 @@ import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_BOOL
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_FILE;
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_HAS_HEADER;
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_NUMBER;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_OPERATOR;
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_NULL_EMPTY;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
 import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.FIRST_ROW_INDEX;
@@ -81,8 +82,6 @@ public final class InputsValidation {
         addVerifyOperator(exceptionMessages, operator, OPERATOR);
         addVerifyNumber(exceptionMessages, firstRowIndex, FIRST_ROW_INDEX);
         addVerifyNumber(exceptionMessages, columnIndextoQuery, COLUMN_INDEX_TO_QUERY);
-
-
         return exceptionMessages;
     }
 
@@ -142,7 +141,7 @@ public final class InputsValidation {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!operators.contains(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_HAS_HEADER, input, inputName));
+            exceptions.add(String.format(EXCEPTION_INVALID_OPERATOR, input, inputName));
         }
         return exceptions;
     }
