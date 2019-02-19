@@ -5,6 +5,7 @@ public class Descriptions {
         public static final String EXCEL_FILE_NAME_DESC = "The absolute path to the new Excel document.\n" +
                 "Examples: c:\\temp\\test.xls";
         public static final String WORKSHEET_NAME_DESC = "The name of Excel worksheet";
+        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
     }
 
     public static class GetCell {
@@ -44,6 +45,9 @@ public class Descriptions {
         public static final String VALUE_DESC = "The value to search in the specified column. If left blank, it means an empty value.\n";
         public static final String RETURN_RESULT_DESC = "This is the primary result. Return a list of row indexes that satisfied the specified condition.";
         public static final String ROWS_COUNT_DESC = "The number of the row indexes returned.";
+        public static final String SUCCESS_DESC = "The row indexes were retrieved successfully.";
+        public static final String FAILURE_DESC = "Failed to retrieve the row indexes.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the row data.";
 
     }
 }

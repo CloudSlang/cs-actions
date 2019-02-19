@@ -20,17 +20,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_EMPTY_FILE_PATH;
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_BOOLEAN;
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_FILE;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_HAS_HEADER;
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_NUMBER;
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_NULL_EMPTY;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
 import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.FIRST_ROW_INDEX;
 import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.HAS_HEADER;
 import static io.cloudslang.content.excel.utils.Inputs.GetRowIndexByCondition.COLUMN_INDEX_TO_QUERY;
+import static io.cloudslang.content.excel.utils.Inputs.GetRowIndexByCondition.OPERATOR;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -49,7 +52,7 @@ public final class InputsValidation {
 
         final List<String> exceptionMessages = verifyCommonInputs(excelFileName, worksheetName);
 
-        addVerifyBoolean(exceptionMessages, hasHeader, HAS_HEADER);
+        addVerifyYesOrNo(exceptionMessages, hasHeader, HAS_HEADER);
         addVerifyNumber(exceptionMessages, firstRowIndex, FIRST_ROW_INDEX);
         return exceptionMessages;
     }
@@ -74,7 +77,8 @@ public final class InputsValidation {
                                                                 @Nullable final String value) {
 
         final List<String> exceptionMessages = verifyCommonInputs(excelFileName, worksheetName);
-        addVerifyBoolean(exceptionMessages, hasHeader, HAS_HEADER);
+        addVerifyYesOrNo(exceptionMessages, hasHeader, HAS_HEADER);
+        addVerifyOperator(exceptionMessages, operator, OPERATOR);
         addVerifyNumber(exceptionMessages, firstRowIndex, FIRST_ROW_INDEX);
         addVerifyNumber(exceptionMessages, columnIndextoQuery, COLUMN_INDEX_TO_QUERY);
 
@@ -118,6 +122,27 @@ public final class InputsValidation {
             exceptions.add(EXCEPTION_EMPTY_FILE_PATH);
         } else if (!isEmpty(filePath) && !isValidFile(filePath)) {
             exceptions.add(String.format(EXCEPTION_INVALID_FILE, filePath, EXCEL_FILE_NAME));
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyYesOrNo(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+        if (isEmpty(input)) {
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+        } else if (!input.equalsIgnoreCase("yes") && !input.equalsIgnoreCase("no")) {
+            exceptions.add(String.format(EXCEPTION_INVALID_HAS_HEADER, input, inputName));
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyOperator(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+        List<String> operators = Arrays.asList("==", "<=", ">=", "!=", "<", ">");
+        if (isEmpty(input)) {
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+        } else if (!operators.contains(input)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_HAS_HEADER, input, inputName));
         }
         return exceptions;
     }
