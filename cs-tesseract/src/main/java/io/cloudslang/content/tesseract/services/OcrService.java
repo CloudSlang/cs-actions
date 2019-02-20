@@ -14,48 +14,98 @@
  */
 package io.cloudslang.content.tesseract.services;
 
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import org.apache.commons.io.FileUtils;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.lept;
 
-import java.io.File;
-import java.net.URISyntaxException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static io.cloudslang.content.tesseract.utils.Constants.*;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.bytedeco.javacpp.lept.pixDestroy;
 import static org.bytedeco.javacpp.lept.pixRead;
 import static org.bytedeco.javacpp.tesseract.TessBaseAPI;
 
 public class OcrService {
-    public static String extractText(String filePath) throws URISyntaxException {
-        if (!new File(filePath).exists())
-            throw new RuntimeException(FILE_NOT_EXISTS);
+    public static String extractText(String filePath, String dataPath, String language) throws IOException, ZipException {
+        String tempPathDirectory = null;
 
-        final BytePointer outText;
-        final TessBaseAPI api = new TessBaseAPI();
-        final String result;
+        try {
+            if (!new File(filePath).exists())
+                throw new RuntimeException(FILE_NOT_EXISTS);
 
-        //Initialize Tesseract OCR
-        if (api.Init(String.valueOf(Paths.get(OcrService.class.getResource(TESSDATA).toURI())
-                .toAbsolutePath()), ENG) != 0) {
-            throw new RuntimeException(TESSERACT_INITIALIZE_ERROR);
+            final BytePointer outText;
+            final TessBaseAPI api = new TessBaseAPI();
+            final String result;
+
+            //Initialize Tesseract OCR
+            if (isEmpty(dataPath)) {
+                tempPathDirectory = getTempResourcePath();
+                if (api.Init(tempPathDirectory, ENG) != 0) {
+                    throw new RuntimeException(TESSERACT_INITIALIZE_ERROR);
+                }
+            } else {
+                if (api.Init(dataPath, language) != 0) {
+                    throw new RuntimeException(TESSERACT_INITIALIZE_ERROR);
+                }
+            }
+
+            // Open input image with leptonica library
+            final lept.PIX image = pixRead(filePath);
+            api.SetImage(image);
+
+            // Get OCR result
+            outText = api.GetUTF8Text();
+            if (outText == null)
+                throw new RuntimeException(TESSERACT_PARSE_ERROR);
+            result = outText.getString();
+
+            // Destroy used object and release memory
+            api.End();
+            outText.deallocate();
+            pixDestroy(image);
+
+            return result;
+        } finally {
+            if (tempPathDirectory != null) {
+                FileUtils.forceDelete(new File(tempPathDirectory));
+            }
+        }
+    }
+
+    private static String getTempResourcePath() throws IOException, ZipException {
+        InputStream stream = null;
+        OutputStream resStreamOut = null;
+        final String jarFolder;
+
+        try {
+            stream = OcrService.class.getResourceAsStream(TESSDATA_ZIP);
+            if (stream == null) {
+                throw new RuntimeException(TESSERACT_DATA_ERROR);
+            }
+
+            int readBytes;
+            final byte[] buffer = new byte[4096];
+            final Path tempDir = Files.createTempDirectory(TESSDATA);
+            jarFolder = tempDir.toFile().getPath().replace('\\', File.separatorChar)
+                    + File.separatorChar;
+
+            resStreamOut = new FileOutputStream(jarFolder + TESSDATA_ZIP);
+            while ((readBytes = stream.read(buffer)) > 0) {
+                resStreamOut.write(buffer, 0, readBytes);
+            }
+
+            new ZipFile(jarFolder + TESSDATA_ZIP).extractAll(jarFolder);
+        } finally {
+            if (stream != null) stream.close();
+            if (resStreamOut != null) resStreamOut.close();
         }
 
-        // Open input image with leptonica library
-        final lept.PIX image = pixRead(filePath);
-        api.SetImage(image);
-
-        // Get OCR result
-        outText = api.GetUTF8Text();
-        if (outText == null)
-            throw new RuntimeException(TESSERACT_PARSE_ERROR);
-        result = outText.getString();
-
-        // Destroy used object and release memory
-        api.End();
-        outText.deallocate();
-        pixDestroy(image);
-
-        return result;
+        return Paths.get(jarFolder).toRealPath().toString();
     }
 }
