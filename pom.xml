@@ -320,7 +320,6 @@
         <module>cs-utilities</module>
         <module>cs-vmware</module>
         <module>cs-xml</module>
-        <module>cs-tesseract</module>
     </modules>
 
 </project>
