@@ -84,6 +84,14 @@ public final class InputsValidation {
         return exceptionMessages;
     }
 
+    @NotNull public static List<String> verifyNewExcelDocument(final String excelFileName,
+                                                               final String worksheetNames,
+                                                               final String delimiter){
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyNonExistingFile(exceptionMessages,excelFileName,EXCEL_FILE_NAME);
+        return exceptionMessages;
+    }
+
 
     @NotNull
     private static List<String> addVerifyNotNullOrEmpty(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
@@ -120,6 +128,16 @@ public final class InputsValidation {
             exceptions.add(EXCEPTION_EMPTY_FILE_PATH);
         } else if (!isEmpty(filePath) && !isValidFile(filePath)) {
             exceptions.add(String.format(EXCEPTION_INVALID_FILE, filePath, EXCEL_FILE_NAME));
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyNonExistingFile(@NotNull List<String> exceptions, @NotNull final String filePath, @NotNull final String inputName) {
+        if (isEmpty(filePath)) {
+            exceptions.add(EXCEPTION_EMPTY_FILE_PATH);
+        } else if (!isEmpty(filePath) && isValidFile(filePath)) {
+            exceptions.add(String.format(EXCEPTION_FILE_ALREADY_EXISTS, filePath, EXCEL_FILE_NAME));
         }
         return exceptions;
     }

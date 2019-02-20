@@ -32,7 +32,6 @@ public class Descriptions {
 
         public static final String SUCCESS_DESC = "The cell data was retrieved successfully.";
         public static final String FAILURE_DESC = "Failed to retrieve the cell data.";
-
     }
 
     public static class GetRowIndexbyCondition {
@@ -51,6 +50,16 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The row indexes were retrieved successfully.";
         public static final String FAILURE_DESC = "Failed to retrieve the row indexes.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the row data.";
+    }
 
+    public static class NewExcelDocument {
+        public static final String WORKSHEET_NAMES_DESC = "A delimited list of names that will be created as worksheets in the document. \n" +
+                "Default value: Sheet1,Sheet2,Sheet3.";
+        public static final String DELIMITER_DESC = "The character used to delimit worksheet names.\n" +
+                "Default value: comma (,)";
+        public static final String RETURN_RESULT_DESC = "This is the primary output. Returns a success or failure message.\n";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error creating the file.";
+        public static final String SUCCESS_DESC = "A new Excel document is created successfully.";
+        public static final String FAILURE_DESC = "Failed to create a new Excel document.";
     }
 }

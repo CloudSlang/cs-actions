@@ -20,10 +20,13 @@ public class Constants {
     public static final String EXCEPTION_INVALID_INDEX = "The value '%s' for %s input is not a valid index.";
     public static final String EXCEPTION_INVALID_INDEX_NOT_A_NUMBER = "The value '%s' in %s input is not a number.";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
+    protected static final String EXCEPTION_FILE_ALREADY_EXISTS = "File already exists";
+    public static final String EXCEPTION_WORKSHEET_NAME_EMPTY = "The %s can't be null or empty.";
     public static final String DEFAULT_WORKSHEET = "Sheet1";
     public static final String YES = "yes";
     public static final String ZERO = "0";
     public static final String DEFAULT_OPERATOR = "==";
     public static final String DEFAULT_ROW_DELIMITER = "|";
     public static final String DEFAULT_COLUMN_DELIMITER = ",";
+    public static final String DEFAULT_DELIMITER_WORKSHEET_NAMES = ",";
 }

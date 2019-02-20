@@ -3,6 +3,8 @@ package io.cloudslang.content.excel.services;
 import io.cloudslang.content.excel.entities.ExcelOperationException;
 import io.cloudslang.content.excel.entities.GetCellInputs;
 import io.cloudslang.content.excel.entities.GetRowIndexByConditionInputs;
+import io.cloudslang.content.excel.entities.NewExcelDocumentInputs;
+import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -26,8 +28,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
-import static io.cloudslang.content.excel.utils.Constants.*;
+import static io.cloudslang.content.excel.utils.Constants.BAD_CREATE_EXCEL_FILE_MSG;
+import static io.cloudslang.content.excel.utils.Constants.BAD_EXCEL_FILE_MSG;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_WORKSHEET_NAME_EMPTY;
+import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLS;
+import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLSM;
+import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLSX;
+import static io.cloudslang.content.excel.utils.Constants.YES;
 import static io.cloudslang.content.excel.utils.Outputs.GetRowIndexByCondition.ROWS_COUNT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -35,6 +44,47 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class ExcelServiceImpl {
     private static String inputFormat = null;
+
+    public static Map<String, String> newExcelDocument(@NotNull final NewExcelDocumentInputs newExcelDocumentInputs) {
+
+        FileOutputStream output;
+        String excelFileName = newExcelDocumentInputs.getExcelFileName();
+        Workbook excelDoc;
+        try {
+            excelDoc = getNewExcelDocument(excelFileName);
+        } catch (Exception exception) {
+            return OutputUtilities.getFailureResultsMap(BAD_CREATE_EXCEL_FILE_MSG);
+        }
+
+        String sheetnameDelimiter = newExcelDocumentInputs.getDelimiter();
+        String sheetNames = newExcelDocumentInputs.getWorksheetNames();
+
+        if (sheetNames.isEmpty()) {
+            sheetNames = "Sheet1" + sheetnameDelimiter + "Sheet2" + sheetnameDelimiter + "Sheet3";
+        }
+
+        StringTokenizer tokenizer = new StringTokenizer(sheetNames, sheetnameDelimiter);
+        if (tokenizer.countTokens() == 0) {
+            return OutputUtilities.getFailureResultsMap(EXCEPTION_WORKSHEET_NAME_EMPTY);
+        }
+        try {
+            while (tokenizer.hasMoreTokens()) {
+                String sheetName = tokenizer.nextToken();
+                excelDoc.createSheet(sheetName);
+            }
+        } catch (Exception exception) {
+            return OutputUtilities.getFailureResultsMap(BAD_CREATE_EXCEL_FILE_MSG);
+        }
+
+        try {
+            output = new FileOutputStream(excelFileName);
+            excelDoc.write(output);
+            output.close();
+        } catch (Exception exception) {
+            return getFailureResultsMap(exception.getMessage());
+        }
+        return OutputUtilities.getSuccessResultsMap(excelFileName + " created successfully");
+    }
 
     public static Map<String, String> getCell(@NotNull final GetCellInputs getCellInputs) {
         Map<String, String> result;
@@ -79,10 +129,14 @@ public class ExcelServiceImpl {
             excelDoc = getExcelDoc(getRowIndexbyConditionInputs.getCommonInputs().getExcelFileName());
             worksheet = getWorksheet(excelDoc, getRowIndexbyConditionInputs.getCommonInputs().getWorksheetName());
         } catch (Exception e) {
-
+            return getFailureResultsMap(e.getMessage());
         }
 
         int firstRowIndex = Integer.parseInt(getRowIndexbyConditionInputs.getFirstRowIndex());
+
+        if (getRowIndexbyConditionInputs.getHasHeader().equalsIgnoreCase("yes")) {
+            firstRowIndex++;
+        }
         int cIndex_int = Integer.parseInt(getRowIndexbyConditionInputs.getColumnIndexToQuery());
         String value = getRowIndexbyConditionInputs.getValue();
         String operator = getRowIndexbyConditionInputs.getOperator();
@@ -95,7 +149,7 @@ public class ExcelServiceImpl {
             resultString = getRowIndex(worksheet, firstRowIndex, value, cIndex_int, operator);
             rowsCount = resultString.split(",").length;
         } catch (Exception e) {
-
+            return getFailureResultsMap(e.getMessage());
         }
         if (!StringUtils.isBlank(resultString)) {
             result = getSuccessResultsMap(resultString);
@@ -288,7 +342,7 @@ public class ExcelServiceImpl {
         }
     }
 
-    protected Workbook getNewExcelDocument(String excelFileName) throws Exception {
+    protected static Workbook getNewExcelDocument(String excelFileName) throws Exception {
         String format = getFileFormat(excelFileName);
 
         if (StringUtils.isBlank(format)) {
@@ -603,7 +657,6 @@ public class ExcelServiceImpl {
         }
         return resultList;
     }
-
 
 
 }

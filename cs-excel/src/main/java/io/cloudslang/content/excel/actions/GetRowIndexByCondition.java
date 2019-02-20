@@ -53,6 +53,9 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
+/**
+ * Created by alexandra boicu 20/2/2019
+ */
 public class GetRowIndexByCondition {
     @Action(name = "Get Row Index by Condition",
             outputs = {

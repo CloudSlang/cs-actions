@@ -24,4 +24,10 @@ public class Inputs extends InputNames {
         public static final String OPERATOR = "operator";
         public static final String VALUE = "value";
     }
+
+    public static class NewExcelDocument{
+        public static final String DELIMITER="delimiter";
+        public static final String WORKSHEET_NAMES="worksheetNames";
+        public static final String EXCEL_FILE_NAME = "excelFileName";
+    }
 }
