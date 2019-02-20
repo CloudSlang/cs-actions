@@ -16,20 +16,14 @@ package io.cloudslang.content.excel.utils;
 
 import io.cloudslang.content.utils.NumberUtilities;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_EMPTY_FILE_PATH;
-import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_BOOLEAN;
-import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_FILE;
-import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_HAS_HEADER;
-import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_NUMBER;
-import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_OPERATOR;
-import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_NULL_EMPTY;
+import static io.cloudslang.content.excel.utils.Constants.*;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
 import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.FIRST_ROW_INDEX;
 import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.HAS_HEADER;
@@ -37,31 +31,34 @@ import static io.cloudslang.content.excel.utils.Inputs.GetRowIndexByCondition.CO
 import static io.cloudslang.content.excel.utils.Inputs.GetRowIndexByCondition.OPERATOR;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNumeric;
 
 public final class InputsValidation {
 
 
     @NotNull
-    public static List<String> verifyGetCellInputs(@Nullable final String excelFileName,
-                                                   @Nullable final String worksheetName,
-                                                   @Nullable final String hasHeader,
-                                                   @Nullable final String firstRowIndex,
-                                                   @Nullable final String rowIndex,
-                                                   @Nullable final String columnIndex,
-                                                   @Nullable final String rowDelimiter,
-                                                   @Nullable final String columnDelimiter) {
+    public static List<String> verifyGetCellInputs(@NotNull final String excelFileName,
+                                                   @NotNull final String worksheetName,
+                                                   @NotNull final String hasHeader,
+                                                   @NotNull final String firstRowIndex,
+                                                   @NotNull final String rowIndex,
+                                                   @NotNull final String columnIndex,
+                                                   @NotNull final String rowDelimiter,
+                                                   @NotNull final String columnDelimiter) {
 
         final List<String> exceptionMessages = verifyCommonInputs(excelFileName, worksheetName);
 
         addVerifyYesOrNo(exceptionMessages, hasHeader, HAS_HEADER);
         addVerifyNumber(exceptionMessages, firstRowIndex, FIRST_ROW_INDEX);
+        addVerifyIndex(exceptionMessages, rowIndex, FIRST_ROW_INDEX);
+        addVerifyIndex(exceptionMessages, columnIndex, FIRST_ROW_INDEX);
+
         return exceptionMessages;
     }
 
-
     @NotNull
-    public static List<String> verifyCommonInputs(@Nullable final String excelFileName,
-                                                  @Nullable final String worksheetName) {
+    public static List<String> verifyCommonInputs(@NotNull final String excelFileName,
+                                                  @NotNull final String worksheetName) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyFile(exceptionMessages, excelFileName, EXCEL_FILE_NAME);
@@ -69,25 +66,27 @@ public final class InputsValidation {
     }
 
     @NotNull
-    public static List<String> verifyGetCellRowIndexbyCondition(@Nullable final String excelFileName,
-                                                                @Nullable final String worksheetName,
-                                                                @Nullable final String hasHeader,
-                                                                @Nullable final String firstRowIndex,
-                                                                @Nullable final String columnIndextoQuery,
-                                                                @Nullable final String operator,
-                                                                @Nullable final String value) {
+    public static List<String> verifyGetCellRowIndexbyCondition(@NotNull final String excelFileName,
+                                                                @NotNull final String worksheetName,
+                                                                @NotNull final String hasHeader,
+                                                                @NotNull final String firstRowIndex,
+                                                                @NotNull final String columnIndextoQuery,
+                                                                @NotNull final String operator,
+                                                                @NotNull final String value) {
 
         final List<String> exceptionMessages = verifyCommonInputs(excelFileName, worksheetName);
+
         addVerifyYesOrNo(exceptionMessages, hasHeader, HAS_HEADER);
         addVerifyOperator(exceptionMessages, operator, OPERATOR);
         addVerifyNumber(exceptionMessages, firstRowIndex, FIRST_ROW_INDEX);
         addVerifyNumber(exceptionMessages, columnIndextoQuery, COLUMN_INDEX_TO_QUERY);
+
         return exceptionMessages;
     }
 
 
     @NotNull
-    private static List<String> addVerifyNotNullOrEmpty(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+    private static List<String> addVerifyNotNullOrEmpty(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         }
@@ -96,7 +95,7 @@ public final class InputsValidation {
 
 
     @NotNull
-    private static List<String> addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+    private static List<String> addVerifyBoolean(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!isValid(input)) {
@@ -106,7 +105,7 @@ public final class InputsValidation {
     }
 
     @NotNull
-    private static List<String> addVerifyNumber(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+    private static List<String> addVerifyNumber(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!NumberUtilities.isValidInt(input)) {
@@ -116,7 +115,7 @@ public final class InputsValidation {
     }
 
     @NotNull
-    private static List<String> addVerifyFile(@NotNull List<String> exceptions, @Nullable final String filePath, @NotNull final String inputName) {
+    private static List<String> addVerifyFile(@NotNull List<String> exceptions, @NotNull final String filePath, @NotNull final String inputName) {
         if (isEmpty(filePath)) {
             exceptions.add(EXCEPTION_EMPTY_FILE_PATH);
         } else if (!isEmpty(filePath) && !isValidFile(filePath)) {
@@ -126,7 +125,7 @@ public final class InputsValidation {
     }
 
     @NotNull
-    private static List<String> addVerifyYesOrNo(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+    private static List<String> addVerifyYesOrNo(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!input.equalsIgnoreCase("yes") && !input.equalsIgnoreCase("no")) {
@@ -136,13 +135,43 @@ public final class InputsValidation {
     }
 
     @NotNull
-    private static List<String> addVerifyOperator(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
-        List<String> operators = Arrays.asList("==", "<=", ">=", "!=", "<", ">");
+    private static List<String> addVerifyOperator(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+        final List<String> operators = Arrays.asList("==", "<=", ">=", "!=", "<", ">");
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!operators.contains(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_OPERATOR, input, inputName));
+            exceptions.add(String.format(EXCEPTION_INVALID_HAS_HEADER, input, inputName));
         }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyIndex(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+        final String[] indexList = input.split(",");
+
+        for (String index : indexList) {
+            final List<String> compositeIndex = Arrays.asList(index.split(":"));
+            final int size = compositeIndex.size();
+
+            if (size != 1 && size != 2) {
+                exceptions.add(String.format(EXCEPTION_INVALID_INDEX, input, inputName));
+            }
+
+            if (size > 0) {
+                final String indexValue = compositeIndex.get(0).trim();
+                if (!isNumeric(indexValue)) {
+                    exceptions.add(String.format(EXCEPTION_INVALID_INDEX_NOT_A_NUMBER, indexValue, input));
+                }
+            }
+
+            if (size == 2) {
+                final String indexValueRight = compositeIndex.get(1).trim();
+                if (!isNumeric(indexValueRight) ) {
+                    exceptions.add(String.format(EXCEPTION_INVALID_INDEX_NOT_A_NUMBER, indexValueRight, input));
+                }
+            }
+        }
+
         return exceptions;
     }
 

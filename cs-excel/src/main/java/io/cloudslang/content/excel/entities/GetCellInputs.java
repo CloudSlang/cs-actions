@@ -7,6 +7,8 @@ import java.beans.ConstructorProperties;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class GetCellInputs {
+    private final ExcelCommonInputs commonInputs;
+
     private final String hasHeader;
     private final String firstRowIndex;
     private final String rowIndex;
@@ -15,8 +17,9 @@ public class GetCellInputs {
     private final String columnDelimiter;
 
     @ConstructorProperties({"hasHeader", "firstRowIndex", "rowIndex", "columnIndex", "rowDelimiter", "columnDelimiter"})
-    private GetCellInputs(String hasHeader, String firstRowIndex, String rowIndex,
+    private GetCellInputs(ExcelCommonInputs commonInputs, String hasHeader, String firstRowIndex, String rowIndex,
                           String columnIndex, String rowDelimiter, String columnDelimiter) {
+        this.commonInputs = commonInputs;
         this.hasHeader = hasHeader;
         this.firstRowIndex = firstRowIndex;
         this.rowIndex = rowIndex;
@@ -60,7 +63,13 @@ public class GetCellInputs {
         return columnDelimiter;
     }
 
+    @NotNull
+    public ExcelCommonInputs getCommonInputs() {
+        return this.commonInputs;
+    }
+
     public static class GetCellInputsBuilder {
+        private ExcelCommonInputs commonInputs;
         private String hasHeader = EMPTY;
         private String firstRowIndex = EMPTY;
         private String rowIndex = EMPTY;
@@ -69,6 +78,12 @@ public class GetCellInputs {
         private String columnDelimiter = EMPTY;
 
         private GetCellInputsBuilder() {}
+
+        @NotNull
+        public GetCellInputsBuilder commonInputs(@NotNull final ExcelCommonInputs commonInputs) {
+            this.commonInputs = commonInputs;
+            return this;
+        }
 
         @NotNull
         public GetCellInputsBuilder hasHeader(@NotNull final String hasHeader) {
@@ -108,7 +123,7 @@ public class GetCellInputs {
 
         @NotNull
         public GetCellInputs build() {
-            return new GetCellInputs(hasHeader, firstRowIndex, rowIndex, columnIndex, rowDelimiter, columnDelimiter);
+            return new GetCellInputs(commonInputs, hasHeader, firstRowIndex, rowIndex, columnIndex, rowDelimiter, columnDelimiter);
         }
     }
 }

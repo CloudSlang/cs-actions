@@ -17,6 +17,8 @@ public class Constants {
     public static final String EXCEPTION_INVALID_OPERATOR = "The %s for %s input is not a valid operator.";
     public static final String EXCEPTION_EMPTY_FILE_PATH = "The excelFilName is required.";
     public static final String EXCEPTION_INVALID_FILE = "The value '%s' for %s input is not a valid file path.";
+    public static final String EXCEPTION_INVALID_INDEX = "The value '%s' for %s input is not a valid index.";
+    public static final String EXCEPTION_INVALID_INDEX_NOT_A_NUMBER = "The value '%s' in %s input is not a number.";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     public static final String DEFAULT_WORKSHEET = "Sheet1";
     public static final String YES = "yes";

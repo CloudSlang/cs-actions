@@ -25,10 +25,13 @@ public class Descriptions {
         public static final String COLUMN_DELIMITER_DESC = "The delimiter used to separate the columns of the returnResult.\n" +
                 "Default value: , (comma)";
         public static final String RETURN_RESULT_DESC = "This is the primary output. Returns the cell data retrieved from Excel document.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the cell data.";
         public static final String HEADER_DESC = "A delimited list of column names of data being returned if hasHeader is set to Yes. ";
         public static final String ROWS_COUNT_DESC = "The number of the rows returned.";
         public static final String COLUMNS_COUNT_DESC = "The number of the columns returned.";
 
+        public static final String SUCCESS_DESC = "The cell data was retrieved successfully.";
+        public static final String FAILURE_DESC = "Failed to retrieve the cell data.";
 
     }
 

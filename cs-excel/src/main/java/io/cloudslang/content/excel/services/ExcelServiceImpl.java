@@ -1,8 +1,8 @@
 package io.cloudslang.content.excel.services;
 
 import io.cloudslang.content.excel.entities.ExcelOperationException;
+import io.cloudslang.content.excel.entities.GetCellInputs;
 import io.cloudslang.content.excel.entities.GetRowIndexByConditionInputs;
-import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -22,18 +22,52 @@ import org.jetbrains.annotations.NotNull;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.excel.utils.Constants.BAD_CREATE_EXCEL_FILE_MSG;
-import static io.cloudslang.content.excel.utils.Constants.BAD_EXCEL_FILE_MSG;
-import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLS;
-import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLSM;
-import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLSX;
+import static io.cloudslang.content.excel.utils.Constants.*;
 import static io.cloudslang.content.excel.utils.Outputs.GetRowIndexByCondition.ROWS_COUNT;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class ExcelServiceImpl {
     private static String inputFormat = null;
+
+    public static Map<String, String> getCell(@NotNull final GetCellInputs getCellInputs) {
+        Map<String, String> result;
+        String resultString = "";
+        Sheet worksheet = null;
+        Workbook excelDoc = null;
+
+        try {
+            excelDoc = getExcelDoc(getCellInputs.getCommonInputs().getExcelFileName());
+            worksheet = getWorksheet(excelDoc, getCellInputs.getCommonInputs().getWorksheetName());
+
+            int firstRowIndex = Integer.parseInt(getCellInputs.getFirstRowIndex());
+            final int firstColumnIndex = 0;
+            final int lastRowIndex = worksheet.getLastRowNum();
+            final int lastColumnIndex = getLastColumnIndex(worksheet, firstRowIndex, lastRowIndex);
+
+            if (getCellInputs.getHasHeader().equals(YES))
+                firstRowIndex++;
+
+            final String rowIndexDefault = firstRowIndex + ":" + lastRowIndex;
+            final String columnIndexDefault = firstColumnIndex + ":" + lastColumnIndex;
+            final String rowIndex = defaultIfEmpty(getCellInputs.getRowIndex(), rowIndexDefault);
+            final String columnIndex = defaultIfEmpty(getCellInputs.getRowIndex(), columnIndexDefault);
+
+            final List<Integer> rowIndexList = validateIndex(processIndex(rowIndex), firstRowIndex, lastRowIndex, true);
+            final List<Integer> columnIndexList = validateIndex(processIndex(columnIndex), firstColumnIndex, lastColumnIndex, false);
+
+            //todo
+            return null;
+        } catch (Exception e) {
+            return getFailureResultsMap(e.getMessage());
+        }
+    }
 
     public static Map<String, String> getRowIndexbyCondition(@NotNull final GetRowIndexByConditionInputs getRowIndexbyConditionInputs) {
         String resultString = "";
@@ -64,11 +98,11 @@ public class ExcelServiceImpl {
 
         }
         if (!StringUtils.isBlank(resultString)) {
-            result = OutputUtilities.getSuccessResultsMap(resultString);
+            result = getSuccessResultsMap(resultString);
             result.put(ROWS_COUNT, String.valueOf(rowsCount));
 
         } else {
-            result = OutputUtilities.getSuccessResultsMap("");
+            result = getSuccessResultsMap("");
             result.put(ROWS_COUNT, String.valueOf(0));
         }
         return result;
@@ -490,4 +524,86 @@ public class ExcelServiceImpl {
 
         return result;
     }
+
+    /**
+     * get last column index
+     *
+     * @throws ExcelOperationException
+     */
+    private static int getLastColumnIndex(Sheet worksheet, int firstRowIndex, int lastRowIndex) {
+        //get the last column index in a sheet
+        int lColIndex = 0;
+        int lastColumnIndex = 0;
+        for (int i = firstRowIndex; i <= lastRowIndex; i++) {
+            Row aRow = worksheet.getRow(i);
+            if (aRow != null) {
+                lColIndex = aRow.getLastCellNum() - 1;
+                if (lColIndex > lastColumnIndex) {
+                    lastColumnIndex = lColIndex;
+                }
+            }
+        }
+
+        return lastColumnIndex;
+    }
+
+    private static List<Integer> processIndex(String index) {
+        final List<Integer> result = new ArrayList<>();
+
+        String[] temp = index.split(",");
+        String[] tempArray;
+
+        for (int i = 0; i < temp.length; i++) {
+            temp[i] = temp[i].trim();
+            tempArray = temp[i].split(":");
+
+            //not a range index
+            if (tempArray.length == 1) {
+                int tmp = Integer.parseInt(temp[i]);
+                result.add(tmp);
+
+            }
+            // range index
+            else if (tempArray.length == 2) {
+                tempArray[0] = tempArray[0].trim();
+                tempArray[1] = tempArray[1].trim();
+                final int start = Integer.parseInt(tempArray[0]);
+                final int end = Integer.parseInt(tempArray[1]);
+
+                for (int j = start; j <= end; j++) {
+                    if (!result.contains(j)) {
+                        result.add(j);
+                    }
+                }
+
+            }
+        }
+
+        return result;
+    }
+
+    private static List<Integer> validateIndex(List<Integer> indexList, int firstIndex, int lastIndex, boolean isRow) throws Exception {
+        List<Integer> resultList = new ArrayList<>();
+        for (Integer index : indexList) {
+            //trim the row or column index if it's above range
+            if (index >= firstIndex && index <= lastIndex) {
+                resultList.add(index);
+            }
+            if (index < 0) {
+                if (isRow) {
+                    throw new ExcelOperationException("The rowIndex input is not valid. " +
+                            "The valid row index must be equal or greater than 0.");
+                } else {
+                    throw new ExcelOperationException("The columnIndex input is not valid. " +
+                            "The valid column index must be equal or greater than 0.");
+                }
+
+            }
+
+        }
+        return resultList;
+    }
+
+
+
 }
