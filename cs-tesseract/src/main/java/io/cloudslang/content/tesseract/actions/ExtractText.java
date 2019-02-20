@@ -41,7 +41,8 @@ public class ExtractText {
     /**
      * This operation extracts the text from a specified file given as input using Tesseract's OCR library.
      *
-     * @param filePath The path of the file to be extracted.
+     * @param filePath The path of the file to be extracted. The file must be an image. Most of the common image formats
+     *                 are supported.
      *                 Required
      * @return a map containing the output of the operation. Keys present in the map are:
      * returnResult - This will contain the extracted text.
