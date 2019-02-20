@@ -31,5 +31,9 @@ public class Descriptions {
 
     public static class InputsDescription {
         public static final String FILE_PATH_DESC = "The path to the file from where the text needs to be extracted.";
+        public static final String DATA_PATH_DESC = "The path to the Tesseract data config directory. This directory" +
+                " can contain different configuration files as well as trained language data files.";
+        public static final String LANGUAGE_DESC = "The language that will be used by the OCR engine. This input is " +
+                "taken into consideration only when specifying the dataPath input as well.";
     }
 }

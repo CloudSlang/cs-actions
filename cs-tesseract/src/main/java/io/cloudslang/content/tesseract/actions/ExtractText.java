@@ -33,7 +33,7 @@ import static io.cloudslang.content.tesseract.utils.Constants.ENG;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.EXCEPTION_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.RETURN_CODE_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.*;
-import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.FILE_PATH_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.*;
 import static io.cloudslang.content.tesseract.utils.Inputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -57,7 +57,7 @@ public class ExtractText {
      * @return a map containing the output of the operation. Keys present in the map are:
      * returnResult - This will contain the extracted text.
      * exception - In case of success response, this result is empty. In case of failure response,
-     *             this result contains the java stack trace of the runtime exception.
+     * this result contains the java stack trace of the runtime exception.
      * returnCode - The returnCode of the operation: 0 for success, -1 for failure.
      */
 
@@ -74,8 +74,8 @@ public class ExtractText {
             })
     public Map<String, String> execute(
             @Param(value = FILE_PATH, required = true, description = FILE_PATH_DESC) String filePath,
-            @Param(value = DATA_PATH, description = FILE_PATH_DESC) String dataPath,
-            @Param(value = LANGUAGE, description = FILE_PATH_DESC) String language
+            @Param(value = DATA_PATH, description = DATA_PATH_DESC) String dataPath,
+            @Param(value = LANGUAGE, description = LANGUAGE_DESC) String language
     ) {
         try {
             dataPath = defaultIfEmpty(dataPath, EMPTY);
