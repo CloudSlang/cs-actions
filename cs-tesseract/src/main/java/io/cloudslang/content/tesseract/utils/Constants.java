@@ -17,5 +17,7 @@ package io.cloudslang.content.tesseract.utils;
 public final class Constants {
     public static final String ENG = "ENG";
     public static final String TESSERACT_INITIALIZE_ERROR = "Error initializing tesseract OCR with English language.";
+    public static final String TESSERACT_PARSE_ERROR = "Error encountered by the OCR engine while parsing the file.";
     public static final String FILE_NOT_EXISTS = "The file does not exist.";
+    public static final String TESSDATA = "tessdata";
 }

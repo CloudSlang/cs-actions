@@ -18,6 +18,8 @@ import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.lept;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 
 import static io.cloudslang.content.tesseract.utils.Constants.*;
 import static org.bytedeco.javacpp.lept.pixDestroy;
@@ -25,7 +27,7 @@ import static org.bytedeco.javacpp.lept.pixRead;
 import static org.bytedeco.javacpp.tesseract.TessBaseAPI;
 
 public class OcrService {
-    public static String extractText(String filePath) {
+    public static String extractText(String filePath) throws URISyntaxException {
         if (!new File(filePath).exists())
             throw new RuntimeException(FILE_NOT_EXISTS);
 
@@ -34,7 +36,8 @@ public class OcrService {
         final String result;
 
         //Initialize Tesseract OCR
-        if (api.Init("./cs-tesseract/tessdata/", ENG) != 0) {
+        if (api.Init(String.valueOf(Paths.get(OcrService.class.getResource(TESSDATA).toURI())
+                .toAbsolutePath()), ENG) != 0) {
             throw new RuntimeException(TESSERACT_INITIALIZE_ERROR);
         }
 
@@ -44,6 +47,8 @@ public class OcrService {
 
         // Get OCR result
         outText = api.GetUTF8Text();
+        if (outText == null)
+            throw new RuntimeException(TESSERACT_PARSE_ERROR);
         result = outText.getString();
 
         // Destroy used object and release memory
