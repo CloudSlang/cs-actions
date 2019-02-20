@@ -29,13 +29,16 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.tesseract.services.OcrService.extractText;
+import static io.cloudslang.content.tesseract.utils.Constants.ENG;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.EXCEPTION_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.RETURN_CODE_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.*;
 import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.FILE_PATH_DESC;
-import static io.cloudslang.content.tesseract.utils.Inputs.FILE_PATH;
+import static io.cloudslang.content.tesseract.utils.Inputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class ExtractText {
     /**
@@ -44,10 +47,17 @@ public class ExtractText {
      * @param filePath The path of the file to be extracted. The file must be an image. Most of the common image formats
      *                 are supported.
      *                 Required
+     * @param dataPath The path to the Tesseract data config directory. This directory can contain different
+     *                 configuration files as well as trained language data files.
+     *                 Optional
+     * @param language The language that will be used by the OCR engine. This input is taken into consideration only
+     *                 when specifying the dataPath input as well.
+     *                 Default: 'ENG'
+     *                 Optional
      * @return a map containing the output of the operation. Keys present in the map are:
      * returnResult - This will contain the extracted text.
      * exception - In case of success response, this result is empty. In case of failure response,
-     * this result contains the java stack trace of the runtime exception.
+     *             this result contains the java stack trace of the runtime exception.
      * returnCode - The returnCode of the operation: 0 for success, -1 for failure.
      */
 
@@ -63,9 +73,15 @@ public class ExtractText {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, isOnFail = true, description = FAILURE_DESC)
             })
     public Map<String, String> execute(
-            @Param(value = FILE_PATH, required = true, description = FILE_PATH_DESC) String filePath) {
+            @Param(value = FILE_PATH, required = true, description = FILE_PATH_DESC) String filePath,
+            @Param(value = DATA_PATH, description = FILE_PATH_DESC) String dataPath,
+            @Param(value = LANGUAGE, description = FILE_PATH_DESC) String language
+    ) {
         try {
-            return getSuccessResultsMap(extractText(filePath));
+            dataPath = defaultIfEmpty(dataPath, EMPTY);
+            language = defaultIfEmpty(language, ENG);
+
+            return getSuccessResultsMap(extractText(filePath, dataPath, language));
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }

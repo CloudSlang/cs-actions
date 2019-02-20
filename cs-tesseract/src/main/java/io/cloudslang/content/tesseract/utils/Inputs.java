@@ -16,4 +16,6 @@ package io.cloudslang.content.tesseract.utils;
 
 public class Inputs {
     public static final String FILE_PATH = "filePath";
+    public static final String DATA_PATH  = "dataPath";
+    public static final String LANGUAGE = "language";
 }
