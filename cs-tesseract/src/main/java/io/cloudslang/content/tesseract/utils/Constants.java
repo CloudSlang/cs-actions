@@ -22,4 +22,5 @@ public final class Constants {
     public static final String FILE_NOT_EXISTS = "The file does not exist.";
     public static final String TESSDATA = "tessdata";
     public static final String TESSDATA_ZIP = "tessdata.zip";
+    public static final String DPI_SET = "300";
 }

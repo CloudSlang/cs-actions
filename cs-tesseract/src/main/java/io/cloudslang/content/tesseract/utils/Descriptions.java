@@ -35,5 +35,13 @@ public class Descriptions {
                 " can contain different configuration files as well as trained language data files.";
         public static final String LANGUAGE_DESC = "The language that will be used by the OCR engine. This input is " +
                 "taken into consideration only when specifying the dataPath input as well.";
+        public static final String PDF_FILE_PATH_DESC = "The path to the PDF file from where the text needs to be " +
+                "extracted.";
+        public static final String DPI_DESC = "The dpi value when converting the PDF file to image.  ";
+    }
+
+    public static class PdfConvert {
+        public static final String PDF_CONVERT_DESC = "This operation converts a PDF file from a given path to an " +
+                "image file and then extracts the text with the help of Extract Text operation";
     }
 }
