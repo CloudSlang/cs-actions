@@ -25,8 +25,10 @@ public class Constants {
     public static final String EXCEPTION_WORKSHEET_NAME_EMPTY = "The %s can't be null or empty.";
     public static final String DEFAULT_WORKSHEET = "Sheet1";
     public static final String YES = "yes";
+    public static final String NO = "no";
     public static final String ZERO = "0";
     public static final String DEFAULT_OPERATOR = "==";
+    public static final String DEFAULT_FIRST_ROW_INDEX= "0";
     public static final String DEFAULT_ROW_DELIMITER = "|";
     public static final String DEFAULT_COLUMN_DELIMITER = ",";
     public static final String DEFAULT_DELIMITER_WORKSHEET_NAMES = ",";

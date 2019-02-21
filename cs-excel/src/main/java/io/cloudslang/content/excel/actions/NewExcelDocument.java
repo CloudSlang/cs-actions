@@ -43,6 +43,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  * Created by alexandra boicu 20/2/2019
  */
 public class NewExcelDocument {
+
     @Action(name = "New Excel Document",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
