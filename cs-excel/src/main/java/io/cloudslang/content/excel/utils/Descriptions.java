@@ -72,6 +72,26 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The cell data specified was deleted successfully.";
         public static final String FAILURE_DESC = "Failed to delete the cell data specified";
         public static final String EXCEPTION_DESC = "An error message in case there was an error deleting the cell.";
+    }
 
+    public static class AddExcelData{
+        public static final String HEADER_DATA_DESC="A delimited list of column names. If left blank, the document will not have a header for the data.";
+        public static final String ROW_DATA_DESC="A delimited list of data.";
+        public static final String ROW_DELIMITER_DESC = "The delimiter used to separate the rows of the returnResult.\n" +
+                "Default value: | (pipe)";
+        public static final String COLUMN_DELIMITER_DESC = "The delimiter used to separate the columns of the returnResult.\n" +
+                "Default value: , (comma)";
+        public static final String ROW_INDEX_DESC = "A list of row indexes.\n" +
+                "Examples: 1:3, 10, 15:20,25\n" +
+                "Default Value: from the index of the first row  to the index of the last row in the Excel worksheet.";
+        public static final String COLUMN_INDEX_DESC = " A list of column indexes.\n" +
+                "Examples: 1:3, 10, 15:20,25\n" +
+                "Default value: from 0 to the index of the last column in the Excel worksheet.";
+        public static final String OVERWRITE_DATA_DESC="True if existing data should be overwritten.\n" +
+                "Default value: false";
+        public static final String RETURN_RESULT_DESC="This is the primary output. Returns the number of rows that were added.";
+        public static final String SUCCESS_DESC = "One or more rows of data were added successfully.";
+        public static final String FAILURE_DESC = "Failed to add rows of data to the Excel document.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error adding excel data.";
     }
 }

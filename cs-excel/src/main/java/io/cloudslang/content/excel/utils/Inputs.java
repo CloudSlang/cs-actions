@@ -35,4 +35,14 @@ public class Inputs extends InputNames {
         public static final String ROW_INDEX = "rowIndex";
         public static final String COLUMN_INDEX = "columnIndex";
     }
+
+    public static class AddExcelData {
+        public static final String HEADER_DATA="headerData";
+        public static final String ROW_DATA="rowData";
+        public static final String ROW_INDEX = "rowIndex";
+        public static final String COLUMN_INDEX = "columnIndex";
+        public static final String ROW_DELIMITER = "rowDelimiter";
+        public static final String COLUMN_DELIMITER = "columnDelimiter";
+        public static final String OVERWRITE_DATA="overwriteData";
+    }
 }

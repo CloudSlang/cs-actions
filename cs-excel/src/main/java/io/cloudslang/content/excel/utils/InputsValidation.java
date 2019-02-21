@@ -16,7 +16,6 @@ package io.cloudslang.content.excel.utils;
 
 import io.cloudslang.content.utils.NumberUtilities;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static io.cloudslang.content.excel.utils.Constants.*;
+import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.HEADER_DATA;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
 import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.FIRST_ROW_INDEX;
 import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.HAS_HEADER;
@@ -34,6 +34,23 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 
 public final class InputsValidation {
+
+    @NotNull
+    public static List<String> verifyAddExcelData(@NotNull final String excelFileName,
+                                                  @NotNull final String worksheetName,
+                                                  @NotNull final String headerData,
+                                                  @NotNull final String rowData,
+                                                  @NotNull final String rowIndex,
+                                                  @NotNull final String columnIndex,
+                                                  @NotNull final String rowDelimiter,
+                                                  @NotNull final String columnDelimiter,
+                                                  @NotNull final String overwriteData){
+        final List<String> exceptionMessages = verifyCommonInputs(excelFileName, worksheetName);
+        addVerifyIndex(exceptionMessages, rowIndex, FIRST_ROW_INDEX);
+        addVerifyIndex(exceptionMessages, columnIndex, FIRST_ROW_INDEX);
+        addVerifyBoolean(exceptionMessages,overwriteData,HEADER_DATA);
+        return exceptionMessages;
+    }
 
     @NotNull
     public static List<String> verifyDeleteCell(@NotNull final String excelFileName,
