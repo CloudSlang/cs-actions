@@ -158,7 +158,7 @@ public final class InputsValidation {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!operators.contains(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_HAS_HEADER, input, inputName));
+            exceptions.add(String.format(EXCEPTION_INVALID_OPERATOR, input, inputName));
         }
         return exceptions;
     }

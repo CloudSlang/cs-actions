@@ -301,8 +301,8 @@ public class GetRowIndexByConditionTest {
                 "1999/09/09 03:00:00"
         );
         assertEquals("0", result.get("returnCode"));
-        assertEquals("2", result.get("rowsCount"));
-        assertEquals("0,1", result.get("returnResult"));
+        assertEquals("1", result.get("rowsCount"));
+        assertEquals("1", result.get("returnResult"));
     }
 
     @Test
@@ -320,8 +320,8 @@ public class GetRowIndexByConditionTest {
                 "ab"
         );
         assertEquals("0", result.get("returnCode"));
-        assertEquals("5", result.get("rowsCount"));
-        assertEquals("0,1,2,3,4", result.get("returnResult"));
+        assertEquals("4", result.get("rowsCount"));
+        assertEquals("1,2,3,4", result.get("returnResult"));
     }
 
     @Test
