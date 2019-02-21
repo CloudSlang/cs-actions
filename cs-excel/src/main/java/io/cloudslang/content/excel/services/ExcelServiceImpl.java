@@ -1,5 +1,6 @@
 package io.cloudslang.content.excel.services;
 
+import io.cloudslang.content.excel.entities.DeleteCellInputs;
 import io.cloudslang.content.excel.entities.ExcelOperationException;
 import io.cloudslang.content.excel.entities.GetCellInputs;
 import io.cloudslang.content.excel.entities.GetRowIndexByConditionInputs;
@@ -44,6 +45,51 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class ExcelServiceImpl {
     private static String inputFormat = null;
+
+    public static Map<String, String> deleteCell(@NotNull final DeleteCellInputs deleteCellInputs) {
+        Sheet worksheet;
+        Workbook excelDoc;
+        final String excelFileName = deleteCellInputs.getCommonInputs().getExcelFileName();
+
+        try {
+            excelDoc = getExcelDoc(excelFileName);
+            worksheet = getWorksheet(excelDoc, deleteCellInputs.getCommonInputs().getWorksheetName());
+
+            int firstRowIndex = worksheet.getFirstRowNum();
+            final int firstColumnIndex = 0;
+            final int lastRowIndex = worksheet.getLastRowNum();
+            final int lastColumnIndex = getLastColumnIndex(worksheet, firstRowIndex, lastRowIndex);
+
+            final String rowIndexDefault = firstRowIndex + ":" + lastRowIndex;
+            final String columnIndexDefault = firstColumnIndex + ":" + lastColumnIndex;
+            final String rowIndex = defaultIfEmpty(deleteCellInputs.getRowIndex(), rowIndexDefault);
+            final String columnIndex = defaultIfEmpty(deleteCellInputs.getColumnIndex(), columnIndexDefault);
+
+            final List<Integer> rowIndexList = validateIndex(processIndex(rowIndex), firstRowIndex, lastRowIndex, true);
+            final List<Integer> columnIndexList = validateIndex(processIndex(columnIndex), firstColumnIndex, lastColumnIndex, false);
+
+            if (rowIndexList.size() != 0 && columnIndexList.size() != 0) {
+                int result_int = deleteCell(worksheet, rowIndexList, columnIndexList);
+                //update formula cells
+                FormulaEvaluator evaluator = excelDoc.getCreationHelper().createFormulaEvaluator();
+                for (Row r : worksheet) {
+                    for (Cell c : r) {
+                        if (c.getCellType() == Cell.CELL_TYPE_FORMULA) {
+                            evaluator.evaluateFormulaCell(c);
+                        }
+                    }
+                }
+                updateWorkbook(excelDoc, excelFileName);
+                return OutputUtilities.getSuccessResultsMap(String.valueOf(result_int));
+
+            }
+            else {
+                return OutputUtilities.getSuccessResultsMap(String.valueOf("0"));
+            }
+        } catch (Exception e) {
+            return getFailureResultsMap(e.getMessage());
+        }
+    }
 
     public static Map<String, String> newExcelDocument(@NotNull final NewExcelDocumentInputs newExcelDocumentInputs) {
 
@@ -656,6 +702,26 @@ public class ExcelServiceImpl {
 
         }
         return resultList;
+    }
+
+    public static int deleteCell(Sheet worksheet, List<Integer> rowIndex, List<Integer> columnIndex) {
+        int rowsDeleted = 0;
+
+        for (Integer rIndex : rowIndex) {
+            Row aRow = worksheet.getRow(rIndex);
+
+            if (aRow != null) {
+                for (Integer cIndex : columnIndex) {
+                    Cell aCell = aRow.getCell(cIndex);
+                    if (aCell != null) {
+                        aRow.removeCell(aCell);
+                    }
+                }
+                rowsDeleted++;
+            }
+        }
+
+        return rowsDeleted;
     }
 
 

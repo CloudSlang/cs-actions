@@ -30,4 +30,9 @@ public class Inputs extends InputNames {
         public static final String WORKSHEET_NAMES="worksheetNames";
         public static final String EXCEL_FILE_NAME = "excelFileName";
     }
+
+    public static class DeleteCell{
+        public static final String ROW_INDEX = "rowIndex";
+        public static final String COLUMN_INDEX = "columnIndex";
+    }
 }

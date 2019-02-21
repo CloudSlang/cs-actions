@@ -22,6 +22,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.ROWS_COUNT;
 import static org.junit.Assert.assertEquals;
 
 public class GetRowIndexByConditionTest {
@@ -133,9 +136,9 @@ public class GetRowIndexByConditionTest {
                 "",
                 "abc"
         );
-        assertEquals("0", result.get("returnCode"));
-        assertEquals("5", result.get("rowsCount"));
-        assertEquals("0,1,2,3,4", result.get("returnResult"));
+        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals("5", result.get(ROWS_COUNT));
+        assertEquals("0,1,2,3,4", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -152,9 +155,9 @@ public class GetRowIndexByConditionTest {
                 "<",
                 "22"
         );
-        assertEquals("0", result.get("returnCode"));
-        assertEquals("1", result.get("rowsCount"));
-        assertEquals("5", result.get("returnResult"));
+        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals("1", result.get(ROWS_COUNT));
+        assertEquals("5", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -171,9 +174,9 @@ public class GetRowIndexByConditionTest {
                 ">",
                 "66%"
         );
-        assertEquals("0", result.get("returnCode"));
-        assertEquals("2", result.get("rowsCount"));
-        assertEquals("3,4", result.get("returnResult"));
+        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals("2", result.get(ROWS_COUNT));
+        assertEquals("3,4", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -190,9 +193,9 @@ public class GetRowIndexByConditionTest {
                 "<=",
                 "1990/05/05"
         );
-        assertEquals("0", result.get("returnCode"));
-        assertEquals("0", result.get("rowsCount"));
-        assertEquals("", result.get("returnResult"));
+        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals("0", result.get(ROWS_COUNT));
+        assertEquals("", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -209,9 +212,9 @@ public class GetRowIndexByConditionTest {
                 "==",
                 "03:00:00"
         );
-        assertEquals("0", result.get("returnCode"));
-        assertEquals("0", result.get("rowsCount"));
-        assertEquals("", result.get("returnResult"));
+        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals("0", result.get(ROWS_COUNT));
+        assertEquals("", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -228,8 +231,8 @@ public class GetRowIndexByConditionTest {
                 "<>",
                 "ab"
         );
-        assertEquals("-1", result.get("returnCode"));
-        assertEquals("The <> for operator input is not a valid operator.", result.get("returnResult"));
+        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals("The <> for operator input is not a valid operator.", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -246,8 +249,8 @@ public class GetRowIndexByConditionTest {
                 "",
                 ""
         );
-        assertEquals("-1", result.get("returnCode"));
-        assertEquals("The maybe for hasHeader input is not valid.The valid values are yes/no.", result.get("returnResult"));
+        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals("The maybe for hasHeader input is not valid.The valid values are yes/no.", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -264,8 +267,8 @@ public class GetRowIndexByConditionTest {
                 "",
                 "3"
         );
-        assertEquals("-1", result.get("returnCode"));
-        assertEquals("The columnIndextoQuery can't be null or empty.", result.get("returnResult"));
+        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals("The columnIndextoQuery can't be null or empty.", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -282,8 +285,8 @@ public class GetRowIndexByConditionTest {
                 "",
                 ""
         );
-        assertEquals("-1", result.get("returnCode"));
-        assertEquals("The A for columnIndextoQuery input is not a valid number value.", result.get("returnResult"));
+        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals("The A for columnIndextoQuery input is not a valid number value.", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -300,9 +303,9 @@ public class GetRowIndexByConditionTest {
                 "!=",
                 "1999/09/09 03:00:00"
         );
-        assertEquals("0", result.get("returnCode"));
-        assertEquals("1", result.get("rowsCount"));
-        assertEquals("1", result.get("returnResult"));
+        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals("1", result.get(ROWS_COUNT));
+        assertEquals("1", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -319,9 +322,9 @@ public class GetRowIndexByConditionTest {
                 "!=",
                 "ab"
         );
-        assertEquals("0", result.get("returnCode"));
-        assertEquals("4", result.get("rowsCount"));
-        assertEquals("1,2,3,4", result.get("returnResult"));
+        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals("4", result.get(ROWS_COUNT));
+        assertEquals("1,2,3,4", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -338,9 +341,9 @@ public class GetRowIndexByConditionTest {
                 "==",
                 "22"
         );
-        assertEquals("0", result.get("returnCode"));
-        assertEquals("2", result.get("rowsCount"));
-        assertEquals("3,4", result.get("returnResult"));
+        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals("2", result.get(ROWS_COUNT));
+        assertEquals("3,4", result.get(RETURN_RESULT));
     }
 
     @Test

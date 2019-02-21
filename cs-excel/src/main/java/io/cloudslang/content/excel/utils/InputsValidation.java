@@ -35,6 +35,16 @@ import static org.apache.commons.lang3.StringUtils.isNumeric;
 
 public final class InputsValidation {
 
+    @NotNull
+    public static List<String> verifyDeleteCell(@NotNull final String excelFileName,
+                                                @NotNull final String worksheetName,
+                                                @NotNull final String rowIndex,
+                                                @NotNull final String columnIndex){
+        final List<String> exceptionMessages = verifyCommonInputs(excelFileName, worksheetName);
+        addVerifyIndex(exceptionMessages, rowIndex, FIRST_ROW_INDEX);
+        addVerifyIndex(exceptionMessages, columnIndex, FIRST_ROW_INDEX);
+        return exceptionMessages;
+    }
 
     @NotNull
     public static List<String> verifyGetCellInputs(@NotNull final String excelFileName,
@@ -165,6 +175,9 @@ public final class InputsValidation {
 
     @NotNull
     private static List<String> addVerifyIndex(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+        if(input.isEmpty())
+            return exceptions;
+
         final String[] indexList = input.split(",");
 
         for (String index : indexList) {

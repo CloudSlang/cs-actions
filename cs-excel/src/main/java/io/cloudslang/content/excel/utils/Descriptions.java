@@ -62,4 +62,16 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "A new Excel document is created successfully.";
         public static final String FAILURE_DESC = "Failed to create a new Excel document.";
     }
+
+    public static class DeleteCell{
+        public static final String ROW_INDEX_DESC="A list of row indexes.\n" +
+                "Examples: 1:3, 10, 15:20,25";
+        public static final String COLUMN_INDEX_DESC="A list of column indexes\n" +
+                "Examples: 1:3, 10, 15:20,25";
+        public static final String RETURN_RESULT_DESC="This is the primary output. Returns the number of rows that were affected.";
+        public static final String SUCCESS_DESC = "The cell data specified was deleted successfully.";
+        public static final String FAILURE_DESC = "Failed to delete the cell data specified";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error deleting the cell.";
+
+    }
 }

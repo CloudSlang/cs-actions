@@ -11,6 +11,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.excel.utils.Constants.BAD_CREATE_EXCEL_FILE_MSG;
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_WORKSHEET_NAME_EMPTY;
 import static org.junit.Assert.assertEquals;
@@ -55,7 +57,7 @@ public class NewExcelDocumentTest {
     public void testExecute() throws Exception {
         Map<String, String> result = toTest.execute(FILE_NAME, "sheet1,sheet12", ",");
 
-        assertEquals("0", result.get("returnCode"));
+        assertEquals("0", result.get(RETURN_CODE));
 
         File f = new File(FILE_NAME);
         assertTrue(f.exists());
@@ -82,8 +84,8 @@ public class NewExcelDocumentTest {
         Map<String, String> result = toTest.execute(FILE_NAME, "sheet1,sheet12", ",");
         f.delete();
 
-        assertEquals("-1", result.get("returnCode"));
-        assertEquals("File already exists", result.get("returnResult"));
+        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals("File already exists", result.get(RETURN_RESULT));
     }
 
     @Test
@@ -93,8 +95,8 @@ public class NewExcelDocumentTest {
      */
     public void testExecute3() {
         Map<String, String> result = toTest.execute(BAD_EXT_FILE_NAME, "sheet1,sheet12", ",");
-        assertEquals("-1", result.get("returnCode"));
-        assertEquals(BAD_CREATE_EXCEL_FILE_MSG, result.get("returnResult"));
+        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals(BAD_CREATE_EXCEL_FILE_MSG, result.get(RETURN_RESULT));
     }
 
     @Test
@@ -105,8 +107,8 @@ public class NewExcelDocumentTest {
      */
     public void testExecute4() {
         Map<String, String> result = toTest.execute(FILE_NAME, "", "");
-        assertEquals("0", result.get("returnCode"));
-        assertTrue(result.get("returnResult").toString().contains("created successfully"));
+        assertEquals("0", result.get(RETURN_CODE));
+        assertTrue(result.get(RETURN_RESULT).toString().contains("created successfully"));
     }
 
     @Test
@@ -116,7 +118,7 @@ public class NewExcelDocumentTest {
      */
     public void testExecute5() {
         Map<String, String> result = toTest.execute(FILE_NAME, ",", ",");
-        assertEquals("-1", result.get("returnCode"));
-        assertEquals(EXCEPTION_WORKSHEET_NAME_EMPTY, result.get("returnResult"));
+        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals(EXCEPTION_WORKSHEET_NAME_EMPTY, result.get(RETURN_RESULT));
     }
 }

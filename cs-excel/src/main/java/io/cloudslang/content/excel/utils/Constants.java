@@ -20,7 +20,8 @@ public class Constants {
     public static final String EXCEPTION_INVALID_INDEX = "The value '%s' for %s input is not a valid index.";
     public static final String EXCEPTION_INVALID_INDEX_NOT_A_NUMBER = "The value '%s' in %s input is not a number.";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
-    protected static final String EXCEPTION_FILE_ALREADY_EXISTS = "File already exists";
+    public static final String EXCEPTION_FILE_ALREADY_EXISTS = "File already exists";
+    public static final String EXCEPTION_INDEX_EMPTY = "Index can`t be empty";
     public static final String EXCEPTION_WORKSHEET_NAME_EMPTY = "The %s can't be null or empty.";
     public static final String DEFAULT_WORKSHEET = "Sheet1";
     public static final String YES = "yes";
