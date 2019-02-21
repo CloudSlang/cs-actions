@@ -6,6 +6,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -22,14 +23,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
+import static org.apache.poi.ss.usermodel.CellType.*;
 import static org.junit.Assert.assertEquals;
 
 public class GetRowIndexByConditionTest {
-    public static final String SHEET1 = "Sheet1";
-    public static final String SHEET2 = "Sheet2";
-    public static final String SHEET3 = "Sheet3";
-    public static final String SHEET4 = "Sheet4";
-    public static final String FILE_NAME = System.getProperty("java.io.tmpdir") + "testFile.xls";
+    private static final String SHEET1 = "Sheet1";
+    private static final String SHEET2 = "Sheet2";
+    private static final String SHEET3 = "Sheet3";
+    private static final String SHEET4 = "Sheet4";
+    private static final String FILE_NAME = System.getProperty("java.io.tmpdir") + "testFile.xls";
     private static GetRowIndexByCondition toTest;
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -62,7 +64,7 @@ public class GetRowIndexByConditionTest {
         String strFormula = "SUM(A1:A3)";
         rowhead = sheet.createRow(5);
         HSSFCell cell = rowhead.createCell(5);
-        cell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
+        cell.setCellType(FORMULA);
         cell.setCellFormula(strFormula);
 
         //set string cells
@@ -358,39 +360,39 @@ public class GetRowIndexByConditionTest {
 
         HSSFRow row = sheet.getRow(0);
         HSSFCell cell = row.getCell(0);
-        assertEquals(Cell.CELL_TYPE_NUMERIC, cell.getCellType());
+        assertEquals(NUMERIC, cell.getCellType());
         cell = row.getCell(1);
-        assertEquals(Cell.CELL_TYPE_ERROR, cell.getCellType());
+        assertEquals(ERROR, cell.getCellType());
         cell = row.getCell(2);
-        assertEquals(Cell.CELL_TYPE_NUMERIC, cell.getCellType());
+        assertEquals(NUMERIC, cell.getCellType());
         row = sheet.getRow(1);
         cell = row.getCell(0);
-        assertEquals(Cell.CELL_TYPE_NUMERIC, cell.getCellType());
+        assertEquals(NUMERIC, cell.getCellType());
         cell = row.getCell(1);
-        assertEquals(Cell.CELL_TYPE_ERROR, cell.getCellType());
+        assertEquals(ERROR, cell.getCellType());
         cell = row.getCell(2);
-        assertEquals(Cell.CELL_TYPE_NUMERIC, cell.getCellType());
+        assertEquals(NUMERIC, cell.getCellType());
         row = sheet.getRow(2);
         cell = row.getCell(0);
-        assertEquals(Cell.CELL_TYPE_NUMERIC, cell.getCellType());
+        assertEquals(NUMERIC, cell.getCellType());
         cell = row.getCell(1);
-        assertEquals(Cell.CELL_TYPE_ERROR, cell.getCellType());
+        assertEquals(ERROR, cell.getCellType());
         cell = row.getCell(2);
-        assertEquals(Cell.CELL_TYPE_NUMERIC, cell.getCellType());
+        assertEquals(NUMERIC, cell.getCellType());
         row = sheet.getRow(3);
         cell = row.getCell(2);
-        assertEquals(Cell.CELL_TYPE_NUMERIC, cell.getCellType());
+        assertEquals(NUMERIC, cell.getCellType());
 
         ExcelServiceImpl.getMergedCell(sheet, 0, 0);
         row = sheet.getRow(0);
         cell = row.getCell(0);
         //0 0 is top left of merged region (not affected).
-        assertEquals(Cell.CELL_TYPE_NUMERIC, cell.getCellType());
+        assertEquals(NUMERIC, cell.getCellType());
         row = sheet.getRow(1);
         cell = row.getCell(0);
-        assertEquals(Cell.CELL_TYPE_ERROR, cell.getCellType());
+        assertEquals(ERROR, cell.getCellType());
         row = sheet.getRow(2);
         cell = row.getCell(0);
-        assertEquals(Cell.CELL_TYPE_ERROR, cell.getCellType());
+        assertEquals(ERROR, cell.getCellType());
     }
 }

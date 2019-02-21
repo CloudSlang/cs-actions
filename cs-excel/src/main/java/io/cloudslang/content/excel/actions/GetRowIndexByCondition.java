@@ -57,6 +57,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  * Created by alexandra boicu 20/2/2019
  */
 public class GetRowIndexByCondition {
+
     @Action(name = "Get Row Index by Condition",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
@@ -75,6 +76,7 @@ public class GetRowIndexByCondition {
                                        @Param(value = COLUMN_INDEX_TO_QUERY, required = true, description = COLUMN_INDEX_TO_QUERY_DESC) String columnIndextoQuery,
                                        @Param(value = OPERATOR, description = OPERATOR_DESC) String operator,
                                        @Param(value = VALUE, description = VALUE_DESC) String value) {
+
         excelFileName = defaultIfEmpty(excelFileName, EMPTY);
         worksheetName = defaultIfEmpty(worksheetName, DEFAULT_WORKSHEET);
         hasHeader = defaultIfEmpty(hasHeader, YES);

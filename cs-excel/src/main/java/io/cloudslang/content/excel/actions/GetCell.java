@@ -7,7 +7,6 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.excel.entities.ExcelCommonInputs;
 import io.cloudslang.content.excel.entities.GetCellInputs;
-import io.cloudslang.content.excel.entities.GetRowIndexByConditionInputs;
 import io.cloudslang.content.excel.services.ExcelServiceImpl;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.utils.StringUtilities;
@@ -28,7 +27,6 @@ import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_N
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.WORKSHEET_NAME;
 import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.*;
 import static io.cloudslang.content.excel.utils.InputsValidation.verifyGetCellInputs;
-import static io.cloudslang.content.excel.utils.InputsValidation.verifyGetCellRowIndexbyCondition;
 import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -36,7 +34,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class GetCell {
 
-    @Action(name = "Get cell data with specified row and column index in an Excel worksheet",
+    @Action(name = "Get Cell",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
