@@ -26,6 +26,9 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.ROWS_COUNT;
+import static org.apache.poi.ss.usermodel.CellType.ERROR;
+import static org.apache.poi.ss.usermodel.CellType.FORMULA;
+import static org.apache.poi.ss.usermodel.CellType.NUMERIC;
 import static org.junit.Assert.assertEquals;
 
 public class GetRowIndexByConditionTest {

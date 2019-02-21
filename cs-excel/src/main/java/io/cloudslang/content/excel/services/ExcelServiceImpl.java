@@ -70,7 +70,7 @@ public class ExcelServiceImpl {
                 FormulaEvaluator evaluator = excelDoc.getCreationHelper().createFormulaEvaluator();
                 for (Row r : worksheet) {
                     for (Cell c : r) {
-                        if (c.getCellType() == Cell.CELL_TYPE_FORMULA) {
+                        if (c.getCellType() == CellType.FORMULA) {
                             evaluator.evaluateFormulaCell(c);
                         }
                     }
