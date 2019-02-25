@@ -37,11 +37,11 @@ public class Descriptions {
                 "taken into consideration only when specifying the dataPath input as well.";
         public static final String PDF_FILE_PATH_DESC = "The path to the PDF file from where the text needs to be " +
                 "extracted.";
-        public static final String DPI_DESC = "The dpi value when converting the PDF file to image.  ";
+        public static final String DPI_DESC = "The DPI value when converting the PDF file to image.";
     }
 
-    public static class PdfConvert {
-        public static final String PDF_CONVERT_DESC = "This operation converts a PDF file from a given path to an " +
-                "image file and then extracts the text with the help of Extract Text operation";
+    public static class ExtractTextFromPDF {
+        public static final String EXTRACT_TEXT_FROM_PDF_DESC = "This operation converts a PDF file given " +
+                "as input and extracts the text using Tesseract's OCR library.";
     }
 }
