@@ -32,19 +32,26 @@ public class PdfService {
     private static StringBuffer result = new StringBuffer();
 
     public static String imageConvert(String sourcePath, String dataPath, String lang, String dpi) throws Exception {
+        List<File> fileList = null;
         String destination = sourcePath.substring(0, sourcePath.lastIndexOf(File.separator)) + File.separator;
-
-        if (!sourcePath.equals("")) {
-            String[] files = sourcePath.split(",");
-            for (String file : files) {
-                File pdf = new File(file);
-                for (File image : requireNonNull(convertPdfToImage(pdf, destination, Integer.parseInt(dpi)))) {
+        try {
+            if (!sourcePath.equals("")) {
+                File pdf = new File(sourcePath);
+                fileList = requireNonNull(convertPdfToImage(pdf, destination, Integer.parseInt(dpi)));
+                for (File image : fileList) {
                     result.append(OcrService.extractText(image.getAbsolutePath(), dataPath, lang));
                     FileUtils.forceDelete(image);
                 }
             }
+            return result.toString();
+        } finally {
+            if (fileList != null) {
+                for (File image : fileList) {
+                    if (image.exists())
+                        FileUtils.forceDelete(image);
+                }
+            }
         }
-        return result.toString();
     }
 
     private static List<File> convertPdfToImage(File file, String destination, Integer dpi) throws Exception {
