@@ -19,9 +19,8 @@ public class Constants {
     public static final String EXCEPTION_INVALID_FILE = "The value '%s' for %s input is not a valid file path.";
     public static final String EXCEPTION_INVALID_INDEX = "The value '%s' for %s input is not a valid index.";
     public static final String EXCEPTION_INVALID_INDEX_NOT_A_NUMBER = "The value '%s' in %s input is not a number.";
-    public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
+    public static final String EXCEPTION_EMPTY = "The %s input can't be empty.";
     public static final String EXCEPTION_FILE_ALREADY_EXISTS = "File already exists";
-    public static final String EXCEPTION_INDEX_EMPTY = "Index can`t be empty";
     public static final String EXCEPTION_WORKSHEET_NAME_EMPTY = "The %s can't be null or empty.";
     public static final String ROW_DATA_REQD_MSG = "Data that should be added or modified in the document is not given.";
     public static final String DEFAULT_WORKSHEET = "Sheet1";
@@ -33,4 +32,18 @@ public class Constants {
     public static final String DEFAULT_ROW_DELIMITER = "|";
     public static final String DEFAULT_COLUMN_DELIMITER = ",";
     public static final String DEFAULT_DELIMITER_WORKSHEET_NAMES = ",";
+
+    //test constants
+    public static final String SHEET0 = "Sheet0";
+    public static final String SHEET1 = "Sheet1";
+    public static final String SHEET2 = "Sheet2";
+    public static final String SHEET3 = "Sheet3";
+    public static final String SHEET4 = "Sheet4";
+    public static final String INVALID_SHEET = "invalid_sheet";
+    public static final String TXT_FILE_NAME = System.getProperty("java.io.tmpdir") + "testFile.txt";
+    public static final String FILE_NAME = System.getProperty("java.io.tmpdir") + "testFile.xls";
+    public static final String FILE_NAME_2 = System.getProperty("java.io.tmpdir")
+            + "testFile2.xls";
+    public static final String BAD_EXT_FILE_NAME_2 = System.getProperty("java.io.tmpdir")
+            + "testFile2.jpg";
 }

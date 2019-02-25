@@ -32,6 +32,9 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
+/**
+ * Created by danielmanciu on 18.02.2019.
+ */
 public class GetCell {
 
     @Action(name = "Get Cell",
@@ -48,13 +51,13 @@ public class GetCell {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = EXCEL_FILE_NAME, required = true, description = EXCEL_FILE_NAME_DESC) String excelFileName,
-                                       @Param(value = WORKSHEET_NAME, required = true, description = WORKSHEET_NAME_DESC) String worksheetName,
-                                       @Param(value = HAS_HEADER, required = true, description = HAS_HEADER_DESC) String hasHeader,
-                                       @Param(value = FIRST_ROW_INDEX, required = true, description = FIRST_ROW_INDEX_DESC) String firstRowIndex,
-                                       @Param(value = ROW_INDEX, required = true, description = ROW_INDEX_DESC) String rowIndex,
-                                       @Param(value = COLUMN_INDEX, required = true, description = COLUMN_INDEX_DESC) String columnIndex,
-                                       @Param(value = ROW_DELIMITER, required = true, description = ROW_DELIMITER_DESC) String rowDelimiter,
-                                       @Param(value = COLUMN_DELIMITER, required = true, description = COLUMN_DELIMITER_DESC) String columnDelimiter) {
+                                       @Param(value = WORKSHEET_NAME, description = WORKSHEET_NAME_DESC) String worksheetName,
+                                       @Param(value = HAS_HEADER, description = HAS_HEADER_DESC) String hasHeader,
+                                       @Param(value = FIRST_ROW_INDEX, description = FIRST_ROW_INDEX_DESC) String firstRowIndex,
+                                       @Param(value = ROW_INDEX, description = ROW_INDEX_DESC) String rowIndex,
+                                       @Param(value = COLUMN_INDEX, description = COLUMN_INDEX_DESC) String columnIndex,
+                                       @Param(value = ROW_DELIMITER, description = ROW_DELIMITER_DESC) String rowDelimiter,
+                                       @Param(value = COLUMN_DELIMITER, description = COLUMN_DELIMITER_DESC) String columnDelimiter) {
 
         excelFileName = defaultIfEmpty(excelFileName, EMPTY);
         worksheetName = defaultIfEmpty(worksheetName, DEFAULT_WORKSHEET);
@@ -86,6 +89,7 @@ public class GetCell {
                     .rowDelimiter(rowDelimiter)
                     .columnDelimiter(columnDelimiter)
                     .build());
+
             return result;
         } catch (Exception exception) {
             return OutputUtilities.getFailureResultsMap(exception);

@@ -21,6 +21,7 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.excel.utils.Constants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -29,15 +30,7 @@ import static org.junit.Assert.assertNull;
  * Created by alexandra boicu 20/2/2019
  */
 public class DeleteCellTest {
-    public static final String SHEET1 = "Sheet1";
-    public static final String SHEET2 = "Sheet2";
-    public static final String SHEET3 = "Sheet3";
-    public static final String FILE_NAME = System.getProperty("java.io.tmpdir") + "testFile.xls";
-
-    //responses
     private static DeleteCell toTest;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @BeforeClass
     /**
@@ -48,7 +41,7 @@ public class DeleteCellTest {
         toTest = new DeleteCell();
 
         // generate xml
-        HSSFWorkbook workbook = new HSSFWorkbook();
+        final HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet(SHEET1);
         HSSFRow rowhead;
 
@@ -206,8 +199,8 @@ public class DeleteCellTest {
         Map<String, String> result;
         result = toTest.execute(FILE_NAME, SHEET2, "1", "A");
         assertEquals("-1", result.get(RETURN_CODE));
-        assertEquals("The value 'A' in A input is not a number.", result.get(RETURN_RESULT));
-        assertEquals("The value 'A' in A input is not a number.", result.get(EXCEPTION));
+        assertEquals("The value 'A' in columnIndex input is not a number.", result.get(RETURN_RESULT));
+        assertEquals("The value 'A' in columnIndex input is not a number.", result.get(EXCEPTION));
     }
 
     @Test

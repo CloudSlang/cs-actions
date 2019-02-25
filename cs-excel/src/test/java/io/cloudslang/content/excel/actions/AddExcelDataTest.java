@@ -1,5 +1,6 @@
 package io.cloudslang.content.excel.actions;
 
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.excel.services.ExcelServiceImpl;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -26,6 +27,8 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.excel.utils.Constants.*;
+import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -40,16 +43,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class AddExcelDataTest {
-
-    public static final String SHEET0 = "Sheet0";
-    public static final String SHEET1 = "Sheet1";
-    public static final String SHEET2 = "Sheet2";
-    public static final String SHEET3 = "Sheet3";
-    public static final String SHEET4 = "Sheet4";
-    public static final String INVALID_SHEET = "invalid_sheet";
-    public static final String FILE_NAME = System.getProperty("java.io.tmpdir") + "testFile.xls";
     private static AddExcelData toTest;
     private static Sheet worksheet;
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -58,7 +54,7 @@ public class AddExcelDataTest {
      * Create an Excel document, add 3 sheets and write some information in each (5 rows and 10 columns)
      * @throws IOException
      */
-    public static void setUp() throws IOException {
+    public static void setUp() {
         worksheet = mock(Sheet.class);
         doReturn(2).when(worksheet).getLastRowNum();
     }
@@ -68,7 +64,7 @@ public class AddExcelDataTest {
         toTest = new AddExcelData();
 
         // generate excel
-        HSSFWorkbook workbook = new HSSFWorkbook();
+        final HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet;
         workbook.createSheet(SHEET0);
         HSSFRow rowhead;
@@ -82,9 +78,9 @@ public class AddExcelDataTest {
         }
 
         //set a formula cell
-        String strFormula = "SUM(A1:A3)";
+        final String strFormula = "SUM(A1:A3)";
         rowhead = sheet.createRow(5);
-        HSSFCell cell = rowhead.createCell(5);
+        final HSSFCell cell = rowhead.createCell(5);
         cell.setCellType(CellType.FORMULA);
         cell.setCellFormula(strFormula);
 
@@ -121,7 +117,7 @@ public class AddExcelDataTest {
      * delete the excel document that was created at setUp.
      */
     public void CleanUp() {
-        File f = new File(FILE_NAME);
+        final File f = new File(FILE_NAME);
         f.delete();
     }
 
@@ -132,9 +128,15 @@ public class AddExcelDataTest {
      * @throws Exception
      */
     public void testExecute() throws Exception {
-
-        Map<String, String> result;
-        result = toTest.execute(FILE_NAME, SHEET1, "unu, doi, trei", "1,2,3,4;5,6,7,8", "1,2", "", ";", ",", "true");
+        final Map<String, String> result = toTest.execute(FILE_NAME,
+                SHEET1,
+                "",
+                "1,2,3,4;5,6,7,8",
+                "1,2",
+                "",
+                ";",
+                ",",
+                "true");
         assertEquals("0", result.get(RETURN_CODE));
         assertNull(result.get(EXCEPTION));
 
@@ -167,20 +169,28 @@ public class AddExcelDataTest {
 
     @Test
     /**
-     * Test execute method on an existing xml documment.
+     * Test execute method on an existing xml document.
      * this method overwrite old data with row_input_data.
      * with header
      * @throws Exception
      */
     public void testExecute0() throws Exception {
-        Map<String, String> result;
-        result = toTest.execute(FILE_NAME, SHEET0, "unu, doi, trei", "1,2,3,4;5,6,7,8", "1,2", "", ";", ",", "true");
-        assertEquals("0", result.get(RETURN_CODE));
+        final Map<String, String> result = toTest.execute(FILE_NAME, 
+                SHEET0,
+                "unu, doi, trei",
+                "1,2,3,4;5,6,7,8",
+                "1,2",
+                "",
+                ";",
+                ",",
+                "true");
+
+        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
         assertNull(result.get(EXCEPTION));
 
-        FileInputStream fis = new FileInputStream(new File(FILE_NAME));
-        HSSFWorkbook workbook = new HSSFWorkbook(fis);
-        HSSFSheet sheet = workbook.getSheet(SHEET0);
+        final FileInputStream fis = new FileInputStream(new File(FILE_NAME));
+        final HSSFWorkbook workbook = new HSSFWorkbook(fis);
+        final HSSFSheet sheet = workbook.getSheet(SHEET0);
         HSSFRow row = sheet.getRow(0);
 
         HSSFCell cell = row.getCell(0);
@@ -217,15 +227,15 @@ public class AddExcelDataTest {
      * @throws IOException
      */
     public void testSetHeaderRow() throws IOException {
-        FileInputStream fis = new FileInputStream(new File(FILE_NAME));
-        HSSFWorkbook workbook = new HSSFWorkbook(fis);
-        HSSFSheet sheet = workbook.getSheet(SHEET2);
-        String headerData = "ana, are, 7.2, mere";
-        String delimiter = ",";
+        final FileInputStream fis = new FileInputStream(new File(FILE_NAME));
+        final HSSFWorkbook workbook = new HSSFWorkbook(fis);
+        final HSSFSheet sheet = workbook.getSheet(SHEET2);
+        final String headerData = "ana, are, 7.2, mere";
+        final String delimiter = ",";
 
         ExcelServiceImpl.setHeaderRow(sheet, headerData, delimiter);
 
-        HSSFRow row = sheet.getRow(0);
+        final HSSFRow row = sheet.getRow(0);
         HSSFCell cell = row.getCell(0);
         assertEquals("ana", cell.getStringCellValue());
         cell = row.getCell(1);
@@ -245,14 +255,14 @@ public class AddExcelDataTest {
      * @throws IOException
      */
     public void testSetDataRows() throws IOException {
-        FileInputStream fis = new FileInputStream(new File(FILE_NAME));
-        HSSFWorkbook workbook = new HSSFWorkbook(fis);
-        HSSFSheet sheet = workbook.getSheet(SHEET3);
-        String rowData = "ana,are,7.2,mere;radu,n-are";
-        String rowDelimiter = ";";
-        String columnDelimiter = ",";
-        int startRowIndex = 4;
-        int startColumnIndex = 3;
+        final FileInputStream fis = new FileInputStream(new File(FILE_NAME));
+        final HSSFWorkbook workbook = new HSSFWorkbook(fis);
+        final HSSFSheet sheet = workbook.getSheet(SHEET3);
+        final String rowData = "ana,are,7.2,mere;radu,n-are";
+        final String rowDelimiter = ";";
+        final String columnDelimiter = ",";
+        final int startRowIndex = 4;
+        final int startColumnIndex = 3;
 
         ExcelServiceImpl.setDataRows(sheet, rowData, rowDelimiter, columnDelimiter, startRowIndex, startColumnIndex);
 
@@ -279,11 +289,18 @@ public class AddExcelDataTest {
      * Test execute method with empty excelFileName input.
      * @throws Exception
      */
-    public void testExecute2() throws Exception {
+    public void testExecute2() {
+        final Map<String, String> result = toTest.execute("",
+                SHEET0,
+                "unu, doi, trei",
+                "1,2,3,4;5,6,7,8",
+                "1,2",
+                "",
+                ";",
+                ",",
+                "true");
 
-        Map<String, String> result;
-        result = toTest.execute("", SHEET0, "unu, doi, trei", "1,2,3,4;5,6,7,8", "1,2", "", ";", ",", "true");
-        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals(ReturnCodes.FAILURE, result.get(RETURN_CODE));
         assertEquals("The excelFilName is required.", result.get(RETURN_RESULT));
     }
 
@@ -294,13 +311,20 @@ public class AddExcelDataTest {
      * @throws Exception
      */
     public void testExecute3() throws Exception {
-        File fileWithInvalidFormat = new File(System.getProperty("java.io.tmpdir") + "testFile.txt");
+        final File fileWithInvalidFormat = new File(System.getProperty("java.io.tmpdir") + "testFile.txt");
         fileWithInvalidFormat.createNewFile();
 
-        Map<String, String> result;
-        result = toTest.execute(System.getProperty("java.io.tmpdir") + "testFile.txt", SHEET0, "unu, doi, trei", "1,2,3,4;5,6,7,8", "1,2", "", ";", ",", "true");
+        final Map<String, String> result = toTest.execute(System.getProperty("java.io.tmpdir") + "testFile.txt",
+                SHEET0,
+                "unu, doi, trei",
+                "1,2,3,4;5,6,7,8",
+                "1,2",
+                "",
+                ";",
+                ",",
+                "true");
 
-        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals(ReturnCodes.FAILURE, result.get(RETURN_CODE));
         assertEquals("Invalid file for Excel documents. Expecting file name with extension XLS , XLSX or XLSM.", result.get(RETURN_RESULT));
 
         fileWithInvalidFormat.delete();
@@ -311,12 +335,19 @@ public class AddExcelDataTest {
      * Test execute method with inexistent sheet.
      * @throws Exception
      */
-    public void testExecute4() throws Exception {
-        Map<String, String> result;
-        result = toTest.execute(System.getProperty("java.io.tmpdir") + "testFile.txt", INVALID_SHEET, "unu, doi, trei", "1,2,3,4;5,6,7,8", "1,2", "", ";", ",", "true");
+    public void testExecute4() {
+        final Map<String, String>  result = toTest.execute(TXT_FILE_NAME,
+                INVALID_SHEET,
+                "unu, doi, trei",
+                "1,2,3,4;5,6,7,8",
+                "1,2",
+                "",
+                ";",
+                ",",
+                "true");
 
-        assertEquals("-1", result.get(RETURN_CODE));
-        assertEquals("Worksheet " + INVALID_SHEET + " does not exist.", result.get(RETURN_RESULT));
+        assertEquals(ReturnCodes.FAILURE, result.get(RETURN_CODE));
+        assertEquals(String.format(EXCEPTION_INVALID_FILE, TXT_FILE_NAME, EXCEL_FILE_NAME), result.get(RETURN_RESULT));
     }
 
     @Test
@@ -324,12 +355,19 @@ public class AddExcelDataTest {
      * Test execute method with null row data.
      * @throws Exception
      */
-    public void testExecute5() throws Exception {
-        Map<String, String> result;
-        result = toTest.execute(System.getProperty("java.io.tmpdir") + "testFile.txt", INVALID_SHEET, "unu, doi, trei", "", "1,2", "", ";", ",", "true");
+    public void testExecute5() {
+        final Map<String, String> result = toTest.execute(TXT_FILE_NAME,
+                INVALID_SHEET,
+                "unu, doi, trei",
+                "1",
+                "1,2",
+                "",
+                ";",
+                ",",
+                "true");
 
-        assertEquals("-1", result.get(RETURN_CODE));
-        assertEquals("Data that should be added or modified in the document is not given.", result.get(RETURN_RESULT));
+        assertEquals(ReturnCodes.FAILURE, result.get(RETURN_CODE));
+        assertEquals(String.format(EXCEPTION_INVALID_FILE, TXT_FILE_NAME, EXCEL_FILE_NAME), result.get(RETURN_RESULT));
     }
 
 
@@ -339,10 +377,17 @@ public class AddExcelDataTest {
     @Test
     public void testProcessIndex() {
         // apache poi works with 0 index based excel files (Microsoft Excel file starts with index 1)
-        List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{1, 2, 5, 6, 7, 8, 9}));
-        String index = "1,2 , 5:8,9";
+        final List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{1, 2, 5, 6, 7, 8, 9}));
+        final String index = "1,2 , 5:8,9";
 
-        List<Integer> result = ExcelServiceImpl.processIndex(index, worksheet, "", "", "", true, false);
+        final List<Integer> result = ExcelServiceImpl.processIndex(index,
+                worksheet,
+                "",
+                "",
+                "",
+                true,
+                false);
+
         assertNotNull(result);
         assertEquals(indexList, result);
     }
@@ -353,12 +398,19 @@ public class AddExcelDataTest {
     @Test
     public void testProcessIndex2() {
         // apache poi works with 0 index based excel files (Microsoft Excel file starts with index 1)
-        List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{2, 3, 4}));
-        String index = "";
-        String rowData = "a,b|c,d|e,f";
+        final List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{2, 3, 4}));
+        final String index = "";
+        final String rowData = "a,b|c,d|e,f";
         doReturn(1).when(worksheet).getLastRowNum();
 
-        List<Integer> result = ExcelServiceImpl.processIndex(index, worksheet, rowData, "\\|", ",", true, false);
+        final List<Integer> result = ExcelServiceImpl.processIndex(index,
+                worksheet,
+                rowData,
+                "\\|",
+                ",",
+                true,
+                false);
+
         assertNotNull(result);
         assertEquals(indexList, result);
     }
@@ -369,10 +421,17 @@ public class AddExcelDataTest {
     @Test
     public void testProcessIndex3() {
         // apache poi works with 0 index based excel files (Microsoft Excel file starts with index 1)
-        List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{1, 2, 5, 6, 7, 8, 9}));
-        String index = "1,2 , 5:8,9";
+        final List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{1, 2, 5, 6, 7, 8, 9}));
+        final String index = "1,2 , 5:8,9";
 
-        List<Integer> result = ExcelServiceImpl.processIndex(index, worksheet, "", "", "", false, false);
+        final List<Integer> result = ExcelServiceImpl.processIndex(index,
+                worksheet,
+                "",
+                "",
+                "",
+                false,
+                false);
+
         assertNotNull(result);
         assertEquals(indexList, result);
     }
@@ -383,11 +442,17 @@ public class AddExcelDataTest {
     @Test
     public void testProcessIndex4() {
         // apache poi works with 0 index based excel files (Microsoft Excel file starts with index 1)
-        List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{0, 1}));
-        String index = "";
-        String rowData = "a,b|c,d|e,f";
+        final List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{0, 1}));
+        final String index = "";
+        final String rowData = "a,b|c,d|e,f";
 
-        List<Integer> result = ExcelServiceImpl.processIndex(index, worksheet, rowData, "\\|", ",", false, false);
+        final List<Integer> result = ExcelServiceImpl.processIndex(index,
+                worksheet,
+                rowData,
+                "\\|",
+                ",",
+                false,
+                false);
         assertNotNull(result);
         assertEquals(indexList, result);
     }
@@ -398,21 +463,36 @@ public class AddExcelDataTest {
     @Test
     public void testProcessIndex5() {
         // apache poi works with 0 index based excel files (Microsoft Excel file starts with index 1)
-        List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{2, 3, 6, 7, 8, 9, 10}));
-        String index = "1,2 , 5:8,9";
-        String rowData = "a,b|c,d|e,f";
+        final List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{2, 3, 6, 7, 8, 9, 10}));
+        final String index = "1,2 , 5:8,9";
+        final String rowData = "a,b|c,d|e,f";
 
-        List<Integer> result = ExcelServiceImpl.processIndex(index, worksheet, rowData, "\\|", ",", true, true);
+        final List<Integer> result = ExcelServiceImpl.processIndex(index,
+                worksheet,
+                rowData,
+                "\\|",
+                ",",
+                true,
+                true);
+
         assertNotNull(result);
         assertEquals(indexList, result);
     }
 
     @Test
     public void testProcessIndex6() {
-        List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{0, 1}));
-        String index = "0:1";
-        String rowData = "a,s,d,f|c,d,f";
-        List<Integer> result = ExcelServiceImpl.processIndex(index, worksheet, rowData, "\\|", ",", false, true);
+        final List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{0, 1}));
+        final String index = "0:1";
+        final String rowData = "a,s,d,f|c,d,f";
+
+        final List<Integer> result = ExcelServiceImpl.processIndex(index,
+                worksheet,
+                rowData,
+                "\\|",
+                ",",
+                false,
+                true);
+
         assertNotNull(result);
         assertEquals(indexList, result);
     }
@@ -423,7 +503,7 @@ public class AddExcelDataTest {
     @Test
     public void testShiftRows() {
         reset(worksheet);
-        List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{0, 1, 2, 3, 4, 5, 6, 7}));
+        final List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{0, 1, 2, 3, 4, 5, 6, 7}));
         ExcelServiceImpl.shiftRows(worksheet, indexList);
         verify(worksheet, times(1)).shiftRows(eq(0), eq(0), eq(8), eq(false), eq(true));
     }
@@ -434,7 +514,7 @@ public class AddExcelDataTest {
     @Test
     public void testShiftRows2() {
         reset(worksheet);
-        List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{0, 1, 5, 6, 7, 8, 9, 12}));
+        final List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{0, 1, 5, 6, 7, 8, 9, 12}));
         ExcelServiceImpl.shiftRows(worksheet, indexList);
         verify(worksheet, atLeastOnce()).shiftRows(anyInt(), anyInt(), anyInt(), anyBoolean(), anyBoolean());
     }
@@ -444,12 +524,12 @@ public class AddExcelDataTest {
      *
      * @throws java.io.IOException
      */
-    @org.junit.Test
+    @Test
     public void testShiftRows3() throws IOException {
         // apache poi works with 0 index based excel files (Microsoft Excel file starts with index 1)
         Workbook workbook = getWorkbook(FILE_NAME);
         Sheet sheet = workbook.getSheet(SHEET4);
-        List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{0}));
+        final List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{0}));
         ExcelServiceImpl.shiftRows(sheet, indexList);
         writeWorkbook(workbook, FILE_NAME);
         assertNotNull(worksheet);
@@ -472,13 +552,20 @@ public class AddExcelDataTest {
      */
     @Test
     public void testExecute6() throws Exception {
-        Map<String, String> result;
-        result = toTest.execute(FILE_NAME, SHEET4, "", "1,2,3,4|5,6,7,8", "", "", "|", ",", "");
+        final Map<String, String> result = toTest.execute(FILE_NAME,
+                SHEET4,
+                "",
+                "1,2,3,4|5,6,7,8",
+                "",
+                "",
+                "|",
+                ",",
+                "");
 
-        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
 
-        Workbook workbook = getWorkbook(FILE_NAME);
-        Sheet sheet = workbook.getSheet(SHEET4);
+        final Workbook workbook = getWorkbook(FILE_NAME);
+        final Sheet sheet = workbook.getSheet(SHEET4);
         assertNotNull(sheet);
         assertEquals(0, (int) sheet.getRow(4).getCell(0).getNumericCellValue());
         assertEquals(1, (int) sheet.getRow(5).getCell(0).getNumericCellValue());
@@ -490,12 +577,19 @@ public class AddExcelDataTest {
      *
      * @throws Exception
      */
-    @org.junit.Test
+    @Test
     public void testExecute7() throws Exception {
-        Map<String, String> result;
-        result = toTest.execute(FILE_NAME, SHEET4, "", "1,2,3,4|5,6,7,8", "4,5", "", "|", ",", "");
+        final Map<String, String> result = toTest.execute(FILE_NAME,
+                SHEET4,
+                "",
+                "1,2,3,4|5,6,7,8",
+                "4,5",
+                "",
+                "|",
+                ",",
+                "");
 
-        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
 
         Workbook workbook = getWorkbook(FILE_NAME);
         Sheet sheet = workbook.getSheet(SHEET4);
@@ -512,13 +606,20 @@ public class AddExcelDataTest {
      */
     @Test
     public void testExecute8() throws Exception {
-        Map<String, String> result;
-        result = toTest.execute(FILE_NAME, SHEET4, "", "1,2,3,4|5,6,7,8", "4,5", "1:3,5", "|", ",", "");
+        final Map<String, String> result = toTest.execute(FILE_NAME,
+                SHEET4,
+                "",
+                "1,2,3,4|5,6,7,8",
+                "4,5",
+                "1:3,5",
+                "|",
+                ",", "");
 
-        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
 
-        Workbook workbook = getWorkbook(FILE_NAME);
-        Sheet sheet = workbook.getSheet(SHEET4);
+        final Workbook workbook = getWorkbook(FILE_NAME);
+        final Sheet sheet = workbook.getSheet(SHEET4);
+
         assertNotNull(sheet);
         assertEquals(0, (int) sheet.getRow(3).getCell(1).getNumericCellValue());
         assertEquals(1, (int) sheet.getRow(4).getCell(1).getNumericCellValue());
@@ -540,15 +641,23 @@ public class AddExcelDataTest {
      *
      * @throws Exception
      */
-    @org.junit.Test
+    @Test
     public void testExecute9() throws Exception {
-        Map<String, String> result;
-        result = toTest.execute(FILE_NAME, SHEET4, "", "1,2,3,4|5,6,7,8", "4,5", "1:3,5", "|", ",", "true");
+        final Map<String, String> result = toTest.execute(FILE_NAME,
+                SHEET4,
+                "",
+                "1,2,3,4|5,6,7,8",
+                "4,5",
+                "1:3,5",
+                "|",
+                ",",
+                "true");
 
-        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
 
-        Workbook workbook = getWorkbook(FILE_NAME);
-        Sheet sheet = workbook.getSheet(SHEET4);
+        final Workbook workbook = getWorkbook(FILE_NAME);
+        final Sheet sheet = workbook.getSheet(SHEET4);
+
         assertNotNull(sheet);
         assertEquals(0, (int) sheet.getRow(3).getCell(1).getNumericCellValue());
         assertEquals(1, (int) sheet.getRow(4).getCell(1).getNumericCellValue());
@@ -570,7 +679,7 @@ public class AddExcelDataTest {
      * @throws IOException
      */
     private Workbook getWorkbook(String filePath) throws IOException {
-        FileInputStream fis = new FileInputStream(new File(filePath));
+        final FileInputStream fis = new FileInputStream(new File(filePath));
         HSSFWorkbook workbook = new HSSFWorkbook(fis);
         fis.close();
         return workbook;
@@ -584,7 +693,7 @@ public class AddExcelDataTest {
      * @throws IOException
      */
     private void writeWorkbook(Workbook workbook, String filePath) throws IOException {
-        FileOutputStream fileOut = new FileOutputStream(filePath);
+        final FileOutputStream fileOut = new FileOutputStream(filePath);
         workbook.write(fileOut);
         fileOut.close();
     }

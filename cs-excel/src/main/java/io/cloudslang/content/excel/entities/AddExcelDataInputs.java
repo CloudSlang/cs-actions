@@ -94,7 +94,7 @@ public class AddExcelDataInputs {
         }
 
         @NotNull
-        public AddExcelDataInputsBuilder headerData(@NotNull final String hasHeader) {
+        public AddExcelDataInputsBuilder headerData(@NotNull final String headerData) {
             this.headerData = headerData;
             return this;
         }

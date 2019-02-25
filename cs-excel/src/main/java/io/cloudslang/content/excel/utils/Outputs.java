@@ -13,4 +13,5 @@ public class Outputs extends OutputNames {
         public static final String ROWS_COUNT="rowsCount";
 
     }
+
 }

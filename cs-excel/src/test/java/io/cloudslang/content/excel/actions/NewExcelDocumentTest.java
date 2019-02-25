@@ -13,8 +13,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.excel.utils.Constants.BAD_CREATE_EXCEL_FILE_MSG;
-import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_WORKSHEET_NAME_EMPTY;
+import static io.cloudslang.content.excel.utils.Constants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -23,10 +22,6 @@ import static org.junit.Assert.assertTrue;
  * Created by alexandra boicu 20/2/2019
  */
 public class NewExcelDocumentTest {
-    public static final String FILE_NAME = System.getProperty("java.io.tmpdir")
-            + "testFile2.xls";
-    public static final String BAD_EXT_FILE_NAME = System.getProperty("java.io.tmpdir")
-            + "testFile2.jpg";
 
     private static NewExcelDocument toTest;
 
@@ -34,7 +29,7 @@ public class NewExcelDocumentTest {
     public void setUp() throws IOException {
         toTest = new NewExcelDocument();
 
-        File f = new File(FILE_NAME);
+        final File f = new File(FILE_NAME_2);
         if (f.exists()) {
             f.delete();
         }
@@ -45,7 +40,7 @@ public class NewExcelDocumentTest {
      * delete the xml document that was created at setUp.
      */
     public void CleanUp() {
-        File f = new File(FILE_NAME);
+        final File f = new File(FILE_NAME_2);
         f.delete();
     }
 
@@ -55,11 +50,11 @@ public class NewExcelDocumentTest {
      * @throws Exception
      */
     public void testExecute() throws Exception {
-        Map<String, String> result = toTest.execute(FILE_NAME, "sheet1,sheet12", ",");
+        Map<String, String> result = toTest.execute(FILE_NAME_2, "sheet1,sheet12", ",");
 
         assertEquals("0", result.get(RETURN_CODE));
 
-        File f = new File(FILE_NAME);
+        File f = new File(FILE_NAME_2);
         assertTrue(f.exists());
         FileInputStream fis = new FileInputStream(f);
         HSSFWorkbook workbook = new HSSFWorkbook(fis);
@@ -77,11 +72,11 @@ public class NewExcelDocumentTest {
      */
     public void testExecute2() throws Exception {
 
-        File f = new File(FILE_NAME);
+        File f = new File(FILE_NAME_2);
         if (!f.exists()) {
             f.createNewFile();
         }
-        Map<String, String> result = toTest.execute(FILE_NAME, "sheet1,sheet12", ",");
+        Map<String, String> result = toTest.execute(FILE_NAME_2, "sheet1,sheet12", ",");
         f.delete();
 
         assertEquals("-1", result.get(RETURN_CODE));
@@ -94,7 +89,7 @@ public class NewExcelDocumentTest {
      * @throws Exception
      */
     public void testExecute3() {
-        Map<String, String> result = toTest.execute(BAD_EXT_FILE_NAME, "sheet1,sheet12", ",");
+        Map<String, String> result = toTest.execute(BAD_EXT_FILE_NAME_2, "sheet1,sheet12", ",");
         assertEquals("-1", result.get(RETURN_CODE));
         assertEquals(BAD_CREATE_EXCEL_FILE_MSG, result.get(RETURN_RESULT));
     }
@@ -106,7 +101,7 @@ public class NewExcelDocumentTest {
      * @throws Exception
      */
     public void testExecute4() {
-        Map<String, String> result = toTest.execute(FILE_NAME, "", "");
+        Map<String, String> result = toTest.execute(FILE_NAME_2, "", "");
         assertEquals("0", result.get(RETURN_CODE));
         assertTrue(result.get(RETURN_RESULT).toString().contains("created successfully"));
     }
@@ -117,7 +112,7 @@ public class NewExcelDocumentTest {
      * @throws Exception
      */
     public void testExecute5() {
-        Map<String, String> result = toTest.execute(FILE_NAME, ",", ",");
+        Map<String, String> result = toTest.execute(FILE_NAME_2, ",", ",");
         assertEquals("-1", result.get(RETURN_CODE));
         assertEquals(EXCEPTION_WORKSHEET_NAME_EMPTY, result.get(RETURN_RESULT));
     }

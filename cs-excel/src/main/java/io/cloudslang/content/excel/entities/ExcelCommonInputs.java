@@ -6,6 +6,9 @@ import java.beans.ConstructorProperties;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
+/**
+ * Created by danielmanciu on 18.02.2019.
+ */
 public class ExcelCommonInputs {
     private final String excelFileName;
     private final String worksheetName;

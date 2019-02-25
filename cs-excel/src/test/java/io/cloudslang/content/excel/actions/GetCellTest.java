@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
+import io.cloudslang.content.constants.ReturnCodes;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -17,7 +18,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.excel.utils.Constants.*;
 import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.*;
@@ -25,11 +25,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class GetCellTest {
-    private static final String SHEET1 = "Sheet1";
-    private static final String SHEET2 = "Sheet2";
-    private static final String SHEET3 = "Sheet3";
-    private static final String FILE_NAME = System.getProperty("java.io.tmpdir") + "testFile.xls";
     private static GetCell toTest;
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -109,8 +106,8 @@ public class GetCellTest {
                 "1",
                 DEFAULT_ROW_DELIMITER,
                 DEFAULT_COLUMN_DELIMITER);
-        
-        assertEquals("0", result.get(RETURN_CODE));
+
+        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
         assertEquals("1", result.get(COLUMNS_COUNT));
         assertEquals("1", result.get(ROWS_COUNT));
         assertEquals("22", result.get(RETURN_RESULT));
@@ -132,7 +129,7 @@ public class GetCellTest {
                 DEFAULT_ROW_DELIMITER,
                 DEFAULT_COLUMN_DELIMITER);
 
-        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
         assertEquals("1", result.get(COLUMNS_COUNT));
         assertEquals("1", result.get(ROWS_COUNT));
         assertEquals("66.0", result.get(RETURN_RESULT));
@@ -154,7 +151,8 @@ public class GetCellTest {
                 DEFAULT_ROW_DELIMITER,
                 DEFAULT_COLUMN_DELIMITER);
 
-        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals(ReturnCodes.FAILURE, result.get(RETURN_CODE));
+        assertEquals("The maybe for hasHeader input is not valid.The valid values are yes/no.", result.get(RETURN_RESULT));
         assertEquals("The maybe for hasHeader input is not valid.The valid values are yes/no.", result.get(EXCEPTION));
     }
 
@@ -173,7 +171,7 @@ public class GetCellTest {
                 DEFAULT_ROW_DELIMITER,
                 DEFAULT_COLUMN_DELIMITER);
 
-        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
         assertEquals("0", result.get(COLUMNS_COUNT));
         assertEquals("0", result.get(ROWS_COUNT));
         assertEquals("", result.get(RETURN_RESULT));
@@ -194,7 +192,7 @@ public class GetCellTest {
                 DEFAULT_ROW_DELIMITER,
                 DEFAULT_COLUMN_DELIMITER);
 
-        assertEquals("0", result.get(RETURN_CODE));
+        assertEquals(ReturnCodes.SUCCESS, result.get(RETURN_CODE));
         assertEquals("2", result.get(COLUMNS_COUNT));
         assertEquals("2", result.get(ROWS_COUNT));
         assertEquals("abc,abc|abc,abc", result.get(RETURN_RESULT));

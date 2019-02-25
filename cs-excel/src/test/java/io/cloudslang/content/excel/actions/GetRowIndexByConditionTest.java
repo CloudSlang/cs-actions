@@ -25,6 +25,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.excel.utils.Constants.*;
 import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.ROWS_COUNT;
 import static org.apache.poi.ss.usermodel.CellType.ERROR;
 import static org.apache.poi.ss.usermodel.CellType.FORMULA;
@@ -32,14 +33,7 @@ import static org.apache.poi.ss.usermodel.CellType.NUMERIC;
 import static org.junit.Assert.assertEquals;
 
 public class GetRowIndexByConditionTest {
-    private static final String SHEET1 = "Sheet1";
-    private static final String SHEET2 = "Sheet2";
-    private static final String SHEET3 = "Sheet3";
-    private static final String SHEET4 = "Sheet4";
-    private static final String FILE_NAME = System.getProperty("java.io.tmpdir") + "testFile.xls";
     private static GetRowIndexByCondition toTest;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @BeforeClass
     /**
@@ -272,7 +266,7 @@ public class GetRowIndexByConditionTest {
                 "3"
         );
         assertEquals("-1", result.get(RETURN_CODE));
-        assertEquals("The columnIndextoQuery can't be null or empty.", result.get(RETURN_RESULT));
+        assertEquals("The columnIndextoQuery input can't be empty.", result.get(RETURN_RESULT));
     }
 
     @Test

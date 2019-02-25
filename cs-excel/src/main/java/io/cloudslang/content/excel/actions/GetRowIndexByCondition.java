@@ -17,36 +17,15 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.excel.utils.Constants.DEFAULT_OPERATOR;
-import static io.cloudslang.content.excel.utils.Constants.DEFAULT_WORKSHEET;
-import static io.cloudslang.content.excel.utils.Constants.NEW_LINE;
-import static io.cloudslang.content.excel.utils.Constants.YES;
-import static io.cloudslang.content.excel.utils.Constants.ZERO;
-import static io.cloudslang.content.excel.utils.Descriptions.Common.EXCEL_FILE_NAME_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.Common.RETURN_CODE_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.Common.WORKSHEET_NAME_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetRowIndexbyCondition.COLUMN_INDEX_TO_QUERY_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetRowIndexbyCondition.EXCEPTION_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetRowIndexbyCondition.FAILURE_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetRowIndexbyCondition.FIRST_ROW_INDEX_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetRowIndexbyCondition.HAS_HEADER_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetRowIndexbyCondition.OPERATOR_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetRowIndexbyCondition.RETURN_RESULT_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetRowIndexbyCondition.ROWS_COUNT_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetRowIndexbyCondition.SUCCESS_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetRowIndexbyCondition.VALUE_DESC;
+import static io.cloudslang.content.excel.utils.Constants.*;
+import static io.cloudslang.content.excel.utils.Descriptions.Common.*;
+import static io.cloudslang.content.excel.utils.Descriptions.GetRowIndexbyCondition.*;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.WORKSHEET_NAME;
-import static io.cloudslang.content.excel.utils.Inputs.GetRowIndexByCondition.COLUMN_INDEX_TO_QUERY;
-import static io.cloudslang.content.excel.utils.Inputs.GetRowIndexByCondition.FIRST_ROW_INDEX;
-import static io.cloudslang.content.excel.utils.Inputs.GetRowIndexByCondition.HAS_HEADER;
-import static io.cloudslang.content.excel.utils.Inputs.GetRowIndexByCondition.OPERATOR;
-import static io.cloudslang.content.excel.utils.Inputs.GetRowIndexByCondition.VALUE;
+import static io.cloudslang.content.excel.utils.Inputs.GetRowIndexByCondition.*;
 import static io.cloudslang.content.excel.utils.InputsValidation.verifyGetCellRowIndexbyCondition;
 import static io.cloudslang.content.excel.utils.Outputs.GetRowIndexByCondition.ROWS_COUNT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -102,6 +81,7 @@ public class GetRowIndexByCondition {
                     .operator(operator)
                     .value(value)
                     .build());
+
             return result;
         } catch (Exception exception) {
             return OutputUtilities.getFailureResultsMap(exception);

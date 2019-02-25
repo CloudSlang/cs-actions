@@ -1,11 +1,6 @@
 package io.cloudslang.content.excel.services;
 
-import io.cloudslang.content.excel.entities.AddExcelDataInputs;
-import io.cloudslang.content.excel.entities.DeleteCellInputs;
-import io.cloudslang.content.excel.entities.ExcelOperationException;
-import io.cloudslang.content.excel.entities.GetCellInputs;
-import io.cloudslang.content.excel.entities.GetRowIndexByConditionInputs;
-import io.cloudslang.content.excel.entities.NewExcelDocumentInputs;
+import io.cloudslang.content.excel.entities.*;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -29,11 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import static io.cloudslang.content.excel.utils.Constants.BAD_CREATE_EXCEL_FILE_MSG;
 import static io.cloudslang.content.excel.utils.Constants.BAD_EXCEL_FILE_MSG;
@@ -50,50 +41,54 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
+/**
+ * Created by danielmanciu on 18.02.2019.
+ */
 public class ExcelServiceImpl {
+    private static boolean incompleted;
     private static String inputFormat = null;
 
     public static Map<String, String> addExcelData(AddExcelDataInputs addExcelDataInputs) {
         boolean hasHeaderData = false;
         try {
             final String excelFileName = addExcelDataInputs.getCommonInputs().getExcelFileName();
-            String format = getFileFormat(excelFileName);
-            Workbook excelDoc;
+            final String format = getFileFormat(excelFileName);
+            final Workbook excelDoc;
 
             if (isValidExcelFormat(format)) {
                 excelDoc = getWorkbook(excelFileName);
             } else {
                 return getFailureResultsMap(BAD_EXCEL_FILE_MSG);
             }
-            int rowsAdded = 0;
+            int rowsAdded;
             if (excelDoc == null) {
                 return getFailureResultsMap("Could not open " + excelFileName);
             }
-            String sheetName = addExcelDataInputs.getCommonInputs().getWorksheetName();
-            Sheet worksheet = excelDoc.getSheet(sheetName);
+            final String sheetName = addExcelDataInputs.getCommonInputs().getWorksheetName();
+            final Sheet worksheet = excelDoc.getSheet(sheetName);
             if (worksheet == null) {
                 return getFailureResultsMap("Worksheet " + sheetName + " does not exist.");
             }
             String columnDelimiter = addExcelDataInputs.getColumnDelimiter();
             String rowDelimiter = addExcelDataInputs.getRowDelimiter();
-            String[] specialChar = {"\\", "?", "|", "*", "$", ".", "+", "(", ")", "{", "}", "[", "]"};
+            final String[] specialChar = {"\\", "?", "|", "*", "$", ".", "+", "(", ")", "{", "}", "[", "]"};
             for (int i = 0; i < specialChar.length; i++) {
                 rowDelimiter = rowDelimiter.replace(specialChar[i], "\\" + specialChar[i]);
                 columnDelimiter = columnDelimiter.replace(specialChar[i], "\\" + specialChar[i]);
             }
-            String headerData = addExcelDataInputs.getHeaderData();
+            final String headerData = addExcelDataInputs.getHeaderData();
             if (!StringUtils.isBlank(headerData)) {
                 hasHeaderData = true;
                 setHeaderRow(worksheet, headerData, columnDelimiter);
             }
 
-            String rowData = addExcelDataInputs.getRowData();
-            String rowIndex = addExcelDataInputs.getRowIndex();
-            String columnIndex = addExcelDataInputs.getColumnIndex();
-            String overwriteString = addExcelDataInputs.getOverwriteData();
-            List<Integer> rowIndexList = processIndex(rowIndex, worksheet, rowData, rowDelimiter, columnDelimiter, true, hasHeaderData);
-            List<Integer> columnIndexList = processIndex(columnIndex, worksheet, rowData, rowDelimiter, columnDelimiter, false, hasHeaderData);
-            boolean overwrite = Boolean.valueOf(overwriteString.toLowerCase());
+            final String rowData = addExcelDataInputs.getRowData();
+            final String rowIndex = addExcelDataInputs.getRowIndex();
+            final String columnIndex = addExcelDataInputs.getColumnIndex();
+            final String overwriteString = addExcelDataInputs.getOverwriteData();
+            final List<Integer> rowIndexList = processIndex(rowIndex, worksheet, rowData, rowDelimiter, columnDelimiter, true, hasHeaderData);
+            final List<Integer> columnIndexList = processIndex(columnIndex, worksheet, rowData, rowDelimiter, columnDelimiter, false, hasHeaderData);
+            final boolean overwrite = Boolean.valueOf(overwriteString.toLowerCase());
 
             if (!overwrite)
                 shiftRows(worksheet, rowIndexList);
@@ -112,16 +107,63 @@ public class ExcelServiceImpl {
         }
     }
 
-    public static Map<String, String> deleteCell(@NotNull final DeleteCellInputs deleteCellInputs) {
-        Sheet worksheet;
-        Workbook excelDoc;
-        final String excelFileName = deleteCellInputs.getCommonInputs().getExcelFileName();
-
+    @NotNull
+    public static Map<String, String> modifyCell(@NotNull final ModifyCellInputs modifyCellInputs) {
         try {
-            excelDoc = getExcelDoc(excelFileName);
-            worksheet = getWorksheet(excelDoc, deleteCellInputs.getCommonInputs().getWorksheetName());
+            final String excelFileName = modifyCellInputs.getCommonInputs().getExcelFileName();
+            final Workbook excelDoc = getExcelDoc(excelFileName);
+            final Sheet worksheet = getWorksheet(excelDoc, modifyCellInputs.getCommonInputs().getWorksheetName());
 
-            int firstRowIndex = worksheet.getFirstRowNum();
+            final int firstRowIndex = worksheet.getFirstRowNum();
+            final int lastRowIndex = worksheet.getLastRowNum();
+            final int firstColumnIndex = 0;
+            final int lastColumnIndex = getLastColumnIndex(worksheet, firstRowIndex, lastRowIndex);
+            final String columnDelimiter = modifyCellInputs.getColumnDelimiter();
+            final String newValue = modifyCellInputs.getNewValue();
+
+            final String rowIndexDefault = firstRowIndex + ":" + lastRowIndex;
+            final String columnIndexDefault = firstColumnIndex + ":" + lastColumnIndex;
+            final String rowIndex = defaultIfEmpty(modifyCellInputs.getRowIndex(), rowIndexDefault);
+            final String columnIndex = defaultIfEmpty(modifyCellInputs.getColumnIndex(), columnIndexDefault);
+
+            final List<Integer> rowIndexList = validateIndex(processIndex(rowIndex), firstRowIndex, lastRowIndex, true);
+            final List<Integer> columnIndexList = validateIndex(processIndex(columnIndex), firstColumnIndex, lastColumnIndex, false);
+
+            final List<String> dataList = getDataList(newValue, columnIndexList, columnDelimiter);
+
+            incompleted = false;
+            final int modifyCellDataResult = modifyCellData(worksheet, rowIndexList, columnIndexList, dataList);
+
+            if (modifyCellDataResult != 0) {
+                //update formula cells
+                final FormulaEvaluator evaluator = excelDoc.getCreationHelper().createFormulaEvaluator();
+                for (Row row : worksheet) {
+                    for (Cell cell : row) {
+                        if (cell.getCellType() == CellType.FORMULA) {
+                            evaluator.evaluateFormulaCell(cell);
+                        }
+                    }
+                }
+                updateWorkbook(excelDoc, excelFileName);
+            }
+
+            if (modifyCellDataResult == rowIndexList.size() && !incompleted) {
+                return getSuccessResultsMap(String.valueOf(modifyCellDataResult));
+            } else {
+                return getFailureResultsMap(String.valueOf(modifyCellDataResult));
+            }
+        } catch (Exception e) {
+            return getFailureResultsMap(e.getMessage());
+        }
+    }
+
+    public static Map<String, String> deleteCell(@NotNull final DeleteCellInputs deleteCellInputs) {
+        try {
+            final String excelFileName = deleteCellInputs.getCommonInputs().getExcelFileName();
+            final Workbook excelDoc = getExcelDoc(excelFileName);
+            final Sheet worksheet = getWorksheet(excelDoc, deleteCellInputs.getCommonInputs().getWorksheetName());
+
+            final int firstRowIndex = worksheet.getFirstRowNum();
             final int firstColumnIndex = 0;
             final int lastRowIndex = worksheet.getLastRowNum();
             final int lastColumnIndex = getLastColumnIndex(worksheet, firstRowIndex, lastRowIndex);
@@ -135,9 +177,9 @@ public class ExcelServiceImpl {
             final List<Integer> columnIndexList = validateIndex(processIndex(columnIndex), firstColumnIndex, lastColumnIndex, false);
 
             if (rowIndexList.size() != 0 && columnIndexList.size() != 0) {
-                int result_int = deleteCell(worksheet, rowIndexList, columnIndexList);
+                final int deleteCellResult = deleteCell(worksheet, rowIndexList, columnIndexList);
                 //update formula cells
-                FormulaEvaluator evaluator = excelDoc.getCreationHelper().createFormulaEvaluator();
+                final FormulaEvaluator evaluator = excelDoc.getCreationHelper().createFormulaEvaluator();
                 for (Row r : worksheet) {
                     for (Cell c : r) {
                         if (c.getCellType() == CellType.FORMULA) {
@@ -146,10 +188,10 @@ public class ExcelServiceImpl {
                     }
                 }
                 updateWorkbook(excelDoc, excelFileName);
-                return OutputUtilities.getSuccessResultsMap(String.valueOf(result_int));
+                return getSuccessResultsMap(String.valueOf(deleteCellResult));
 
             } else {
-                return OutputUtilities.getSuccessResultsMap(String.valueOf("0"));
+                return getSuccessResultsMap("0");
             }
         } catch (Exception e) {
             return getFailureResultsMap(e.getMessage());
@@ -157,7 +199,6 @@ public class ExcelServiceImpl {
     }
 
     public static Map<String, String> newExcelDocument(@NotNull final NewExcelDocumentInputs newExcelDocumentInputs) {
-
         final FileOutputStream output;
         final String excelFileName = newExcelDocumentInputs.getExcelFileName();
         final Workbook excelDoc;
@@ -204,8 +245,8 @@ public class ExcelServiceImpl {
             final Sheet worksheet = getWorksheet(excelDoc, getCellInputs.getCommonInputs().getWorksheetName());
 
             int firstRowIndex = Integer.parseInt(getCellInputs.getFirstRowIndex());
-            final int firstColumnIndex = 0;
             final int lastRowIndex = worksheet.getLastRowNum();
+            final int firstColumnIndex = 0;
             final int lastColumnIndex = getLastColumnIndex(worksheet, firstRowIndex, lastRowIndex);
             final String rowDelimiter = getCellInputs.getRowDelimiter();
             final String columnDelimiter = getCellInputs.getColumnDelimiter();
@@ -217,7 +258,7 @@ public class ExcelServiceImpl {
             final String rowIndexDefault = firstRowIndex + ":" + lastRowIndex;
             final String columnIndexDefault = firstColumnIndex + ":" + lastColumnIndex;
             final String rowIndex = defaultIfEmpty(getCellInputs.getRowIndex(), rowIndexDefault);
-            final String columnIndex = defaultIfEmpty(getCellInputs.getRowIndex(), columnIndexDefault);
+            final String columnIndex = defaultIfEmpty(getCellInputs.getColumnIndex(), columnIndexDefault);
 
             final List<Integer> rowIndexList = validateIndex(processIndex(rowIndex), firstRowIndex, lastRowIndex, true);
             final List<Integer> columnIndexList = validateIndex(processIndex(columnIndex), firstColumnIndex, lastColumnIndex, false);
@@ -366,6 +407,91 @@ public class ExcelServiceImpl {
         return result.toString();
     }
 
+    private static int modifyCellData(final Sheet worksheet,
+                                      final List<Integer> rowIndexList,
+                                      final List<Integer> columnIndexList,
+                                      final List<String> dataList) {
+        int rowCount = 0;
+
+        for (Integer rowIndex : rowIndexList) {
+            boolean isModified = false;
+            int i = 0;
+            Row row = worksheet.getRow(rowIndex);
+            //if the specified row does not exist
+            if (row == null) {
+                row = worksheet.createRow(rowIndex);
+
+            }
+            for (Integer columnIndex : columnIndexList) {
+                Cell cell = row.getCell(columnIndex);
+                //if the specified cell does not exist
+                if (cell == null) {
+                    cell = row.createCell(columnIndex);
+                }
+                //the cell is a merged cell, cannot modify it
+                if (isMergedCell(worksheet, rowIndex, columnIndex)) {
+                    i++;
+                    incompleted = true;
+                } else {
+                    //if the cell needs to be modified is in formula type,
+                    if (cell.getCellType() == CellType.FORMULA) {
+                        cell.setCellType(CellType.STRING);
+                    }
+                    try {
+                        double valueNumeric = Double.parseDouble(dataList.get(i).trim());
+                        cell.setCellValue(valueNumeric);
+                    }
+                    //for non-numeric value
+                    catch (Exception e) {
+                        try {
+                            Date date = new Date(dataList.get(i).trim());
+                            cell.setCellValue(date);
+                        } catch (Exception e1) {
+                            cell.setCellValue(dataList.get(i).trim());
+                        }
+                    }
+                    i++;
+                    isModified = true;
+                }
+            }
+            if (isModified) rowCount++;
+        }
+
+        return rowCount;
+    }
+
+    public static boolean isMergedCell(final Sheet worksheet, final int rowIndex, final int columnIndex) {
+        int countMRegion = worksheet.getNumMergedRegions();
+
+        for (int i = 0; i < countMRegion; i++) {
+            CellRangeAddress range = worksheet.getMergedRegion(i);
+            int firstRow = range.getFirstRow();
+            int firstColumn = range.getFirstColumn();
+
+            boolean isInRange = range.isInRange(rowIndex, columnIndex);
+
+            if (isInRange) {
+                if (!(rowIndex == firstRow && columnIndex == firstColumn && isInRange)) {
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
+    private static List<String> getDataList(final String newValue, final List<Integer> columnIndexList, final String columnDelimiter) throws Exception {
+        final List<String> dataList = Arrays.asList(newValue.split(columnDelimiter));
+
+        if (dataList.size() != columnIndexList.size()) {
+            throw new ExcelOperationException("The data input is not valid. " +
+                    "The size of data input should be the same as size of columnIndex input, which is " + columnIndexList.size() + ".");
+        }
+
+        return dataList;
+    }
+
+
     /**
      * retrieves data from header row
      *
@@ -414,7 +540,7 @@ public class ExcelServiceImpl {
         return bd.toString();
     }
 
-    private static boolean isValidExcelFormat(String format) throws Exception {
+    private static boolean isValidExcelFormat(final String format) throws Exception {
         if (StringUtils.isBlank(format)) {
             throw new ExcelOperationException(BAD_EXCEL_FILE_MSG);
         } else
@@ -795,7 +921,7 @@ public class ExcelServiceImpl {
      * @return true or false
      * @throws Exception
      */
-    private static boolean compareNumericValue(double value1, double value2, String operator) {
+    private static boolean compareNumericValue(double value1, double value2, final String operator) {
         boolean result = false;
         if (operator.equals("==")) {
             if (value1 == value2) result = true;
@@ -823,7 +949,7 @@ public class ExcelServiceImpl {
      * @return true or false
      * @throws Exception
      */
-    private static boolean compareStringValue(String s1, String s2, String operator) {
+    private static boolean compareStringValue(final String s1, final String s2, final String operator) {
         boolean result = false;
         if (operator.equals("==")) {
             if (s1.equals(s2))
@@ -839,7 +965,7 @@ public class ExcelServiceImpl {
     /**
      * get last column index
      */
-    private static int getLastColumnIndex(Sheet worksheet, int firstRowIndex, int lastRowIndex) {
+    private static int getLastColumnIndex(final Sheet worksheet, final int firstRowIndex, final int lastRowIndex) {
         //get the last column index in a sheet
         int tempLastColumnIndex;
         int lastColumnIndex = 0;
@@ -856,7 +982,7 @@ public class ExcelServiceImpl {
         return lastColumnIndex;
     }
 
-    private static List<Integer> processIndex(String index) {
+    private static List<Integer> processIndex(final String index) {
         final List<Integer> result = new ArrayList<>();
 
         final String[] temp = index.split(",");
@@ -891,7 +1017,10 @@ public class ExcelServiceImpl {
         return result;
     }
 
-    private static List<Integer> validateIndex(List<Integer> indexList, int firstIndex, int lastIndex, boolean isRow) throws Exception {
+    private static List<Integer> validateIndex(final List<Integer> indexList,
+                                               final int firstIndex,
+                                               final int lastIndex,
+                                               final boolean isRow) throws Exception {
         final List<Integer> resultList = new ArrayList<>();
         for (Integer index : indexList) {
             //trim the row or column index if it's above range
@@ -914,17 +1043,17 @@ public class ExcelServiceImpl {
         return resultList;
     }
 
-    public static int deleteCell(Sheet worksheet, List<Integer> rowIndex, List<Integer> columnIndex) {
+    public static int deleteCell(final Sheet worksheet, final List<Integer> rowIndex, final List<Integer> columnIndex) {
         int rowsDeleted = 0;
 
         for (Integer rIndex : rowIndex) {
-            Row aRow = worksheet.getRow(rIndex);
+            Row row = worksheet.getRow(rIndex);
 
-            if (aRow != null) {
+            if (row != null) {
                 for (Integer cIndex : columnIndex) {
-                    Cell aCell = aRow.getCell(cIndex);
-                    if (aCell != null) {
-                        aRow.removeCell(aCell);
+                    Cell cell = row.getCell(cIndex);
+                    if (cell != null) {
+                        row.removeCell(cell);
                     }
                 }
                 rowsDeleted++;
@@ -934,7 +1063,7 @@ public class ExcelServiceImpl {
         return rowsDeleted;
     }
 
-    public static void setHeaderRow(Sheet worksheet, String headerData, String delimiter) {
+    public static void setHeaderRow(final Sheet worksheet, final String headerData, final String delimiter) {
 		/*StringTokenizer headerTokens = new StringTokenizer(headerData, delimiter);
 		Row headerRow = worksheet.createRow(0);
 		int columnIndex = 0;
@@ -944,26 +1073,31 @@ public class ExcelServiceImpl {
 			cell.setCellValue(headerTokens.nextToken());
 			columnIndex++;
 		}*/
-        Row headerRow = worksheet.createRow(0);
+        final Row headerRow = worksheet.createRow(0);
 
-        String[] tmp = headerData.split(delimiter);
+        final String[] tmp = headerData.split(delimiter);
         for (int i = 0; i < tmp.length; i++) {
-            Cell aCell = headerRow.getCell(i);
-            if (aCell == null) {
-                aCell = headerRow.createCell(i);
+            Cell cell = headerRow.getCell(i);
+            if (cell == null) {
+                cell = headerRow.createCell(i);
             }
             try {
-                double value_num = Double.parseDouble(tmp[i].trim());
-                aCell.setCellValue(value_num);
+                double valueNumeric = Double.parseDouble(tmp[i].trim());
+                cell.setCellValue(valueNumeric);
             }
             //for non-numeric value
             catch (Exception e) {
-                aCell.setCellValue(tmp[i].trim());
+                cell.setCellValue(tmp[i].trim());
             }
         }
     }
 
-    public static int setDataRows(Sheet worksheet, String rowData, String rowDelimiter, String columnDelimiter, int startRowIndex, int startColumnIndex) {
+    public static int setDataRows(final Sheet worksheet,
+                                  final String rowData,
+                                  final String rowDelimiter,
+                                  final String columnDelimiter,
+                                  final int startRowIndex,
+                                  final int startColumnIndex) {
 		/*StringTokenizer dataTokens = new StringTokenizer(rowData, rowDelimiter);
 		int rowIndex = startRowIndex;
 
@@ -993,32 +1127,32 @@ public class ExcelServiceImpl {
 
         String[] tmpRow = rowData.split(rowDelimiter);
 
-        int rIndex = startRowIndex;
+        int rowIndex = startRowIndex;
 
         for (int i = 0; i < tmpRow.length; i++) {
-            int cIndex = startColumnIndex;
-            Row aRow = worksheet.getRow(rIndex);
-            if (aRow == null) {
-                aRow = worksheet.createRow(rIndex);
+            int columnIndex = startColumnIndex;
+            Row row = worksheet.getRow(rowIndex);
+            if (row == null) {
+                row = worksheet.createRow(rowIndex);
             }
 
             String[] tmpCol = tmpRow[i].split(columnDelimiter);
             for (int j = 0; j < tmpCol.length; j++) {
-                Cell aCell = aRow.getCell(cIndex);
-                if (aCell == null) {
-                    aCell = aRow.createCell(cIndex);
+                Cell cell = row.getCell(columnIndex);
+                if (cell == null) {
+                    cell = row.createCell(columnIndex);
                 }
                 try {
                     double value_num = Double.parseDouble(tmpCol[j].trim());
-                    aCell.setCellValue(value_num);
+                    cell.setCellValue(value_num);
                 }
                 //for non-numeric value
                 catch (Exception e) {
-                    aCell.setCellValue(tmpCol[j].trim());
+                    cell.setCellValue(tmpCol[j].trim());
                 }
-                cIndex++;
+                columnIndex++;
             }
-            rIndex++;
+            rowIndex++;
         }
         return tmpRow.length;
     }
@@ -1036,34 +1170,34 @@ public class ExcelServiceImpl {
      * @return Number of rows that were added to the worksheet
      * @throws Exception Input list sizes doesn't match
      */
-    private static int setDataRows(Sheet worksheet, String rowData, String rowDelimiter, String columnDelimiter,
-                                   List<Integer> rowIndexList, List<Integer> columnIndexList) throws Exception {
-        String[] rows = rowData.split(rowDelimiter);
+    private static int setDataRows(final Sheet worksheet, final String rowData, final String rowDelimiter, final String columnDelimiter,
+                                   final List<Integer> rowIndexList, final List<Integer> columnIndexList) {
+        final String[] rows = rowData.split(rowDelimiter);
         String[] columns;
 
         if (rows.length != rowIndexList.size())
             throw new IllegalArgumentException("Row index list size doesn't match rowData row count.");
 
         for (int i = 0; i < rowIndexList.size(); i++) {
-            Row aRow = worksheet.getRow(rowIndexList.get(i));
-            if (aRow == null) {
-                aRow = worksheet.createRow(rowIndexList.get(i));
+            Row row = worksheet.getRow(rowIndexList.get(i));
+            if (row == null) {
+                row = worksheet.createRow(rowIndexList.get(i));
             }
             columns = rows[i].split(columnDelimiter);
             if (columns.length != columnIndexList.size())
                 throw new IllegalArgumentException("Column index list size doesn't match rowData column count.");
             for (int j = 0; j < columnIndexList.size(); j++) {
-                Cell aCell = aRow.getCell(columnIndexList.get(j));
-                if (aCell == null) {
-                    aCell = aRow.createCell(columnIndexList.get(j));
+                Cell cell = row.getCell(columnIndexList.get(j));
+                if (cell == null) {
+                    cell = row.createCell(columnIndexList.get(j));
                 }
                 try {
                     double numberValue = Double.parseDouble(columns[j].trim());
-                    aCell.setCellValue(numberValue);
+                    cell.setCellValue(numberValue);
                 }
                 //for non-numeric value
                 catch (NumberFormatException e) {
-                    aCell.setCellValue(columns[j].trim());
+                    cell.setCellValue(columns[j].trim());
                 } catch (Exception e) {
                     throw new IllegalArgumentException("Invalid row data");
                 }
@@ -1083,9 +1217,9 @@ public class ExcelServiceImpl {
      * @param isRow           true - if the index list (param) contains row indexes
      * @return List of indexes where data will be added in the worksheet
      */
-    public static List<Integer> processIndex(String index, Sheet worksheet, String rowData, String rowDelimiter,
-                                              String columnDelimiter, boolean isRow, boolean hasHeader) {
-        String[] rows = rowData.split(rowDelimiter);
+    public static List<Integer> processIndex(final String index, final Sheet worksheet, final String rowData, final String rowDelimiter,
+                                             final String columnDelimiter, final boolean isRow, final boolean hasHeader) {
+        final String[] rows = rowData.split(rowDelimiter);
         String[] indexArray = null;
         if (!StringUtils.isBlank(index)) {
             indexArray = index.split(",");
@@ -1094,8 +1228,8 @@ public class ExcelServiceImpl {
         if (sheetLastRowIndex > 0) {
             sheetLastRowIndex++;
         }
-        int dataRows = rows.length;
-        int dataColumns = rows[0].split(columnDelimiter).length;
+        final int dataRows = rows.length;
+        final int dataColumns = rows[0].split(columnDelimiter).length;
         int headerOffset = 0;
         if (hasHeader) {
             headerOffset = 1;
@@ -1116,8 +1250,8 @@ public class ExcelServiceImpl {
      * @param endIndex   End index for the default case (ex. append for rows)
      * @return List of indexes where data will be added in the worksheet
      */
-    private static List<Integer> processIndexWithOffset(String[] indexArray, int offset, int startIndex, int endIndex) {
-        List<Integer> indexList = new ArrayList<>();
+    private static List<Integer> processIndexWithOffset(final String[] indexArray, final int offset, final int startIndex, final int endIndex) {
+        final List<Integer> indexList = new ArrayList<>();
         String[] range;
         if (indexArray != null) {
             for (String index : indexArray) {
@@ -1150,8 +1284,10 @@ public class ExcelServiceImpl {
      * @param worksheet    Worksheet where rows will be inserted
      * @param rowIndexList List of row indexes where rows will be inserted
      */
-    public static void shiftRows(Sheet worksheet, List<Integer> rowIndexList) {
-        int i = 0, insertPoint, nRows;
+    public static void shiftRows(final Sheet worksheet, final List<Integer> rowIndexList) {
+        int insertPoint;
+        int nRows;
+        int i = 0;
         while (i < rowIndexList.size()) {
             insertPoint = rowIndexList.get(i);
             nRows = 1;

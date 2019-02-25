@@ -16,23 +16,16 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.excel.utils.Constants.DEFAULT_DELIMITER_WORKSHEET_NAMES;
 import static io.cloudslang.content.excel.utils.Constants.NEW_LINE;
 import static io.cloudslang.content.excel.utils.Descriptions.Common.EXCEL_FILE_NAME_DESC;
 import static io.cloudslang.content.excel.utils.Descriptions.Common.RETURN_CODE_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.NewExcelDocument.DELIMITER_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.NewExcelDocument.EXCEPTION_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.NewExcelDocument.FAILURE_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.NewExcelDocument.RETURN_RESULT_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.NewExcelDocument.SUCCESS_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.NewExcelDocument.WORKSHEET_NAMES_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.NewExcelDocument.*;
+import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
 import static io.cloudslang.content.excel.utils.Inputs.NewExcelDocument.DELIMITER;
-import static io.cloudslang.content.excel.utils.Inputs.NewExcelDocument.EXCEL_FILE_NAME;
 import static io.cloudslang.content.excel.utils.Inputs.NewExcelDocument.WORKSHEET_NAMES;
 import static io.cloudslang.content.excel.utils.InputsValidation.verifyNewExcelDocument;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -73,6 +66,7 @@ public class NewExcelDocument {
                     .worksheetNames(worksheetNames)
                     .delimiter(delimiter)
                     .build());
+
             return result;
         } catch (Exception exception) {
             return OutputUtilities.getFailureResultsMap(exception);
