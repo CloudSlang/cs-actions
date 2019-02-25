@@ -35,5 +35,13 @@ public class Descriptions {
                 " can contain different configuration files as well as trained language data files.";
         public static final String LANGUAGE_DESC = "The language that will be used by the OCR engine. This input is " +
                 "taken into consideration only when specifying the dataPath input as well.";
+        public static final String PDF_FILE_PATH_DESC = "The path to the PDF file from where the text needs to be " +
+                "extracted.";
+        public static final String DPI_DESC = "The DPI value when converting the PDF file to image.";
+    }
+
+    public static class ExtractTextFromPDF {
+        public static final String EXTRACT_TEXT_FROM_PDF_DESC = "This operation converts a PDF file given " +
+                "as input and extracts the text using Tesseract's OCR library.";
     }
 }
