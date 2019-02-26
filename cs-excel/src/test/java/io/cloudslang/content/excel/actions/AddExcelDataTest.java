@@ -1,6 +1,7 @@
 package io.cloudslang.content.excel.actions;
 
 import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.excel.services.AddExcelDataService;
 import io.cloudslang.content.excel.services.ExcelServiceImpl;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -233,7 +234,7 @@ public class AddExcelDataTest {
         final String headerData = "ana, are, 7.2, mere";
         final String delimiter = ",";
 
-        ExcelServiceImpl.setHeaderRow(sheet, headerData, delimiter);
+        AddExcelDataService.setHeaderRow(sheet, headerData, delimiter);
 
         final HSSFRow row = sheet.getRow(0);
         HSSFCell cell = row.getCell(0);
@@ -264,7 +265,7 @@ public class AddExcelDataTest {
         final int startRowIndex = 4;
         final int startColumnIndex = 3;
 
-        ExcelServiceImpl.setDataRows(sheet, rowData, rowDelimiter, columnDelimiter, startRowIndex, startColumnIndex);
+        AddExcelDataService.setDataRows(sheet, rowData, rowDelimiter, columnDelimiter, startRowIndex, startColumnIndex);
 
         HSSFRow row = sheet.getRow(4);
         HSSFCell cell = row.getCell(3);
@@ -504,7 +505,7 @@ public class AddExcelDataTest {
     public void testShiftRows() {
         reset(worksheet);
         final List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{0, 1, 2, 3, 4, 5, 6, 7}));
-        ExcelServiceImpl.shiftRows(worksheet, indexList);
+        AddExcelDataService.shiftRows(worksheet, indexList);
         verify(worksheet, times(1)).shiftRows(eq(0), eq(0), eq(8), eq(false), eq(true));
     }
 
@@ -515,7 +516,7 @@ public class AddExcelDataTest {
     public void testShiftRows2() {
         reset(worksheet);
         final List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{0, 1, 5, 6, 7, 8, 9, 12}));
-        ExcelServiceImpl.shiftRows(worksheet, indexList);
+        AddExcelDataService.shiftRows(worksheet, indexList);
         verify(worksheet, atLeastOnce()).shiftRows(anyInt(), anyInt(), anyInt(), anyBoolean(), anyBoolean());
     }
 
@@ -530,7 +531,7 @@ public class AddExcelDataTest {
         Workbook workbook = getWorkbook(FILE_NAME);
         Sheet sheet = workbook.getSheet(SHEET4);
         final List<Integer> indexList = java.util.Arrays.asList(ArrayUtils.toObject(new int[]{0}));
-        ExcelServiceImpl.shiftRows(sheet, indexList);
+        AddExcelDataService.shiftRows(sheet, indexList);
         writeWorkbook(workbook, FILE_NAME);
         assertNotNull(worksheet);
 

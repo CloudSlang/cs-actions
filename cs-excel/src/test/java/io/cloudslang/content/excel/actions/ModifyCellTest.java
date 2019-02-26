@@ -1,14 +1,15 @@
 package io.cloudslang.content.excel.actions;
 
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.excel.services.ExcelServiceImpl;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.junit.*;
-import org.junit.rules.ExpectedException;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,19 +17,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
 
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.excel.services.ExcelServiceImpl.isMergedCell;
+import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.excel.services.ModifyCellService.isMergedCell;
 import static io.cloudslang.content.excel.utils.Constants.*;
-import static io.cloudslang.content.excel.utils.Constants.DEFAULT_COLUMN_DELIMITER;
-import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
-import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.WORKSHEET_NAME;
-import static io.cloudslang.content.excel.utils.Inputs.ModifyCell.*;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
 
 /**
  * Created by danielmanciu 21.02.2019
@@ -284,11 +279,8 @@ public class ModifyCellTest {
         final HSSFWorkbook workbook = new HSSFWorkbook(fis);
         final HSSFSheet sheet = workbook.getSheet(SHEET2);
 
-        Boolean rez;
-        rez = isMergedCell(sheet,
-                1,
-                1);
-        assertTrue(rez);
+        boolean res = isMergedCell(sheet, 1, 1);
+        assertTrue(res);
     }
 
     @Test
@@ -301,10 +293,7 @@ public class ModifyCellTest {
         HSSFWorkbook workbook = new HSSFWorkbook(fis);
         HSSFSheet sheet = workbook.getSheet(SHEET1);
 
-        Boolean rez;
-        rez = isMergedCell(sheet,
-                1,
-                1);
-        assertFalse(rez);
+        boolean res = isMergedCell(sheet, 1, 1);
+        assertFalse(res);
     }
 }

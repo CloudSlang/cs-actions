@@ -7,7 +7,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.excel.entities.DeleteCellInputs;
 import io.cloudslang.content.excel.entities.ExcelCommonInputs;
-import io.cloudslang.content.excel.services.ExcelServiceImpl;
+import io.cloudslang.content.excel.services.DeleteCellService;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -66,7 +66,7 @@ public class DeleteCell {
         }
 
         try {
-            final Map<String, String> result = ExcelServiceImpl.deleteCell(DeleteCellInputs.builder()
+            final Map<String, String> result = DeleteCellService.deleteCell(DeleteCellInputs.builder()
                     .commonInputs(ExcelCommonInputs.builder()
                             .excelFileName(excelFileName)
                             .worksheetName(worksheetName)

@@ -25,6 +25,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.excel.services.GetRowIndexByConditionService.getMergedCell;
 import static io.cloudslang.content.excel.utils.Constants.*;
 import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.ROWS_COUNT;
 import static org.apache.poi.ss.usermodel.CellType.ERROR;
@@ -355,7 +356,7 @@ public class GetRowIndexByConditionTest {
         HSSFWorkbook workbook = new HSSFWorkbook(fis);
         HSSFSheet sheet = workbook.getSheet(SHEET1);
 
-        ExcelServiceImpl.getMergedCell(sheet, 0, 1);
+        getMergedCell(sheet, 0, 1);
 
         HSSFRow row = sheet.getRow(0);
         HSSFCell cell = row.getCell(0);
@@ -382,7 +383,7 @@ public class GetRowIndexByConditionTest {
         cell = row.getCell(2);
         assertEquals(NUMERIC, cell.getCellType());
 
-        ExcelServiceImpl.getMergedCell(sheet, 0, 0);
+        getMergedCell(sheet, 0, 0);
         row = sheet.getRow(0);
         cell = row.getCell(0);
         //0 0 is top left of merged region (not affected).

@@ -7,7 +7,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.excel.entities.ExcelCommonInputs;
 import io.cloudslang.content.excel.entities.GetCellInputs;
-import io.cloudslang.content.excel.services.ExcelServiceImpl;
+import io.cloudslang.content.excel.services.GetCellService;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -77,7 +77,7 @@ public class GetCell {
         }
 
         try {
-            final Map<String, String> result = ExcelServiceImpl.getCell(GetCellInputs.builder()
+            final Map<String, String> result = GetCellService.getCell(GetCellInputs.builder()
                     .commonInputs(ExcelCommonInputs.builder()
                             .excelFileName(excelFileName)
                             .worksheetName(worksheetName)

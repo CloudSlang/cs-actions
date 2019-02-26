@@ -6,7 +6,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.excel.entities.NewExcelDocumentInputs;
-import io.cloudslang.content.excel.services.ExcelServiceImpl;
+import io.cloudslang.content.excel.services.NewExcelDocumentService;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -61,7 +61,7 @@ public class NewExcelDocument {
         }
 
         try {
-            final Map<String, String> result = ExcelServiceImpl.newExcelDocument(NewExcelDocumentInputs.builder()
+            final Map<String, String> result = NewExcelDocumentService.newExcelDocument(NewExcelDocumentInputs.builder()
                     .excelFileName(excelFileName)
                     .worksheetNames(worksheetNames)
                     .delimiter(delimiter)

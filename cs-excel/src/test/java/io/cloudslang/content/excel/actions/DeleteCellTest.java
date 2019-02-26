@@ -1,5 +1,6 @@
 package io.cloudslang.content.excel.actions;
 
+import io.cloudslang.content.excel.services.DeleteCellService;
 import io.cloudslang.content.excel.services.ExcelServiceImpl;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -236,7 +237,7 @@ public class DeleteCellTest {
         HSSFCell cell = row.getCell(6);
         assertNotNull(cell);
 
-        ExcelServiceImpl.deleteCell(sheet, rowIndex, columnIndex);
+        DeleteCellService.deleteCell(sheet, rowIndex, columnIndex);
 
         cell = row.getCell(6);
         assertNull(cell);

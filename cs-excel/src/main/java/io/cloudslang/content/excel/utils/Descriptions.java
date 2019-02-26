@@ -43,7 +43,7 @@ public class Descriptions {
         public static final String COLUMN_INDEX_TO_QUERY_DESC = "The column index to search in.";
         public static final String OPERATOR_DESC = " operator - The math operators. \n" +
                 "Valid values: ==, != for string comparison; ==, !=, <,<=,>,>= for numeric comparison.\n" +
-                "Default vaue: ==";
+                "Default value: ==";
         public static final String VALUE_DESC = "The value to search in the specified column. If left blank, it means an empty value.\n";
         public static final String RETURN_RESULT_DESC = "This is the primary result. Return a list of row indexes that satisfied the specified condition.";
         public static final String ROWS_COUNT_DESC = "The number of the row indexes returned.";
@@ -53,7 +53,7 @@ public class Descriptions {
     }
 
     public static class NewExcelDocument {
-        public static final String WORKSHEET_NAMES_DESC = "A delimited list of names that will be created as worksheets in the document. \n" +
+        public static final String WORKSHEET_NAMES_DESC = "A delimited list of names that will be created as worksheets in the document.\n" +
                 "Default value: Sheet1,Sheet2,Sheet3.";
         public static final String DELIMITER_DESC = "The character used to delimit worksheet names.\n" +
                 "Default value: comma (,)";
