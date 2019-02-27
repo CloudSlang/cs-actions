@@ -336,7 +336,6 @@
         <module>cs-utilities</module>
         <module>cs-vmware</module>
         <module>cs-xml</module>
-        <module>cs-excel</module>
     </modules>
 
 </project>

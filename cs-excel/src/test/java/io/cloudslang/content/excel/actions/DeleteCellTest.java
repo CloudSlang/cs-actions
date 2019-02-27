@@ -1,16 +1,28 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.excel.actions;
 
 import io.cloudslang.content.excel.services.DeleteCellService;
-import io.cloudslang.content.excel.services.ExcelServiceImpl;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,7 +34,10 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.excel.utils.Constants.*;
+import static io.cloudslang.content.excel.utils.Constants.FILE_NAME;
+import static io.cloudslang.content.excel.utils.Constants.SHEET1;
+import static io.cloudslang.content.excel.utils.Constants.SHEET2;
+import static io.cloudslang.content.excel.utils.Constants.SHEET3;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

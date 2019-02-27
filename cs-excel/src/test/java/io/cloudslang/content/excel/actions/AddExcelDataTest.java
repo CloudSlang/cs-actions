@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.excel.actions;
 
 import io.cloudslang.content.constants.ReturnCodes;
@@ -28,7 +43,15 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.excel.utils.Constants.*;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_FILE;
+import static io.cloudslang.content.excel.utils.Constants.FILE_NAME;
+import static io.cloudslang.content.excel.utils.Constants.INVALID_SHEET;
+import static io.cloudslang.content.excel.utils.Constants.SHEET0;
+import static io.cloudslang.content.excel.utils.Constants.SHEET1;
+import static io.cloudslang.content.excel.utils.Constants.SHEET2;
+import static io.cloudslang.content.excel.utils.Constants.SHEET3;
+import static io.cloudslang.content.excel.utils.Constants.SHEET4;
+import static io.cloudslang.content.excel.utils.Constants.TXT_FILE_NAME;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -176,7 +199,7 @@ public class AddExcelDataTest {
      * @throws Exception
      */
     public void testExecute0() throws Exception {
-        final Map<String, String> result = toTest.execute(FILE_NAME, 
+        final Map<String, String> result = toTest.execute(FILE_NAME,
                 SHEET0,
                 "unu, doi, trei",
                 "1,2,3,4;5,6,7,8",
@@ -337,7 +360,7 @@ public class AddExcelDataTest {
      * @throws Exception
      */
     public void testExecute4() {
-        final Map<String, String>  result = toTest.execute(TXT_FILE_NAME,
+        final Map<String, String> result = toTest.execute(TXT_FILE_NAME,
                 INVALID_SHEET,
                 "unu, doi, trei",
                 "1,2,3,4;5,6,7,8",

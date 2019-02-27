@@ -1,15 +1,42 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.excel.services;
 
 import io.cloudslang.content.excel.entities.GetRowIndexByConditionInputs;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.Map;
 
-import static io.cloudslang.content.excel.services.ExcelServiceImpl.*;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.compareNumericValue;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.compareStringValue;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.getCellType;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.getExcelDoc;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.getWorksheet;
 import static io.cloudslang.content.excel.utils.Outputs.GetRowIndexByCondition.ROWS_COUNT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;

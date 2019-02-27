@@ -1,9 +1,30 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.excel.services;
 
 import io.cloudslang.content.excel.entities.ExcelOperationException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,7 +32,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.excel.utils.Constants.*;
+import static io.cloudslang.content.excel.utils.Constants.BAD_EXCEL_FILE_MSG;
+import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLS;
+import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLSM;
+import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLSX;
 
 /**
  * Created by danielmanciu on 18.02.2019.

@@ -1,7 +1,29 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.excel.services;
 
 import io.cloudslang.content.excel.entities.GetCellInputs;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -9,7 +31,11 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.excel.services.ExcelServiceImpl.*;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.getExcelDoc;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.getLastColumnIndex;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.getWorksheet;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.processIndex;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.validateIndex;
 import static io.cloudslang.content.excel.utils.Constants.YES;
 import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.COLUMNS_COUNT;
 import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.HEADER;

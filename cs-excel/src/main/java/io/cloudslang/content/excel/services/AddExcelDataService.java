@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.excel.services;
 
 import io.cloudslang.content.excel.entities.AddExcelDataInputs;
@@ -11,7 +26,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.excel.services.ExcelServiceImpl.*;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.getFileFormat;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.getWorkbook;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.isValidExcelFormat;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.processIndex;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.updateWorkbook;
 import static io.cloudslang.content.excel.utils.Constants.BAD_EXCEL_FILE_MSG;
 import static io.cloudslang.content.excel.utils.Constants.ROW_DATA_REQD_MSG;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -78,6 +97,7 @@ public class AddExcelDataService {
             return getFailureResultsMap(e.getMessage());
         }
     }
+
     /**
      * Adds (inserts/appends) specified data to the worksheet.
      *

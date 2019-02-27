@@ -1,4 +1,19 @@
 /*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * (c) Copyright 2019 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -22,8 +37,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.cloudslang.content.excel.utils.Constants.*;
-import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.*;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_EMPTY;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_EMPTY_FILE_PATH;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_FILE_ALREADY_EXISTS;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_BOOLEAN;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_FILE;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_HAS_HEADER;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_INDEX;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_INDEX_NOT_A_NUMBER;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_NUMBER;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_OPERATOR;
+import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.COLUMN_INDEX;
+import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.OVERWRITE_DATA;
+import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.ROW_DATA;
+import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.ROW_INDEX;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
 import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.FIRST_ROW_INDEX;
 import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.HAS_HEADER;

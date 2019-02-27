@@ -1,9 +1,19 @@
-package io.cloudslang.content.excel.actions;
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Map;
+package io.cloudslang.content.excel.actions;
 
 import io.cloudslang.content.constants.ReturnCodes;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -18,9 +28,26 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.excel.utils.Constants.*;
-import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Map;
+
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.excel.utils.Constants.DEFAULT_COLUMN_DELIMITER;
+import static io.cloudslang.content.excel.utils.Constants.DEFAULT_FIRST_ROW_INDEX;
+import static io.cloudslang.content.excel.utils.Constants.DEFAULT_ROW_DELIMITER;
+import static io.cloudslang.content.excel.utils.Constants.FILE_NAME;
+import static io.cloudslang.content.excel.utils.Constants.NO;
+import static io.cloudslang.content.excel.utils.Constants.SHEET1;
+import static io.cloudslang.content.excel.utils.Constants.SHEET2;
+import static io.cloudslang.content.excel.utils.Constants.SHEET3;
+import static io.cloudslang.content.excel.utils.Constants.YES;
+import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.COLUMNS_COUNT;
+import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.HEADER;
+import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.ROWS_COUNT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 

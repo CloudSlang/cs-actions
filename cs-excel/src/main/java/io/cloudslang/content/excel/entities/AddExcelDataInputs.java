@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.excel.entities;
 
 import org.jetbrains.annotations.NotNull;
@@ -17,9 +31,9 @@ public class AddExcelDataInputs {
     private final String columnDelimiter;
     private final String overwriteData;
 
-    @ConstructorProperties({"commonInputs","headerData", "rowData", "rowIndex", "columnIndex", "rowDelimiter", "columnDelimiter","overwriteData"})
+    @ConstructorProperties({"commonInputs", "headerData", "rowData", "rowIndex", "columnIndex", "rowDelimiter", "columnDelimiter", "overwriteData"})
     private AddExcelDataInputs(ExcelCommonInputs commonInputs, String headerData, String rowData, String rowIndex,
-                          String columnIndex, String rowDelimiter, String columnDelimiter,String overwriteData) {
+                               String columnIndex, String rowDelimiter, String columnDelimiter, String overwriteData) {
         this.commonInputs = commonInputs;
         this.headerData = headerData;
         this.rowData = rowData;
@@ -27,7 +41,7 @@ public class AddExcelDataInputs {
         this.columnIndex = columnIndex;
         this.rowDelimiter = rowDelimiter;
         this.columnDelimiter = columnDelimiter;
-        this.overwriteData=overwriteData;
+        this.overwriteData = overwriteData;
     }
 
     @NotNull
@@ -85,7 +99,8 @@ public class AddExcelDataInputs {
         private String columnDelimiter = EMPTY;
         private String overwriteData = EMPTY;
 
-        private AddExcelDataInputsBuilder() {}
+        private AddExcelDataInputsBuilder() {
+        }
 
         @NotNull
         public AddExcelDataInputsBuilder commonInputs(@NotNull final ExcelCommonInputs commonInputs) {
@@ -137,7 +152,7 @@ public class AddExcelDataInputs {
 
         @NotNull
         public AddExcelDataInputs build() {
-            return new AddExcelDataInputs(commonInputs, headerData, rowData, rowIndex, columnIndex, rowDelimiter, columnDelimiter,overwriteData);
+            return new AddExcelDataInputs(commonInputs, headerData, rowData, rowIndex, columnIndex, rowDelimiter, columnDelimiter, overwriteData);
         }
     }
 }
