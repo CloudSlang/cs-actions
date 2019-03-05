@@ -82,7 +82,7 @@ public class DeleteCell {
         rowIndex = defaultIfEmpty(rowIndex, EMPTY); //its default depends on the document so it will be set later
         columnIndex = defaultIfEmpty(columnIndex, EMPTY); //its default depends on the document so it will be set later
 
-        final List<String> exceptionMessages = verifyDeleteCell(excelFileName, worksheetName, rowIndex, columnIndex);
+        final List<String> exceptionMessages = verifyDeleteCell(excelFileName, rowIndex, columnIndex);
 
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));

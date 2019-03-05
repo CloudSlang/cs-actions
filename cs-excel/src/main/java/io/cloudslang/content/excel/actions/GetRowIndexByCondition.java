@@ -99,7 +99,7 @@ public class GetRowIndexByCondition {
         operator = defaultIfEmpty(operator, DEFAULT_OPERATOR);
         value = defaultIfEmpty(value, EMPTY);
 
-        final List<String> exceptionMessages = verifyGetCellRowIndexbyCondition(excelFileName, worksheetName, hasHeader, firstRowIndex, columnIndextoQuery, operator, value);
+        final List<String> exceptionMessages = verifyGetCellRowIndexbyCondition(excelFileName, hasHeader, firstRowIndex, columnIndextoQuery, operator);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }

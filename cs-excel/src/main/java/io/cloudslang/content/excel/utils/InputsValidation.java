@@ -53,15 +53,13 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyAddExcelData(@NotNull final String excelFileName,
-                                                  @NotNull final String worksheetName,
-                                                  @NotNull final String headerData,
                                                   @NotNull final String rowData,
                                                   @NotNull final String rowIndex,
                                                   @NotNull final String columnIndex,
-                                                  @NotNull final String rowDelimiter,
-                                                  @NotNull final String columnDelimiter,
                                                   @NotNull final String overwriteData) {
-        final List<String> exceptionMessages = verifyCommonInputs(excelFileName, worksheetName);
+
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyFile(exceptionMessages, excelFileName, EXCEL_FILE_NAME);
         addVerifyIndex(exceptionMessages, rowIndex, ROW_INDEX);
         addVerifyIndex(exceptionMessages, columnIndex, COLUMN_INDEX);
         addVerifyBoolean(exceptionMessages, overwriteData, OVERWRITE_DATA);
@@ -72,10 +70,10 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyDeleteCell(@NotNull final String excelFileName,
-                                                @NotNull final String worksheetName,
                                                 @NotNull final String rowIndex,
                                                 @NotNull final String columnIndex) {
-        final List<String> exceptionMessages = verifyCommonInputs(excelFileName, worksheetName);
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyFile(exceptionMessages, excelFileName, EXCEL_FILE_NAME);
         addVerifyIndex(exceptionMessages, rowIndex, ROW_INDEX);
         addVerifyIndex(exceptionMessages, columnIndex, COLUMN_INDEX);
 
@@ -84,14 +82,12 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyGetCellInputs(@NotNull final String excelFileName,
-                                                   @NotNull final String worksheetName,
                                                    @NotNull final String hasHeader,
                                                    @NotNull final String firstRowIndex,
                                                    @NotNull final String rowIndex,
-                                                   @NotNull final String columnIndex,
-                                                   @NotNull final String rowDelimiter,
-                                                   @NotNull final String columnDelimiter) {
-        final List<String> exceptionMessages = verifyCommonInputs(excelFileName, worksheetName);
+                                                   @NotNull final String columnIndex) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyFile(exceptionMessages, excelFileName, EXCEL_FILE_NAME);
 
         addVerifyYesOrNo(exceptionMessages, hasHeader, HAS_HEADER);
         addVerifyNumber(exceptionMessages, firstRowIndex, FIRST_ROW_INDEX);
@@ -103,13 +99,11 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyModifyCellInputs(@NotNull final String excelFileName,
-                                                      @NotNull final String worksheetName,
                                                       @NotNull final String rowIndex,
                                                       @NotNull final String columnIndex,
-                                                      @NotNull final String newValue,
-                                                      @NotNull final String columnDelimiter) {
-        final List<String> exceptionMessages = verifyCommonInputs(excelFileName, worksheetName);
-
+                                                      @NotNull final String newValue) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyFile(exceptionMessages, excelFileName, EXCEL_FILE_NAME);
         addVerifyIndex(exceptionMessages, rowIndex, ROW_INDEX);
         addVerifyIndex(exceptionMessages, columnIndex, COLUMN_INDEX);
         addVerifyNonEmpty(exceptionMessages, newValue, NEW_VALUE);
@@ -118,25 +112,14 @@ public final class InputsValidation {
     }
 
     @NotNull
-    public static List<String> verifyCommonInputs(@NotNull final String excelFileName,
-                                                  @NotNull final String worksheetName) {
-        final List<String> exceptionMessages = new ArrayList<>();
-        addVerifyFile(exceptionMessages, excelFileName, EXCEL_FILE_NAME);
-
-        return exceptionMessages;
-    }
-
-    @NotNull
     public static List<String> verifyGetCellRowIndexbyCondition(@NotNull final String excelFileName,
-                                                                @NotNull final String worksheetName,
                                                                 @NotNull final String hasHeader,
                                                                 @NotNull final String firstRowIndex,
                                                                 @NotNull final String columnIndextoQuery,
-                                                                @NotNull final String operator,
-                                                                @NotNull final String value) {
+                                                                @NotNull final String operator) {
 
-        final List<String> exceptionMessages = verifyCommonInputs(excelFileName, worksheetName);
-
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyFile(exceptionMessages, excelFileName, EXCEL_FILE_NAME);
         addVerifyYesOrNo(exceptionMessages, hasHeader, HAS_HEADER);
         addVerifyOperator(exceptionMessages, operator, OPERATOR);
         addVerifyNumber(exceptionMessages, firstRowIndex, FIRST_ROW_INDEX);
@@ -146,9 +129,7 @@ public final class InputsValidation {
     }
 
     @NotNull
-    public static List<String> verifyNewExcelDocument(final String excelFileName,
-                                                      final String worksheetNames,
-                                                      final String delimiter) {
+    public static List<String> verifyNewExcelDocument(final String excelFileName) {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyNonExistingFile(exceptionMessages, excelFileName, EXCEL_FILE_NAME);
         return exceptionMessages;
@@ -187,7 +168,7 @@ public final class InputsValidation {
         if (isEmpty(filePath)) {
             exceptions.add(EXCEPTION_EMPTY_FILE_PATH);
         } else if (!isEmpty(filePath) && !isValidFile(filePath)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_FILE, filePath, EXCEL_FILE_NAME));
+            exceptions.add(String.format(EXCEPTION_INVALID_FILE, filePath, inputName));
         }
         return exceptions;
     }
@@ -197,7 +178,7 @@ public final class InputsValidation {
         if (isEmpty(filePath)) {
             exceptions.add(EXCEPTION_EMPTY_FILE_PATH);
         } else if (!isEmpty(filePath) && isValidFile(filePath)) {
-            exceptions.add(String.format(EXCEPTION_FILE_ALREADY_EXISTS, filePath, EXCEL_FILE_NAME));
+            exceptions.add(String.format(EXCEPTION_FILE_ALREADY_EXISTS, filePath, inputName));
         }
         return exceptions;
     }

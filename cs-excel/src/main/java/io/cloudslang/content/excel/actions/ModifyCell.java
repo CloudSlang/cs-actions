@@ -90,7 +90,7 @@ public class ModifyCell {
         newValue = defaultIfEmpty(newValue, EMPTY);
         columnDelimiter = defaultIfEmpty(columnDelimiter, DEFAULT_COLUMN_DELIMITER);
 
-        final List<String> exceptionMessages = verifyModifyCellInputs(excelFileName, worksheetName, rowIndex, columnIndex, newValue, columnDelimiter);
+        final List<String> exceptionMessages = verifyModifyCellInputs(excelFileName, worksheetName, rowIndex, columnIndex);
 
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));

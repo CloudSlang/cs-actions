@@ -110,8 +110,7 @@ public class GetCell {
         rowDelimiter = defaultIfEmpty(rowDelimiter, DEFAULT_ROW_DELIMITER);
         columnDelimiter = defaultIfEmpty(columnDelimiter, DEFAULT_COLUMN_DELIMITER);
 
-        final List<String> exceptionMessages = verifyGetCellInputs(excelFileName, worksheetName, hasHeader,
-                firstRowIndex, rowIndex, columnIndex, rowDelimiter, columnDelimiter);
+        final List<String> exceptionMessages = verifyGetCellInputs(excelFileName, hasHeader, firstRowIndex, rowIndex, columnIndex);
 
 
         if (!exceptionMessages.isEmpty()) {

@@ -17,7 +17,6 @@ package io.cloudslang.content.excel.utils;
 
 public class Constants {
     public static final String BOOLEAN_FALSE = "false";
-    public static final String BOOLEAN_TRUE = "true";
     public static final String NEW_LINE = "\n";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
@@ -33,26 +32,11 @@ public class Constants {
     public static final String ROW_DATA_REQD_MSG = "Data that should be added or modified in the document is not given.";
     public static final String DEFAULT_WORKSHEET = "Sheet1";
     public static final String YES = "yes";
-    public static final String NO = "no";
     public static final String ZERO = "0";
     public static final String DEFAULT_OPERATOR = "==";
-    public static final String DEFAULT_FIRST_ROW_INDEX = "0";
     public static final String DEFAULT_ROW_DELIMITER = "|";
     public static final String DEFAULT_COLUMN_DELIMITER = ",";
     public static final String DEFAULT_DELIMITER_WORKSHEET_NAMES = ",";
-    //test constants
-    public static final String SHEET0 = "Sheet0";
-    public static final String SHEET1 = "Sheet1";
-    public static final String SHEET2 = "Sheet2";
-    public static final String SHEET3 = "Sheet3";
-    public static final String SHEET4 = "Sheet4";
-    public static final String INVALID_SHEET = "invalid_sheet";
-    public static final String TXT_FILE_NAME = System.getProperty("java.io.tmpdir") + "testFile.txt";
-    public static final String FILE_NAME = System.getProperty("java.io.tmpdir") + "testFile.xls";
-    public static final String FILE_NAME_2 = System.getProperty("java.io.tmpdir")
-            + "testFile2.xls";
-    public static final String BAD_EXT_FILE_NAME_2 = System.getProperty("java.io.tmpdir")
-            + "testFile2.jpg";
     public static String FORMAT_XLSX = "XLSX";
     public static String FORMAT_XLS = "XLS";
     public static final String BAD_CREATE_EXCEL_FILE_MSG = "Invalid file for Excel documents. Expecting file name with extension "

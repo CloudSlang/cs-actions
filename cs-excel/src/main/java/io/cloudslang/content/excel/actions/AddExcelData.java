@@ -101,8 +101,7 @@ public class AddExcelData {
         columnDelimiter = defaultIfEmpty(columnDelimiter, DEFAULT_COLUMN_DELIMITER);
         overwriteData = defaultIfEmpty(overwriteData, BOOLEAN_FALSE);
 
-        final List<String> exceptionMessages = verifyAddExcelData(excelFileName, worksheetName, headerData,
-                rowData, rowIndex, columnIndex, rowDelimiter, columnDelimiter, overwriteData);
+        final List<String> exceptionMessages = verifyAddExcelData(excelFileName, rowData, rowIndex, columnIndex, overwriteData);
 
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));

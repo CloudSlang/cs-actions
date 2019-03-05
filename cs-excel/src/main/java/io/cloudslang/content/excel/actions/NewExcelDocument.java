@@ -76,7 +76,7 @@ public class NewExcelDocument {
         worksheetNames = defaultIfEmpty(worksheetNames, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER_WORKSHEET_NAMES);
 
-        final List<String> exceptionMessages = verifyNewExcelDocument(excelFileName, worksheetNames, delimiter);
+        final List<String> exceptionMessages = verifyNewExcelDocument(excelFileName);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
