@@ -17,7 +17,6 @@ package io.cloudslang.content.tesseract.services;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.FileUtils;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -29,37 +28,38 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static io.cloudslang.content.tesseract.utils.Constants.*;
+import static java.lang.Boolean.parseBoolean;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.bytedeco.javacpp.lept.*;
 import static org.bytedeco.javacpp.tesseract.*;
 
 public class OcrService {
 
-    public static String extractText(String filePath, String dataPath, String language, String textBlocks) throws IOException, ZipException {
+    public static String extractText(String filePath, String dataPath, String language, String textBlocks) throws Exception {
         String tempPathDirectory = null;
         String result;
 
         try {
             if (!new File(filePath).exists())
-                throw new RuntimeException(FILE_NOT_EXISTS);
+                throw new Exception(FILE_NOT_EXISTS);
 
             final TessBaseAPI api = new TessBaseAPI();
             //Initialize Tesseract OCR
             if (isEmpty(dataPath)) {
                 tempPathDirectory = getTempResourcePath();
                 if (TessBaseAPIInit3(api, tempPathDirectory, ENG) != 0) {
-                    throw new RuntimeException(TESSERACT_INITIALIZE_ERROR);
+                    throw new Exception(TESSERACT_INITIALIZE_ERROR);
                 }
             } else {
                 if (TessBaseAPIInit3(api, dataPath, language) != 0) {
-                    throw new RuntimeException(TESSERACT_INITIALIZE_ERROR);
+                    throw new Exception(TESSERACT_INITIALIZE_ERROR);
                 }
             }
             // Open input image with leptonica library
             final lept.PIX image = pixRead(filePath);
             TessBaseAPISetImage2(api, image);
 
-            if (Boolean.parseBoolean(textBlocks)) {
+            if (parseBoolean(textBlocks)) {
                 result = extractAllText(api);
             } else {
                 result = extractBlocks(api);
@@ -75,12 +75,12 @@ public class OcrService {
         }
     }
 
-    private static String extractAllText(TessBaseAPI api) {
+    private static String extractAllText(TessBaseAPI api) throws Exception {
         final BytePointer outText;
         final String result;
         outText = api.GetUTF8Text();
         if (outText == null) {
-            throw new RuntimeException(TESSERACT_PARSE_ERROR);
+            throw new Exception(TESSERACT_PARSE_ERROR);
         }
         result = outText.getString();
         outText.deallocate();
@@ -114,7 +114,7 @@ public class OcrService {
         return outputJson;
     }
 
-    private static String getTempResourcePath() throws IOException, ZipException {
+    private static String getTempResourcePath() throws Exception {
         InputStream stream = null;
         OutputStream resStreamOut = null;
         final String jarFolder;
@@ -122,7 +122,7 @@ public class OcrService {
         try {
             stream = OcrService.class.getResourceAsStream(TESSDATA_ZIP);
             if (stream == null) {
-                throw new RuntimeException(TESSERACT_DATA_ERROR);
+                throw new Exception(TESSERACT_DATA_ERROR);
             }
 
             int readBytes;

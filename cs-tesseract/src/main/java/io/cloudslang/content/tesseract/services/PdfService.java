@@ -74,7 +74,7 @@ public class PdfService {
             doc.close();
             return fileList;
         }
-        throw new RuntimeException(FILE_NOT_EXISTS);
+        throw new Exception(FILE_NOT_EXISTS);
     }
 }
 
