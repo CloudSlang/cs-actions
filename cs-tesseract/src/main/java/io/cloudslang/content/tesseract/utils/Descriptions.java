@@ -38,6 +38,14 @@ public class Descriptions {
         public static final String PDF_FILE_PATH_DESC = "The path to the PDF file from where the text needs to be " +
                 "extracted.";
         public static final String DPI_DESC = "The DPI value when converting the PDF file to image.";
+        public static final String TEXT_BLOCKS_DESC = "If set to 'true' operation will return a json containing text blocks " +
+                "extracted from image. Valid values: false, true" +
+                "Default value: false";
+    }
+
+    public static class OutputsDescription {
+        public static final String TEXT_STRING_DESC = "The extracted text from image.";
+        public static final String TEXT_JSON_DESC = "A json containing extracted blocks of text from image.";
     }
 
     public static class ExtractTextFromPDF {

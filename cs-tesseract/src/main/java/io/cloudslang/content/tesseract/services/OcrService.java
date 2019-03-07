@@ -14,10 +14,13 @@
  */
 package io.cloudslang.content.tesseract.services;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.FileUtils;
 import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.lept;
 
 import java.io.*;
@@ -27,47 +30,41 @@ import java.nio.file.Paths;
 
 import static io.cloudslang.content.tesseract.utils.Constants.*;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.bytedeco.javacpp.lept.pixDestroy;
-import static org.bytedeco.javacpp.lept.pixRead;
-import static org.bytedeco.javacpp.tesseract.TessBaseAPI;
+import static org.bytedeco.javacpp.lept.*;
+import static org.bytedeco.javacpp.tesseract.*;
 
 public class OcrService {
-    public static String extractText(String filePath, String dataPath, String language) throws IOException, ZipException {
+
+    public static String extractText(String filePath, String dataPath, String language, String textBlocks) throws IOException, ZipException {
         String tempPathDirectory = null;
+        String result;
 
         try {
             if (!new File(filePath).exists())
                 throw new RuntimeException(FILE_NOT_EXISTS);
 
-            final BytePointer outText;
             final TessBaseAPI api = new TessBaseAPI();
-            final String result;
-
             //Initialize Tesseract OCR
             if (isEmpty(dataPath)) {
                 tempPathDirectory = getTempResourcePath();
-                if (api.Init(tempPathDirectory, ENG) != 0) {
+                if (TessBaseAPIInit3(api, tempPathDirectory, ENG) != 0) {
                     throw new RuntimeException(TESSERACT_INITIALIZE_ERROR);
                 }
             } else {
-                if (api.Init(dataPath, language) != 0) {
+                if (TessBaseAPIInit3(api, dataPath, language) != 0) {
                     throw new RuntimeException(TESSERACT_INITIALIZE_ERROR);
                 }
             }
-
             // Open input image with leptonica library
             final lept.PIX image = pixRead(filePath);
-            api.SetImage(image);
+            TessBaseAPISetImage2(api, image);
 
-            // Get OCR result
-            outText = api.GetUTF8Text();
-            if (outText == null)
-                throw new RuntimeException(TESSERACT_PARSE_ERROR);
-            result = outText.getString();
-
-            // Destroy used object and release memory
+            if (Boolean.parseBoolean(textBlocks)) {
+                result = extractAllText(api);
+            } else {
+                result = extractBlocks(api);
+            }
             api.End();
-            outText.deallocate();
             pixDestroy(image);
 
             return result;
@@ -76,6 +73,45 @@ public class OcrService {
                 FileUtils.forceDelete(new File(tempPathDirectory));
             }
         }
+    }
+
+    private static String extractAllText(TessBaseAPI api) {
+        final BytePointer outText;
+        final String result;
+        outText = api.GetUTF8Text();
+        if (outText == null) {
+            throw new RuntimeException(TESSERACT_PARSE_ERROR);
+        }
+        result = outText.getString();
+        outText.deallocate();
+        return result;
+    }
+
+    private static String extractBlocks(TessBaseAPI api) throws UnsupportedEncodingException {
+        TessBaseAPISetPageSegMode(api, PSM_AUTO_OSD);
+        lept.BOXA boxes = TessBaseAPIGetComponentImages(api, RIL_BLOCK, true, (PointerPointer) null, null);
+        final int boxCount = boxaGetCount(boxes);
+        JsonObject outputJson = new JsonObject();
+        for (int i = 0; i < boxCount; i++) {
+            lept.BOX box = boxaGetBox(boxes, i, L_CLONE);
+            if (box == null) {
+                continue;
+            }
+            TessBaseAPISetRectangle(api, box.x(), box.y(), box.w(), box.h());
+            BytePointer utf8Text = TessBaseAPIGetUTF8Text(api);
+            String ocrResult = utf8Text.getString(UTF_8);
+
+            outputJson = buildOutputJson(outputJson, ocrResult, i);
+            boxDestroy(box);
+            utf8Text.deallocate();
+        }
+        boxaDestroy(boxes);
+        return new GsonBuilder().setPrettyPrinting().create().toJson(outputJson);
+    }
+
+    public static JsonObject buildOutputJson(JsonObject outputJson, String textBlock, int i) {
+        outputJson.addProperty(TEXT_BLOCK + i, textBlock);
+        return outputJson;
     }
 
     private static String getTempResourcePath() throws IOException, ZipException {

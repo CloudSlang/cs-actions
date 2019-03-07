@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
 public class PdfService {
     private static StringBuffer result = new StringBuffer();
 
-    public static String imageConvert(String sourcePath, String dataPath, String lang, String dpi) throws Exception {
+    public static String imageConvert(String sourcePath, String dataPath, String lang, String dpi, String textBlocks) throws Exception {
         List<File> fileList = null;
         String destination = sourcePath.substring(0, sourcePath.lastIndexOf(File.separator)) + File.separator;
         try {
@@ -39,7 +39,7 @@ public class PdfService {
                 File pdf = new File(sourcePath);
                 fileList = requireNonNull(convertPdfToImage(pdf, destination, Integer.parseInt(dpi)));
                 for (File image : fileList) {
-                    result.append(OcrService.extractText(image.getAbsolutePath(), dataPath, lang));
+                    result.append(OcrService.extractText(image.getAbsolutePath(), dataPath, lang, textBlocks));
                     FileUtils.forceDelete(image);
                 }
             }
