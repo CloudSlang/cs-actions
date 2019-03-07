@@ -14,10 +14,7 @@
  */
 package io.cloudslang.content.tesseract.utils;
 
-public class Inputs {
-    public static final String FILE_PATH = "filePath";
-    public static final String DATA_PATH = "dataPath";
-    public static final String LANGUAGE = "language";
-    public static final String DPI = "dpi";
-    public static final String TEXT_BLOCKS = "textBlocks";
+public class Outputs {
+    public static final String TEXT_STRING = "textString";
+    public static final String TEXT_JSON = "textJson";
 }

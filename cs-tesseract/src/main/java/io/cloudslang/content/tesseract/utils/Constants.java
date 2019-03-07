@@ -16,6 +16,7 @@ package io.cloudslang.content.tesseract.utils;
 
 public final class Constants {
     public static final String ENG = "ENG";
+    public static final String FALSE = "false";
     public static final String TESSERACT_INITIALIZE_ERROR = "Error initializing Tesseract OCR.";
     public static final String TESSERACT_PARSE_ERROR = "Error encountered by the OCR engine while parsing the file.";
     public static final String TESSERACT_DATA_ERROR = "Cannot get resources from Jar file.";
@@ -23,4 +24,6 @@ public final class Constants {
     public static final String TESSDATA = "tessdata";
     public static final String TESSDATA_ZIP = "tessdata.zip";
     public static final String DPI_SET = "300";
+    public static final String UTF_8 = "UTF-8";
+    public static final String TEXT_BLOCK = "text_block_";
 }

@@ -30,11 +30,16 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.tesseract.services.OcrService.extractText;
 import static io.cloudslang.content.tesseract.utils.Constants.ENG;
+import static io.cloudslang.content.tesseract.utils.Constants.FALSE;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.EXCEPTION_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.RETURN_CODE_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.*;
 import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.*;
+import static io.cloudslang.content.tesseract.utils.Descriptions.OutputsDescription.TEXT_JSON_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.OutputsDescription.TEXT_STRING_DESC;
 import static io.cloudslang.content.tesseract.utils.Inputs.*;
+import static io.cloudslang.content.tesseract.utils.Outputs.TEXT_JSON;
+import static io.cloudslang.content.tesseract.utils.Outputs.TEXT_STRING;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -54,10 +59,17 @@ public class ExtractText {
      *                 when specifying the dataPath input as well.
      *                 Default: 'ENG'
      *                 Optional
+     * @param textBlocks If set to 'true' operation will return a json containing text blocks
+     *                   extracted from image.
+     *                   Valid values: false, true
+     *                   Default value: false
+     *                   Optional
      * @return a map containing the output of the operation. Keys present in the map are:
      * returnResult - This will contain the extracted text.
      * exception - In case of success response, this result is empty. In case of failure response,
      * this result contains the java stack trace of the runtime exception.
+     * textString - The extracted text from image.
+     * textJson - A json containing extracted blocks of text from image.
      * returnCode - The returnCode of the operation: 0 for success, -1 for failure.
      */
 
@@ -66,6 +78,8 @@ public class ExtractText {
             outputs = {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = TEXT_STRING, description = TEXT_STRING_DESC),
+                    @Output(value = TEXT_JSON, description = TEXT_JSON_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
             },
             responses = {
@@ -75,13 +89,23 @@ public class ExtractText {
     public Map<String, String> execute(
             @Param(value = FILE_PATH, required = true, description = FILE_PATH_DESC) String filePath,
             @Param(value = DATA_PATH, description = DATA_PATH_DESC) String dataPath,
-            @Param(value = LANGUAGE, description = LANGUAGE_DESC) String language
+            @Param(value = LANGUAGE, description = LANGUAGE_DESC) String language,
+            @Param(value = TEXT_BLOCKS, description = TEXT_BLOCKS_DESC) String textBlocks
     ) {
         try {
             dataPath = defaultIfEmpty(dataPath, EMPTY);
             language = defaultIfEmpty(language, ENG);
+            textBlocks = defaultIfEmpty(textBlocks, FALSE);
 
-            return getSuccessResultsMap(extractText(filePath, dataPath, language));
+            final String resultText = extractText(filePath, dataPath, language, textBlocks);
+            final Map<String, String> result = getSuccessResultsMap(resultText);
+            if (Boolean.parseBoolean(textBlocks)) {
+                result.put(TEXT_STRING, resultText);
+            } else {
+                result.put(TEXT_JSON, resultText);
+            }
+
+            return result;
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }
