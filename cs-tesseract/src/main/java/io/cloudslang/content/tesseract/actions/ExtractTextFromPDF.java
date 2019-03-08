@@ -29,14 +29,17 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.tesseract.services.PdfService.imageConvert;
-import static io.cloudslang.content.tesseract.utils.Constants.DPI_SET;
-import static io.cloudslang.content.tesseract.utils.Constants.ENG;
+import static io.cloudslang.content.tesseract.utils.Constants.*;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.EXCEPTION_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.RETURN_CODE_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.*;
 import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractTextFromPDF.EXTRACT_TEXT_FROM_PDF_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.*;
+import static io.cloudslang.content.tesseract.utils.Descriptions.OutputsDescription.TEXT_JSON_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.OutputsDescription.TEXT_STRING_DESC;
 import static io.cloudslang.content.tesseract.utils.Inputs.*;
+import static io.cloudslang.content.tesseract.utils.Outputs.TEXT_JSON;
+import static io.cloudslang.content.tesseract.utils.Outputs.TEXT_STRING;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -49,6 +52,8 @@ public class ExtractTextFromPDF {
             outputs = {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = TEXT_STRING, description = TEXT_STRING_DESC),
+                    @Output(value = TEXT_JSON, description = TEXT_JSON_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
             },
             responses = {
@@ -59,13 +64,24 @@ public class ExtractTextFromPDF {
             @Param(value = FILE_PATH, required = true, description = PDF_FILE_PATH_DESC) String filePath,
             @Param(value = DATA_PATH, description = DATA_PATH_DESC) String dataPath,
             @Param(value = LANGUAGE, description = LANGUAGE_DESC) String language,
-            @Param(value = DPI, description = DPI_DESC) String dpi
+            @Param(value = DPI, description = DPI_DESC) String dpi,
+            @Param(value = TEXT_BLOCKS, description = TEXT_BLOCKS_DESC) String textBlocks
     ) {
         try {
             dataPath = defaultIfEmpty(dataPath, EMPTY);
             language = defaultIfEmpty(language, ENG);
             dpi = defaultIfEmpty(dpi, DPI_SET);
-            return getSuccessResultsMap(imageConvert(filePath, dataPath, language, dpi));
+            textBlocks = defaultIfEmpty(textBlocks, FALSE);
+
+            final String resultText = imageConvert(filePath, dataPath, language, dpi, textBlocks);
+            final Map<String, String> result = getSuccessResultsMap(resultText);
+            if (Boolean.parseBoolean(textBlocks)) {
+                result.put(TEXT_STRING, resultText);
+            } else {
+                result.put(TEXT_JSON, resultText);
+            }
+
+            return result;
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }
