@@ -132,7 +132,6 @@ public class HttpClientAction {
      * @param headers                            The list containing the headers to use for the request separated by new line (CRLF).
      *                                           The header name - value pair will be separated by ":". Format: According to HTTP standard for headers (RFC 2616).
      *                                           Examples: Accept:text/plain
-     *                                                     header1:value1 \n header2:value2
      * @param responseCharacterSet               The character encoding to be used for the HTTP response.
      *                                           If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.
      *                                           If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty,
