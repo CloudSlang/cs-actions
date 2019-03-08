@@ -20,4 +20,5 @@ public class Inputs {
     public static final String LANGUAGE = "language";
     public static final String DPI = "dpi";
     public static final String TEXT_BLOCKS = "textBlocks";
+    public static final String DESKEW = "deskew";
 }

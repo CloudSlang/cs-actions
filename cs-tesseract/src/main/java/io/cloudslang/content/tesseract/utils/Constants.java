@@ -26,4 +26,11 @@ public final class Constants {
     public static final String DPI_SET = "300";
     public static final String UTF_8 = "UTF-8";
     public static final String TEXT_BLOCK = "text_block_";
+    public static final double MINIMUM_DESKEW_THRESHOLD = 0.05d;
+    public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
+    public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
+    public static final String EXCEPTION_EMPTY_FILE = "The filePath input is required.";
+    public static final String EXCEPTION_INVALID_FILE = "The value '%s' for %s input is not a valid file path.";
+    public static final String EXCEPTION_INVALID_DATA_PATH = "The value '%s' for %s input is not a valid path.";
+    public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
 }

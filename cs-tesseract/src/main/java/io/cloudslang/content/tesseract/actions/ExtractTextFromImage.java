@@ -19,25 +19,42 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.*;
+import static com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text.NEW_LINE;
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.tesseract.services.OcrService.extractText;
+import static io.cloudslang.content.tesseract.services.OcrService.extractTextFromImage;
 import static io.cloudslang.content.tesseract.utils.Constants.ENG;
 import static io.cloudslang.content.tesseract.utils.Constants.FALSE;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.EXCEPTION_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.RETURN_CODE_DESC;
-import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.*;
-import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.*;
+import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.EXTRACT_TEXT_FROM_IMAGE_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.FAILURE_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.RETURN_RESULT_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.SUCCESS_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.DATA_PATH_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.DESKEW_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.FILE_PATH_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.LANGUAGE_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.TEXT_BLOCKS_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.OutputsDescription.TEXT_JSON_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.OutputsDescription.TEXT_STRING_DESC;
-import static io.cloudslang.content.tesseract.utils.Inputs.*;
+import static io.cloudslang.content.tesseract.utils.Inputs.DATA_PATH;
+import static io.cloudslang.content.tesseract.utils.Inputs.DESKEW;
+import static io.cloudslang.content.tesseract.utils.Inputs.FILE_PATH;
+import static io.cloudslang.content.tesseract.utils.Inputs.LANGUAGE;
+import static io.cloudslang.content.tesseract.utils.Inputs.TEXT_BLOCKS;
+import static io.cloudslang.content.tesseract.utils.InputsValidation.verifyExtractTextInputs;
 import static io.cloudslang.content.tesseract.utils.Outputs.TEXT_JSON;
 import static io.cloudslang.content.tesseract.utils.Outputs.TEXT_STRING;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -45,22 +62,26 @@ import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class ExtractText {
+public class ExtractTextFromImage {
     /**
      * This operation extracts the text from a specified file given as input using Tesseract's OCR library.
      *
-     * @param filePath The path of the file to be extracted. The file must be an image. Most of the common image formats
-     *                 are supported.
-     *                 Required
-     * @param dataPath The path to the Tesseract data config directory. This directory can contain different
-     *                 configuration files as well as trained language data files.
-     *                 Optional
-     * @param language The language that will be used by the OCR engine. This input is taken into consideration only
-     *                 when specifying the dataPath input as well.
-     *                 Default: 'ENG'
-     *                 Optional
+     * @param filePath   The path of the file to be extracted. The file must be an image. Most of the common image formats
+     *                   are supported.
+     *                   Required
+     * @param dataPath   The path to the Tesseract data config directory. This directory can contain different
+     *                   configuration files as well as trained language data files.
+     *                   Optional
+     * @param language   The language that will be used by the OCR engine. This input is taken into consideration only
+     *                   when specifying the dataPath input as well.
+     *                   Default: 'ENG'
+     *                   Optional
      * @param textBlocks If set to 'true' operation will return a json containing text blocks
      *                   extracted from image.
+     *                   Valid values: false, true
+     *                   Default value: false
+     *                   Optional
+     * @param deskew     If set to 'true' the image will be rotated to the correct text orientation.
      *                   Valid values: false, true
      *                   Default value: false
      *                   Optional
@@ -73,8 +94,8 @@ public class ExtractText {
      * returnCode - The returnCode of the operation: 0 for success, -1 for failure.
      */
 
-    @Action(name = "Extract text",
-            description = EXTRACT_TEXT_DESC,
+    @Action(name = "Extract text from image",
+            description = EXTRACT_TEXT_FROM_IMAGE_DESC,
             outputs = {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
@@ -90,19 +111,26 @@ public class ExtractText {
             @Param(value = FILE_PATH, required = true, description = FILE_PATH_DESC) String filePath,
             @Param(value = DATA_PATH, description = DATA_PATH_DESC) String dataPath,
             @Param(value = LANGUAGE, description = LANGUAGE_DESC) String language,
-            @Param(value = TEXT_BLOCKS, description = TEXT_BLOCKS_DESC) String textBlocks
-    ) {
-        try {
-            dataPath = defaultIfEmpty(dataPath, EMPTY);
-            language = defaultIfEmpty(language, ENG);
-            textBlocks = defaultIfEmpty(textBlocks, FALSE);
+            @Param(value = TEXT_BLOCKS, description = TEXT_BLOCKS_DESC) String textBlocks,
+            @Param(value = DESKEW, description = DESKEW_DESC) String deskew) {
 
-            final String resultText = extractText(filePath, dataPath, language, textBlocks);
+        dataPath = defaultIfEmpty(dataPath, EMPTY);
+        language = defaultIfEmpty(language, ENG);
+        textBlocks = defaultIfEmpty(textBlocks, FALSE);
+        deskew = defaultIfEmpty(deskew, FALSE);
+
+        final List<String> exceptionMessages = verifyExtractTextInputs(filePath, dataPath, textBlocks, deskew);
+        if (!exceptionMessages.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+        }
+
+        try {
+            final String resultText = extractTextFromImage(filePath, dataPath, language, textBlocks, deskew);
             final Map<String, String> result = getSuccessResultsMap(resultText);
             if (Boolean.parseBoolean(textBlocks)) {
-                result.put(TEXT_STRING, resultText);
-            } else {
                 result.put(TEXT_JSON, resultText);
+            } else {
+                result.put(TEXT_STRING, resultText);
             }
 
             return result;
