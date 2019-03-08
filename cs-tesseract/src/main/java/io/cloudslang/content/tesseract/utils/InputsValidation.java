@@ -30,8 +30,7 @@ public class InputsValidation {
                                                        @Nullable final String textBlocks,
                                                        @Nullable final String deskew) {
 
-        final List<String> exceptionMessages = verifyCommonInputs(filePath, dataPath, textBlocks, deskew);
-        return exceptionMessages;
+       return verifyCommonInputs(filePath, dataPath, textBlocks, deskew);
     }
 
     @NotNull
@@ -47,7 +46,7 @@ public class InputsValidation {
     }
 
     @NotNull
-    public static List<String> verifyCommonInputs(@Nullable final String filePath,
+    private static List<String> verifyCommonInputs(@Nullable final String filePath,
                                                   @Nullable final String dataPath,
                                                   @Nullable final String textBlocks,
                                                   @Nullable final String deskew) {
@@ -99,7 +98,6 @@ public class InputsValidation {
         return exceptions;
     }
 
-    @NotNull
     private static boolean isValidFile(@NotNull final String filePath) {
         return new File(filePath).exists();
     }

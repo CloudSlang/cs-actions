@@ -155,7 +155,7 @@ public class OcrService {
         return new GsonBuilder().setPrettyPrinting().create().toJson(outputJson);
     }
 
-    public static JsonObject buildOutputJson(JsonObject outputJson, String textBlock, int i) {
+    private static JsonObject buildOutputJson(JsonObject outputJson, String textBlock, int i) {
         outputJson.addProperty(TEXT_BLOCK + i, textBlock);
         return outputJson;
     }
