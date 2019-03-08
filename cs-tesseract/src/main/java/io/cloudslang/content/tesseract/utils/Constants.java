@@ -15,6 +15,7 @@
 package io.cloudslang.content.tesseract.utils;
 
 public final class Constants {
+    public static final String NEW_LINE = "\n";
     public static final String ENG = "ENG";
     public static final String FALSE = "false";
     public static final String TESSERACT_INITIALIZE_ERROR = "Error initializing Tesseract OCR.";
