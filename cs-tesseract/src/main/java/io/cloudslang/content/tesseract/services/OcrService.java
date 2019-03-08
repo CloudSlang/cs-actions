@@ -33,7 +33,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -129,7 +128,7 @@ public class OcrService {
         return result;
     }
 
-    private static String extractBlocks(TessBaseAPI api) throws UnsupportedEncodingException {
+    private static String extractBlocks(TessBaseAPI api) throws Exception {
         TessBaseAPISetPageSegMode(api, PSM_AUTO_OSD);
         lept.BOXA boxes = TessBaseAPIGetComponentImages(api, RIL_BLOCK, true, (PointerPointer) null, null);
         final int boxCount = boxaGetCount(boxes);
@@ -150,7 +149,7 @@ public class OcrService {
         }
         boxaDestroy(boxes);
         if (boxCount == 0) {
-            throw new UnsupportedEncodingException("Failed to extract text blocks (Empty page), check text orientation or check if text exists.");
+            throw new Exception("Failed to extract text blocks (Empty page), check text orientation or check if text exists.");
         }
         return new GsonBuilder().setPrettyPrinting().create().toJson(outputJson);
     }

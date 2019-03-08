@@ -81,7 +81,8 @@ public class ExtractTextFromImage {
      *                   Valid values: false, true
      *                   Default value: false
      *                   Optional
-     * @param deskew     If set to 'true' the image will be rotated to the correct text orientation.
+     * @param deskew     Improve text recognition if an image does not have a normal text orientation(skewed image).
+     *                   If set to 'true' the image will be rotated to the correct text orientation.
      *                   Valid values: false, true
      *                   Default value: false
      *                   Optional

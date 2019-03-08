@@ -41,7 +41,7 @@ public class Descriptions {
         public static final String TEXT_BLOCKS_DESC = "If set to 'true' operation will return a json containing text blocks " +
                 "extracted from image. Valid values: false, true" +
                 "Default value: false";
-        public static final String DESKEW_DESC = "If set to 'true' the image will be rotated to the correct text " +
+        public static final String DESKEW_DESC = "Improve text recognition if an image does not have a normal text orientation(skewed image). If set to 'true' the image will be rotated to the correct text " +
                 "orientation.\nValid values: false, true\n" +
                 "Default value: false";
     }
