@@ -22,7 +22,7 @@ public class Descriptions {
     }
 
     public static class ExtractText {
-        public static final String EXTRACT_TEXT_DESC = "This operation extracts the text from a specified file given " +
+        public static final String EXTRACT_TEXT_FROM_IMAGE_DESC = "This operation extracts the text from a specified image given " +
                 "as input using Tesseract's OCR library.";
         public static final String RETURN_RESULT_DESC = "This will contain the extracted text.";
         public static final String SUCCESS_DESC = "Text extracted successfully.";
@@ -40,6 +40,9 @@ public class Descriptions {
         public static final String DPI_DESC = "The DPI value when converting the PDF file to image.";
         public static final String TEXT_BLOCKS_DESC = "If set to 'true' operation will return a json containing text blocks " +
                 "extracted from image. Valid values: false, true" +
+                "Default value: false";
+        public static final String DESKEW_DESC = "Improve text recognition if an image does not have a normal text orientation(skewed image). If set to 'true' the image will be rotated to the correct text " +
+                "orientation.\nValid values: false, true\n" +
                 "Default value: false";
     }
 

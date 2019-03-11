@@ -15,6 +15,7 @@
 package io.cloudslang.content.tesseract.utils;
 
 public final class Constants {
+    public static final String NEW_LINE = "\n";
     public static final String ENG = "ENG";
     public static final String FALSE = "false";
     public static final String TESSERACT_INITIALIZE_ERROR = "Error initializing Tesseract OCR.";
@@ -26,4 +27,11 @@ public final class Constants {
     public static final String DPI_SET = "300";
     public static final String UTF_8 = "UTF-8";
     public static final String TEXT_BLOCK = "text_block_";
+    public static final double MINIMUM_DESKEW_THRESHOLD = 0.05d;
+    static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
+    static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
+    static final String EXCEPTION_EMPTY_FILE = "The filePath input is required.";
+    static final String EXCEPTION_INVALID_FILE = "The value '%s' for %s input is not a valid file path.";
+    static final String EXCEPTION_INVALID_DATA_PATH = "The value '%s' for %s input is not a valid path.";
+    static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
 }
