@@ -22,17 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.tesseract.utils.Constants.EXCEPTION_EMPTY_FILE;
-import static io.cloudslang.content.tesseract.utils.Constants.EXCEPTION_INVALID_BOOLEAN;
-import static io.cloudslang.content.tesseract.utils.Constants.EXCEPTION_INVALID_DATA_PATH;
-import static io.cloudslang.content.tesseract.utils.Constants.EXCEPTION_INVALID_FILE;
-import static io.cloudslang.content.tesseract.utils.Constants.EXCEPTION_INVALID_NUMBER;
-import static io.cloudslang.content.tesseract.utils.Constants.EXCEPTION_NULL_EMPTY;
-import static io.cloudslang.content.tesseract.utils.Inputs.DATA_PATH;
-import static io.cloudslang.content.tesseract.utils.Inputs.DESKEW;
-import static io.cloudslang.content.tesseract.utils.Inputs.DPI;
-import static io.cloudslang.content.tesseract.utils.Inputs.FILE_PATH;
-import static io.cloudslang.content.tesseract.utils.Inputs.TEXT_BLOCKS;
+import static io.cloudslang.content.tesseract.utils.Constants.*;
+import static io.cloudslang.content.tesseract.utils.Inputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -44,7 +35,7 @@ public class InputsValidation {
                                                        @Nullable final String textBlocks,
                                                        @Nullable final String deskew) {
 
-       return verifyCommonInputs(filePath, dataPath, textBlocks, deskew);
+        return verifyCommonInputs(filePath, dataPath, textBlocks, deskew);
     }
 
     @NotNull
@@ -52,18 +43,32 @@ public class InputsValidation {
                                                         @Nullable final String dataPath,
                                                         @Nullable final String dpi,
                                                         @Nullable final String textBlocks,
-                                                        @Nullable final String deskew) {
+                                                        @Nullable final String deskew,
+                                                        @Nullable final String startPage,
+                                                        @Nullable final String finishPage,
+                                                        @Nullable final String certainPages) {
 
         final List<String> exceptionMessages = verifyCommonInputs(filePath, dataPath, textBlocks, deskew);
         addVerifyNumber(exceptionMessages, dpi, DPI);
+        addVerifyNumber(exceptionMessages, startPage, START_PAGE);
+        addVerifyNumber(exceptionMessages, finishPage, FINISH_PAGE);
+
+        if (Integer.parseInt(startPage) > Integer.parseInt(finishPage))
+            exceptionMessages.add(EXCEPTION_INVALID_INPUT);
+
+        String regex = "[0-9, /,]+";
+        final boolean matches = certainPages.matches(regex);
+        if (!matches)
+            exceptionMessages.add(EXCEPTION_INVALID_INPUT);
+
         return exceptionMessages;
     }
 
     @NotNull
     private static List<String> verifyCommonInputs(@Nullable final String filePath,
-                                                  @Nullable final String dataPath,
-                                                  @Nullable final String textBlocks,
-                                                  @Nullable final String deskew) {
+                                                   @Nullable final String dataPath,
+                                                   @Nullable final String textBlocks,
+                                                   @Nullable final String deskew) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyBoolean(exceptionMessages, textBlocks, TEXT_BLOCKS);

@@ -21,4 +21,7 @@ public class Inputs {
     public static final String DPI = "dpi";
     public static final String TEXT_BLOCKS = "textBlocks";
     public static final String DESKEW = "deskew";
+    public static final String START_PAGE = "startPage";
+    public static final String FINISH_PAGE = "finishPage";
+    public static final String INDEX_PAGES = "indexPages";
 }
