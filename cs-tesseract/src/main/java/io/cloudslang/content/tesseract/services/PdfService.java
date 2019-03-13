@@ -33,15 +33,14 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class PdfService {
     private static StringBuffer result = new StringBuffer();
 
-    public static String imageConvert(String sourcePath, String dataPath, String lang, Integer dpi, String textBlocks,
-                                      String deskew, Integer fromPage, Integer toPage, String pageIndex)
+    public static String imageConvert(String sourcePath, String dataPath, String lang, Integer dpiImp, String textBlocks,String deskew, Integer fromPageImp, Integer toPageImp, String pageIndex)
             throws Exception {
         List<File> fileList = null;
         String destination = sourcePath.substring(0, sourcePath.lastIndexOf(File.separator)) + File.separator;
         try {
             if (!sourcePath.equals(EMPTY)) {
                 File pdf = new File(sourcePath);
-                fileList = requireNonNull(convertPdfToImage(pdf, destination, dpi, fromPage, toPage,
+                fileList = requireNonNull(convertPdfToImage(pdf, destination, dpiImp, fromPageImp, toPageImp,
                         pageIndex));
                 for (File image : fileList) {
                     result.append(OcrService.extractTextFromImage(image.getAbsolutePath(), dataPath, lang, textBlocks,
@@ -60,8 +59,8 @@ public class PdfService {
         }
     }
 
-    private static List<File> convertPdfToImage(File file, String destination, Integer dpi, Integer fromPage,
-                                                Integer toPage, String pageIndex) throws Exception {
+    private static List<File> convertPdfToImage(File file, String destination, Integer dpiImp, Integer fromPageImp,
+                                                Integer toPageImp, String pageIndex) throws Exception {
         if (file.exists()) {
             PDDocument doc = PDDocument.load(file);
             PDFRenderer renderer = new PDFRenderer(doc);
@@ -69,17 +68,17 @@ public class PdfService {
 
             String fileName = file.getName().replace(PDF, EMPTY);
 
-            if (fromPage == 0 && toPage == 0 && pageIndex.equals(ZERO))
-                fileList = PdfService.iteration(destination, dpi, renderer, fileList, fileName, fromPage,
+            if (fromPageImp == 0 && toPageImp == 0 && pageIndex.equals(ZERO))
+                fileList = PdfService.iteration(destination, dpiImp, renderer, fileList, fileName, fromPageImp,
                         doc.getNumberOfPages(), pageIndex);
-            if (fromPage == 0 && toPage != 0 && pageIndex.equals(ZERO))
-                fileList = PdfService.iteration(destination, dpi, renderer, fileList, fileName, fromPage, toPage,
+            if (fromPageImp == 0 && toPageImp != 0 && pageIndex.equals(ZERO))
+                fileList = PdfService.iteration(destination, dpiImp, renderer, fileList, fileName, fromPageImp, toPageImp,
                         pageIndex);
-            if (fromPage != 0 && toPage != 0 && pageIndex.equals(ZERO))
-                fileList = PdfService.iteration(destination, dpi, renderer, fileList, fileName, --fromPage, toPage,
+            if (fromPageImp != 0 && toPageImp != 0 && pageIndex.equals(ZERO))
+                fileList = PdfService.iteration(destination, dpiImp, renderer, fileList, fileName, --fromPageImp, toPageImp,
                         pageIndex);
             if (!pageIndex.equals(ZERO))
-                fileList = iteration(destination, dpi, renderer, fileList, fileName, fromPage, toPage, pageIndex);
+                fileList = iteration(destination, dpiImp, renderer, fileList, fileName, fromPageImp, toPageImp, pageIndex);
 
             doc.close();
             return fileList;
@@ -88,7 +87,7 @@ public class PdfService {
     }
 
     private static List<File> iteration(String destination, Integer dpi, PDFRenderer renderer, List<File> fileList,
-                                        String fileName, Integer fromPage, Integer toPage, String pageIndex)
+                                        String fileName, Integer fromPageImp, Integer toPageImp, String pageIndex)
             throws IOException {
         if (!pageIndex.equals(ZERO)) {
             final String[] arrSplit = pageIndex.split(COMMA);
@@ -97,7 +96,7 @@ public class PdfService {
                 fileCreation(destination, dpi, renderer, fileList, fileName, --val);
             }
         } else {
-            for (int i = fromPage; i < toPage; i++) {
+            for (int i = fromPageImp; i < toPageImp; i++) {
                 // default image files path: original file path
                 // if necessary, file.getParent() + "/" => another path
                 fileCreation(destination, dpi, renderer, fileList, fileName, i);

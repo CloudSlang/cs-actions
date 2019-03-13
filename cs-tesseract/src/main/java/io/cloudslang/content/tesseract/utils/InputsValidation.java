@@ -42,13 +42,13 @@ public class InputsValidation {
                                                         @Nullable final String dataPath,
                                                         @Nullable final String textBlocks,
                                                         @Nullable final String deskew,
-                                                        @Nullable final Integer fromPage,
-                                                        @Nullable final Integer toPage,
+                                                        @Nullable final Integer fromPageImp,
+                                                        @Nullable final Integer toPageImp,
                                                         @Nullable final String pageIndex) {
 
         final List<String> exceptionMessages = verifyCommonInputs(filePath, dataPath, textBlocks, deskew);
 
-        if (fromPage > toPage)
+        if (fromPageImp > toPageImp)
             exceptionMessages.add(EXCEPTION_INVALID_FROM_PAGE);
 
         String regex = "[0-9, /,]+";
