@@ -44,6 +44,9 @@ public class Descriptions {
         public static final String DESKEW_DESC = "Improve text recognition if an image does not have a normal text orientation(skewed image). If set to 'true' the image will be rotated to the correct text " +
                 "orientation.\nValid values: false, true\n" +
                 "Default value: false";
+        public static final String FROM_PAGE_DESC = "The starting page from where the text should be retrieved";
+        public static final String TO_PAGE_DESC = "The last page from where the text should be retrieved";
+        public static final String PAGE_INDEX_DESC = "A list of indexes from where the text should be retrieved";
     }
 
     public static class OutputsDescription {
