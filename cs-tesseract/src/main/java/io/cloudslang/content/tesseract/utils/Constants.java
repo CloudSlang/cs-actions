@@ -36,11 +36,14 @@ public final class Constants {
     public static final String PDF = ".pdf";
     public static final String UNDERSCORE = "_";
     public static final String COMMA = ",";
+    public static final String EXCEPTION_EXCEEDS_PAGES = "One or more values provided for the inputs exceeds the total" +
+            " pages of the document";
     static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     static final String EXCEPTION_EMPTY_FILE = "The filePath input is required.";
     static final String EXCEPTION_INVALID_FILE = "The value '%s' for %s input is not a valid file path.";
     static final String EXCEPTION_INVALID_DATA_PATH = "The value '%s' for %s input is not a valid path.";
-    static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
     static final String EXCEPTION_INVALID_INPUT = "The input is not valid.";
+    static final String EXCEPTION_INVALID_FROM_PAGE = "The value for the input from_page cannot be higher than the one " +
+            "for the input to_page";
 }

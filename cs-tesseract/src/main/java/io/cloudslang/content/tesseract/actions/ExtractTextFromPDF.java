@@ -67,24 +67,28 @@ public class ExtractTextFromPDF {
             @Param(value = FILE_PATH, required = true, description = PDF_FILE_PATH_DESC) String filePath,
             @Param(value = DATA_PATH, description = DATA_PATH_DESC) String dataPath,
             @Param(value = LANGUAGE, description = LANGUAGE_DESC) String language,
-            @Param(value = DPI, description = DPI_DESC) String dpi,
+            @Param(value = DPI, description = DPI_DESC) String dpiIm,
             @Param(value = TEXT_BLOCKS, description = TEXT_BLOCKS_DESC) String textBlocks,
             @Param(value = DESKEW, description = DESKEW_DESC) String deskew,
-            @Param(value = FROM_PAGE, description = FROM_PAGE_DESC) String fromPage,
-            @Param(value = TO_PAGE, description = TO_PAGE_DESC) String toPage,
+            @Param(value = FROM_PAGE, description = FROM_PAGE_DESC) String fromPg,
+            @Param(value = TO_PAGE, description = TO_PAGE_DESC) String toPg,
             @Param(value = PAGE_INDEX, description = PAGE_INDEX_DESC) String pageIndex) {
 
         dataPath = defaultIfEmpty(dataPath, EMPTY);
         language = defaultIfEmpty(language, ENG);
-        dpi = defaultIfEmpty(dpi, DPI_SET);
+        dpiIm = defaultIfEmpty(dpiIm, DPI_SET);
         textBlocks = defaultIfEmpty(textBlocks, FALSE);
         deskew = defaultIfEmpty(deskew, FALSE);
-        fromPage = defaultIfEmpty(fromPage, FROM_PAGE_SET);
-        toPage = defaultIfEmpty(toPage, TO_PAGE_SET);
+        fromPg = defaultIfEmpty(fromPg, FROM_PAGE_SET);
+        toPg = defaultIfEmpty(toPg, TO_PAGE_SET);
         pageIndex = defaultIfEmpty(pageIndex, PAGE_INDEX_SET);
 
+        final Integer fromPage = Integer.valueOf(fromPg);
+        final Integer toPage = Integer.valueOf(toPg);
+        final Integer dpi = Integer.valueOf(dpiIm);
 
-        final List<String> exceptionMessages = verifyExtractTextFromPDF(filePath, dataPath, dpi, textBlocks, deskew, fromPage, toPage, pageIndex);
+
+        final List<String> exceptionMessages = verifyExtractTextFromPDF(filePath, dataPath, textBlocks, deskew, fromPage, toPage, pageIndex);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -99,6 +103,8 @@ public class ExtractTextFromPDF {
             }
 
             return result;
+        } catch (IndexOutOfBoundsException e) {
+            return getFailureResultsMap(EXCEPTION_EXCEEDS_PAGES);
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }

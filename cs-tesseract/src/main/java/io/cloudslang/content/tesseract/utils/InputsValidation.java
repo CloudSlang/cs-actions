@@ -14,7 +14,6 @@
  */
 package io.cloudslang.content.tesseract.utils;
 
-import io.cloudslang.content.utils.NumberUtilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,20 +40,16 @@ public class InputsValidation {
     @NotNull
     public static List<String> verifyExtractTextFromPDF(@Nullable final String filePath,
                                                         @Nullable final String dataPath,
-                                                        @Nullable final String dpi,
                                                         @Nullable final String textBlocks,
                                                         @Nullable final String deskew,
-                                                        @Nullable final String fromPage,
-                                                        @Nullable final String toPage,
+                                                        @Nullable final Integer fromPage,
+                                                        @Nullable final Integer toPage,
                                                         @Nullable final String pageIndex) {
 
         final List<String> exceptionMessages = verifyCommonInputs(filePath, dataPath, textBlocks, deskew);
-        addVerifyNumber(exceptionMessages, dpi, DPI);
-        addVerifyNumber(exceptionMessages, fromPage, FROM_PAGE);
-        addVerifyNumber(exceptionMessages, toPage, TO_PAGE);
 
-        if (Integer.parseInt(fromPage) > Integer.parseInt(toPage))
-            exceptionMessages.add(EXCEPTION_INVALID_INPUT);
+        if (fromPage > toPage)
+            exceptionMessages.add(EXCEPTION_INVALID_FROM_PAGE);
 
         String regex = "[0-9, /,]+";
         final boolean matches = pageIndex.matches(regex);
@@ -107,15 +102,6 @@ public class InputsValidation {
         return exceptions;
     }
 
-    @NotNull
-    private static List<String> addVerifyNumber(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
-        if (isEmpty(input)) {
-            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
-        } else if (!NumberUtilities.isValidInt(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
-        }
-        return exceptions;
-    }
 
     private static boolean isValidFile(@NotNull final String filePath) {
         return new File(filePath).exists();
