@@ -70,27 +70,27 @@ public class ExtractTextFromPDF {
             @Param(value = DPI, description = DPI_DESC) String dpi,
             @Param(value = TEXT_BLOCKS, description = TEXT_BLOCKS_DESC) String textBlocks,
             @Param(value = DESKEW, description = DESKEW_DESC) String deskew,
-            @Param(value = START_PAGE, description = START_PAGE_DESC) String startPage,
-            @Param(value = FINISH_PAGE, description = FINISH_PAGE_DESC) String finishPage,
-            @Param(value = INDEX_PAGES, description = INDEX_PAGES_DESC) String indexPages) {
+            @Param(value = FROM_PAGE, description = FROM_PAGE_DESC) String fromPage,
+            @Param(value = TO_PAGE, description = TO_PAGE_DESC) String toPage,
+            @Param(value = PAGE_INDEX, description = PAGE_INDEX_DESC) String pageIndex) {
 
         dataPath = defaultIfEmpty(dataPath, EMPTY);
         language = defaultIfEmpty(language, ENG);
         dpi = defaultIfEmpty(dpi, DPI_SET);
         textBlocks = defaultIfEmpty(textBlocks, FALSE);
         deskew = defaultIfEmpty(deskew, FALSE);
-        startPage = defaultIfEmpty(startPage, START_PAGE_SET);
-        finishPage = defaultIfEmpty(finishPage, FINISH_PAGE_SET);
-        indexPages = defaultIfEmpty(indexPages, INDEX_PAGES_SET);
+        fromPage = defaultIfEmpty(fromPage, FROM_PAGE_SET);
+        toPage = defaultIfEmpty(toPage, TO_PAGE_SET);
+        pageIndex = defaultIfEmpty(pageIndex, PAGE_INDEX_SET);
 
 
-        final List<String> exceptionMessages = verifyExtractTextFromPDF(filePath, dataPath, dpi, textBlocks, deskew, startPage, finishPage, indexPages);
+        final List<String> exceptionMessages = verifyExtractTextFromPDF(filePath, dataPath, dpi, textBlocks, deskew, fromPage, toPage, pageIndex);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
         try {
 
-            final String resultText = imageConvert(filePath, dataPath, language, dpi, textBlocks, deskew, startPage, finishPage, indexPages);
+            final String resultText = imageConvert(filePath, dataPath, language, dpi, textBlocks, deskew, fromPage, toPage, pageIndex);
             final Map<String, String> result = getSuccessResultsMap(resultText);
             if (Boolean.parseBoolean(textBlocks)) {
                 result.put(TEXT_JSON, resultText);
