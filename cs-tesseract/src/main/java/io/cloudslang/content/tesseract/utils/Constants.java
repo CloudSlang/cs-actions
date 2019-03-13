@@ -29,9 +29,9 @@ public final class Constants {
     public static final String TEXT_BLOCK = "text_block_";
     public static final double MINIMUM_DESKEW_THRESHOLD = 0.05d;
     public static final String ZERO = "0";
-    public static final String START_PAGE_SET = "0";
-    public static final String FINISH_PAGE_SET = "0";
-    public static final String INDEX_PAGES_SET = "0";
+    public static final String FROM_PAGE_SET = "0";
+    public static final String TO_PAGE_SET = "0";
+    public static final String PAGE_INDEX_SET = "0";
     public static final String PNG = "PNG";
     public static final String PDF = ".pdf";
     public static final String UNDERSCORE = "_";

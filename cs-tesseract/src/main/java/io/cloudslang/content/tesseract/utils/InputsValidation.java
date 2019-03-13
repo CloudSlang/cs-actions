@@ -44,20 +44,20 @@ public class InputsValidation {
                                                         @Nullable final String dpi,
                                                         @Nullable final String textBlocks,
                                                         @Nullable final String deskew,
-                                                        @Nullable final String startPage,
-                                                        @Nullable final String finishPage,
-                                                        @Nullable final String certainPages) {
+                                                        @Nullable final String fromPage,
+                                                        @Nullable final String toPage,
+                                                        @Nullable final String pageIndex) {
 
         final List<String> exceptionMessages = verifyCommonInputs(filePath, dataPath, textBlocks, deskew);
         addVerifyNumber(exceptionMessages, dpi, DPI);
-        addVerifyNumber(exceptionMessages, startPage, START_PAGE);
-        addVerifyNumber(exceptionMessages, finishPage, FINISH_PAGE);
+        addVerifyNumber(exceptionMessages, fromPage, FROM_PAGE);
+        addVerifyNumber(exceptionMessages, toPage, TO_PAGE);
 
-        if (Integer.parseInt(startPage) > Integer.parseInt(finishPage))
+        if (Integer.parseInt(fromPage) > Integer.parseInt(toPage))
             exceptionMessages.add(EXCEPTION_INVALID_INPUT);
 
         String regex = "[0-9, /,]+";
-        final boolean matches = certainPages.matches(regex);
+        final boolean matches = pageIndex.matches(regex);
         if (!matches)
             exceptionMessages.add(EXCEPTION_INVALID_INPUT);
 

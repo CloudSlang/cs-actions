@@ -33,13 +33,13 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class PdfService {
     private static StringBuffer result = new StringBuffer();
 
-    public static String imageConvert(String sourcePath, String dataPath, String lang, String dpi, String textBlocks, String deskew, String startPage, String finishPage, String certainPages) throws Exception {
+    public static String imageConvert(String sourcePath, String dataPath, String lang, String dpi, String textBlocks, String deskew, String fromPage, String toPage, String pageIndex) throws Exception {
         List<File> fileList = null;
         String destination = sourcePath.substring(0, sourcePath.lastIndexOf(File.separator)) + File.separator;
         try {
             if (!sourcePath.equals(EMPTY)) {
                 File pdf = new File(sourcePath);
-                fileList = requireNonNull(convertPdfToImage(pdf, destination, Integer.parseInt(dpi), Integer.parseInt(startPage), Integer.parseInt(finishPage), certainPages));
+                fileList = requireNonNull(convertPdfToImage(pdf, destination, Integer.parseInt(dpi), Integer.parseInt(fromPage), Integer.parseInt(toPage), pageIndex));
                 for (File image : fileList) {
                     result.append(OcrService.extractTextFromImage(image.getAbsolutePath(), dataPath, lang, textBlocks, deskew));
                     FileUtils.forceDelete(image);
@@ -56,7 +56,7 @@ public class PdfService {
         }
     }
 
-    private static List<File> convertPdfToImage(File file, String destination, Integer dpi, Integer startPage, Integer finishPage, String indexPages) throws Exception {
+    private static List<File> convertPdfToImage(File file, String destination, Integer dpi, Integer fromPage, Integer toPage, String pageIndex) throws Exception {
         if (file.exists()) {
             PDDocument doc = PDDocument.load(file);
             PDFRenderer renderer = new PDFRenderer(doc);
@@ -65,14 +65,14 @@ public class PdfService {
             String fileName = file.getName().replace(PDF, EMPTY);
 
 
-            if (startPage == 0 && finishPage == 0 && indexPages.equals(ZERO))
+            if (fromPage == 0 && toPage == 0 && pageIndex.equals(ZERO))
                 fileList = PdfService.interation(destination, dpi, renderer, fileList, fileName, 0, doc.getNumberOfPages());
-            if (startPage == 0 && finishPage != 0 && indexPages.equals(ZERO))
-                fileList = PdfService.interation(destination, dpi, renderer, fileList, fileName, 0, finishPage);
-            if (startPage != 0 && finishPage != 0 && indexPages.equals(ZERO))
-                fileList = PdfService.interation(destination, dpi, renderer, fileList, fileName, --startPage, finishPage);
+            if (fromPage == 0 && toPage != 0 && pageIndex.equals(ZERO))
+                fileList = PdfService.interation(destination, dpi, renderer, fileList, fileName, 0, toPage);
+            if (fromPage != 0 && toPage != 0 && pageIndex.equals(ZERO))
+                fileList = PdfService.interation(destination, dpi, renderer, fileList, fileName, --fromPage, toPage);
             else {
-                String[] arrSplit = indexPages.split(COMMA);
+                String[] arrSplit = pageIndex.split(COMMA);
                 for (String anArrSplit : arrSplit) {
                     int val = Integer.parseInt(anArrSplit);
                     File fileTemp = new File(destination + fileName + UNDERSCORE + RandomStringUtils.randomAlphanumeric(15).toUpperCase() + PDF); // jpg or png
