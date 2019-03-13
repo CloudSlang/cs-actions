@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2018 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,13 +13,12 @@
  * limitations under the License.
  */
 
+
 package io.cloudslang.content.json.services;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.internal.filter.ValueNode;
-import io.cloudslang.content.json.actions.JsonPathQuery;
 import io.cloudslang.content.json.exceptions.RemoveEmptyElementException;
 import org.junit.After;
 import org.junit.Before;

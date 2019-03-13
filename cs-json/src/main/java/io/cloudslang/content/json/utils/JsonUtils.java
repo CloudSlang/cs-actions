@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2018 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,9 +13,11 @@
  * limitations under the License.
  */
 
+
 package io.cloudslang.content.json.utils;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
@@ -73,10 +75,10 @@ public class JsonUtils {
         final String actionString = action.toLowerCase().trim();
 
         boolean exists = false;
-        String actionEnumValues = "";
+        StringBuilder actionEnumValues = new StringBuilder();
         for (ActionsEnum actionsEnum : ActionsEnum.values()) {
             final String actionEnumValue = actionsEnum.getValue();
-            actionEnumValues += actionEnumValue + " ";
+            actionEnumValues.append(actionEnumValue).append(" ");
             if (actionString.equals(actionEnumValue)) {
                 exists = true;
             }
@@ -124,6 +126,23 @@ public class JsonUtils {
         } catch (IllegalArgumentException iae) {
             throw hammerIllegalArgumentExceptionWithMessage(INVALID_JSONOBJECT, iae);
         }
+    }
+
+    @NotNull
+    public static JsonContext getValidJsonContextWithoutDup(final String jsonObject) {
+        try {
+            final ObjectMapper objectMapper = new ObjectMapper().configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+            objectMapper.enable(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY);
+            final AbstractJsonProvider provider = new JacksonJsonNodeJsonProvider(objectMapper);
+            final Configuration configuration = Configuration.defaultConfiguration()
+                    .jsonProvider(provider);
+            final JsonContext jsonContext = new JsonContext(configuration);
+            jsonContext.parse(jsonObject);
+            return jsonContext;
+        } catch (IllegalArgumentException iae) {
+            throw hammerIllegalArgumentExceptionWithMessage(INVALID_JSONOBJECT, iae);
+        }
+
     }
 
     public static boolean parseBooleanWithDefault(String booleanValue, boolean defaultValue) {

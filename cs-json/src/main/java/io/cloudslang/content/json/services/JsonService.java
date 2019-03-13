@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2018 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 package io.cloudslang.content.json.services;
 
@@ -163,6 +164,13 @@ public class JsonService {
     @NotNull
     public static JsonNode evaluateJsonPathQuery(@Nullable final String jsonObject, @Nullable final String jsonPath) {
         final JsonContext jsonContext = JsonUtils.getValidJsonContext(jsonObject);
+        final JsonPath path = JsonUtils.getValidJsonPath(jsonPath);
+        return jsonContext.read(path);
+    }
+
+    @NotNull
+    public static JsonNode evaluateJsonPathQueryWithoutDup(@Nullable final String jsonObject, @Nullable final String jsonPath) {
+        final JsonContext jsonContext = JsonUtils.getValidJsonContextWithoutDup(jsonObject);
         final JsonPath path = JsonUtils.getValidJsonPath(jsonPath);
         return jsonContext.read(path);
     }

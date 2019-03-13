@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2018 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+
 package io.cloudslang.content.json.utils;
 
 /**
@@ -23,6 +24,7 @@ public final class Constants {
 
     public static final class InputNames extends io.cloudslang.content.constants.InputNames {
         public static final String JSON_OBJECT = "jsonObject";
+        public static final String JSON_INPUT = "jsonInput";
         public static final String NEW_PROPERTY_NAME = "newPropertyName";
         public static final String NEW_PROPERTY_VALUE = "newPropertyValue";
         public static final String OBJECT = "object";
@@ -33,6 +35,8 @@ public final class Constants {
         public static final String NAME = "name";
         public static final String VALUE = "value";
         public static final String VALIDATE_VALUE = "validateValue";
+        public static final String JSON_INPUT_DESC = "The string representation of a JSON object";
+        public static final String JSON_PATH_DESC = "The JSON Path query to run";
     }
 
     static final class EditJsonOperations {
