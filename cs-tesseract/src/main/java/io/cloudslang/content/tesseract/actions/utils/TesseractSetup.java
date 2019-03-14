@@ -17,11 +17,10 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.tesseract.services.ConfigService.copyConfigFiles;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.EXCEPTION_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.RETURN_CODE_DESC;
-import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.*;
+import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.RETURN_RESULT_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.DATA_PATH_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.DATA_PATH_INP_DESC;
-import static io.cloudslang.content.tesseract.utils.Descriptions.TesseractSetup.CONFIGURATION_FILES_FOR_TESSERACT_OCR;
-import static io.cloudslang.content.tesseract.utils.Descriptions.TesseractSetup.TESSERACT_SETUP_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.TesseractSetup.*;
 import static io.cloudslang.content.tesseract.utils.Inputs.DATA_PATH;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -40,8 +39,8 @@ public class TesseractSetup {
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, isOnFail = true, description = FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_SETUP_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, isOnFail = true, description = FAILURE_SETUP_DESC)
             })
     public Map<String, String> execute(
             @Param(value = DATA_PATH, required = true, description = DATA_PATH_INP_DESC) String dataPath) {
