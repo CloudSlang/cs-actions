@@ -27,33 +27,18 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.tesseract.services.OcrService.extractTextFromImage;
-import static io.cloudslang.content.tesseract.utils.Constants.ENG;
-import static io.cloudslang.content.tesseract.utils.Constants.FALSE;
-import static io.cloudslang.content.tesseract.utils.Constants.NEW_LINE;
+import static io.cloudslang.content.tesseract.utils.Constants.*;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.EXCEPTION_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.RETURN_CODE_DESC;
-import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.EXTRACT_TEXT_FROM_IMAGE_DESC;
-import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.FAILURE_DESC;
-import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.RETURN_RESULT_DESC;
-import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.SUCCESS_DESC;
-import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.DATA_PATH_DESC;
-import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.DESKEW_DESC;
-import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.FILE_PATH_DESC;
-import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.LANGUAGE_DESC;
-import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.TEXT_BLOCKS_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.*;
+import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.*;
 import static io.cloudslang.content.tesseract.utils.Descriptions.OutputsDescription.TEXT_JSON_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.OutputsDescription.TEXT_STRING_DESC;
-import static io.cloudslang.content.tesseract.utils.Inputs.DATA_PATH;
-import static io.cloudslang.content.tesseract.utils.Inputs.DESKEW;
-import static io.cloudslang.content.tesseract.utils.Inputs.FILE_PATH;
-import static io.cloudslang.content.tesseract.utils.Inputs.LANGUAGE;
-import static io.cloudslang.content.tesseract.utils.Inputs.TEXT_BLOCKS;
+import static io.cloudslang.content.tesseract.utils.Inputs.*;
 import static io.cloudslang.content.tesseract.utils.InputsValidation.verifyExtractTextInputs;
 import static io.cloudslang.content.tesseract.utils.Outputs.TEXT_JSON;
 import static io.cloudslang.content.tesseract.utils.Outputs.TEXT_STRING;
@@ -114,8 +99,8 @@ public class ExtractTextFromImage {
             })
     public Map<String, String> execute(
             @Param(value = FILE_PATH, required = true, description = FILE_PATH_DESC) String filePath,
-            @Param(value = DATA_PATH, description = DATA_PATH_DESC) String dataPath,
-            @Param(value = LANGUAGE, description = LANGUAGE_DESC) String language,
+            @Param(value = DATA_PATH, required = true, description = DATA_PATH_DESC) String dataPath,
+            @Param(value = LANGUAGE, required = true, description = LANGUAGE_DESC) String language,
             @Param(value = TEXT_BLOCKS, description = TEXT_BLOCKS_DESC) String textBlocks,
             @Param(value = DESKEW, description = DESKEW_DESC) String deskew) {
 
