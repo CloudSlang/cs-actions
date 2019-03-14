@@ -63,4 +63,8 @@ public class Descriptions {
         public static final String EXTRACT_TEXT_FROM_PDF_DESC = "This operation converts a PDF file given " +
                 "as input and extracts the text using Tesseract's OCR library.";
     }
+
+    public static class TesseractSetup {
+        public static final String TESSERACT_SETUP_DESC = "This operation setup Tesseract config files.";
+    }
 }
