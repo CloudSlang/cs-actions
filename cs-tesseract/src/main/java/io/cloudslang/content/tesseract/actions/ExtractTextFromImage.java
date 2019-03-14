@@ -69,12 +69,16 @@ public class ExtractTextFromImage {
      * @param filePath   The path of the file to be extracted. The file must be an image. Most of the common image formats
      *                   are supported.
      *                   Required
-     * @param dataPath   The path to the Tesseract data config directory. This directory can contain different
-     *                   configuration files as well as trained language data files.
+     * @param dataPath   The path to the tessdata folder that contains the tesseract config files. If no file path is
+     *                   provided, at runtime a tessdata folder containing the ENG traineddata file will be created in
+     *                   the system's temp folder. It is recommended to create the tessdata folder and provide the path
+     *                   in this input, in order to be able to provide newer traineddata files, other langauge files
+     *                   and to avoid unnecessary disk writes. The folder and files can be found on the official
+     *                   tesseract Github.
      *                   Optional
      * @param language   The language that will be used by the OCR engine. This input is taken into consideration only
      *                   when specifying the dataPath input as well.
-     *                   Default: 'ENG'
+     *                   Default value: 'ENG'
      *                   Optional
      * @param textBlocks If set to 'true' operation will return a json containing text blocks
      *                   extracted from image.
