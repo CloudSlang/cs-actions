@@ -19,6 +19,8 @@ import static io.cloudslang.content.tesseract.utils.Descriptions.Common.EXCEPTIO
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.RETURN_CODE_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.*;
 import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.DATA_PATH_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.DATA_PATH_INP_DESC;
+import static io.cloudslang.content.tesseract.utils.Descriptions.TesseractSetup.CONFIGURATION_FILES_FOR_TESSERACT_OCR;
 import static io.cloudslang.content.tesseract.utils.Descriptions.TesseractSetup.TESSERACT_SETUP_DESC;
 import static io.cloudslang.content.tesseract.utils.Inputs.DATA_PATH;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -42,13 +44,13 @@ public class TesseractSetup {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, isOnFail = true, description = FAILURE_DESC)
             })
     public Map<String, String> execute(
-            @Param(value = DATA_PATH, required = true, description = DATA_PATH_DESC) String dataPath) {
+            @Param(value = DATA_PATH, required = true, description = DATA_PATH_INP_DESC) String dataPath) {
 
         dataPath = defaultIfEmpty(dataPath, EMPTY);
 
         try {
             final String configPath = copyConfigFiles(dataPath);
-            final Map<String, String> result = getSuccessResultsMap(configPath);
+            final Map<String, String> result = getSuccessResultsMap(CONFIGURATION_FILES_FOR_TESSERACT_OCR);
             result.put(DATA_PATH, configPath);
 
             return result;

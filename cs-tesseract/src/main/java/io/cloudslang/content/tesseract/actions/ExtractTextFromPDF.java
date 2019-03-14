@@ -55,17 +55,12 @@ public class ExtractTextFromPDF {
      * @param filePath   The path of the file to be extracted. The file must be an image. Most of the common image formats
      *                   are supported.
      *                   Required
-     * @param dataPath   The path to the tessdata folder that contains the tesseract config files. If no file path is
-     *                   provided, at runtime a tessdata folder containing the ENG traineddata file will be created in
-     *                   the system's temp folder. It is recommended to create the tessdata folder and provide the path
-     *                   in this input, in order to be able to provide newer traineddata files, other langauge files
-     *                   and to avoid unnecessary disk writes. The folder and files can be found on the official
-     *                   tesseract Github.
-     *                   Optional
+     * @param dataPath   The path to the tessdata folder that contains the tesseract config files.
+     *                   Required
      * @param language   The language that will be used by the OCR engine. This input is taken into consideration only
      *                   when specifying the dataPath input as well.
      *                   Default value: 'ENG'
-     *                   Optional
+     *                   Required
      * @param dpi        The DPI value when converting the PDF file to image.
      *                   Default value: 300
      *                   Optional
@@ -112,8 +107,8 @@ public class ExtractTextFromPDF {
             })
     public Map<String, String> execute(
             @Param(value = FILE_PATH, required = true, description = PDF_FILE_PATH_DESC) String filePath,
-            @Param(value = DATA_PATH, description = DATA_PATH_DESC) String dataPath,
-            @Param(value = LANGUAGE, description = LANGUAGE_DESC) String language,
+            @Param(value = DATA_PATH, required = true, description = DATA_PATH_DESC) String dataPath,
+            @Param(value = LANGUAGE, required = true, description = LANGUAGE_DESC) String language,
             @Param(value = DPI, description = DPI_DESC) String dpi,
             @Param(value = TEXT_BLOCKS, description = TEXT_BLOCKS_DESC) String textBlocks,
             @Param(value = DESKEW, description = DESKEW_DESC) String deskew,

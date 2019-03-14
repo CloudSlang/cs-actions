@@ -32,11 +32,8 @@ public class Descriptions {
     public static class InputsDescription {
         public static final String FILE_PATH_DESC = "The path to the file from where the text needs to be extracted.";
         public static final String DATA_PATH_DESC = "The path to the tessdata folder that contains the tesseract config" +
-                " files. If no file path is provided, at runtime a tessdata folder containing the ENG traineddata file" +
-                " will be created in the system's temp folder. It is recommended to create the tessdata folder and" +
-                " provide the path in this input, in order to be able to provide newer traineddata files, other " +
-                "langauge files and to avoid unnecessary disk writes. The folder and files can be found on the official" +
-                " tesseract Github.";
+                " files.";
+        public static final String DATA_PATH_INP_DESC = "The path to a folder where OCR Tesseract configuration files will be created.";
         public static final String LANGUAGE_DESC = "The language that will be used by the OCR engine. This input is " +
                 "taken into consideration only when specifying the dataPath input as well.";
         public static final String PDF_FILE_PATH_DESC = "The path to the PDF file from where the text needs to be " +
@@ -66,5 +63,6 @@ public class Descriptions {
 
     public static class TesseractSetup {
         public static final String TESSERACT_SETUP_DESC = "This operation setup Tesseract config files.";
+        public static final String CONFIGURATION_FILES_FOR_TESSERACT_OCR = "Configuration files for Tesseract OCR created successfully.";
     }
 }

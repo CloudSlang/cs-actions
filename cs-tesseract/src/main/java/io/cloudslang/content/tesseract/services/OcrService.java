@@ -17,7 +17,6 @@ package io.cloudslang.content.tesseract.services;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.recognition.software.jdeskew.ImageDeskew;
-import net.lingala.zip4j.core.ZipFile;
 import net.sourceforge.tess4j.util.ImageHelper;
 import org.apache.commons.io.FileUtils;
 import org.bytedeco.javacpp.BytePointer;
@@ -29,62 +28,26 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Iterator;
 
-import static io.cloudslang.content.tesseract.utils.Constants.ENG;
-import static io.cloudslang.content.tesseract.utils.Constants.MINIMUM_DESKEW_THRESHOLD;
-import static io.cloudslang.content.tesseract.utils.Constants.TESSDATA;
-import static io.cloudslang.content.tesseract.utils.Constants.TESSDATA_ZIP;
-import static io.cloudslang.content.tesseract.utils.Constants.TESSERACT_DATA_ERROR;
-import static io.cloudslang.content.tesseract.utils.Constants.TESSERACT_INITIALIZE_ERROR;
-import static io.cloudslang.content.tesseract.utils.Constants.TESSERACT_PARSE_ERROR;
-import static io.cloudslang.content.tesseract.utils.Constants.TEXT_BLOCK;
-import static io.cloudslang.content.tesseract.utils.Constants.UTF_8;
+import static io.cloudslang.content.tesseract.utils.Constants.*;
 import static java.lang.Boolean.parseBoolean;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.bytedeco.javacpp.lept.L_CLONE;
-import static org.bytedeco.javacpp.lept.boxDestroy;
-import static org.bytedeco.javacpp.lept.boxaDestroy;
-import static org.bytedeco.javacpp.lept.boxaGetBox;
-import static org.bytedeco.javacpp.lept.boxaGetCount;
-import static org.bytedeco.javacpp.lept.pixDestroy;
-import static org.bytedeco.javacpp.lept.pixRead;
-import static org.bytedeco.javacpp.tesseract.PSM_AUTO_OSD;
-import static org.bytedeco.javacpp.tesseract.RIL_BLOCK;
-import static org.bytedeco.javacpp.tesseract.TessBaseAPI;
-import static org.bytedeco.javacpp.tesseract.TessBaseAPIGetComponentImages;
-import static org.bytedeco.javacpp.tesseract.TessBaseAPIGetUTF8Text;
-import static org.bytedeco.javacpp.tesseract.TessBaseAPIInit3;
-import static org.bytedeco.javacpp.tesseract.TessBaseAPISetImage2;
-import static org.bytedeco.javacpp.tesseract.TessBaseAPISetPageSegMode;
-import static org.bytedeco.javacpp.tesseract.TessBaseAPISetRectangle;
+import static org.bytedeco.javacpp.lept.*;
+import static org.bytedeco.javacpp.tesseract.*;
 
 public class OcrService {
 
     public static String extractTextFromImage(String filePath, String dataPath, String language, String textBlocks, String deskew) throws Exception {
-        String tempPathDirectory = null;
         String tempImagePath = null;
         String result;
         final TessBaseAPI api = new TessBaseAPI();
 
         try {
             //Initialize Tesseract OCR
-            if (isEmpty(dataPath)) {
-                tempPathDirectory = getTempResourcePath();
-                if (TessBaseAPIInit3(api, tempPathDirectory, ENG) != 0) {
-                    throw new Exception(TESSERACT_INITIALIZE_ERROR);
-                }
-            } else {
-                if (TessBaseAPIInit3(api, dataPath, language) != 0) {
-                    throw new Exception(TESSERACT_INITIALIZE_ERROR);
-                }
+            if (TessBaseAPIInit3(api, dataPath, language) != 0) {
+                throw new Exception(TESSERACT_INITIALIZE_ERROR);
             }
 
             final lept.PIX image;
@@ -106,9 +69,6 @@ public class OcrService {
 
             return result;
         } finally {
-            if (tempPathDirectory != null) {
-                FileUtils.forceDelete(new File(tempPathDirectory));
-            }
             if (tempImagePath != null) {
                 FileUtils.forceDelete(new File(tempImagePath));
             }
@@ -157,37 +117,6 @@ public class OcrService {
     private static JsonObject buildOutputJson(JsonObject outputJson, String textBlock, int i) {
         outputJson.addProperty(TEXT_BLOCK + i, textBlock);
         return outputJson;
-    }
-
-    private static String getTempResourcePath() throws Exception {
-        InputStream stream = null;
-        OutputStream resStreamOut = null;
-        final String jarFolder;
-
-        try {
-            stream = OcrService.class.getResourceAsStream(TESSDATA_ZIP);
-            if (stream == null) {
-                throw new Exception(TESSERACT_DATA_ERROR);
-            }
-
-            int readBytes;
-            final byte[] buffer = new byte[4096];
-            final Path tempDir = Files.createTempDirectory(TESSDATA);
-            jarFolder = tempDir.toFile().getPath().replace('\\', File.separatorChar)
-                    + File.separatorChar;
-
-            resStreamOut = new FileOutputStream(jarFolder + TESSDATA_ZIP);
-            while ((readBytes = stream.read(buffer)) > 0) {
-                resStreamOut.write(buffer, 0, readBytes);
-            }
-
-            new ZipFile(jarFolder + TESSDATA_ZIP).extractAll(jarFolder);
-        } finally {
-            if (stream != null) stream.close();
-            if (resStreamOut != null) resStreamOut.close();
-        }
-
-        return Paths.get(jarFolder).toRealPath().toString();
     }
 
     private static String deskewImage(String filePath) throws IOException {
