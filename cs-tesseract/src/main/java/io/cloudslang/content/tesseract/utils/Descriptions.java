@@ -64,5 +64,8 @@ public class Descriptions {
     public static class TesseractSetup {
         public static final String TESSERACT_SETUP_DESC = "This operation setup Tesseract config files.";
         public static final String CONFIGURATION_FILES_FOR_TESSERACT_OCR = "Configuration files for Tesseract OCR created successfully.";
+        public static final String SUCCESS_SETUP_DESC = "Configuration files created successfully.";
+        public static final String FAILURE_SETUP_DESC = "There was an error while trying to create configuration files.";
+
     }
 }
