@@ -31,8 +31,12 @@ public class Descriptions {
 
     public static class InputsDescription {
         public static final String FILE_PATH_DESC = "The path to the file from where the text needs to be extracted.";
-        public static final String DATA_PATH_DESC = "The path to the Tesseract data config directory. This directory" +
-                " can contain different configuration files as well as trained language data files.";
+        public static final String DATA_PATH_DESC = "The path to the tessdata folder that contains the tesseract config" +
+                " files. If no file path is provided, at runtime a tessdata folder containing the ENG traineddata file" +
+                " will be created in the system's temp folder. It is recommended to create the tessdata folder and" +
+                " provide the path in this input, in order to be able to provide newer traineddata files, other " +
+                "langauge files and to avoid unnecessary disk writes. The folder and files can be found on the official" +
+                " tesseract Github.";
         public static final String LANGUAGE_DESC = "The language that will be used by the OCR engine. This input is " +
                 "taken into consideration only when specifying the dataPath input as well.";
         public static final String PDF_FILE_PATH_DESC = "The path to the PDF file from where the text needs to be " +
@@ -41,7 +45,8 @@ public class Descriptions {
         public static final String TEXT_BLOCKS_DESC = "If set to 'true' operation will return a json containing text blocks " +
                 "extracted from image. Valid values: false, true" +
                 "Default value: false";
-        public static final String DESKEW_DESC = "Improve text recognition if an image does not have a normal text orientation(skewed image). If set to 'true' the image will be rotated to the correct text " +
+        public static final String DESKEW_DESC = "Improve text recognition if an image does not have a normal text" +
+                " orientation(skewed image). If set to 'true' the image will be rotated to the correct text " +
                 "orientation.\nValid values: false, true\n" +
                 "Default value: false";
         public static final String FROM_PAGE_DESC = "The starting page from where the text should be retrieved";
