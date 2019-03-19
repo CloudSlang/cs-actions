@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.tesseract.utils;
 
+import io.cloudslang.content.utils.NumberUtilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,9 +25,11 @@ import java.util.List;
 import static io.cloudslang.content.tesseract.utils.Constants.*;
 import static io.cloudslang.content.tesseract.utils.Inputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class InputsValidation {
+
 
     @NotNull
     public static List<String> verifyExtractTextInputs(@Nullable final String filePath,
@@ -42,20 +45,29 @@ public class InputsValidation {
                                                         @Nullable final String dataPath,
                                                         @Nullable final String textBlocks,
                                                         @Nullable final String deskew,
-                                                        @Nullable final Integer fromPageImp,
-                                                        @Nullable final Integer toPageImp,
-                                                        @Nullable final String pageIndex) {
+                                                        @Nullable final String fromPage,
+                                                        @Nullable final String toPage,
+                                                        @Nullable final String pageIndex,
+                                                        @Nullable final String dpi) {
 
         final List<String> exceptionMessages = verifyCommonInputs(filePath, dataPath, textBlocks, deskew);
 
-        if (fromPageImp > toPageImp)
-            exceptionMessages.add(EXCEPTION_INVALID_FROM_PAGE);
+        if (fromPage != EMPTY)
+            addVerifyNumber(exceptionMessages, fromPage, FROM_PAGE);
+        if (toPage != EMPTY)
+            addVerifyNumber(exceptionMessages, toPage, TO_PAGE);
+        addVerifyNumber(exceptionMessages, dpi, DPI);
 
-        String regex = "[0-9, /,]+";
-        final boolean matches = pageIndex.matches(regex);
-        if (!matches)
-            exceptionMessages.add(EXCEPTION_INVALID_INPUT);
 
+        if (exceptionMessages.isEmpty() && fromPage != EMPTY && toPage != EMPTY) {
+            if (Integer.parseInt(fromPage) > Integer.parseInt(toPage))
+                exceptionMessages.add(EXCEPTION_INVALID_FROM_PAGE);
+        } else if (pageIndex != EMPTY) {
+            String regex = "[0-9, /,]+";
+            final boolean matches = pageIndex.matches(regex);
+            if (!matches)
+                exceptionMessages.add(EXCEPTION_INVALID_INPUT);
+        }
         return exceptionMessages;
     }
 
@@ -98,6 +110,16 @@ public class InputsValidation {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!isValid(input)) {
             exceptions.add(String.format(EXCEPTION_INVALID_BOOLEAN, input, inputName));
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyNumber(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+        if (!NumberUtilities.isValidInt(input)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
+        } else if (Integer.parseInt(input) <= 0) {
+            exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
         }
         return exceptions;
     }
