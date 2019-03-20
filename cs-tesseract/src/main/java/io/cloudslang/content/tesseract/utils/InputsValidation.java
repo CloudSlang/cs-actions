@@ -15,6 +15,7 @@
 package io.cloudslang.content.tesseract.utils;
 
 import io.cloudslang.content.utils.NumberUtilities;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,21 +53,25 @@ public class InputsValidation {
 
         final List<String> exceptionMessages = verifyCommonInputs(filePath, dataPath, textBlocks, deskew);
 
-        if (fromPage != EMPTY)
-            addVerifyNumber(exceptionMessages, fromPage, FROM_PAGE);
-        if (toPage != EMPTY)
-            addVerifyNumber(exceptionMessages, toPage, TO_PAGE);
-        addVerifyNumber(exceptionMessages, dpi, DPI);
-
-
-        if (exceptionMessages.isEmpty() && fromPage != EMPTY && toPage != EMPTY) {
-            if (Integer.parseInt(fromPage) > Integer.parseInt(toPage))
-                exceptionMessages.add(EXCEPTION_INVALID_FROM_PAGE);
-        } else if (pageIndex != EMPTY) {
+        if (!StringUtils.equals(pageIndex, EMPTY)) {
             String regex = "[0-9, /,]+";
             final boolean matches = pageIndex.matches(regex);
             if (!matches)
                 exceptionMessages.add(EXCEPTION_INVALID_INPUT);
+        } else {
+            if (!StringUtils.equals(fromPage, EMPTY))
+                addVerifyNumber(exceptionMessages, fromPage, FROM_PAGE);
+            if (!StringUtils.equals(toPage, EMPTY))
+                addVerifyNumber(exceptionMessages, toPage, TO_PAGE);
+            addVerifyNumber(exceptionMessages, dpi, DPI);
+
+
+            if (exceptionMessages.isEmpty() && !StringUtils.equals(fromPage, EMPTY) && !StringUtils.equals(toPage, EMPTY)) {
+                if (Integer.parseInt(fromPage) > Integer.parseInt(toPage))
+                    exceptionMessages.add(EXCEPTION_INVALID_FROM_PAGE);
+            } else if (exceptionMessages.isEmpty() && !StringUtils.equals(fromPage, EMPTY) && StringUtils.equals(toPage, EMPTY) && StringUtils.equals(pageIndex, EMPTY)) {
+                exceptionMessages.add(EXCEPTION_INVALID_INPUT);
+            }
         }
         return exceptionMessages;
     }
@@ -97,7 +102,7 @@ public class InputsValidation {
     }
 
     @NotNull
-    private static List<String> addVerifyDataPath(@NotNull List<String> exceptions, @Nullable final String dataPath, @NotNull final String inputName) {
+    public static List<String> addVerifyDataPath(@NotNull List<String> exceptions, @Nullable final String dataPath, @NotNull final String inputName) {
 
         if (!isEmpty(dataPath) && !isValidFile(dataPath))
             exceptions.add(String.format(EXCEPTION_INVALID_DATA_PATH, dataPath, inputName));

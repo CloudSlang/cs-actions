@@ -16,6 +16,7 @@ package io.cloudslang.content.tesseract.services;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
@@ -68,18 +69,18 @@ public class PdfService {
 
             String fileName = file.getName().replace(PDF_EXTENSION, EMPTY);
 
-            if (fromPage == EMPTY && toPage == EMPTY && pageIndex.equals(EMPTY))
+            if (StringUtils.equals(fromPage, EMPTY) && StringUtils.equals(toPage, EMPTY) && StringUtils.equals(pageIndex, EMPTY))
                 fileList = PdfService.iteration(destination, Integer.parseInt(dpi), renderer, fileList, fileName, 0,
                         doc.getNumberOfPages(), pageIndex);
-            if (fromPage == EMPTY && toPage != EMPTY && pageIndex.equals(EMPTY))
+            if (StringUtils.equals(fromPage, EMPTY) && !StringUtils.equals(toPage, EMPTY) && StringUtils.equals(pageIndex, EMPTY))
                 fileList = PdfService.iteration(destination, Integer.parseInt(dpi), renderer, fileList, fileName, 0, Integer.parseInt(toPage),
                         pageIndex);
-            if (fromPage != EMPTY && toPage != EMPTY && pageIndex.equals(EMPTY)) {
-                Integer fromPageImp = Integer.parseInt(fromPage);
+            if (!StringUtils.equals(fromPage, EMPTY) && !StringUtils.equals(toPage, EMPTY) && StringUtils.equals(pageIndex, EMPTY)) {
+                int fromPageImp = Integer.parseInt(fromPage);
                 fileList = PdfService.iteration(destination, Integer.parseInt(dpi), renderer, fileList, fileName, --fromPageImp, Integer.parseInt(toPage),
                         pageIndex);
             }
-            if (!pageIndex.equals(EMPTY))
+            if (!StringUtils.equals(pageIndex, EMPTY))
                 fileList = iteration(destination, Integer.parseInt(dpi), renderer, fileList, fileName, 0, 0, pageIndex);
 
             doc.close();

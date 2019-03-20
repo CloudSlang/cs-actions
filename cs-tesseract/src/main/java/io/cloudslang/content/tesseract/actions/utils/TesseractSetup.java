@@ -19,7 +19,10 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
@@ -29,6 +32,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.tesseract.services.ConfigService.copyConfigFiles;
+import static io.cloudslang.content.tesseract.utils.Constants.NEW_LINE;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.EXCEPTION_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.Common.RETURN_CODE_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.ExtractText.RETURN_RESULT_DESC;
@@ -36,6 +40,7 @@ import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescripti
 import static io.cloudslang.content.tesseract.utils.Descriptions.InputsDescription.DATA_PATH_INP_DESC;
 import static io.cloudslang.content.tesseract.utils.Descriptions.TesseractSetup.*;
 import static io.cloudslang.content.tesseract.utils.Inputs.DATA_PATH;
+import static io.cloudslang.content.tesseract.utils.InputsValidation.addVerifyDataPath;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -60,6 +65,12 @@ public class TesseractSetup {
             @Param(value = DATA_PATH, required = true, description = DATA_PATH_INP_DESC) String dataPath) {
 
         dataPath = defaultIfEmpty(dataPath, EMPTY);
+
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyDataPath(exceptionMessages, dataPath, DATA_PATH);
+        if (!exceptionMessages.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+        }
 
         try {
             final String configPath = copyConfigFiles(dataPath);
