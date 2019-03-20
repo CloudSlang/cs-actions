@@ -75,13 +75,10 @@ public class ExtractTextFromPDF {
      *                   Default value: false
      *                   Optional
      * @param fromPage   The starting page from where the text should be retrieved
-     *                   Default value: 0
      *                   Optional
      * @param toPage     The last page from where the text should be retrieved
-     *                   Default value: 0
      *                   Optional
      * @param pageIndex  A list of indexes from where the text should be retrieved
-     *                   Default value: 0
      *                   Optional
      * @return a map containing the output of the operation. Keys present in the map are:
      * returnResult - This will contain the extracted text.
