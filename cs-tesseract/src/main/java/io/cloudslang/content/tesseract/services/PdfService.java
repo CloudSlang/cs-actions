@@ -31,10 +31,10 @@ import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class PdfService {
-    private static StringBuffer result = new StringBuffer();
 
     public static String imageConvert(String sourcePath, String dataPath, String lang, Integer dpiImp, String textBlocks,String deskew, Integer fromPageImp, Integer toPageImp, String pageIndex)
             throws Exception {
+        StringBuilder result = new StringBuilder();
         List<File> fileList = null;
         String destination = sourcePath.substring(0, sourcePath.lastIndexOf(File.separator)) + File.separator;
         try {
