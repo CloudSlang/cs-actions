@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.tesseract.services;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,13 +42,25 @@ public class PdfService {
         String destination = sourcePath.substring(0, sourcePath.lastIndexOf(File.separator)) + File.separator;
         try {
             if (!sourcePath.equals(EMPTY)) {
+                JsonObject outputObject = new JsonObject();
+                JsonArray outputArray = new JsonArray();
                 File pdf = new File(sourcePath);
                 fileList = requireNonNull(convertPdfToImage(pdf, destination, dpi, fromPage, toPage,
                         pageIndex));
-                for (File image : fileList) {
-                    result.append(OcrService.extractTextFromImage(image.getAbsolutePath(), dataPath, lang, textBlocks,
-                            deskew));
-                    FileUtils.forceDelete(image);
+                if (Boolean.parseBoolean(textBlocks)) {
+                    for (File image : fileList) {
+                        outputArray.add(OcrService.extractTextFromImage(image.getAbsolutePath(), dataPath, lang, textBlocks,
+                                deskew));
+                        FileUtils.forceDelete(image);
+                    }
+                    outputObject.add(PAGE, outputArray);
+                    result.append(outputObject.toString());
+                } else {
+                    for (File image : fileList) {
+                        result.append(OcrService.extractTextFromImage(image.getAbsolutePath(), dataPath, lang, textBlocks,
+                                deskew));
+                        FileUtils.forceDelete(image);
+                    }
                 }
             }
             return result.toString();
@@ -59,6 +73,7 @@ public class PdfService {
             }
         }
     }
+
 
     private static List<File> convertPdfToImage(File file, String destination, String dpi, String fromPage,
                                                 String toPage, String pageIndex) throws Exception {

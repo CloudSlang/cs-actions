@@ -27,6 +27,7 @@ public final class Constants {
     public static final String DPI_SET = "300";
     public static final String UTF_8 = "UTF-8";
     public static final String TEXT_BLOCK = "text_block_";
+    public static final String PAGE = "pages";
     public static final double MINIMUM_DESKEW_THRESHOLD = 0.05d;
     public static final String PNG = "PNG";
     public static final String PNG_EXTENSION = ".png";

@@ -23,5 +23,5 @@ public class Inputs {
     public static final String DESKEW = "deskew";
     public static final String FROM_PAGE = "fromPage";
     public static final String TO_PAGE = "toPage";
-    public static final String PAGE_INDEX = "PageIndex";
+    public static final String PAGE_INDEX = "pageIndex";
 }
