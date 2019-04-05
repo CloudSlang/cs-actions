@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.utilities.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -40,10 +54,8 @@ public class Base64Decoder {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = FILE_PATH, description = FILE_PATH_DESC) String filePath,
-                                       @Param(value = CONTENT_BYTES, description = CONTENT_BYTES_DESC) String contentBytes) {
-        filePath = defaultIfEmpty(filePath, EMPTY);
-        contentBytes = defaultIfEmpty(contentBytes, EMPTY);
+    public Map<String, String> execute(@Param(value = FILE_PATH, description = FILE_PATH_DESC, required = true) String filePath,
+                                       @Param(value = CONTENT_BYTES, description = CONTENT_BYTES_DESC, required = true) String contentBytes) {
 
         final List<String> exceptionMessages = verifyBase64DecoderInputs(filePath, contentBytes);
         if (!exceptionMessages.isEmpty()) {
@@ -51,7 +63,7 @@ public class Base64Decoder {
         }
 
         try {
-            Base64DecoderInputs base64DecoderInputs = Base64DecoderInputs.builder()
+            final Base64DecoderInputs base64DecoderInputs = Base64DecoderInputs.builder()
                     .filePath(filePath)
                     .contentBytes(contentBytes)
                     .build();
