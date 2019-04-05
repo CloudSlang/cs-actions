@@ -30,7 +30,7 @@ package io.cloudslang.content.utilities.util.base64decoder;
 
 public final class Constants {
     public static final String NEW_LINE = "\n";
-    public static final String EXCEPTION_EMPTY_CONTENT_BYTES = "The contentBytes input are required.";
+    public static final String EXCEPTION_EMPTY_CONTENT_BYTES = "The contentBytes input are required";
     public static final String EXCEPTION_EMPTY_PATH = "The filePath input is required";
     public static final String EXCEPTION_VALID_PATH = "The filePath is not valid";
     public static final String FILE_RETURN_MESSAGE = "File was succesfully created at: ";
