@@ -30,7 +30,7 @@ public class Descriptions {
         public static final String RETURN_PATH_DESC = "The path to the decoded file";
 
 
-        public static final String BASE64_DECODER_DESC = "Convert bytes to a file";
+        public static final String BASE64_DECODER_TO_FILE = "Base64 Decoder to File";
     }
 
 }

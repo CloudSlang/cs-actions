@@ -43,7 +43,7 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 
 public class Base64DecoderToFile {
-    @Action(name = BASE64_DECODER_DESC,
+    @Action(name = BASE64_DECODER_TO_FILE,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
