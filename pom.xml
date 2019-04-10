@@ -227,7 +227,7 @@
             <!--</includes>-->
             <!--&lt;!&ndash;Pass arguments using ${var} syntax in license.template file&ndash;&gt;-->
             <!--<properties>-->
-            <!--<copyright.year>2017</copyright.year>-->
+            <!--<copyright.year>2019</copyright.year>-->
             <!--</properties>-->
             <!--&lt;!&ndash;Custom mapping for java extensions&ndash;&gt;-->
             <!--<useDefaultMapping>false</useDefaultMapping>-->

@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+
 package io.cloudslang.content.office365.entities.createMessageModels;
 
 public class From {
