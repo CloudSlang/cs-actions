@@ -42,15 +42,15 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public final class InputsValidation {
 
     @NotNull
-    public static List<String> verifyBase64DecoderInputs(
+    public static List<String> verifyBase64DecoderToFileInputs(
             @Nullable final String filePath,
             @Nullable final String contentBytes) {
 
-        return verifyBase64DecoderBytesAndPath(filePath, contentBytes);
+        return verifyBase64DecoderToFileBytesAndPath(filePath, contentBytes);
     }
 
     @NotNull
-    private static List<String> verifyBase64DecoderBytesAndPath(@Nullable final String filePath, @Nullable final String contentBytes) {
+    private static List<String> verifyBase64DecoderToFileBytesAndPath(@Nullable final String filePath, @Nullable final String contentBytes) {
         final List<String> exceptionMessages = new ArrayList<>();
 
         if (isEmpty(contentBytes)) {

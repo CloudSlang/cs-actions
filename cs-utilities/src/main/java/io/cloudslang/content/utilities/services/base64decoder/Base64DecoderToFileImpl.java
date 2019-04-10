@@ -14,7 +14,7 @@
  */
 package io.cloudslang.content.utilities.services.base64decoder;
 
-import io.cloudslang.content.utilities.entities.base64decoder.Base64DecoderInputs;
+import io.cloudslang.content.utilities.entities.base64decoder.Base64DecoderToFileInputs;
 import org.apache.commons.codec.binary.Base64;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,14 +22,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class Base64DecoderImpl {
+public class Base64DecoderToFileImpl {
 
     @NotNull
-    public static String writeBytesToFile(Base64DecoderInputs base64DecoderInputs) throws IOException {
-        byte[] data = Base64.decodeBase64(base64DecoderInputs.getContentBytes());
-        try (OutputStream stream = new FileOutputStream(base64DecoderInputs.getFilePath())) {
+    public static String writeBytesToFile(Base64DecoderToFileInputs base64DecoderToFileInputs) throws IOException {
+        byte[] data = Base64.decodeBase64(base64DecoderToFileInputs.getContentBytes());
+        try (OutputStream stream = new FileOutputStream(base64DecoderToFileInputs.getFilePath())) {
             stream.write(data);
         }
-        return base64DecoderInputs.getFilePath();
+        return base64DecoderToFileInputs.getFilePath();
     }
 }

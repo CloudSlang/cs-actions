@@ -34,4 +34,8 @@ public final class Constants {
     public static final String EXCEPTION_EMPTY_PATH = "The filePath input is required";
     public static final String EXCEPTION_VALID_PATH = "The filePath is not valid";
     public static final String FILE_RETURN_MESSAGE = "File was succesfully created at: ";
+
+    public static final String RETURN_PATH = "returnPath";
+    public static final String EXCEPTION_MESSAGE = "Error converting the bytes to file";
+
 }

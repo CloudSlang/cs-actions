@@ -32,13 +32,13 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class Base64DecoderInputs {
+public class Base64DecoderToFileInputs {
 
     private final String filePath;
     private final String contentBytes;
 
     @java.beans.ConstructorProperties({"filePath", "contentBytes"})
-    public Base64DecoderInputs(String filePath, String contentBytes) {
+    public Base64DecoderToFileInputs(String filePath, String contentBytes) {
         this.filePath = filePath;
         this.contentBytes = contentBytes;
     }
@@ -67,20 +67,20 @@ public class Base64DecoderInputs {
         }
 
         @NotNull
-        public Base64DecoderInputs.Base64DecoderInputsBuilder filePath(@NotNull final String filePath) {
+        public Base64DecoderToFileInputs.Base64DecoderInputsBuilder filePath(@NotNull final String filePath) {
             this.filePath = filePath;
             return this;
         }
 
 
         @NotNull
-        public Base64DecoderInputs.Base64DecoderInputsBuilder contentBytes(@NotNull final String contentBytes) {
+        public Base64DecoderToFileInputs.Base64DecoderInputsBuilder contentBytes(@NotNull final String contentBytes) {
             this.contentBytes = contentBytes;
             return this;
         }
 
-        public Base64DecoderInputs build() {
-            return new Base64DecoderInputs(filePath, contentBytes);
+        public Base64DecoderToFileInputs build() {
+            return new Base64DecoderToFileInputs(filePath, contentBytes);
         }
     }
 

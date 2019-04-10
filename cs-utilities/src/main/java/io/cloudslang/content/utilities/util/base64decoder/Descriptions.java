@@ -39,6 +39,8 @@ public class Descriptions {
         public static final String RETURN_RESULT_DESC = "The path of the decoded file or error message in case of failure";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while decoding the file";
+        public static final String RETURN_PATH_DESC = "The path to the decoded file";
+
 
         public static final String BASE64_DECODER_DESC = "Convert bytes to a file";
     }

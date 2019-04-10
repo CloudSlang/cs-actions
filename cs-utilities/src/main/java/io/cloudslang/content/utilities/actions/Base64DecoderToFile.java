@@ -19,8 +19,8 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.utilities.entities.base64decoder.Base64DecoderInputs;
-import io.cloudslang.content.utilities.services.base64decoder.Base64DecoderImpl;
+import io.cloudslang.content.utilities.entities.base64decoder.Base64DecoderToFileInputs;
+import io.cloudslang.content.utilities.services.base64decoder.Base64DecoderToFileImpl;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -32,23 +32,21 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.utilities.util.base64decoder.Constants.FILE_RETURN_MESSAGE;
-import static io.cloudslang.content.utilities.util.base64decoder.Constants.NEW_LINE;
+import static io.cloudslang.content.utilities.util.base64decoder.Constants.*;
 import static io.cloudslang.content.utilities.util.base64decoder.Descriptions.ConvertBytesToFile.*;
 import static io.cloudslang.content.utilities.util.base64decoder.Inputs.ConvertBytesToFileInputs.CONTENT_BYTES;
 import static io.cloudslang.content.utilities.util.base64decoder.Inputs.ConvertBytesToFileInputs.FILE_PATH;
-import static io.cloudslang.content.utilities.util.base64decoder.InputsValidation.verifyBase64DecoderInputs;
+import static io.cloudslang.content.utilities.util.base64decoder.InputsValidation.verifyBase64DecoderToFileInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class Base64Decoder {
+public class Base64DecoderToFile {
     @Action(name = BASE64_DECODER_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = EXCEPTION, description = EXCEPTION_DESC)
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = RETURN_PATH, description = RETURN_PATH_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -57,23 +55,27 @@ public class Base64Decoder {
     public Map<String, String> execute(@Param(value = FILE_PATH, description = FILE_PATH_DESC, required = true) String filePath,
                                        @Param(value = CONTENT_BYTES, description = CONTENT_BYTES_DESC, required = true) String contentBytes) {
 
-        final List<String> exceptionMessages = verifyBase64DecoderInputs(filePath, contentBytes);
+        final List<String> exceptionMessages = verifyBase64DecoderToFileInputs(filePath, contentBytes);
         if (!exceptionMessages.isEmpty()) {
-            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+            final Map<String, String> result = getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+            result.put(RETURN_PATH, EXCEPTION_MESSAGE);
+            return result;
         }
 
         try {
-            final Base64DecoderInputs base64DecoderInputs = Base64DecoderInputs.builder()
+            final Base64DecoderToFileInputs base64DecoderToFileInputs = Base64DecoderToFileInputs.builder()
                     .filePath(filePath)
                     .contentBytes(contentBytes)
                     .build();
-            final String resultPath = Base64DecoderImpl.writeBytesToFile(base64DecoderInputs);
+            final String resultPath = Base64DecoderToFileImpl.writeBytesToFile(base64DecoderToFileInputs);
             final Map<String, String> result = getSuccessResultsMap(FILE_RETURN_MESSAGE + resultPath);
-            result.put(FILE_PATH, resultPath);
+            result.put(RETURN_PATH, resultPath);
 
             return result;
         } catch (Exception exception) {
-            return getFailureResultsMap(exception);
+            final Map<String, String> result = getFailureResultsMap(exception);
+            result.put(RETURN_PATH, EXCEPTION_MESSAGE);
+            return result;
         }
     }
 }
