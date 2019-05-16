@@ -14,13 +14,13 @@
  */
 
 
-package io.cloudslang.content.utilities.util.base64decoder;
+package io.cloudslang.content.utilities.util;
 
 import io.cloudslang.content.constants.InputNames;
 
 public final class Inputs extends InputNames {
 
-    public static class ConvertBytesToFileInputs {
+    public static class Base64CoderInputs {
         public static final String FILE_PATH = "filePath";
         public static final String CONTENT_BYTES = "contentBytes";
     }

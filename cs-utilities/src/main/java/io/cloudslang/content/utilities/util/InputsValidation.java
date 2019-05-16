@@ -14,9 +14,10 @@
  */
 
 
-package io.cloudslang.content.utilities.util.base64decoder;
+package io.cloudslang.content.utilities.util;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,8 +25,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.utilities.util.base64decoder.Constants.*;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public final class InputsValidation {
 
@@ -41,21 +40,42 @@ public final class InputsValidation {
     private static List<String> verifyBase64DecoderToFileBytesAndPath(@Nullable final String filePath, @Nullable final String contentBytes) {
         final List<String> exceptionMessages = new ArrayList<>();
 
-        if (isEmpty(contentBytes)) {
-            exceptionMessages.add(EXCEPTION_EMPTY_CONTENT_BYTES);
+        if (StringUtils.isEmpty(contentBytes)) {
+            exceptionMessages.add(Constants.EXCEPTION_EMPTY_CONTENT_BYTES);
         }
-        if (isEmpty(filePath)) {
-            exceptionMessages.add(EXCEPTION_EMPTY_PATH);
+        if (StringUtils.isEmpty(filePath)) {
+            exceptionMessages.add(Constants.EXCEPTION_EMPTY_PATH);
         } else if (!isValidPath(filePath)) {
-            exceptionMessages.add(EXCEPTION_VALID_PATH);
+            exceptionMessages.add(Constants.EXCEPTION_VALID_PATH);
         }
         return exceptionMessages;
     }
 
+    /**
+     * This method verifies the inputs for the encode operation
+     * @param filePath - the absolute filepath to the file that need to be encoded
+     * @return - returns an error message in case of not meeting the requirements
+     */
+    @NotNull
+    public static List<String> verifyBase64EncoderInputs(@Nullable final String filePath) {
+        final List<String> exceptionMessages = new ArrayList<>();
+
+        if (StringUtils.isEmpty(filePath)) {
+            exceptionMessages.add(Constants.EXCEPTION_EMPTY_PATH);
+        } else if (!isValidPath(filePath)) {
+            exceptionMessages.add(Constants.EXCEPTION_VALID_PATH);
+        }
+        return exceptionMessages;
+    }
+
+    /**
+     * This method verifies if the path is valid and if the specified file exists
+     * @param path - the absolute filepath to the file
+     * @return - returns a boolean response
+     */
     private static boolean isValidPath(@NotNull final String path) {
         final File file = new File(path);
         return new File(FilenameUtils.getFullPathNoEndSeparator(file.getAbsolutePath())).exists();
     }
-
 }
 
