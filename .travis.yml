@@ -1,12 +1,10 @@
-dist: trusty
-
 language: java
 
 env:
   - MVN_EXCLUDE_MODULES='-pl !cs-vmware' JAVA_OPTS='-Xmx2048m -Xms512m' M2_HOME=${HOME}/apache-maven-3.5.0 PATH=${M2_HOME}/bin:${PATH}
 
 jdk:
-  - oraclejdk8
+  - oraclejdk9
   - openjdk7
 
 cache:
