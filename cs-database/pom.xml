@@ -53,6 +53,11 @@
 
     <repositories>
         <repository>
+            <id>atlassian-maven-external</id>
+            <name>Atlassian Maven External</name>
+            <url>https://packages.atlassian.com/maven-external/</url>
+        </repository>
+        <repository>
             <id>atlassian-3rdparty</id>
             <name>Atlassian 3rdparty</name>
             <url>https://maven.atlassian.com/3rdparty/</url>
