@@ -1,10 +1,13 @@
+dist: trusty
+
 language: java
 
 env:
   - MVN_EXCLUDE_MODULES='-pl !cs-vmware' JAVA_OPTS='-Xmx2048m -Xms512m' M2_HOME=${HOME}/apache-maven-3.5.0 PATH=${M2_HOME}/bin:${PATH}
 
 jdk:
-  - openjdk9
+  - oraclejdk8
+  - openjdk8
 
 cache:
   directories:
@@ -15,6 +18,7 @@ before_script:
   - "echo $JAVA_OPTS"
 
 before_install:
+  - rm ~/.m2/settings.xml
   - if [ ! -d "${M2_HOME}"/bin ]; then curl https://archive.apache.org/dist/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz | tar zxf - -C "${HOME}"; fi
 
 install:
