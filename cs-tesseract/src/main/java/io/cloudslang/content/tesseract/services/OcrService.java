@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.tesseract.services;
 
 import com.google.gson.GsonBuilder;
@@ -111,7 +112,7 @@ public class OcrService {
         if (boxCount == 0) {
             throw new Exception("Failed to extract text blocks (Empty page), check text orientation or check if text exists.");
         }
-        return new GsonBuilder().setPrettyPrinting().create().toJson(outputJson);
+        return outputJson.toString();
     }
 
     private static JsonObject buildOutputJson(JsonObject outputJson, String textBlock, int i) {

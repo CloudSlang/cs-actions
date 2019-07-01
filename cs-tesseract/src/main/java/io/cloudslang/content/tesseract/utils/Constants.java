@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.tesseract.utils;
 
 public final class Constants {
@@ -27,17 +28,16 @@ public final class Constants {
     public static final String DPI_SET = "300";
     public static final String UTF_8 = "UTF-8";
     public static final String TEXT_BLOCK = "text_block_";
+    public static final String PAGE = "pages";
     public static final double MINIMUM_DESKEW_THRESHOLD = 0.05d;
-    public static final String ZERO = "0";
-    public static final String FROM_PAGE_SET = "0";
-    public static final String TO_PAGE_SET = "0";
-    public static final String PAGE_INDEX_SET = "0";
     public static final String PNG = "PNG";
-    public static final String PDF = ".pdf";
+    public static final String PNG_EXTENSION = ".png";
+    public static final String PDF_EXTENSION = ".pdf";
     public static final String UNDERSCORE = "_";
     public static final String COMMA = ",";
     public static final String EXCEPTION_EXCEEDS_PAGES = "One or more values provided for the inputs exceeds the total" +
             " pages of the document";
+    public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not valid";
     static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     static final String EXCEPTION_EMPTY_FILE = "The filePath input is required.";

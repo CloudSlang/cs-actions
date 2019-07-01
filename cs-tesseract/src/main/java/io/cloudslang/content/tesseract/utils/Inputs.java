@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.tesseract.utils;
 
 public class Inputs {
@@ -23,5 +24,5 @@ public class Inputs {
     public static final String DESKEW = "deskew";
     public static final String FROM_PAGE = "fromPage";
     public static final String TO_PAGE = "toPage";
-    public static final String PAGE_INDEX = "PageIndex";
+    public static final String PAGE_INDEX = "pageIndex";
 }

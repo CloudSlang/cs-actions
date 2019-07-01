@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.tesseract.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -76,13 +77,10 @@ public class ExtractTextFromPDF {
      *                   Default value: false
      *                   Optional
      * @param fromPage   The starting page from where the text should be retrieved
-     *                   Default value: 0
      *                   Optional
      * @param toPage     The last page from where the text should be retrieved
-     *                   Default value: 0
      *                   Optional
      * @param pageIndex  A list of indexes from where the text should be retrieved
-     *                   Default value: 0
      *                   Optional
      * @return a map containing the output of the operation. Keys present in the map are:
      * returnResult - This will contain the extracted text.
@@ -122,22 +120,19 @@ public class ExtractTextFromPDF {
         dpi = defaultIfEmpty(dpi, DPI_SET);
         textBlocks = defaultIfEmpty(textBlocks, FALSE);
         deskew = defaultIfEmpty(deskew, FALSE);
-        fromPage = defaultIfEmpty(fromPage, FROM_PAGE_SET);
-        toPage = defaultIfEmpty(toPage, TO_PAGE_SET);
-        pageIndex = defaultIfEmpty(pageIndex, PAGE_INDEX_SET);
+        fromPage = defaultIfEmpty(fromPage, EMPTY);
+        toPage = defaultIfEmpty(toPage, EMPTY);
+        pageIndex = defaultIfEmpty(pageIndex, EMPTY);
 
-        final Integer fromPageImp = Integer.valueOf(fromPage);
-        final Integer toPageImp = Integer.valueOf(toPage);
-        final Integer dpiImp = Integer.valueOf(dpi);
-
-
-        final List<String> exceptionMessages = verifyExtractTextFromPDF(filePath, dataPath, textBlocks, deskew, fromPageImp, toPageImp, pageIndex);
+        final List<String> exceptionMessages = verifyExtractTextFromPDF(filePath, dataPath, textBlocks, deskew, fromPage, toPage, pageIndex, dpi);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
+
         try {
 
-            final String resultText = imageConvert(filePath, dataPath, language, dpiImp, textBlocks, deskew, fromPageImp, toPageImp, pageIndex);
+
+            final String resultText = imageConvert(filePath, dataPath, language, dpi, textBlocks, deskew, fromPage, toPage, pageIndex);
             final Map<String, String> result = getSuccessResultsMap(resultText);
             if (Boolean.parseBoolean(textBlocks)) {
                 result.put(TEXT_JSON, resultText);
