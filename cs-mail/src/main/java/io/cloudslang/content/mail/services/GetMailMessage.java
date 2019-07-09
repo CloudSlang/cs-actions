@@ -46,8 +46,8 @@ import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.util.*;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static io.cloudslang.content.mail.utils.Constants.DEFAULT_JAVA_KEYSTORE;
+import static org.apache.commons.lang3.StringUtils.*;
 import static org.bouncycastle.mail.smime.SMIMEUtil.toMimeBodyPart;
 
 /**
@@ -122,9 +122,9 @@ public class GetMailMessage {
     private boolean subjectOnly = true;
     private boolean enableSSL;
     private boolean enableTLS;
-    private static String keystore;
+    private String keystore;
     private String keystorePassword;
-    private static String trustKeystoreFile;
+    private String trustKeystoreFile;
     private String trustPassword;
     private String characterSet;
     private String decryptionKeystore;
@@ -482,9 +482,9 @@ public class GetMailMessage {
         enableSSL = (null != strEnableSSL && strEnableSSL.equalsIgnoreCase(STR_TRUE));
         String strEnableTLS = getMailMessageInputs.getEnableTLS();
         enableTLS = (null != strEnableTLS && strEnableTLS.equalsIgnoreCase(STR_TRUE));
-        keystore = StringUtils.defaultIfEmpty(getMailMessageInputs.getKeystore(), Constants.DEFAULT_JAVA_KEYSTORE);
+        keystore = defaultIfEmpty(getMailMessageInputs.getKeystore(), DEFAULT_JAVA_KEYSTORE);
         keystorePassword = getMailMessageInputs.getKeystorePassword();
-        trustKeystoreFile = StringUtils.defaultIfEmpty(getMailMessageInputs.getTrustKeystore(), Constants.DEFAULT_JAVA_KEYSTORE);
+        trustKeystoreFile = defaultIfEmpty(getMailMessageInputs.getTrustKeystore(), DEFAULT_JAVA_KEYSTORE);
         trustPassword = getMailMessageInputs.getTrustPassword();
         characterSet = getMailMessageInputs.getCharacterSet();
         String strDeleteUponRetrieval = getMailMessageInputs.getDeleteUponRetrieval();
