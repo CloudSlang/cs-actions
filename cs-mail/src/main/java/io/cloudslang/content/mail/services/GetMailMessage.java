@@ -122,9 +122,9 @@ public class GetMailMessage {
     private boolean subjectOnly = true;
     private boolean enableSSL;
     private boolean enableTLS;
-    private String keystore;
+    private static String keystore;
     private String keystorePassword;
-    private String trustKeystoreFile;
+    private static String trustKeystoreFile;
     private String trustPassword;
     private String characterSet;
     private String decryptionKeystore;
@@ -482,9 +482,9 @@ public class GetMailMessage {
         enableSSL = (null != strEnableSSL && strEnableSSL.equalsIgnoreCase(STR_TRUE));
         String strEnableTLS = getMailMessageInputs.getEnableTLS();
         enableTLS = (null != strEnableTLS && strEnableTLS.equalsIgnoreCase(STR_TRUE));
-        keystore = (String) StringUtils.defaultIfEmpty(getMailMessageInputs.getKeystore(), Constants.DEFAULT_JAVA_KEYSTORE);
+        keystore = StringUtils.defaultIfEmpty(getMailMessageInputs.getKeystore(), Constants.DEFAULT_JAVA_KEYSTORE);
         keystorePassword = getMailMessageInputs.getKeystorePassword();
-        trustKeystoreFile = (String)StringUtils.defaultIfEmpty(getMailMessageInputs.getTrustKeystore(), Constants.DEFAULT_JAVA_KEYSTORE);
+        trustKeystoreFile = StringUtils.defaultIfEmpty(getMailMessageInputs.getTrustKeystore(), Constants.DEFAULT_JAVA_KEYSTORE);
         trustPassword = getMailMessageInputs.getTrustPassword();
         characterSet = getMailMessageInputs.getCharacterSet();
         String strDeleteUponRetrieval = getMailMessageInputs.getDeleteUponRetrieval();
