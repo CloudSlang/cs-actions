@@ -48,7 +48,7 @@ public class FTPInputsValidation {
         addVerifyNotNullOrEmpty(exceptionMessages, localFile, PARAM_LOCAL_FILE);
         addVerifyNotNullOrEmpty(exceptionMessages, remoteFile, PARAM_REMOTE_FILE);
         addVerifyNotNullOrEmpty(exceptionMessages,user,PARAM_USER);
-        // addVerifyNotNullOrEmpty(exceptionMessages,password,PARAM_PASSWORD);
+        addVerifyNotNullOrEmpty(exceptionMessages,password,PARAM_PASSWORD);
         addVerifyType(exceptionMessages, type);
         addVerifyBoolean(exceptionMessages, passive);
         addVerifyCharacterSet(exceptionMessages, characterSet);

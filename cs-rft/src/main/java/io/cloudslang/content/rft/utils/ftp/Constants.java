@@ -18,7 +18,6 @@ public final class Constants {
     public static final String BOOLEAN_FALSE = "false";
     public static final String BINARY_FILE_TYPE = "binary";
     public static final String ASCII_FILE_TYPE = "ascii";
-    public static final String ANONYMOUS = "anonymous";
     public static final String PORT_21 = "21";
     public static final String CHARACTER_SET_LATIN1 = "ISO-8859-1";
 

@@ -68,7 +68,7 @@ public class Put {
         port = defaultIfEmpty(port, PORT_21);
         localFile = defaultIfEmpty(localFile, EMPTY);
         remoteFile = defaultIfEmpty(remoteFile, EMPTY);
-        user = defaultIfEmpty(user, ANONYMOUS);
+        user = defaultIfEmpty(user, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
         type = defaultIfEmpty(type, BINARY_FILE_TYPE);
         passive = defaultIfEmpty(passive, BOOLEAN_FALSE);
@@ -81,7 +81,7 @@ public class Put {
         if (!exceptionMessages.isEmpty()) {
             Map<String,String> result =  getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE)); //REPLY CODE = 501 SYNTAX ERROR IN PARAMETERS OR ARGUMENTS
             result.put(FTP_REPLY_CODE, "501");
-            result.put(FTP_SESSION_LOG, "Empty session log");
+            result.put(FTP_SESSION_LOG, "");
             return result;
         }
 

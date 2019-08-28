@@ -68,7 +68,7 @@ public class Get {
         port = defaultIfEmpty(port, PORT_21);
         localFile = defaultIfEmpty(localFile, EMPTY);
         remoteFile = defaultIfEmpty(remoteFile, EMPTY);
-        user = defaultIfEmpty(user, ANONYMOUS);
+        user = defaultIfEmpty(user, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
         type = defaultIfEmpty(type, BINARY_FILE_TYPE);
         passive = defaultIfEmpty(passive, BOOLEAN_FALSE);

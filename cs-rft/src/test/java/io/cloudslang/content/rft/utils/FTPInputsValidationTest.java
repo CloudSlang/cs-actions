@@ -48,16 +48,12 @@ public class FTPInputsValidationTest {
                 "",
                 "",
                 "",
-                "",          //password can be empty
+                "",
                 "wrongtype",
                 "wrongboolean",
                 "wrongCharSet");
         int numberOfExceptions = exceptions.size();
-//        for (String x: exceptions
-//             ) {
-//            System.out.println(x);
-//        }
-        assertEquals(numberOfExceptions,8);
+        assertEquals(numberOfExceptions,9);
     }
 
 
