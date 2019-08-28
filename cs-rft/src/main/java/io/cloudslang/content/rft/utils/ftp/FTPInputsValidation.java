@@ -47,7 +47,7 @@ public class FTPInputsValidation {
         addVerifyPort(exceptionMessages, port);
         addVerifyNotNullOrEmpty(exceptionMessages, localFile, PARAM_LOCAL_FILE);
         addVerifyNotNullOrEmpty(exceptionMessages, remoteFile, PARAM_REMOTE_FILE);
-         addVerifyNotNullOrEmpty(exceptionMessages,user,PARAM_USER);
+        addVerifyNotNullOrEmpty(exceptionMessages,user,PARAM_USER);
         // addVerifyNotNullOrEmpty(exceptionMessages,password,PARAM_PASSWORD);
         addVerifyType(exceptionMessages, type);
         addVerifyBoolean(exceptionMessages, passive);
@@ -84,7 +84,7 @@ public class FTPInputsValidation {
 
     }
 
-    private static void addVerifyType(@NotNull List<String> exceptions, @Nullable final String input) {
+    private static void addVerifyType(@NotNull List<String> exceptions, @NotNull final String input) {
         if (!isValidType(input))
             exceptions.add(String.format(Constants.EXCEPTION_INVALID_TYPE, input, Inputs.PARAM_TYPE));
     }

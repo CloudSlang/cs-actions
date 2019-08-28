@@ -81,7 +81,7 @@ public class Get {
         if (!exceptionMessages.isEmpty()) {
             Map<String, String> result = getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
             result.put(FTP_REPLY_CODE, "501");                                    //REPLY CODE = 501 SYNTAX ERROR IN PARAMETERS OR ARGUMENTS
-            result.put(FTP_SESSION_LOG, "Empty log session");
+            result.put(FTP_SESSION_LOG, "");
             return result;
         }
 
