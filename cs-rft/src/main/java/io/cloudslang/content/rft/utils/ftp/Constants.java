@@ -36,6 +36,5 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_LOCAL_FILE = "The value '%s'  is not a valid file path.";
     public static final String EXCEPTION_INVALID_REMOTE_FILE = "'%s' does not exist.";
     public static final String EXCEPTION_CONNECT = "Could not connect to %s : %s, reason: '%s'";
-    public static final String EXCEPTION_LOGIN = "Username or password is incorrect";
     public static final String EXCEPTION_CHARACTER_SET = "The character set was invalid!";
 }

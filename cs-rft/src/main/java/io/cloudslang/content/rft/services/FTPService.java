@@ -87,11 +87,8 @@ public class FTPService {
         final Map<String, String> result = new HashMap<>();
 
         try {
-            // open server portNumber with a specified command encoding
             ftp = connect(ftpInputs.getHostname(), Integer.parseInt(ftpInputs.getPort()), ftpInputs.getCharacterSet(), Boolean.parseBoolean(ftpInputs.getPassive()));
 
-            // user foo
-            // passwd: *****
             login(ftp, ftpInputs.getUser(), ftpInputs.getPassword());
             setFileType(ftp, ftpInputs.getType());
             performFTPOperation(ftp, ftpOperation, ftpInputs.getRemoteFile(), ftpInputs.getLocalFile());

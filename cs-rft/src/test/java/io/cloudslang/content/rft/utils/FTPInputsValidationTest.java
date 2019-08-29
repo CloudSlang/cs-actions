@@ -43,13 +43,13 @@ public class FTPInputsValidationTest {
 
     @Test
     public void verifyInvalidFTPInputs() {
-        List<String> exceptions = FTPInputsValidation.verifyInputsFTP("",
+        List<String> exceptions = FTPInputsValidation.verifyInputsFTP(null,
                 "wrongPort",
                 "",
                 "",
                 "",
                 "",
-                "wrongtype",
+                null,
                 "wrongboolean",
                 "wrongCharSet");
         int numberOfExceptions = exceptions.size();

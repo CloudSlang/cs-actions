@@ -38,7 +38,6 @@ import static io.cloudslang.content.rft.utils.ftp.Descriptions.Common.*;
 import static io.cloudslang.content.rft.utils.ftp.FTPInputsValidation.verifyInputsFTP;
 import static io.cloudslang.content.rft.utils.ftp.Inputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class Put {
@@ -64,12 +63,7 @@ public class Put {
                                        @Param(value = PARAM_PASSIVE, description = PARAM_PASSIVE_DESC) String passive,
                                        @Param(value = PARAM_CHARACTER_SET, description = PARAM_CHARACTER_SET_DESC) String characterSet) {
 
-        hostName = defaultIfEmpty(hostName, EMPTY);
         port = defaultIfEmpty(port, PORT_21);
-        localFile = defaultIfEmpty(localFile, EMPTY);
-        remoteFile = defaultIfEmpty(remoteFile, EMPTY);
-        user = defaultIfEmpty(user, EMPTY);
-        password = defaultIfEmpty(password, EMPTY);
         type = defaultIfEmpty(type, BINARY_FILE_TYPE);
         passive = defaultIfEmpty(passive, BOOLEAN_FALSE);
         passive = passive.toLowerCase();

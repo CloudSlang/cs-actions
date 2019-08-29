@@ -31,15 +31,15 @@ public class FTPInputsValidation {
 
     @NotNull
     public static List<String> verifyInputsFTP(
-            @NotNull final String hostName,
-            @NotNull final String port,
-            @NotNull final String localFile,
-            @NotNull final String remoteFile,
-            @NotNull final String user,
-            @NotNull final String password,
-            @NotNull final String type,
-            @NotNull final String passive,
-            @NotNull final String characterSet) {
+            @Nullable final String hostName,
+            @Nullable final String port,
+            @Nullable final String localFile,
+            @Nullable final String remoteFile,
+            @Nullable final String user,
+            @Nullable final String password,
+            @Nullable final String type,
+            @Nullable final String passive,
+            @Nullable final String characterSet) {
 
         final List<String> exceptionMessages = new ArrayList<>();
 
@@ -84,14 +84,18 @@ public class FTPInputsValidation {
 
     }
 
-    private static void addVerifyType(@NotNull List<String> exceptions, @NotNull final String input) {
+    private static void addVerifyType(@NotNull List<String> exceptions, @Nullable final String input) {
         if (!isValidType(input))
             exceptions.add(String.format(Constants.EXCEPTION_INVALID_TYPE, input, Inputs.PARAM_TYPE));
     }
 
-    private static boolean isValidType(@NotNull final String type) {
-        final String lowerCaseType = StringUtils.strip(type).toLowerCase();
-        return lowerCaseType.equals(Constants.BINARY_FILE_TYPE) || lowerCaseType.equals(Constants.ASCII_FILE_TYPE);
+    private static boolean isValidType(@Nullable final String type) {
+        if(isEmpty(type))
+            return false;
+        else {
+            final String lowerCaseType = StringUtils.strip(type).toLowerCase();
+            return lowerCaseType.equals(Constants.BINARY_FILE_TYPE) || lowerCaseType.equals(Constants.ASCII_FILE_TYPE);
+        }
     }
 
     private static Integer tryParse(String text) {

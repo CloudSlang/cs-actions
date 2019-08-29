@@ -83,7 +83,7 @@ public class GetTest {
         Map<String,String> result = getOperation.execute("nohost",
                 "55555",
                 "downloaded.txt",
-                "invalidFile.txt",     //non-existing file
+                "invalidFile.txt",
                 "user",
                 "password",
                 "ascii",
@@ -98,7 +98,7 @@ public class GetTest {
         Map<String,String> result = getOperation.execute("localhost",
                 "55555",
                 "downloaded.txt",
-                "invalidFile.txt",     //non-existing file
+                "invalidFile.txt",
                 "user",
                 "password",
                 "ascii",
@@ -114,7 +114,7 @@ public class GetTest {
         Map<String,String> result = getOperation.execute("localhost",
                 String.valueOf(fakeFtpServer.getServerControlPort()),
                 "localFile.txt",
-                invalidRemoteFile,     //non-existing file
+                invalidRemoteFile,
                 "user",
                 "password",
                 "ascii",
@@ -145,7 +145,7 @@ public class GetTest {
                 "downloaded.txt",
                 "foobar.txt",
                 "user",
-                "passdaadasword",
+                "passwesdaasfa",
                 "ascii",
                 "",
                 "");
