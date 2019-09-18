@@ -16,6 +16,8 @@ package io.cloudslang.content.rft.entities;
 
 import org.jetbrains.annotations.NotNull;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 public class FTPInputs {
 
     private final String hostname;
@@ -40,6 +42,11 @@ public class FTPInputs {
         this.type = type;
         this.passive = passive;
         this.characterSet = characterSet;
+    }
+
+    @NotNull
+    public static FTPInputsBuilder builder() {
+        return new FTPInputsBuilder();
     }
 
     @NotNull
@@ -86,6 +93,82 @@ public class FTPInputs {
     public String getCharacterSet() {
         return characterSet;
     }
+
+    public static class FTPInputsBuilder {
+        private String hostname = EMPTY;
+        private String port = EMPTY;
+        private String localFile = EMPTY;
+        private String remoteFile = EMPTY;
+        private String user = EMPTY;
+        private String password = EMPTY;
+        private String type = EMPTY;
+        private String passive = EMPTY;
+        private String characterSet = EMPTY;
+
+        FTPInputsBuilder() {
+        }
+
+        @NotNull
+        public FTPInputs.FTPInputsBuilder hostname(@NotNull final String hostname) {
+            this.hostname = hostname;
+            return this;
+        }
+
+        @NotNull
+        public FTPInputs.FTPInputsBuilder port(@NotNull final String port) {
+            this.port = port;
+            return this;
+        }
+
+        @NotNull
+        public FTPInputs.FTPInputsBuilder localFile(@NotNull final String localFile) {
+            this.localFile = localFile;
+            return this;
+        }
+
+        @NotNull
+        public FTPInputs.FTPInputsBuilder remoteFile(@NotNull final String remoteFile) {
+            this.remoteFile = remoteFile;
+            return this;
+        }
+
+        @NotNull
+        public FTPInputs.FTPInputsBuilder user(@NotNull final String user) {
+            this.user = user;
+            return this;
+        }
+
+        @NotNull
+        public FTPInputs.FTPInputsBuilder password(@NotNull final String password) {
+            this.password = password;
+            return this;
+        }
+
+        @NotNull
+        public FTPInputs.FTPInputsBuilder type(@NotNull final String type) {
+            this.type = type;
+            return this;
+        }
+
+        @NotNull
+        public FTPInputs.FTPInputsBuilder passive(@NotNull final String passive) {
+            this.passive = passive;
+            return this;
+        }
+
+        @NotNull
+        public FTPInputs.FTPInputsBuilder characterSet(@NotNull final String characterSet) {
+            this.characterSet = characterSet;
+            return this;
+        }
+
+        public FTPInputs build() {
+            return new FTPInputs(hostname, port, localFile, remoteFile, user, password, type, passive, characterSet);
+        }
+
+
+    }
+
 }
 
 

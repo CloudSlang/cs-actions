@@ -21,7 +21,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.FTPInputs;
 import io.cloudslang.content.rft.services.FTPService;
-import io.cloudslang.content.rft.utils.ftp.FTPOperation;
+import io.cloudslang.content.rft.utils.FTPOperation;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -33,11 +33,12 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.rft.utils.ftp.Constants.*;
-import static io.cloudslang.content.rft.utils.ftp.Descriptions.Common.*;
-import static io.cloudslang.content.rft.utils.ftp.FTPInputsValidation.verifyInputsFTP;
-import static io.cloudslang.content.rft.utils.ftp.Inputs.*;
+import static io.cloudslang.content.rft.utils.Inputs.FTPInputs.*;
+import static io.cloudslang.content.rft.utils.Constants.*;
+import static io.cloudslang.content.rft.utils.Descriptions.FTPDescriptions.*;
+import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class Get {
@@ -63,7 +64,12 @@ public class Get {
                                        @Param(value = PARAM_PASSIVE, description = PARAM_PASSIVE_DESC) String passive,
                                        @Param(value = PARAM_CHARACTER_SET, description = PARAM_CHARACTER_SET_DESC) String characterSet) {
 
+        hostName = defaultIfEmpty(hostName,EMPTY);
         port = defaultIfEmpty(port, PORT_21);
+        localFile = defaultIfEmpty(localFile,EMPTY);
+        remoteFile = defaultIfEmpty(remoteFile,EMPTY);
+        user = defaultIfEmpty(user,EMPTY);
+        password = defaultIfEmpty(password,EMPTY);
         type = defaultIfEmpty(type, BINARY_FILE_TYPE);
         passive = defaultIfEmpty(passive, BOOLEAN_FALSE);
         passive = passive.toLowerCase();
@@ -79,8 +85,16 @@ public class Get {
             return result;
         }
 
-        FTPInputs ftpInputs = new FTPInputs(hostName, port, localFile, remoteFile, user, password, type, passive, characterSet);
-        return new FTPService().ftpOperation(ftpInputs, FTPOperation.GET);
-
+        return new FTPService().ftpOperation(FTPInputs.builder()
+                .hostname(hostName)
+                .port(port)
+                .localFile(localFile)
+                .remoteFile(remoteFile)
+                .user(user)
+                .password(password)
+                .type(type)
+                .passive(passive)
+                .characterSet(characterSet)
+                .build(), FTPOperation.GET);
     }
 }

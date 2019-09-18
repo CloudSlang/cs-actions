@@ -147,6 +147,17 @@
             <artifactId>annotations</artifactId>
             <version>17.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.hp.oo.contentcommons</groupId>
+            <artifactId>content-commons</artifactId>
+            <version>1.6.23</version>
+        </dependency>
+        <dependency>
+            <groupId>bouncycastle</groupId>
+            <artifactId>bcprov-jdk15</artifactId>
+            <version>140</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 
