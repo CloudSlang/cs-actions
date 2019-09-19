@@ -41,7 +41,6 @@ import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
 import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -63,8 +62,7 @@ public class SFTPGet {
                                        @Param(value = PARAM_PRIVATE_KEY, description = PARAM_PRIVATE_KEY_DESC) String privateKey,
                                        @Param(value = PARAM_REMOTE_FILE, description = PARAM_REMOTE_FILE_DESC) String remoteFile,
                                        @Param(value = PARAM_LOCAL_LOCATION, description = PARAM_LOCAL_LOCATION_DESC) String localLocation,
-                                       @Param(value = PARAM_AGENT_FORWARDING, description = PARAM_AGENT_FORWARDING_DESC) String agentForwarding,
-                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
+                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = PARAM_GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = PARAM_CHARACTER_SET, description = PARAM_CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = PARAM_CLOSE_SESSION, description = PARAM_CLOSE_SESSION_DESC) String closeSession) {
 
@@ -73,14 +71,10 @@ public class SFTPGet {
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
         privateKey = defaultIfEmpty(privateKey, EMPTY);
-        agentForwarding = defaultIfEmpty(agentForwarding,EMPTY);
         remoteFile = defaultIfEmpty(remoteFile, EMPTY);
         localLocation = defaultIfEmpty(localLocation, EMPTY);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
-
-//        if(globalSessionObject == null)
-//            globalSessionObject = new GlobalSessionObject<>();
 
         final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, privateKey, characterSet, closeSession, SFTPOperation.GET, remoteFile, localLocation);
         if (!exceptionMessages.isEmpty()) {
@@ -96,7 +90,6 @@ public class SFTPGet {
                         .username(username)
                         .password(password)
                         .privateKey(privateKey)
-                        .agentForwarding(agentForwarding)
                         .characterSet(characterSet)
                         .closeSession(closeSession)
                         .globalSessionObject(globalSessionObject)

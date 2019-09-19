@@ -31,9 +31,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Map;
 
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.rft.utils.Constants.SUCCESS_RESULT;
 import static org.junit.Assert.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -51,44 +48,17 @@ public class SFTPTest {
     @Mock
     private GlobalSessionObject<Map<String,SFTPConnection>> globalSessionObjectMock;
 
-    SFTPGet sftpGet;
-    SFTPPut sftpPut;
-    SFTPGetChildren sftpGetChildren;
+    private SFTPGet sftpGet;
+    private SFTPPut sftpPut;
+    private SFTPGetChildren sftpGetChildren;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp()  {
         sftpGet = new SFTPGet();
         sftpPut = new SFTPPut();
         sftpGetChildren = new SFTPGetChildren();
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
-
-
-    @Test
-    public void testGetChildren(){
-        Map<String,String> result = sftpGetChildren.execute("localhost",
-                "15555",
-                "testuser",
-                "testuser",
-                "C:/Users/Sergiu/sftp/privatekey.rsa",
-                "foldere/layer2/director",
-                " , ",
-                "",
-                new GlobalSessionObject<Map<String, SFTPConnection>>(),
-                "",
-                "");
-        System.out.println(result.get("returnResult"));
-        System.out.println(result.get("exception"));
-        System.out.println("--------------------------------------------------------");
-        System.out.println(result.get("files"));
-        System.out.println("--------------------------------------------------------");
-        System.out.println(result.get("folders"));
-
-
-    }
 
     @Test
     public void testGetFromCache(){
@@ -115,17 +85,17 @@ public class SFTPTest {
         SFTPService sftpService = new SFTPService();
         String sessionId = "sessionId";
         boolean savedToCache = sftpService.saveToCache(globalSessionObjectMock,sftpCopierMock,sessionId);
-        assertEquals(false,savedToCache);
+        assertFalse(savedToCache);
 
         when(sftpCopierMock.saveToCache(globalSessionObjectMock,sessionId)).thenReturn(true);
         savedToCache = sftpService.saveToCache(globalSessionObjectMock,sftpCopierMock,sessionId);
-        assertEquals(true,savedToCache);
+        assertTrue(savedToCache);
 
         final GlobalSessionObject<Map<String, SFTPConnection>> sessionParam = new GlobalSessionObject<>();
         when(sftpCopierMock.saveToCache(sessionParam,sessionId)).thenReturn(true);
         savedToCache = sftpService.saveToCache(sessionParam,sftpCopierMock,sessionId);
         assertEquals(sessionParam.getName(),"sshSessions:default-id");
-        assertEquals(true,savedToCache);
+        assertTrue(savedToCache);
 
 
     }

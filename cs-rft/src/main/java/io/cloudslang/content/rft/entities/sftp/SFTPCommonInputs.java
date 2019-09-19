@@ -32,18 +32,16 @@ public class SFTPCommonInputs implements IHasFTPOperation {
     private final String privateKey;
     private final String characterSet;
     private final String closeSession;
-    private final String agentForwarding;
     private GlobalSessionObject<Map<String,SFTPConnection>> globalSessionObject;
 
 
-    @java.beans.ConstructorProperties({"host", "port", "username", "password", "privateKey","agentForwarding","globalSessionObject", "characterSet", "closeSession"})
-    public SFTPCommonInputs(String host, String port, String username, String password, String privateKey, String agentForwarding, GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject, String characterSet, String closeSession) {
+    @java.beans.ConstructorProperties({"host", "port", "username", "password", "privateKey","globalSessionObject", "characterSet", "closeSession"})
+    public SFTPCommonInputs(String host, String port, String username, String password, String privateKey, GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject, String characterSet, String closeSession) {
         this.host = host;
         this.port = port;
         this.username = username;
         this.password = password;
         this.privateKey = privateKey;
-        this.agentForwarding = agentForwarding;
         this.globalSessionObject = globalSessionObject;
         this.characterSet = characterSet;
         this.closeSession = closeSession;
@@ -102,17 +100,12 @@ public class SFTPCommonInputs implements IHasFTPOperation {
         return this;
     }
 
-    public String getAgentForwarding() {
-        return agentForwarding;
-    }
-
     public static class SFTPCommonInputsBuilder{
         private String host = EMPTY;
         private String port = EMPTY;
         private String username = EMPTY;
         private String password = EMPTY;
         private String privateKey = EMPTY;
-        private String agentForwarding = EMPTY;
         private String characterSet = EMPTY;
         private String closeSession = EMPTY;
         private GlobalSessionObject<Map<String,SFTPConnection>> globalSessionObject;
@@ -151,12 +144,6 @@ public class SFTPCommonInputs implements IHasFTPOperation {
         }
 
         @NotNull
-        public SFTPCommonInputs.SFTPCommonInputsBuilder agentForwarding(@NotNull final String agentForwarding){
-            this.agentForwarding = agentForwarding;
-            return this;
-        }
-
-        @NotNull
         public SFTPCommonInputs.SFTPCommonInputsBuilder characterSet(@NotNull final String characterSet){
             this.characterSet = characterSet ;
             return this;
@@ -176,7 +163,7 @@ public class SFTPCommonInputs implements IHasFTPOperation {
         }
 
         public SFTPCommonInputs build(){
-            return new SFTPCommonInputs(host,port,username,password,privateKey,agentForwarding,globalSessionObject,characterSet,closeSession);
+            return new SFTPCommonInputs(host,port,username,password,privateKey,globalSessionObject,characterSet,closeSession);
         }
     }
 }

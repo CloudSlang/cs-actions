@@ -23,7 +23,6 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.sftp.SFTPCommonInputs;
 import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
 import io.cloudslang.content.rft.entities.sftp.SFTPGetChildrenInputs;
-import io.cloudslang.content.rft.entities.sftp.SFTPGetInputs;
 import io.cloudslang.content.rft.services.SFTPService;
 import io.cloudslang.content.rft.utils.SFTPOperation;
 import io.cloudslang.content.utils.StringUtilities;
@@ -67,8 +66,7 @@ public class SFTPGetChildren {
                                        @Param(value = PARAM_PRIVATE_KEY, description = PARAM_PRIVATE_KEY_DESC) String privateKey,
                                        @Param(value = PARAM_REMOTE_PATH, description = PARAM_REMOTE_PATH_DESC) String remotePath,
                                        @Param(value = PARAM_DELIMITER, description = PARAM_DELIMITER_DESC) String delimiter,
-                                       @Param(value = PARAM_AGENT_FORWARDING, description = PARAM_AGENT_FORWARDING_DESC) String agentForwarding,
-                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
+                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = PARAM_GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = PARAM_CHARACTER_SET, description = PARAM_CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = PARAM_CLOSE_SESSION, description = PARAM_CLOSE_SESSION_DESC) String closeSession) {
 
@@ -77,7 +75,6 @@ public class SFTPGetChildren {
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
         privateKey = defaultIfEmpty(privateKey, EMPTY);
-        agentForwarding = defaultIfEmpty(agentForwarding,EMPTY);
         remotePath = defaultIfEmpty(remotePath, EMPTY);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
@@ -96,7 +93,6 @@ public class SFTPGetChildren {
                         .username(username)
                         .password(password)
                         .privateKey(privateKey)
-                        .agentForwarding(agentForwarding)
                         .characterSet(characterSet)
                         .closeSession(closeSession)
                         .globalSessionObject(globalSessionObject)

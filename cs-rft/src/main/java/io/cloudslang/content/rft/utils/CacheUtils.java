@@ -86,7 +86,6 @@ public class CacheUtils {
         return false;
     }
 
-
     /**
      * Remove the SSH session (and associated channel if any) from the cache.
      * @param sessionParam The cache.

@@ -65,10 +65,9 @@ public class SFTPPut {
                                        @Param(value = PARAM_USERNAME, description = PARAM_USERNAME_DESC) String username,
                                        @Param(value = PARAM_PASSWORD, description = PARAM_PASSWORD_DESC) String password,
                                        @Param(value = PARAM_PRIVATE_KEY, description = PARAM_PRIVATE_KEY_DESC) String privateKey,
-                                       @Param(value = PARAM_REMOTE_LOCATION, description = PARAM_REMOTE_LOCATION_DESC) String remoteLocation,  //DESC
-                                       @Param(value = PARAM_LOCAL_FILE, description = PARAM_LOCAL_FILE_DESC) String localFile,                 //DESC
-                                       @Param(value = PARAM_AGENT_FORWARDING, description = PARAM_AGENT_FORWARDING_DESC) String agentForwarding,
-                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = SSH_SESSIONS_DEFAULT_ID) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
+                                       @Param(value = PARAM_REMOTE_LOCATION, description = PARAM_REMOTE_LOCATION_DESC) String remoteLocation,
+                                       @Param(value = PARAM_LOCAL_FILE, description = PARAM_LOCAL_FILE_DESC) String localFile,
+                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = PARAM_LOCAL_FILE_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = PARAM_CHARACTER_SET, description = PARAM_CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = PARAM_CLOSE_SESSION, description = PARAM_CLOSE_SESSION_DESC) String closeSession) {
 
@@ -77,7 +76,6 @@ public class SFTPPut {
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
         privateKey = defaultIfEmpty(privateKey, EMPTY);
-        agentForwarding = defaultIfEmpty(agentForwarding,EMPTY);
         remoteLocation = defaultIfEmpty(remoteLocation, EMPTY);
         localFile = defaultIfEmpty(localFile, EMPTY);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
@@ -98,7 +96,6 @@ public class SFTPPut {
                         .username(username)
                         .password(password)
                         .privateKey(privateKey)
-                        .agentForwarding(agentForwarding)
                         .globalSessionObject(globalSessionObject)
                         .characterSet(characterSet)
                         .closeSession(closeSession)

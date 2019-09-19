@@ -61,8 +61,6 @@ public class Inputs extends InputNames {
         public static final String PARAM_PRIVATE_KEY = "privateKey";
         public static final String PARAM_CHARACTER_SET = "characterSet";
         public static final String PARAM_CLOSE_SESSION = "closeSession";
-        public static final String PARAM_AGENT_FORWARDING = "agentForwarding";
-
 
         //GET ONLY
         public static final String PARAM_REMOTE_FILE = "remoteFile";

@@ -47,7 +47,7 @@ public class Descriptions {
         public static final String PARAM_REMOTE_LOCATION_DESC = "The remote location where the file is to be placed.";
         public static final String PARAM_LOCAL_FILE_DESC = "The path to the file on the RAS to be copied remotely using SFTP.";
         public static final String PARAM_LOCAL_LOCATION_DESC = "The location where file is to be placed on the RAS.";
-        public static final String PARAM_AGENT_FORWARDING_DESC = "The sessionObject that holds the connection if the close session is false.";
+        public static final String PARAM_GLOBAL_SESSION_DESC = "The sessionObject that holds the connection if the close session is false.";
         public static final String PARAM_DELIMITER_DESC = "A delimiter to use for the result lists (returnResult, files, folders).";
         public static final String PARAM_REMOTE_PATH_DESC = "The remote file or directory name.";
 
