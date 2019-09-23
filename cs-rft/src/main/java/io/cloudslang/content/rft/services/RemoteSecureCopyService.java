@@ -18,8 +18,9 @@
 package io.cloudslang.content.rft.services;
 
 
-import com.hp.oo.sdk.content.constants.OutputNames;
-import com.hp.oo.sdk.content.constants.ReturnCodes;
+
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.*;
 import io.cloudslang.content.rft.utils.Constants;
 import io.cloudslang.content.rft.utils.StringUtils;
@@ -57,17 +58,17 @@ public class RemoteSecureCopyService {
                 resultMessage = "File " + remoteSecureCopyInputs.getSrcPath() + " successfully copied to path " +
                         remoteSecureCopyInputs.getDestPath() + " on " + remoteSecureCopyInputs.getDestHost();
                 errorMessage = Constants.EMPTY_STRING;
-                returnCode = ReturnCodes.RETURN_CODE_SUCCESS;
+                returnCode = ReturnCodes.SUCCESS;
 
             } else {
                 resultMessage = Constants.NO_ACK_RECEIVED;
                 errorMessage = Constants.NO_ACK_RECEIVED;
-                returnCode = ReturnCodes.RETURN_CODE_FAILURE;
+                returnCode = ReturnCodes.FAILURE;
             }
             populateResult(returnResult, resultMessage, errorMessage, returnCode);
 
         } catch (Exception e) {
-            populateResult(returnResult, e.getMessage(), StringUtils.getStackTraceAsString(e), ReturnCodes.RETURN_CODE_FAILURE);
+            populateResult(returnResult, e.getMessage(), StringUtils.getStackTraceAsString(e), ReturnCodes.FAILURE);
         }
         return returnResult;
     }
