@@ -24,7 +24,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.security.Provider;
 import java.security.Security;
-import java.util.HashMap;
+
 import java.util.Map;
 
 import static io.cloudslang.content.rft.utils.Constants.EXCEPTION_UNABLE_SAVE_SESSION;
@@ -34,13 +34,7 @@ import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 
 public class SFTPService {
 
-    Map<String,String> result = new HashMap<>();
-    public static boolean isNull(String s) {
-        return s == null || s.isEmpty();
-    }
-
     public Map<String, String> execute(IHasFTPOperation sftpInputs, SFTPOperation sftpOperation) {
-
         SFTPCopier sftpCopier = null;
         String sessionId = "";
         boolean providerAdded = addSecurityProvider();

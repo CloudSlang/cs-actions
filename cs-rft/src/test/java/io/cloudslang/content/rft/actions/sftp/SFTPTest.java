@@ -59,7 +59,6 @@ public class SFTPTest {
         sftpGetChildren = new SFTPGetChildren();
     }
 
-
     @Test
     public void testGetFromCache(){
         SFTPService sftpService = new SFTPService();
@@ -96,7 +95,5 @@ public class SFTPTest {
         savedToCache = sftpService.saveToCache(sessionParam,sftpCopierMock,sessionId);
         assertEquals(sessionParam.getName(),"sshSessions:default-id");
         assertTrue(savedToCache);
-
-
     }
 }
