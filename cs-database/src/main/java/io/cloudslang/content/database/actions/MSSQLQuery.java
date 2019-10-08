@@ -61,15 +61,12 @@ public class MSSQLQuery {
      * @param instance                  The name instance of MSSQL Server. Leave it blank for default instance.
      *                                  Example: MSSQLSERVER
      * @param dbPort                    The port to connect to.
-     *                                  Valid values: Oracle: 1521, MSSQL: 1433, Sybase: 5000, Netcool: 4100, DB2: 50000, PostgreSQL: 5432.
      * @param databaseName              The name of the database to connect to.
      * @param authenticationType        The type of authentication used to access the database (applicable only to MSSQL type).
      *                                  Default: sql
      *                                  Values: sql, windows
      * @param dbClass                   The classname of the JDBC driver to use.
-     *                                  Examples: "oracle.jdbc.driver.OracleDriver", "org.postgresql.Driver"
      * @param dbURL                     The url required to load up the driver and make your connection.
-     *                                  Examples: "jdbc:oracle:drivertype:@database", "jdbc:postgresql://host:port/database"
      * @param command                   The SQL query to execute.
      *                                  Example: "SELECT * FROM table"
      * @param trustAllRoots             Specifies whether to enable weak security over SSL/TSL. A certificate is trusted even if no trusted certification authority issued it.
@@ -87,7 +84,6 @@ public class MSSQLQuery {
      *                                  Default values: 0
      * @param databasePoolingProperties Properties for database pooling configuration. Pooling is disabled by default.
      *                                  Default: db.pooling.enable=false
-     *                                  Example: db.pooling.enable=true
      * @param resultSetType             the result set type. See JDBC folder description for more details.
      *                                  Valid values: TYPE_FORWARD_ONLY, TYPE_SCROLL_INSENSITIVE,TYPE_SCROLL_SENSITIVE.
      *                                  Default value: TYPE_SCROLL_INSENSITIVE except DB2 which is overridden to TYPE_FORWARD_ONLY
