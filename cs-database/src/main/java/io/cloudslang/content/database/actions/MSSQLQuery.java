@@ -45,10 +45,12 @@ import static io.cloudslang.content.database.constants.DBResponseNames.*;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryInputs;
 import static io.cloudslang.content.database.utils.SQLUtils.getRowsFromGlobalSessionMap;
+import static io.cloudslang.content.database.utils.SQLUtils.getStrColumns;
 import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.NumberUtilities.toInteger;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -185,12 +187,16 @@ public class MSSQLQuery {
         try {
 
             final String aKey = getSqlKey(sqlInputs);
+            final String strKeyCol = format(KEY_COLUMNS, aKey);
+
             globalSessionObject = getOrDefaultGlobalSessionObj(globalSessionObject);
 
             final Map<String, Object> globalMap = globalSessionObject.get();
 
             if (globalMap.containsKey(aKey)) {
                 sqlInputs.setLRows(getRowsFromGlobalSessionMap(globalSessionObject, aKey));
+                sqlInputs.setStrColumns(getStrColumns(globalSessionObject, strKeyCol));
+
             } else {
                 SQLQueryService.executeSqlQuery(sqlInputs);
             }
@@ -204,6 +210,7 @@ public class MSSQLQuery {
                 result.put(ROWS_LEFT, String.valueOf(sqlInputs.getLRows().size()));
 
                 globalMap.put(aKey, sqlInputs.getLRows());
+                globalMap.put(strKeyCol, sqlInputs.getStrColumns());
 
                 globalSessionObject.setResource(new SQLSessionResource(globalMap));
 
