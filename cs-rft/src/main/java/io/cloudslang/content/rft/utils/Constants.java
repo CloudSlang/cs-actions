@@ -28,6 +28,7 @@ import java.nio.file.Paths;
 public class Constants {
     public static final String EMPTY_STRING = "";
     public static final String NO_ACK_RECEIVED = "No ack received";
+    public static final String SSH_SESSIONS_DEFAULT_ID = "sshSessions:default-id";
     public static final String STDOUT = "STDOUT";
     public static final String STDERR = "STDERR";
 
@@ -38,44 +39,38 @@ public class Constants {
     public static final Path DEFAULT_KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
     public static final int DEFAULT_PROXY_PORT = 8080;
 
-    public static final class InputNames {
-        public static final String SOURCE_HOST = "sourceHost";
-        public static final String SOURCE_PATH = "sourcePath";
-        public static final String SOURCE_PORT = "sourcePort";
-        public static final String SOURCE_PRIVATE_KEY_FILE = "sourcePrivateKeyFile";
-        public static final String SOURCE_USERNAME = "sourceUsername";
-        public static final String SOURCE_PASSWORD = "sourcePassword";
-        public static final String DESTINATION_HOST = "destinationHost";
-        public static final String DESTINATION_PATH = "destinationPath";
-        public static final String DESTINATION_PORT = "destinationPort";
-        public static final String DESTINATION_PRIVATE_KEY_FILE = "destinationPrivateKeyFile";
-        public static final String DESTINATION_USERNAME = "destinationUsername";
-        public static final String DESTINATION_PASSWORD = "destinationPassword";
-        public static final String KNOWN_HOSTS_POLICY = "knownHostsPolicy";
-        public static final String KNOWN_HOSTS_PATH = "knownHostsPath";
-        public static final String TIMEOUT = "timeout";
-        public static final String PROXY_HOST = "proxyHost";
-        public static final String PROXY_PORT = "proxyPort";
 
-    }
+    public static final String BOOLEAN_FALSE = "false";
+    public static final String BOOLEAN_TRUE = "true";
+    public static final String BINARY_FILE_TYPE = "binary";
+    public static final String ASCII_FILE_TYPE = "ascii";
+    public static final String PORT_21 = "21";
+    public static final String CHARACTER_SET_LATIN1 = "ISO-8859-1";
+    public static final String CHARACTER_SET_UTF8 = "UTF-8";
 
-    public static final class OutputNames {
+    public static final String NEW_LINE = "\n";
 
-        public static final String RETURN_RESULT = "returnResult";
-        public static final String EXCEPTION = "exception";
-        public static final String RETURN_CODE = "returnCode";
-    }
+    public static final String FTP_REPLY_CODE = "ftpReplyCode";
+    public static final String FTP_SESSION_LOG = "ftpSessionLog";
+    public static final String FILES = "files";
+    public static final String FOLDERS = "folders";
 
-    public static final class ReturnCodes {
+    public static final String SUCCESS_RESULT = "The operation was successfully completed!";
 
-        public static final String RETURN_CODE_FAILURE = "-1";
-        public static final String RETURN_CODE_SUCCESS = "0";
-    }
+    public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
+    public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
+    public static final String EXCEPTION_INVALID_TYPE = "The '%s' for %s input is not a valid type value.(ascii/binary)";
+    public static final String EXCEPTION_INVALID_PORT = "Invalid port number: %s. Valid values: 0-65535";
+    public static final String EXCEPTION_UNKNOWN_HOST = "Unknown host: %s.";
+    public static final String EXCEPTION_INVALID_LOCAL_FILE = "The value '%s'  is not a valid file path.";
+    public static final String EXCEPTION_INVALID_REMOTE_FILE = "'%s' does not exist.";
+    public static final String EXCEPTION_CONNECT = "Could not connect to %s : %s, reason: '%s'";
+    public static final String EXCEPTION_CHARACTER_SET = "The character set was invalid!";
+    public static final String EXCEPTION_CONNECTION = "Could not connect to %s : %s";
+    public static final String EXCEPTION_LOCAL_FILE_EXISTS = "File '%s' already exists!";
+    public static final String EXCEPTION_UNABLE_TO_RETRIEVE = "Unable to retrieve file over SFTP";
+    public static final String EXCEPTION_UNABLE_TO_STORE = "Unable to store file over SFTP";
+    public static final String EXCEPTION_UNABLE_SAVE_SESSION = "The SSH Session could not be saved in the given sessionParam";
 
-    public static final class ResponseNames {
-
-        public static final String SUCCESS = "success";
-        public static final String FAILURE = "failure";
-    }
 
 }

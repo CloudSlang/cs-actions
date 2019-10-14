@@ -32,8 +32,8 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 
-import static io.cloudslang.content.rft.utils.ftp.Constants.EXCEPTION_INVALID_LOCAL_FILE;
-import static io.cloudslang.content.rft.utils.ftp.Constants.SUCCESS_RESULT;
+import static io.cloudslang.content.rft.utils.Constants.EXCEPTION_INVALID_LOCAL_FILE;
+import static io.cloudslang.content.rft.utils.Constants.SUCCESS_RESULT;
 import static org.junit.Assert.*;
 
 public class PutTest {

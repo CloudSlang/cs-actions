@@ -32,7 +32,7 @@ import java.io.File;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.rft.utils.ftp.Constants.*;
+import static io.cloudslang.content.rft.utils.Constants.*;
 import static org.junit.Assert.*;
 
 
