@@ -25,4 +25,8 @@ import io.cloudslang.content.constants.ResponseNames;
 public class DBResponseNames extends ResponseNames {
     public static final String HAS_MORE = "has more";
     public static final String NO_MORE = "no more";
+
+    public static final String MORE_ITEMS = "more items";
+    public static final String NO_MORE_ITEMS = "no more itmes";
+
 }
