@@ -17,43 +17,40 @@ package io.cloudslang.content.rft.utils;
 import org.junit.Test;
 
 import java.util.List;
-
-import static io.cloudslang.content.rft.utils.Constants.ASCII_FILE_TYPE;
-import static io.cloudslang.content.rft.utils.Constants.CHARACTER_SET_LATIN1;
 import static org.junit.Assert.assertEquals;
 
-
-public class FTPInputsValidationTest {
+public class SFTPInputsValidationTest {
 
     @Test
-    public void verifyValidFTPInputs() {
-        List<String> exceptions = InputsValidation.verifyInputsFTP("someHost",
+    public void verifyValidSFTPPInputs() {
+        List<String> exceptions = InputsValidation.verifyInputsSFTP("someHost",
                 "21",
-                "exitingFile.txt",
-                "existingRemoteFile.txt",
-                "user",
+                "username",
                 "password",
-                ASCII_FILE_TYPE,
-                "TRuE",
-                CHARACTER_SET_LATIN1);
+                "privateKeyPath",
+                "UTF-8",
+                "true",
+                SFTPOperation.PUT,
+                "specificinput.txt",
+                "specificinput2.txt");
         int numberOfExceptions = exceptions.size();
         assertEquals(numberOfExceptions,0);
     }
 
     @Test
-    public void verifyInvalidFTPInputs() {
-        List<String> exceptions = InputsValidation.verifyInputsFTP(null,
-                "wrongPort",
-                "",
-                "",
-                "",
-                "",
+    public void verifyInvalidSFTPInputs() {
+        List<String> exceptions = InputsValidation.verifyInputsSFTP(null,
+                "212222",
                 null,
-                "wrongboolean",
-                "wrongCharSet");
+                "",
+                "",
+                "",
+                "tsdarue",
+                SFTPOperation.GET,
+                "",
+                "");
         int numberOfExceptions = exceptions.size();
-        assertEquals(numberOfExceptions,9);
+        assertEquals(numberOfExceptions,8);
     }
-
 
 }

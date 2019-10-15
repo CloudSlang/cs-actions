@@ -18,7 +18,7 @@ import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.FTPException;
 import io.cloudslang.content.rft.entities.FTPInputs;
-import io.cloudslang.content.rft.utils.ftp.FTPOperation;
+import io.cloudslang.content.rft.utils.FTPOperation;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
@@ -29,8 +29,8 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.rft.utils.ftp.Constants.*;
-import static io.cloudslang.content.rft.utils.ftp.Inputs.PARAM_TYPE;
+import static io.cloudslang.content.rft.utils.Inputs.FTPInputs.PARAM_TYPE;
+import static io.cloudslang.content.rft.utils.Constants.*;
 
 public class FTPService {
 
