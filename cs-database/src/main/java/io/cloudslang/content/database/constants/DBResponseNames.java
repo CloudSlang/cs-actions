@@ -27,6 +27,6 @@ public class DBResponseNames extends ResponseNames {
     public static final String NO_MORE = "no more";
 
     public static final String MORE_ITEMS = "more items";
-    public static final String NO_MORE_ITEMS = "no more itmes";
+    public static final String NO_MORE_ITEMS = "no more items";
 
 }
