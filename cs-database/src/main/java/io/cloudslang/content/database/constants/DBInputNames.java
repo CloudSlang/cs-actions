@@ -50,4 +50,13 @@ public class DBInputNames extends InputNames {
     public static final String SCRIPT_FILE_NAME = "scriptFileName";
     public static final String GLOBAL_SESSION_OBJECT = "globalSessionObject";
     public static final String SQL_COMMANDS = "sqlCommands";
+
+
+    public static final String MS_DELIMITER = "Delimiter";
+    public static final String MS_DB_SERVER_NAME = "DBServerName";
+    public static final String MS_USERNAME = "Username";
+    public static final String MS_PASSWORD = "Password";
+    public static final String MS_DATABASE_NAME = "Database";
+    public static final String MS_COMMAND = "Command";
+    public static final String MS_KEY = "Key";
 }

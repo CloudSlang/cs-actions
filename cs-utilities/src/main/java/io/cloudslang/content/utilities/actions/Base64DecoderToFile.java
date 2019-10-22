@@ -21,8 +21,8 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.utilities.entities.base64decoder.Base64DecoderToFileInputs;
-import io.cloudslang.content.utilities.services.base64decoder.Base64DecoderToFileImpl;
+import io.cloudslang.content.utilities.entities.Base64DecoderToFileInputs;
+import io.cloudslang.content.utilities.services.base64coder.Base64DecoderToFileImpl;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -34,11 +34,11 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.utilities.util.base64decoder.Constants.*;
-import static io.cloudslang.content.utilities.util.base64decoder.Descriptions.ConvertBytesToFile.*;
-import static io.cloudslang.content.utilities.util.base64decoder.Inputs.ConvertBytesToFileInputs.CONTENT_BYTES;
-import static io.cloudslang.content.utilities.util.base64decoder.Inputs.ConvertBytesToFileInputs.FILE_PATH;
-import static io.cloudslang.content.utilities.util.base64decoder.InputsValidation.verifyBase64DecoderToFileInputs;
+import static io.cloudslang.content.utilities.util.Constants.*;
+import static io.cloudslang.content.utilities.util.Descriptions.ConvertBytesToFile.*;
+import static io.cloudslang.content.utilities.util.Inputs.Base64CoderInputs.CONTENT_BYTES;
+import static io.cloudslang.content.utilities.util.Inputs.Base64CoderInputs.FILE_PATH;
+import static io.cloudslang.content.utilities.util.InputsValidation.verifyBase64DecoderToFileInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 

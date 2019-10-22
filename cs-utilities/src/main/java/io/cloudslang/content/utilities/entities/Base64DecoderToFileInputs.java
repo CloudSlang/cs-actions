@@ -14,7 +14,7 @@
  */
 
 
-package io.cloudslang.content.utilities.entities.base64decoder;
+package io.cloudslang.content.utilities.entities;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +25,7 @@ public class Base64DecoderToFileInputs {
     private final String filePath;
     private final String contentBytes;
 
-    @java.beans.ConstructorProperties({"filePath", "contentBytes"})
+    @java.beans.ConstructorProperties({"setFilePath", "contentBytes"})
     public Base64DecoderToFileInputs(String filePath, String contentBytes) {
         this.filePath = filePath;
         this.contentBytes = contentBytes;

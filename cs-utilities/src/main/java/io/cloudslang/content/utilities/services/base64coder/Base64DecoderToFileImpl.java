@@ -14,9 +14,9 @@
  */
 
 
-package io.cloudslang.content.utilities.services.base64decoder;
+package io.cloudslang.content.utilities.services.base64coder;
 
-import io.cloudslang.content.utilities.entities.base64decoder.Base64DecoderToFileInputs;
+import io.cloudslang.content.utilities.entities.Base64DecoderToFileInputs;
 import org.apache.commons.codec.binary.Base64;
 import org.jetbrains.annotations.NotNull;
 

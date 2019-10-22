@@ -92,6 +92,11 @@
             <version>${score-content-sdk.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-commons</artifactId>
+            <version>${cs-commons.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>0.1.52</version>
@@ -127,6 +132,29 @@
             <version>3.21.0-GA</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockftpserver</groupId>
+            <artifactId>MockFtpServer</artifactId>
+            <version>2.7.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>15.0</version>
+        </dependency>
+        <dependency>
+            <groupId>bouncycastle</groupId>
+            <artifactId>bcprov-jdk15</artifactId>
+            <version>140</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

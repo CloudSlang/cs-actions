@@ -14,19 +14,16 @@
  */
 
 
+package io.cloudslang.content.utilities.util;
 
-package io.cloudslang.content.database.constants;
+import io.cloudslang.content.constants.InputNames;
 
-import io.cloudslang.content.constants.ResponseNames;
+public final class Inputs extends InputNames {
 
-/**
- * Created by pinteae on 1/16/2017.
- */
-public class DBResponseNames extends ResponseNames {
-    public static final String HAS_MORE = "has more";
-    public static final String NO_MORE = "no more";
-
-    public static final String MORE_ITEMS = "more items";
-    public static final String NO_MORE_ITEMS = "no more items";
+    public static class Base64CoderInputs {
+        public static final String FILE_PATH = "filePath";
+        public static final String CONTENT_BYTES = "contentBytes";
+    }
 
 }
+

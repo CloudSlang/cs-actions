@@ -12,18 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.rft.utils;
 
-
-package io.cloudslang.content.utilities.util.base64decoder;
-
-import io.cloudslang.content.constants.InputNames;
-
-public final class Inputs extends InputNames {
-
-    public static class ConvertBytesToFileInputs {
-        public static final String FILE_PATH = "filePath";
-        public static final String CONTENT_BYTES = "contentBytes";
-    }
-
+public enum FTPOperation {
+    GET,PUT;
 }
-

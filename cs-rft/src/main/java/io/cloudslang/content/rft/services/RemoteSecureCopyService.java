@@ -18,6 +18,9 @@
 package io.cloudslang.content.rft.services;
 
 
+
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.*;
 import io.cloudslang.content.rft.utils.Constants;
 import io.cloudslang.content.rft.utils.StringUtils;
@@ -55,25 +58,25 @@ public class RemoteSecureCopyService {
                 resultMessage = "File " + remoteSecureCopyInputs.getSrcPath() + " successfully copied to path " +
                         remoteSecureCopyInputs.getDestPath() + " on " + remoteSecureCopyInputs.getDestHost();
                 errorMessage = Constants.EMPTY_STRING;
-                returnCode = Constants.ReturnCodes.RETURN_CODE_SUCCESS;
+                returnCode = ReturnCodes.SUCCESS;
 
             } else {
                 resultMessage = Constants.NO_ACK_RECEIVED;
                 errorMessage = Constants.NO_ACK_RECEIVED;
-                returnCode = Constants.ReturnCodes.RETURN_CODE_FAILURE;
+                returnCode = ReturnCodes.FAILURE;
             }
             populateResult(returnResult, resultMessage, errorMessage, returnCode);
 
         } catch (Exception e) {
-            populateResult(returnResult, e.getMessage(), StringUtils.getStackTraceAsString(e), Constants.ReturnCodes.RETURN_CODE_FAILURE);
+            populateResult(returnResult, e.getMessage(), StringUtils.getStackTraceAsString(e), ReturnCodes.FAILURE);
         }
         return returnResult;
     }
 
     private void populateResult(Map<String, String> returnResult, String resultMessage, String errorMessage, String returnCode){
-        returnResult.put(Constants.OutputNames.RETURN_RESULT, resultMessage);
-        returnResult.put(Constants.OutputNames.EXCEPTION, errorMessage);
-        returnResult.put(Constants.OutputNames.RETURN_CODE, returnCode);
+        returnResult.put(OutputNames.RETURN_RESULT, resultMessage);
+        returnResult.put(OutputNames.EXCEPTION, errorMessage);
+        returnResult.put(OutputNames.RETURN_CODE, returnCode);
     }
 
 }

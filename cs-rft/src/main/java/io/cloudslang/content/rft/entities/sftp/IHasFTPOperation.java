@@ -12,21 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.rft.entities.sftp;
 
+import org.jetbrains.annotations.NotNull;
 
-
-package io.cloudslang.content.database.constants;
-
-import io.cloudslang.content.constants.ResponseNames;
-
-/**
- * Created by pinteae on 1/16/2017.
- */
-public class DBResponseNames extends ResponseNames {
-    public static final String HAS_MORE = "has more";
-    public static final String NO_MORE = "no more";
-
-    public static final String MORE_ITEMS = "more items";
-    public static final String NO_MORE_ITEMS = "no more items";
-
+public interface IHasFTPOperation{
+    @NotNull
+    SFTPCommonInputs getSftpCommonInputs();
 }
