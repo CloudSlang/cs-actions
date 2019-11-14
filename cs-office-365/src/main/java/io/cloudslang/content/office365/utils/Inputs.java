@@ -35,6 +35,11 @@ public final class Inputs extends InputNames {
         public static final String RESOURCE = "resource";
     }
 
+    public static class SendMailInputs {
+        public static final String TENANT_NAME = "tennant";
+        public static final String EMAIL_ADDRESS = "emailAddress";
+    }
+
     public static class EmailInputs {
         public static final String AUTH_TOKEN = "authToken";
         public static final String USER_PRINCIPAL_NAME = "userPrincipalName";
