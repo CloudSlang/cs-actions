@@ -109,6 +109,7 @@ public class Descriptions {
 
     public static class SendMail {
         public static final String TENANT_NAME_DESC = "Your application tenant.";
+        public static final String MESSAGE_ID_DESC = "The ID of the sent mail.";
     }
 
     public static class SendMessage {

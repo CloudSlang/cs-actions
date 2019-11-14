@@ -51,6 +51,7 @@ import static io.cloudslang.content.office365.utils.Descriptions.Common.RETURN_C
 import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.*;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.*;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
+import static io.cloudslang.content.office365.utils.Descriptions.SendMail.MESSAGE_ID_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.SendMail.TENANT_NAME_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.SendMessage.RETURN_RESULT_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.SendMessage.EXCEPTION_DESC;
@@ -76,7 +77,8 @@ public class SendEmail {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = MESSAGE_ID, description = MESSAGE_ID_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
