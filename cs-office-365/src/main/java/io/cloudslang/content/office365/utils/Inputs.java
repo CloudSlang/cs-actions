@@ -36,8 +36,7 @@ public final class Inputs extends InputNames {
     }
 
     public static class SendMailInputs {
-        public static final String TENANT_NAME = "tennant";
-        public static final String EMAIL_ADDRESS = "emailAddress";
+        public static final String TENANT_NAME = "tenant";
     }
 
     public static class EmailInputs {

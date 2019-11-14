@@ -109,7 +109,6 @@ public class Descriptions {
 
     public static class SendMail {
         public static final String TENANT_NAME_DESC = "Your application tenant.";
-        public static final String EMAIL_ADDRESS_DESC = "The email address of the user to perform the action on.";
     }
 
     public static class SendMessage {
