@@ -58,6 +58,7 @@ public class Descriptions {
 
     public static class GetEmail {
         public static final String AUTH_TOKEN_DESC = "The authorization token for Office 365.";
+        public static final String EMAIL_ADDRESS_DESC = "The email address on which to perform the action,";
         public static final String USER_PRINCIPAL_NAME_DESC = "The email address of the user to perform the action on. " +
                 "The input is mutually exclusive with the userId input.";
         public static final String USER_ID_DESC = "The ID of the user to perform the action on.";

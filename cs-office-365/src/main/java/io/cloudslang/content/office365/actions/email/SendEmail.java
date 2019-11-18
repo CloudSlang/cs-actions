@@ -44,7 +44,6 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONS
 import static io.cloudslang.content.office365.services.EmailServiceImpl.createMessage;
 import static io.cloudslang.content.office365.services.EmailServiceImpl.sendMessage;
 import static io.cloudslang.content.office365.utils.Constants.*;
-import static io.cloudslang.content.office365.utils.Constants.SEND_MESSAGE;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.RETURN_CODE_DESC;

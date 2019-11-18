@@ -27,7 +27,6 @@ import io.cloudslang.content.office365.entities.ListMessagesInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.office365.services.AuthorizationTokenImpl;
 import io.cloudslang.content.utils.NumberUtilities;
-import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
 import java.util.Map;
@@ -64,7 +63,6 @@ import static io.cloudslang.content.office365.utils.Constants.DELIMITER;
 import static io.cloudslang.content.office365.utils.Constants.LOGIN_AUTHORITY_PREFIX;
 import static io.cloudslang.content.office365.utils.Constants.LOGIN_AUTHORITY_SUfFIX;
 import static io.cloudslang.content.office365.utils.Constants.MESSAGE_ID_LIST_JSON_PATH;
-import static io.cloudslang.content.office365.utils.Constants.NEW_LINE;
 import static io.cloudslang.content.office365.utils.Constants.STATUS_CODE;
 import static io.cloudslang.content.office365.utils.Constants.STRICT;
 import static io.cloudslang.content.office365.utils.Constants.TOP_QUERY_CONST;
@@ -86,13 +84,8 @@ import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_PA
 import static io.cloudslang.content.office365.utils.Descriptions.Common.X509_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.CLIENT_ID_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.CLIENT_SECRET_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.FOLDER_ID_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.O_DATA_QUERY_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.SELECT_QUERY_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.STATUS_CODE_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.TOP_QUERY_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.USER_ID_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.USER_PRINCIPAL_NAME_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
+import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.MESSAGE_ID_LIST_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.SendMail.MESSAGE_ID_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.SendMail.TENANT_NAME_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.SendMessage.EXCEPTION_DESC;
@@ -110,10 +103,8 @@ import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.MESSAGE_I
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.O_DATA_QUERY;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.SELECT_QUERY;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.TOP_QUERY_INPUT;
-import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.USER_ID;
-import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.USER_PRINCIPAL_NAME;
+import static io.cloudslang.content.office365.utils.Inputs.GetEmailInputs.EMAIL_ADDRESS;
 import static io.cloudslang.content.office365.utils.Inputs.SendMailInputs.TENANT_NAME;
-import static io.cloudslang.content.office365.utils.InputsValidation.verifySendEmailInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -127,15 +118,15 @@ public class GetEmail {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = MESSAGE_ID, description = MESSAGE_ID_DESC)
+                    @Output(value = MESSAGE_ID, description = MESSAGE_ID_DESC),
+                    @Output(value = MESSAGE_ID_LIST, description = MESSAGE_ID_LIST_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR)
             })
     public Map<String, String> execute(@Param(value = CLIENT_ID, required = true, description = CLIENT_ID_DESC) String clientId,
-                                       @Param(value = USER_ID, description = USER_ID_DESC) String userId,
-                                       @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
+                                       @Param(value = EMAIL_ADDRESS, description = EMAIL_ADDRESS_DESC) String emailAddress,
 
                                        @Param(value = CLIENT_SECRET, encrypted = true, description = CLIENT_SECRET_DESC) String clientSecret,
                                        @Param(value = TENANT_NAME, required = true, description = TENANT_NAME_DESC) String tenant,
@@ -162,9 +153,7 @@ public class GetEmail {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
 
-        userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         clientId = defaultIfEmpty(clientId, EMPTY);
-        userId = defaultIfEmpty(userId, EMPTY);
         clientSecret = defaultIfEmpty(clientSecret, EMPTY);
         final String loginAuthority = LOGIN_AUTHORITY_PREFIX + tenant + LOGIN_AUTHORITY_SUfFIX;
         folderId = defaultIfEmpty(folderId, EMPTY);
@@ -222,8 +211,7 @@ public class GetEmail {
                                 .responseCharacterSet(responseCharacterSet)
                                 .connectTimeout(connectTimeout)
                                 .trustAllRoots(trustAllRoots)
-                                .userId(userId)
-                                .userPrincipalName(userPrincipalName)
+                                .userPrincipalName(emailAddress)
                                 .x509HostnameVerifier(x509HostnameVerifier)
                                 .trustKeystore(trustKeystore)
                                 .trustPassword(trustPassword)
@@ -239,9 +227,9 @@ public class GetEmail {
 
                     if (!messageIdList.isEmpty()) {
                         final String messageIdListAsString = join(messageIdList.toArray(), DELIMITER);
-                        ListMessagesResult.put(MESSAGE_ID_LIST, messageIdListAsString);
+                        successResultMap.put(MESSAGE_ID_LIST, messageIdListAsString);
                     } else {
-                        ListMessagesResult.put(MESSAGE_ID_LIST, EMPTY);
+                        successResultMap.put(MESSAGE_ID_LIST, EMPTY);
                     }
                 }
                 return successResultMap;
@@ -266,8 +254,7 @@ public class GetEmail {
                                 .responseCharacterSet(responseCharacterSet)
                                 .connectTimeout(connectTimeout)
                                 .trustAllRoots(trustAllRoots)
-                                .userId(userId)
-                                .userPrincipalName(userPrincipalName)
+                                .userPrincipalName(emailAddress)
                                 .x509HostnameVerifier(x509HostnameVerifier)
                                 .trustKeystore(trustKeystore)
                                 .trustPassword(trustPassword)
