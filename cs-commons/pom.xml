@@ -75,7 +75,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <junit.version>4.12</junit.version>
-        <jetbrains-annotations.version>15.0</jetbrains-annotations.version>
+        <jetbrains-annotations.version>17.0.0</jetbrains-annotations.version>
         <apache-commons-lang3.version>3.4</apache-commons-lang3.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -95,6 +95,7 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>${jetbrains-annotations.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
