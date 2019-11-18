@@ -68,6 +68,7 @@ public final class Constants {
     public static final String SEND = "/send";
     public static final String MOVE = "/move";
     public static final String SEND_MESSAGE = "Email sent. For the delivery status please check the Delivery Report Email.";
+    public static final String SEND_EMAIL = "Email sent.";
     public static final String UPDATE_USER = "User updated successfully.";
     public static final String ID = "id";
     public static final String COMMA = ",";

@@ -216,7 +216,7 @@ public class SendEmail {
                     .build());
 
             final String returnMessage = sendMailResult.get(RETURN_RESULT);
-            final Map<String, String> successResultMap = getOperationResults(sendMailResult, SEND_MESSAGE, returnMessage, EMPTY);
+            final Map<String, String> successResultMap = getOperationResults(sendMailResult, SEND_EMAIL, returnMessage, EMPTY);
             successResultMap.put(MESSAGE_ID, messageId.toString());
             return successResultMap;
         } catch (Exception exception) {
