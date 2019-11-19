@@ -118,7 +118,6 @@ public class GetEmail {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = MESSAGE_ID, description = MESSAGE_ID_DESC),
                     @Output(value = MESSAGE_ID_LIST, description = MESSAGE_ID_LIST_DESC)
             },
             responses = {
