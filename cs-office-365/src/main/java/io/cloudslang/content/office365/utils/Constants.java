@@ -93,7 +93,7 @@ public final class Constants {
     public static final String ODATA_TYPE = "@odata.type";
     public static final String MICROSOFT_GRAPH_FILE_ATTACHMENT = "#microsoft.graph.fileAttachment";
     public static final String LOGIN_AUTHORITY_PREFIX = "https://login.windows.net/";
-    public static final String LOGIN_AUTHORITY_SUfFIX = "/oauth2/token";
+    public static final String LOGIN_AUTHORITY_SUFFIX = "/oauth2/token";
     public static final String SEND_MAIL_DEFAULT_IMPORTANCE = "normal";
     public static final String SEND_MAIL_DEFAULT_INFERENCE_CLASSIFICATION = "focused";
     public static final String ERROR = "error";

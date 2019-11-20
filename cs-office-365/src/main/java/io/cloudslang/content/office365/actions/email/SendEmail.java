@@ -112,7 +112,7 @@ public class SendEmail {
 
         clientId = defaultIfEmpty(clientId, EMPTY);
         clientSecret = defaultIfEmpty(clientSecret, EMPTY);
-        final String loginAuthority = LOGIN_AUTHORITY_PREFIX + tenant + LOGIN_AUTHORITY_SUfFIX;
+        final String loginAuthority = LOGIN_AUTHORITY_PREFIX + tenant + LOGIN_AUTHORITY_SUFFIX;
 
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
