@@ -63,6 +63,7 @@ import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_US
 import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.*;
 import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.BODY;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
+import static io.cloudslang.content.office365.utils.Inputs.SendMailInputs.FROM_ADDRESS;
 import static io.cloudslang.content.office365.utils.Inputs.SendMailInputs.TENANT_NAME;
 import static io.cloudslang.content.office365.utils.InputsValidation.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -93,7 +94,7 @@ public class SendEmail {
                                        @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
 
                                        @Param(value = CC_RECIPIENTS, description = CC_RECIPIENTS_DESC) String ccRecipients,
-                                       @Param(value = FROM, required = true, description = FROM_DESC) String from,
+                                       @Param(value = FROM_ADDRESS, required = true, description = FROM_DESC) String fromAddress,
                                        @Param(value = TO_RECIPIENTS, required = true, description = TO_RECIPIENTS_DESC) String toRecipients,
                                        @Param(value = BODY, description = BODY_DESC) String body,
                                        @Param(value = SUBJECT, description = SUBJECT_DESC) String subject,
@@ -119,7 +120,7 @@ public class SendEmail {
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
 
         ccRecipients = defaultIfEmpty(ccRecipients, EMPTY);
-        from = defaultIfEmpty(from, EMPTY);
+        fromAddress = defaultIfEmpty(fromAddress, EMPTY);
         toRecipients = defaultIfEmpty(toRecipients, EMPTY);
         body = defaultIfEmpty(body, EMPTY);
         subject = defaultIfEmpty(subject, EMPTY);
@@ -135,7 +136,7 @@ public class SendEmail {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessages = verifySendEmailInputs(clientId, clientSecret, proxyPort, from, EMPTY,
+        final List<String> exceptionMessages = verifySendEmailInputs(clientId, clientSecret, proxyPort, fromAddress, EMPTY,
                                                                      trustAllRoots, connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
@@ -156,11 +157,11 @@ public class SendEmail {
 
             final String createdMessage = createMessage(CreateMessageInputs.builder()
                     .ccRecipients(ccRecipients)
-                    .from(from)
+                    .from(fromAddress)
                     .importance(SEND_MAIL_DEFAULT_IMPORTANCE)
                     .inferenceClassification(SEND_MAIL_DEFAULT_INFERENCE_CLASSIFICATION)
                     .isRead(BOOLEAN_FALSE)
-                    .sender(from)
+                    .sender(fromAddress)
                     .toRecipients(toRecipients)
                     .body(body)
                     .isDeliveryReceiptRequested(BOOLEAN_FALSE)
@@ -178,7 +179,7 @@ public class SendEmail {
                             .responseCharacterSet(responseCharacterSet)
                             .connectTimeout(connectTimeout)
                             .trustAllRoots(trustAllRoots)
-                            .userPrincipalName(from)
+                            .userPrincipalName(fromAddress)
                             .x509HostnameVerifier(x509HostnameVerifier)
                             .trustKeystore(trustKeystore)
                             .trustPassword(trustPassword)
@@ -207,7 +208,7 @@ public class SendEmail {
                             .responseCharacterSet(responseCharacterSet)
                             .connectTimeout(connectTimeout)
                             .trustAllRoots(trustAllRoots)
-                            .userPrincipalName(from)
+                            .userPrincipalName(fromAddress)
                             .x509HostnameVerifier(x509HostnameVerifier)
                             .trustKeystore(trustKeystore)
                             .trustPassword(trustPassword)
