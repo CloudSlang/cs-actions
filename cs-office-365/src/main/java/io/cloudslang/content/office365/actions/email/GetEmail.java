@@ -51,23 +51,7 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_P
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.office365.services.EmailServiceImpl.getMessage;
 import static io.cloudslang.content.office365.services.EmailServiceImpl.listMessages;
-import static io.cloudslang.content.office365.utils.Constants.BOOLEAN_FALSE;
-import static io.cloudslang.content.office365.utils.Constants.CHANGEIT;
-import static io.cloudslang.content.office365.utils.Constants.CONNECTIONS_MAX_PER_ROUTE_CONST;
-import static io.cloudslang.content.office365.utils.Constants.CONNECTIONS_MAX_TOTAL_CONST;
-import static io.cloudslang.content.office365.utils.Constants.DEFAULT_JAVA_KEYSTORE;
-import static io.cloudslang.content.office365.utils.Constants.DEFAULT_LOGIN_TYPE;
-import static io.cloudslang.content.office365.utils.Constants.DEFAULT_PROXY_PORT;
-import static io.cloudslang.content.office365.utils.Constants.DEFAULT_RESOURCE;
-import static io.cloudslang.content.office365.utils.Constants.DELIMITER;
-import static io.cloudslang.content.office365.utils.Constants.LOGIN_AUTHORITY_PREFIX;
-import static io.cloudslang.content.office365.utils.Constants.LOGIN_AUTHORITY_SUfFIX;
-import static io.cloudslang.content.office365.utils.Constants.MESSAGE_ID_LIST_JSON_PATH;
-import static io.cloudslang.content.office365.utils.Constants.STATUS_CODE;
-import static io.cloudslang.content.office365.utils.Constants.STRICT;
-import static io.cloudslang.content.office365.utils.Constants.TOP_QUERY_CONST;
-import static io.cloudslang.content.office365.utils.Constants.UTF8;
-import static io.cloudslang.content.office365.utils.Constants.ZERO;
+import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.CONNECT_TIMEOUT_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.CONN_MAX_ROUTE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
@@ -154,7 +138,7 @@ public class GetEmail {
 
         clientId = defaultIfEmpty(clientId, EMPTY);
         clientSecret = defaultIfEmpty(clientSecret, EMPTY);
-        final String loginAuthority = LOGIN_AUTHORITY_PREFIX + tenant + LOGIN_AUTHORITY_SUfFIX;
+        final String loginAuthority = LOGIN_AUTHORITY_PREFIX + tenant + LOGIN_AUTHORITY_SUFFIX;
         folderId = defaultIfEmpty(folderId, EMPTY);
 
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
