@@ -85,9 +85,7 @@ import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.FOLDER_ID
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.MESSAGE_ID;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.MESSAGE_ID_LIST;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.O_DATA_QUERY;
-import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.SELECT_QUERY;
-import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.TOP_QUERY_INPUT;
-import static io.cloudslang.content.office365.utils.Inputs.GetEmailInputs.EMAIL_ADDRESS;
+import static io.cloudslang.content.office365.utils.Inputs.GetEmailInputs.*;
 import static io.cloudslang.content.office365.utils.Inputs.SendMailInputs.TENANT_NAME;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -121,8 +119,8 @@ public class GetEmail {
                                        @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
 
                                        @Param(value = FOLDER_ID, description = FOLDER_ID_DESC) String folderId,
-                                       @Param(value = TOP_QUERY_INPUT, description = TOP_QUERY_DESC) String topQuery,
-                                       @Param(value = SELECT_QUERY, description = SELECT_QUERY_DESC) String selectQuery,
+                                       @Param(value = COUNT, description = TOP_QUERY_DESC) String count,
+                                       @Param(value = QUERY_INPUT, description = SELECT_QUERY_DESC) String query,
                                        @Param(value = O_DATA_QUERY, description = O_DATA_QUERY_DESC) String oDataQuery,
 
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
@@ -147,8 +145,8 @@ public class GetEmail {
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
 
         messageId = defaultIfEmpty(messageId, EMPTY);
-        topQuery = defaultIfEmpty(topQuery, TOP_QUERY_CONST);
-        selectQuery = defaultIfEmpty(selectQuery, EMPTY);
+        count = defaultIfEmpty(count, TOP_QUERY_CONST);
+        query = defaultIfEmpty(query, EMPTY);
         oDataQuery = defaultIfEmpty(oDataQuery, EMPTY);
 
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
@@ -178,8 +176,8 @@ public class GetEmail {
             if (messageId.isEmpty()) {
                 final Map<String, String> ListMessagesResult = listMessages(ListMessagesInputs.builder()
                         .folderId(folderId)
-                        .topQuery(topQuery)
-                        .selectQuery(selectQuery)
+                        .topQuery(count)
+                        .selectQuery(query)
                         .oDataQuery(oDataQuery)
                         .commonInputs(Office365CommonInputs.builder()
                                 .authToken(authToken)
@@ -222,7 +220,7 @@ public class GetEmail {
                 final Map<String, String> result = getMessage(GetMessageInputs.builder()
                         .messageId(messageId)
                         .folderId(folderId)
-                        .selectQuery(selectQuery)
+                        .selectQuery(query)
                         .oDataQuery(oDataQuery)
                         .commonInputs(Office365CommonInputs.builder()
                                 .authToken(authToken)
