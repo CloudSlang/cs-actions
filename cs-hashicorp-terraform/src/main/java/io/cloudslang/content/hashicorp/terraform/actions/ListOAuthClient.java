@@ -17,14 +17,13 @@ import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.services.ListOauthClientImpl.listOAuthClient;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.*;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.AuthorizationOutputs.AUTH_TOKEN;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.LIST_OAUTH_CLIENT_OPERATION_NAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.OAUTH_TOKEN_LIST_JSON_PATH;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -34,7 +33,9 @@ import static org.apache.commons.lang3.StringUtils.*;
 public class ListOAuthClient {
     @Action(name = LIST_OAUTH_CLIENT_OPERATION_NAME,
             outputs = {
-                    @Output(value = OutputNames.RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value=OAUTH_TOKEN_ID,description = OAUTH_TOKEN_ID_DESCRIPTION),
+                    @Output(value=STATUS_CODE,description = STATUS_CODE_DESC)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
@@ -104,9 +105,9 @@ public class ListOAuthClient {
                 final List<String> outhTokenIdList = JsonPath.read(returnMessage, OAUTH_TOKEN_LIST_JSON_PATH);
                 if (!outhTokenIdList.isEmpty()) {
                     final String mouthTokenIdListAsString = join(outhTokenIdList.toArray(), DELIMITER);
-                    results.put("oauthTokenId", mouthTokenIdListAsString);
+                    results.put(OAUTH_TOKEN_ID, mouthTokenIdListAsString);
                 } else {
-                    results.put("oauthTokenId", EMPTY);
+                    results.put(OAUTH_TOKEN_ID, EMPTY);
                 }
             }
 

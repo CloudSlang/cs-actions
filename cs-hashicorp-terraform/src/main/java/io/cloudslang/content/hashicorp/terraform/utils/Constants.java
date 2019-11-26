@@ -72,5 +72,6 @@ public class Constants {
         public static final String LIST_OAUTH_CLIENT_OPERATION_NAME = "List OAuth Client";
         public static final String OAUTH_CLIENT_PATH = "/oauth-clients";
         public static final String OAUTH_TOKEN_LIST_JSON_PATH = "$.data[*].relationships.oauth-tokens.data[*].id";
+        public static final String OAUTH_TOKEN_ID="oauthTokenId";
     }
 }

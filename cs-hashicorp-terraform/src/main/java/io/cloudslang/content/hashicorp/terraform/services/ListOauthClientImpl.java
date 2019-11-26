@@ -1,6 +1,6 @@
 package io.cloudslang.content.hashicorp.terraform.services;
 
-import com.sun.istack.internal.NotNull;
+
 
 import java.util.Map;
 
@@ -9,7 +9,7 @@ import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import org.apache.http.client.utils.URIBuilder;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-
+import org.jetbrains.annotations.NotNull;
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
@@ -24,7 +24,6 @@ public class ListOauthClientImpl {
         httpClientInputs.setMethod(GET);
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
-        System.out.println("URL" + httpClientInputs.getUrl());
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
         return new HttpClientService().execute(httpClientInputs);

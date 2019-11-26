@@ -1,11 +1,12 @@
 package io.cloudslang.content.hashicorp.terraform.services;
 
-import com.sun.istack.internal.NotNull;
+
 import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.http.client.utils.URIBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 

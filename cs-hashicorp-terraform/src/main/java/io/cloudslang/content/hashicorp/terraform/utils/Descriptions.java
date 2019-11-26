@@ -51,6 +51,7 @@ public class Descriptions {
         public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Office 365 API request.";
+        public static final String OAUTH_TOKEN_ID_DESCRIPTION="Id of the oauthtoken";
     }
 
 
