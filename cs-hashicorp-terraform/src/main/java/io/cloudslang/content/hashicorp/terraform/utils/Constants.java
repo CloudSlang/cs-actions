@@ -74,4 +74,9 @@ public class Constants {
         public static final String OAUTH_TOKEN_LIST_JSON_PATH = "$.data[*].relationships.oauth-tokens.data[*].id";
         public static final String OAUTH_TOKEN_ID="oauthTokenId";
     }
+    public static class CreateRunConstants{
+        public static  final String CREATE_RUN_PATH="/runs";
+        public static final String RUN_EVENT_ID = "$.data[*].relationships.run-events.data[*].id";
+
+    }
 }

@@ -25,11 +25,12 @@ public class CreateRunInputs {
     private String body;
     private TerraformCommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"workspaceId", "runMessage", "isDestroy"})
-    public CreateRunInputs(String workspaceId, String runMessage, String isDestroy, TerraformCommonInputs commonInputs) {
+    @java.beans.ConstructorProperties({"workspaceId", "runMessage", "isDestroy","body"})
+    public CreateRunInputs(String workspaceId, String runMessage, String isDestroy,String body, TerraformCommonInputs commonInputs) {
         this.workspaceId = workspaceId;
         this.runMessage = runMessage;
         this.isDestroy = isDestroy;
+        this.body = body;
         this.commonInputs = commonInputs;
     }
 
@@ -53,9 +54,7 @@ public class CreateRunInputs {
     }
 
     @NotNull
-    public String getBody() {
-        return body;
-    }
+    public String getBody() { return body; }
 
     @NotNull
     public TerraformCommonInputs getCommonInputs() {
@@ -104,7 +103,7 @@ public class CreateRunInputs {
         }
 
         public CreateRunInputs build() {
-            return new CreateRunInputs(workspaceId, runMessage, isDestroy, commonInputs);
+            return new CreateRunInputs(workspaceId, runMessage, isDestroy,body, commonInputs);
         }
     }
 

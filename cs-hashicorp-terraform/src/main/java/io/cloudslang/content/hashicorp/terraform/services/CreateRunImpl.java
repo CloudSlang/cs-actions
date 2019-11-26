@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBuilder;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
@@ -33,21 +34,24 @@ public class CreateRunImpl {
     public static Map<String, String> createRunClient(@NotNull final CreateRunInputs createRunInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = createRunInputs.getCommonInputs();
-        httpClientInputs.setUrl(createRunClientUrl(createRunInputs.getWorkspaceId(), createRunInputs.getRunMessage(), createRunInputs.getIsDestroy()));
-        httpClientInputs.setBody("{}");
+        httpClientInputs.setUrl(createRunClientUrl());
+        httpClientInputs.setBody(createRunInputs.getBody());
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
-        System.out.println(httpClientInputs.getUrl());
         return new HttpClientService().execute(httpClientInputs);
     }
 
     @NotNull
-    private static String createRunClientUrl(@NotNull final String workspaceId, @NotNull final String runMessage, @NotNull final String isDestroy) throws Exception {
+    private static String createRunClientUrl() throws Exception {
 
         final URIBuilder uriBuilder = getUriBuilder();
-
-        return uriBuilder.build().toURL().toString() + workspaceId + "/oauth-clients";
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(API_VERSION)
+                .append(CREATE_RUN_PATH);
+        uriBuilder.setPath(pathString.toString());
+        return uriBuilder.build().toURL().toString();
     }
 }
