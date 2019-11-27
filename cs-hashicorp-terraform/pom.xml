@@ -104,6 +104,13 @@
             <version>${common-codec.version}</version>
         </dependency>
 
+        <!-- Json provider required for Jayway in order to handle single quoted JSONs-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.7</version>
+        </dependency>
+
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
