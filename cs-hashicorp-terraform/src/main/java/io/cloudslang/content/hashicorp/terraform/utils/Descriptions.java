@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2020 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.hashicorp.terraform.utils;
 
 public class Descriptions {
@@ -54,5 +69,18 @@ public class Descriptions {
         public static final String OAUTH_TOKEN_ID_DESCRIPTION="Id of the oauthtoken";
     }
 
+    public static class CreateWorkspace {
+        public static final String CREATE_WORKSPACE_DESC = "Create a workspace in an organization.";
+        public static final String WORKSPACE_NAME_DESC = "The name of workspace to be created.";
+        public static final String VCS_REPO_ID_DESC = "The ID of VCS repository +" +
+                "example : username/repo_name";
+        public static final String WORKSPACE_REQUEST_BODY_DESC = "The request body of the workspace.";
+        public static final String WORKSPACE_ID_DESC ="The Id of created workspace";
+        public static final String CREATE_WORKSPACE_RETURN_RESULT_DESC = "The response of the workspace";
+        public static final String CREATE_WORKSPACE_EXCEPTION_DESC = "An error message in case there was an error while creating the message.";
+        public static final String FAILURE_DESC = "There was an error while creating workspace.";
+        public static final String SUCCESS_DESC = "The request was successfully executed.";
+
+    }
 
 }

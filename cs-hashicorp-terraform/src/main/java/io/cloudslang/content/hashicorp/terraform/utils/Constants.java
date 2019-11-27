@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -65,6 +65,7 @@ public class Constants {
     }
 
     public static class CreateWorkspace {
+        public static final String CREATE_WORKSPACE_OPERATION_NAME = "Create Workspace";
         public static final String WORKSPACE_PATH = "/workspaces";
     }
 
