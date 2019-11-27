@@ -1,9 +1,10 @@
 package io.cloudslang.content.hashicorp.terraform.utils;
 
-import com.sun.istack.internal.NotNull;
+
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
 import org.apache.http.client.utils.URIBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.Authenticator;
 import java.net.InetSocketAddress;
