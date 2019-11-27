@@ -1,7 +1,7 @@
 package io.cloudslang.content.hashicorp.terraform.utils;
 
 public class Inputs {
-    public static final String TOKEN = "token";
+    public static final String AUTH_TOKEN = "authToken";
     public static final String PROXY_HOST = "proxyHost";
     public static final String PROXY_PORT = "proxyPort";
     public static final String PROXY_USERNAME = "proxyUsername";

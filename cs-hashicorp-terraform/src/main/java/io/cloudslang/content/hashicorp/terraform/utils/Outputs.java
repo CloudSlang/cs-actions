@@ -13,13 +13,11 @@ public class Outputs extends OutputNames {
         public static final String AUTH_TOKEN = "authToken";
         public static final String AUTH_TOKEN_TYPE = "authTokenType";
     }
-
-    public static class GetAttachmentsOutputs {
-        public static final String CONTENT_NAME = "contentName";
-        public static final String CONTENT_TYPE = "contentType";
-        public static final String CONTENT_BYTES = "contentBytes";
-        public static final String CONTENT_SIZE = "contentSize";
+    public static class ListOAuthClientOutputs{
+        public static final String OAUTH_TOKEN_ID="oauthTokenId";
     }
+
+
 
 
 }
