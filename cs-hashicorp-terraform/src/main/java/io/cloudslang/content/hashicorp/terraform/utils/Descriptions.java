@@ -53,6 +53,7 @@ public class Descriptions {
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
                 "Default value: UTF-8";
         public static final String AUTH_TOKEN_DESC = "The authorization token for terraform";
+        public static final String ORGANIZATION_NAME_DESC="Name of the organization";
 
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
     }
@@ -80,6 +81,13 @@ public class Descriptions {
         public static final String CREATE_WORKSPACE_EXCEPTION_DESC = "An error message in case there was an error while creating the message.";
         public static final String FAILURE_DESC = "There was an error while creating workspace.";
         public static final String SUCCESS_DESC = "The request was successfully executed.";
+
+    }
+
+    public static class CreateRun{
+        public static  final String RUN_MESSAGE = "Specifies the message to be associated with this run";
+        public static  final String IS_DESTROY = "Specifies if this plan is a destroy plan, which will destroy all provisioned resources.";
+
 
     }
 

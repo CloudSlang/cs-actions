@@ -14,18 +14,20 @@
  */
 package io.cloudslang.content.hashicorp.terraform.entities;
 
+import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.jetbrains.annotations.NotNull;
 
 public class CreateWorkspaceInputs {
+
     private final String workspaceName;
     private final String vcsRepoId;
     private final String oauthTokenId;
     private final String requestBody;
-    private final TerraformCommonInputs commonInputs;
+    private final Inputs commonInputs;
 
     @java.beans.ConstructorProperties({"workspaceName", "vcsRepoId", "oauthTokenId", "requestBody", "commonInputs"})
     public CreateWorkspaceInputs(String workspaceName, String vcsRepoId, String oauthTokenId, String requestBody,
-                                 TerraformCommonInputs commonInputs) {
+                                 Inputs commonInputs) {
         this.workspaceName = workspaceName;
         this.vcsRepoId = vcsRepoId;
         this.oauthTokenId = oauthTokenId;
@@ -60,7 +62,7 @@ public class CreateWorkspaceInputs {
 
 
     @NotNull
-    public TerraformCommonInputs getCommonInputs() {
+    public Inputs getCommonInputs() {
         return this.commonInputs;
     }
 
@@ -70,7 +72,7 @@ public class CreateWorkspaceInputs {
         private String vcsRepoId;
         private String oauthTokenId;
         private String requestBody;
-        private TerraformCommonInputs commonInputs;
+        private Inputs commonInputs;
 
         CreateWorkspaceInputsBuilder() {
 
@@ -100,7 +102,7 @@ public class CreateWorkspaceInputs {
             return this;
         }
 
-        public CreateWorkspaceInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
+        public CreateWorkspaceInputsBuilder commonInputs(@NotNull final Inputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }

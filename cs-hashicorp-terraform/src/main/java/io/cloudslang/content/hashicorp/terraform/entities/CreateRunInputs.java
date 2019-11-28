@@ -15,22 +15,26 @@
 
 package io.cloudslang.content.hashicorp.terraform.entities;
 
+import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class CreateRunInputs {
+
+    public  static final String RUN_MESSAGE="runMessage";
+    public  static final String IS_DESTROY="isDestroy";
+
+
     private String workspaceId;
     private String runMessage;
     private String isDestroy;
-    private String body;
-    private TerraformCommonInputs commonInputs;
+    private Inputs commonInputs;
 
-    @java.beans.ConstructorProperties({"workspaceId", "runMessage", "isDestroy","body"})
-    public CreateRunInputs(String workspaceId, String runMessage, String isDestroy,String body, TerraformCommonInputs commonInputs) {
+    @java.beans.ConstructorProperties({"workspaceId", "runMessage", "isDestroy"})
+    public CreateRunInputs(String workspaceId, String runMessage, String isDestroy, Inputs commonInputs) {
         this.workspaceId = workspaceId;
         this.runMessage = runMessage;
         this.isDestroy = isDestroy;
-        this.body = body;
         this.commonInputs = commonInputs;
     }
 
@@ -54,10 +58,7 @@ public class CreateRunInputs {
     }
 
     @NotNull
-    public String getBody() { return body; }
-
-    @NotNull
-    public TerraformCommonInputs getCommonInputs() {
+    public Inputs getCommonInputs() {
         return commonInputs;
     }
 
@@ -65,9 +66,8 @@ public class CreateRunInputs {
         private String workspaceId = StringUtils.EMPTY;
         private String runMessage = StringUtils.EMPTY;
         private String isDestroy = StringUtils.EMPTY;
-        private String body = StringUtils.EMPTY;
 
-        private TerraformCommonInputs commonInputs;
+        private Inputs commonInputs;
 
         CreateRunInputsBuilder() {
         }
@@ -90,20 +90,15 @@ public class CreateRunInputs {
             return this;
         }
 
-        @NotNull
-        public CreateRunInputs.CreateRunInputsBuilder body(@NotNull final String body) {
-            this.body = body;
-            return this;
-        }
 
         @NotNull
-        public CreateRunInputs.CreateRunInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
+        public CreateRunInputs.CreateRunInputsBuilder commonInputs(@NotNull final Inputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
         public CreateRunInputs build() {
-            return new CreateRunInputs(workspaceId, runMessage, isDestroy,body, commonInputs);
+            return new CreateRunInputs(workspaceId, runMessage, isDestroy, commonInputs);
         }
     }
 

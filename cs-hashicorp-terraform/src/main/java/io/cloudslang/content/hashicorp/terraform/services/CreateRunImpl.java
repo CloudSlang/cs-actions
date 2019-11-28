@@ -16,9 +16,11 @@
 package io.cloudslang.content.hashicorp.terraform.services;
 
 import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.services.CreateRunModels.CreateRunBody;
+import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import net.minidev.json.JSONObject;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,9 +35,13 @@ public class CreateRunImpl {
     @NotNull
     public static Map<String, String> createRunClient(@NotNull final CreateRunInputs createRunInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final TerraformCommonInputs commonInputs = createRunInputs.getCommonInputs();
+        final Inputs commonInputs = createRunInputs.getCommonInputs();
         httpClientInputs.setUrl(createRunClientUrl());
-        httpClientInputs.setBody(createRunInputs.getBody());
+        if(commonInputs.getRequestBody().isEmpty()){
+            httpClientInputs.setBody(createRunBody(createRunInputs));
+        }else{
+            httpClientInputs.setBody(commonInputs.getRequestBody());
+        }
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
@@ -53,5 +59,42 @@ public class CreateRunImpl {
                 .append(CREATE_RUN_PATH);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    private static String createRunBody(CreateRunInputs createRunInputs ){
+        JSONObject createRunJson=new JSONObject();
+        CreateRunBody createBody=new CreateRunBody();
+        CreateRunBody.CreateRunData createRundata=createBody.new CreateRunData();
+        CreateRunBody.Attributes attributes=createBody.new Attributes();
+        CreateRunBody.Relationships relationships=createBody.new Relationships();
+        CreateRunBody.Workspace workspace=createBody.new Workspace();
+        CreateRunBody.WorkspaceData workspaceData=createBody.new WorkspaceData();
+
+
+        workspaceData.setId(createRunInputs.getWorkspaceId());
+        workspaceData.setType("runs");
+
+
+        attributes.setRunMessage(createRunInputs.getRunMessage());
+        attributes.setIsDestroy(createRunInputs.getIsDestroy());
+
+        relationships.setWorkspace(workspace);
+
+        workspace.setData(workspaceData);
+
+        workspaceData.setId(createRunInputs.getWorkspaceId());
+        workspaceData.setType("workspace-3");
+
+        createRundata.setRelationships(relationships);
+        createRundata.setAttributes(attributes);
+        createRundata.setType("runs");
+
+        createBody.setData(createRundata);
+
+        createRunJson.put("data",createBody.getData());
+
+        return  createRunJson.toString();
+
     }
 }
