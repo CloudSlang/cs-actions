@@ -25,5 +25,16 @@ public final class Inputs extends InputNames {
         public static final String CONTENT_BYTES = "contentBytes";
     }
 
+    public static class RandomPasswordGeneratorInputsNames {
+        public static final String PASSWORD_LENGTH = "passwordLength";
+        public static final String NUMBER_OF_LOWER_CASE_CHARACTERS = "numberOfLowerCaseCharacters";
+        public static final String NUMBER_OF_UPPER_CASE_CHARACTERS = "numberOfUpperCaseCharacters";
+        public static final String NUMBER_OF_NUMERICAL_CHARACTERS = "numberOfNumericalCharacters";
+        public static final String NUMBER_OF_SPECIAL_CHARACTERS = "numberOfSpecialCharacters";
+        public static final String FORBIDDEN_CHARACTERS = "forbiddenCharacters";
+        public static final String SPECIFIC_FORMAT = "specificFormat";
+
+    }
+
 }
 

@@ -32,4 +32,15 @@ public final class Constants {
     public static final String EXCEPTION_MESSAGE = "Error converting the bytes to file";
     public static final String EXCEPTION_VALID_PATH = "The setFilePath is not valid";
 
+    public static final String DEFAULT_PASSWORD_LENGTH = "10";
+    public static final String ONE = "1";
+    static final String EXCEPTION_PASSWORD_LENGTH = "The passwordLength should be greater.";
+    static final String EXCEPTION_LENGTH = "The input for any minimum number of a specific class" +
+            "of characters should be a number greater or equal to 0.";
+    public static final String EXCEPTION_SPECIFIC_FORMAT = "Wrong specific password format.";
+    static final String EXCEPTION_NUMBER_FORMAT = "Wrong input number provided.";
+
+
+
+
 }
