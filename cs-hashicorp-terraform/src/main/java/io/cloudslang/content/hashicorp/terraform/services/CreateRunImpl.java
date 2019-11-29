@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBuilder;
@@ -46,6 +47,7 @@ public class CreateRunImpl {
         httpClientInputs.setMethod(POST);
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
         return new HttpClientService().execute(httpClientInputs);
     }
 
