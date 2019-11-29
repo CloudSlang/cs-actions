@@ -48,4 +48,23 @@ public class Descriptions {
 
     }
 
+    public static class RandomPasswordGeneratorDescriptions{
+        public static final String RANDOM_PASSWORD_GENERATOR = "Random Password Generator";
+        public static final String SUCCESS_DESC = "The password was generated successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to generate the password.";
+
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while generating the password.";
+        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
+        public static final String RETURN_RESULT_DESC = "The generated password or error message in case of failure.";
+
+        public static final String PASSWORD_LENGTH_DESC = "The length of the generated password. It must be a positive integer. Default: 10.";
+        public static final String NUMBER_OF_LOWER_CASE_CHARACTERS_DESC = "The minimum number of lower case characters that the password should contain. If 0 it won't contain this type of character. Default: 1.";
+        public static final String NUMBER_OF_UPPER_CASE_CHARACTERS_DESC = "The minimum number of upper case characters that the password should contain. If 0 it won't contain this type of character. Default: 1.";
+        public static final String NUMBER_OF_NUMERICAL_CHARACTERS_DESC = "The minimum number of numerical characters that the password should contain. If 0 it won't contain this type of character. Default: 1.";
+        public static final String NUMBER_OF_SPECIAL_CHARACTERS_DESC = "The minimum number of special characters that the password should contain. If 0 it won't contain this " +
+                "type of character. Default: 1. Used special characters are: -=[];,.~!@#$%&*()_+{}|:<>?";
+        public static final String FORBIDDEN_CHARACTERS_DESC = "A list of characters that the password should not contain. Example: []{}.";
+        public static final String SPECIFIC_FORMAT_DESC = "A specific format that the password should respect. Example: SAP.";
+    }
+
 }
