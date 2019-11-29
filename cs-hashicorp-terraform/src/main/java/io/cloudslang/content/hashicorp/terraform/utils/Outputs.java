@@ -30,6 +30,10 @@ public class Outputs extends OutputNames {
     public static class CreateWorkspaceOutputs{
         public  static final String WORKSPACE_ID="workspaceId";
     }
+    public static class CreateRunOutputs{
+        public  static final String RUN_ID="runId";
+
+    }
 
 
 

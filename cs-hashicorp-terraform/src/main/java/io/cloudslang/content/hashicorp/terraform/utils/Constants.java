@@ -25,7 +25,12 @@ public class Constants {
         public static final String BOOLEAN_TRUE = "true";
         public static final String STRICT = "strict";
         public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
-        public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port.";
+        public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid proxy details.";
+        public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
+        public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
+        public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
+        public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
+        public static final String EXCEPTION_EMPTY_FILE_PATH_AND_CONTENT_BYTES = "The filePath or both contentName and contentBytes inputs are required.";
         public static final String ANONYMOUS = "anonymous";
         public static final String GET = "GET";
         public static final String POST = "POST";
@@ -34,6 +39,7 @@ public class Constants {
         public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
         public static final String CHANGEIT = "changeit";
         public static final String ZERO = "0";
+        public static final String CONNECT_TIMEOUT_CONST="10000";
         public static final String UTF8 = "UTF-8";
         public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
         public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
@@ -54,8 +60,6 @@ public class Constants {
         public static final String DEFAULT_INFERENCE_CLASSIFICATION = "other";
         public static final String DELIMITER = ",";
         public static final String CONTENT_TYPE = "HTML";
-        public static final String SEND = "/send";
-        public static final String MOVE = "/move";
         public static final String ID = "id";
         public static final String COMMA = ",";
         public static final String NAME = "name";
@@ -77,7 +81,7 @@ public class Constants {
     }
     public static class CreateRunConstants{
         public static  final String CREATE_RUN_PATH="/runs";
-        public static final String RUN_EVENT_ID = "$.data[*].relationships.run-events.data[*].id";
+        public static final String RUN_ID = "$.data[*].relationships.run-events.data[*].id";
 
     }
 }

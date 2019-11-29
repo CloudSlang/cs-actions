@@ -19,6 +19,8 @@ import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 public class CreateRunInputs {
 
     public  static final String RUN_MESSAGE="runMessage";
@@ -26,13 +28,15 @@ public class CreateRunInputs {
 
 
     private String workspaceId;
+    private  String workspaceName;
     private String runMessage;
-    private String isDestroy;
+    private boolean isDestroy;
     private Inputs commonInputs;
 
-    @java.beans.ConstructorProperties({"workspaceId", "runMessage", "isDestroy"})
-    public CreateRunInputs(String workspaceId, String runMessage, String isDestroy, Inputs commonInputs) {
+    @java.beans.ConstructorProperties({"workspaceId","workspaceName", "runMessage", "isDestroy"})
+    public CreateRunInputs(String workspaceId,String workspaceName, String runMessage, boolean isDestroy, Inputs commonInputs) {
         this.workspaceId = workspaceId;
+        this.workspaceName=workspaceName;
         this.runMessage = runMessage;
         this.isDestroy = isDestroy;
         this.commonInputs = commonInputs;
@@ -48,14 +52,15 @@ public class CreateRunInputs {
     }
 
     @NotNull
+    public String getWorkspaceName() { return workspaceName; }
+
+    @NotNull
     public String getRunMessage() {
         return runMessage;
     }
 
     @NotNull
-    public String getIsDestroy() {
-        return isDestroy;
-    }
+    public boolean isDestroy() { return isDestroy; }
 
     @NotNull
     public Inputs getCommonInputs() {
@@ -63,9 +68,10 @@ public class CreateRunInputs {
     }
 
     public static class CreateRunInputsBuilder {
-        private String workspaceId = StringUtils.EMPTY;
-        private String runMessage = StringUtils.EMPTY;
-        private String isDestroy = StringUtils.EMPTY;
+        private String workspaceId = EMPTY;
+        private String workspaceName=EMPTY;
+        private String runMessage = EMPTY;
+        private boolean isDestroy = Boolean.FALSE;
 
         private Inputs commonInputs;
 
@@ -79,13 +85,19 @@ public class CreateRunInputs {
         }
 
         @NotNull
+        public CreateRunInputs.CreateRunInputsBuilder workspaceName(@NotNull final String workspaceName) {
+            this.workspaceName = workspaceName;
+            return this;
+        }
+
+        @NotNull
         public CreateRunInputs.CreateRunInputsBuilder runMessage(@NotNull final String runMessage) {
             this.runMessage = runMessage;
             return this;
         }
 
         @NotNull
-        public CreateRunInputs.CreateRunInputsBuilder isDestroy(@NotNull final String isDestroy) {
+        public CreateRunInputs.CreateRunInputsBuilder isDestroy(@NotNull final boolean isDestroy) {
             this.isDestroy = isDestroy;
             return this;
         }
@@ -98,7 +110,7 @@ public class CreateRunInputs {
         }
 
         public CreateRunInputs build() {
-            return new CreateRunInputs(workspaceId, runMessage, isDestroy, commonInputs);
+            return new CreateRunInputs(workspaceId,workspaceName, runMessage, isDestroy, commonInputs);
         }
     }
 

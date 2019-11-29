@@ -77,7 +77,7 @@ public class CreateRunImpl {
 
 
         attributes.setRunMessage(createRunInputs.getRunMessage());
-        attributes.setIsDestroy(createRunInputs.getIsDestroy());
+        attributes.setIsDestroy(createRunInputs.isDestroy());
 
         relationships.setWorkspace(workspace);
 

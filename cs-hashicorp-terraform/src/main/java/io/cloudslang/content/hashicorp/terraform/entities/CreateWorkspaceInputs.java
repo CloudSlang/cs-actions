@@ -17,7 +17,10 @@ package io.cloudslang.content.hashicorp.terraform.entities;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.jetbrains.annotations.NotNull;
 
+
 public class CreateWorkspaceInputs {
+
+    public static final String WORKSPACE_NAME="workspaceName";
 
     private final String workspaceName;
     private final String vcsRepoId;
