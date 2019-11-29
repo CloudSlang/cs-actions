@@ -1,5 +1,7 @@
 package io.cloudslang.content.hashicorp.terraform.services.CreateRunModels;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CreateRunBody {
 
 CreateRunData data;
@@ -43,7 +45,9 @@ CreateRunData data;
     }
    public class Attributes{
         String runMessage;
-        String isDestroy;
+
+        @JsonProperty("is-Destroy")
+        boolean isDestroy;
 
         public String getRunMessage() {
             return runMessage;
@@ -53,11 +57,9 @@ CreateRunData data;
             this.runMessage = runMessage;
         }
 
-        public String getIsDestroy() {
-            return isDestroy;
-        }
+       public boolean isDestroy() { return isDestroy; }
 
-        public void setIsDestroy(String isDestroy) {
+       public void setIsDestroy(boolean isDestroy) {
             this.isDestroy = isDestroy;
         }
     }

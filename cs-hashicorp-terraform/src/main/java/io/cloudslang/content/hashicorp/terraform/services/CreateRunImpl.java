@@ -22,7 +22,6 @@ import io.cloudslang.content.hashicorp.terraform.services.CreateRunModels.Create
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import net.minidev.json.JSONObject;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -91,7 +90,7 @@ public class CreateRunImpl {
         workspace.setData(workspaceData);
 
         workspaceData.setId(createRunInputs.getWorkspaceId());
-        workspaceData.setType("workspace-6");
+        workspaceData.setType(createRunInputs.getWorkspaceName());
 
         createRundata.setRelationships(relationships);
         createRundata.setAttributes(attributes);
