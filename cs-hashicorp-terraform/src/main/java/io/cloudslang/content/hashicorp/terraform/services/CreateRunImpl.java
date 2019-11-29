@@ -15,6 +15,8 @@
 
 package io.cloudslang.content.hashicorp.terraform.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
 import io.cloudslang.content.hashicorp.terraform.services.CreateRunModels.CreateRunBody;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
@@ -32,6 +34,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRu
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBuilder;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class CreateRunImpl {
     @NotNull
@@ -66,7 +69,7 @@ public class CreateRunImpl {
 
     @NotNull
     private static String createRunBody(CreateRunInputs createRunInputs ){
-        JSONObject createRunJson=new JSONObject();
+        ObjectMapper mapper=new ObjectMapper();
         CreateRunBody createBody=new CreateRunBody();
         CreateRunBody.CreateRunData createRundata=createBody.new CreateRunData();
         CreateRunBody.Attributes attributes=createBody.new Attributes();
@@ -74,27 +77,36 @@ public class CreateRunImpl {
         CreateRunBody.Workspace workspace=createBody.new Workspace();
         CreateRunBody.WorkspaceData workspaceData=createBody.new WorkspaceData();
 
+        String requestBody= EMPTY;
+        workspaceData.setId(createRunInputs.getWorkspaceId());
+        workspaceData.setType(RUN_TYPE);
 
 
-        attributes.setRunMessage(createRunInputs.getRunMessage());
         attributes.setIsDestroy(createRunInputs.isDestroy());
+        attributes.setRunMessage(createRunInputs.getRunMessage());
+
 
         relationships.setWorkspace(workspace);
 
         workspace.setData(workspaceData);
 
         workspaceData.setId(createRunInputs.getWorkspaceId());
-        workspaceData.setType(createRunInputs.getWorkspaceName());
+        workspaceData.setType("workspace-6");
 
         createRundata.setRelationships(relationships);
         createRundata.setAttributes(attributes);
-        createRundata.setType(RUN_TYPE);
+        createRundata.setType("runs");
 
         createBody.setData(createRundata);
 
-        createRunJson.put("data",createBody.getData());
+        try {
+            requestBody=mapper.writeValueAsString(createBody);
 
-        return  createRunJson.toString();
+        }catch(JsonProcessingException e){
+            e.printStackTrace();
+        }
 
+
+        return requestBody;
     }
 }
