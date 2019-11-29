@@ -28,6 +28,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBuilder;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
@@ -74,9 +75,6 @@ public class CreateRunImpl {
         CreateRunBody.WorkspaceData workspaceData=createBody.new WorkspaceData();
 
 
-        workspaceData.setId(createRunInputs.getWorkspaceId());
-        workspaceData.setType("runs");
-
 
         attributes.setRunMessage(createRunInputs.getRunMessage());
         attributes.setIsDestroy(createRunInputs.isDestroy());
@@ -86,11 +84,11 @@ public class CreateRunImpl {
         workspace.setData(workspaceData);
 
         workspaceData.setId(createRunInputs.getWorkspaceId());
-        workspaceData.setType("workspace-3");
+        workspaceData.setType(createRunInputs.getWorkspaceName());
 
         createRundata.setRelationships(relationships);
         createRundata.setAttributes(attributes);
-        createRundata.setType("runs");
+        createRundata.setType(RUN_TYPE);
 
         createBody.setData(createRundata);
 

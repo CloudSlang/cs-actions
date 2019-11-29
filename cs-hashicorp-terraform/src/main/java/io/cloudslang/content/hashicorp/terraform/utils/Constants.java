@@ -81,6 +81,7 @@ public class Constants {
     }
     public static class CreateRunConstants{
         public static  final String CREATE_RUN_PATH="/runs";
+        public static  final String RUN_TYPE="runs";
         public static final String RUN_ID = "$.data[*].relationships.run-events.data[*].id";
 
     }
