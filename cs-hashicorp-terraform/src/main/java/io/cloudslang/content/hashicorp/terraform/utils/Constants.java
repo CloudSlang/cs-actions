@@ -46,6 +46,7 @@ public class Constants {
         public static final String AUTHORIZATION = "Authorization:";
         public static final String BEARER = "Bearer ";
         public static final String TERRAFORM_HOST = "app.terraform.io";
+        public static final String TERRAFORM_VERSION = "0.12.1";
         public static final String ORGANIZATION_PATH = "/organizations/";
         public static final String ORGANIZATION_NAME = "organizationName";
         public static final String PATH_SEPARATOR = "/";
@@ -71,6 +72,8 @@ public class Constants {
     public static class CreateWorkspace {
         public static final String CREATE_WORKSPACE_OPERATION_NAME = "Create Workspace";
         public static final String WORKSPACE_PATH = "/workspaces";
+        public static final String WORKSPACE_ID_JSON_PATH = "$.data[*].id";
+        public static final String WORKSPACE_TYPE = "workspaces";
     }
 
     public static class ListOAuthClientConstants {

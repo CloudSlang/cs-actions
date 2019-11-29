@@ -15,14 +15,14 @@
 
 package io.cloudslang.content.hashicorp.terraform.actions.workspaces;
 
-import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
+import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 
 import java.util.Map;
 
@@ -32,84 +32,101 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.addOutput;
+import static io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.createWorkspace;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.CREATE_WORKSPACE_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_ID_JSON_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.OAUTH_TOKEN_ID_DESCRIPTION;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.STATUS_CODE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspace.VCS_REPO_ID;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspace.WORKSPACE_NAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.GetWorkspaceDetails.WORKSPACE_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_USERNAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.ListOAuthClientOutputs.OAUTH_TOKEN_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class CreateWorkspace {
 
     /**
-     * List An OAuth Client Id which represents  the connection between an organization and a VCS provider.
+     * Creates a workspace which represent running infrastructure managed by Terraform.
      *
-     * @param authToken         required - authentication token used to connect to Terraform API.
+     * @param authToken              required - authentication token used to connect to Terraform API.
      *
-     * @param organizationName  required - name of the Terraform organization.
+     * @param organizationName       required - name of the Terraform organization.
      *
-     * @param workspaceName     Optional - The name of workspace to be created.
+     * @param workspaceName          Optional - The name of workspace to be created.
      *
-     * @param vcsRepoId         Optional - The ID of VCS(GIT) repository.
+     * @param workspaceDescription   Optional - The description of workspace to be created.
      *
-     * @param oauthTokenId      Optional - Id of the oauth-token-id of the VCS Provider.
+     * @param vcsRepoId              Optional - The ID of VCS(GIT) repository.
      *
-     * @param reuestBody        Optional - The request body of the workspace.
+     * @param vcsBranchName          Optional - VCS Branch name for given repo.
      *
-     * @param proxyHost         Optional - proxy server used to connect to Terraform API. If empty no proxy will be used.
-     *                          Default: ""
-     * @param proxyPort         Optional - proxy server port. You must either specify values for both proxyHost and
-     *                          proxyPort inputs or leave them both empty.
-     *                          Default: ""
-     * @param proxyUsername     Optional - proxy server user name.
-     *                          Default: ""
-     * @param proxyPassword     Optional - proxy server password associated with the proxyUsername input value.
-     *                          Default: ""
-     * @param trustAllRoots     Optional - Specifies whether to enable weak security over SSL/TSL.
+     * @param isDefaultBranch        Optional - This repesents the VCS repo branch is default or not.
+     *                               Default: true
      *
-     * @param x509HostnameVerifier Optional - Specifies the way the server hostname must match a domain name in
-     *                                         the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to
-     *                                         allow_all to skip any checking. For the value browser_compatible the hostname verifier
-     *                                         works the same way as Curl and Firefox. The hostname must match either the first CN, or any of
-     *                                         the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only
-     *                                         difference between browser_compatible and strict is that a wildcard (such as *.foo.com)
-     *                                         with browser_compatible matches all subdomains, including a.b.foo.com
-     * @param trustKeystore    Optional - The pathname of the Java TrustStore file. This contains certificates from other parties that you expect to communicate with, or from Certificate Authorities
-     *                                    that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https'
-     *                                    or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS);
-     * @param trustPassword    Optional - The password associated with the TrustStore file. If trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied
+     * @param oauthTokenId           Optional - Id of the oauth-token-id of the VCS Provider.
      *
-     * @param connectTimeout   Optional - The time to wait for a connection to be established in seconds. A timeout value of '0' represents an infinite timeout
+     * @param requestBody            Optional - The request body of the workspace.
      *
-     * @param socketTimeout    Optional - The timeout for waiting for data (a maximum period " +
-     *                                    inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' represents an infinite timeout
-     * @param keepAlive        Optional - Specifies whether to create a shared connection that will be used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
-     *                                    execution it will close it
+     * @param proxyHost              Optional - proxy server used to connect to Terraform API. If empty no proxy will be used.
+     * @param proxyPort              Optional - proxy server port. You must either specify values for both proxyHost and
+     *                               proxyPort inputs or leave them both empty.
+     *                               Default: 8080
+     *
+     * @param proxyUsername          Optional - proxy server user name.
+     *
+     * @param proxyPassword          Optional - proxy server password associated with the proxyUsername input value.
+     *
+     * @param trustAllRoots          Optional - Specifies whether to enable weak security over SSL/TSL.
+     *                               Default: false
+     *
+     * @param x509HostnameVerifier   Optional - Specifies the way the server hostname must match a domain name in
+     *                               the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to
+     *                               allow_all to skip any checking. For the value browser_compatible the hostname verifier
+     *                               works the same way as Curl and Firefox. The hostname must match either the first CN, or any of
+     *                               the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only
+     *                               difference between browser_compatible and strict is that a wildcard (such as *.foo.com)
+     *                               with browser_compatible matches all subdomains, including a.b.foo.com
+     *                               Default: "strict"
+     *
+     * @param trustKeystore          Optional - The pathname of the Java TrustStore file. This contains certificates from other parties that you expect to communicate with, or from Certificate Authorities
+     *                               that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https'
+     *                               or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS);
+     *
+     * @param trustPassword          Optional - The password associated with the TrustStore file. If trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied
+     *
+     * @param connectTimeout         Optional - The time to wait for a connection to be established in seconds. A timeout value of '0' represents an infinite timeout
+     *                               Default: 10000
+     *
+     * @param socketTimeout          Optional - The timeout for waiting for data (a maximum period " +
+     *                               inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' represents an infinite timeout
+     *                               Default: 0
+     *
+     * @param keepAlive              Optional - Specifies whether to create a shared connection that will be used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
+     *                               execution it will close it
+     *                               Default: true
+     *
      * @param connectionsMaxPerRoute Optional - The maximum limit of connections on a per route basis
+     *                               Default: 2
      *
      * @param connectionsMaxTotal    Optional - The maximum limit of connections in total
+     *                               Default: 20
      *
      * @param responseCharacterSet   Optional - The character encoding to be used for the HTTP response. If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
-     *                                          default value will be used. You should not use this for method=HEAD or OPTIONS.
+     *                               default value will be used. You should not use this for method=HEAD or OPTIONS.
      *                               Default : UTF-8
-     * @return                  A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     *                          operation, or failure message and the exception if there is one
+     *
+     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
+     * operation, or failure message and the exception if there is one
      */
 
     @Action(name = CREATE_WORKSPACE_OPERATION_NAME,
@@ -125,11 +142,15 @@ public class CreateWorkspace {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = ORGANIZATION_NAME, required = true) String organizationName,
+                                       @Param(value = ORGANIZATION_NAME, required = true, description = ORGANIZATION_NAME_DESC) String organizationName,
                                        @Param(value = WORKSPACE_NAME, description = WORKSPACE_NAME_DESC) String workspaceName,
+                                       @Param(value = WORKSPACE_DESCRIPTION, description = WORKSPACE_DESCRIPTION_DESC) String workspaceDescription,
                                        @Param(value = VCS_REPO_ID, description = VCS_REPO_ID_DESC) String vcsRepoId,
+                                       @Param(value = VCS_BRANCH_NAME, description = VCS_BRANCH_NAME_DESC) String vcsBranchName,
+                                       @Param(value = VCS_DEFAULT_BRANCH, description = VCS_DEFAULT_BRANCH_DESC) String isDefaultBranch,
                                        @Param(value = OAUTH_TOKEN_ID, description = OAUTH_TOKEN_ID_DESCRIPTION) String oauthTokenId,
-                                       @Param(value = BODY, description = WORKSPACE_REQUEST_BODY_DESC) String reuestBody,
+                                       @Param(value = TERRAFORM_VERSION, description = TERAAFORM_VERSION_DESC) String terraformVersion,
+                                       @Param(value = BODY, description = WORKSPACE_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -147,9 +168,13 @@ public class CreateWorkspace {
         authToken = defaultIfEmpty(authToken, EMPTY);
         organizationName = defaultIfEmpty(organizationName, EMPTY);
         workspaceName = defaultIfEmpty(workspaceName, EMPTY);
+        workspaceDescription = defaultIfEmpty(workspaceDescription, EMPTY);
         vcsRepoId = defaultIfEmpty(vcsRepoId, EMPTY);
+        vcsBranchName = defaultIfEmpty(vcsBranchName, EMPTY);
+        isDefaultBranch = defaultIfEmpty(isDefaultBranch, BOOLEAN_TRUE);
         oauthTokenId = defaultIfEmpty(oauthTokenId, EMPTY);
-        reuestBody = defaultIfEmpty(reuestBody, EMPTY);
+        requestBody = defaultIfEmpty(requestBody, EMPTY);
+        terraformVersion = defaultIfEmpty(terraformVersion, TERRAFORM_VERSION);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -160,19 +185,25 @@ public class CreateWorkspace {
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
         connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
-        keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
+        keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
+
+
         try {
             final Map<String, String> result = createWorkspace(CreateWorkspaceInputs.builder()
                     .workspaceName(workspaceName)
+                    .workspaceDescription(workspaceDescription)
                     .vcsRepoId(vcsRepoId)
+                    .vcsBranchName(vcsBranchName)
+                    .isDefaultBranch(isDefaultBranch)
                     .oauthTokenId(oauthTokenId)
-                    .requestBody(reuestBody)
-                    .commonInputs(TerraformCommonInputs.builder()
+                    .commonInputs(Inputs.builder()
                             .organizationName(organizationName)
                             .authToken(authToken)
+                            .terraformVersion(terraformVersion)
+                            .requestBody(requestBody)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
@@ -190,11 +221,17 @@ public class CreateWorkspace {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
+            System.out.println(returnMessage);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                addOutput(results, new JsonParser().parse(returnMessage).getAsJsonObject(), ID, WORKSPACE_ID);
+                final String workspaceId = JsonPath.read(returnMessage, WORKSPACE_ID_JSON_PATH);
+                if (!workspaceId.isEmpty()) {
+                    results.put(WORKSPACE_ID, workspaceId);
+                } else {
+                    results.put(WORKSPACE_ID, EMPTY);
+                }
             }
             return results;
         } catch (Exception exception) {

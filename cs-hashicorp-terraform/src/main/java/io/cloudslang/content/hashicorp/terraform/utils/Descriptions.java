@@ -17,8 +17,8 @@ package io.cloudslang.content.hashicorp.terraform.utils;
 
 public class Descriptions {
     public static class Common {
-        public static final String PROXY_HOST_DESC = "Proxy server used to access the Office 365 service.";
-        public static final String PROXY_PORT_DESC = "Proxy server port used to access the Office 365 service." +
+        public static final String PROXY_HOST_DESC = "Proxy server used to access the Terraform service.";
+        public static final String PROXY_PORT_DESC = "Proxy server port used to access the Terraform service." +
                 "Default: '8080'";
         public static final String PROXY_USERNAME_DESC = "Proxy server user name.";
         public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxy_username input value.";
@@ -53,8 +53,8 @@ public class Descriptions {
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
                 "Default value: UTF-8";
         public static final String AUTH_TOKEN_DESC = "The authorization token for terraform";
-        public static final String ORGANIZATION_NAME_DESC="Name of the organization";
-
+        public static final String ORGANIZATION_NAME_DESC = "Name of the organization";
+        public static final String TERAAFORM_VERSION_DESC = "Terraform version.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
     }
 
@@ -66,13 +66,17 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The request was successfully executed.";
         public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
-        public static final String STATUS_CODE_DESC = "The HTTP status code for Office 365 API request.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
         public static final String OAUTH_TOKEN_ID_DESCRIPTION="Id of the oauthtoken";
     }
 
     public static class CreateWorkspace {
         public static final String CREATE_WORKSPACE_DESC = "Create a workspace in an organization.";
-        public static final String WORKSPACE_NAME_DESC = "The name of workspace to be created.";
+        public static final String WORKSPACE_NAME_DESC = "The name of the workspace, which can only include letters, numbers, -, and _. " +
+                "This will be used as an identifier and must be unique in the organization.";
+        public static final String WORKSPACE_DESCRIPTION_DESC = "The description of workspace to be created.";
+        public static final String VCS_BRANCH_NAME_DESC = "VCS Branch name for given repo.";
+        public static final String VCS_DEFAULT_BRANCH_DESC = "This repesents the VCS repo branch is default or not.";
         public static final String VCS_REPO_ID_DESC = "The ID of VCS repository +" +
                 "example : username/repo_name";
         public static final String WORKSPACE_REQUEST_BODY_DESC = "The request body of the workspace.";

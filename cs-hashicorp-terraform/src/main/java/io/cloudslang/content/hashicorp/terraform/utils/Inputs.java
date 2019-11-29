@@ -10,7 +10,11 @@ public class Inputs {
     public static final String PROXY_PORT = "proxyPort";
     public static final String PROXY_USERNAME = "proxyUsername";
     public static final String PROXY_PASSWORD = "proxyPassword";
-    public static final String REQUEST_BODY = "proxyPassword";
+    public static final String REQUEST_BODY = "requestBody";
+    public static final String EXECUTION_TIMEOUT = "executionTimeout";
+    public static final String POLLING_INTERVAL = "pollingInterval";
+    public static final String ASYNC = "async";
+
 
     public static final String PAGE_NUMBER = "page[number]";
     public static final String PAGE_SIZE = "page[size]";
@@ -18,6 +22,7 @@ public class Inputs {
     private final String authToken;
     private final String organizationName;
     private final String requestBody;
+    private final String terraformVersion;
     private final String proxyHost;
     private final String proxyPort;
     private final String proxyUsername;
@@ -28,21 +33,25 @@ public class Inputs {
     private final String trustPassword;
     private final String connectTimeout;
     private final String socketTimeout;
+    private final String executionTimeout;
+    private final String pollingInterval;
+    private final String async;
     private final String keepAlive;
     private final String responseCharacterSet;
     private final String connectionsMaxPerRoot;
     private final String connectionsMaxTotal;
 
-    @java.beans.ConstructorProperties({"authToken", "organizationName","requestBody","requestBody", "proxyHost", "proxyPort", "proxyUsername",
+    @java.beans.ConstructorProperties({"authToken", "organizationName","requestBody","terraformVersion", "proxyHost", "proxyPort", "proxyUsername",
             "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "connectTimeout",
-            "socketTimeout", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal"})
-    private Inputs(String authToken, String organizationName,String requestBody, String proxyHost, String proxyPort,
+            "socketTimeout","executionTimeout","pollingInterval","async", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal"})
+    private Inputs(String authToken, String organizationName,String requestBody, String terraformVersion, String proxyHost, String proxyPort,
                    String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier,
-                   String trustKeystore, String trustPassword, String connectTimeout, String socketTimeout,
-                   String keepAlive, String responseCharacterSet, String connectionsMaxPerRoot, String connectionsMaxTotal) {
+                   String trustKeystore, String trustPassword, String connectTimeout, String socketTimeout,String executionTimeout, String pollingInterval,
+                   String async, String keepAlive, String responseCharacterSet, String connectionsMaxPerRoot, String connectionsMaxTotal) {
         this.authToken = authToken;
         this.organizationName = organizationName;
         this.requestBody=requestBody;
+        this.terraformVersion = terraformVersion;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
         this.proxyUsername = proxyUsername;
@@ -53,6 +62,9 @@ public class Inputs {
         this.trustPassword = trustPassword;
         this.connectTimeout = connectTimeout;
         this.socketTimeout = socketTimeout;
+        this.executionTimeout =executionTimeout;
+        this.pollingInterval = pollingInterval;
+        this.async = async;
         this.keepAlive = keepAlive;
         this.responseCharacterSet = responseCharacterSet;
         this.connectionsMaxPerRoot = connectionsMaxPerRoot;
@@ -78,6 +90,9 @@ public class Inputs {
     public String getRequestBody() {
         return requestBody;
     }
+
+    @NotNull
+    public String getTerraformVersion() { return terraformVersion; }
 
     @NotNull
     public String getAuthToken() {
@@ -140,6 +155,21 @@ public class Inputs {
     }
 
     @NotNull
+    public String getExecutionTimeout() {
+        return this.executionTimeout;
+    }
+
+    @NotNull
+    public String getPollingInterval() {
+        return this.pollingInterval;
+    }
+
+    @NotNull
+    public String getAsync() {
+        return this.async;
+    }
+
+    @NotNull
     public String getKeepAlive() {
         return this.keepAlive;
     }
@@ -153,6 +183,7 @@ public class Inputs {
         private String authToken = EMPTY;
         private String organizationName = EMPTY;
         private String requestBody = EMPTY;
+        private String terraformVersion = EMPTY;
         private String proxyHost = EMPTY;
         private String proxyPort = EMPTY;
         private String proxyUsername = EMPTY;
@@ -163,6 +194,9 @@ public class Inputs {
         private String trustPassword = EMPTY;
         private String connectTimeout = EMPTY;
         private String socketTimeout = EMPTY;
+        private String executionTimeout = EMPTY;
+        private String pollingInterval = EMPTY;
+        private String async = EMPTY;
         private String keepAlive = EMPTY;
         private String responseCharacterSet = EMPTY;
         private String connectionsMaxPerRoot = EMPTY;
@@ -189,6 +223,11 @@ public class Inputs {
             return this;
         }
 
+        @NotNull
+        public Inputs.InputsBuilder terraformVersion(@NotNull final String terraformVersion) {
+            this.terraformVersion = terraformVersion;
+            return this;
+        }
 
         @NotNull
         public Inputs.InputsBuilder trustAllRoots(@NotNull final String trustAllRoots) {
@@ -251,6 +290,24 @@ public class Inputs {
         }
 
         @NotNull
+        public Inputs.InputsBuilder executionTimeout(@NotNull final String executionTimeout) {
+            this.executionTimeout = executionTimeout;
+            return this;
+        }
+
+        @NotNull
+        public Inputs.InputsBuilder pollingInterval(@NotNull final String pollingInterval) {
+            this.pollingInterval = pollingInterval;
+            return this;
+        }
+
+        @NotNull
+        public Inputs.InputsBuilder async(@NotNull final String async) {
+            this.async = async;
+            return this;
+        }
+
+        @NotNull
         public Inputs.InputsBuilder keepAlive(@NotNull final String keepAlive) {
             this.keepAlive = keepAlive;
             return this;
@@ -276,9 +333,9 @@ public class Inputs {
         }
 
         public Inputs build() {
-            return new Inputs(authToken, organizationName,requestBody, proxyHost, proxyPort, proxyUsername, proxyPassword,
+            return new Inputs(authToken, organizationName,requestBody, terraformVersion, proxyHost, proxyPort, proxyUsername, proxyPassword,
                     trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, connectTimeout,
-                    socketTimeout, keepAlive, responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal);
+                    socketTimeout,executionTimeout,pollingInterval,async, keepAlive, responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal);
         }
     }
 
