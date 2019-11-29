@@ -44,9 +44,10 @@ CreateRunData data;
         }
     }
    public class Attributes{
+       @JsonProperty("message")
         String runMessage;
 
-        @JsonProperty("is-Destroy")
+       @JsonProperty("is-Destroy")
         boolean isDestroy;
 
         public String getRunMessage() {
