@@ -16,6 +16,7 @@
 package io.cloudslang.content.hashicorp.terraform.entities;
 
 
+import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.jetbrains.annotations.NotNull;
 
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.ORGANIZATION_NAME;
@@ -23,11 +24,11 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class ListOAuthClientInputs {
 
-    private TerraformCommonInputs commonInputs;
+    private Inputs commonInputs;
 
 
     @java.beans.ConstructorProperties({ORGANIZATION_NAME})
-    public ListOAuthClientInputs(TerraformCommonInputs commonInputs) {
+    public ListOAuthClientInputs(Inputs commonInputs) {
         this.commonInputs = commonInputs;
 
     }
@@ -37,19 +38,19 @@ public class ListOAuthClientInputs {
     }
 
     @NotNull
-    public TerraformCommonInputs getCommonInputs() {
+    public Inputs getCommonInputs() {
         return commonInputs;
     }
 
     public static class ListOAuthClientInputsBuilder {
         private String organizationName = EMPTY;
-        private TerraformCommonInputs commonInputs;
+        private Inputs commonInputs;
 
         ListOAuthClientInputsBuilder() {
         }
 
         @NotNull
-        public ListOAuthClientInputs.ListOAuthClientInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
+        public ListOAuthClientInputs.ListOAuthClientInputsBuilder commonInputs(@NotNull final Inputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }

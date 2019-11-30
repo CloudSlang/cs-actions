@@ -12,24 +12,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.hashicorp.terraform.entities;
 
+import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.jetbrains.annotations.NotNull;
 
 public class CreateWorkspaceInputs {
-    private final String workspaceName;
-    private final String vcsRepoId;
-    private final String oauthTokenId;
-    private final String requestBody;
-    private final TerraformCommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"workspaceName", "vcsRepoId", "oauthTokenId", "requestBody", "commonInputs"})
-    public CreateWorkspaceInputs(String workspaceName, String vcsRepoId, String oauthTokenId, String requestBody,
-                                 TerraformCommonInputs commonInputs) {
+    public static final String WORKSPACE_NAME = "workspaceName";
+    public static final String WORKSPACE_DESCRIPTION = "workspaceDescription";
+    public static final String VCS_REPO_ID = "vcsRepoId";
+    public static final String VCS_BRANCH_NAME = "vcsBranchName";
+    public static final String VCS_DEFAULT_BRANCH = "vcsDefaultBranch";
+
+    private final String workspaceName;
+    private final String workspaceDescription;
+    private final String vcsRepoId;
+    private final String vcsBranchName;
+    private final String  isDefaultBranch;
+    private final String oauthTokenId;
+    private final Inputs commonInputs;
+
+    @java.beans.ConstructorProperties({"workspaceName", "workspaceDescription", "vcsRepoId", "vcsBranchName", "isDefaultBranch", "oauthTokenId", "commonInputs"})
+    public CreateWorkspaceInputs(String workspaceName, String workspaceDescription, String vcsRepoId, String vcsBranchName, String  isDefaultBranch, String oauthTokenId,
+                                 Inputs commonInputs) {
         this.workspaceName = workspaceName;
+        this.workspaceDescription = workspaceDescription;
         this.vcsRepoId = vcsRepoId;
+        this.vcsBranchName = vcsBranchName;
+        this.isDefaultBranch = isDefaultBranch;
         this.oauthTokenId = oauthTokenId;
-        this.requestBody = requestBody;
         this.commonInputs = commonInputs;
     }
 
@@ -44,8 +57,22 @@ public class CreateWorkspaceInputs {
     }
 
     @NotNull
+    public String getWorkspaceDescription() {
+        return workspaceDescription;
+    }
+
+    @NotNull
     public String getVcsRepoId() {
         return vcsRepoId;
+    }
+
+    @NotNull
+    public String getVcsBranch() {
+        return vcsBranchName;
+    }
+
+    public String isDefaultBranch() {
+        return isDefaultBranch;
     }
 
     @NotNull
@@ -54,23 +81,19 @@ public class CreateWorkspaceInputs {
     }
 
     @NotNull
-    public String getRequestBody() {
-        return requestBody;
-    }
-
-
-    @NotNull
-    public TerraformCommonInputs getCommonInputs() {
+    public Inputs getCommonInputs() {
         return this.commonInputs;
     }
 
 
     public static class CreateWorkspaceInputsBuilder {
         private String workspaceName;
+        private String workspaceDescription;
         private String vcsRepoId;
+        private String vcsBranchName;
+        private String isDefaultBranch;
         private String oauthTokenId;
-        private String requestBody;
-        private TerraformCommonInputs commonInputs;
+        private Inputs commonInputs;
 
         CreateWorkspaceInputsBuilder() {
 
@@ -83,8 +106,26 @@ public class CreateWorkspaceInputs {
         }
 
         @NotNull
+        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder workspaceDescription(@NotNull final String workspaceDescription) {
+            this.workspaceDescription = workspaceDescription;
+            return this;
+        }
+
+        @NotNull
         public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder vcsRepoId(@NotNull final String vcsRepoId) {
             this.vcsRepoId = vcsRepoId;
+            return this;
+        }
+
+        @NotNull
+        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder vcsBranchName(@NotNull final String vcsBranchName) {
+            this.vcsBranchName = vcsBranchName;
+            return this;
+        }
+
+        @NotNull
+        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder isDefaultBranch(@NotNull final String  isDefaultBranch) {
+            this.isDefaultBranch = isDefaultBranch;
             return this;
         }
 
@@ -94,19 +135,13 @@ public class CreateWorkspaceInputs {
             return this;
         }
 
-        @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder requestBody(@NotNull final String requestBody) {
-            this.requestBody = requestBody;
-            return this;
-        }
-
-        public CreateWorkspaceInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
+        public CreateWorkspaceInputsBuilder commonInputs(@NotNull final Inputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
         public CreateWorkspaceInputs build() {
-            return new CreateWorkspaceInputs(workspaceName, vcsRepoId, oauthTokenId, requestBody, commonInputs);
+            return new CreateWorkspaceInputs(workspaceName, workspaceDescription, vcsRepoId, vcsBranchName, isDefaultBranch, oauthTokenId, commonInputs);
         }
 
     }

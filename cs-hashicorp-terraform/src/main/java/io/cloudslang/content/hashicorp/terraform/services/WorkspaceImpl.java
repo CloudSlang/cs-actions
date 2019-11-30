@@ -14,9 +14,11 @@
  */
 package io.cloudslang.content.hashicorp.terraform.services;
 
-import com.google.gson.JsonObject;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
+import io.cloudslang.content.hashicorp.terraform.services.CreateWorkspaceModels.CreateWorkspaceBody;
+import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.http.client.utils.URIBuilder;
@@ -27,6 +29,7 @@ import java.util.Map;
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.ANONYMOUS;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -36,16 +39,19 @@ public class WorkspaceImpl {
     @NotNull
     public static Map<String, String> createWorkspace(@NotNull final CreateWorkspaceInputs createWorkspaceInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final TerraformCommonInputs commonInputs = createWorkspaceInputs.getCommonInputs();
+        final Inputs commonInputs = createWorkspaceInputs.getCommonInputs();
         httpClientInputs.setUrl(createWorkspaceUrl(createWorkspaceInputs.getCommonInputs().getOrganizationName()));
         setCommonHttpInputs(httpClientInputs, commonInputs);
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
-        httpClientInputs.setBody(createWorkspaceInputs.getRequestBody());
+        if (commonInputs.getRequestBody().equals(EMPTY)) {
+            httpClientInputs.setBody(createWorkspaceBody(createWorkspaceInputs));
+        } else {
+            httpClientInputs.setBody(commonInputs.getRequestBody());
+        }
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-
         return new HttpClientService().execute(httpClientInputs);
     }
 
@@ -54,13 +60,6 @@ public class WorkspaceImpl {
         final URIBuilder uriBuilder = getUriBuilder();
         uriBuilder.setPath(getWorkspacePath(organizationName));
         return uriBuilder.build().toURL().toString();
-    }
-
-    public static void addOutput(Map<String, String> results, JsonObject responseJson, String key, String keyToAdd) {
-        if (responseJson.has(key))
-            results.put(keyToAdd, responseJson.get(key).getAsString());
-        else
-            results.put(keyToAdd, EMPTY);
     }
 
     @NotNull
@@ -72,5 +71,43 @@ public class WorkspaceImpl {
                 .append(organizationName)
                 .append(WORKSPACE_PATH);
         return pathString.toString();
+    }
+
+    @NotNull
+    private static String createWorkspaceBody(CreateWorkspaceInputs createWorkspaceInputs) {
+        ObjectMapper createWorkspaceMapper = new ObjectMapper();
+        CreateWorkspaceBody createBody = new CreateWorkspaceBody();
+        CreateWorkspaceBody.CreateWorkspaceData createWorkspaceData = createBody.new CreateWorkspaceData();
+        CreateWorkspaceBody.Attributes attributes = createBody.new Attributes();
+        String requestBody = EMPTY;
+
+        attributes.setName(createWorkspaceInputs.getWorkspaceName());
+        attributes.setTerraform_version(createWorkspaceInputs.getCommonInputs().getTerraformVersion());
+        attributes.setDescription(createWorkspaceInputs.getWorkspaceDescription());
+
+        CreateWorkspaceBody.VCSRepo vcsRepo = createBody.new VCSRepo();
+
+        vcsRepo.setIdentifier(createWorkspaceInputs.getVcsRepoId());
+        vcsRepo.setOauthTokenId(createWorkspaceInputs.getOauthTokenId());
+        vcsRepo.setBranch(createWorkspaceInputs.getVcsBranch());
+        vcsRepo.setIsDefaultBranch(createWorkspaceInputs.isDefaultBranch());
+
+        attributes.setVcsRepo(vcsRepo);
+
+        createWorkspaceData.setAttributes(attributes);
+        createWorkspaceData.setType(WORKSPACE_TYPE);
+
+        createBody.setData(createWorkspaceData);
+
+
+        try {
+            requestBody = createWorkspaceMapper.writeValueAsString(createBody);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(requestBody);
+        return requestBody;
+
     }
 }

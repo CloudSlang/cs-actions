@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.hashicorp.terraform.actions;
+package io.cloudslang.content.hashicorp.terraform.actions.runs;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -26,22 +26,28 @@ import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 
 import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs.IS_DESTROY;
+import static io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs.RUN_MESSAGE;
+import static io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs.WORKSPACE_NAME;
 import static io.cloudslang.content.hashicorp.terraform.services.CreateRunImpl.createRunClient;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_EVENT_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.UTF8;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.RESPONSC_CHARACTER_SET_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_NAME_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.AuthorizationOutputs.AUTH_TOKEN;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.DELIMITER;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.STATUS_CODE;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.OAUTH_TOKEN_LIST_JSON_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.AUTH_TOKEN;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.REQUEST_BODY;
+import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateRunOutputs.RUN_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
@@ -53,14 +59,14 @@ public class CreateRun {
      * @param authToken         required - authentication token used to connect to Terraform API.
      *
      * @param proxyHost         Optional - proxy server used to connect to Terraform API. If empty no proxy will be used.
-     *                          Default: ""
+     *
      * @param proxyPort         Optional - proxy server port. You must either specify values for both proxyHost and
      *                          proxyPort inputs or leave them both empty.
-     *                          Default: ""
+     *                          Default: 8080
      * @param proxyUsername     Optional - proxy server user name.
-     *                          Default: ""
+     *
      * @param proxyPassword     Optional - proxy server password associated with the proxyUsername input value.
-     *                          Default: ""
+     *
      * @param trustAllRoots     Optional - Specifies whether to enable weak security over SSL/TSL.
      *
      * @param x509HostnameVerifier Optional - Specifies the way the server hostname must match a domain name in
@@ -70,20 +76,26 @@ public class CreateRun {
      *                                         the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only
      *                                         difference between browser_compatible and strict is that a wildcard (such as *.foo.com)
      *                                         with browser_compatible matches all subdomains, including a.b.foo.com
+     *                             Default: "strict"
      * @param trustKeystore    Optional - The pathname of the Java TrustStore file. This contains certificates from other parties that you expect to communicate with, or from Certificate Authorities
      *                                    that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https'
      *                                    or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS);
      * @param trustPassword    Optional - The password associated with the TrustStore file. If trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied
      *
      * @param connectTimeout   Optional - The time to wait for a connection to be established in seconds. A timeout value of '0' represents an infinite timeout
+     *                         Default: 10000
      *
      * @param socketTimeout    Optional - The timeout for waiting for data (a maximum period " +
      *                                    inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' represents an infinite timeout
+     *                         Default: 0
      * @param keepAlive        Optional - Specifies whether to create a shared connection that will be used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
      *                                    execution it will close it
+     *                         Default: true
      * @param connectionsMaxPerRoute Optional - The maximum limit of connections on a per route basis
+     *                               Default: 2
      *
      * @param connectionsMaxTotal    Optional - The maximum limit of connections in total
+     *                               Default: 20
      *
      * @param responseCharacterSet   Optional - The character encoding to be used for the HTTP response. If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
      *                                          default value will be used. You should not use this for method=HEAD or OPTIONS.
@@ -101,10 +113,11 @@ public class CreateRun {
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = "workspaceId") String workspaceId,
-                                       @Param(value = "runMessage") String runMessage,
-                                       @Param(value = "isDestroy") String isDestroy,
-                                       @Param( value = "body") String body,
+                                       @Param(value = WORKSPACE_ID,description = WORKSPACE_ID_DESC) String workspaceId,
+                                       @Param(value = WORKSPACE_NAME,description = WORKSPACE_NAME_DESC) String workspaceName,
+                                       @Param(value = RUN_MESSAGE,description = RUN_MESSAGE) String runMessage,
+                                       @Param(value = IS_DESTROY,description =IS_DESTROY ) boolean isDestroy,
+                                       @Param( value = REQUEST_BODY) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -119,15 +132,49 @@ public class CreateRun {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSC_CHARACTER_SET_DESC) String responseCharacterSet) {
+
         workspaceId = defaultIfEmpty(workspaceId, EMPTY);
+        workspaceName=defaultString(workspaceName,EMPTY);
         runMessage = defaultIfEmpty(runMessage, EMPTY);
-        isDestroy = defaultIfEmpty(isDestroy, EMPTY);
-        body=defaultIfEmpty(body,EMPTY);
+        requestBody=defaultIfEmpty(requestBody,EMPTY);
+        proxyHost = defaultIfEmpty(proxyHost, EMPTY);
+        proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
+        proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
+        proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
+        x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
+        trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
+        trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
+        connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
+        socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
+        keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
+        connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
+        connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
+        responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
+
         try {
             final Map<String, String> result = createRunClient(CreateRunInputs.builder()
-                    .body(body)
-                    .commonInputs(TerraformCommonInputs.builder()
+                    .workspaceId(workspaceId)
+                    .workspaceName(workspaceName)
+                    .runMessage(runMessage)
+                    .isDestroy(isDestroy)
+                    .commonInputs(Inputs.builder()
                             .authToken(authToken)
+                            .requestBody(requestBody)
+                            .proxyHost(proxyHost)
+                            .proxyPort(proxyPort)
+                            .proxyUsername(proxyUsername)
+                            .proxyPassword(proxyPassword)
+                            .trustAllRoots(trustAllRoots)
+                            .x509HostnameVerifier(x509HostnameVerifier)
+                            .trustKeystore(trustKeystore)
+                            .trustPassword(trustPassword)
+                            .connectTimeout(connectTimeout)
+                            .socketTimeout(socketTimeout)
+                            .keepAlive(keepAlive)
+                            .connectionsMaxPerRoot(connectionsMaxPerRoute)
+                            .connectionsMaxTotal(connectionsMaxTotal)
+                            .responseCharacterSet(responseCharacterSet)
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
@@ -136,12 +183,12 @@ public class CreateRun {
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                final List<String> runEventIdList = JsonPath.read(returnMessage, RUN_EVENT_ID);
+                final List<String> runEventIdList = JsonPath.read(returnMessage, RUN_ID);
                 if (!runEventIdList.isEmpty()) {
                     final String runEventIdListAsString = join(runEventIdList.toArray(), DELIMITER);
-                    results.put("runEventId", runEventIdListAsString);
+                    results.put(RUN_ID, runEventIdListAsString);
                 } else {
-                    results.put("runEventId", EMPTY);
+                    results.put(RUN_ID, EMPTY);
                 }
             }
 

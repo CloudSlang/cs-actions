@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus
+ * (c) Copyright 2020 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -22,11 +22,12 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.hashicorp.terraform.entities.ListOAuthClientInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import com.hp.oo.sdk.content.annotations.Action;
+import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
 import java.util.Map;
@@ -42,8 +43,8 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_USERNAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.AuthorizationOutputs.AUTH_TOKEN;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.ListOAuthClientOutputs.OAUTH_TOKEN_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -60,15 +61,16 @@ public class ListOAuthClient {
      * @param organizationName  required - name of the Terraform organization.
      *
      * @param proxyHost         Optional - proxy server used to connect to Terraform API. If empty no proxy will be used.
-     *                          Default: ""
+     *
      * @param proxyPort         Optional - proxy server port. You must either specify values for both proxyHost and
      *                          proxyPort inputs or leave them both empty.
-     *                          Default: ""
+     *                          Default: 8080
      * @param proxyUsername     Optional - proxy server user name.
-     *                          Default: ""
+     *
      * @param proxyPassword     Optional - proxy server password associated with the proxyUsername input value.
-     *                          Default: ""
+     *
      * @param trustAllRoots     Optional - Specifies whether to enable weak security over SSL/TSL.
+     *                          Default: false
      *
      * @param x509HostnameVerifier Optional - Specifies the way the server hostname must match a domain name in
      *                                         the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to
@@ -77,20 +79,26 @@ public class ListOAuthClient {
      *                                         the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only
      *                                         difference between browser_compatible and strict is that a wildcard (such as *.foo.com)
      *                                         with browser_compatible matches all subdomains, including a.b.foo.com
+     *                             Default: "strict"
      * @param trustKeystore    Optional - The pathname of the Java TrustStore file. This contains certificates from other parties that you expect to communicate with, or from Certificate Authorities
      *                                    that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https'
      *                                    or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS);
      * @param trustPassword    Optional - The password associated with the TrustStore file. If trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied
      *
      * @param connectTimeout   Optional - The time to wait for a connection to be established in seconds. A timeout value of '0' represents an infinite timeout
+     *                         Default: 10000
      *
      * @param socketTimeout    Optional - The timeout for waiting for data (a maximum period " +
      *                                    inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' represents an infinite timeout
+     *                         Default: 0
      * @param keepAlive        Optional - Specifies whether to create a shared connection that will be used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
      *                                    execution it will close it
+     *                         Default: true
      * @param connectionsMaxPerRoute Optional - The maximum limit of connections on a per route basis
+     *                               Default: 2
      *
      * @param connectionsMaxTotal    Optional - The maximum limit of connections in total
+     *                               Default: 20
      *
      * @param responseCharacterSet   Optional - The character encoding to be used for the HTTP response. If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
      *                                          default value will be used. You should not use this for method=HEAD or OPTIONS.
@@ -110,7 +118,7 @@ public class ListOAuthClient {
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = ORGANIZATION_NAME) String organizationName,
+                                       @Param(value = ORGANIZATION_NAME,required = true,description = ORGANIZATION_NAME_DESC) String organizationName,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -136,9 +144,9 @@ public class ListOAuthClient {
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
-        connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
+        connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
-        keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
+        keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
@@ -146,7 +154,7 @@ public class ListOAuthClient {
 
         try {
             final Map<String, String> result = listOAuthClient(ListOAuthClientInputs.builder()
-                    .commonInputs(TerraformCommonInputs.builder()
+                    .commonInputs(Inputs.builder()
                             .organizationName(organizationName)
                             .authToken(authToken)
                             .proxyHost(proxyHost)
@@ -165,6 +173,13 @@ public class ListOAuthClient {
                             .responseCharacterSet(responseCharacterSet)
                             .build())
                     .build());
+
+            final List<String> exceptionMessage = verifyCommonInputs(proxyPort,trustAllRoots,
+                    connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+            if (!exceptionMessage.isEmpty()) {
+                return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
+            }
+
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
