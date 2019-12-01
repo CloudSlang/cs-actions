@@ -30,12 +30,12 @@ public class CreateWorkspaceInputs {
     private final String workspaceDescription;
     private final String vcsRepoId;
     private final String vcsBranchName;
-    private final String  isDefaultBranch;
+    private final boolean  isDefaultBranch;
     private final String oauthTokenId;
     private final Inputs commonInputs;
 
     @java.beans.ConstructorProperties({"workspaceName", "workspaceDescription", "vcsRepoId", "vcsBranchName", "isDefaultBranch", "oauthTokenId", "commonInputs"})
-    public CreateWorkspaceInputs(String workspaceName, String workspaceDescription, String vcsRepoId, String vcsBranchName, String  isDefaultBranch, String oauthTokenId,
+    public CreateWorkspaceInputs(String workspaceName, String workspaceDescription, String vcsRepoId, String vcsBranchName, boolean  isDefaultBranch, String oauthTokenId,
                                  Inputs commonInputs) {
         this.workspaceName = workspaceName;
         this.workspaceDescription = workspaceDescription;
@@ -71,7 +71,7 @@ public class CreateWorkspaceInputs {
         return vcsBranchName;
     }
 
-    public String isDefaultBranch() {
+    public boolean isDefaultBranch() {
         return isDefaultBranch;
     }
 
@@ -91,7 +91,7 @@ public class CreateWorkspaceInputs {
         private String workspaceDescription;
         private String vcsRepoId;
         private String vcsBranchName;
-        private String isDefaultBranch;
+        private boolean isDefaultBranch;
         private String oauthTokenId;
         private Inputs commonInputs;
 
@@ -124,7 +124,7 @@ public class CreateWorkspaceInputs {
         }
 
         @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder isDefaultBranch(@NotNull final String  isDefaultBranch) {
+        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder isDefaultBranch(@NotNull final boolean  isDefaultBranch) {
             this.isDefaultBranch = isDefaultBranch;
             return this;
         }

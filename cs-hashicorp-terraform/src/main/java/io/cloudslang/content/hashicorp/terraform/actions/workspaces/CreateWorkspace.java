@@ -60,24 +60,28 @@ public class CreateWorkspace {
      *
      * @param authToken              required - authentication token used to connect to Terraform API.
      *
-     * @param organizationName       required - name of the Terraform organization.
+     * @param organizationName       required - The name of the Terraform organization.
      *
-     * @param workspaceName          Optional - The name of workspace to be created.
+     * @param workspaceName          Optional - The name of the workspace, which can only include letters, numbers, -, and _.
+     *                               This will be used as an identifier and must be unique in the organization.
      *
-     * @param workspaceDescription   Optional - The description of workspace to be created.
+     * @param workspaceDescription   Optional - A description of the workspace to be created.
      *
-     * @param vcsRepoId              Optional - The ID of VCS(GIT) repository.
+     * @param vcsRepoId              Optional - A reference to your VCS repository in the format :org/:repo where :org and :repo refer to the organization and " +
+     *                               "repository in your VCS provider..
      *
-     * @param vcsBranchName          Optional - VCS Branch name for given repo.
+     * @param vcsBranchName          Optional - The repository branch that Terraform will execute from. " +
+     *                               "If omitted or submitted as an empty string, this defaults to the repository's default branch (e.g. master).
      *
-     * @param isDefaultBranch        Optional - This repesents the VCS repo branch is default or not.
+     * @param isDefaultBranch        Optional - This value represents the VCS repo branch is default or not.
      *                               Default: true
      *
-     * @param oauthTokenId           Optional - Id of the oauth-token-id of the VCS Provider.
+     * @param oauthTokenId           Optional - The VCS Connection (OAuth Connection + Token) to use. This ID can be obtained from the oauth-tokens endpoint.
      *
      * @param requestBody            Optional - The request body of the workspace.
      *
      * @param proxyHost              Optional - proxy server used to connect to Terraform API. If empty no proxy will be used.
+     *
      * @param proxyPort              Optional - proxy server port. You must either specify values for both proxyHost and
      *                               proxyPort inputs or leave them both empty.
      *                               Default: 8080
@@ -147,10 +151,10 @@ public class CreateWorkspace {
                                        @Param(value = WORKSPACE_DESCRIPTION, description = WORKSPACE_DESCRIPTION_DESC) String workspaceDescription,
                                        @Param(value = VCS_REPO_ID, description = VCS_REPO_ID_DESC) String vcsRepoId,
                                        @Param(value = VCS_BRANCH_NAME, description = VCS_BRANCH_NAME_DESC) String vcsBranchName,
-                                       @Param(value = VCS_DEFAULT_BRANCH, description = VCS_DEFAULT_BRANCH_DESC) String isDefaultBranch,
+                                       @Param(value = VCS_DEFAULT_BRANCH, description = VCS_DEFAULT_BRANCH_DESC) boolean isDefaultBranch,
                                        @Param(value = OAUTH_TOKEN_ID, description = OAUTH_TOKEN_ID_DESCRIPTION) String oauthTokenId,
                                        @Param(value = TERRAFORM_VERSION, description = TERAAFORM_VERSION_DESC) String terraformVersion,
-                                       @Param(value = BODY, description = WORKSPACE_REQUEST_BODY_DESC) String requestBody,
+                                       @Param(value = REQUEST_BODY, description = WORKSPACE_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -164,14 +168,14 @@ public class CreateWorkspace {
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSC_CHARACTER_SET_DESC) String responseCharacterSet) {
+                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
         authToken = defaultIfEmpty(authToken, EMPTY);
         organizationName = defaultIfEmpty(organizationName, EMPTY);
         workspaceName = defaultIfEmpty(workspaceName, EMPTY);
         workspaceDescription = defaultIfEmpty(workspaceDescription, EMPTY);
         vcsRepoId = defaultIfEmpty(vcsRepoId, EMPTY);
         vcsBranchName = defaultIfEmpty(vcsBranchName, EMPTY);
-        isDefaultBranch = defaultIfEmpty(isDefaultBranch, BOOLEAN_TRUE);
+        isDefaultBranch = TRUE;
         oauthTokenId = defaultIfEmpty(oauthTokenId, EMPTY);
         requestBody = defaultIfEmpty(requestBody, EMPTY);
         terraformVersion = defaultIfEmpty(terraformVersion, TERRAFORM_VERSION);
@@ -221,7 +225,6 @@ public class CreateWorkspace {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
-            System.out.println(returnMessage);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 

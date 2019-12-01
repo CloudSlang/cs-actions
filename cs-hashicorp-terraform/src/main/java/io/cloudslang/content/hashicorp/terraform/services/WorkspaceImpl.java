@@ -12,12 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.hashicorp.terraform.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
-import io.cloudslang.content.hashicorp.terraform.services.CreateWorkspaceModels.CreateWorkspaceBody;
+import io.cloudslang.content.hashicorp.terraform.services.createModels.workspace.CreateWorkspaceRequestBody;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
@@ -74,18 +75,18 @@ public class WorkspaceImpl {
     }
 
     @NotNull
-    private static String createWorkspaceBody(CreateWorkspaceInputs createWorkspaceInputs) {
+    public static String createWorkspaceBody(CreateWorkspaceInputs createWorkspaceInputs) {
         ObjectMapper createWorkspaceMapper = new ObjectMapper();
-        CreateWorkspaceBody createBody = new CreateWorkspaceBody();
-        CreateWorkspaceBody.CreateWorkspaceData createWorkspaceData = createBody.new CreateWorkspaceData();
-        CreateWorkspaceBody.Attributes attributes = createBody.new Attributes();
+        CreateWorkspaceRequestBody createBody = new CreateWorkspaceRequestBody();
+        CreateWorkspaceRequestBody.CreateWorkspaceData createWorkspaceData = createBody.new CreateWorkspaceData();
+        CreateWorkspaceRequestBody.Attributes attributes = createBody.new Attributes();
         String requestBody = EMPTY;
 
         attributes.setName(createWorkspaceInputs.getWorkspaceName());
         attributes.setTerraform_version(createWorkspaceInputs.getCommonInputs().getTerraformVersion());
         attributes.setDescription(createWorkspaceInputs.getWorkspaceDescription());
 
-        CreateWorkspaceBody.VCSRepo vcsRepo = createBody.new VCSRepo();
+        CreateWorkspaceRequestBody.VCSRepo vcsRepo = createBody.new VCSRepo();
 
         vcsRepo.setIdentifier(createWorkspaceInputs.getVcsRepoId());
         vcsRepo.setOauthTokenId(createWorkspaceInputs.getOauthTokenId());
@@ -105,7 +106,6 @@ public class WorkspaceImpl {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
         System.out.println(requestBody);
         return requestBody;
 

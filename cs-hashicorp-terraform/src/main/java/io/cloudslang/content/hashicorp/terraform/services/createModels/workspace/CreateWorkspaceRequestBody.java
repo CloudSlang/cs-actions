@@ -1,8 +1,23 @@
-package io.cloudslang.content.hashicorp.terraform.services.CreateWorkspaceModels;
+/*
+ * (c) Copyright 2020 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.cloudslang.content.hashicorp.terraform.services.createModels.workspace;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CreateWorkspaceBody {
+public class CreateWorkspaceRequestBody {
 
     CreateWorkspaceData data;
 
@@ -78,6 +93,7 @@ public class CreateWorkspaceBody {
         }
 
     }
+
     public class VCSRepo {
 
         String identifier;
@@ -85,7 +101,7 @@ public class CreateWorkspaceBody {
         String oauthTokenId;
         String branch;
         @JsonProperty("default-branch")
-        String isDefaultBranch;
+        boolean isDefaultBranch;
 
         public String getIdentifier() {
             return identifier;
@@ -99,11 +115,13 @@ public class CreateWorkspaceBody {
             return branch;
         }
 
-        public String getIsDefaultBranch() {
+        public boolean isDefaultBranch() {
             return isDefaultBranch;
         }
 
-        public void setIdentifier(String identifier) { this.identifier = identifier; }
+        public void setIdentifier(String identifier) {
+            this.identifier = identifier;
+        }
 
         public void setOauthTokenId(String oauthTokenId) {
             this.oauthTokenId = oauthTokenId;
@@ -113,7 +131,7 @@ public class CreateWorkspaceBody {
             this.branch = branch;
         }
 
-        public void setIsDefaultBranch(String  isDefaultBranch) {
+        public void setIsDefaultBranch(boolean isDefaultBranch) {
             this.isDefaultBranch = isDefaultBranch;
         }
 

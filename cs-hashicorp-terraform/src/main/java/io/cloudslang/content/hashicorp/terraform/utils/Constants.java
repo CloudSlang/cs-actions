@@ -23,6 +23,7 @@ public class Constants {
         public static final String DEFAULT_PROXY_PORT = "8080";
         public static final String BOOLEAN_FALSE = "false";
         public static final String BOOLEAN_TRUE = "true";
+        public static final boolean TRUE = true;
         public static final String STRICT = "strict";
         public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
         public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid proxy details.";
@@ -72,7 +73,7 @@ public class Constants {
     public static class CreateWorkspace {
         public static final String CREATE_WORKSPACE_OPERATION_NAME = "Create Workspace";
         public static final String WORKSPACE_PATH = "/workspaces";
-        public static final String WORKSPACE_ID_JSON_PATH = "$.data[*].id";
+        public static final String WORKSPACE_ID_JSON_PATH = "$.data.id";
         public static final String WORKSPACE_TYPE = "workspaces";
     }
 

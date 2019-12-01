@@ -47,14 +47,15 @@ public class Descriptions {
                 "represents an infinite timeout.";
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout.";
-        public static final String RESPONSC_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
+        public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
                 "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
                 "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
                 "Default value: UTF-8";
         public static final String AUTH_TOKEN_DESC = "The authorization token for terraform";
         public static final String ORGANIZATION_NAME_DESC = "Name of the organization";
-        public static final String TERAAFORM_VERSION_DESC = "Terraform version.";
+        public static final String TERAAFORM_VERSION_DESC = "The version of Terraform to use for this workspace. Upon creating a workspace," +
+                " the latest version is selected unless otherwise specified (e.g. \"0.11.1\").";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
     }
 
@@ -67,18 +68,20 @@ public class Descriptions {
         public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
-        public static final String OAUTH_TOKEN_ID_DESCRIPTION="Id of the oauthtoken";
+        public static final String OAUTH_TOKEN_ID_DESCRIPTION="The VCS Connection (OAuth Connection + Token) to use. " +
+                "This ID can be obtained from the oauth-tokens endpoint.";
     }
 
     public static class CreateWorkspace {
         public static final String CREATE_WORKSPACE_DESC = "Create a workspace in an organization.";
         public static final String WORKSPACE_NAME_DESC = "The name of the workspace, which can only include letters, numbers, -, and _. " +
                 "This will be used as an identifier and must be unique in the organization.";
-        public static final String WORKSPACE_DESCRIPTION_DESC = "The description of workspace to be created.";
-        public static final String VCS_BRANCH_NAME_DESC = "VCS Branch name for given repo.";
-        public static final String VCS_DEFAULT_BRANCH_DESC = "This repesents the VCS repo branch is default or not.";
-        public static final String VCS_REPO_ID_DESC = "The ID of VCS repository +" +
-                "example : username/repo_name";
+        public static final String WORKSPACE_DESCRIPTION_DESC = "A description of the workspace to be created.";
+        public static final String VCS_BRANCH_NAME_DESC = "The repository branch that Terraform will execute from. " +
+                "If omitted or submitted as an empty string, this defaults to the repository's default branch (e.g. master) .";
+        public static final String VCS_DEFAULT_BRANCH_DESC = "This represents the VCS repo branch is default or not.";
+        public static final String VCS_REPO_ID_DESC = "A reference to your VCS repository in the format :org/:repo where :org and :repo refer to the organization and " +
+                "repository in your VCS provider.";
         public static final String WORKSPACE_REQUEST_BODY_DESC = "The request body of the workspace.";
         public static final String WORKSPACE_ID_DESC ="The Id of created workspace";
         public static final String CREATE_WORKSPACE_RETURN_RESULT_DESC = "The response of the workspace";
