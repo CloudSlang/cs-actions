@@ -43,7 +43,6 @@ public class VariableImpl {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Inputs commonInputs = createVariableInputs.getCommonInputs();
         httpClientInputs.setUrl(createVariableUrl());
-        System.out.println(httpClientInputs.getUrl());
         setCommonHttpInputs(httpClientInputs, commonInputs);
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
@@ -55,7 +54,6 @@ public class VariableImpl {
         }
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        System.out.println(httpClientInputs.getHeaders());
         return new HttpClientService().execute(httpClientInputs);
     }
 
@@ -81,29 +79,22 @@ public class VariableImpl {
         ObjectMapper createVariableMapper = new ObjectMapper();
         CreateVariableRequestBody createVariableRequestBody = new CreateVariableRequestBody();
         CreateVariableRequestBody.CreateVariableData createVariableData = createVariableRequestBody.new CreateVariableData();
-        System.out.println(createVariableInputs.getVariableName());
         createVariableData.setType(VARIABLE_TYPE);
 
         CreateVariableRequestBody.Attributes attributes = createVariableRequestBody.new Attributes();
         attributes.setKey(createVariableInputs.getVariableName());
         attributes.setValue(createVariableInputs.getVariableValue());
         attributes.setCategory(createVariableInputs.getVariableCategory());
-        attributes.setHcl(createVariableInputs.isHcl());
-        attributes.setSensitive(createVariableInputs.isSensitive());
+        attributes.setHcl(createVariableInputs.getHcl());
+        attributes.setSensitive(createVariableInputs.getSensitive());
 
         CreateVariableRequestBody.Data data = createVariableRequestBody.new Data();
         data.setId(createVariableInputs.getWorkspaceId());
         data.setType(WORKSPACE_TYPE);
-        System.out.println(data.getId() + " : " + data.getType());
         CreateVariableRequestBody.Workspace workspace = createVariableRequestBody.new Workspace();
         workspace.setData(data);
-        System.out.println(workspace.getData().getId() + " : " + workspace.getData().getType());
         CreateVariableRequestBody.Relationships relationships = createVariableRequestBody.new Relationships();
         relationships.setWorkspace(workspace);
-
-
-        System.out.println(relationships.getWorkspace().getData().getId() + " : " + relationships.getWorkspace().getData().getType());
-
 
         createVariableData.setRelationships(relationships);
         createVariableData.setAttributes(attributes);
@@ -115,7 +106,6 @@ public class VariableImpl {
             e.printStackTrace();
         }
 
-        System.out.println(requestBody);
         return requestBody;
 
     }

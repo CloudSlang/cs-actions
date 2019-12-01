@@ -34,7 +34,7 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.hashicorp.terraform.entities.CreateVariableInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.createVariable;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.CREATE_WORKSPACE_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.CREATE_VARIABLE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.*;
@@ -105,8 +105,8 @@ public class CreateVariable {
      * operation, or failure message and the exception if there is one
      */
 
-    @Action(name = CREATE_WORKSPACE_OPERATION_NAME,
-            description = CREATE_WORKSPACE_DESC,
+    @Action(name = CREATE_VARIABLE_OPERATION_NAME,
+            description = CREATE_VARIABLE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = CREATE_WORKSPACE_RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = CREATE_WORKSPACE_EXCEPTION_DESC),
@@ -121,8 +121,8 @@ public class CreateVariable {
                                        @Param(value = VARIABLE_NAME, description = VARIABLE_NAME_DESC) String variableName,
                                        @Param(value = VARIABLE_VALUE, description = VARIABLE_VALUE_DESC) String variableValue,
                                        @Param(value = VARIABLE_CATEGORY, description = VARIABLE_CATEGORY_DESC) String variableCategory,
-                                       @Param(value = SENSITIVE, description = SENSITIVE_DESC) boolean sensitive,
-                                       @Param(value = HCL, description = HCL_DESC) boolean hcl,
+                                       @Param(value = SENSITIVE, description = SENSITIVE_DESC) String sensitive,
+                                       @Param(value = HCL, description = HCL_DESC) String hcl,
                                        @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
                                        @Param(value = VARIABLE_REQUEST_BODY, description = VARIABLE_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
@@ -143,6 +143,8 @@ public class CreateVariable {
         variableName = defaultIfEmpty(variableName, EMPTY);
         variableValue = defaultIfEmpty(variableValue, EMPTY);
         variableCategory = defaultIfEmpty(variableCategory, EMPTY);
+        hcl = defaultIfEmpty(hcl,BOOLEAN_FALSE);
+        sensitive = defaultIfEmpty(sensitive,BOOLEAN_FALSE);
         workspaceId = defaultIfEmpty(workspaceId, BOOLEAN_TRUE);
         requestBody = defaultIfEmpty(requestBody, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);

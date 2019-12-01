@@ -40,8 +40,6 @@ public class ApplyRunImpl {
     public static Map<String, String> applyRunClient(@NotNull final ApplyRunInputs applyRunInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Inputs commonInputs = applyRunInputs.getCommonInputs();
-        System.out.println(applyRunInputs.getRunId());
-        System.out.println(applyRunClientUrl(applyRunInputs.getRunId()));
         httpClientInputs.setUrl(applyRunClientUrl(applyRunInputs.getRunId()));
         if (commonInputs.getRequestBody().isEmpty()) {
             httpClientInputs.setBody(applyRunBody(applyRunInputs));
@@ -76,9 +74,7 @@ public class ApplyRunImpl {
         ObjectMapper mapper = new ObjectMapper();
         ApplyRunRequestBody applyRunBody = new ApplyRunRequestBody();
         applyRunBody.setRunComment(applyRunInputs.getRunComment());
-
         String requestBody = EMPTY;
-
 
         try {
             requestBody = mapper.writeValueAsString(applyRunBody);
@@ -86,7 +82,6 @@ public class ApplyRunImpl {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
 
         return requestBody;
     }

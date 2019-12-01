@@ -31,13 +31,13 @@ public class CreateVariableInputs {
     private final String variableValue;
     private final String variableCategory;
 
-    private final boolean hcl;
+    private final String hcl;
     private final String workspaceId;
-    private final boolean sensitive;
+    private final String sensitive;
     private final Inputs commonInputs;
 
     @java.beans.ConstructorProperties({"variableName", "variableValue", "variableCategory", "hcl", "workspaceId", "sensitive", "commonInputs"})
-    public CreateVariableInputs(String variableName, String variableValue, String variableCategory, boolean hcl, String workspaceId, boolean sensitive,
+    public CreateVariableInputs(String variableName, String variableValue, String variableCategory, String hcl, String workspaceId, String sensitive,
                                 Inputs commonInputs) {
 
         this.variableName = variableName;
@@ -70,7 +70,7 @@ public class CreateVariableInputs {
         return variableCategory;
     }
 
-    public boolean isHcl() {
+    public String getHcl() {
         return hcl;
     }
 
@@ -79,7 +79,7 @@ public class CreateVariableInputs {
         return workspaceId;
     }
 
-    public boolean isSensitive() {
+    public String getSensitive() {
         return sensitive;
     }
 
@@ -94,9 +94,9 @@ public class CreateVariableInputs {
         private String variableName;
         private String variableValue;
         private String variableCategory;
-        private boolean hcl;
+        private String hcl;
         private String workspaceId;
-        private boolean sensitive;
+        private String sensitive;
         private Inputs commonInputs;
 
         CreateVariableInputsBuilder() {
@@ -123,7 +123,7 @@ public class CreateVariableInputs {
         }
 
         @NotNull
-        public CreateVariableInputs.CreateVariableInputsBuilder hcl(@NotNull final boolean hcl) {
+        public CreateVariableInputs.CreateVariableInputsBuilder hcl(@NotNull final String hcl) {
             this.hcl = hcl;
             return this;
         }
@@ -135,7 +135,7 @@ public class CreateVariableInputs {
         }
 
         @NotNull
-        public CreateVariableInputs.CreateVariableInputsBuilder sensitive(@NotNull final boolean sensitive) {
+        public CreateVariableInputs.CreateVariableInputsBuilder sensitive(@NotNull final String sensitive) {
             this.sensitive = sensitive;
             return this;
         }

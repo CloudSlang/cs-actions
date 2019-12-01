@@ -66,8 +66,8 @@ public class CreateVariableRequestBody {
         String key;
         String value;
         String category;
-        boolean hcl;
-        boolean sensitive;
+        String hcl;
+        String sensitive;
 
         public String getKey() {
             return key;
@@ -93,19 +93,19 @@ public class CreateVariableRequestBody {
             this.category = category;
         }
 
-        public boolean getHcl() {
+        public String getHcl() {
             return hcl;
         }
 
-        public void setHcl(boolean hcl) {
+        public void setHcl(String hcl) {
             this.hcl = hcl;
         }
 
-        public boolean isSensitive() {
+        public String getSensitive() {
             return sensitive;
         }
 
-        public void setSensitive(boolean sensitive) {
+        public void setSensitive(String sensitive) {
             this.sensitive = sensitive;
         }
     }

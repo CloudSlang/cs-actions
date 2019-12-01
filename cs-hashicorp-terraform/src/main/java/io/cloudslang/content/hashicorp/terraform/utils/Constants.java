@@ -97,7 +97,7 @@ public class Constants {
     }
 
     public static class CreateVariableConstants {
-
+        public static final String CREATE_VARIABLE_OPERATION_NAME = "Create Variable";
         public static final String VARIABLE_PATH = "/vars";
         public static final String VARIABLE_TYPE = "vars";
         public static final String RUN_ID = "$.data[*].relationships.run-events.data[*].id";

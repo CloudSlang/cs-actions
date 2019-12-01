@@ -103,6 +103,7 @@ public class Descriptions {
     }
 
     public static class CreateVariable {
+        public static final String CREATE_VARIABLE_DESC = "Creates a variable in workspace.";
         public static final String VARIABLE_NAME_DESC = "The name of the variable.";
         public static final String VARIABLE_VALUE_DESC = "The value of the variable.";
         public static final String VARIABLE_CATEGORY_DESC = "Whether this is a Terraform or environment variable. Valid values are \"terraform\" or \"env\".";
