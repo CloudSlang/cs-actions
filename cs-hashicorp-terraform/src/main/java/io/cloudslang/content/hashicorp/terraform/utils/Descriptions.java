@@ -67,7 +67,7 @@ public class Descriptions {
         public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
-        public static final String OAUTH_TOKEN_ID_DESCRIPTION="Id of the oauthtoken";
+        public static final String OAUTH_TOKEN_ID_DESCRIPTION = "Id of the oauthtoken";
     }
 
     public static class CreateWorkspace {
@@ -80,7 +80,7 @@ public class Descriptions {
         public static final String VCS_REPO_ID_DESC = "The ID of VCS repository +" +
                 "example : username/repo_name";
         public static final String WORKSPACE_REQUEST_BODY_DESC = "The request body of the workspace.";
-        public static final String WORKSPACE_ID_DESC ="The Id of created workspace";
+        public static final String WORKSPACE_ID_DESC = "The Id of created workspace";
         public static final String CREATE_WORKSPACE_RETURN_RESULT_DESC = "The response of the workspace";
         public static final String CREATE_WORKSPACE_EXCEPTION_DESC = "An error message in case there was an error while creating the message.";
         public static final String FAILURE_DESC = "There was an error while creating workspace.";
@@ -88,10 +88,27 @@ public class Descriptions {
 
     }
 
-    public static class CreateRun{
-        public static  final String RUN_MESSAGE = "Specifies the message to be associated with this run";
-        public static  final String IS_DESTROY = "Specifies if this plan is a destroy plan, which will destroy all provisioned resources.";
+    public static class CreateRun {
+        public static final String RUN_MESSAGE = "Specifies the message to be associated with this run";
+        public static final String IS_DESTROY = "Specifies if this plan is a destroy plan, which will destroy all provisioned resources.";
 
+
+    }
+
+    public static class ApplyRun {
+        public static final String APPLY_RUN_DESC = "Applies a run that is paused waiting for confirmation after a plan. This includes runs in the \"needs confirmation\" and \"policy checked\" states. This action is only required for runs that can't be auto-applied.";
+        public static final String RUN_COMMENT_DESC = "Specifies the comment to be associated with this run";
+        public static final String RUN_DESC = "Specifies the run";
+
+    }
+
+    public static class CreateVariable {
+        public static final String VARIABLE_NAME_DESC = "The name of the variable.";
+        public static final String VARIABLE_VALUE_DESC = "The value of the variable.";
+        public static final String VARIABLE_CATEGORY_DESC = "Whether this is a Terraform or environment variable. Valid values are \"terraform\" or \"env\".";
+        public static final String HCL_DESC = "Whether to evaluate the value of the variable as a string of HCL code. Has no effect for environment variables.";
+        public static final String SENSITIVE_DESC = "Whether the value is sensitive. If true then the variable is written once and not visible thereafter.";
+        public static final String VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Variable.";
 
     }
 

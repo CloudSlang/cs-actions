@@ -39,7 +39,7 @@ public class Constants {
         public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
         public static final String CHANGEIT = "changeit";
         public static final String ZERO = "0";
-        public static final String CONNECT_TIMEOUT_CONST="10000";
+        public static final String CONNECT_TIMEOUT_CONST = "10000";
         public static final String UTF8 = "UTF-8";
         public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
         public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
@@ -82,9 +82,24 @@ public class Constants {
         public static final String OAUTH_TOKEN_LIST_JSON_PATH = "$.data[*].relationships.oauth-tokens.data[*].id";
 
     }
-    public static class CreateRunConstants{
-        public static  final String CREATE_RUN_PATH="/runs";
-        public static  final String RUN_TYPE="runs";
+
+    public static class CreateRunConstants {
+        public static final String CREATE_RUN_PATH = "/runs";
+        public static final String RUN_TYPE = "runs";
+        public static final String RUN_ID = "$.data[*].relationships.run-events.data[*].id";
+
+    }
+
+    public static class ApplyRunConstants {
+        public static final String APPLY_RUN_OPERATION_NAME = "Apply Run";
+        public static final String RUN_PATH = "/runs/";
+        public static final String APPLY_RUN_PATH = "/actions/apply";
+    }
+
+    public static class CreateVariableConstants {
+
+        public static final String VARIABLE_PATH = "/vars";
+        public static final String VARIABLE_TYPE = "vars";
         public static final String RUN_ID = "$.data[*].relationships.run-events.data[*].id";
 
     }
