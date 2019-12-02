@@ -24,15 +24,17 @@ public class GetMessageInputs {
     private final String folderId;
     private final String selectQuery;
     private final String oDataQuery;
+    private final String filePath;
 
     private final Office365CommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"messageId", "folderId", "selectQuery", "oDataQuery", "commonInputs"})
-    public GetMessageInputs(String messageId, String folderId, String selectQuery, String oDataQuery, Office365CommonInputs commonInputs) {
+    @java.beans.ConstructorProperties({"messageId", "folderId", "selectQuery", "oDataQuery", "filePath", "commonInputs"})
+    public GetMessageInputs(String messageId, String folderId, String selectQuery, String oDataQuery, String filePath, Office365CommonInputs commonInputs) {
         this.messageId = messageId;
         this.folderId = folderId;
         this.selectQuery = selectQuery;
         this.oDataQuery = oDataQuery;
+        this.filePath = filePath;
         this.commonInputs = commonInputs;
     }
 
@@ -62,6 +64,11 @@ public class GetMessageInputs {
     }
 
     @NotNull
+    public String getfilePath() {
+        return this.filePath;
+    }
+
+    @NotNull
     public Office365CommonInputs getCommonInputs() {
         return this.commonInputs;
     }
@@ -71,6 +78,7 @@ public class GetMessageInputs {
         private String folderId = EMPTY;
         private String selectQuery = EMPTY;
         private String oDataQuery = EMPTY;
+        private String filePath = EMPTY;
         private Office365CommonInputs commonInputs;
 
         GetMessageInputsBuilder() {
@@ -96,6 +104,11 @@ public class GetMessageInputs {
             this.oDataQuery = oDataQuery;
             return this;
         }
+        @NotNull
+        public GetMessageInputs.GetMessageInputsBuilder filePath(@NotNull final String filePath) {
+            this.filePath = filePath;
+            return this;
+        }
 
         @NotNull
         public GetMessageInputs.GetMessageInputsBuilder commonInputs(@NotNull final Office365CommonInputs commonInputs) {
@@ -104,7 +117,7 @@ public class GetMessageInputs {
         }
 
         public GetMessageInputs build() {
-            return new GetMessageInputs(messageId, folderId, selectQuery, oDataQuery, commonInputs);
+            return new GetMessageInputs(messageId, folderId, selectQuery, oDataQuery, filePath, commonInputs);
         }
     }
 

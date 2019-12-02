@@ -21,51 +21,27 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.office365.entities.AuthorizationTokenInputs;
-import io.cloudslang.content.office365.entities.GetMessageInputs;
-import io.cloudslang.content.office365.entities.ListMessagesInputs;
-import io.cloudslang.content.office365.entities.Office365CommonInputs;
+import io.cloudslang.content.office365.entities.*;
 import io.cloudslang.content.office365.services.AuthorizationTokenImpl;
 import io.cloudslang.content.utils.NumberUtilities;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_TOTAL;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECT_TIMEOUT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.SOCKET_TIMEOUT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_KEYSTORE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER;
-import static io.cloudslang.content.office365.services.EmailServiceImpl.getMessage;
-import static io.cloudslang.content.office365.services.EmailServiceImpl.listMessages;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.office365.services.EmailServiceImpl.*;
+import static io.cloudslang.content.office365.utils.Constants.FILE_PATH;
 import static io.cloudslang.content.office365.utils.Constants.*;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.CONNECT_TIMEOUT_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.CONN_MAX_ROUTE_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.KEEP_ALIVE_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.PROXY_HOST_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.PROXY_PASSWORD_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.PROXY_PORT_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.PROXY_USERNAME_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.RETURN_CODE_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.SOCKET_TIMEOUT_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_ALL_ROOTS_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_KEYSTORE_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_PASSWORD_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.X509_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
+import static io.cloudslang.content.office365.utils.Descriptions.GetAttachments.FILE_PATH_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.CLIENT_ID_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.CLIENT_SECRET_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
@@ -81,16 +57,12 @@ import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HO
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.FOLDER_ID;
-import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.MESSAGE_ID;
-import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.MESSAGE_ID_LIST;
-import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.O_DATA_QUERY;
+import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.office365.utils.Inputs.GetEmailInputs.*;
+import static io.cloudslang.content.office365.utils.Inputs.ListAttachments.ATTACHMENT_ID;
 import static io.cloudslang.content.office365.utils.Inputs.SendMailInputs.TENANT_NAME;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.apache.commons.lang3.StringUtils.join;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class GetEmail {
 
@@ -122,6 +94,7 @@ public class GetEmail {
                                        @Param(value = COUNT, description = TOP_QUERY_DESC) String count,
                                        @Param(value = QUERY_INPUT, description = SELECT_QUERY_DESC) String query,
                                        @Param(value = O_DATA_QUERY, description = O_DATA_QUERY_DESC) String oDataQuery,
+                                       @Param(value = FILE_PATH, description = FILE_PATH_DESC) String filePath,
 
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,
@@ -148,6 +121,7 @@ public class GetEmail {
         count = defaultIfEmpty(count, TOP_QUERY_CONST);
         query = defaultIfEmpty(query, EMPTY);
         oDataQuery = defaultIfEmpty(oDataQuery, EMPTY);
+        filePath = defaultIfEmpty(filePath, EMPTY);
 
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
@@ -159,6 +133,10 @@ public class GetEmail {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
+
+        List<String> messageIdList;
+        String[] attachmentsList;
+        Map<String, String> successResultMap;
 
         try {
             final String authToken = AuthorizationTokenImpl.getToken(AuthorizationTokenInputs.builder()
@@ -200,11 +178,11 @@ public class GetEmail {
                         .build());
 
                 final String returnMessage = ListMessagesResult.get(RETURN_RESULT);
-                final Map<String, String> successResultMap = getOperationResults(ListMessagesResult, returnMessage, returnMessage, returnMessage);
+                successResultMap = getOperationResults(ListMessagesResult, returnMessage, returnMessage, returnMessage);
                 final int statusCode = Integer.parseInt(ListMessagesResult.get(STATUS_CODE));
 
                 if (statusCode >= 200 && statusCode < 300) {
-                    final List<String> messageIdList = JsonPath.read(returnMessage, MESSAGE_ID_LIST_JSON_PATH);
+                    messageIdList = JsonPath.read(returnMessage, MESSAGE_ID_LIST_JSON_PATH);
 
                     if (!messageIdList.isEmpty()) {
                         final String messageIdListAsString = join(messageIdList.toArray(), DELIMITER);
@@ -213,7 +191,6 @@ public class GetEmail {
                         successResultMap.put(MESSAGE_ID_LIST, EMPTY);
                     }
                 }
-                return successResultMap;
 
             } else {
 
@@ -222,6 +199,7 @@ public class GetEmail {
                         .folderId(folderId)
                         .selectQuery(query)
                         .oDataQuery(oDataQuery)
+                        .filePath(filePath)
                         .commonInputs(Office365CommonInputs.builder()
                                 .authToken(authToken)
                                 .proxyHost(proxyHost)
@@ -241,13 +219,76 @@ public class GetEmail {
                                 .trustPassword(trustPassword)
                                 .build())
                         .build());
+
                 final String returnMessage = result.get(RETURN_RESULT);
-                return getOperationResults(result, returnMessage, returnMessage, returnMessage);
+                successResultMap = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             }
 
+            final Map<String, String> listAttachmentsResult = listAttachment(ListAttachmentsInputs.builder()
+                    .messageId(messageId)
+                    .commonInputs(Office365CommonInputs.builder()
+                            .authToken(authToken)
+                            .connectionsMaxPerRoute(connectionsMaxPerRoute)
+                            .connectionsMaxTotal(connectionsMaxTotal)
+                            .proxyHost(proxyHost)
+                            .proxyPort(proxyPort)
+                            .proxyUsername(proxyUsername)
+                            .proxyPassword(proxyPassword)
+                            .keepAlive(keepAlive)
+                            .responseCharacterSet(responseCharacterSet)
+                            .connectTimeout(connectTimeout)
+                            .trustAllRoots(trustAllRoots)
+                            .userId(EMPTY)
+                            .userPrincipalName(emailAddress)
+                            .x509HostnameVerifier(x509HostnameVerifier)
+                            .trustKeystore(trustKeystore)
+                            .trustPassword(trustPassword)
+                            .build())
+                    .build());
+
+            final String returnListAttachment = listAttachmentsResult.get(RETURN_RESULT);
+            final Integer statusCode = Integer.parseInt(listAttachmentsResult.get(STATUS_CODE));
+
+            if (statusCode >= 200 && statusCode < 300) {
+                successResultMap.put(ATTACHMENT_ID, retrieveAttachmentIdList(returnListAttachment));
+            } else {
+                successResultMap.put(ATTACHMENT_ID, EMPTY);
+            }
+
+            String attachmentId = successResultMap.get("attachmentId").replaceAll("\"", "");
+            attachmentsList = StringUtils.split(attachmentId, ",");
+
+            for (int j = 0; j < attachmentsList.length; j++) {
+                final Map<String, String> getAttachmentsResults = getAttachments(GetAttachmentsInputs.builder()
+                        .messageId(messageId)
+                        .attachmentId(attachmentsList[j])
+                        .filePath(filePath)
+                        .commonInputs(Office365CommonInputs.builder()
+                                .authToken(authToken)
+                                .proxyHost(proxyHost)
+                                .proxyPort(proxyPort)
+                                .proxyUsername(proxyUsername)
+                                .proxyPassword(proxyPassword)
+                                .connectionsMaxTotal(connectionsMaxTotal)
+                                .connectionsMaxPerRoute(connectionsMaxPerRoute)
+                                .keepAlive(keepAlive)
+                                .socketTimeout(socketTimeout)
+                                .responseCharacterSet(responseCharacterSet)
+                                .connectTimeout(connectTimeout)
+                                .trustAllRoots(trustAllRoots)
+                                .userPrincipalName(emailAddress)
+                                .x509HostnameVerifier(x509HostnameVerifier)
+                                .trustKeystore(trustKeystore)
+                                .trustPassword(trustPassword)
+                                .build())
+                        .build());
+
+                final String results = getAttachmentsResults.get(RETURN_RESULT);
+                addAditionalOutputs(successResultMap, getAttachmentsResults, results, filePath);
+            }
+            return successResultMap;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
-
     }
 }
