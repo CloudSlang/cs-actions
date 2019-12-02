@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RunImplTest.class)
 public class RunImplTest {
-    private final String EXPECTED_CREATE_RUN_BODY="{\"data\":{\"attributes\":{\"message\":\"test\",\"is-Destroy\":false},\"type\":\"runs\",\"relationships\":{\"workspace\":{\"data\":{\"type\":\"test\",\"id\":\"test-123\"}}}}}";
+    private final String EXPECTED_CREATE_RUN_BODY="{\"data\":{\"attributes\":{\"message\":\"test\",\"is-Destroy\":false},\"type\":\"runs\",\"relationships\":{\"workspace\":{\"data\":{\"type\":\"workspaces\",\"id\":\"test-123\"}}}}}";
     private final CreateRunInputs invalidCreateRunInputs=CreateRunInputs.builder()
             .workspaceId("")
             .workspaceName("")
@@ -43,7 +43,6 @@ public class RunImplTest {
 
         private final CreateRunInputs createRunBody = CreateRunInputs.builder()
                 .workspaceId("test-123")
-                .workspaceName("test")
                 .runMessage("test")
                 .isDestroy("false")
                 .build();

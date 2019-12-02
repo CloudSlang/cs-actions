@@ -55,7 +55,7 @@ public class Descriptions {
         public static final String POLLING_INTERVAL_DESC="The time, in seconds, to wait before a new request that verifies if the operation finished\\n\" +\n" +
                 "                \"is executed.\" +\n" +
                 "                \"Default: '1000'";
-        public static final String RESPONSC_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
+        public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
                 "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
                 "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
@@ -99,8 +99,8 @@ public class Descriptions {
 
     public static class CreateRun{
         public static final String CREATE_RUN_DESC = "Create a run.";
-        public static  final String RUN_MESSAGE = "Specifies the message to be associated with this run";
-        public static  final String IS_DESTROY = "Specifies if this plan is a destroy plan, which will destroy all provisioned resources.";
+        public static  final String RUN_MESSAGE_DESC = "Specifies the message to be associated with this run";
+        public static  final String IS_DESTROY_DESC = "Specifies if this plan is a destroy plan, which will destroy all provisioned resources.";
 
 
     }
