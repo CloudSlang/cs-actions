@@ -13,9 +13,11 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.hashicorp.terraform.services.createModels.workspace;
+package io.cloudslang.content.hashicorp.terraform.services.models.workspace;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
 
 public class CreateWorkspaceRequestBody {
 
@@ -32,7 +34,7 @@ public class CreateWorkspaceRequestBody {
 
     public class CreateWorkspaceData {
         Attributes attributes;
-        String type;
+        private String type;
 
         public String getType() {
             return type;
@@ -54,9 +56,21 @@ public class CreateWorkspaceRequestBody {
     }
 
     public class Attributes {
-        String name;
+        private String name;
         String terraform_version;
         String description;
+        @JsonProperty("auto-apply")
+        String autoApply;
+        @JsonProperty("file-triggers-enabled")
+        String fileTriggersEnabled;
+        @JsonProperty("working-directory")
+        String workingDirectory;
+        @JsonProperty("trigger-prefixes")
+        List<String> triggerPrefixes;
+        @JsonProperty("queue-all-runs")
+        String queueAllRuns;
+        @JsonProperty("speculative-enabled")
+        String speculativeEnabled;
         @JsonProperty("vcs-repo")
         VCSRepo vcsRepo;
 
@@ -88,6 +102,54 @@ public class CreateWorkspaceRequestBody {
             this.description = description;
         }
 
+        public String getAutoApply() {
+            return autoApply;
+        }
+
+        public void setAutoApply(String autoApply) {
+            this.autoApply = autoApply;
+        }
+
+        public String getFileTriggersEnabled() {
+            return fileTriggersEnabled;
+        }
+
+        public void setFileTriggersEnabled(String fileTriggersEnabled) {
+            this.fileTriggersEnabled = fileTriggersEnabled;
+        }
+
+        public String getWorkingDirectory() {
+            return workingDirectory;
+        }
+
+        public void setWorkingDirectory(String workingDirectory) {
+            this.workingDirectory = workingDirectory;
+        }
+
+        public List<String> getTriggerPrefixes() {
+            return triggerPrefixes;
+        }
+
+        public void setTriggerPrefixes(List<String> triggerPrefixes) {
+            this.triggerPrefixes = triggerPrefixes;
+        }
+
+        public String getQueueAllRuns() {
+            return queueAllRuns;
+        }
+
+        public void setQueueAllRuns(String queueAllRuns) {
+            this.queueAllRuns = queueAllRuns;
+        }
+
+        public String getSpeculativeEnabled() {
+            return speculativeEnabled;
+        }
+
+        public void setSpeculativeEnabled(String speculativeEnabled) {
+            this.speculativeEnabled = speculativeEnabled;
+        }
+
         public void setVcsRepo(VCSRepo vcsRepo) {
             this.vcsRepo = vcsRepo;
         }
@@ -100,8 +162,8 @@ public class CreateWorkspaceRequestBody {
         @JsonProperty("oauth-token-id")
         String oauthTokenId;
         String branch;
-        @JsonProperty("default-branch")
-        boolean isDefaultBranch;
+        @JsonProperty("ingress-submodules")
+        String ingressSubmodules;
 
         public String getIdentifier() {
             return identifier;
@@ -113,10 +175,6 @@ public class CreateWorkspaceRequestBody {
 
         public String getBranch() {
             return branch;
-        }
-
-        public boolean isDefaultBranch() {
-            return isDefaultBranch;
         }
 
         public void setIdentifier(String identifier) {
@@ -131,9 +189,12 @@ public class CreateWorkspaceRequestBody {
             this.branch = branch;
         }
 
-        public void setIsDefaultBranch(boolean isDefaultBranch) {
-            this.isDefaultBranch = isDefaultBranch;
+        public String getIngressSubmodules() {
+            return ingressSubmodules;
         }
 
+        public void setIngressSubmodules(String ingressSubmodules) {
+            this.ingressSubmodules = ingressSubmodules;
+        }
     }
 }

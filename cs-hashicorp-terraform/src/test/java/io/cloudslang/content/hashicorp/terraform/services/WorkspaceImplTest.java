@@ -32,13 +32,21 @@ public class WorkspaceImplTest {
 
     private static final String ORGANIZATION_NAME = "test";
     private static final String EXPECTED_WORKSPACE_PATH = "/api/v2/organizations/test/workspaces";
-    private static final String EXPECTED_WORKSPACE_REQUEST_BODY = "{\"data\":{\"attributes\":{\"name\":\"test\",\"terraform_version\":\"0.12.1\",\"description\":\"test\",\"vcs-repo\":{\"identifier\":\"test\",\"branch\":\"test\",\"oauth-token-id\":\"test\",\"default-branch\":true}},\"type\":\"workspaces\"}}";
+    private static final String EXPECTED_WORKSPACE_REQUEST_BODY = "{\"data\":{\"attributes\":{\"name\":\"test\",\"terraform_version\":\"0.12.1\",\"description\":\"test\",\"auto-apply\":\"true\",\"file-triggers-enabled\":\"true\"," +
+            "\"working-directory\":\"/test\",\"trigger-prefixes\":[\"\"],\"queue-all-runs\":\"false\",\"speculative-enabled\":\"true\"," +
+            "\"vcs-repo\":{\"identifier\":\"test\",\"branch\":\"test\",\"oauth-token-id\":\"test\",\"ingress-submodules\":\"true\"}},\"type\":\"workspaces\"}}";
     private final CreateWorkspaceInputs invalidCreateWorkspaceInputs = CreateWorkspaceInputs.builder()
             .workspaceName("test")
             .workspaceDescription("test")
+            .autoApply("true")
+            .fileTriggersEnabled("true")
+            .workingDirectory("/test")
+            .triggerPrefixes("")
+            .queueAllRuns("false")
+            .speculativeEnabled("true")
+            .ingressSubmodules("true")
             .vcsRepoId("test")
             .vcsBranchName("test")
-            .isDefaultBranch(true)
             .oauthTokenId("test")
             .commonInputs(Inputs.builder()
                     .organizationName("test")
@@ -55,6 +63,9 @@ public class WorkspaceImplTest {
                     .trustPassword("")
                     .connectTimeout("")
                     .socketTimeout("")
+                    .executionTimeout("")
+                    .pollingInterval("")
+                    .async("")
                     .keepAlive("")
                     .connectionsMaxPerRoot("")
                     .connectionsMaxTotal("")
@@ -75,7 +86,7 @@ public class WorkspaceImplTest {
 
     @Test
     public void getWorkspaceRequestBody() {
-        final String requestBody = createWorkspaceBody(invalidCreateWorkspaceInputs);
+        final String requestBody = createWorkspaceBody(invalidCreateWorkspaceInputs, ",");
         assertEquals(EXPECTED_WORKSPACE_REQUEST_BODY, requestBody);
     }
 }

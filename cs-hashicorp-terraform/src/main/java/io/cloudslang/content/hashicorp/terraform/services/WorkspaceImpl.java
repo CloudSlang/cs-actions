@@ -18,14 +18,14 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
-import io.cloudslang.content.hashicorp.terraform.services.createModels.workspace.CreateWorkspaceRequestBody;
+import io.cloudslang.content.hashicorp.terraform.services.models.workspace.CreateWorkspaceRequestBody;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
+import java.util.*;
 
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.ANONYMOUS;
@@ -47,7 +47,7 @@ public class WorkspaceImpl {
         httpClientInputs.setMethod(POST);
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
         if (commonInputs.getRequestBody().equals(EMPTY)) {
-            httpClientInputs.setBody(createWorkspaceBody(createWorkspaceInputs));
+            httpClientInputs.setBody(createWorkspaceBody(createWorkspaceInputs, DELIMITER));
         } else {
             httpClientInputs.setBody(commonInputs.getRequestBody());
         }
@@ -75,23 +75,32 @@ public class WorkspaceImpl {
     }
 
     @NotNull
-    public static String createWorkspaceBody(CreateWorkspaceInputs createWorkspaceInputs) {
+    public static String createWorkspaceBody(CreateWorkspaceInputs createWorkspaceInputs, String delimiter) {
+        String requestBody = EMPTY;
+        final List<String> triggerPrefixesList = new ArrayList<>();
         ObjectMapper createWorkspaceMapper = new ObjectMapper();
         CreateWorkspaceRequestBody createBody = new CreateWorkspaceRequestBody();
         CreateWorkspaceRequestBody.CreateWorkspaceData createWorkspaceData = createBody.new CreateWorkspaceData();
         CreateWorkspaceRequestBody.Attributes attributes = createBody.new Attributes();
-        String requestBody = EMPTY;
 
         attributes.setName(createWorkspaceInputs.getWorkspaceName());
         attributes.setTerraform_version(createWorkspaceInputs.getCommonInputs().getTerraformVersion());
         attributes.setDescription(createWorkspaceInputs.getWorkspaceDescription());
+        attributes.setAutoApply(createWorkspaceInputs.getAutoApply());
+        attributes.setFileTriggersEnabled(createWorkspaceInputs.getFileTriggersEnabled());
+        attributes.setWorkingDirectory(createWorkspaceInputs.getWorkingDirectory());
+        attributes.setQueueAllRuns(createWorkspaceInputs.getQueueAllRuns());
+        attributes.setSpeculativeEnabled(createWorkspaceInputs.getSpeculativeEnabled());
+        String[] triggerPrefixes = createWorkspaceInputs.getTriggerPrefixes().split(delimiter);
+        Collections.addAll(triggerPrefixesList, triggerPrefixes);
+        attributes.setTriggerPrefixes(triggerPrefixesList);
 
         CreateWorkspaceRequestBody.VCSRepo vcsRepo = createBody.new VCSRepo();
 
         vcsRepo.setIdentifier(createWorkspaceInputs.getVcsRepoId());
         vcsRepo.setOauthTokenId(createWorkspaceInputs.getOauthTokenId());
         vcsRepo.setBranch(createWorkspaceInputs.getVcsBranch());
-        vcsRepo.setIsDefaultBranch(createWorkspaceInputs.isDefaultBranch());
+        vcsRepo.setIngressSubmodules(createWorkspaceInputs.getIngressSubmodules());
 
         attributes.setVcsRepo(vcsRepo);
 
@@ -106,7 +115,6 @@ public class WorkspaceImpl {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        System.out.println(requestBody);
         return requestBody;
 
     }
