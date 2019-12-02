@@ -18,7 +18,7 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
-import io.cloudslang.content.hashicorp.terraform.services.CreateRunModels.CreateRunBody;
+import io.cloudslang.content.hashicorp.terraform.services.models.runs.CreateRunBody;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
