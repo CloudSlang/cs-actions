@@ -16,7 +16,6 @@
 
 package io.cloudslang.content.utilities.util;
 
-import io.cloudslang.content.utilities.util.randomPasswordGenerator.SpecificPasswordFormat;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -104,7 +103,7 @@ public final class InputsValidation {
                 exceptionMessages.add(Constants.EXCEPTION_LENGTH);
             }
             return exceptionMessages;
-        }catch (Exception exception){
+        } catch (Exception exception) {
             throw new Exception(Constants.EXCEPTION_NUMBER_FORMAT);
         }
     }

@@ -26,7 +26,6 @@ public class RandomPasswordGeneratorInputs {
     private final String numberOfNumericalCharacters;
     private final String numberOfSpecialCharacters;
     private final String forbiddenCharacters;
-    private final String specificFormat;
 
     @NotNull
     public String getPasswordLength() {
@@ -58,25 +57,17 @@ public class RandomPasswordGeneratorInputs {
         return forbiddenCharacters;
     }
 
-    @NotNull
-    public String getSpecificFormat() {
-        return specificFormat;
-    }
-
-
 
     @java.beans.ConstructorProperties({"passwordLength", "numberOfLowerCaseCharacters","numberOfUpperCaseCharacters","numberOfNumericalCharacters"
             ,"numberOfSpecialCharacters","forbiddenCharacters","specificFormat"})
     private RandomPasswordGeneratorInputs(String passwordLength, String numberOfLowerCaseCharacters, String numberOfUpperCaseCharacters,
-                                          String numberOfNumericalCharacters, String numberOfSpecialCharacters, String forbiddenCharacters,
-                                          String specificFormat) {
+                                          String numberOfNumericalCharacters, String numberOfSpecialCharacters, String forbiddenCharacters) {
         this.passwordLength = passwordLength;
         this.numberOfLowerCaseCharacters = numberOfLowerCaseCharacters;
         this.numberOfUpperCaseCharacters = numberOfUpperCaseCharacters;
         this.numberOfNumericalCharacters = numberOfNumericalCharacters;
         this.numberOfSpecialCharacters = numberOfSpecialCharacters;
         this.forbiddenCharacters = forbiddenCharacters;
-        this.specificFormat = specificFormat;
 
     }
 
@@ -93,7 +84,6 @@ public class RandomPasswordGeneratorInputs {
         String numberOfNumericalCharacters = EMPTY;
         String numberOfSpecialCharacters = EMPTY;
         String forbiddenCharacters = EMPTY;
-        String specificFormat = EMPTY;
 
 
 
@@ -137,14 +127,9 @@ public class RandomPasswordGeneratorInputs {
             return this;
         }
 
-        @NotNull
-        public RandomPasswordGeneratorInputs.RandomPasswordGeneratorInputsBuilder specificFormat(@NotNull final String specificFormat) {
-            this.specificFormat = specificFormat;
-            return this;
-        }
         public RandomPasswordGeneratorInputs build() {
             return new RandomPasswordGeneratorInputs(passwordLength, numberOfLowerCaseCharacters, numberOfUpperCaseCharacters,
-                    numberOfNumericalCharacters, numberOfSpecialCharacters, forbiddenCharacters, specificFormat);
+                    numberOfNumericalCharacters, numberOfSpecialCharacters, forbiddenCharacters);
         }
     }
 

@@ -15,17 +15,14 @@
 package io.cloudslang.content.utilities.services.passwordgenerator;
 
 import io.cloudslang.content.utilities.entities.RandomPasswordGeneratorInputs;
-import io.cloudslang.content.utilities.util.Constants;
 import io.cloudslang.content.utilities.util.randomPasswordGenerator.Characters;
 import io.cloudslang.content.utilities.util.randomPasswordGenerator.SpecialCharacters;
-import io.cloudslang.content.utilities.util.randomPasswordGenerator.SpecificPasswordFormat;
 import org.jetbrains.annotations.NotNull;
 import org.passay.CharacterRule;
 import org.passay.PasswordGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class RandomPasswordGeneratorImpl {
 
@@ -33,16 +30,7 @@ public class RandomPasswordGeneratorImpl {
     public static String generatePassword(RandomPasswordGeneratorInputs randomPasswordGeneratorInputs) throws Exception {
         List<CharacterRule> rules = generatePasswordRules(randomPasswordGeneratorInputs);
         PasswordGenerator passwordGenerator = new PasswordGenerator();
-        if (randomPasswordGeneratorInputs.getSpecificFormat().equals("")) {
-            return passwordGenerator.generatePassword(Integer.parseInt(randomPasswordGeneratorInputs.getPasswordLength()), rules);
-        } else if (randomPasswordGeneratorInputs.getSpecificFormat().equalsIgnoreCase(SpecificPasswordFormat.SAP.toString())) {
-            String password = "!";
-            while (!Pattern.matches("(?!^(.)\\1\\1)(?!^[!?])\\S*", password)) {
-                password = passwordGenerator.generatePassword(Integer.parseInt(randomPasswordGeneratorInputs.getPasswordLength()), rules);
-            }
-            return password;
-        } else
-            throw new Exception(Constants.EXCEPTION_SPECIFIC_FORMAT);
+        return passwordGenerator.generatePassword(Integer.parseInt(randomPasswordGeneratorInputs.getPasswordLength()), rules);
     }
 
     private static List<CharacterRule> generatePasswordRules(RandomPasswordGeneratorInputs randomPasswordGeneratorInputs) {

@@ -64,7 +64,6 @@ public class Descriptions {
         public static final String NUMBER_OF_SPECIAL_CHARACTERS_DESC = "The minimum number of special characters that the password should contain. If 0 it won't contain this " +
                 "type of character. Default: 1. Used special characters are: -=[];,.~!@#$%&*()_+{}|:<>?";
         public static final String FORBIDDEN_CHARACTERS_DESC = "A list of characters that the password should not contain. Example: []{}.";
-        public static final String SPECIFIC_FORMAT_DESC = "A specific format that the password should respect. Example: SAP.";
     }
 
 }
