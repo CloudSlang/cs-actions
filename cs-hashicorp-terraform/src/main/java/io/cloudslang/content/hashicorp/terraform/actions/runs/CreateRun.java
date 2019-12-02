@@ -179,6 +179,17 @@ public class CreateRun {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
+        final List<String> exceptionMessage = verifyCommonInputs(proxyPort,trustAllRoots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        if (!exceptionMessage.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
+        }
+
+        final List<String> exceptionMessages = verifyCreateRunInputs(workspaceId,requestBody);
+        if (!exceptionMessages.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+        }
+
         try {
             final Map<String, String> result = createRunClient(CreateRunInputs.builder()
                     .workspaceId(workspaceId)
@@ -208,16 +219,7 @@ public class CreateRun {
                     .build());
 
 
-            final List<String> exceptionMessage = verifyCommonInputs(proxyPort,trustAllRoots,
-                    connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-            if (!exceptionMessage.isEmpty()) {
-                return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
-            }
 
-            final List<String> exceptionMessages = verifyCreateRunInputs(workspaceId,requestBody);
-            if (!exceptionMessages.isEmpty()) {
-                return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
-            }
             final String returnMessage = result.get(RETURN_RESULT);
 
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
