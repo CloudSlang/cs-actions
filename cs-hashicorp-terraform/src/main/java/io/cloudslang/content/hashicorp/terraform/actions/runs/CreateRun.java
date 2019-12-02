@@ -35,17 +35,22 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs.IS_DESTROY;
 import static io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs.RUN_MESSAGE;
 import static io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs.WORKSPACE_NAME;
-import static io.cloudslang.content.hashicorp.terraform.services.CreateRunImpl.createRunClient;
+import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.createRunClient;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.UTF8;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.RESPONSC_CHARACTER_SET_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateRun.CREATE_RUN_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_NAME_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.AUTH_TOKEN;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.REQUEST_BODY;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_HOST;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PASSWORD;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PORT;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateRunOutputs.RUN_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
@@ -104,7 +109,8 @@ public class CreateRun {
      *                          operation, or failure message and the exception if there is one
      */
 
-    @Action(name = "Create Run",
+    @Action(name = CREATE_RUN_OPERATION_NAME,
+            description = CREATE_RUN_DESC,
             outputs = {
                     @Output(value = OutputNames.RETURN_RESULT, description = RETURN_RESULT_DESC),
             },
@@ -116,7 +122,7 @@ public class CreateRun {
                                        @Param(value = WORKSPACE_ID,description = WORKSPACE_ID_DESC) String workspaceId,
                                        @Param(value = WORKSPACE_NAME,description = WORKSPACE_NAME_DESC) String workspaceName,
                                        @Param(value = RUN_MESSAGE,description = RUN_MESSAGE) String runMessage,
-                                       @Param(value = IS_DESTROY,description =IS_DESTROY ) boolean isDestroy,
+                                       @Param(value = IS_DESTROY,description =IS_DESTROY ) String isDestroy,
                                        @Param( value = REQUEST_BODY) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -128,6 +134,9 @@ public class CreateRun {
                                        @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
+                                       @Param(value = EXECUTION_TIMEOUT,description = CONNECT_TIMEOUT_DESC) String executionTimeout,
+                                       @Param(value = ASYNC,description = ASYN_DESC) String asyn,
+                                       @Param(value = POLLING_INTERVAL,description = POLLING_INTERVAL_DESC) String pollingInterval,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
@@ -147,6 +156,9 @@ public class CreateRun {
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
         connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
+        executionTimeout = defaultIfEmpty(executionTimeout,ZERO);
+        asyn = defaultString(asyn,EMPTY);
+        pollingInterval = defaultString(pollingInterval,EMPTY);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
@@ -171,6 +183,9 @@ public class CreateRun {
                             .trustPassword(trustPassword)
                             .connectTimeout(connectTimeout)
                             .socketTimeout(socketTimeout)
+                            .executionTimeout(executionTimeout)
+                            .async(asyn)
+                            .pollingInterval(pollingInterval)
                             .keepAlive(keepAlive)
                             .connectionsMaxPerRoot(connectionsMaxPerRoute)
                             .connectionsMaxTotal(connectionsMaxTotal)
