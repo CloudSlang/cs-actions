@@ -32,7 +32,6 @@ public final class Inputs extends InputNames {
         public static final String NUMBER_OF_NUMERICAL_CHARACTERS = "numberOfNumericalCharacters";
         public static final String NUMBER_OF_SPECIAL_CHARACTERS = "numberOfSpecialCharacters";
         public static final String FORBIDDEN_CHARACTERS = "forbiddenCharacters";
-        public static final String SPECIFIC_FORMAT = "specificFormat";
 
     }
 

@@ -57,8 +57,7 @@ public class RandomPasswordGenerator {
                                        @Param(value = NUMBER_OF_UPPER_CASE_CHARACTERS, description = NUMBER_OF_UPPER_CASE_CHARACTERS_DESC) String numberOfUpperCaseCharacters,
                                        @Param(value = NUMBER_OF_NUMERICAL_CHARACTERS, description = NUMBER_OF_NUMERICAL_CHARACTERS_DESC) String numberOfNumericalCharacters,
                                        @Param(value = NUMBER_OF_SPECIAL_CHARACTERS, description = NUMBER_OF_SPECIAL_CHARACTERS_DESC) String numberOfSpecialCharacters,
-                                       @Param(value = FORBIDDEN_CHARACTERS, description = FORBIDDEN_CHARACTERS_DESC) String forbiddenCharacters,
-                                       @Param(value = SPECIFIC_FORMAT, description = SPECIFIC_FORMAT_DESC) String specificFormat) {
+                                       @Param(value = FORBIDDEN_CHARACTERS, description = FORBIDDEN_CHARACTERS_DESC) String forbiddenCharacters) {
 
 
         passwordLength = defaultIfEmpty(passwordLength, DEFAULT_PASSWORD_LENGTH);
@@ -67,7 +66,6 @@ public class RandomPasswordGenerator {
         numberOfNumericalCharacters = defaultIfEmpty(numberOfNumericalCharacters, ONE);
         numberOfSpecialCharacters = defaultIfEmpty(numberOfSpecialCharacters, ONE);
         forbiddenCharacters = defaultIfEmpty(forbiddenCharacters, EMPTY);
-        specificFormat = defaultIfEmpty(specificFormat, EMPTY);
 
         try {
 
@@ -85,7 +83,6 @@ public class RandomPasswordGenerator {
                     .numberOfNumericalCharacters(numberOfNumericalCharacters)
                     .numberOfSpecialCharacters(numberOfSpecialCharacters)
                     .forbiddenCharacters(forbiddenCharacters)
-                    .specificFormat(specificFormat)
                     .build();
 
             final String resultPassword = RandomPasswordGeneratorImpl.generatePassword(randomPasswordGeneratorInputs);
