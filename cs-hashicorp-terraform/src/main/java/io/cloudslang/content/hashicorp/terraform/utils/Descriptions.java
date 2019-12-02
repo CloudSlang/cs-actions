@@ -47,7 +47,15 @@ public class Descriptions {
                 "represents an infinite timeout.";
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout.";
-        public static final String RESPONSC_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
+        public static final String EXECUTION_TIMEOUT_DESC="\"The amount of time (in milliseconds) to allow the client to complete the execution \" +\n" +
+                "                \"of an API call. A value of '0' disables this feature.\" +\n" +
+                "                \"Default: '60000'";
+        public static final String ASYN_DESC="\"Whether to run the operation is async mode.\" +\n" +
+                "                \"Default: 'false'";
+        public static final String POLLING_INTERVAL_DESC="The time, in seconds, to wait before a new request that verifies if the operation finished\\n\" +\n" +
+                "                \"is executed.\" +\n" +
+                "                \"Default: '1000'";
+        public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
                 "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
                 "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
@@ -67,7 +75,8 @@ public class Descriptions {
         public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
-        public static final String OAUTH_TOKEN_ID_DESCRIPTION = "Id of the oauthtoken";
+        public static final String OAUTH_TOKEN_ID_DESCRIPTION="Id of the oauthtoken";
+        public static final String LIST_OAUTH_CLIENT_DESC="List An OAuth Client Id";
     }
 
     public static class CreateWorkspace {
@@ -80,7 +89,7 @@ public class Descriptions {
         public static final String VCS_REPO_ID_DESC = "The ID of VCS repository +" +
                 "example : username/repo_name";
         public static final String WORKSPACE_REQUEST_BODY_DESC = "The request body of the workspace.";
-        public static final String WORKSPACE_ID_DESC = "The Id of created workspace";
+        public static final String WORKSPACE_ID_DESC ="The Id of created workspace";
         public static final String CREATE_WORKSPACE_RETURN_RESULT_DESC = "The response of the workspace";
         public static final String CREATE_WORKSPACE_EXCEPTION_DESC = "An error message in case there was an error while creating the message.";
         public static final String FAILURE_DESC = "There was an error while creating workspace.";
@@ -88,9 +97,10 @@ public class Descriptions {
 
     }
 
-    public static class CreateRun {
-        public static final String RUN_MESSAGE = "Specifies the message to be associated with this run";
-        public static final String IS_DESTROY = "Specifies if this plan is a destroy plan, which will destroy all provisioned resources.";
+    public static class CreateRun{
+        public static final String CREATE_RUN_DESC = "Create a run.";
+        public static  final String RUN_MESSAGE_DESC = "Specifies the message to be associated with this run";
+        public static  final String IS_DESTROY_DESC = "Specifies if this plan is a destroy plan, which will destroy all provisioned resources.";
 
 
     }
@@ -99,6 +109,8 @@ public class Descriptions {
         public static final String APPLY_RUN_DESC = "Applies a run that is paused waiting for confirmation after a plan. This includes runs in the \"needs confirmation\" and \"policy checked\" states. This action is only required for runs that can't be auto-applied.";
         public static final String RUN_COMMENT_DESC = "Specifies the comment to be associated with this run";
         public static final String RUN_DESC = "Specifies the run";
+        public static final String APPLY_RUN_RETURN_RESULT_DESC = "The response of the apply run.";
+        public static final String APPLY_RUN_EXCEPTION_DESC = "An error message in case there was an error while apply run.";
 
     }
 
@@ -110,6 +122,9 @@ public class Descriptions {
         public static final String HCL_DESC = "Whether to evaluate the value of the variable as a string of HCL code. Has no effect for environment variables.";
         public static final String SENSITIVE_DESC = "Whether the value is sensitive. If true then the variable is written once and not visible thereafter.";
         public static final String VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Variable.";
+        public static final String VARIABLE_ID_DESC = "The Id of created variable.";
+        public static final String CREATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while creating the variable.";
+        public static final String CREATE_VARIABLE_RETURN_RESULT_DESC = "The response of the apply run.";
 
     }
 

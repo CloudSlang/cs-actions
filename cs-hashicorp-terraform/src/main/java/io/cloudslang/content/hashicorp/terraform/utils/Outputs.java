@@ -34,6 +34,9 @@ public class Outputs extends OutputNames {
         public  static final String RUN_ID="runId";
 
     }
+    public static class CreateVariableOutputs{
+        public  static final String VARIABLE_ID="variableId";
+    }
 
 
 

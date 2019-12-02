@@ -18,7 +18,7 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateVariableInputs;
-import io.cloudslang.content.hashicorp.terraform.services.createmodels.variables.CreateVariableRequestBody;
+import io.cloudslang.content.hashicorp.terraform.services.models.variables.CreateVariableRequestBody;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
@@ -74,7 +74,7 @@ public class VariableImpl {
     }
 
     @NotNull
-    private static String createVariableRequestBody(CreateVariableInputs createVariableInputs) {
+    public static String createVariableRequestBody(CreateVariableInputs createVariableInputs) {
         String requestBody = EMPTY;
         ObjectMapper createVariableMapper = new ObjectMapper();
         CreateVariableRequestBody createVariableRequestBody = new CreateVariableRequestBody();

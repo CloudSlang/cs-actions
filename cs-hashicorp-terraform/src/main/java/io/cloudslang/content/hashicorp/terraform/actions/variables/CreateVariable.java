@@ -19,10 +19,13 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
+import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
@@ -35,6 +38,7 @@ import static io.cloudslang.content.hashicorp.terraform.entities.CreateVariableI
 import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.createVariable;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.CREATE_VARIABLE_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_ID_JSON_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.*;
@@ -45,11 +49,12 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_USERNAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateVariableOutputs.VARIABLE_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class CreateVariable {
     /**
@@ -65,7 +70,7 @@ public class CreateVariable {
      * @param hcl                    Optional - Whether to evaluate the value of the variable as a string of HCL code. Has no effect for environment variables.
      *                               Default: false
      * @param workspaceId            Optional - The Id of workspace.
-     * @param requestBody            Optional - The request body of the workspace.
+     * @param requestBody            Optional - The request body of the create variable.
      * @param proxyHost              Optional - proxy server used to connect to Terraform API. If empty no proxy will be used.
      * @param proxyPort              Optional - proxy server port. You must either specify values for both proxyHost and
      *                               proxyPort inputs or leave them both empty.
@@ -91,6 +96,16 @@ public class CreateVariable {
      * @param socketTimeout          Optional - The timeout for waiting for data (a maximum period " +
      *                               inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' represents an infinite timeout
      *                               Default: 0
+     * @param executionTimeout       Optional - The amount of time (in milliseconds) to allow the client to complete the execution of an API call. A value of '0' disables this feature.
+     *                               Default: 60000
+     *
+     * @param asyn                   Optional - Whether to run the operation in async mode.
+     *                               Default: false
+     *
+     * @param pollingInterval        Optional - The time, in seconds, to wait before a new request that verifies if the operation finished is executed.
+     *                               Default: 1000
+     *
+
      * @param keepAlive              Optional - Specifies whether to create a shared connection that will be used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
      *                               execution it will close it
      *                               Default: true
@@ -108,16 +123,16 @@ public class CreateVariable {
     @Action(name = CREATE_VARIABLE_OPERATION_NAME,
             description = CREATE_VARIABLE_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = CREATE_WORKSPACE_RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = CREATE_WORKSPACE_EXCEPTION_DESC),
+                    @Output(value = RETURN_RESULT, description = CREATE_VARIABLE_RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = CREATE_VARIABLE_EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC)
+                    @Output(value = VARIABLE_ID, description = VARIABLE_ID_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = VARIABLE_NAME, description = VARIABLE_NAME_DESC) String variableName,
                                        @Param(value = VARIABLE_VALUE, description = VARIABLE_VALUE_DESC) String variableValue,
                                        @Param(value = VARIABLE_CATEGORY, description = VARIABLE_CATEGORY_DESC) String variableCategory,
@@ -135,10 +150,13 @@ public class CreateVariable {
                                        @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
+                                       @Param(value = EXECUTION_TIMEOUT,description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
+                                       @Param(value = ASYNC,description = ASYN_DESC) String asyn,
+                                       @Param(value = POLLING_INTERVAL,description = POLLING_INTERVAL_DESC) String pollingInterval,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSC_CHARACTER_SET_DESC) String responseCharacterSet) {
+                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
         authToken = defaultIfEmpty(authToken, EMPTY);
         variableName = defaultIfEmpty(variableName, EMPTY);
         variableValue = defaultIfEmpty(variableValue, EMPTY);
@@ -157,10 +175,23 @@ public class CreateVariable {
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
         connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
+        executionTimeout = defaultIfEmpty(executionTimeout,ZERO);
+        asyn = defaultString(asyn,EMPTY);
+        pollingInterval = defaultString(pollingInterval,EMPTY);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
+
+        final List<String> exceptionMessage = verifyCommonInputs(proxyPort,trustAllRoots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        if (!exceptionMessage.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
+        }
+        final List<String> exceptionMessages = verifyCreateVariableInputs(workspaceId, variableName, variableValue, variableCategory, requestBody);
+        if (!exceptionMessages.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+        }
 
 
         try {
@@ -184,6 +215,9 @@ public class CreateVariable {
                             .trustPassword(trustPassword)
                             .connectTimeout(connectTimeout)
                             .socketTimeout(socketTimeout)
+                            .executionTimeout(executionTimeout)
+                            .async(asyn)
+                            .pollingInterval(pollingInterval)
                             .keepAlive(keepAlive)
                             .connectionsMaxPerRoot(connectionsMaxPerRoute)
                             .connectionsMaxTotal(connectionsMaxTotal)
@@ -191,7 +225,21 @@ public class CreateVariable {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
-            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
+
+
+            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
+
+            if (statusCode >= 200 && statusCode < 300) {
+                final String variableId = JsonPath.read(returnMessage, VARIABLE_ID_JSON_PATH);
+                if (!variableId.isEmpty()) {
+                    results.put(VARIABLE_ID, variableId);
+                } else {
+                    results.put(VARIABLE_ID, EMPTY);
+                }
+            }
+
+            return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

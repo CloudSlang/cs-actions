@@ -23,6 +23,7 @@ public class Constants {
         public static final String DEFAULT_PROXY_PORT = "8080";
         public static final String BOOLEAN_FALSE = "false";
         public static final String BOOLEAN_TRUE = "true";
+        public static final boolean TRUE = true;
         public static final String STRICT = "strict";
         public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
         public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid proxy details.";
@@ -39,7 +40,7 @@ public class Constants {
         public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
         public static final String CHANGEIT = "changeit";
         public static final String ZERO = "0";
-        public static final String CONNECT_TIMEOUT_CONST = "10000";
+        public static final String CONNECT_TIMEOUT_CONST="10000";
         public static final String UTF8 = "UTF-8";
         public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
         public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
@@ -72,7 +73,7 @@ public class Constants {
     public static class CreateWorkspace {
         public static final String CREATE_WORKSPACE_OPERATION_NAME = "Create Workspace";
         public static final String WORKSPACE_PATH = "/workspaces";
-        public static final String WORKSPACE_ID_JSON_PATH = "$.data[*].id";
+        public static final String WORKSPACE_ID_JSON_PATH = "$.data.id";
         public static final String WORKSPACE_TYPE = "workspaces";
     }
 
@@ -82,11 +83,11 @@ public class Constants {
         public static final String OAUTH_TOKEN_LIST_JSON_PATH = "$.data[*].relationships.oauth-tokens.data[*].id";
 
     }
-
-    public static class CreateRunConstants {
-        public static final String CREATE_RUN_PATH = "/runs";
-        public static final String RUN_TYPE = "runs";
-        public static final String RUN_ID = "$.data[*].relationships.run-events.data[*].id";
+    public static class CreateRunConstants{
+        public static final String CREATE_RUN_OPERATION_NAME = "Create Run";
+        public static  final String CREATE_RUN_PATH="/runs";
+        public static  final String RUN_TYPE="runs";
+        public static final String RUN_ID_PATH = "$.data[*].relationships.run-events.data[*].id";
 
     }
 
@@ -100,7 +101,7 @@ public class Constants {
         public static final String CREATE_VARIABLE_OPERATION_NAME = "Create Variable";
         public static final String VARIABLE_PATH = "/vars";
         public static final String VARIABLE_TYPE = "vars";
-        public static final String RUN_ID = "$.data[*].relationships.run-events.data[*].id";
+        public static final String VARIABLE_ID_JSON_PATH = "$.data.id";
 
     }
 }

@@ -26,13 +26,16 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs.RUN_COMMENT;
 import static io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs.RUN_ID;
-import static io.cloudslang.content.hashicorp.terraform.services.ApplyRunImpl.applyRunClient;
+import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.applyRunClient;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.APPLY_RUN_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ApplyRun.*;
@@ -44,6 +47,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PASSW
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.*;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
@@ -53,16 +57,25 @@ public class ApplyRun {
      * Applies a run that is paused waiting for confirmation after a plan.
      *
      * @param authToken              required - authentication token used to connect to Terraform API.
+     *
      * @param runId                  Optional - The run ID to apply.
+     *
      * @param runComment             Optional - An optional comment about the run.
+     *
      * @param requestBody            Optional - The request body of the apply run.
+     *
      * @param proxyHost              Optional - proxy server used to connect to Terraform API. If empty no proxy will be used.
+     *
      * @param proxyPort              Optional - proxy server port. You must either specify values for both proxyHost and
      *                               proxyPort inputs or leave them both empty.
      *                               Default: 8080
+     *
      * @param proxyUsername          Optional - proxy server user name.
+     *
      * @param proxyPassword          Optional - proxy server password associated with the proxyUsername input value.
+     *
      * @param trustAllRoots          Optional - Specifies whether to enable weak security over SSL/TSL.
+     *
      * @param x509HostnameVerifier   Optional - Specifies the way the server hostname must match a domain name in
      *                               the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to
      *                               allow_all to skip any checking. For the value browser_compatible the hostname verifier
@@ -71,25 +84,43 @@ public class ApplyRun {
      *                               difference between browser_compatible and strict is that a wildcard (such as *.foo.com)
      *                               with browser_compatible matches all subdomains, including a.b.foo.com
      *                               Default: "strict"
+     *
      * @param trustKeystore          Optional - The pathname of the Java TrustStore file. This contains certificates from other parties that you expect to communicate with, or from Certificate Authorities
      *                               that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https'
      *                               or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS);
+     *
      * @param trustPassword          Optional - The password associated with the TrustStore file. If trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied
+     *
      * @param connectTimeout         Optional - The time to wait for a connection to be established in seconds. A timeout value of '0' represents an infinite timeout
      *                               Default: 10000
+     *
      * @param socketTimeout          Optional - The timeout for waiting for data (a maximum period " +
      *                               inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' represents an infinite timeout
      *                               Default: 0
+     *
+     * @param executionTimeout       Optional - The amount of time (in milliseconds) to allow the client to complete the execution of an API call. A value of '0' disables this feature.
+     *                               Default: 60000
+     *
+     * @param asyn                   Optional - Whether to run the operation in async mode.
+     *                               Default: false
+     *
+     * @param pollingInterval        Optional - The time, in seconds, to wait before a new request that verifies if the operation finished is executed.
+     *                               Default: 1000
+     *
      * @param keepAlive              Optional - Specifies whether to create a shared connection that will be used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
      *                               execution it will close it
      *                               Default: true
+     *
      * @param connectionsMaxPerRoute Optional - The maximum limit of connections on a per route basis
      *                               Default: 2
+     *
      * @param connectionsMaxTotal    Optional - The maximum limit of connections in total
      *                               Default: 20
+     *
      * @param responseCharacterSet   Optional - The character encoding to be used for the HTTP response. If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
      *                               default value will be used. You should not use this for method=HEAD or OPTIONS.
      *                               Default : UTF-8
+     *
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -97,13 +128,15 @@ public class ApplyRun {
     @Action(name = APPLY_RUN_OPERATION_NAME,
             description = APPLY_RUN_DESC,
             outputs = {
-                    @Output(value = OutputNames.RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = APPLY_RUN_RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = APPLY_RUN_EXCEPTION_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = RUN_ID, required = true, description = RUN_DESC) String runId,
                                        @Param(value = RUN_COMMENT, description = RUN_COMMENT_DESC) String runComment,
                                        @Param(value = REQUEST_BODY) String requestBody,
@@ -117,10 +150,13 @@ public class ApplyRun {
                                        @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
+                                       @Param(value = EXECUTION_TIMEOUT,description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
+                                       @Param(value = ASYNC,description = ASYN_DESC) String asyn,
+                                       @Param(value = POLLING_INTERVAL,description = POLLING_INTERVAL_DESC) String pollingInterval,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSC_CHARACTER_SET_DESC) String responseCharacterSet) {
+                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
 
         runId = defaultIfEmpty(runId, EMPTY);
@@ -136,10 +172,24 @@ public class ApplyRun {
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
         connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
+        executionTimeout = defaultIfEmpty(executionTimeout,ZERO);
+        asyn = defaultString(asyn,EMPTY);
+        pollingInterval = defaultString(pollingInterval,EMPTY);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
+
+        final List<String> exceptionMessage = verifyCommonInputs(proxyPort,trustAllRoots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        if (!exceptionMessage.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
+        }
+
+        final List<String> exceptionMessages = verifyApplyRunRequestBody(requestBody);
+        if (!exceptionMessages.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+        }
 
         try {
             final Map<String, String> result = applyRunClient(ApplyRunInputs.builder()
@@ -158,6 +208,9 @@ public class ApplyRun {
                             .trustPassword(trustPassword)
                             .connectTimeout(connectTimeout)
                             .socketTimeout(socketTimeout)
+                            .executionTimeout(executionTimeout)
+                            .async(asyn)
+                            .pollingInterval(pollingInterval)
                             .keepAlive(keepAlive)
                             .connectionsMaxPerRoot(connectionsMaxPerRoute)
                             .connectionsMaxTotal(connectionsMaxTotal)

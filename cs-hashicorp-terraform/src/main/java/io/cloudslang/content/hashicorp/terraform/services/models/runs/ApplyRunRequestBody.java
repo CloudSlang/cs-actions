@@ -1,4 +1,4 @@
-package io.cloudslang.content.hashicorp.terraform.services.createmodels.runs;
+package io.cloudslang.content.hashicorp.terraform.services.models.runs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

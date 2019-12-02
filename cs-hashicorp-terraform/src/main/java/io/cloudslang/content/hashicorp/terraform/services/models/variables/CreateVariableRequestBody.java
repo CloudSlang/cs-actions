@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.hashicorp.terraform.services.createmodels.variables;
+package io.cloudslang.content.hashicorp.terraform.services.models.variables;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -15,8 +15,8 @@
 
 package io.cloudslang.content.hashicorp.terraform.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.utils.NumberUtilities;
-import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,8 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs.IS_DESTROY;
-import static io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs.RUN_MESSAGE;
+import static io.cloudslang.content.hashicorp.terraform.entities.CreateVariableInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
@@ -60,38 +59,50 @@ public final class InputsValidation {
 
 
     @NotNull
-    public static List<String> verifyCommonUserInputs(@Nullable final String proxyPort,
-                                                      @Nullable final String trust_all_roots,
-                                                      @Nullable final String connectTimeout,
-                                                      @Nullable final String socketTimeout,
-                                                      @Nullable final String keepAlive,
-                                                      @Nullable final String connectionsMaxPerRoute,
-                                                      @Nullable final String connectionsMaxTotal) {
+    public static List<String> verifyCreateRunInputs(@Nullable final String workspaceId,
+                                                     @Nullable final String requestBody) {
 
         final List<String> exceptionMessages = new ArrayList<>();
-        addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
-        addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
-        addVerifyNumber(exceptionMessages, connectTimeout, CONNECT_TIMEOUT);
-        addVerifyNumber(exceptionMessages, socketTimeout, SOCKET_TIMEOUT);
-        addVerifyBoolean(exceptionMessages, keepAlive, KEEP_ALIVE);
-        addVerifyNumber(exceptionMessages, connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE);
-        addVerifyNumber(exceptionMessages, connectionsMaxTotal, CONNECTIONS_MAX_TOTAL);
+        if(requestBody.isEmpty()) {
+            addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
+        }else{
+            addVerifyRequestBody(exceptionMessages,requestBody);
+        }
+
 
         return exceptionMessages;
     }
-
-
-
 
     @NotNull
-    public static List<String> verifyCreateRunInputs(@Nullable final String workspaceId, @Nullable final String runMessage,
-                                                         @Nullable final String isDestroy) {
+    public static List<String> verifyCreateVariableInputs(@Nullable final String workspaceId, @Nullable final String variableName, @Nullable final String variableValue, @Nullable final String variableCategory,
+                                                     @Nullable final String requestBody) {
+
         final List<String> exceptionMessages = new ArrayList<>();
-        addVerifyNotNullOrEmpty(exceptionMessages, workspaceId, WORKSPACE_ID);
-        addVerifyNotNullOrEmpty(exceptionMessages, runMessage, RUN_MESSAGE);
-        addVerifyBoolean(exceptionMessages, isDestroy, IS_DESTROY);
+        if(requestBody.isEmpty()) {
+            addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
+            addVerifyString(exceptionMessages, variableName, VARIABLE_NAME);
+            addVerifyString(exceptionMessages, variableValue, VARIABLE_VALUE);
+            addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
+        }else{
+            addVerifyRequestBody(exceptionMessages,requestBody);
+        }
+
+
         return exceptionMessages;
     }
+
+    @NotNull
+    public static List<String> verifyApplyRunRequestBody(@Nullable final String requestBody) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+        if(!requestBody.isEmpty()) {
+            addVerifyRequestBody(exceptionMessages,requestBody);
+        }
+
+        return exceptionMessages;
+    }
+
+
 
     @NotNull
     private static List<String> addVerifyUserInputs(@NotNull List<String> exceptions, @Nullable final String organizationName) {
@@ -119,6 +130,13 @@ public final class InputsValidation {
         }
         return exceptions;
     }
+    @NotNull
+    private static List<String> addVerifyString(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+        if (isEmpty(input)) {
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+        }
+        return exceptions;
+    }
 
     @NotNull
     private static List<String> addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
@@ -129,6 +147,18 @@ public final class InputsValidation {
         }
         return exceptions;
     }
+
+    @NotNull
+    private static List<String> addVerifyRequestBody(@NotNull List<String> exceptions, @Nullable final String input) {
+        try{
+            ObjectMapper mapper=new ObjectMapper();
+            mapper.readTree(input);
+        }catch (Exception exception){
+            exceptions.add(exception.getMessage());
+        }
+        return exceptions;
+    }
+
 
     @NotNull
     private static List<String> addVerifyNumber(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
