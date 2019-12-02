@@ -84,13 +84,9 @@ public class RunImpl {
 
         attributes.setDestroy(Boolean.valueOf(createRunInputs.getIsDestroy()));
         attributes.setRunMessage(createRunInputs.getRunMessage());
-
         relationships.setWorkspace(workspace);
 
         workspace.setData(workspaceData);
-
-        workspaceData.setId(createRunInputs.getWorkspaceId());
-        workspaceData.setType(createRunInputs.getWorkspaceName());
 
         createRundata.setRelationships(relationships);
         createRundata.setAttributes(attributes);
