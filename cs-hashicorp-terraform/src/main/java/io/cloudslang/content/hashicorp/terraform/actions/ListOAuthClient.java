@@ -108,6 +108,7 @@ public class ListOAuthClient {
      */
 
     @Action(name = LIST_OAUTH_CLIENT_OPERATION_NAME,
+            description = LIST_OAUTH_CLIENT_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value=OAUTH_TOKEN_ID,description = OAUTH_TOKEN_ID_DESCRIPTION),

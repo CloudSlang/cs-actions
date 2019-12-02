@@ -70,16 +70,6 @@ public class HttpUtils {
         return uriBuilder;
     }
 
-    @NotNull
-    public static String getListOAuthClientPath(@NotNull String organizationName) {
-        StringBuilder pathString = new StringBuilder()
-                .append(API)
-                .append(API_VERSION)
-                .append(ORGANIZATION_PATH)
-                .append(organizationName)
-                .append(OAUTH_CLIENT_PATH);
-        return pathString.toString();
-    }
 
     @NotNull
     public static String getAuthHeaders(@NotNull final String authToken) {

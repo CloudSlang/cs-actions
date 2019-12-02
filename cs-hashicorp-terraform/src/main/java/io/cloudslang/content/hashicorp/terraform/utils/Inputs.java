@@ -10,7 +10,7 @@ public class Inputs {
     public static final String PROXY_PORT = "proxyPort";
     public static final String PROXY_USERNAME = "proxyUsername";
     public static final String PROXY_PASSWORD = "proxyPassword";
-    public static final String REQUEST_BODY = "body";
+    public static final String REQUEST_BODY = "requestBody";
     public static final String EXECUTION_TIMEOUT = "executionTimeout";
     public static final String POLLING_INTERVAL = "pollingInterval";
     public static final String ASYNC = "async";

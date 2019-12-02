@@ -16,7 +16,6 @@
 package io.cloudslang.content.hashicorp.terraform.utils;
 
 import io.cloudslang.content.utils.NumberUtilities;
-import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -24,6 +24,7 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.jetbrains.annotations.NotNull;
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.OAUTH_CLIENT_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 
@@ -49,5 +50,15 @@ public class ListOauthClientImpl {
         uriBuilder.setPath(getListOAuthClientPath(organizationName));
 
         return uriBuilder.build().toURL().toString();
+    }
+    @NotNull
+    public static String getListOAuthClientPath(@NotNull String organizationName) {
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(API_VERSION)
+                .append(ORGANIZATION_PATH)
+                .append(organizationName)
+                .append(OAUTH_CLIENT_PATH);
+        return pathString.toString();
     }
 }

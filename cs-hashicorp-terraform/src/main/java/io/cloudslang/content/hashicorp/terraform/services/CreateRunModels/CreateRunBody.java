@@ -44,26 +44,27 @@ CreateRunData data;
         }
     }
    public class Attributes{
-       @JsonProperty("message")
+
+        boolean isDestroy;
         String runMessage;
 
-       @JsonProperty("is-Destroy")
-        boolean isDestroy;
-
+       @JsonProperty("message")
         public String getRunMessage() {
             return runMessage;
         }
-
+       @JsonProperty("message")
         public void setRunMessage(String runMessage) {
             this.runMessage = runMessage;
         }
-
-       public boolean isDestroy() { return isDestroy; }
-
-       public void setIsDestroy(boolean isDestroy) {
-            this.isDestroy = isDestroy;
-        }
-    }
+       @JsonProperty("is-Destroy")
+       public boolean isDestroy() {
+           return isDestroy;
+       }
+       @JsonProperty("is-Destroy")
+       public void setDestroy(boolean isDestroy) {
+          this.isDestroy = isDestroy;
+       }
+   }
     public  class Relationships{
         Workspace workspace;
 

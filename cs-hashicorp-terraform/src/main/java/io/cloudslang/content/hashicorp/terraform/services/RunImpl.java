@@ -35,7 +35,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBu
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class CreateRunImpl {
+public class RunImpl {
     @NotNull
     public static Map<String, String> createRunClient(@NotNull final CreateRunInputs createRunInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
@@ -55,7 +55,7 @@ public class CreateRunImpl {
     }
 
     @NotNull
-    private static String createRunClientUrl() throws Exception {
+    public static String createRunClientUrl() throws Exception {
 
         final URIBuilder uriBuilder = getUriBuilder();
         StringBuilder pathString = new StringBuilder()
@@ -67,7 +67,7 @@ public class CreateRunImpl {
     }
 
     @NotNull
-    private static String createRunBody(CreateRunInputs createRunInputs ){
+    public static String createRunBody(CreateRunInputs createRunInputs ){
         ObjectMapper mapper=new ObjectMapper();
         CreateRunBody createBody=new CreateRunBody();
         CreateRunBody.CreateRunData createRundata=createBody.new CreateRunData();
@@ -77,13 +77,12 @@ public class CreateRunImpl {
         CreateRunBody.WorkspaceData workspaceData=createBody.new WorkspaceData();
 
         String requestBody= EMPTY;
+
         workspaceData.setId(createRunInputs.getWorkspaceId());
-        workspaceData.setType(RUN_TYPE);
+        workspaceData.setType(createRunInputs.getWorkspaceName());
 
-
-        attributes.setIsDestroy(createRunInputs.isDestroy());
+        attributes.setDestroy(Boolean.valueOf(createRunInputs.getIsDestroy()));
         attributes.setRunMessage(createRunInputs.getRunMessage());
-
 
         relationships.setWorkspace(workspace);
 
@@ -94,7 +93,7 @@ public class CreateRunImpl {
 
         createRundata.setRelationships(relationships);
         createRundata.setAttributes(attributes);
-        createRundata.setType("runs");
+        createRundata.setType(RUN_TYPE);
 
         createBody.setData(createRundata);
 
@@ -104,7 +103,7 @@ public class CreateRunImpl {
         }catch(JsonProcessingException e){
             e.printStackTrace();
         }
-
+        System.out.println(requestBody);
 
         return requestBody;
     }
