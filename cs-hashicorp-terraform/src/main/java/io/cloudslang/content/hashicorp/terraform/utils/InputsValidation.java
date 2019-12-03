@@ -57,16 +57,15 @@ public final class InputsValidation {
     }
 
 
-
     @NotNull
     public static List<String> verifyCreateRunInputs(@Nullable final String workspaceId,
                                                      @Nullable final String requestBody) {
 
         final List<String> exceptionMessages = new ArrayList<>();
-        if(requestBody.isEmpty()) {
+        if (requestBody.isEmpty()) {
             addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
-        }else{
-            addVerifyRequestBody(exceptionMessages,requestBody);
+        } else {
+            addVerifyRequestBody(exceptionMessages, requestBody);
         }
 
 
@@ -75,16 +74,16 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyCreateVariableInputs(@Nullable final String workspaceId, @Nullable final String variableName, @Nullable final String variableValue, @Nullable final String variableCategory,
-                                                     @Nullable final String requestBody) {
+                                                          @Nullable final String requestBody) {
 
         final List<String> exceptionMessages = new ArrayList<>();
-        if(requestBody.isEmpty()) {
+        if (requestBody.isEmpty()) {
             addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
             addVerifyString(exceptionMessages, variableName, VARIABLE_NAME);
             addVerifyString(exceptionMessages, variableValue, VARIABLE_VALUE);
             addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
-        }else{
-            addVerifyRequestBody(exceptionMessages,requestBody);
+        } else {
+            addVerifyRequestBody(exceptionMessages, requestBody);
         }
 
 
@@ -95,13 +94,12 @@ public final class InputsValidation {
     public static List<String> verifyApplyRunRequestBody(@Nullable final String requestBody) {
 
         final List<String> exceptionMessages = new ArrayList<>();
-        if(!requestBody.isEmpty()) {
-            addVerifyRequestBody(exceptionMessages,requestBody);
+        if (!requestBody.isEmpty()) {
+            addVerifyRequestBody(exceptionMessages, requestBody);
         }
 
         return exceptionMessages;
     }
-
 
 
     @NotNull
@@ -130,6 +128,7 @@ public final class InputsValidation {
         }
         return exceptions;
     }
+
     @NotNull
     private static List<String> addVerifyString(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
@@ -150,10 +149,10 @@ public final class InputsValidation {
 
     @NotNull
     private static List<String> addVerifyRequestBody(@NotNull List<String> exceptions, @Nullable final String input) {
-        try{
-            ObjectMapper mapper=new ObjectMapper();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
             mapper.readTree(input);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             exceptions.add(exception.getMessage());
         }
         return exceptions;

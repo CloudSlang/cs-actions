@@ -24,21 +24,22 @@ public class Outputs extends OutputNames {
 
     }
 
-    public static class ListOAuthClientOutputs{
-        public static final String OAUTH_TOKEN_ID="oauthTokenId";
-    }
-    public static class CreateWorkspaceOutputs{
-        public  static final String WORKSPACE_ID="workspaceId";
-    }
-    public static class CreateRunOutputs{
-        public  static final String RUN_ID="runId";
-
-    }
-    public static class CreateVariableOutputs{
-        public  static final String VARIABLE_ID="variableId";
+    public static class ListOAuthClientOutputs {
+        public static final String OAUTH_TOKEN_ID = "oauthTokenId";
     }
 
+    public static class CreateWorkspaceOutputs {
+        public static final String WORKSPACE_ID = "workspaceId";
+    }
 
+    public static class CreateRunOutputs {
+        public static final String RUN_ID = "runId";
+
+    }
+
+    public static class CreateVariableOutputs {
+        public static final String VARIABLE_ID = "variableId";
+    }
 
 
 }

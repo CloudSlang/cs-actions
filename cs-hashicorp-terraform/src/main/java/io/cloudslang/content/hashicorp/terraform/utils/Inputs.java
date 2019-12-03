@@ -41,16 +41,16 @@ public class Inputs {
     private final String connectionsMaxPerRoot;
     private final String connectionsMaxTotal;
 
-    @java.beans.ConstructorProperties({"authToken", "organizationName","requestBody","terraformVersion", "proxyHost", "proxyPort", "proxyUsername",
+    @java.beans.ConstructorProperties({"authToken", "organizationName", "requestBody", "terraformVersion", "proxyHost", "proxyPort", "proxyUsername",
             "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "connectTimeout",
-            "socketTimeout","executionTimeout","pollingInterval","async", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal"})
-    private Inputs(String authToken, String organizationName,String requestBody, String terraformVersion, String proxyHost, String proxyPort,
+            "socketTimeout", "executionTimeout", "pollingInterval", "async", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal"})
+    private Inputs(String authToken, String organizationName, String requestBody, String terraformVersion, String proxyHost, String proxyPort,
                    String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier,
-                   String trustKeystore, String trustPassword, String connectTimeout, String socketTimeout,String executionTimeout, String pollingInterval,
+                   String trustKeystore, String trustPassword, String connectTimeout, String socketTimeout, String executionTimeout, String pollingInterval,
                    String async, String keepAlive, String responseCharacterSet, String connectionsMaxPerRoot, String connectionsMaxTotal) {
         this.authToken = authToken;
         this.organizationName = organizationName;
-        this.requestBody=requestBody;
+        this.requestBody = requestBody;
         this.terraformVersion = terraformVersion;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
@@ -62,7 +62,7 @@ public class Inputs {
         this.trustPassword = trustPassword;
         this.connectTimeout = connectTimeout;
         this.socketTimeout = socketTimeout;
-        this.executionTimeout =executionTimeout;
+        this.executionTimeout = executionTimeout;
         this.pollingInterval = pollingInterval;
         this.async = async;
         this.keepAlive = keepAlive;
@@ -92,7 +92,9 @@ public class Inputs {
     }
 
     @NotNull
-    public String getTerraformVersion() { return terraformVersion; }
+    public String getTerraformVersion() {
+        return terraformVersion;
+    }
 
     @NotNull
     public String getAuthToken() {
@@ -333,9 +335,9 @@ public class Inputs {
         }
 
         public Inputs build() {
-            return new Inputs(authToken, organizationName,requestBody, terraformVersion, proxyHost, proxyPort, proxyUsername, proxyPassword,
+            return new Inputs(authToken, organizationName, requestBody, terraformVersion, proxyHost, proxyPort, proxyUsername, proxyPassword,
                     trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, connectTimeout,
-                    socketTimeout,executionTimeout,pollingInterval,async, keepAlive, responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal);
+                    socketTimeout, executionTimeout, pollingInterval, async, keepAlive, responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal);
         }
     }
 
