@@ -53,6 +53,12 @@
             <organization>Micro Focus</organization>
             <organizationUrl>https://www.microfocus.com/about/</organizationUrl>
         </developer>
+        <developer>
+            <name>Rajesh Kalyankar</name>
+            <email>rajesh.kum.kalyankar@microfocus.com</email>
+            <organization>Micro Focus</organization>
+            <organizationUrl>https://www.microfocus.com/about/</organizationUrl>
+        </developer>
     </developers>
 
     <distributionManagement>

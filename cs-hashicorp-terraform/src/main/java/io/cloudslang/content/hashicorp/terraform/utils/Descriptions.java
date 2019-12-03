@@ -60,7 +60,7 @@ public class Descriptions {
                 "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
                 "Default value: UTF-8";
-        public static final String AUTH_TOKEN_DESC = "The authorization token for terraform";
+        public static final String AUTH_TOKEN_DESC = "The authorization token for terraform API.";
         public static final String ORGANIZATION_NAME_DESC = "Name of the organization";
         public static final String TERAAFORM_VERSION_DESC = "Terraform version.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";

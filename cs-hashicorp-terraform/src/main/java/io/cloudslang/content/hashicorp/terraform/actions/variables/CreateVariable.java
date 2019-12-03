@@ -57,68 +57,6 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public class CreateVariable {
-    /**
-     * Creates a variable in workspace.
-     *
-     * @param authToken              required - authentication token used to connect to Terraform API.
-     * @param variableName           Optional - The name of the variable.
-     * @param variableValue          Optional - The value of the variable.
-     * @param variableCategory       Optional - Whether this is a Terraform or environment variable.
-     *                               Valid values are "terraform" or "env".
-     * @param sensitive              Optional - Whether the value is sensitive. If true then the variable is written once and not visible thereafter.
-     *                               Default: false
-     * @param hcl                    Optional - Whether to evaluate the value of the variable as a string of HCL code. Has no effect for environment variables.
-     *                               Default: false
-     * @param workspaceId            Optional - The Id of workspace.
-     * @param requestBody            Optional - The request body of the create variable.
-     * @param proxyHost              Optional - proxy server used to connect to Terraform API. If empty no proxy will be used.
-     * @param proxyPort              Optional - proxy server port. You must either specify values for both proxyHost and
-     *                               proxyPort inputs or leave them both empty.
-     *                               Default: 8080
-     * @param proxyUsername          Optional - proxy server user name.
-     * @param proxyPassword          Optional - proxy server password associated with the proxyUsername input value.
-     * @param trustAllRoots          Optional - Specifies whether to enable weak security over SSL/TSL.
-     *                               Default: false
-     * @param x509HostnameVerifier   Optional - Specifies the way the server hostname must match a domain name in
-     *                               the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to
-     *                               allow_all to skip any checking. For the value browser_compatible the hostname verifier
-     *                               works the same way as Curl and Firefox. The hostname must match either the first CN, or any of
-     *                               the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only
-     *                               difference between browser_compatible and strict is that a wildcard (such as *.foo.com)
-     *                               with browser_compatible matches all subdomains, including a.b.foo.com
-     *                               Default: "strict"
-     * @param trustKeystore          Optional - The pathname of the Java TrustStore file. This contains certificates from other parties that you expect to communicate with, or from Certificate Authorities
-     *                               that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https'
-     *                               or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS);
-     * @param trustPassword          Optional - The password associated with the TrustStore file. If trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied
-     * @param connectTimeout         Optional - The time to wait for a connection to be established in seconds. A timeout value of '0' represents an infinite timeout
-     *                               Default: 10000
-     * @param socketTimeout          Optional - The timeout for waiting for data (a maximum period " +
-     *                               inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' represents an infinite timeout
-     *                               Default: 0
-     * @param executionTimeout       Optional - The amount of time (in milliseconds) to allow the client to complete the execution of an API call. A value of '0' disables this feature.
-     *                               Default: 60000
-     *
-     * @param asyn                   Optional - Whether to run the operation in async mode.
-     *                               Default: false
-     *
-     * @param pollingInterval        Optional - The time, in seconds, to wait before a new request that verifies if the operation finished is executed.
-     *                               Default: 1000
-     *
-
-     * @param keepAlive              Optional - Specifies whether to create a shared connection that will be used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
-     *                               execution it will close it
-     *                               Default: true
-     * @param connectionsMaxPerRoute Optional - The maximum limit of connections on a per route basis
-     *                               Default: 2
-     * @param connectionsMaxTotal    Optional - The maximum limit of connections in total
-     *                               Default: 20
-     * @param responseCharacterSet   Optional - The character encoding to be used for the HTTP response. If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
-     *                               default value will be used. You should not use this for method=HEAD or OPTIONS.
-     *                               Default : UTF-8
-     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
-     */
 
     @Action(name = CREATE_VARIABLE_OPERATION_NAME,
             description = CREATE_VARIABLE_DESC,
@@ -150,9 +88,9 @@ public class CreateVariable {
                                        @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
-                                       @Param(value = EXECUTION_TIMEOUT,description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
-                                       @Param(value = ASYNC,description = ASYN_DESC) String asyn,
-                                       @Param(value = POLLING_INTERVAL,description = POLLING_INTERVAL_DESC) String pollingInterval,
+                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
+                                       @Param(value = ASYNC, description = ASYN_DESC) String asyn,
+                                       @Param(value = POLLING_INTERVAL, description = POLLING_INTERVAL_DESC) String pollingInterval,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
@@ -161,8 +99,8 @@ public class CreateVariable {
         variableName = defaultIfEmpty(variableName, EMPTY);
         variableValue = defaultIfEmpty(variableValue, EMPTY);
         variableCategory = defaultIfEmpty(variableCategory, EMPTY);
-        hcl = defaultIfEmpty(hcl,BOOLEAN_FALSE);
-        sensitive = defaultIfEmpty(sensitive,BOOLEAN_FALSE);
+        hcl = defaultIfEmpty(hcl, BOOLEAN_FALSE);
+        sensitive = defaultIfEmpty(sensitive, BOOLEAN_FALSE);
         workspaceId = defaultIfEmpty(workspaceId, BOOLEAN_TRUE);
         requestBody = defaultIfEmpty(requestBody, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
@@ -175,15 +113,15 @@ public class CreateVariable {
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
         connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
-        executionTimeout = defaultIfEmpty(executionTimeout,EXEC_TIMEOUT);
-        asyn = defaultString(asyn,BOOLEAN_FALSE);
-        pollingInterval = defaultString(pollingInterval,POLLING_INTERVAL_DEFAULT);
+        executionTimeout = defaultIfEmpty(executionTimeout, EXEC_TIMEOUT);
+        asyn = defaultString(asyn, BOOLEAN_FALSE);
+        pollingInterval = defaultString(pollingInterval, POLLING_INTERVAL_DEFAULT);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessage = verifyCommonInputs(proxyPort,trustAllRoots,
+        final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
