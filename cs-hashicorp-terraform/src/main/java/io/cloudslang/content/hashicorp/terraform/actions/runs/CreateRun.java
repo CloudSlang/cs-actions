@@ -135,7 +135,7 @@ public class CreateRun {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true,encrypted = true,description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = WORKSPACE_ID,description = WORKSPACE_ID_DESC) String workspaceId,
                                        @Param(value = RUN_MESSAGE,description = RUN_MESSAGE_DESC) String runMessage,
                                        @Param(value = IS_DESTROY,description =IS_DESTROY_DESC ) String isDestroy,

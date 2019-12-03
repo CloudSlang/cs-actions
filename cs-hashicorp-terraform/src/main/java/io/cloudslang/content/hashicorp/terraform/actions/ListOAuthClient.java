@@ -118,7 +118,7 @@ public class ListOAuthClient {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true,encrypted = true,description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = ORGANIZATION_NAME,required = true,description = ORGANIZATION_NAME_DESC) String organizationName,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
