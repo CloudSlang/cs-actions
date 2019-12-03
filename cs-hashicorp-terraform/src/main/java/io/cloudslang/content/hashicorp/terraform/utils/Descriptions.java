@@ -24,13 +24,13 @@ public class Descriptions {
         public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxy_username input value.";
         public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL/TSL. " +
                 "A certificate is trusted even if no trusted certification authority issued it.";
-        public static final String X509_DESC = "Specifies the way the server hostname must match a domain name in " +
-                "the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to " +
-                "\"allow_all\" to skip any checking. For the value \"browser_compatible\" the hostname verifier " +
+        public static final String X509_DESC = "Specifies the way the server hostname must match a domain name in "+
+                "the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to "+
+                "allow_all to skip any checking. For the value browser_compatible the hostname verifier "+
                 "works the same way as Curl and Firefox. The hostname must match either the first CN, or any of " +
                 "the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only " +
-                "difference between \"browser_compatible\" and \"strict\" is that a wildcard (such as \"*.foo.com\") " +
-                "with \"browser_compatible\" matches all subdomains, including \"a.b.foo.com\".";
+                "difference between browser_compatible and strict is that a wildcard (such as *.foo.com) " +
+                "with browser_compatible matches all subdomains, including a.b.foo.com.";
         public static final String TRUST_KEYSTORE_DESC = "The pathname of the Java TrustStore file. This contains " +
                 "certificates from other parties that you expect to communicate with, or from Certificate Authorities" +
                 " that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https' " +
@@ -47,19 +47,10 @@ public class Descriptions {
                 "represents an infinite timeout.";
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout.";
-        public static final String EXECUTION_TIMEOUT_DESC="\"The amount of time (in milliseconds) to allow the client to complete the execution \" +\n" +
-                "                \"of an API call. A value of '0' disables this feature.\" +\n" +
-                "                \"Default: '60000'";
-        public static final String ASYN_DESC="\"Whether to run the operation is async mode.\" +\n" +
-                "                \"Default: 'false'";
-        public static final String POLLING_INTERVAL_DESC="The time, in seconds, to wait before a new request that verifies if the operation finished\\n\" +\n" +
-                "                \"is executed.\" +\n" +
-                "                \"Default: '1000'";
-        public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
-                "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
-                "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
-                "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
-                "Default value: UTF-8";
+        public static final String EXECUTION_TIMEOUT_DESC="The amount of time (in milliseconds) to allow the client to complete the execution of an API call. A value of '0' disables this feature";
+        public static final String ASYN_DESC="Whether to run the operation is async mode";
+        public static final String POLLING_INTERVAL_DESC="The time, in seconds, to wait before a new request that verifies if the operation finished is executed.";
+        public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response,If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the default value will be used. You should not use this for method=HEAD or OPTIONS";
         public static final String AUTH_TOKEN_DESC = "The authorization token for terraform";
         public static final String ORGANIZATION_NAME_DESC = "Name of the organization";
         public static final String TERAAFORM_VERSION_DESC = "Terraform version.";
