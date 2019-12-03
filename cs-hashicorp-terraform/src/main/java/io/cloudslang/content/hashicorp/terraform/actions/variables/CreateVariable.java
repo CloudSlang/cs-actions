@@ -173,11 +173,11 @@ public class CreateVariable {
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
-        connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
+        connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
-        executionTimeout = defaultIfEmpty(executionTimeout,ZERO);
-        asyn = defaultString(asyn,EMPTY);
-        pollingInterval = defaultString(pollingInterval,EMPTY);
+        executionTimeout = defaultIfEmpty(executionTimeout,EXEC_TIMEOUT);
+        asyn = defaultString(asyn,BOOLEAN_FALSE);
+        pollingInterval = defaultString(pollingInterval,POLLING_INTERVAL_DEFAULT);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
