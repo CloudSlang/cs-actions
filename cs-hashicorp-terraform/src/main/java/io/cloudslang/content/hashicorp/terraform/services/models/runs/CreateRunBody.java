@@ -45,7 +45,7 @@ CreateRunData data;
     }
    public class Attributes{
 
-        boolean isDestroy;
+        String isDestroy;
         String runMessage;
 
        @JsonProperty("message")
@@ -57,11 +57,11 @@ CreateRunData data;
             this.runMessage = runMessage;
         }
        @JsonProperty("is-Destroy")
-       public boolean isDestroy() {
+       public String isDestroy() {
            return isDestroy;
        }
        @JsonProperty("is-Destroy")
-       public void setDestroy(boolean isDestroy) {
+       public void setDestroy(String isDestroy) {
           this.isDestroy = isDestroy;
        }
    }

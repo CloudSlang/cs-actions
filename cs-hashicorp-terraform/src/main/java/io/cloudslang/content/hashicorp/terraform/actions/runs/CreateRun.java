@@ -104,7 +104,7 @@ public class CreateRun {
      *                         Default: 60000
      *
      *
-     * @param asyn             Optional - Whether to run the operation is async mode.
+     * @param asyn             Optional - Whether to run the operation in async mode.
      *                         Default: false
      *
      * @param pollingInterval  Optional - The time, in seconds, to wait before a new request that verifies if the operation finished is executed.

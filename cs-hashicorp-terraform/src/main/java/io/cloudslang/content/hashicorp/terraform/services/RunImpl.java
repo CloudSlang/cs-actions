@@ -34,6 +34,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWo
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBuilder;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class RunImpl {
@@ -43,7 +44,11 @@ public class RunImpl {
         final Inputs commonInputs = createRunInputs.getCommonInputs();
         httpClientInputs.setUrl(createRunClientUrl());
         if(commonInputs.getRequestBody().isEmpty()){
+            try{
             httpClientInputs.setBody(createRunBody(createRunInputs));
+            }catch(JsonProcessingException e){
+                return getFailureResultsMap(e);
+            }
         }else{
             httpClientInputs.setBody(commonInputs.getRequestBody());
         }
@@ -68,7 +73,7 @@ public class RunImpl {
     }
 
     @NotNull
-    public static String createRunBody(CreateRunInputs createRunInputs ){
+    public static String createRunBody(CreateRunInputs createRunInputs )throws JsonProcessingException{
         ObjectMapper mapper=new ObjectMapper();
         CreateRunBody createBody=new CreateRunBody();
         CreateRunBody.CreateRunData createRundata=createBody.new CreateRunData();
@@ -82,7 +87,7 @@ public class RunImpl {
         workspaceData.setId(createRunInputs.getWorkspaceId());
         workspaceData.setType(WORKSPACE_TYPE);
 
-        attributes.setDestroy(Boolean.valueOf(createRunInputs.getIsDestroy()));
+        attributes.setDestroy(createRunInputs.getIsDestroy());
         attributes.setRunMessage(createRunInputs.getRunMessage());
         relationships.setWorkspace(workspace);
 
@@ -94,12 +99,8 @@ public class RunImpl {
 
         createBody.setData(createRundata);
 
-        try {
-            requestBody=mapper.writeValueAsString(createBody);
+        requestBody=mapper.writeValueAsString(createBody);
 
-        }catch(JsonProcessingException e){
-            e.printStackTrace();
-        }
         System.out.println(requestBody);
 
         return requestBody;
