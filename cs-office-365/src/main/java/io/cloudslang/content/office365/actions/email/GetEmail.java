@@ -26,7 +26,6 @@ import io.cloudslang.content.office365.services.AuthorizationTokenImpl;
 import io.cloudslang.content.utils.NumberUtilities;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -199,7 +198,6 @@ public class GetEmail {
                         .folderId(folderId)
                         .selectQuery(query)
                         .oDataQuery(oDataQuery)
-                        .filePath(filePath)
                         .commonInputs(Office365CommonInputs.builder()
                                 .authToken(authToken)
                                 .proxyHost(proxyHost)
