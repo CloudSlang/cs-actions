@@ -84,15 +84,15 @@
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <cs-commons.version>0.0.7-RC1</cs-commons.version>
+        <cs-commons.version>0.0.6</cs-commons.version>
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <junit.version>4.12</junit.version>
         <common-codec.version>1.10</common-codec.version>
         <cs-http-client.version>0.1.75</cs-http-client.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <maven.sources.skip>true</maven.sources.skip>
         <custom.nexus>overwritten_by_ci</custom.nexus>
     </properties>
@@ -245,7 +245,7 @@
                         <include>pom.xml</include>
                     </includes>
                     <properties>
-                        <copyright.year>2019</copyright.year>
+                        <copyright.year>2020</copyright.year>
                     </properties>
                     <useDefaultMapping>false</useDefaultMapping>
                     <mapping>
