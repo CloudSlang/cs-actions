@@ -60,76 +60,13 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public class CreateRun {
-    /**
-     * Creates a run which can performs a plan and apply
-     *
-     * @param authToken         required - authentication token used to connect to Terraform API.
-     *
-     * @param runMessage        Optional - Specifies the message to be associated with this run.
-     *
-     * @param isDestroy         Optional - Specifies if this plan is a destroy plan, which will destroy all provisioned resources.
-     *
-     * @param proxyHost         Optional - proxy server used to connect to Terraform API. If empty no proxy will be used.
-     *
-     * @param proxyPort         Optional - proxy server port. You must either specify values for both proxyHost and
-     *                          proxyPort inputs or leave them both empty.
-     *                          Default: 8080
-     * @param proxyUsername     Optional - proxy server user name.
-     *
-     * @param proxyPassword     Optional - proxy server password associated with the proxyUsername input value.
-     *
-     * @param trustAllRoots     Optional - Specifies whether to enable weak security over SSL/TSL.
-     *                          Default: false
-     *
-     * @param x509HostnameVerifier Optional - Specifies the way the server hostname must match a domain name in
-     *                                         the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to
-     *                                         allow_all to skip any checking. For the value browser_compatible the hostname verifier
-     *                                         works the same way as Curl and Firefox. The hostname must match either the first CN, or any of
-     *                                         the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only
-     *                                         difference between browser_compatible and strict is that a wildcard (such as *.foo.com)
-     *                                         with browser_compatible matches all subdomains, including a.b.foo.com
-     *                             Default: "strict"
-     * @param trustKeystore    Optional - The pathname of the Java TrustStore file. This contains certificates from other parties that you expect to communicate with, or from Certificate Authorities
-     *                                    that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https'
-     *                                    or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS);
-     * @param trustPassword    Optional - The password associated with the TrustStore file. If trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied
-     *
-     * @param connectTimeout   Optional - The time to wait for a connection to be established in seconds. A timeout value of '0' represents an infinite timeout
-     *                         Default: 10000
-     *
-     * @param socketTimeout    Optional - The timeout for waiting for data (a maximum period " +
-     *                                    inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' represents an infinite timeout
-     *                         Default: 0
-     * @param executionTimeout Optional - The amount of time (in milliseconds) to allow the client to complete the execution of an API call. A value of '0' disables this feature.
-     *                         Default: 60000
-     *
-     *
-     * @param asyn             Optional - Whether to run the operation in async mode.
-     *                         Default: false
-     *
-     * @param pollingInterval  Optional - The time, in seconds, to wait before a new request that verifies if the operation finished is executed.
-     *                         Default: 1000
-     *
-     * @param keepAlive        Optional - Specifies whether to create a shared connection that will be used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
-     *                                    execution it will close it
-     *                         Default: true
-     * @param connectionsMaxPerRoute Optional - The maximum limit of connections on a per route basis
-     *                               Default: 2
-     *
-     * @param connectionsMaxTotal    Optional - The maximum limit of connections in total
-     *                               Default: 20
-     *
-     * @param responseCharacterSet   Optional - The character encoding to be used for the HTTP response. If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
-     *                                          default value will be used. You should not use this for method=HEAD or OPTIONS.
-     *                               Default : UTF-8
-     * @return                  A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     *                          operation, or failure message and the exception if there is one
-     */
 
     @Action(name = CREATE_RUN_OPERATION_NAME,
             description = CREATE_RUN_DESC,
             outputs = {
-                    @Output(value = OutputNames.RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = STATUS_CODE,description = STATUS_CODE_DESC),
+                    @Output(value = RUN_ID,description = RUN_ID_DESC)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
