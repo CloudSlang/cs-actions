@@ -15,15 +15,11 @@
 
 package io.cloudslang.content.hashicorp.terraform.services;
 
-import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.createWorkspaceBody;
-import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.getWorkspacePath;
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.getWorkspaceDetailsPath;
 import static org.junit.Assert.assertEquals;
 
