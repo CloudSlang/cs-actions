@@ -60,17 +60,17 @@ public class CreateWorkspaceRequestBody {
         String terraform_version;
         String description;
         @JsonProperty("auto-apply")
-        String autoApply;
+        boolean autoApply;
         @JsonProperty("file-triggers-enabled")
-        String fileTriggersEnabled;
+        boolean fileTriggersEnabled;
         @JsonProperty("working-directory")
         String workingDirectory;
         @JsonProperty("trigger-prefixes")
         List<String> triggerPrefixes;
         @JsonProperty("queue-all-runs")
-        String queueAllRuns;
+        boolean queueAllRuns;
         @JsonProperty("speculative-enabled")
-        String speculativeEnabled;
+        boolean speculativeEnabled;
         @JsonProperty("vcs-repo")
         VCSRepo vcsRepo;
 
@@ -102,19 +102,19 @@ public class CreateWorkspaceRequestBody {
             this.description = description;
         }
 
-        public String getAutoApply() {
+        public boolean getAutoApply() {
             return autoApply;
         }
 
-        public void setAutoApply(String autoApply) {
+        public void setAutoApply(boolean autoApply) {
             this.autoApply = autoApply;
         }
 
-        public String getFileTriggersEnabled() {
+        public boolean getFileTriggersEnabled() {
             return fileTriggersEnabled;
         }
 
-        public void setFileTriggersEnabled(String fileTriggersEnabled) {
+        public void setFileTriggersEnabled(boolean fileTriggersEnabled) {
             this.fileTriggersEnabled = fileTriggersEnabled;
         }
 
@@ -134,19 +134,19 @@ public class CreateWorkspaceRequestBody {
             this.triggerPrefixes = triggerPrefixes;
         }
 
-        public String getQueueAllRuns() {
+        public boolean getQueueAllRuns() {
             return queueAllRuns;
         }
 
-        public void setQueueAllRuns(String queueAllRuns) {
+        public void setQueueAllRuns(boolean queueAllRuns) {
             this.queueAllRuns = queueAllRuns;
         }
 
-        public String getSpeculativeEnabled() {
+        public boolean getSpeculativeEnabled() {
             return speculativeEnabled;
         }
 
-        public void setSpeculativeEnabled(String speculativeEnabled) {
+        public void setSpeculativeEnabled(boolean speculativeEnabled) {
             this.speculativeEnabled = speculativeEnabled;
         }
 
@@ -163,7 +163,7 @@ public class CreateWorkspaceRequestBody {
         String oauthTokenId;
         String branch;
         @JsonProperty("ingress-submodules")
-        String ingressSubmodules;
+        boolean ingressSubmodules;
 
         public String getIdentifier() {
             return identifier;
@@ -189,11 +189,11 @@ public class CreateWorkspaceRequestBody {
             this.branch = branch;
         }
 
-        public String getIngressSubmodules() {
+        public boolean getIngressSubmodules() {
             return ingressSubmodules;
         }
 
-        public void setIngressSubmodules(String ingressSubmodules) {
+        public void setIngressSubmodules(boolean ingressSubmodules) {
             this.ingressSubmodules = ingressSubmodules;
         }
     }

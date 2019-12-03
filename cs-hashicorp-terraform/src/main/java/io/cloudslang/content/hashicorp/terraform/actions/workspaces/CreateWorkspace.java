@@ -23,7 +23,9 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
@@ -52,6 +54,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_USERNAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.ListOAuthClientOutputs.OAUTH_TOKEN_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
@@ -59,121 +62,6 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public class CreateWorkspace {
-
-    /**
-     * Creates a workspace which represent running infrastructure managed by Terraform.
-     *
-     * @param authToken              required - authentication token used to connect to Terraform API.
-     *
-     * @param organizationName       required - The name of the Terraform organization.
-     *
-     * @param workspaceName          Optional - The name of the workspace, which can only include letters, numbers, -, and _.
-     *                                          This will be used as an identifier and must be unique in the organization.
-     *
-     * @param workspaceDescription   Optional - A description of the workspace to be created.
-     *
-     * @param autoApply              Optional - Whether to automatically apply changes when a Terraform plan is successful, with some exceptions.
-     *                               Default: false
-     *
-     * @param fileTriggersEnabled    Optional - Whether to filter runs based on the changed files in a VCS push. If enabled, the working-directory
-     *                                          and trigger-prefixes describe a set of paths which must contain changes for a VCS
-     *                                          push to trigger a run. If disabled, any push will trigger a run.
-     *                               Default: true
-     *
-     * @param workingDirectory       Optional - A relative path that Terraform will execute within. This defaults to the root of your repository
-     *                                         and is typically set to a subdirectory matching the environment when multiple environments exist within the same repository.
-     *
-     * @param triggerPrefixes        Optional - List of repository-root-relative paths which should be tracked for changes, in addition to the working directory.
-     *
-     * @param queueAllRuns           Optional - Whether runs should be queued immediately after workspace creation. When set to false, runs triggered by a VCS change
-     *                                          will not be queued until at least one run is manually queued.
-     *                               Default: false
-     *
-     * @param speculativeEnabled     Optional - Whether this workspace allows speculative plans. Setting this to false prevents Terraform Cloud from running plans
-     *                                          on pull requests, which can improve security if the VCS repository is public or includes untrusted contributors.
-     *                               Default: true
-     *
-     * @param ingressSubmodules      Optional - Whether submodules should be fetched when cloning the VCS repository.
-     *                               Default: false
-     *
-     * @param vcsRepoId              Optional - A reference to your VCS repository in the format :org/:repo where :org and :repo refer to the organization and
-     *                                          repository in your VCS provider..
-     *
-     * @param vcsBranchName          Optional - The repository branch that Terraform will execute from.
-     *                                          If omitted or submitted as an empty string, this defaults to the repository's default branch (e.g. master).
-     *
-     * @param oauthTokenId           Optional - The VCS Connection (OAuth Connection + Token) to use. This ID can be obtained from the oauth-tokens endpoint.
-     *
-     * @param requestBody            Optional - The request body of the workspace.
-     *
-     * @param terraformVersion       Optional - The version of Terraform to use for this workspace. Upon creating a workspace,
-     *                                          the latest version is selected unless otherwise specified (e.g. \"0.11.1\").
-     *                               Default: 0.12.1
-     *
-     * @param proxyHost              Optional - proxy server used to connect to Terraform API. If empty no proxy will be used.
-     *
-     * @param proxyPort              Optional - proxy server port. You must either specify values for both proxyHost and
-     *                                          proxyPort inputs or leave them both empty.
-     *                               Default: 8080
-     *
-     * @param proxyUsername          Optional - proxy server user name.
-     *
-     * @param proxyPassword          Optional - proxy server password associated with the proxyUsername input value.
-     *
-     * @param trustAllRoots          Optional - Specifies whether to enable weak security over SSL/TSL.
-     *                               Default: false
-     *
-     * @param x509HostnameVerifier   Optional - Specifies the way the server hostname must match a domain name in
-     *                                          the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to
-     *                                          allow_all to skip any checking. For the value browser_compatible the hostname verifier
-     *                                          works the same way as Curl and Firefox. The hostname must match either the first CN, or any of
-     *                                          the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only
-     *                                          difference between browser_compatible and strict is that a wildcard (such as *.foo.com)
-     *                                          with browser_compatible matches all subdomains, including a.b.foo.com
-     *                               Default: "strict"
-     *
-     * @param trustKeystore          Optional - The pathname of the Java TrustStore file. This contains certificates from other parties that you expect to communicate with, or from Certificate Authorities
-     *                                          that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https'
-     *                                          or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS);
-     *
-     * @param trustPassword          Optional - The password associated with the TrustStore file. If trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied
-     *
-     * @param connectTimeout         Optional - The time to wait for a connection to be established in seconds. A timeout value of '0' represents an infinite timeout
-     *                               Default: 10000
-     *
-     * @param socketTimeout          Optional - The timeout for waiting for data (a maximum period inactivity between two consecutive data packets),
-     *                                          in seconds. A socketTimeout value of '0' represents an infinite timeout
-     *                               Default: 0
-     *
-     * @param executionTimeout       Optional - The amount of time (in milliseconds) to allow the client to complete the execution
-     *                                          of an API call. A value of '0' disables this feature.
-     *                               Default: 60000
-     *
-     * @param pollingInterval        Optional - The time, in seconds, to wait before a new request that verifies if the operation finished
-     *                                          is executed.
-     *                               Default: 1000
-     *
-     * @param async                  Optional - Whether to run the operation is async mode.
-     *                               Default: false
-     *
-     * @param keepAlive              Optional - Specifies whether to create a shared connection that will be used in subsequent calls. If keepAlive is false, the already open connection will be used and after
-     *                               execution it will close it
-     *                               Default: true
-     *
-     * @param connectionsMaxPerRoute Optional - The maximum limit of connections on a per route basis
-     *                               Default: 2
-     *
-     * @param connectionsMaxTotal    Optional - The maximum limit of connections in total
-     *                               Default: 20
-     *
-     * @param responseCharacterSet   Optional - The character encoding to be used for the HTTP response. If responseCharacterSet is empty, the charset from the
-     *                               'Content-Type' HTTP response header will be used.If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the
-     *                               default value will be used. You should not use this for method=HEAD or OPTIONS.
-     *                               Default : UTF-8
-     *
-     * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     * operation, or failure message and the exception if there is one
-     */
 
     @Action(name = CREATE_WORKSPACE_OPERATION_NAME,
             description = CREATE_WORKSPACE_DESC,
@@ -244,7 +132,7 @@ public class CreateWorkspace {
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
-        connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
+        connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
         executionTimeout = defaultIfEmpty(executionTimeout, EXEC_TIMEOUT);
         pollingInterval = defaultIfEmpty(pollingInterval, POLLING_INTERVAL_DEFAULT);
@@ -254,6 +142,16 @@ public class CreateWorkspace {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
+        final List<String> exceptionMessage = verifyCommonInputs(proxyPort,trustAllRoots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        if (!exceptionMessage.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
+        }
+
+        final List<String> exceptionMessages = verifyCreateWorkspaceInputs(workspaceName, vcsRepoId, oauthTokenId, requestBody);
+        if (!exceptionMessages.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+        }
 
         try {
             final Map<String, String> result = createWorkspace(CreateWorkspaceInputs.builder()

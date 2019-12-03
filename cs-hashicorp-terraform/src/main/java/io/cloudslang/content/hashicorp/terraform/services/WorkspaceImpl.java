@@ -82,15 +82,14 @@ public class WorkspaceImpl {
         CreateWorkspaceRequestBody createBody = new CreateWorkspaceRequestBody();
         CreateWorkspaceRequestBody.CreateWorkspaceData createWorkspaceData = createBody.new CreateWorkspaceData();
         CreateWorkspaceRequestBody.Attributes attributes = createBody.new Attributes();
-
         attributes.setName(createWorkspaceInputs.getWorkspaceName());
         attributes.setTerraform_version(createWorkspaceInputs.getCommonInputs().getTerraformVersion());
         attributes.setDescription(createWorkspaceInputs.getWorkspaceDescription());
-        attributes.setAutoApply(createWorkspaceInputs.getAutoApply());
-        attributes.setFileTriggersEnabled(createWorkspaceInputs.getFileTriggersEnabled());
+        attributes.setAutoApply(Boolean.valueOf(createWorkspaceInputs.getAutoApply()));
+        attributes.setFileTriggersEnabled(Boolean.valueOf(createWorkspaceInputs.getFileTriggersEnabled()));
         attributes.setWorkingDirectory(createWorkspaceInputs.getWorkingDirectory());
-        attributes.setQueueAllRuns(createWorkspaceInputs.getQueueAllRuns());
-        attributes.setSpeculativeEnabled(createWorkspaceInputs.getSpeculativeEnabled());
+        attributes.setQueueAllRuns(Boolean.valueOf(createWorkspaceInputs.getQueueAllRuns()));
+        attributes.setSpeculativeEnabled(Boolean.valueOf(createWorkspaceInputs.getSpeculativeEnabled()));
         String[] triggerPrefixes = createWorkspaceInputs.getTriggerPrefixes().split(delimiter);
         Collections.addAll(triggerPrefixesList, triggerPrefixes);
         attributes.setTriggerPrefixes(triggerPrefixesList);
@@ -100,7 +99,7 @@ public class WorkspaceImpl {
         vcsRepo.setIdentifier(createWorkspaceInputs.getVcsRepoId());
         vcsRepo.setOauthTokenId(createWorkspaceInputs.getOauthTokenId());
         vcsRepo.setBranch(createWorkspaceInputs.getVcsBranch());
-        vcsRepo.setIngressSubmodules(createWorkspaceInputs.getIngressSubmodules());
+        vcsRepo.setIngressSubmodules(Boolean.valueOf(createWorkspaceInputs.getIngressSubmodules()));
 
         attributes.setVcsRepo(vcsRepo);
 

@@ -1,10 +1,11 @@
 package io.cloudslang.content.hashicorp.terraform.utils;
 
+import io.cloudslang.content.constants.InputNames;
 import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class Inputs {
+public class Inputs extends InputNames {
     public static final String AUTH_TOKEN = "authToken";
     public static final String PROXY_HOST = "proxyHost";
     public static final String PROXY_PORT = "proxyPort";
