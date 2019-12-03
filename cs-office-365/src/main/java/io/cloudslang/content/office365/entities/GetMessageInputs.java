@@ -24,7 +24,6 @@ public class GetMessageInputs {
     private final String folderId;
     private final String selectQuery;
     private final String oDataQuery;
-
     private final Office365CommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"messageId", "folderId", "selectQuery", "oDataQuery", "commonInputs"})
