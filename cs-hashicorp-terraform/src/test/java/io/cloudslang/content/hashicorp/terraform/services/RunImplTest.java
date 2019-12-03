@@ -15,7 +15,8 @@
 
 package io.cloudslang.content.hashicorp.terraform.services;
 
-import io.cloudslang.content.hashicorp.terraform.entities.CreateVariableInputs;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,17 +26,22 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(io.cloudslang.content.hashicorp.terraform.services.VariableImpl.class)
-public class VariableImplTest {
-    private final String EXPECTED_CREATE_VARIABLE_BODY="{\"data\":{\"attributes\":{\"key\":\"test\",\"value\":\"test-123\",\"category\":\"env\",\"hcl\":\"false\",\"sensitive\":\"false\"},\"relationships\":{\"workspace\":{\"data\":{\"id\":\"ws-test123\",\"type\":\"workspaces\"}}},\"type\":\"vars\"}}";
+@PrepareForTest(RunImplTest.class)
+public class RunImplTest {
 
-    private final CreateVariableInputs getCreateVariableInputs = CreateVariableInputs.builder()
-            .variableName("")
-            .variableValue("")
-            .variableCategory("")
-            .workspaceId("")
-            .hcl("false")
-            .sensitive("false")
+    private final String EXPECTED_APPLY_RUN_REQUEST_BODY = "{\"comment\":\"test apply run comment\"}";
+    private final String EXPECTED_APPLY_RUN_URL = "https://app.terraform.io/api/v2/runs/run-456test/actions/apply";
+
+    private final ApplyRunInputs applyRunInputs = ApplyRunInputs.builder()
+            .runComment("test apply run comment")
+            .runId("test-123")
+            .build();
+    private final ApplyRunInputs applyRunInputsForURL = ApplyRunInputs.builder()
+            .runId("run-456test")
+            .build();
+    private final ApplyRunInputs getApplyRun = ApplyRunInputs.builder()
+            .runId("")
+            .runComment("")
             .commonInputs(Inputs.builder()
                     .organizationName("")
                     .authToken("")
@@ -49,29 +55,34 @@ public class VariableImplTest {
                     .trustPassword("")
                     .connectTimeout("")
                     .socketTimeout("")
+                    .executionTimeout("")
+                    .async("")
+                    .pollingInterval("")
                     .keepAlive("")
                     .connectionsMaxPerRoot("")
                     .connectionsMaxTotal("")
                     .responseCharacterSet("")
                     .build())
             .build();
-    private final CreateVariableInputs createVariableInputs = CreateVariableInputs.builder()
-            .workspaceId("ws-test123")
-            .variableName("test")
-            .variableValue("test-123")
-            .variableCategory("env")
-            .hcl("false")
-            .sensitive("false")
-            .build();
+
+    @Test
+    public void getApplyRunURL() throws Exception {
+        String applyRunClientUrl = RunImpl.applyRunClientUrl(applyRunInputsForURL.getRunId());
+        assertEquals(EXPECTED_APPLY_RUN_URL, applyRunClientUrl);
+    }
+
+
+    @Test
+    public void getApplyRunBody() throws JsonProcessingException {
+        String applyRunRequestBody = RunImpl.applyRunBody(applyRunInputs);
+        assertEquals(EXPECTED_APPLY_RUN_REQUEST_BODY, applyRunRequestBody);
+    }
+
 
     @Test(expected = IllegalArgumentException.class)
-    public void createVariable() throws Exception {
-        VariableImpl.createVariable(getCreateVariableInputs);
+    public void applyRunInputThrows() throws Exception {
+        RunImpl.applyRunClient(getApplyRun);
     }
-    @Test
-    public void getCreateVariableBody() throws Exception {
-        String createVariableBody= VariableImpl.createVariableRequestBody(createVariableInputs);
 
-        assertEquals(EXPECTED_CREATE_VARIABLE_BODY,createVariableBody);
-    }
+
 }
