@@ -15,6 +15,7 @@
 
 package io.cloudslang.content.hashicorp.terraform.utils;
 
+
 public class Descriptions {
     public static class Common {
         public static final String PROXY_HOST_DESC = "Proxy server used to access the Terraform service.";
@@ -87,12 +88,17 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The request was successfully executed.";
 
     }
+    public static class GetWorkspaceDetails
 
-    public static class CreateRun{
-        public static  final String RUN_MESSAGE = "Specifies the message to be associated with this run";
-        public static  final String IS_DESTROY = "Specifies if this plan is a destroy plan, which will destroy all provisioned resources.";
-
-
+    {
+        public static final String GET_WORKSPACE_DETAILS_DESC = "Get details of workspace in an organization.";
+        public static final String WORKSPACE_NAME_DESC = "The name of workspace whose description is to be fetched.";
+        public static final String WORKSPACE_ID_DESC ="The Id of the workspace";
+        public static final String GET_WORKSPACE_DETAILS_RETURN_RESULT_DESC = "Workspace details in response";
+        public static final String GET_WORKSPACE_DETAILS_EXCEPTION_DESC = "An error message in case there was an error while creating the message.";
+        public static final String FAILURE_DESC = "There was an error while creating workspace.";
+        public static final String SUCCESS_DESC = "The request was successfully executed.";
     }
+
 
 }

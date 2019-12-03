@@ -76,6 +76,12 @@ public class Constants {
         public static final String WORKSPACE_TYPE = "workspaces";
     }
 
+    public static class GetWorkspaceDetails {
+        public static final String GET_WORKSPACE_DETAILS_OPERATION_NAME = "Get Workspace Details";
+        public static final String GET_WORKSPACE_PATH = "/workspaces/";
+        public static final String WORKSPACE_ID_JSON_PATH = "data.id";
+    }
+
     public static class ListOAuthClientConstants {
         public static final String LIST_OAUTH_CLIENT_OPERATION_NAME = "List OAuth Client";
         public static final String OAUTH_CLIENT_PATH = "/oauth-clients";
@@ -84,6 +90,13 @@ public class Constants {
     }
     public static class CreateRunConstants{
         public static  final String CREATE_RUN_PATH="/runs";
+        public static  final String RUN_TYPE="runs";
+        public static final String RUN_ID = "$.data[*].relationships.run-events.data[*].id";
+
+    }
+
+    public static class GetRunDetailsConstants{
+        public static  final String GET_RUN_DETAILS_PATH="/runs/";
         public static  final String RUN_TYPE="runs";
         public static final String RUN_ID = "$.data[*].relationships.run-events.data[*].id";
 
