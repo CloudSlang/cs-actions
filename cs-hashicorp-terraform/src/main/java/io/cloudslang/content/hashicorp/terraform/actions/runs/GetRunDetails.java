@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2020 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.hashicorp.terraform.actions.runs;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -11,6 +26,9 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.GetRunDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.utils.StringUtilities;
+
+import java.util.List;
 import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.hashicorp.terraform.entities.GetRunDetailsInputs.RUN_ID;
@@ -18,14 +36,15 @@ import static io.cloudslang.content.hashicorp.terraform.entities.GetRunDetailsIn
 import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.getRunDetails;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.STATUS_CODE;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetRunDetailsConstants.GET_RUN_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.RESPONSC_CHARACTER_SET_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.FAILURE_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.RETURN_RESULT_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.SUCCESS_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetRunDetails.GET_RUN_DETAILS_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.AUTH_TOKEN;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -33,68 +52,19 @@ import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class GetRunDetails {
-    /**
-     * Get the details of a Run
-     *
-     * @param authToken         required - authentication token used to connect to Terraform API.
-     *
-     * @param runId             required - authentication token used to connect to Terraform API.
-     *
-     * @param proxyHost         Optional - proxy server used to connect to Terraform API. If empty no proxy will be used.
-     *
-     * @param proxyPort         Optional - proxy server port. You must either specify values for both proxyHost and
-     *                          proxyPort inputs or leave them both empty.
-     *                          Default: 8080
-     * @param proxyUsername     Optional - proxy server user name.
-     *
-     * @param proxyPassword     Optional - proxy server password associated with the proxyUsername input value.
-     *
-     * @param trustAllRoots     Optional - Specifies whether to enable weak security over SSL/TSL.
-     *
-     * @param x509HostnameVerifier Optional - Specifies the way the server hostname must match a domain name in
-     *                                         the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to
-     *                                         allow_all to skip any checking. For the value browser_compatible the hostname verifier
-     *                                         works the same way as Curl and Firefox. The hostname must match either the first CN, or any of
-     *                                         the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only
-     *                                         difference between browser_compatible and strict is that a wildcard (such as *.foo.com)
-     *                                         with browser_compatible matches all subdomains, including a.b.foo.com
-     *                             Default: "strict"
-     * @param trustKeystore    Optional - The pathname of the Java TrustStore file. This contains certificates from other parties that you expect to communicate with, or from Certificate Authorities
-     *                                    that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https'
-     *                                    or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS);
-     * @param trustPassword    Optional - The password associated with the TrustStore file. If trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied
-     *
-     * @param connectTimeout   Optional - The time to wait for a connection to be established in seconds. A timeout value of '0' represents an infinite timeout
-     *                         Default: 10000
-     *
-     * @param socketTimeout    Optional - The timeout for waiting for data (a maximum period " +
-     *                                    inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' represents an infinite timeout
-     *                         Default: 0
-     * @param keepAlive        Optional - Specifies whether to create a shared connection that will be used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
-     *                                    execution it will close it
-     *                         Default: true
-     * @param connectionsMaxPerRoute Optional - The maximum limit of connections on a per route basis
-     *                               Default: 2
-     *
-     * @param connectionsMaxTotal    Optional - The maximum limit of connections in total
-     *                               Default: 20
-     *
-     * @param responseCharacterSet   Optional - The character encoding to be used for the HTTP response. If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
-     *                                          default value will be used. You should not use this for method=HEAD or OPTIONS.
-     *                               Default : UTF-8
-     * @return                  A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
-     *                          operation, or failure message and the exception if there is one
-     */
 
-    @Action(name = "Create Run",
+
+    @Action(name = GET_RUN_OPERATION_NAME,
+            description = GET_RUN_DETAILS_DESC,
             outputs = {
-                    @Output(value = OutputNames.RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, encrypted = true, required = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = RUN_ID, required = true, description = RUN_ID_DESC) String runId,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -120,7 +90,7 @@ public class GetRunDetails {
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
-        connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
+        connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
@@ -151,8 +121,6 @@ public class GetRunDetails {
             final String returnMessage = result.get(RETURN_RESULT);
 
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
-
             return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);

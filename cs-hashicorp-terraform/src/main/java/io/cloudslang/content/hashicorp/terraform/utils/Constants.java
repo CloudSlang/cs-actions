@@ -96,9 +96,8 @@ public class Constants {
     }
 
     public static class GetRunDetailsConstants{
+        public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
         public static  final String GET_RUN_DETAILS_PATH="/runs/";
-        public static  final String RUN_TYPE="runs";
-        public static final String RUN_ID = "$.data[*].relationships.run-events.data[*].id";
 
     }
 }

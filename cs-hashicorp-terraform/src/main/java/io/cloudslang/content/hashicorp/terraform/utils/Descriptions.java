@@ -88,9 +88,7 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The request was successfully executed.";
 
     }
-    public static class GetWorkspaceDetails
-
-    {
+    public static class GetWorkspaceDetails {
         public static final String GET_WORKSPACE_DETAILS_DESC = "Get details of workspace in an organization.";
         public static final String WORKSPACE_NAME_DESC = "The name of workspace whose description is to be fetched.";
         public static final String WORKSPACE_ID_DESC ="The Id of the workspace";
@@ -99,6 +97,13 @@ public class Descriptions {
         public static final String FAILURE_DESC = "There was an error while creating workspace.";
         public static final String SUCCESS_DESC = "The request was successfully executed.";
     }
+
+    public static class GetRunDetails {
+        public static final String GET_RUN_DETAILS_DESC = "Getting details about a run";
+
+
+    }
+
 
 
 }
