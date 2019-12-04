@@ -106,6 +106,7 @@ public class Descriptions {
         public static final String RUN_DESC = "Specifies the run";
         public static final String APPLY_RUN_RETURN_RESULT_DESC = "The response of the apply run.";
         public static final String APPLY_RUN_EXCEPTION_DESC = "An error message in case there was an error while apply run.";
+        public static final String APPLY_RUN_REQUEST_BODY_DESC = "Request Body for the apply run.";
 
     }
 

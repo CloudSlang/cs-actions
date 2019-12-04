@@ -68,7 +68,7 @@ public class ApplyRun {
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = RUN_ID, required = true, description = RUN_DESC) String runId,
                                        @Param(value = RUN_COMMENT, description = RUN_COMMENT_DESC) String runComment,
-                                       @Param(value = REQUEST_BODY) String requestBody,
+                                       @Param(value = REQUEST_BODY,description = APPLY_RUN_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
