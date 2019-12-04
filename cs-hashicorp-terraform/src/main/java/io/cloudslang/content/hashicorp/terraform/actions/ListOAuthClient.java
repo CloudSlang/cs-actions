@@ -58,15 +58,15 @@ public class ListOAuthClient {
             description = LIST_OAUTH_CLIENT_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
-                    @Output(value=OAUTH_TOKEN_ID,description = OAUTH_TOKEN_ID_DESCRIPTION),
-                    @Output(value=STATUS_CODE,description = STATUS_CODE_DESC)
+                    @Output(value = OAUTH_TOKEN_ID, description = OAUTH_TOKEN_ID_DESCRIPTION),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true,encrypted = true,description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = ORGANIZATION_NAME,required = true,description = ORGANIZATION_NAME_DESC) String organizationName,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
+                                       @Param(value = ORGANIZATION_NAME, required = true, description = ORGANIZATION_NAME_DESC) String organizationName,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -99,7 +99,7 @@ public class ListOAuthClient {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessage = verifyCommonInputs(proxyPort,trustAllRoots,
+        final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
@@ -127,7 +127,6 @@ public class ListOAuthClient {
                             .responseCharacterSet(responseCharacterSet)
                             .build())
                     .build());
-
 
 
             final String returnMessage = result.get(RETURN_RESULT);

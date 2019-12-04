@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CreateRunBody {
 
-CreateRunData data;
+    CreateRunData data;
 
     public CreateRunData getData() {
         return data;
@@ -29,7 +29,7 @@ CreateRunData data;
         this.data = data;
     }
 
-    public class CreateRunData{
+    public class CreateRunData {
         Attributes attributes;
         String type;
         Relationships relationships;
@@ -58,29 +58,34 @@ CreateRunData data;
             this.relationships = relationships;
         }
     }
-   public class Attributes{
+
+    public class Attributes {
 
         String isDestroy;
         String runMessage;
 
-       @JsonProperty("message")
+        @JsonProperty("message")
         public String getRunMessage() {
             return runMessage;
         }
-       @JsonProperty("message")
+
+        @JsonProperty("message")
         public void setRunMessage(String runMessage) {
             this.runMessage = runMessage;
         }
-       @JsonProperty("is-Destroy")
-       public String isDestroy() {
-           return isDestroy;
-       }
-       @JsonProperty("is-Destroy")
-       public void setDestroy(String isDestroy) {
-          this.isDestroy = isDestroy;
-       }
-   }
-    public  class Relationships{
+
+        @JsonProperty("is-Destroy")
+        public String isDestroy() {
+            return isDestroy;
+        }
+
+        @JsonProperty("is-Destroy")
+        public void setDestroy(String isDestroy) {
+            this.isDestroy = isDestroy;
+        }
+    }
+
+    public class Relationships {
         Workspace workspace;
 
         public Workspace getWorkspace() {
@@ -91,7 +96,8 @@ CreateRunData data;
             this.workspace = workspace;
         }
     }
-    public  class Workspace{
+
+    public class Workspace {
         WorkspaceData data;
 
         public WorkspaceData getData() {
@@ -102,7 +108,8 @@ CreateRunData data;
             this.data = data;
         }
     }
-    public class WorkspaceData{
+
+    public class WorkspaceData {
         String type;
         String id;
 
