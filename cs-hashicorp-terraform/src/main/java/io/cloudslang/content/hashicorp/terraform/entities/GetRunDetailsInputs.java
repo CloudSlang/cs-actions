@@ -14,20 +14,15 @@
  */
 
 package io.cloudslang.content.hashicorp.terraform.entities;
-
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.jetbrains.annotations.NotNull;
 
 public class GetRunDetailsInputs {
 
-    public static final String RUN_ID = "runId";
-    public static final String RUN_ID_DESC = "runIdDescription";
-
     private final String runId;
-    private final Inputs commonInputs;
+    private final TerraformCommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"runId", "commonInputs"})
-    public GetRunDetailsInputs(String runId, Inputs commonInputs) {
+    public GetRunDetailsInputs(String runId, TerraformCommonInputs commonInputs) {
         this.runId = runId;
         this.commonInputs = commonInputs;
     }
@@ -44,14 +39,14 @@ public class GetRunDetailsInputs {
     }
 
     @NotNull
-    public Inputs getCommonInputs() {
+    public TerraformCommonInputs getCommonInputs() {
         return this.commonInputs;
     }
 
 
     public static class GetRunDetailsInputsBuilder {
         private String runId;
-        private Inputs commonInputs;
+        private TerraformCommonInputs commonInputs;
 
         GetRunDetailsInputsBuilder() {
 
@@ -63,7 +58,7 @@ public class GetRunDetailsInputs {
             return this;
         }
 
-        public GetRunDetailsInputs.GetRunDetailsInputsBuilder commonInputs(@NotNull final Inputs commonInputs) {
+        public GetRunDetailsInputs.GetRunDetailsInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }

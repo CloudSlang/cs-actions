@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.hashicorp.terraform.services;
 
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 @PrepareForTest(WorkspaceImpl.class)
 public class WorkspaceImplTest {
 
-    private final Inputs getOrganizationName=Inputs.builder()
+    private final TerraformCommonInputs getOrganizationName=TerraformCommonInputs.builder()
             .organizationName("test")
             .build();
     private static final String WORKSPACE_NAME="test";

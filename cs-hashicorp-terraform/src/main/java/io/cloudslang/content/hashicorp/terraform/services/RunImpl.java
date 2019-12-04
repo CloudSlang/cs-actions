@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -15,49 +15,25 @@
 
 package io.cloudslang.content.hashicorp.terraform.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.GetRunDetailsInputs;
-import io.cloudslang.content.hashicorp.terraform.services.CreateRunModels.CreateRunBody;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_PATH;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetRunDetailsConstants.GET_RUN_DETAILS_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBuilder;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class RunImpl {
-    @NotNull
-    public static Map<String, String> createRunClient(@NotNull final CreateRunInputs createRunInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final Inputs commonInputs = createRunInputs.getCommonInputs();
-        httpClientInputs.setUrl(createRunClientUrl());
-        if(commonInputs.getRequestBody().isEmpty()){
-            httpClientInputs.setBody(createRunBody(createRunInputs));
-        }else{
-            httpClientInputs.setBody(commonInputs.getRequestBody());
-        }
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
-        setCommonHttpInputs(httpClientInputs, commonInputs);
-        return new HttpClientService().execute(httpClientInputs);
-    }
 
     @NotNull
     public static Map<String, String> getRunDetails(@NotNull final GetRunDetailsInputs getRunDetailsInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final Inputs commonInputs = getRunDetailsInputs.getCommonInputs();
+        final TerraformCommonInputs commonInputs = getRunDetailsInputs.getCommonInputs();
         httpClientInputs.setUrl(getRunDetailsUrl(getRunDetailsInputs.getRunId()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
@@ -65,18 +41,6 @@ public class RunImpl {
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
         setCommonHttpInputs(httpClientInputs, commonInputs);
         return new HttpClientService().execute(httpClientInputs);
-    }
-
-    @NotNull
-    private static String createRunClientUrl() throws Exception {
-
-        final URIBuilder uriBuilder = getUriBuilder();
-        StringBuilder pathString = new StringBuilder()
-                .append(API)
-                .append(API_VERSION)
-                .append(CREATE_RUN_PATH);
-        uriBuilder.setPath(pathString.toString());
-        return uriBuilder.build().toURL().toString();
     }
 
     @NotNull
@@ -90,48 +54,5 @@ public class RunImpl {
                 .append(runId);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
-    }
-
-    @NotNull
-    public static String createRunBody(CreateRunInputs createRunInputs ){
-        ObjectMapper mapper=new ObjectMapper();
-        CreateRunBody createBody=new CreateRunBody();
-        CreateRunBody.CreateRunData createRundata=createBody.new CreateRunData();
-        CreateRunBody.Attributes attributes=createBody.new Attributes();
-        CreateRunBody.Relationships relationships=createBody.new Relationships();
-        CreateRunBody.Workspace workspace=createBody.new Workspace();
-        CreateRunBody.WorkspaceData workspaceData=createBody.new WorkspaceData();
-
-        String requestBody= EMPTY;
-        workspaceData.setId(createRunInputs.getWorkspaceId());
-        workspaceData.setType(RUN_TYPE);
-
-
-        attributes.setDestroy(createRunInputs.getIsDestroy());
-        attributes.setRunMessage(createRunInputs.getRunMessage());
-
-
-        relationships.setWorkspace(workspace);
-
-        workspace.setData(workspaceData);
-
-        workspaceData.setId(createRunInputs.getWorkspaceId());
-        workspaceData.setType(createRunInputs.getWorkspaceName());
-
-        createRundata.setRelationships(relationships);
-        createRundata.setAttributes(attributes);
-        createRundata.setType("runs");
-
-        createBody.setData(createRundata);
-
-        try {
-            requestBody=mapper.writeValueAsString(createBody);
-
-        }catch(JsonProcessingException e){
-            e.printStackTrace();
-        }
-
-
-        return requestBody;
     }
 }

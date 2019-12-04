@@ -24,10 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs.IS_DESTROY;
-import static io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs.RUN_MESSAGE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
@@ -83,32 +80,8 @@ public final class InputsValidation {
 
 
 
-    @NotNull
-    public static List<String> verifyCreateRunInputs(@Nullable final String workspaceId, @Nullable final String runMessage,
-                                                         @Nullable final String isDestroy) {
-        final List<String> exceptionMessages = new ArrayList<>();
-        addVerifyNotNullOrEmpty(exceptionMessages, workspaceId, WORKSPACE_ID);
-        addVerifyNotNullOrEmpty(exceptionMessages, runMessage, RUN_MESSAGE);
-        addVerifyBoolean(exceptionMessages, isDestroy, IS_DESTROY);
-        return exceptionMessages;
-    }
-
-    @NotNull
-    private static List<String> addVerifyUserInputs(@NotNull List<String> exceptions, @Nullable final String organizationName) {
-        if (isEmpty(organizationName)) {
-            exceptions.add(String.format(ORGANIZATION_NAME));
-        }
-        return exceptions;
-    }
 
 
-    @NotNull
-    private static List<String> addVerifyNotNullOrEmpty(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
-        if (isEmpty(input)) {
-            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
-        }
-        return exceptions;
-    }
 
     @NotNull
     private static List<String> addVerifyProxy(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {

@@ -1,28 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    * (c) Copyright 2019 Micro Focus
-    * All rights reserved. This program and the accompanying materials
-    * are made available under the terms of the Apache License v2.0 which accompany this distribution.
-    *
-    * The Apache License is available at
-    * http://www.apache.org/licenses/LICENSE-2.0
-    *
-    * Unless required by applicable law or agreed to in writing, software
-    * distributed under the License is distributed on an "AS IS" BASIS,
-    * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    * See the License for the specific language governing permissions and
-    * limitations under the License.
-
--->
+        <!--
+            * (c) Copyright 2020 Micro Focus
+            * All rights reserved. This program and the accompanying materials
+            * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+            *
+            * The Apache License is available at
+            * http://www.apache.org/licenses/LICENSE-2.0
+            *
+            * Unless required by applicable law or agreed to in writing, software
+            * distributed under the License is distributed on an "AS IS" BASIS,
+            * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+            * See the License for the specific language governing permissions and
+            * limitations under the License.
+        -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-hashicorp-terraform</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-	
- <name>${project.groupId}:${project.artifactId}</name>
+
+    <name>${project.groupId}:${project.artifactId}</name>
     <description>Terraform Integration</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
 
@@ -39,7 +37,7 @@
         <url>https://github.com/CloudSlang/cs-actions.git</url>
         <tag>master</tag>
     </scm>
-	
+
     <developers>
         <developer>
             <name>Mantesh Patil</name>
@@ -78,15 +76,15 @@
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <cs-commons.version>0.0.7-RC1</cs-commons.version>
+        <cs-commons.version>0.0.6</cs-commons.version>
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <junit.version>4.12</junit.version>
         <common-codec.version>1.10</common-codec.version>
         <cs-http-client.version>0.1.75</cs-http-client.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <maven.sources.skip>true</maven.sources.skip>
         <custom.nexus>overwritten_by_ci</custom.nexus>
     </properties>
@@ -170,7 +168,7 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
-            <version>2.0.4</version>
+            <version>1.6.5</version>
             <scope>test</scope>
         </dependency>
 
@@ -239,7 +237,7 @@
                         <include>pom.xml</include>
                     </includes>
                     <properties>
-                        <copyright.year>2019</copyright.year>
+                        <copyright.year>2020</copyright.year>
                     </properties>
                     <useDefaultMapping>false</useDefaultMapping>
                     <mapping>

@@ -25,28 +25,25 @@ import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.GetRunDetailsInputs;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
-import io.cloudslang.content.utils.StringUtilities;
-
-import java.util.List;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.hashicorp.terraform.entities.GetRunDetailsInputs.RUN_ID;
-import static io.cloudslang.content.hashicorp.terraform.entities.GetRunDetailsInputs.RUN_ID_DESC;
 import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.getRunDetails;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.STATUS_CODE;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetRunDetailsConstants.GET_RUN_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.RESPONSC_CHARACTER_SET_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetRunDetails.GET_RUN_DETAILS_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.FAILURE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.AUTH_TOKEN;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.AUTH_TOKEN;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.GetRunDetailInputs.RUN_ID_DESC;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
+import static io.cloudslang.content.httpclient.utils.Descriptions.UrlDecoder.RETURN_RESULT_DESC;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -79,7 +76,7 @@ public class GetRunDetails {
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSC_CHARACTER_SET_DESC) String responseCharacterSet) {
+                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
         runId = defaultIfEmpty(runId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
@@ -100,7 +97,7 @@ public class GetRunDetails {
         try {
             final Map<String, String> result = getRunDetails(GetRunDetailsInputs.builder()
                     .runId(runId)
-                    .commonInputs(Inputs.builder()
+                    .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
