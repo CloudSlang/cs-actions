@@ -55,6 +55,7 @@ public class Descriptions {
         public static final String ORGANIZATION_NAME_DESC = "Name of the organization";
         public static final String TERAAFORM_VERSION_DESC = "Terraform version.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
     }
 
 
@@ -65,7 +66,6 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The request was successfully executed.";
         public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
-        public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
         public static final String OAUTH_TOKEN_ID_DESCRIPTION="Id of the oauthtoken";
         public static final String LIST_OAUTH_CLIENT_DESC="List An OAuth Client Id";
     }

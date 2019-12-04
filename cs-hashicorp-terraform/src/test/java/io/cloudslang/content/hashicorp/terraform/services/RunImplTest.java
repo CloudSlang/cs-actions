@@ -18,7 +18,6 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
