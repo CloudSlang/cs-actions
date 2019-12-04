@@ -51,7 +51,6 @@ public class Constants {
         public static final String TERRAFORM_HOST = "app.terraform.io";
         public static final String TERRAFORM_VERSION = "0.12.1";
         public static final String ORGANIZATION_PATH = "/organizations/";
-        public static final String ORGANIZATION_NAME = "organizationName";
         public static final String PATH_SEPARATOR = "/";
         public static final String AND = "&";
         public static final String QUERY = "?";

@@ -22,7 +22,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateVariableInputs;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -34,7 +34,6 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.hashicorp.terraform.entities.CreateVariableInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.createVariable;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.CREATE_VARIABLE_OPERATION_NAME;
@@ -44,11 +43,12 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Creat
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.STATUS_CODE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_HOST;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PASSWORD;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PORT;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_USERNAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateVariableOutputs.VARIABLE_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
@@ -77,7 +77,7 @@ public class CreateVariable {
                                        @Param(value = SENSITIVE, description = SENSITIVE_DESC) String sensitive,
                                        @Param(value = HCL, description = HCL_DESC) String hcl,
                                        @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
-                                       @Param(value = VARIABLE_REQUEST_BODY, description = VARIABLE_REQUEST_BODY_DESC) String requestBody,
+                                       @Param(value = REQUEST_BODY, description = VARIABLE_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -140,7 +140,7 @@ public class CreateVariable {
                     .sensitive(sensitive)
                     .hcl(hcl)
                     .workspaceId(workspaceId)
-                    .commonInputs(Inputs.builder()
+                    .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
                             .requestBody(requestBody)
                             .proxyHost(proxyHost)

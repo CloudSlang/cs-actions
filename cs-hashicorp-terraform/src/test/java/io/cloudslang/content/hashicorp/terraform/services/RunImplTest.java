@@ -17,7 +17,7 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -42,7 +42,7 @@ public class RunImplTest {
     private final ApplyRunInputs getApplyRun = ApplyRunInputs.builder()
             .runId("")
             .runComment("")
-            .commonInputs(Inputs.builder()
+            .commonInputs(TerraformCommonInputs.builder()
                     .organizationName("")
                     .authToken("")
                     .proxyHost("")

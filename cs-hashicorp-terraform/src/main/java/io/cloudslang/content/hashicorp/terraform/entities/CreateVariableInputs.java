@@ -15,16 +15,9 @@
 
 package io.cloudslang.content.hashicorp.terraform.entities;
 
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.jetbrains.annotations.NotNull;
 
 public class CreateVariableInputs {
-    public static final String VARIABLE_NAME = "variableName";
-    public static final String VARIABLE_VALUE = "variableValue";
-    public static final String VARIABLE_CATEGORY = "variableCategory";
-    public static final String SENSITIVE = "sensitive";
-    public static final String HCL = "hcl";
-    public static final String VARIABLE_REQUEST_BODY = "body";
 
 
     private final String variableName;
@@ -34,11 +27,11 @@ public class CreateVariableInputs {
     private final String hcl;
     private final String workspaceId;
     private final String sensitive;
-    private final Inputs commonInputs;
+    private final TerraformCommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"variableName", "variableValue", "variableCategory", "hcl", "workspaceId", "sensitive", "commonInputs"})
     public CreateVariableInputs(String variableName, String variableValue, String variableCategory, String hcl, String workspaceId, String sensitive,
-                                Inputs commonInputs) {
+                                TerraformCommonInputs commonInputs) {
 
         this.variableName = variableName;
         this.variableValue = variableValue;
@@ -84,7 +77,7 @@ public class CreateVariableInputs {
     }
 
     @NotNull
-    public Inputs getCommonInputs() {
+    public TerraformCommonInputs getCommonInputs() {
         return this.commonInputs;
     }
 
@@ -97,7 +90,7 @@ public class CreateVariableInputs {
         private String hcl;
         private String workspaceId;
         private String sensitive;
-        private Inputs commonInputs;
+        private TerraformCommonInputs commonInputs;
 
         CreateVariableInputsBuilder() {
 
@@ -140,7 +133,7 @@ public class CreateVariableInputs {
             return this;
         }
 
-        public CreateVariableInputs.CreateVariableInputsBuilder commonInputs(@NotNull final Inputs commonInputs) {
+        public CreateVariableInputs.CreateVariableInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }

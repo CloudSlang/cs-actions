@@ -47,18 +47,13 @@ public class Descriptions {
                 "represents an infinite timeout.";
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout.";
-        public static final String EXECUTION_TIMEOUT_DESC = "\"The amount of time (in milliseconds) to allow the client to complete the execution \" +\n" +
-                "                \"of an API call. A value of '0' disables this feature.\" +\n" +
-                "                \"Default: '60000'";
-        public static final String ASYN_DESC = "\"Whether to run the operation is async mode.\" +\n" +
-                "                \"Default: 'false'";
-        public static final String POLLING_INTERVAL_DESC = "The time, in seconds, to wait before a new request that verifies if the operation finished\\n\" +\n" +
-                "                \"is executed.\" +\n" +
-                "                \"Default: '1000'";
+        public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in milliseconds) to allow the client to complete the execution of an API call. A value of '0' disables this feature";
+        public static final String ASYN_DESC = "Whether to run the operation is async mode";
+        public static final String POLLING_INTERVAL_DESC = "The time, in seconds, to wait before a new request that verifies if the operation finished is executed.";
         public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
                 "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
                 "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
-                "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
+                "default value will be used. You should not use this for method=HEAD or OPTIONS." +
                 "Default value: UTF-8";
         public static final String AUTH_TOKEN_DESC = "The authorization token for terraform API.";
         public static final String ORGANIZATION_NAME_DESC = "Name of the organization";

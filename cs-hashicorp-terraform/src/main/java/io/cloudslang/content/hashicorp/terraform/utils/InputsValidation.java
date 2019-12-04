@@ -24,8 +24,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.hashicorp.terraform.entities.CreateVariableInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.ORGANIZATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;

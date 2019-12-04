@@ -18,8 +18,8 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateVariableInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.variables.CreateVariableRequestBody;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.http.client.utils.URIBuilder;
@@ -41,7 +41,7 @@ public class VariableImpl {
     @NotNull
     public static Map<String, String> createVariable(@NotNull final CreateVariableInputs createVariableInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final Inputs commonInputs = createVariableInputs.getCommonInputs();
+        final TerraformCommonInputs commonInputs = createVariableInputs.getCommonInputs();
         httpClientInputs.setUrl(createVariableUrl());
         setCommonHttpInputs(httpClientInputs, commonInputs);
         httpClientInputs.setAuthType(ANONYMOUS);

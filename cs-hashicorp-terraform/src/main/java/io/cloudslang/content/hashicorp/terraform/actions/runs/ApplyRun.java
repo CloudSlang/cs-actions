@@ -25,7 +25,7 @@ import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -33,8 +33,6 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs.RUN_COMMENT;
-import static io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs.RUN_ID;
 import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.applyRunClient;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.APPLY_RUN_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
@@ -42,11 +40,13 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Apply
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_HOST;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PASSWORD;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PORT;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_USERNAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyRunInputs.RUN_COMMENT;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyRunInputs.RUN_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.*;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -124,7 +124,7 @@ public class ApplyRun {
             final Map<String, String> result = applyRunClient(ApplyRunInputs.builder()
                     .runId(runId)
                     .runComment(runComment)
-                    .commonInputs(Inputs.builder()
+                    .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
                             .requestBody(requestBody)
                             .proxyHost(proxyHost)
