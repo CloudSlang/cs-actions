@@ -13,19 +13,15 @@
  * limitations under the License.
  */
 
-
 package io.cloudslang.content.hashicorp.terraform.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import io.cloudslang.content.hashicorp.terraform.services.models.runs.ApplyRunRequestBody;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.services.models.runs.ApplyRunRequestBody;
 import io.cloudslang.content.hashicorp.terraform.services.models.runs.CreateRunBody;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
-
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.http.client.utils.URIBuilder;
@@ -34,8 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.APPLY_RUN_PATH;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_TYPE;
@@ -45,8 +39,33 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class RunImpl {
+import io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs;
 
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.APPLY_RUN_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.RUN_PATH;
+
+public class RunImpl {
+    @NotNull
+    public static Map<String, String> createRunClient(@NotNull final CreateRunInputs createRunInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformCommonInputs commonInputs = createRunInputs.getCommonInputs();
+        httpClientInputs.setUrl(createRunClientUrl());
+        if (commonInputs.getRequestBody().isEmpty()) {
+            try {
+                httpClientInputs.setBody(createRunBody(createRunInputs));
+            } catch (JsonProcessingException e) {
+                return getFailureResultsMap(e);
+            }
+        } else {
+            httpClientInputs.setBody(commonInputs.getRequestBody());
+        }
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(POST);
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+        return new HttpClientService().execute(httpClientInputs);
+    }
 
     @NotNull
     public static Map<String, String> applyRunClient(@NotNull final ApplyRunInputs applyRunInputs) throws Exception {
@@ -60,20 +79,6 @@ public class RunImpl {
                 return getFailureResultsMap(e);
             }
         } else {
-
-    @NotNull
-    public static Map<String, String> createRunClient(@NotNull final CreateRunInputs createRunInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final TerraformCommonInputs commonInputs = createRunInputs.getCommonInputs();
-        httpClientInputs.setUrl(createRunClientUrl());
-        if(commonInputs.getRequestBody().isEmpty()){
-            try{
-            httpClientInputs.setBody(createRunBody(createRunInputs));
-            }catch(JsonProcessingException e){
-                return getFailureResultsMap(e);
-            }
-        }else{
-
             httpClientInputs.setBody(commonInputs.getRequestBody());
         }
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -85,8 +90,19 @@ public class RunImpl {
     }
 
     @NotNull
-    public static String applyRunClientUrl(@NotNull String runId) throws Exception {
     public static String createRunClientUrl() throws Exception {
+
+        final URIBuilder uriBuilder = getUriBuilder();
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(API_VERSION)
+                .append(CREATE_RUN_PATH);
+        uriBuilder.setPath(pathString.toString());
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    public static String applyRunClientUrl(@NotNull String runId) throws Exception {
 
         final URIBuilder uriBuilder = getUriBuilder();
         StringBuilder pathString = new StringBuilder()
@@ -95,35 +111,21 @@ public class RunImpl {
                 .append(RUN_PATH)
                 .append(runId)
                 .append(APPLY_RUN_PATH);
-                .append(CREATE_RUN_PATH);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
     }
 
-
-
     @NotNull
-    public static String applyRunBody(ApplyRunInputs applyRunInputs) throws JsonProcessingException {
+    public static String createRunBody(CreateRunInputs createRunInputs) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        ApplyRunRequestBody applyRunBody = new ApplyRunRequestBody();
-        applyRunBody.setRunComment(applyRunInputs.getRunComment());
+        CreateRunBody createBody = new CreateRunBody();
+        CreateRunBody.CreateRunData createRundata = createBody.new CreateRunData();
+        CreateRunBody.Attributes attributes = createBody.new Attributes();
+        CreateRunBody.Relationships relationships = createBody.new Relationships();
+        CreateRunBody.Workspace workspace = createBody.new Workspace();
+        CreateRunBody.WorkspaceData workspaceData = createBody.new WorkspaceData();
+
         String requestBody = EMPTY;
-
-
-        requestBody = mapper.writeValueAsString(applyRunBody);
-
-
-    @NotNull
-    public static String createRunBody(CreateRunInputs createRunInputs )throws JsonProcessingException{
-        ObjectMapper mapper=new ObjectMapper();
-        CreateRunBody createBody=new CreateRunBody();
-        CreateRunBody.CreateRunData createRundata=createBody.new CreateRunData();
-        CreateRunBody.Attributes attributes=createBody.new Attributes();
-        CreateRunBody.Relationships relationships=createBody.new Relationships();
-        CreateRunBody.Workspace workspace=createBody.new Workspace();
-        CreateRunBody.WorkspaceData workspaceData=createBody.new WorkspaceData();
-
-        String requestBody= EMPTY;
 
         workspaceData.setId(createRunInputs.getWorkspaceId());
         workspaceData.setType(WORKSPACE_TYPE);
@@ -140,7 +142,20 @@ public class RunImpl {
 
         createBody.setData(createRundata);
 
-        requestBody=mapper.writeValueAsString(createBody);
+        requestBody = mapper.writeValueAsString(createBody);
+
+        System.out.println(requestBody);
+
+        return requestBody;
+    }
+
+    @NotNull
+    public static String applyRunBody(ApplyRunInputs applyRunInputs) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ApplyRunRequestBody applyRunBody = new ApplyRunRequestBody();
+        applyRunBody.setRunComment(applyRunInputs.getRunComment());
+        String requestBody = EMPTY;
+        requestBody = mapper.writeValueAsString(applyRunBody);
 
         return requestBody;
     }
