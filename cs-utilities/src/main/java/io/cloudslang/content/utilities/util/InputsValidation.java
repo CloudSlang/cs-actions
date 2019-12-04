@@ -53,6 +53,7 @@ public final class InputsValidation {
 
     /**
      * This method verifies the inputs for the encode operation
+     *
      * @param filePath - the absolute filepath to the file that need to be encoded
      * @return - returns an error message in case of not meeting the requirements
      */
@@ -70,6 +71,7 @@ public final class InputsValidation {
 
     /**
      * This method verifies if the path is valid and if the specified file exists
+     *
      * @param path - the absolute filepath to the file
      * @return - returns a boolean response
      */
@@ -77,5 +79,46 @@ public final class InputsValidation {
         final File file = new File(path);
         return new File(FilenameUtils.getFullPathNoEndSeparator(file.getAbsolutePath())).exists();
     }
+
+    @NotNull
+    public static List<String> verifyGenerateRandomPasswordInputs(@NotNull final String passwordLength, @NotNull final String numberOfLowerCaseCharacters,
+                                                                  @NotNull final String numberOfUpperCaseCharacters, @NotNull final String numberOfNumericalCharacters,
+                                                                  @NotNull final String numberOfSpecialCharacters) throws Exception {
+        final List<String> exceptionMessages = new ArrayList<>();
+        try {
+            if (!isValidLength(passwordLength) || !isValidPasswordLength(passwordLength, numberOfLowerCaseCharacters,
+                    numberOfUpperCaseCharacters, numberOfNumericalCharacters, numberOfSpecialCharacters)) {
+                exceptionMessages.add(Constants.EXCEPTION_PASSWORD_LENGTH);
+            }
+            if (!isValidLength(numberOfLowerCaseCharacters)) {
+                exceptionMessages.add(Constants.EXCEPTION_LENGTH);
+            }
+            if (!isValidLength(numberOfUpperCaseCharacters)) {
+                exceptionMessages.add(Constants.EXCEPTION_LENGTH);
+            }
+            if (!isValidLength(numberOfNumericalCharacters)) {
+                exceptionMessages.add(Constants.EXCEPTION_LENGTH);
+            }
+            if (!isValidLength(numberOfSpecialCharacters)) {
+                exceptionMessages.add(Constants.EXCEPTION_LENGTH);
+            }
+            return exceptionMessages;
+        } catch (Exception exception) {
+            throw new Exception(Constants.EXCEPTION_NUMBER_FORMAT);
+        }
+    }
+
+    private static boolean isValidLength(@NotNull final String passwordLength) {
+        int length = Integer.parseInt(passwordLength);
+        return length > -1;
+    }
+
+    private static boolean isValidPasswordLength(@NotNull final String passwordLength, @NotNull final String numberOfLowerCaseCharacters,
+                                                 @NotNull final String numberOfUpperCaseCharacters, @NotNull final String numberOfNumericalCharacters,
+                                                 @NotNull final String numberOfSpecialCharacters) {
+        return Integer.parseInt(passwordLength) >= Integer.parseInt(numberOfLowerCaseCharacters) + Integer.parseInt(numberOfUpperCaseCharacters) + Integer.parseInt(numberOfNumericalCharacters)
+                + Integer.parseInt(numberOfSpecialCharacters);
+    }
+
 }
 
