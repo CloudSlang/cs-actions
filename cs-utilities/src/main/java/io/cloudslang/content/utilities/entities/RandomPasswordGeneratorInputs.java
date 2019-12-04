@@ -58,8 +58,8 @@ public class RandomPasswordGeneratorInputs {
     }
 
 
-    @java.beans.ConstructorProperties({"passwordLength", "numberOfLowerCaseCharacters","numberOfUpperCaseCharacters","numberOfNumericalCharacters"
-            ,"numberOfSpecialCharacters","forbiddenCharacters","specificFormat"})
+    @java.beans.ConstructorProperties({"passwordLength", "numberOfLowerCaseCharacters", "numberOfUpperCaseCharacters", "numberOfNumericalCharacters"
+            , "numberOfSpecialCharacters", "forbiddenCharacters", "specificFormat"})
     private RandomPasswordGeneratorInputs(String passwordLength, String numberOfLowerCaseCharacters, String numberOfUpperCaseCharacters,
                                           String numberOfNumericalCharacters, String numberOfSpecialCharacters, String forbiddenCharacters) {
         this.passwordLength = passwordLength;
@@ -84,7 +84,6 @@ public class RandomPasswordGeneratorInputs {
         String numberOfNumericalCharacters = EMPTY;
         String numberOfSpecialCharacters = EMPTY;
         String forbiddenCharacters = EMPTY;
-
 
 
         RandomPasswordGeneratorInputsBuilder() {
