@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,7 +19,6 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.jetbrains.annotations.NotNull;
-
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setConnectionParameters;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setProxy;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setSecurityInputs;

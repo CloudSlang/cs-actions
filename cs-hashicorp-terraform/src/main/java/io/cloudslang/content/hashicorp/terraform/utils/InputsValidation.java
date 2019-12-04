@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -57,22 +57,6 @@ public final class InputsValidation {
         return exceptionMessages;
     }
 
-
-    @NotNull
-    public static List<String> verifyCreateRunInputs(@Nullable final String workspaceId,
-                                                     @Nullable final String requestBody) {
-
-        final List<String> exceptionMessages = new ArrayList<>();
-        if (requestBody.isEmpty()) {
-            addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
-        } else {
-            addVerifyRequestBody(exceptionMessages, requestBody);
-        }
-
-
-        return exceptionMessages;
-    }
-
     @NotNull
     public static List<String> verifyCreateVariableInputs(@Nullable final String workspaceId, @Nullable final String variableName, @Nullable final String variableValue, @Nullable final String variableCategory,
                                                           @Nullable final String requestBody) {
@@ -85,6 +69,19 @@ public final class InputsValidation {
             addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
         } else {
             addVerifyRequestBody(exceptionMessages, requestBody);
+        }
+       return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyCreateRunInputs(@Nullable final String workspaceId,
+                                                      @Nullable final String requestBody) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+        if(requestBody.isEmpty()) {
+            addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
+        }else{
+            addVerifyRequestBody(exceptionMessages,requestBody);
         }
 
 
@@ -101,7 +98,6 @@ public final class InputsValidation {
 
         return exceptionMessages;
     }
-
 
     @NotNull
     private static List<String> addVerifyUserInputs(@NotNull List<String> exceptions, @Nullable final String organizationName) {
@@ -154,6 +150,7 @@ public final class InputsValidation {
             ObjectMapper mapper = new ObjectMapper();
             mapper.readTree(input);
         } catch (Exception exception) {
+
             exceptions.add(exception.getMessage());
         }
         return exceptions;
