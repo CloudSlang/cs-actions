@@ -65,7 +65,10 @@ public class Descriptions {
         public static final String O_DATA_QUERY_DESC = "Query parameters which can be used to specify and control the amount of data returned " +
                 "in a response specified in 'key1=val1&key2=val2' format. $top and $select options should be not passed for this input because the values" +
                 "for these options can be passed in topQuery and selectQuery inputs." +
-                " Example: $format=json";
+                " Example: &filter=Subject eq 'Test' AND IsRead eq true " +
+                "          &filter=HasAttachments eq true"+
+                "          &search=\"from:help@contoso.com\""+
+                "          &search=\"subject:Test\"";
         public static final String TOP_QUERY_DESC = "Query parameter use to specify the number of results. Default value: 10";
         public static final String SELECT_QUERY_DESC = "A list of query parameters in the form of a comma delimited list." +
                 " Example: id,internetMessageHeaders";
