@@ -18,7 +18,7 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import java.util.Map;
 
 import io.cloudslang.content.hashicorp.terraform.entities.ListOAuthClientInputs;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import org.apache.http.client.utils.URIBuilder;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
@@ -32,7 +32,7 @@ public class ListOauthClientImpl {
     @NotNull
     public static Map<String, String> listOAuthClient(@NotNull final ListOAuthClientInputs listOAuthInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final Inputs commonInputs = listOAuthInputs.getCommonInputs();
+        final TerraformCommonInputs commonInputs = listOAuthInputs.getCommonInputs();
         httpClientInputs.setUrl(listOAuthClientUrl(commonInputs.getOrganizationName()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);

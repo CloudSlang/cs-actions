@@ -18,6 +18,7 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.runs.CreateRunBody;
 import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
@@ -41,7 +42,7 @@ public class RunImpl {
     @NotNull
     public static Map<String, String> createRunClient(@NotNull final CreateRunInputs createRunInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final Inputs commonInputs = createRunInputs.getCommonInputs();
+        final TerraformCommonInputs commonInputs = createRunInputs.getCommonInputs();
         httpClientInputs.setUrl(createRunClientUrl());
         if(commonInputs.getRequestBody().isEmpty()){
             try{

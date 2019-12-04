@@ -15,27 +15,19 @@
 
 package io.cloudslang.content.hashicorp.terraform.entities;
 
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.jetbrains.annotations.NotNull;
-
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class CreateRunInputs {
 
-    public  static final String RUN_MESSAGE="runMessage";
-    public  static final String IS_DESTROY="isDestroy";
-
-
     private String workspaceId;
-    private  String workspaceName;
     private String runMessage;
     private String isDestroy;
-    private Inputs commonInputs;
+    private TerraformCommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"workspaceId","workspaceName", "runMessage", "isDestroy"})
-    public CreateRunInputs(String workspaceId, String workspaceName, String runMessage, String isDestroy, Inputs commonInputs) {
+    public CreateRunInputs(String workspaceId, String runMessage, String isDestroy, TerraformCommonInputs commonInputs) {
         this.workspaceId = workspaceId;
-        this.workspaceName=workspaceName;
         this.runMessage = runMessage;
         this.isDestroy = isDestroy;
         this.commonInputs = commonInputs;
@@ -50,8 +42,6 @@ public class CreateRunInputs {
         return workspaceId;
     }
 
-    @NotNull
-    public String getWorkspaceName() { return workspaceName; }
 
     @NotNull
     public String getRunMessage() {
@@ -62,17 +52,16 @@ public class CreateRunInputs {
     public String getIsDestroy() { return isDestroy; }
 
     @NotNull
-    public Inputs getCommonInputs() {
+    public TerraformCommonInputs getCommonInputs() {
         return commonInputs;
     }
 
     public static class CreateRunInputsBuilder {
         private String workspaceId = EMPTY;
-        private String workspaceName=EMPTY;
         private String runMessage = EMPTY;
         private String isDestroy = EMPTY;
 
-        private Inputs commonInputs;
+        private TerraformCommonInputs commonInputs;
 
         CreateRunInputsBuilder() {
         }
@@ -80,12 +69,6 @@ public class CreateRunInputs {
         @NotNull
         public CreateRunInputs.CreateRunInputsBuilder workspaceId(@NotNull final String workspaceId) {
             this.workspaceId = workspaceId;
-            return this;
-        }
-
-        @NotNull
-        public CreateRunInputs.CreateRunInputsBuilder workspaceName(@NotNull final String workspaceName) {
-            this.workspaceName = workspaceName;
             return this;
         }
 
@@ -103,13 +86,13 @@ public class CreateRunInputs {
 
 
         @NotNull
-        public CreateRunInputs.CreateRunInputsBuilder commonInputs(@NotNull final Inputs commonInputs) {
+        public CreateRunInputs.CreateRunInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
         public CreateRunInputs build() {
-            return new CreateRunInputs(workspaceId,workspaceName, runMessage, isDestroy, commonInputs);
+            return new CreateRunInputs(workspaceId, runMessage, isDestroy, commonInputs);
         }
     }
 

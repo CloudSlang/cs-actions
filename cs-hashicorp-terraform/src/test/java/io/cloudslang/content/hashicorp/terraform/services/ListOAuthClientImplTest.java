@@ -15,9 +15,8 @@
 
 package io.cloudslang.content.hashicorp.terraform.services;
 
-import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.ListOAuthClientInputs;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -30,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 @PrepareForTest(ListOAuthClientImplTest.class)
 public class ListOAuthClientImplTest {
     public final String EXPECTED_OAUTH_PATH="/api/v2/organizations/test/oauth-clients";
-    private final ListOAuthClientInputs getListOAuthClientInputs=ListOAuthClientInputs.builder().commonInputs(Inputs.builder()
+    private final ListOAuthClientInputs getListOAuthClientInputs=ListOAuthClientInputs.builder().commonInputs(TerraformCommonInputs.builder()
             .organizationName("")
             .authToken("")
             .proxyHost("")
@@ -50,7 +49,7 @@ public class ListOAuthClientImplTest {
             .build())
             .build();
 
-    private final Inputs getOrganizationName=Inputs.builder()
+    private final TerraformCommonInputs getOrganizationName=TerraformCommonInputs.builder()
             .organizationName("test")
             .build();
 
