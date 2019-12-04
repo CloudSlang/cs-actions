@@ -43,24 +43,25 @@ CreateRunData data;
             this.relationships = relationships;
         }
     }
-   public class Attributes{
-       @JsonProperty("message")
+    public class Attributes{
+
+        String isDestroy;
         String runMessage;
 
-       @JsonProperty("is-Destroy")
-        boolean isDestroy;
-
+        @JsonProperty("message")
         public String getRunMessage() {
             return runMessage;
         }
-
+        @JsonProperty("message")
         public void setRunMessage(String runMessage) {
             this.runMessage = runMessage;
         }
-
-       public boolean isDestroy() { return isDestroy; }
-
-       public void setIsDestroy(boolean isDestroy) {
+        @JsonProperty("is-Destroy")
+        public String isDestroy() {
+            return isDestroy;
+        }
+        @JsonProperty("is-Destroy")
+        public void setDestroy(String isDestroy) {
             this.isDestroy = isDestroy;
         }
     }

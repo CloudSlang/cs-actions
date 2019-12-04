@@ -30,11 +30,11 @@ public class CreateRunInputs {
     private String workspaceId;
     private  String workspaceName;
     private String runMessage;
-    private boolean isDestroy;
+    private String isDestroy;
     private Inputs commonInputs;
 
     @java.beans.ConstructorProperties({"workspaceId","workspaceName", "runMessage", "isDestroy"})
-    public CreateRunInputs(String workspaceId,String workspaceName, String runMessage, boolean isDestroy, Inputs commonInputs) {
+    public CreateRunInputs(String workspaceId,String workspaceName, String runMessage, String isDestroy, Inputs commonInputs) {
         this.workspaceId = workspaceId;
         this.workspaceName=workspaceName;
         this.runMessage = runMessage;
@@ -60,7 +60,7 @@ public class CreateRunInputs {
     }
 
     @NotNull
-    public boolean isDestroy() { return isDestroy; }
+    public String getIsDestroy() { return isDestroy; }
 
     @NotNull
     public Inputs getCommonInputs() {
@@ -71,7 +71,7 @@ public class CreateRunInputs {
         private String workspaceId = EMPTY;
         private String workspaceName=EMPTY;
         private String runMessage = EMPTY;
-        private boolean isDestroy = Boolean.FALSE;
+        private String isDestroy = EMPTY;
 
         private Inputs commonInputs;
 
@@ -97,7 +97,7 @@ public class CreateRunInputs {
         }
 
         @NotNull
-        public CreateRunInputs.CreateRunInputsBuilder isDestroy(@NotNull final boolean isDestroy) {
+        public CreateRunInputs.CreateRunInputsBuilder isDestroy(@NotNull final String isDestroy) {
             this.isDestroy = isDestroy;
             return this;
         }
