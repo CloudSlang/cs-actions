@@ -59,7 +59,7 @@ public class Descriptions {
         public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
                 "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
                 "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
-                "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
+                "default value will be used. You should not use this for method=HEAD or OPTIONS." +
                 "Default: UTF-8";
         public static final String AUTH_TOKEN_DESC = "The authorization token for terraform";
         public static final String ORGANIZATION_NAME_DESC = "The name of the organization";
@@ -72,6 +72,7 @@ public class Descriptions {
                 "Default: '60000'";
         public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
                 "Default: 'false'";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
     }
 
 
@@ -82,7 +83,6 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The request was successfully executed.";
         public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
-        public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
         public static final String OAUTH_TOKEN_ID_DESCRIPTION="The VCS Connection (OAuth Connection + Token) to use. " +
                 "This ID can be obtained from the oauth-tokens endpoint.";
     }

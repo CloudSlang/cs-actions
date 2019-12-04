@@ -56,7 +56,6 @@ public class CreateWorkspaceRequestBody {
     }
 
     public class Attributes {
-        private String name;
         String terraform_version;
         String description;
         @JsonProperty("auto-apply")
@@ -73,33 +72,38 @@ public class CreateWorkspaceRequestBody {
         boolean speculativeEnabled;
         @JsonProperty("vcs-repo")
         VCSRepo vcsRepo;
+        private String name;
 
         public String getName() {
             return name;
-        }
-
-        public String getTerraform_version() {
-            return terraform_version;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public VCSRepo getVcsRepo() {
-            return vcsRepo;
         }
 
         public void setName(String name) {
             this.name = name;
         }
 
+        public String getTerraform_version() {
+            return terraform_version;
+        }
+
         public void setTerraform_version(String terraform_version) {
             this.terraform_version = terraform_version;
         }
 
+        public String getDescription() {
+            return description;
+        }
+
         public void setDescription(String description) {
             this.description = description;
+        }
+
+        public VCSRepo getVcsRepo() {
+            return vcsRepo;
+        }
+
+        public void setVcsRepo(VCSRepo vcsRepo) {
+            this.vcsRepo = vcsRepo;
         }
 
         public boolean getAutoApply() {
@@ -150,10 +154,6 @@ public class CreateWorkspaceRequestBody {
             this.speculativeEnabled = speculativeEnabled;
         }
 
-        public void setVcsRepo(VCSRepo vcsRepo) {
-            this.vcsRepo = vcsRepo;
-        }
-
     }
 
     public class VCSRepo {
@@ -169,20 +169,20 @@ public class CreateWorkspaceRequestBody {
             return identifier;
         }
 
-        public String getOauthTokenId() {
-            return oauthTokenId;
-        }
-
-        public String getBranch() {
-            return branch;
-        }
-
         public void setIdentifier(String identifier) {
             this.identifier = identifier;
         }
 
+        public String getOauthTokenId() {
+            return oauthTokenId;
+        }
+
         public void setOauthTokenId(String oauthTokenId) {
             this.oauthTokenId = oauthTokenId;
+        }
+
+        public String getBranch() {
+            return branch;
         }
 
         public void setBranch(String branch) {

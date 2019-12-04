@@ -16,7 +16,7 @@
 package io.cloudslang.content.hashicorp.terraform.services;
 
 import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -32,7 +32,7 @@ public class WorkspaceImplTest {
 
     private static final String ORGANIZATION_NAME = "test";
     private static final String EXPECTED_WORKSPACE_PATH = "/api/v2/organizations/test/workspaces";
-    private static final String EXPECTED_WORKSPACE_REQUEST_BODY = "{\"data\":{\"attributes\":{\"name\":\"test\",\"terraform_version\":\"0.12.1\",\"description\":\"test\",\"auto-apply\":true,\"file-triggers-enabled\":true," +
+    private static final String EXPECTED_WORKSPACE_REQUEST_BODY = "{\"data\":{\"attributes\":{\"terraform_version\":\"0.12.1\",\"description\":\"test\",\"name\":\"test\",\"auto-apply\":true,\"file-triggers-enabled\":true," +
             "\"working-directory\":\"/test\",\"trigger-prefixes\":[\"\"],\"queue-all-runs\":false,\"speculative-enabled\":true," +
             "\"vcs-repo\":{\"identifier\":\"test\",\"branch\":\"test\",\"oauth-token-id\":\"test\",\"ingress-submodules\":true}},\"type\":\"workspaces\"}}";
     private final CreateWorkspaceInputs invalidCreateWorkspaceInputs = CreateWorkspaceInputs.builder()
@@ -48,7 +48,7 @@ public class WorkspaceImplTest {
             .vcsRepoId("test")
             .vcsBranchName("test")
             .oauthTokenId("test")
-            .commonInputs(Inputs.builder()
+            .commonInputs(TerraformCommonInputs.builder()
                     .organizationName("test")
                     .authToken("test")
                     .terraformVersion("0.12.1")

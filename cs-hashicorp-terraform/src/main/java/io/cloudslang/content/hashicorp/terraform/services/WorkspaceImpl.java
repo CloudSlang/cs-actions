@@ -18,21 +18,24 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.workspace.CreateWorkspaceRequestBody;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.ANONYMOUS;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_TYPE;
-import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBuilder;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class WorkspaceImpl {
@@ -40,7 +43,7 @@ public class WorkspaceImpl {
     @NotNull
     public static Map<String, String> createWorkspace(@NotNull final CreateWorkspaceInputs createWorkspaceInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final Inputs commonInputs = createWorkspaceInputs.getCommonInputs();
+        final TerraformCommonInputs commonInputs = createWorkspaceInputs.getCommonInputs();
         httpClientInputs.setUrl(createWorkspaceUrl(createWorkspaceInputs.getCommonInputs().getOrganizationName()));
         setCommonHttpInputs(httpClientInputs, commonInputs);
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -85,11 +88,11 @@ public class WorkspaceImpl {
         attributes.setName(createWorkspaceInputs.getWorkspaceName());
         attributes.setTerraform_version(createWorkspaceInputs.getCommonInputs().getTerraformVersion());
         attributes.setDescription(createWorkspaceInputs.getWorkspaceDescription());
-        attributes.setAutoApply(Boolean.valueOf(createWorkspaceInputs.getAutoApply()));
-        attributes.setFileTriggersEnabled(Boolean.valueOf(createWorkspaceInputs.getFileTriggersEnabled()));
+        attributes.setAutoApply(Boolean.parseBoolean(createWorkspaceInputs.getAutoApply()));
+        attributes.setFileTriggersEnabled(Boolean.parseBoolean(createWorkspaceInputs.getFileTriggersEnabled()));
         attributes.setWorkingDirectory(createWorkspaceInputs.getWorkingDirectory());
-        attributes.setQueueAllRuns(Boolean.valueOf(createWorkspaceInputs.getQueueAllRuns()));
-        attributes.setSpeculativeEnabled(Boolean.valueOf(createWorkspaceInputs.getSpeculativeEnabled()));
+        attributes.setQueueAllRuns(Boolean.parseBoolean(createWorkspaceInputs.getQueueAllRuns()));
+        attributes.setSpeculativeEnabled(Boolean.parseBoolean(createWorkspaceInputs.getSpeculativeEnabled()));
         String[] triggerPrefixes = createWorkspaceInputs.getTriggerPrefixes().split(delimiter);
         Collections.addAll(triggerPrefixesList, triggerPrefixes);
         attributes.setTriggerPrefixes(triggerPrefixesList);
@@ -99,7 +102,7 @@ public class WorkspaceImpl {
         vcsRepo.setIdentifier(createWorkspaceInputs.getVcsRepoId());
         vcsRepo.setOauthTokenId(createWorkspaceInputs.getOauthTokenId());
         vcsRepo.setBranch(createWorkspaceInputs.getVcsBranch());
-        vcsRepo.setIngressSubmodules(Boolean.valueOf(createWorkspaceInputs.getIngressSubmodules()));
+        vcsRepo.setIngressSubmodules(Boolean.parseBoolean(createWorkspaceInputs.getIngressSubmodules()));
 
         attributes.setVcsRepo(vcsRepo);
 

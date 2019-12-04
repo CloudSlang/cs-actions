@@ -22,7 +22,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -34,32 +34,28 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs.*;
-import static io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs.INGRESS_SUBMODULES;
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.createWorkspace;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.POLLING_INTERVAL_DEFAULT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.CREATE_WORKSPACE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_ID_JSON_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.ASYNC_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.INGRESS_SUBMODULES_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.OAUTH_TOKEN_ID_DESCRIPTION;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.STATUS_CODE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ASYNC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_USERNAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCreateWorkspaceInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.ListOAuthClientOutputs.OAUTH_TOKEN_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateWorkspace {
 
@@ -142,7 +138,7 @@ public class CreateWorkspace {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessage = verifyCommonInputs(proxyPort,trustAllRoots,
+        final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
@@ -167,7 +163,7 @@ public class CreateWorkspace {
                     .vcsRepoId(vcsRepoId)
                     .vcsBranchName(vcsBranchName)
                     .oauthTokenId(oauthTokenId)
-                    .commonInputs(Inputs.builder()
+                    .commonInputs(TerraformCommonInputs.builder()
                             .organizationName(organizationName)
                             .authToken(authToken)
                             .terraformVersion(terraformVersion)
@@ -194,7 +190,7 @@ public class CreateWorkspace {
 
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
             if (statusCode >= 200 && statusCode < 300) {
                 final String workspaceId = JsonPath.read(returnMessage, WORKSPACE_ID_JSON_PATH);
                 if (!workspaceId.isEmpty()) {

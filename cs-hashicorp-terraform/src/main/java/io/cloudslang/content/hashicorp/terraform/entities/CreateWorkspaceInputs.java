@@ -15,23 +15,9 @@
 
 package io.cloudslang.content.hashicorp.terraform.entities;
 
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.jetbrains.annotations.NotNull;
 
 public class CreateWorkspaceInputs {
-
-    public static final String WORKSPACE_NAME = "workspaceName";
-    public static final String WORKSPACE_DESCRIPTION = "workspaceDescription";
-    public static final String AUTO_APPLY = "autoApply";
-    public static final String FILE_TRIGGERS_ENABLED = "fileTriggersEnabled";
-    public static final String WORKING_DIRECTORY = "workingDirectory";
-    public static final String TRIGGER_PREFIXES = "triggerPrefixes";
-    public static final String QUEUE_ALL_RUNS = "queueAllRuns";
-    public static final String SPECULATIVE_ENABLED = "speculativeEnabled";
-    public static final String INGRESS_SUBMODULES = "ingressSubmodules";
-    public static final String VCS_REPO_ID = "vcsRepoId";
-    public static final String VCS_BRANCH_NAME = "vcsBranchName";
-
 
     private final String workspaceName;
     private final String workspaceDescription;
@@ -45,16 +31,16 @@ public class CreateWorkspaceInputs {
     private final String vcsRepoId;
     private final String vcsBranchName;
     private final String oauthTokenId;
-    private final Inputs commonInputs;
+    private final TerraformCommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"workspaceName", "workspaceDescription","autoApply","fileTriggersEnabled", "workingDirectory", "triggerPrefixes", "queueAllRuns",
-            "speculativeEnabled","ingressSubmodules","vcsRepoId", "vcsBranchName", "oauthTokenId", "commonInputs"})
-    public CreateWorkspaceInputs(String workspaceName, String workspaceDescription,String autoApply, String fileTriggersEnabled,String workingDirectory,String triggerPrefixes, String queueAllRuns,String speculativeEnabled,
-                                 String ingressSubmodules,String vcsRepoId, String vcsBranchName, String oauthTokenId, Inputs commonInputs) {
+    @java.beans.ConstructorProperties({"workspaceName", "workspaceDescription", "autoApply", "fileTriggersEnabled", "workingDirectory", "triggerPrefixes", "queueAllRuns",
+            "speculativeEnabled", "ingressSubmodules", "vcsRepoId", "vcsBranchName", "oauthTokenId", "commonInputs"})
+    public CreateWorkspaceInputs(String workspaceName, String workspaceDescription, String autoApply, String fileTriggersEnabled, String workingDirectory, String triggerPrefixes, String queueAllRuns, String speculativeEnabled,
+                                 String ingressSubmodules, String vcsRepoId, String vcsBranchName, String oauthTokenId, TerraformCommonInputs commonInputs) {
         this.workspaceName = workspaceName;
         this.workspaceDescription = workspaceDescription;
         this.autoApply = autoApply;
-        this.fileTriggersEnabled =fileTriggersEnabled;
+        this.fileTriggersEnabled = fileTriggersEnabled;
         this.workingDirectory = workingDirectory;
         this.triggerPrefixes = triggerPrefixes;
         this.queueAllRuns = queueAllRuns;
@@ -132,7 +118,7 @@ public class CreateWorkspaceInputs {
     }
 
     @NotNull
-    public Inputs getCommonInputs() {
+    public TerraformCommonInputs getCommonInputs() {
         return this.commonInputs;
     }
 
@@ -150,7 +136,7 @@ public class CreateWorkspaceInputs {
         private String vcsRepoId;
         private String vcsBranchName;
         private String oauthTokenId;
-        private Inputs commonInputs;
+        private TerraformCommonInputs commonInputs;
 
         CreateWorkspaceInputsBuilder() {
 
@@ -228,13 +214,13 @@ public class CreateWorkspaceInputs {
             return this;
         }
 
-        public CreateWorkspaceInputsBuilder commonInputs(@NotNull final Inputs commonInputs) {
+        public CreateWorkspaceInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
         public CreateWorkspaceInputs build() {
-            return new CreateWorkspaceInputs(workspaceName, workspaceDescription,autoApply,fileTriggersEnabled,workingDirectory,triggerPrefixes,queueAllRuns,speculativeEnabled,ingressSubmodules,vcsRepoId, vcsBranchName, oauthTokenId, commonInputs);
+            return new CreateWorkspaceInputs(workspaceName, workspaceDescription, autoApply, fileTriggersEnabled, workingDirectory, triggerPrefixes, queueAllRuns, speculativeEnabled, ingressSubmodules, vcsRepoId, vcsBranchName, oauthTokenId, commonInputs);
         }
 
     }
