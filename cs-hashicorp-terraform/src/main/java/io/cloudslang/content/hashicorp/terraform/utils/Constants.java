@@ -104,4 +104,16 @@ public class Constants {
         public static final String VARIABLE_ID_JSON_PATH = "$.data.id";
 
     }
+
+    public static class GetWorkspaceDetails {
+        public static final String GET_WORKSPACE_DETAILS_OPERATION_NAME = "Get Workspace Details";
+        public static final String GET_WORKSPACE_PATH = "/workspaces/";
+        public static final String WORKSPACE_ID_JSON_PATH = "data.id";
+    }
+
+    public static class GetRunDetailsConstants{
+        public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
+        public static  final String GET_RUN_DETAILS_PATH="/runs/";
+
+    }
 }

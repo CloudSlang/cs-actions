@@ -23,6 +23,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.getRunDetailsUrl;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
@@ -31,7 +33,9 @@ public class RunImplTest {
 
     private final String EXPECTED_APPLY_RUN_REQUEST_BODY = "{\"comment\":\"test apply run comment\"}";
     private final String EXPECTED_APPLY_RUN_URL = "https://app.terraform.io/api/v2/runs/run-456test/actions/apply";
-     private final String EXPECTED_CREATE_RUN_BODY="{\"data\":{\"attributes\":{\"is-Destroy\":\"false\",\"message\":\"test\"},\"type\":\"runs\",\"relationships\":{\"workspace\":{\"data\":{\"type\":\"workspaces\",\"id\":\"test-123\"}}}}}";
+    private final String EXPECTED_CREATE_RUN_BODY="{\"data\":{\"attributes\":{\"is-Destroy\":\"false\",\"message\":\"test\"},\"type\":\"runs\",\"relationships\":{\"workspace\":{\"data\":{\"type\":\"workspaces\",\"id\":\"test-123\"}}}}}";
+    private static final String RUN_ID="test123";
+    private final String EXPECTED_GET_RUN_DETAILS_PATH="https://app.terraform.io/api/v2/runs/test123";
 
     private final ApplyRunInputs applyRunInputs = ApplyRunInputs.builder()
             .runComment("test apply run comment")
@@ -64,8 +68,8 @@ public class RunImplTest {
                     .connectionsMaxTotal("")
                     .responseCharacterSet("")
                     .build())
-            .build();      
-   
+            .build();
+
     private final CreateRunInputs invalidCreateRunInputs=CreateRunInputs.builder()
             .workspaceId("")
             .runMessage("")
@@ -92,12 +96,12 @@ public class RunImplTest {
                     .responseCharacterSet("")
                     .build())
             .build();
-  
-     private final CreateRunInputs createRunBody = CreateRunInputs.builder()
-                .workspaceId("test-123")
-                .runMessage("test")
-                .isDestroy("false")
-                .build();
+
+    private final CreateRunInputs createRunBody = CreateRunInputs.builder()
+            .workspaceId("test-123")
+            .runMessage("test")
+            .isDestroy("false")
+            .build();
 
 
     @Test
@@ -119,16 +123,22 @@ public class RunImplTest {
         RunImpl.applyRunClient(getApplyRun);
     }
 
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void getRunInputsThrows() throws Exception{
-    RunImpl.createRunClient(invalidCreateRunInputs);
+        RunImpl.createRunClient(invalidCreateRunInputs);
     }
 
     @Test
     public void getCreateRunBody() throws JsonProcessingException {
         String createRunRequestBody=RunImpl.createRunBody(createRunBody);
         assertEquals(EXPECTED_CREATE_RUN_BODY,createRunRequestBody);
+    }
+
+    @Test
+    public void getRunDetailsPathTest() throws Exception{
+        final String path=getRunDetailsUrl(RUN_ID);
+        assertEquals(EXPECTED_GET_RUN_DETAILS_PATH,path);
     }
 
 
