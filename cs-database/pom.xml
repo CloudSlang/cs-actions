@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-database</artifactId>
-    <version>0.0.11-SNAPSHOT</version>
+    <version>0.0.112-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -137,9 +137,9 @@
         </dependency>
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>sqljdbc4</artifactId>
-            <version>4.0</version>
-            <scope>runtime</scope>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>6.2.2.jre7</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.oracle</groupId>
