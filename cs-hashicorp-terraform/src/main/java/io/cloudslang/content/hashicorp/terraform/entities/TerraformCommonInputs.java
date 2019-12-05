@@ -44,6 +44,7 @@ public class TerraformCommonInputs {
     private final String connectionsMaxPerRoot;
     private final String connectionsMaxTotal;
 
+
     @java.beans.ConstructorProperties({"authToken", "organizationName", "requestBody", "terraformVersion", "proxyHost", "proxyPort", "proxyUsername",
             "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "connectTimeout",
             "socketTimeout", "executionTimeout", "pollingInterval", "async", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal"})
@@ -98,6 +99,7 @@ public class TerraformCommonInputs {
     public String getTerraformVersion() {
         return terraformVersion;
     }
+
 
     @NotNull
     public String getAuthToken() {

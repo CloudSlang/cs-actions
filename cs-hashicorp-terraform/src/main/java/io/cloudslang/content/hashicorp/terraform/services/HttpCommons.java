@@ -18,8 +18,9 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.jetbrains.annotations.NotNull;
-
-import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setConnectionParameters;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setProxy;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setSecurityInputs;
 
 public class HttpCommons {
 
