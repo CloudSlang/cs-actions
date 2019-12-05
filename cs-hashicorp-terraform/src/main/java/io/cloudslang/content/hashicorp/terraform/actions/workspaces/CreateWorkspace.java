@@ -42,11 +42,11 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Commo
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.OAUTH_TOKEN_ID_DESCRIPTION;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_HOST;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PASSWORD;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_PORT;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PROXY_USERNAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCreateWorkspaceInputs;

@@ -85,6 +85,7 @@ public class Descriptions {
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String OAUTH_TOKEN_ID_DESCRIPTION="The VCS Connection (OAuth Connection + Token) to use. " +
                 "This ID can be obtained from the oauth-tokens endpoint.";
+        public static final String LIST_OAUTH_CLIENT_DESC="List An OAuth Client Id";
     }
 
     public static class CreateWorkspace {
