@@ -20,7 +20,6 @@ import io.cloudslang.content.utils.NumberUtilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +33,6 @@ import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public final class InputsValidation {
-
 
     @NotNull
     public static List<String> verifyCommonInputs(@Nullable final String proxyPort,
@@ -83,92 +81,100 @@ public final class InputsValidation {
         }else{
             addVerifyRequestBody(exceptionMessages,requestBody);
         }
-
-
         return exceptionMessages;
     }
+  
+     @NotNull
+    public static List<String> verifyCreateWorkspaceInputs(@Nullable final String workspaceName, @Nullable final String vcsRepoId, @Nullable final String oauthTokenId,
+                                                           @Nullable final String requestBody) {
+         final List<String> exceptionMessages = new ArrayList<>();
+         if (requestBody.isEmpty()) {
+             addVerifyString(exceptionMessages, workspaceName, WORKSPACE_ID);
+             addVerifyString(exceptionMessages, vcsRepoId, VARIABLE_NAME);
+             addVerifyString(exceptionMessages, oauthTokenId, VARIABLE_VALUE);
+         } else {
+             addVerifyRequestBody(exceptionMessages, requestBody);
+         }
+         return exceptionMessages;
+     }
 
-    @NotNull
-    public static List<String> verifyApplyRunRequestBody(@Nullable final String requestBody) {
+         @NotNull
+         public static List<String> verifyApplyRunRequestBody(@Nullable final String requestBody) {
 
-        final List<String> exceptionMessages = new ArrayList<>();
-        if (!requestBody.isEmpty()) {
-            addVerifyRequestBody(exceptionMessages, requestBody);
-        }
+             final List<String> exceptionMessages = new ArrayList<>();
+             if (!requestBody.isEmpty()) {
+                 addVerifyRequestBody(exceptionMessages, requestBody);
+             }
 
-        return exceptionMessages;
-    }
+             return exceptionMessages;
+         }
 
-    @NotNull
-    private static List<String> addVerifyUserInputs(@NotNull List<String> exceptions, @Nullable final String organizationName) {
-        if (isEmpty(organizationName)) {
-            exceptions.add(String.format(ORGANIZATION_NAME));
-        }
-        return exceptions;
-    }
-
-
-    @NotNull
-    private static List<String> addVerifyNotNullOrEmpty(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
-        if (isEmpty(input)) {
-            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
-        }
-        return exceptions;
-    }
-
-    @NotNull
-    private static List<String> addVerifyProxy(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
-        if (isEmpty(input)) {
-            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
-        } else if (!isValidIpPort(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_PROXY, inputName));
-        }
-        return exceptions;
-    }
-
-    @NotNull
-    private static List<String> addVerifyString(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
-        if (isEmpty(input)) {
-            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
-        }
-        return exceptions;
-    }
-
-    @NotNull
-    private static List<String> addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
-        if (isEmpty(input)) {
-            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
-        } else if (!isValid(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_BOOLEAN, input, inputName));
-        }
-        return exceptions;
-    }
-
-    @NotNull
-    private static List<String> addVerifyRequestBody(@NotNull List<String> exceptions, @Nullable final String input) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.readTree(input);
-        } catch (Exception exception) {
-
-            exceptions.add(exception.getMessage());
-        }
-        return exceptions;
-    }
+         @NotNull
+         private static List<String> addVerifyUserInputs(@NotNull List<String> exceptions, @Nullable final String organizationName) {
+             if (isEmpty(organizationName)) {
+                 exceptions.add(String.format(ORGANIZATION_NAME));
+             }
+             return exceptions;
+         }
 
 
-    @NotNull
-    private static List<String> addVerifyNumber(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
-        if (isEmpty(input)) {
-            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
-        } else if (!NumberUtilities.isValidInt(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
-        }
-        return exceptions;
-    }
+         @NotNull
+         private static List<String> addVerifyNotNullOrEmpty(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+             if (isEmpty(input)) {
+                 exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+             }
+             return exceptions;
+         }
 
-    private static boolean isValidFile(@NotNull final String filePath) {
-        return new File(filePath).exists();
-    }
+         @NotNull
+         private static List<String> addVerifyProxy(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+             if (isEmpty(input)) {
+                 exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+             } else if (!isValidIpPort(input)) {
+                 exceptions.add(String.format(EXCEPTION_INVALID_PROXY, inputName));
+             }
+             return exceptions;
+         }
+
+         @NotNull
+         private static List<String> addVerifyString(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+             if (isEmpty(input)) {
+                 exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+             }
+             return exceptions;
+         }
+
+         @NotNull
+         private static List<String> addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+             if (isEmpty(input)) {
+                 exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+             } else if (!isValid(input)) {
+                 exceptions.add(String.format(EXCEPTION_INVALID_BOOLEAN, input, inputName));
+             }
+             return exceptions;
+         }
+
+         @NotNull
+         private static List<String> addVerifyRequestBody(@NotNull List<String> exceptions, @Nullable final String input) {
+             try {
+                 ObjectMapper mapper = new ObjectMapper();
+                 mapper.readTree(input);
+             } catch (Exception exception) {
+
+                 exceptions.add(exception.getMessage());
+             }
+             return exceptions;
+         }
+
+
+         @NotNull
+         private static List<String> addVerifyNumber(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+             if (isEmpty(input)) {
+                 exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+             } else if (!NumberUtilities.isValidInt(input)) {
+                 exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
+             }
+             return exceptions;
+         }
 }
 

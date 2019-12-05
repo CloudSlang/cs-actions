@@ -23,16 +23,17 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class Inputs extends InputNames {
 
     public static class CommonInputs {
-        public static final String AUTH_TOKEN = "authToken";
-        public static final String PROXY_HOST = "proxyHost";
-        public static final String PROXY_PORT = "proxyPort";
-        public static final String PROXY_USERNAME = "proxyUsername";
-        public static final String PROXY_PASSWORD = "proxyPassword";
-        public static final String REQUEST_BODY = "requestBody";
-        public static final String EXECUTION_TIMEOUT = "executionTimeout";
-        public static final String POLLING_INTERVAL = "pollingInterval";
-        public static final String ASYNC = "async";
-        public static final String ORGANIZATION_NAME = "organizationName";
+    public static final String AUTH_TOKEN = "authToken";
+    public static final String ORGANIZATION_NAME = "organizationName";
+    public static final String PROXY_HOST = "proxyHost";
+    public static final String PROXY_PORT = "proxyPort";
+    public static final String PROXY_USERNAME = "proxyUsername";
+    public static final String PROXY_PASSWORD = "proxyPassword";
+    public static final String REQUEST_BODY = "body";
+    public static final String TERRAFORM_VERSION ="terraformVersion";
+    public static final String EXECUTION_TIMEOUT = "executionTimeout";
+    public static final String POLLING_INTERVAL = "pollingInterval";
+    public static final String ASYNC = "async";
 
     }
 
@@ -41,6 +42,20 @@ public class Inputs extends InputNames {
     public static class ApplyRunInputs {
         public static final String RUN_ID = "runId";
         public static final String RUN_COMMENT = "runComment";
+    }
+
+   public static class CreateWorkspaceInputs {
+        public static final String WORKSPACE_NAME = "workspaceName";
+        public static final String WORKSPACE_DESCRIPTION = "workspaceDescription";
+        public static final String AUTO_APPLY = "autoApply";
+        public static final String FILE_TRIGGERS_ENABLED = "fileTriggersEnabled";
+        public static final String WORKING_DIRECTORY = "workingDirectory";
+        public static final String TRIGGER_PREFIXES = "triggerPrefixes";
+        public static final String QUEUE_ALL_RUNS = "queueAllRuns";
+        public static final String SPECULATIVE_ENABLED = "speculativeEnabled";
+        public static final String INGRESS_SUBMODULES = "ingressSubmodules";
+        public static final String VCS_REPO_ID = "vcsRepoId";
+        public static final String VCS_BRANCH_NAME = "vcsBranchName";
     }
 
     public static class CreateVariableInputs {
@@ -52,7 +67,6 @@ public class Inputs extends InputNames {
     }
 
     public static class CreateRunInputs {
-
         public static final String RUN_MESSAGE = "runMessage";
         public static final String IS_DESTROY = "isDestroy";
     }

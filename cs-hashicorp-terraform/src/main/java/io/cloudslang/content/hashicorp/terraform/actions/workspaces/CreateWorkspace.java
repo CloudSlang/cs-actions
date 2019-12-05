@@ -13,68 +13,80 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.hashicorp.terraform.actions.runs;
+package io.cloudslang.content.hashicorp.terraform.actions.workspaces;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.jayway.jsonpath.JsonPath;
-import io.cloudslang.content.constants.OutputNames;
-import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.createRunClient;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
+import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.createWorkspace;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_OPERATION_NAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_ID_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.CREATE_WORKSPACE_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_ID_JSON_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateRun.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.OAUTH_TOKEN_ID_DESCRIPTION;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateRunInputs.IS_DESTROY;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateRunInputs.RUN_MESSAGE;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCreateRunInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateRunOutputs.RUN_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCreateWorkspaceInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.ListOAuthClientOutputs.OAUTH_TOKEN_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class CreateRun {
+public class CreateWorkspace {
 
-    @Action(name = CREATE_RUN_OPERATION_NAME,
-            description = CREATE_RUN_DESC,
+    @Action(name = CREATE_WORKSPACE_OPERATION_NAME,
+            description = CREATE_WORKSPACE_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = CREATE_WORKSPACE_RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = CREATE_WORKSPACE_EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = RUN_ID, description = RUN_ID_DESC)
+                    @Output(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC)
             },
             responses = {
-                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
-                                       @Param(value = RUN_MESSAGE, description = RUN_MESSAGE_DESC) String runMessage,
-                                       @Param(value = IS_DESTROY, description = IS_DESTROY_DESC) String isDestroy,
-                                       @Param(value = REQUEST_BODY, description = CREATE_RUN_REQUEST_BODY_DESC) String requestBody,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, encrypted = true, required = true, description = AUTH_TOKEN_DESC) String authToken,
+                                       @Param(value = ORGANIZATION_NAME, required = true, description = ORGANIZATION_NAME_DESC) String organizationName,
+                                       @Param(value = WORKSPACE_NAME, description = WORKSPACE_NAME_DESC) String workspaceName,
+                                       @Param(value = WORKSPACE_DESCRIPTION, description = WORKSPACE_DESCRIPTION_DESC) String workspaceDescription,
+                                       @Param(value = AUTO_APPLY, description = AUTO_APPLY_DESC) String autoApply,
+                                       @Param(value = FILE_TRIGGERS_ENABLED, description = FILE_TRIGGERS_ENABLED_DESC) String fileTriggersEnabled,
+                                       @Param(value = WORKING_DIRECTORY, description = WORKING_DIRECTORY_DESC) String workingDirectory,
+                                       @Param(value = TRIGGER_PREFIXES, description = TRIGGER_PREFIXES_DESC) String triggerPrefixes,
+                                       @Param(value = QUEUE_ALL_RUNS, description = QUEUE_ALL_RUNS_DESC) String queueAllRuns,
+                                       @Param(value = SPECULATIVE_ENABLED, description = SPECULATIVE_ENABLED_DESC) String speculativeEnabled,
+                                       @Param(value = INGRESS_SUBMODULES, description = INGRESS_SUBMODULES_DESC) String ingressSubmodules,
+                                       @Param(value = VCS_REPO_ID, description = VCS_REPO_ID_DESC) String vcsRepoId,
+                                       @Param(value = VCS_BRANCH_NAME, description = VCS_BRANCH_NAME_DESC) String vcsBranchName,
+                                       @Param(value = OAUTH_TOKEN_ID, description = OAUTH_TOKEN_ID_DESCRIPTION) String oauthTokenId,
+                                       @Param(value = TERRAFORM_VERSION, description = TERAAFORM_VERSION_DESC) String terraformVersion,
+                                       @Param(value = REQUEST_BODY, description = WORKSPACE_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -86,16 +98,28 @@ public class CreateRun {
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
-                                       @Param(value = ASYNC, description = ASYNC_DESC) String async,
                                        @Param(value = POLLING_INTERVAL, description = POLLING_INTERVAL_DESC) String pollingInterval,
+                                       @Param(value = ASYNC, description = ASYNC_DESC) String async,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
-
-        workspaceId = defaultIfEmpty(workspaceId, EMPTY);
-        runMessage = defaultIfEmpty(runMessage, EMPTY);
+        authToken = defaultIfEmpty(authToken, EMPTY);
+        organizationName = defaultIfEmpty(organizationName, EMPTY);
+        workspaceName = defaultIfEmpty(workspaceName, EMPTY);
+        workspaceDescription = defaultIfEmpty(workspaceDescription, EMPTY);
+        autoApply = defaultIfEmpty(autoApply, BOOLEAN_FALSE);
+        fileTriggersEnabled = defaultIfEmpty(fileTriggersEnabled, BOOLEAN_TRUE);
+        workingDirectory = defaultIfEmpty(workingDirectory, EMPTY);
+        triggerPrefixes = defaultIfEmpty(triggerPrefixes, EMPTY);
+        queueAllRuns = defaultIfEmpty(queueAllRuns, BOOLEAN_FALSE);
+        speculativeEnabled = defaultIfEmpty(speculativeEnabled, BOOLEAN_TRUE);
+        ingressSubmodules = defaultIfEmpty(ingressSubmodules, BOOLEAN_FALSE);
+        vcsRepoId = defaultIfEmpty(vcsRepoId, EMPTY);
+        vcsBranchName = defaultIfEmpty(vcsBranchName, EMPTY);
+        oauthTokenId = defaultIfEmpty(oauthTokenId, EMPTY);
         requestBody = defaultIfEmpty(requestBody, EMPTY);
+        terraformVersion = defaultIfEmpty(terraformVersion, TERRAFORM_VERSION_CONSTANT);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -107,8 +131,8 @@ public class CreateRun {
         connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
         executionTimeout = defaultIfEmpty(executionTimeout, EXEC_TIMEOUT);
-        async = defaultString(async, BOOLEAN_FALSE);
-        pollingInterval = defaultString(pollingInterval, POLLING_INTERVAL_DEFAULT);
+        pollingInterval = defaultIfEmpty(pollingInterval, POLLING_INTERVAL_DEFAULT);
+        async = defaultIfEmpty(async, BOOLEAN_FALSE);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
@@ -120,18 +144,29 @@ public class CreateRun {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
-        final List<String> exceptionMessages = verifyCreateRunInputs(workspaceId, requestBody);
+        final List<String> exceptionMessages = verifyCreateWorkspaceInputs(workspaceName, vcsRepoId, oauthTokenId, requestBody);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
         try {
-            final Map<String, String> result = createRunClient(CreateRunInputs.builder()
-                    .workspaceId(workspaceId)
-                    .runMessage(runMessage)
-                    .isDestroy(isDestroy)
+            final Map<String, String> result = createWorkspace(CreateWorkspaceInputs.builder()
+                    .workspaceName(workspaceName)
+                    .workspaceDescription(workspaceDescription)
+                    .autoApply(autoApply)
+                    .fileTriggersEnabled(fileTriggersEnabled)
+                    .workingDirectory(workingDirectory)
+                    .triggerPrefixes(triggerPrefixes)
+                    .queueAllRuns(queueAllRuns)
+                    .speculativeEnabled(speculativeEnabled)
+                    .ingressSubmodules(ingressSubmodules)
+                    .vcsRepoId(vcsRepoId)
+                    .vcsBranchName(vcsBranchName)
+                    .oauthTokenId(oauthTokenId)
                     .commonInputs(TerraformCommonInputs.builder()
+                            .organizationName(organizationName)
                             .authToken(authToken)
+                            .terraformVersion(terraformVersion)
                             .requestBody(requestBody)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
@@ -144,8 +179,8 @@ public class CreateRun {
                             .connectTimeout(connectTimeout)
                             .socketTimeout(socketTimeout)
                             .executionTimeout(executionTimeout)
-                            .async(async)
                             .pollingInterval(pollingInterval)
+                            .async(async)
                             .keepAlive(keepAlive)
                             .connectionsMaxPerRoot(connectionsMaxPerRoute)
                             .connectionsMaxTotal(connectionsMaxTotal)
@@ -153,22 +188,17 @@ public class CreateRun {
                             .build())
                     .build());
 
-
             final String returnMessage = result.get(RETURN_RESULT);
-
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
-
             if (statusCode >= 200 && statusCode < 300) {
-                final List<String> runEventIdList = JsonPath.read(returnMessage, RUN_ID_PATH);
-                if (!runEventIdList.isEmpty()) {
-                    final String runEventIdListAsString = join(runEventIdList.toArray(), DELIMITER);
-                    results.put(RUN_ID, runEventIdListAsString);
+                final String workspaceId = JsonPath.read(returnMessage, WORKSPACE_ID_JSON_PATH);
+                if (!workspaceId.isEmpty()) {
+                    results.put(WORKSPACE_ID, workspaceId);
                 } else {
-                    results.put(RUN_ID, EMPTY);
+                    results.put(WORKSPACE_ID, EMPTY);
                 }
             }
-
             return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);

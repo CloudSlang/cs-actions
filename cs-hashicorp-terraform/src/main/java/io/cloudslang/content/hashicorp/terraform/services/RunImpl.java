@@ -17,11 +17,11 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.runs.ApplyRunRequestBody;
 import io.cloudslang.content.hashicorp.terraform.services.models.runs.CreateRunBody;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.http.client.utils.URIBuilder;
@@ -30,19 +30,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.APPLY_RUN_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.RUN_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBuilder;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-
-import io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs;
-
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.APPLY_RUN_PATH;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.RUN_PATH;
 
 public class RunImpl {
     @NotNull
@@ -143,8 +140,6 @@ public class RunImpl {
         createBody.setData(createRundata);
 
         requestBody = mapper.writeValueAsString(createBody);
-
-        System.out.println(requestBody);
 
         return requestBody;
     }

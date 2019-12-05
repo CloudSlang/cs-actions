@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-
 package io.cloudslang.content.hashicorp.terraform.services;
 
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
