@@ -70,7 +70,6 @@ public class HttpUtils {
         return uriBuilder;
     }
 
-
     @NotNull
     public static String getAuthHeaders(@NotNull final String authToken) {
         final StringBuilder headerBuilder = new StringBuilder();

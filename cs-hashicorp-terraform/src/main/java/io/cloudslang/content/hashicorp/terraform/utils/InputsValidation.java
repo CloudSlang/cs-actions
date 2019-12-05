@@ -28,6 +28,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorks
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.WORKSPACE_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.ListOAuthClientOutputs.OAUTH_TOKEN_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.ORGANIZATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
@@ -57,6 +58,22 @@ public final class InputsValidation {
         return exceptionMessages;
     }
 
+    @NotNull
+    public static List<String> verifyCreateVariableInputs(@Nullable final String workspaceId, @Nullable final String variableName, @Nullable final String variableValue, @Nullable final String variableCategory,
+                                                          @Nullable final String requestBody) {
+
+
+        final List<String> exceptionMessages = new ArrayList<>();
+        if (requestBody.isEmpty()) {
+            addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
+            addVerifyString(exceptionMessages, variableName, VARIABLE_NAME);
+            addVerifyString(exceptionMessages, variableValue, VARIABLE_VALUE);
+            addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
+        } else {
+            addVerifyRequestBody(exceptionMessages, requestBody);
+        }
+       return exceptionMessages;
+    }
 
     @NotNull
     public static List<String> verifyCreateRunInputs(@Nullable final String workspaceId,
@@ -75,17 +92,17 @@ public final class InputsValidation {
     public static List<String> verifyCreateWorkspaceInputs(@Nullable final String workspaceName, @Nullable final String vcsRepoId, @Nullable final String oauthTokenId,
                                                            @Nullable final String requestBody) {
 
+    @NotNull
+    public static List<String> verifyApplyRunRequestBody(@Nullable final String requestBody) {
+
+
         final List<String> exceptionMessages = new ArrayList<>();
-        if (requestBody.isEmpty()) {
-            addVerifyString(exceptionMessages, workspaceName, WORKSPACE_NAME);
-            addVerifyString(exceptionMessages, vcsRepoId, VCS_REPO_ID);
-            addVerifyString(exceptionMessages, oauthTokenId, OAUTH_TOKEN_ID);
-        } else {
+        if (!requestBody.isEmpty()) {
             addVerifyRequestBody(exceptionMessages, requestBody);
         }
+
         return exceptionMessages;
     }
-
 
     @NotNull
     private static List<String> addVerifyUserInputs(@NotNull List<String> exceptions, @Nullable final String organizationName) {
@@ -113,7 +130,7 @@ public final class InputsValidation {
         }
         return exceptions;
     }
-  
+
     @NotNull
     private static List<String> addVerifyString(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
@@ -134,10 +151,11 @@ public final class InputsValidation {
 
     @NotNull
     private static List<String> addVerifyRequestBody(@NotNull List<String> exceptions, @Nullable final String input) {
-        try{
-            ObjectMapper mapper=new ObjectMapper();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
             mapper.readTree(input);
-        }catch (Exception exception){
+        } catch (Exception exception) {
+
             exceptions.add(exception.getMessage());
         }
         return exceptions;

@@ -60,7 +60,7 @@ public class Descriptions {
                 "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
                 "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
                 "default value will be used. You should not use this for method=HEAD or OPTIONS." +
-                "Default: UTF-8";
+                "Default value: UTF-8";
         public static final String AUTH_TOKEN_DESC = "The authorization token for terraform";
         public static final String ORGANIZATION_NAME_DESC = "The name of the organization";
         public static final String TERAAFORM_VERSION_DESC = "The version of Terraform to use for this workspace. Upon creating a workspace," +
@@ -73,6 +73,7 @@ public class Descriptions {
         public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
                 "Default: 'false'";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
+
     }
 
 
@@ -85,6 +86,7 @@ public class Descriptions {
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String OAUTH_TOKEN_ID_DESCRIPTION="The VCS Connection (OAuth Connection + Token) to use. " +
                 "This ID can be obtained from the oauth-tokens endpoint.";
+        public static final String LIST_OAUTH_CLIENT_DESC = "List An OAuth Client Id";
     }
 
     public static class CreateWorkspace {
@@ -114,7 +116,7 @@ public class Descriptions {
         public static final String VCS_REPO_ID_DESC = "A reference to your VCS repository in the format :org/:repo where :org and :repo refer to the organization and " +
                 "repository in your VCS provider.";
         public static final String WORKSPACE_REQUEST_BODY_DESC = "The request body of the workspace.";
-        public static final String WORKSPACE_ID_DESC ="The Id of created workspace";
+        public static final String WORKSPACE_ID_DESC = "The Id of created workspace";
         public static final String CREATE_WORKSPACE_RETURN_RESULT_DESC = "The response of the workspace";
         public static final String CREATE_WORKSPACE_EXCEPTION_DESC = "An error message in case there was an error while creating the workspace.";
         public static final String FAILURE_DESC = "There was an error while creating workspace.";
@@ -122,6 +124,30 @@ public class Descriptions {
 
     }
 
+
+    public static class ApplyRun {
+        public static final String APPLY_RUN_DESC = "Applies a run that is paused waiting for confirmation after a plan. This includes runs in the \"needs confirmation\" and \"policy checked\" states. This action is only required for runs that can't be auto-applied.";
+        public static final String RUN_COMMENT_DESC = "Specifies the comment to be associated with this run";
+        public static final String RUN_DESC = "Specifies the run";
+        public static final String APPLY_RUN_RETURN_RESULT_DESC = "The response of the apply run.";
+        public static final String APPLY_RUN_EXCEPTION_DESC = "An error message in case there was an error while apply run.";
+        public static final String APPLY_RUN_REQUEST_BODY_DESC = "Request Body for the apply run.";
+
+    }
+
+    public static class CreateVariable {
+        public static final String CREATE_VARIABLE_DESC = "Creates a variable in workspace.";
+        public static final String VARIABLE_NAME_DESC = "The name of the variable.";
+        public static final String VARIABLE_VALUE_DESC = "The value of the variable.";
+        public static final String VARIABLE_CATEGORY_DESC = "Whether this is a Terraform or environment variable. Valid values are \"terraform\" or \"env\".";
+        public static final String HCL_DESC = "Whether to evaluate the value of the variable as a string of HCL code. Has no effect for environment variables.";
+        public static final String SENSITIVE_DESC = "Whether the value is sensitive. If true then the variable is written once and not visible thereafter.";
+        public static final String VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Variable.";
+        public static final String VARIABLE_ID_DESC = "The Id of created variable.";
+        public static final String CREATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while creating the variable.";
+        public static final String CREATE_VARIABLE_RETURN_RESULT_DESC = "The response of the apply run.";
+    }
+  
     public static class CreateRun{
         public static final String CREATE_RUN_DESC = "Creates a run in workspace.";
         public static final String CREATE_RUN_REQUEST_BODY_DESC = "The request body of the crate run.";
