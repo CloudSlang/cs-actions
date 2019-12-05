@@ -23,11 +23,10 @@ public class Constants {
         public static final String DEFAULT_PROXY_PORT = "8080";
         public static final String BOOLEAN_FALSE = "false";
         public static final String BOOLEAN_TRUE = "true";
+        public static final boolean TRUE = true;
         public static final String STRICT = "strict";
         public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
         public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid proxy details.";
-        public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
-        public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
         public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
         public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
         public static final String EXCEPTION_EMPTY_FILE_PATH_AND_CONTENT_BYTES = "The filePath or both contentName and contentBytes inputs are required.";
@@ -39,16 +38,17 @@ public class Constants {
         public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
         public static final String CHANGEIT = "changeit";
         public static final String ZERO = "0";
-        public static final String CONNECT_TIMEOUT_CONST="10000";
+        public static final String CONNECT_TIMEOUT_CONST = "10000";
+        public static final String POLLING_INTERVAL_DEFAULT = "1000";
+        public static final String EXEC_TIMEOUT = "600000";
         public static final String UTF8 = "UTF-8";
         public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
         public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
         public static final String AUTHORIZATION = "Authorization:";
         public static final String BEARER = "Bearer ";
         public static final String TERRAFORM_HOST = "app.terraform.io";
-        public static final String TERRAFORM_VERSION = "0.12.1";
+        public static final String TERRAFORM_VERSION_CONSTANT = "0.12.1";
         public static final String ORGANIZATION_PATH = "/organizations/";
-        public static final String ORGANIZATION_NAME = "organizationName";
         public static final String PATH_SEPARATOR = "/";
         public static final String AND = "&";
         public static final String QUERY = "?";
@@ -72,14 +72,8 @@ public class Constants {
     public static class CreateWorkspace {
         public static final String CREATE_WORKSPACE_OPERATION_NAME = "Create Workspace";
         public static final String WORKSPACE_PATH = "/workspaces";
-        public static final String WORKSPACE_ID_JSON_PATH = "$.data[*].id";
+        public static final String WORKSPACE_ID_JSON_PATH = "$.data.id";
         public static final String WORKSPACE_TYPE = "workspaces";
-    }
-
-    public static class GetWorkspaceDetails {
-        public static final String GET_WORKSPACE_DETAILS_OPERATION_NAME = "Get Workspace Details";
-        public static final String GET_WORKSPACE_PATH = "/workspaces/";
-        public static final String WORKSPACE_ID_JSON_PATH = "data.id";
     }
 
     public static class ListOAuthClientConstants {
@@ -88,11 +82,33 @@ public class Constants {
         public static final String OAUTH_TOKEN_LIST_JSON_PATH = "$.data[*].relationships.oauth-tokens.data[*].id";
 
     }
-    public static class CreateRunConstants{
-        public static  final String CREATE_RUN_PATH="/runs";
-        public static  final String RUN_TYPE="runs";
-        public static final String RUN_ID = "$.data[*].relationships.run-events.data[*].id";
 
+    public static class CreateRunConstants {
+        public static final String CREATE_RUN_OPERATION_NAME = "Create Run";
+        public static final String CREATE_RUN_PATH = "/runs";
+        public static final String RUN_TYPE = "runs";
+        public static final String RUN_ID_PATH = "$.data[*].relationships.run-events.data[*].id";
+
+    }
+
+    public static class ApplyRunConstants {
+        public static final String APPLY_RUN_OPERATION_NAME = "Apply Run";
+        public static final String RUN_PATH = "/runs/";
+        public static final String APPLY_RUN_PATH = "/actions/apply";
+    }
+
+    public static class CreateVariableConstants {
+        public static final String CREATE_VARIABLE_OPERATION_NAME = "Create Variable";
+        public static final String VARIABLE_PATH = "/vars";
+        public static final String VARIABLE_TYPE = "vars";
+        public static final String VARIABLE_ID_JSON_PATH = "$.data.id";
+
+    }
+
+    public static class GetWorkspaceDetails {
+        public static final String GET_WORKSPACE_DETAILS_OPERATION_NAME = "Get Workspace Details";
+        public static final String GET_WORKSPACE_PATH = "/workspaces/";
+        public static final String WORKSPACE_ID_JSON_PATH = "data.id";
     }
 
     public static class GetRunDetailsConstants{
