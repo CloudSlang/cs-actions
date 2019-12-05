@@ -16,18 +16,40 @@
 package io.cloudslang.content.hashicorp.terraform.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.utils.StringUtilities;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.Authenticator;
+import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
+import java.net.Proxy;
 import java.util.Map;
 
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CommonOutputs.DOCUMENT;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.OAUTH_CLIENT_PATH;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static java.net.Proxy.Type.HTTP;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class HttpUtils {
+    @org.jetbrains.annotations.NotNull
+    public static Proxy getProxy(@org.jetbrains.annotations.NotNull final String proxyHost, final int proxyPort, @org.jetbrains.annotations.NotNull final String proxyUser, @org.jetbrains.annotations.NotNull final String proxyPassword) {
+        if (StringUtilities.isBlank(proxyHost)) {
+            return Proxy.NO_PROXY;
+        }
+        if (StringUtilities.isNotEmpty(proxyUser)) {
+            Authenticator.setDefault(new Authenticator() {
+                @Override
+                public PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(proxyUser, proxyPassword.toCharArray());
+                }
+            });
+        }
+        return new Proxy(HTTP, InetSocketAddress.createUnresolved(proxyHost, proxyPort));
+    }
 
     public static void setProxy(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs,
                                 @org.jetbrains.annotations.NotNull final String proxyHost,

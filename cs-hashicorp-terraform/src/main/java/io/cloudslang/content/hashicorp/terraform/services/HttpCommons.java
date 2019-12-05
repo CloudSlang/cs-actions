@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.hashicorp.terraform.services;
 
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
@@ -22,6 +23,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
 
 public class HttpCommons {
 
+    @NotNull
     static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
                                     @NotNull final TerraformCommonInputs commonInputs) {
         setProxy(httpClientInputs,

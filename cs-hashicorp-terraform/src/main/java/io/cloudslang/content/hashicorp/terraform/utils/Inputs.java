@@ -12,11 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.hashicorp.terraform.utils;
 
 import io.cloudslang.content.constants.InputNames;
+import org.jetbrains.annotations.NotNull;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class Inputs extends InputNames {
+
+    public static class CommonInputs {
     public static final String AUTH_TOKEN = "authToken";
     public static final String ORGANIZATION_NAME = "organizationName";
     public static final String PROXY_HOST = "proxyHost";
@@ -28,10 +34,16 @@ public class Inputs extends InputNames {
     public static final String EXECUTION_TIMEOUT = "executionTimeout";
     public static final String POLLING_INTERVAL = "pollingInterval";
     public static final String ASYNC = "async";
-    public static final String PAGE_NUMBER = "page[number]";
-    public static final String PAGE_SIZE = "page[size]";
 
-    public static class CreateWorkspaceInputs {
+    }
+
+    public static class CreateRunInputs {
+
+        public static final String RUN_MESSAGE = "runMessage";
+        public static final String IS_DESTROY = "isDestroy";
+    }
+
+   public static class CreateWorkspaceInputs {
         public static final String WORKSPACE_NAME = "workspaceName";
         public static final String WORKSPACE_DESCRIPTION = "workspaceDescription";
         public static final String AUTO_APPLY = "autoApply";

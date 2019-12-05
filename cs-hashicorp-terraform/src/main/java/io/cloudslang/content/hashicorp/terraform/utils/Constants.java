@@ -29,6 +29,9 @@ public class Constants {
         public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid proxy details.";
         public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
         public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
+        public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
+        public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
+        public static final String EXCEPTION_EMPTY_FILE_PATH_AND_CONTENT_BYTES = "The filePath or both contentName and contentBytes inputs are required.";
         public static final String ANONYMOUS = "anonymous";
         public static final String GET = "GET";
         public static final String POST = "POST";
@@ -82,9 +85,10 @@ public class Constants {
 
     }
     public static class CreateRunConstants{
+        public static final String CREATE_RUN_OPERATION_NAME = "Create Run";
         public static  final String CREATE_RUN_PATH="/runs";
         public static  final String RUN_TYPE="runs";
-        public static final String RUN_ID = "$.data[*].relationships.run-events.data[*].id";
+        public static final String RUN_ID_PATH = "$.data[*].relationships.run-events.data[*].id";
 
     }
 }

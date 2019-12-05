@@ -123,8 +123,11 @@ public class Descriptions {
     }
 
     public static class CreateRun{
-        public static  final String RUN_MESSAGE = "Specifies the message to be associated with this run";
-        public static  final String IS_DESTROY = "Specifies if this plan is a destroy plan, which will destroy all provisioned resources.";
+        public static final String CREATE_RUN_DESC = "Creates a run in workspace.";
+        public static final String CREATE_RUN_REQUEST_BODY_DESC = "The request body of the crate run.";
+        public static  final String RUN_MESSAGE_DESC = "Specifies the message to be associated with this run";
+        public static  final String IS_DESTROY_DESC = "Specifies if this plan is a destroy plan, which will destroy all provisioned resources.";
+        public static final String RUN_ID_DESC="Id of the run.";
 
 
     }
