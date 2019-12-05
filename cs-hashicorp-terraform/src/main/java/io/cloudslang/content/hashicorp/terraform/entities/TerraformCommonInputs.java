@@ -1,6 +1,5 @@
 package io.cloudslang.content.hashicorp.terraform.entities;
 
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -28,16 +27,17 @@ public class TerraformCommonInputs {
     private final String connectionsMaxPerRoot;
     private final String connectionsMaxTotal;
 
-    @java.beans.ConstructorProperties({"authToken", "organizationName","requestBody","terraformVersion", "proxyHost", "proxyPort", "proxyUsername",
+
+    @java.beans.ConstructorProperties({"authToken", "organizationName", "requestBody", "terraformVersion", "proxyHost", "proxyPort", "proxyUsername",
             "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "connectTimeout",
-            "socketTimeout","executionTimeout","pollingInterval","async", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal"})
-    private TerraformCommonInputs(String authToken, String organizationName,String requestBody, String terraformVersion, String proxyHost, String proxyPort,
-                   String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier,
-                   String trustKeystore, String trustPassword, String connectTimeout, String socketTimeout,String executionTimeout, String pollingInterval,
-                   String async, String keepAlive, String responseCharacterSet, String connectionsMaxPerRoot, String connectionsMaxTotal) {
+            "socketTimeout", "executionTimeout", "pollingInterval", "async", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal"})
+    private TerraformCommonInputs(String authToken, String organizationName, String requestBody, String terraformVersion, String proxyHost, String proxyPort,
+                                  String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier,
+                                  String trustKeystore, String trustPassword, String connectTimeout, String socketTimeout, String executionTimeout, String pollingInterval,
+                                  String async, String keepAlive, String responseCharacterSet, String connectionsMaxPerRoot, String connectionsMaxTotal) {
         this.authToken = authToken;
         this.organizationName = organizationName;
-        this.requestBody=requestBody;
+        this.requestBody = requestBody;
         this.terraformVersion = terraformVersion;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
@@ -49,7 +49,7 @@ public class TerraformCommonInputs {
         this.trustPassword = trustPassword;
         this.connectTimeout = connectTimeout;
         this.socketTimeout = socketTimeout;
-        this.executionTimeout =executionTimeout;
+        this.executionTimeout = executionTimeout;
         this.pollingInterval = pollingInterval;
         this.async = async;
         this.keepAlive = keepAlive;
@@ -80,6 +80,7 @@ public class TerraformCommonInputs {
 
     @NotNull
     public String getTerraformVersion() { return terraformVersion; }
+
 
     @NotNull
     public String getAuthToken() {
@@ -320,9 +321,9 @@ public class TerraformCommonInputs {
         }
 
         public TerraformCommonInputs build() {
-            return new TerraformCommonInputs(authToken, organizationName,requestBody, terraformVersion, proxyHost, proxyPort, proxyUsername, proxyPassword,
+            return new TerraformCommonInputs(authToken, organizationName, requestBody, terraformVersion, proxyHost, proxyPort, proxyUsername, proxyPassword,
                     trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, connectTimeout,
-                    socketTimeout,executionTimeout,pollingInterval,async, keepAlive, responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal);
+                    socketTimeout, executionTimeout, pollingInterval, async, keepAlive, responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal);
         }
     }
 

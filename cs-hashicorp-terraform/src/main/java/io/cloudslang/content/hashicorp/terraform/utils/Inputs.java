@@ -36,12 +36,25 @@ public class Inputs extends InputNames {
 
     }
 
+
+
+    public static class ApplyRunInputs {
+        public static final String RUN_ID = "runId";
+        public static final String RUN_COMMENT = "runComment";
+    }
+
+    public static class CreateVariableInputs {
+        public static final String VARIABLE_NAME = "variableName";
+        public static final String VARIABLE_VALUE = "variableValue";
+        public static final String VARIABLE_CATEGORY = "variableCategory";
+        public static final String SENSITIVE = "sensitive";
+        public static final String HCL = "hcl";
+    }
+
     public static class CreateRunInputs {
 
         public static final String RUN_MESSAGE = "runMessage";
         public static final String IS_DESTROY = "isDestroy";
     }
-
-
-
+  
 }
