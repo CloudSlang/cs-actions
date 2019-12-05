@@ -18,6 +18,7 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.GetWorkspaceDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.workspace.CreateWorkspaceRequestBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
@@ -34,6 +35,7 @@ import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.set
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_TYPE;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetWorkspaceDetails.GET_WORKSPACE_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBuilder;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -60,9 +62,29 @@ public class WorkspaceImpl {
     }
 
     @NotNull
+    public static Map<String, String> getWorkspaceDetails(@NotNull final GetWorkspaceDetailsInputs getWorkspaceDetailsInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformCommonInputs commonInputs = getWorkspaceDetailsInputs.getCommonInputs();
+        httpClientInputs.setUrl(getWorkspaceDetailsUrl(getWorkspaceDetailsInputs.getCommonInputs().getOrganizationName(),getWorkspaceDetailsInputs.getWorkspaceName()));
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
     private static String createWorkspaceUrl(@NotNull final String organizationName) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
         uriBuilder.setPath(getWorkspacePath(organizationName));
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    private static String getWorkspaceDetailsUrl(@NotNull final String organizationName, @NotNull final String workspaceName) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder();
+        uriBuilder.setPath(getWorkspaceDetailsPath(organizationName,workspaceName));
         return uriBuilder.build().toURL().toString();
     }
 
@@ -74,6 +96,18 @@ public class WorkspaceImpl {
                 .append(ORGANIZATION_PATH)
                 .append(organizationName)
                 .append(WORKSPACE_PATH);
+        return pathString.toString();
+    }
+
+    @NotNull
+    public static String getWorkspaceDetailsPath(@NotNull final String organizationName,  @NotNull final String workspaceName) {
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(API_VERSION)
+                .append(ORGANIZATION_PATH)
+                .append(organizationName)
+                .append(GET_WORKSPACE_PATH)
+                .append(workspaceName);
         return pathString.toString();
     }
 
