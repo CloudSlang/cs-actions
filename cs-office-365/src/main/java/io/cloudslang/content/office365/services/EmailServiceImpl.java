@@ -45,7 +45,6 @@ import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutput
 import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.*;
 import static io.cloudslang.content.office365.utils.PopulateAttachmentBody.populateAddAttachmentBody;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class EmailServiceImpl {
 
@@ -316,22 +315,26 @@ public class EmailServiceImpl {
         }
     }
 
-    public static void addAditionalOutputs(Map<String, String> results, Map<String, String> result, String returnMessage, String filePath) throws IOException {
+    public static String addAditionalOutputs(Map<String, String> results, Map<String, String> result, String returnMessage, String filePath) throws IOException {
         final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
-        if (statusCode >= 200 && statusCode < 300) {
-            final JsonParser parser = new JsonParser();
-            final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
-            addOutput(results, responseJson, NAME, CONTENT_NAME);
-            addOutput(results, responseJson, CONTENT_TYPE, CONTENT_TYPE);
-            addOutput(results, responseJson, CONTENT_BYTES, CONTENT_BYTES);
-            addOutput(results, responseJson, SIZE, CONTENT_SIZE);
+        try {
+            if (statusCode >= 200 && statusCode < 300) {
+                final JsonParser parser = new JsonParser();
+                final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
+                addOutput(results, responseJson, NAME, CONTENT_NAME);
+                addOutput(results, responseJson, CONTENT_TYPE, CONTENT_TYPE);
+                addOutput(results, responseJson, CONTENT_BYTES, CONTENT_BYTES);
+                addOutput(results, responseJson, SIZE, CONTENT_SIZE);
 
-            if (!isEmpty(filePath))
-                downloadAttachment(filePath, responseJson.get(CONTENT_BYTES).getAsString(), responseJson.get(NAME).getAsString());
+                if (!isEmpty(filePath))
+                    downloadAttachment(filePath, responseJson.get(CONTENT_BYTES).getAsString(), responseJson.get(NAME).getAsString());
+            }
+        } catch (NullPointerException | IOException e) {
+            return String.valueOf(e);
         }
+        return null;
     }
-
     public static void addOutput(Map<String, String> results, JsonObject responseJson, String key, String keyToAdd) {
         if (responseJson.has(key))
             results.put(keyToAdd, responseJson.get(key).getAsString());
@@ -340,10 +343,10 @@ public class EmailServiceImpl {
     }
 
     @NotNull
-    public static Map<String, String> ListAttachment(@NotNull final ListAttachmentsInputs getListAttachmentInputs) throws Exception {
+    public static Map<String, String> listAttachment(@NotNull final ListAttachmentsInputs getListAttachmentInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = getListAttachmentInputs.getCommonInputs();
-        httpClientInputs.setUrl(ListAttachmentsUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(), getListAttachmentInputs.getMessageId()));
+        httpClientInputs.setUrl(listAttachmentsUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(), getListAttachmentInputs.getMessageId()));
 
         HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
@@ -360,7 +363,7 @@ public class EmailServiceImpl {
     }
 
     @NotNull
-    private static String ListAttachmentsUrl(String userPrincipalName, String userId, String messageId) throws Exception {
+    private static String listAttachmentsUrl(String userPrincipalName, String userId, String messageId) throws Exception {
         String finalUrl;
         if (!StringUtils.isEmpty(userPrincipalName))
             finalUrl = GET_USER_REQUEST_URL + userPrincipalName;

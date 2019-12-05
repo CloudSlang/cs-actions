@@ -320,6 +320,7 @@
         <module>cs-utilities</module>
         <module>cs-vmware</module>
         <module>cs-xml</module>
+        <module>cs-hashicorp-terraform</module>
     </modules>
 
 </project>

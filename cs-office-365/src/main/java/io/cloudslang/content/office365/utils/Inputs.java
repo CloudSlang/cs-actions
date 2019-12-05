@@ -42,6 +42,8 @@ public final class Inputs extends InputNames {
 
     public static class GetEmailInputs {
         public static final String EMAIL_ADDRESS = "emailAddress";
+        public static final String COUNT = "count";
+        public static final String QUERY_INPUT = "query";
     }
 
     public static class EmailInputs {
