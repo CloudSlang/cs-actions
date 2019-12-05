@@ -58,7 +58,7 @@ public class GetWorkspaceDetailsInputs {
             return this;
         }
 
-               public GetWorkspaceDetailsInputs.GetWorkspaceDetailsInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
+        public GetWorkspaceDetailsInputs.GetWorkspaceDetailsInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }

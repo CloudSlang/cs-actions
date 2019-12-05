@@ -23,7 +23,9 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.GetWorkspaceDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+
 import java.util.Map;
+
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
@@ -60,7 +62,7 @@ public class GetWorkspaceDetails {
                     @Output(value = RETURN_RESULT, description = GET_WORKSPACE_DETAILS_RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = GET_WORKSPACE_DETAILS_EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value=WORKSPACE_ID,description = WORKSPACE_ID_DESC),
+                    @Output(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC),
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -125,7 +127,6 @@ public class GetWorkspaceDetails {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
-            System.out.println(returnMessage);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 

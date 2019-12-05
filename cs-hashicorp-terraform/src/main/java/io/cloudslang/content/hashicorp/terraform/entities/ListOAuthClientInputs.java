@@ -17,6 +17,7 @@ package io.cloudslang.content.hashicorp.terraform.entities;
 
 
 import org.jetbrains.annotations.NotNull;
+
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.ORGANIZATION_NAME;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 

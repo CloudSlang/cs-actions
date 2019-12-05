@@ -26,7 +26,9 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.GetRunDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+
 import java.util.Map;
+
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.getRunDetails;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;

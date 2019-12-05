@@ -158,9 +158,7 @@ public class RunImpl {
         attributes.setDestroy(createRunInputs.getIsDestroy());
         attributes.setRunMessage(createRunInputs.getRunMessage());
         relationships.setWorkspace(workspace);
-
         workspace.setData(workspaceData);
-
         createRundata.setRelationships(relationships);
         createRundata.setAttributes(attributes);
         createRundata.setType(RUN_TYPE);
