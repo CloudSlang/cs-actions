@@ -35,21 +35,18 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.createRunClient;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.UTF8;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_ID_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateRun.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_NAME_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateRunInputs.IS_DESTROY;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateRunInputs.RUN_MESSAGE;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
@@ -89,7 +86,7 @@ public class CreateRun {
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
-                                       @Param(value = ASYNC, description = ASYN_DESC) String asyn,
+                                       @Param(value = ASYNC, description = ASYNC_DESC) String async,
                                        @Param(value = POLLING_INTERVAL, description = POLLING_INTERVAL_DESC) String pollingInterval,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
@@ -110,7 +107,7 @@ public class CreateRun {
         connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
         executionTimeout = defaultIfEmpty(executionTimeout, EXEC_TIMEOUT);
-        asyn = defaultString(asyn, BOOLEAN_FALSE);
+        async = defaultString(async, BOOLEAN_FALSE);
         pollingInterval = defaultString(pollingInterval, POLLING_INTERVAL_DEFAULT);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
@@ -147,7 +144,7 @@ public class CreateRun {
                             .connectTimeout(connectTimeout)
                             .socketTimeout(socketTimeout)
                             .executionTimeout(executionTimeout)
-                            .async(asyn)
+                            .async(async)
                             .pollingInterval(pollingInterval)
                             .keepAlive(keepAlive)
                             .connectionsMaxPerRoot(connectionsMaxPerRoute)

@@ -85,6 +85,7 @@ public class Descriptions {
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String OAUTH_TOKEN_ID_DESCRIPTION="The VCS Connection (OAuth Connection + Token) to use. " +
                 "This ID can be obtained from the oauth-tokens endpoint.";
+        public static final String LIST_OAUTH_CLIENT_DESC = "List An OAuth Client Id";
     }
 
     public static class CreateWorkspace {
@@ -128,8 +129,28 @@ public class Descriptions {
         public static  final String RUN_MESSAGE_DESC = "Specifies the message to be associated with this run";
         public static  final String IS_DESTROY_DESC = "Specifies if this plan is a destroy plan, which will destroy all provisioned resources.";
         public static final String RUN_ID_DESC="Id of the run.";
+    }
 
+    public static class ApplyRun {
+        public static final String APPLY_RUN_DESC = "Applies a run that is paused waiting for confirmation after a plan. This includes runs in the \"needs confirmation\" and \"policy checked\" states. This action is only required for runs that can't be auto-applied.";
+        public static final String RUN_COMMENT_DESC = "Specifies the comment to be associated with this run";
+        public static final String RUN_DESC = "Specifies the run";
+        public static final String APPLY_RUN_RETURN_RESULT_DESC = "The response of the apply run.";
+        public static final String APPLY_RUN_EXCEPTION_DESC = "An error message in case there was an error while apply run.";
+        public static final String APPLY_RUN_REQUEST_BODY_DESC = "Request Body for the apply run.";
+    }
 
+    public static class CreateVariable {
+        public static final String CREATE_VARIABLE_DESC = "Creates a variable in workspace.";
+        public static final String VARIABLE_NAME_DESC = "The name of the variable.";
+        public static final String VARIABLE_VALUE_DESC = "The value of the variable.";
+        public static final String VARIABLE_CATEGORY_DESC = "Whether this is a Terraform or environment variable. Valid values are \"terraform\" or \"env\".";
+        public static final String HCL_DESC = "Whether to evaluate the value of the variable as a string of HCL code. Has no effect for environment variables.";
+        public static final String SENSITIVE_DESC = "Whether the value is sensitive. If true then the variable is written once and not visible thereafter.";
+        public static final String VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Variable.";
+        public static final String VARIABLE_ID_DESC = "The Id of created variable.";
+        public static final String CREATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while creating the variable.";
+        public static final String CREATE_VARIABLE_RETURN_RESULT_DESC = "The response of the apply run.";
     }
 
 }
