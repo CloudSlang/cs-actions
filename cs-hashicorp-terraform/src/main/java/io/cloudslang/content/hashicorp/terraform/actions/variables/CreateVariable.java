@@ -88,7 +88,7 @@ public class CreateVariable {
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
-                                       @Param(value = ASYNC, description = ASYN_DESC) String asyn,
+                                       @Param(value = ASYNC, description = ASYN_DESC) String async,
                                        @Param(value = POLLING_INTERVAL, description = POLLING_INTERVAL_DESC) String pollingInterval,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
@@ -113,7 +113,7 @@ public class CreateVariable {
         connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
         executionTimeout = defaultIfEmpty(executionTimeout, EXEC_TIMEOUT);
-        asyn = defaultString(asyn, BOOLEAN_FALSE);
+        async = defaultString(async, BOOLEAN_FALSE);
         pollingInterval = defaultString(pollingInterval, POLLING_INTERVAL_DEFAULT);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
@@ -153,7 +153,7 @@ public class CreateVariable {
                             .connectTimeout(connectTimeout)
                             .socketTimeout(socketTimeout)
                             .executionTimeout(executionTimeout)
-                            .async(asyn)
+                            .async(async)
                             .pollingInterval(pollingInterval)
                             .keepAlive(keepAlive)
                             .connectionsMaxPerRoot(connectionsMaxPerRoute)
