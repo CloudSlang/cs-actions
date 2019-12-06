@@ -20,7 +20,6 @@ import io.cloudslang.content.utils.NumberUtilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +33,6 @@ import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public final class InputsValidation {
-
 
     @NotNull
     public static List<String> verifyCommonInputs(@Nullable final String proxyPort,
@@ -70,12 +68,12 @@ public final class InputsValidation {
         } else {
             addVerifyRequestBody(exceptionMessages, requestBody);
         }
-       return exceptionMessages;
+        return exceptionMessages;
     }
 
     @NotNull
     public static List<String> verifyCreateRunInputs(@Nullable final String workspaceId,
-                                                      @Nullable final String requestBody) {
+                                                     @Nullable final String requestBody) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         if(requestBody.isEmpty()) {
@@ -83,8 +81,20 @@ public final class InputsValidation {
         }else{
             addVerifyRequestBody(exceptionMessages,requestBody);
         }
+        return exceptionMessages;
+    }
 
-
+    @NotNull
+    public static List<String> verifyCreateWorkspaceInputs(@Nullable final String workspaceName, @Nullable final String vcsRepoId, @Nullable final String oauthTokenId,
+                                                           @Nullable final String requestBody) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        if (requestBody.isEmpty()) {
+            addVerifyString(exceptionMessages, workspaceName, WORKSPACE_ID);
+            addVerifyString(exceptionMessages, vcsRepoId, VARIABLE_NAME);
+            addVerifyString(exceptionMessages, oauthTokenId, VARIABLE_VALUE);
+        } else {
+            addVerifyRequestBody(exceptionMessages, requestBody);
+        }
         return exceptionMessages;
     }
 
@@ -165,10 +175,6 @@ public final class InputsValidation {
             exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
         }
         return exceptions;
-    }
-
-    private static boolean isValidFile(@NotNull final String filePath) {
-        return new File(filePath).exists();
     }
 }
 

@@ -21,60 +21,50 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.GetRunDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import io.cloudslang.content.utils.StringUtilities;
 
-import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.createRunClient;
+import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.getRunDetails;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_OPERATION_NAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_ID_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.STATUS_CODE;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetRunDetailsConstants.GET_RUN_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateRun.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetRunDetails.GET_RUN_DETAILS_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.FAILURE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateRunInputs.IS_DESTROY;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateRunInputs.RUN_MESSAGE;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCreateRunInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateRunOutputs.RUN_ID;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.AUTH_TOKEN;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.GetRunDetailInputs.RUN_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.GetRunDetailInputs.RUN_ID_DESC;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
+import static io.cloudslang.content.httpclient.utils.Descriptions.UrlDecoder.RETURN_RESULT_DESC;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class CreateRun {
+public class GetRunDetails {
 
-    @Action(name = CREATE_RUN_OPERATION_NAME,
-            description = CREATE_RUN_DESC,
+
+    @Action(name = GET_RUN_OPERATION_NAME,
+            description = GET_RUN_DETAILS_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = RUN_ID, description = RUN_ID_DESC)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
-                                       @Param(value = RUN_MESSAGE, description = RUN_MESSAGE_DESC) String runMessage,
-                                       @Param(value = IS_DESTROY, description = IS_DESTROY_DESC) String isDestroy,
-                                       @Param(value = REQUEST_BODY, description = CREATE_RUN_REQUEST_BODY_DESC) String requestBody,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, encrypted = true, required = true, description = AUTH_TOKEN_DESC) String authToken,
+                                       @Param(value = RUN_ID, required = true, description = RUN_ID_DESC) String runId,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -85,17 +75,12 @@ public class CreateRun {
                                        @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
-                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
-                                       @Param(value = ASYNC, description = ASYNC_DESC) String async,
-                                       @Param(value = POLLING_INTERVAL, description = POLLING_INTERVAL_DESC) String pollingInterval,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
-        workspaceId = defaultIfEmpty(workspaceId, EMPTY);
-        runMessage = defaultIfEmpty(runMessage, EMPTY);
-        requestBody = defaultIfEmpty(requestBody, EMPTY);
+        runId = defaultIfEmpty(runId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -106,33 +91,16 @@ public class CreateRun {
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
         connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
-        executionTimeout = defaultIfEmpty(executionTimeout, EXEC_TIMEOUT);
-        async = defaultString(async, BOOLEAN_FALSE);
-        pollingInterval = defaultString(pollingInterval, POLLING_INTERVAL_DEFAULT);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
-                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        if (!exceptionMessage.isEmpty()) {
-            return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
-        }
-
-        final List<String> exceptionMessages = verifyCreateRunInputs(workspaceId, requestBody);
-        if (!exceptionMessages.isEmpty()) {
-            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
-        }
-
         try {
-            final Map<String, String> result = createRunClient(CreateRunInputs.builder()
-                    .workspaceId(workspaceId)
-                    .runMessage(runMessage)
-                    .isDestroy(isDestroy)
+            final Map<String, String> result = getRunDetails(GetRunDetailsInputs.builder()
+                    .runId(runId)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
-                            .requestBody(requestBody)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
@@ -143,32 +111,15 @@ public class CreateRun {
                             .trustPassword(trustPassword)
                             .connectTimeout(connectTimeout)
                             .socketTimeout(socketTimeout)
-                            .executionTimeout(executionTimeout)
-                            .async(async)
-                            .pollingInterval(pollingInterval)
                             .keepAlive(keepAlive)
                             .connectionsMaxPerRoot(connectionsMaxPerRoute)
                             .connectionsMaxTotal(connectionsMaxTotal)
                             .responseCharacterSet(responseCharacterSet)
                             .build())
                     .build());
-
-
             final String returnMessage = result.get(RETURN_RESULT);
 
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
-
-            if (statusCode >= 200 && statusCode < 300) {
-                final List<String> runEventIdList = JsonPath.read(returnMessage, RUN_ID_PATH);
-                if (!runEventIdList.isEmpty()) {
-                    final String runEventIdListAsString = join(runEventIdList.toArray(), DELIMITER);
-                    results.put(RUN_ID, runEventIdListAsString);
-                } else {
-                    results.put(RUN_ID, EMPTY);
-                }
-            }
-
             return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);

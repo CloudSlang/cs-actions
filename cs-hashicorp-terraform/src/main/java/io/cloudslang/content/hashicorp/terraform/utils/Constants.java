@@ -27,8 +27,6 @@ public class Constants {
         public static final String STRICT = "strict";
         public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
         public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid proxy details.";
-        public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
-        public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
         public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
         public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
         public static final String EXCEPTION_EMPTY_FILE_PATH_AND_CONTENT_BYTES = "The filePath or both contentName and contentBytes inputs are required.";
@@ -49,7 +47,7 @@ public class Constants {
         public static final String AUTHORIZATION = "Authorization:";
         public static final String BEARER = "Bearer ";
         public static final String TERRAFORM_HOST = "app.terraform.io";
-        public static final String TERRAFORM_VERSION = "0.12.1";
+        public static final String TERRAFORM_VERSION_CONSTANT = "0.12.1";
         public static final String ORGANIZATION_PATH = "/organizations/";
         public static final String PATH_SEPARATOR = "/";
         public static final String AND = "&";
@@ -104,6 +102,18 @@ public class Constants {
         public static final String VARIABLE_PATH = "/vars";
         public static final String VARIABLE_TYPE = "vars";
         public static final String VARIABLE_ID_JSON_PATH = "$.data.id";
+
+    }
+
+    public static class GetWorkspaceDetails {
+        public static final String GET_WORKSPACE_DETAILS_OPERATION_NAME = "Get Workspace Details";
+        public static final String GET_WORKSPACE_PATH = "/workspaces/";
+        public static final String WORKSPACE_ID_JSON_PATH = "data.id";
+    }
+
+    public static class GetRunDetailsConstants{
+        public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
+        public static  final String GET_RUN_DETAILS_PATH="/runs/";
 
     }
 }

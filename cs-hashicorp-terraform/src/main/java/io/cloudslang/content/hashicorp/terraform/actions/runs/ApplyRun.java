@@ -38,16 +38,18 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRun
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ApplyRun.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.FAILURE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyRunInputs.RUN_COMMENT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyRunInputs.RUN_ID;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyApplyRunRequestBody;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
@@ -80,7 +82,7 @@ public class ApplyRun {
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
-                                       @Param(value = ASYNC, description = ASYN_DESC) String async,
+                                       @Param(value = ASYNC, description = ASYNC_DESC) String async,
                                        @Param(value = POLLING_INTERVAL, description = POLLING_INTERVAL_DESC) String pollingInterval,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
