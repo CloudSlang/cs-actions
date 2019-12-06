@@ -166,7 +166,7 @@ public class Descriptions {
     public static class GetRunDetails {
         public static final String GET_RUN_DETAILS_DESC = "Getting details about a run";
         public static final String GET_RUN_DETAILS_EXCEPTION_DESC = "An error message in case there was an error while getting run details.";
-        public static final String GET_RUN_DETAILS_RETURN_RESULT_DESC = "Run details or error message in case of failure";
+        public static final String GET_RUN_DETAILS_RETURN_RESULT_DESC = "Run details or error message in case of failure.";
 
 
     }
