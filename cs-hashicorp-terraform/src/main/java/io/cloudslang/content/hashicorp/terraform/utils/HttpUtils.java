@@ -26,9 +26,8 @@ import java.net.PasswordAuthentication;
 import java.net.Proxy;
 import java.util.Map;
 
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.OAUTH_CLIENT_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
@@ -117,6 +116,19 @@ public class HttpUtils {
         httpClientInputs.setKeepAlive(keepAlive);
         httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
         httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
+    }
+
+    @NotNull
+    public static String getQueryParams(String pageNumber,
+                                        final String pageSize) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(QUERY)
+                .append(PAGE_NUMBER)
+                .append(pageNumber)
+                .append(AND)
+                .append(PAGE_SIZE)
+                .append(pageSize);
+        return queryParams.toString();
     }
 
 }

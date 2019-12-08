@@ -22,22 +22,26 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.createWorkspaceBody;
-import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.getWorkspaceDetailsPath;
-import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.getWorkspacePath;
+import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(WorkspaceImpl.class)
 public class WorkspaceImplTest {
 
-    private static final String ORGANIZATION_NAME = "test";
-    private static final String EXPECTED_WORKSPACE_PATH = "/api/v2/organizations/test/workspaces";
-    private static final String EXPECTED_WORKSPACE_REQUEST_BODY = "{\"data\":{\"attributes\":{\"terraform_version\":\"0.12.1\",\"description\":\"test\",\"name\":\"test\",\"auto-apply\":true,\"file-triggers-enabled\":true," +
-            "\"working-directory\":\"/test\",\"trigger-prefixes\":[\"\"],\"queue-all-runs\":false,\"speculative-enabled\":true," +
-            "\"vcs-repo\":{\"identifier\":\"test\",\"branch\":\"test\",\"oauth-token-id\":\"test\",\"ingress-submodules\":true}},\"type\":\"workspaces\"}}";
-    private static final String WORKSPACE_NAME="test";
+    public static final String DELIMITER = ",";
+    private static final String WORKSPACE_NAME = "test";
+    private static final String EXPECTED_WORKSPACE_REQUEST_BODY = "{\"data\":{\"attributes\":{\"terraform_version\":" +
+            "\"0.12.1\",\"description\":\"test\",\"name\":\"test\",\"auto-apply\":true,\"file-triggers-enabled\":true," +
+            "\"working-directory\":\"/test\",\"trigger-prefixes\":[\"\"],\"queue-all-runs\":false," +
+            "\"speculative-enabled\":true,\"vcs-repo\":{\"identifier\":\"test\",\"branch\":\"test\"," +
+            "\"oauth-token-id\":\"test\",\"ingress-submodules\":true}},\"type\":\"workspaces\"}}";
     private static final String EXPECTED_GET_WORKSPACE_PATH = "/api/v2/organizations/test/workspaces/test";
+    private static final String EXPECTED_WORKSPACE_PATH = "/api/v2/organizations/test/workspaces";
+    private static final String EXPECTED_DELETE_WORKSPACE_PATH = "/api/v2/organizations/test/workspaces/test";
+    private static final String EXPECTED_LIST_WORKSPACES_PATH = "/api/v2/organizations/test/workspaces";
+
+
     private final CreateWorkspaceInputs invalidCreateWorkspaceInputs = CreateWorkspaceInputs.builder()
             .workspaceName("test")
             .workspaceDescription("test")
@@ -76,7 +80,7 @@ public class WorkspaceImplTest {
                     .build())
             .build();
 
-    private final TerraformCommonInputs getOrganizationName=TerraformCommonInputs.builder()
+    private final TerraformCommonInputs getOrganizationName = TerraformCommonInputs.builder()
             .organizationName("test")
             .build();
 
@@ -87,18 +91,31 @@ public class WorkspaceImplTest {
 
     @Test
     public void getWorkspacePathTest() {
-        final String path = getWorkspacePath(ORGANIZATION_NAME);
+        final String path = getWorkspacePath(getOrganizationName.getOrganizationName());
         assertEquals(EXPECTED_WORKSPACE_PATH, path);
     }
 
     @Test
     public void getWorkspaceRequestBody() {
-        final String requestBody = createWorkspaceBody(invalidCreateWorkspaceInputs, ",");
+        final String requestBody = createWorkspaceBody(invalidCreateWorkspaceInputs, DELIMITER);
         assertEquals(EXPECTED_WORKSPACE_REQUEST_BODY, requestBody);
     }
+
+    @Test
+    public void getDeleteWorkspacePathTest() {
+        final String path = getWorkspaceDetailsPath(getOrganizationName.getOrganizationName(), WORKSPACE_NAME);
+        assertEquals(EXPECTED_DELETE_WORKSPACE_PATH, path);
+    }
+
+    @Test
+    public void getListWorkspacesPathTest() {
+        final String path = getWorkspacePath(getOrganizationName.getOrganizationName());
+        assertEquals(EXPECTED_LIST_WORKSPACES_PATH, path);
+    }
+
     @Test
     public void getWorkspaceDetailsPathTest() {
-        final String path=getWorkspaceDetailsPath(getOrganizationName.getOrganizationName(),WORKSPACE_NAME);
-        assertEquals(EXPECTED_GET_WORKSPACE_PATH,path);
+        final String path = getWorkspaceDetailsPath(getOrganizationName.getOrganizationName(), WORKSPACE_NAME);
+        assertEquals(EXPECTED_GET_WORKSPACE_PATH, path);
     }
 }

@@ -19,7 +19,11 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.jayway.jsonpath.JsonPath;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.GetWorkspaceDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
@@ -28,50 +32,43 @@ import io.cloudslang.content.utils.StringUtilities;
 import java.util.List;
 import java.util.Map;
 
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.constants.ResponseNames.FAILURE;
-import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.getWorkspaceDetails;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.listWorkspaces;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetWorkspaceDetails.GET_WORKSPACE_DETAILS_OPERATION_NAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetWorkspaceDetails.WORKSPACE_ID_JSON_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListWorkspaces.LIST_WORKSPACES_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListWorkspaces.WORKSPACES_LIST_JSON_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListWorkspaces.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PAGE_NUMBER;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PAGE_SIZE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.WORKSPACE_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyGetWorkspaceDetailsInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.ListWorkspacesOutputs.WORKSPACE_LIST;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
-public class GetWorkspaceDetails {
-
-    @Action(name = GET_WORKSPACE_DETAILS_OPERATION_NAME,
-            description = GET_WORKSPACE_DETAILS_DESC,
+public class ListWorkspaces {
+    @Action(name = LIST_WORKSPACES_OPERATION_NAME,
+            description = LIST_WORKSPACES_OPERATION_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = GET_WORKSPACE_DETAILS_RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = GET_WORKSPACE_DETAILS_EXCEPTION_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = WORKSPACE_LIST, description = WORKSPACE_LIST_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, encrypted = true, required = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = ORGANIZATION_NAME, required = true, description = ORGANIZATION_NAME_DESC) String organizationName,
-                                       @Param(value = WORKSPACE_NAME, description = WORKSPACE_NAME_DESC) String workspaceName,
+                                       @Param(value = PAGE_NUMBER, description = PAGE_NUMBER_DESC) String pageNumber,
+                                       @Param(value = PAGE_SIZE, description = PAGE_SIZE_DESC) String pageSize,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -88,7 +85,8 @@ public class GetWorkspaceDetails {
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
         authToken = defaultIfEmpty(authToken, EMPTY);
         organizationName = defaultIfEmpty(organizationName, EMPTY);
-        workspaceName = defaultIfEmpty(workspaceName, EMPTY);
+        pageNumber = defaultIfEmpty(pageNumber, DEFAULT_PAGE_NUMBER);
+        pageSize = defaultIfEmpty(pageSize, DEFAULT_PAGE_SIZE);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -110,17 +108,13 @@ public class GetWorkspaceDetails {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
-        final List<String> exceptionMessages = verifyGetWorkspaceDetailsInputs(workspaceName);
-        if (!exceptionMessages.isEmpty()) {
-            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
-        }
-
         try {
-            final Map<String, String> result = getWorkspaceDetails(GetWorkspaceDetailsInputs.builder()
-                    .workspaceName(workspaceName)
+            final Map<String, String> result = listWorkspaces(GetWorkspaceDetailsInputs.builder()
                     .commonInputs(TerraformCommonInputs.builder()
                             .organizationName(organizationName)
                             .authToken(authToken)
+                            .pageNumber(pageNumber)
+                            .pageSize(pageSize)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
@@ -137,23 +131,24 @@ public class GetWorkspaceDetails {
                             .responseCharacterSet(responseCharacterSet)
                             .build())
                     .build());
+
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
-
+            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
             if (statusCode >= 200 && statusCode < 300) {
-                final String workspaceId = JsonPath.read(returnMessage, WORKSPACE_ID_JSON_PATH);
-                if (!workspaceId.isEmpty()) {
-
-                    results.put(WORKSPACE_ID, workspaceId);
+                final List<String> workspaceList = JsonPath.read(returnMessage, WORKSPACES_LIST_JSON_PATH);
+                if (!workspaceList.isEmpty()) {
+                    final String workspaceListAsString = join(workspaceList.toArray(), DELIMITER);
+                    results.put(WORKSPACE_LIST, workspaceListAsString);
                 } else {
-                    results.put(WORKSPACE_ID, EMPTY);
+                    results.put(WORKSPACE_LIST, EMPTY);
                 }
             }
-
             return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
+
     }
+
 }

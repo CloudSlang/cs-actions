@@ -16,9 +16,6 @@
 package io.cloudslang.content.hashicorp.terraform.utils;
 
 import io.cloudslang.content.constants.InputNames;
-import org.jetbrains.annotations.NotNull;
-
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class Inputs extends InputNames {
 
@@ -29,15 +26,14 @@ public class Inputs extends InputNames {
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
-        public static final String REQUEST_BODY = "body";
-        public static final String TERRAFORM_VERSION ="terraformVersion";
+        public static final String REQUEST_BODY = "requestBody";
+        public static final String TERRAFORM_VERSION = "terraformVersion";
         public static final String EXECUTION_TIMEOUT = "executionTimeout";
         public static final String POLLING_INTERVAL = "pollingInterval";
         public static final String ASYNC = "async";
-
+        public static final String PAGE_NUMBER = "pageNumber";
+        public static final String PAGE_SIZE = "pageSize";
     }
-
-
 
     public static class ApplyRunInputs {
         public static final String RUN_ID = "runId";
@@ -71,10 +67,9 @@ public class Inputs extends InputNames {
         public static final String IS_DESTROY = "isDestroy";
     }
 
-    public static class GetRunDetailInputs{
+    public static class GetRunDetailInputs {
         public static final String RUN_ID = "runId";
         public static final String RUN_ID_DESC = "runIdDescription";
-
     }
 
 }

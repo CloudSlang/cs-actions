@@ -19,7 +19,6 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.GetWorkspaceDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
@@ -34,12 +33,13 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.getWorkspaceDetails;
+import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.deleteWorkspace;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetWorkspaceDetails.GET_WORKSPACE_DETAILS_OPERATION_NAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetWorkspaceDetails.WORKSPACE_ID_JSON_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.DeleteWorkspace.DELETE_WORKSPACE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.SUCCESS_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_NAME_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.DeleteWorkspace.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -49,21 +49,19 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInput
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.WORKSPACE_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyGetWorkspaceDetailsInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetWorkspaceDetails {
+public class DeleteWorkspace {
 
-    @Action(name = GET_WORKSPACE_DETAILS_OPERATION_NAME,
-            description = GET_WORKSPACE_DETAILS_DESC,
+    @Action(name = DELETE_WORKSPACE_OPERATION_NAME,
+            description = DELETE_WORKSPACE_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = GET_WORKSPACE_DETAILS_RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = GET_WORKSPACE_DETAILS_EXCEPTION_DESC),
+                    @Output(value = RETURN_RESULT, description = DELETE_WORKSPACE_RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = DELETE_WORKSPACE_EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC),
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -116,7 +114,7 @@ public class GetWorkspaceDetails {
         }
 
         try {
-            final Map<String, String> result = getWorkspaceDetails(GetWorkspaceDetailsInputs.builder()
+            final Map<String, String> result = deleteWorkspace(GetWorkspaceDetailsInputs.builder()
                     .workspaceName(workspaceName)
                     .commonInputs(TerraformCommonInputs.builder()
                             .organizationName(organizationName)
@@ -137,21 +135,9 @@ public class GetWorkspaceDetails {
                             .responseCharacterSet(responseCharacterSet)
                             .build())
                     .build());
+
             final String returnMessage = result.get(RETURN_RESULT);
-            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
-
-            if (statusCode >= 200 && statusCode < 300) {
-                final String workspaceId = JsonPath.read(returnMessage, WORKSPACE_ID_JSON_PATH);
-                if (!workspaceId.isEmpty()) {
-
-                    results.put(WORKSPACE_ID, workspaceId);
-                } else {
-                    results.put(WORKSPACE_ID, EMPTY);
-                }
-            }
-
-            return results;
+            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

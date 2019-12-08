@@ -85,7 +85,7 @@ public class CreateWorkspace {
                                        @Param(value = VCS_REPO_ID, description = VCS_REPO_ID_DESC) String vcsRepoId,
                                        @Param(value = VCS_BRANCH_NAME, description = VCS_BRANCH_NAME_DESC) String vcsBranchName,
                                        @Param(value = OAUTH_TOKEN_ID, description = OAUTH_TOKEN_ID_DESCRIPTION) String oauthTokenId,
-                                       @Param(value = TERRAFORM_VERSION, description = TERAAFORM_VERSION_DESC) String terraformVersion,
+                                       @Param(value = TERRAFORM_VERSION, description = TERRAFORM_VERSION_DESC) String terraformVersion,
                                        @Param(value = REQUEST_BODY, description = WORKSPACE_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
