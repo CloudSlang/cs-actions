@@ -40,7 +40,7 @@ public class ListVariables {
             description = LIST_VARIABLE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = CREATE_VARIABLE_EXCEPTION_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
             },
             responses = {
