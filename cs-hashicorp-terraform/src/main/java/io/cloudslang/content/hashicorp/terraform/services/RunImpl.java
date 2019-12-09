@@ -17,10 +17,7 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.GetRunDetailsInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.*;
 import io.cloudslang.content.hashicorp.terraform.services.models.runs.ApplyRunRequestBody;
 import io.cloudslang.content.hashicorp.terraform.services.models.runs.CreateRunBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
@@ -36,10 +33,12 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRun
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_TYPE;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetRunDetailsConstants.GET_RUN_DETAILS_PATH;
-import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
-import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBuilder;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PAGE_NUMBER;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PAGE_SIZE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
@@ -85,6 +84,22 @@ public class RunImpl {
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
         setCommonHttpInputs(httpClientInputs, commonInputs);
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static Map<String, String> listRunsInWorkspaceClient(@NotNull final ListRunsInWorkspaceInputs listRunsInWorkspaceInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformCommonInputs commonInputs = listRunsInWorkspaceInputs.getCommonInputs();
+        httpClientInputs.setUrl(listRunsInWorkspaceClientUrl(listRunsInWorkspaceInputs.getWorkspaceId()));
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+        httpClientInputs.setQueryParams(getQueryParams(listRunsInWorkspaceInputs.getCommonInputs().getPageNumber(),
+                listRunsInWorkspaceInputs.getCommonInputs().getPageSize()));
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         return new HttpClientService().execute(httpClientInputs);
     }
 
@@ -136,6 +151,22 @@ public class RunImpl {
                 .append(RUN_PATH)
                 .append(runId)
                 .append(APPLY_RUN_PATH);
+        uriBuilder.setPath(pathString.toString());
+        return uriBuilder.build().toURL().toString();
+    }
+
+
+    @NotNull
+    public static String listRunsInWorkspaceClientUrl(@NotNull String workspaceId) throws Exception {
+
+        final URIBuilder uriBuilder = getUriBuilder();
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(API_VERSION)
+                .append(WORKSPACE_PATH)
+                .append(PATH_SEPARATOR)
+                .append(workspaceId)
+                .append(CREATE_RUN_PATH);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
     }

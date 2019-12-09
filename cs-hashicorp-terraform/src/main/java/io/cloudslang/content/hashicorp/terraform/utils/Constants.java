@@ -67,6 +67,10 @@ public class Constants {
         public static final String SIZE = "size";
         public static final String PASSWORD_BODY = "password";
         public static final String VALUE = "value";
+        public static final String DEFAULT_PAGE_NUMBER = "1";
+        public static final String DEFAULT_PAGE_SIZE = "100";
+        public static final String PAGE_NUMBER = "page[number]=";
+        public static final String PAGE_SIZE = "page[size]=";
     }
 
     public static class CreateWorkspace {
@@ -97,6 +101,10 @@ public class Constants {
         public static final String APPLY_RUN_PATH = "/actions/apply";
     }
 
+    public static class ListRunsInWorkspaceConstants {
+        public static final String LIST_RUNS_IN_WORKSPACE_OPERATION_NAME = "List Runs in a Workspace";
+    }
+
     public static class CreateVariableConstants {
         public static final String CREATE_VARIABLE_OPERATION_NAME = "Create Variable";
         public static final String VARIABLE_PATH = "/vars";
@@ -111,9 +119,9 @@ public class Constants {
         public static final String WORKSPACE_ID_JSON_PATH = "data.id";
     }
 
-    public static class GetRunDetailsConstants{
+    public static class GetRunDetailsConstants {
         public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
-        public static  final String GET_RUN_DETAILS_PATH="/runs/";
+        public static final String GET_RUN_DETAILS_PATH = "/runs/";
 
     }
 }
