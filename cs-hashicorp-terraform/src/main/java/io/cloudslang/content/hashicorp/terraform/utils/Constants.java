@@ -87,7 +87,7 @@ public class Constants {
         public static final String CREATE_RUN_OPERATION_NAME = "Create Run";
         public static final String CREATE_RUN_PATH = "/runs";
         public static final String RUN_TYPE = "runs";
-        public static final String RUN_ID_PATH = "$.data[*].relationships.run-events.data[*].id";
+        public static final String RUN_ID_PATH = "data.id";
 
     }
 
@@ -102,6 +102,11 @@ public class Constants {
         public static final String VARIABLE_PATH = "/vars";
         public static final String VARIABLE_TYPE = "vars";
         public static final String VARIABLE_ID_JSON_PATH = "$.data.id";
+
+    }
+
+    public static class ListVariableConstants {
+        public static final String LIST_VARIABLE_OPERATION_NAME = "List Variable";
 
     }
 

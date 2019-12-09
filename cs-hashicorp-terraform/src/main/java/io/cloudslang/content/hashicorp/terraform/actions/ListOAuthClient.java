@@ -27,7 +27,6 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import com.hp.oo.sdk.content.annotations.Action;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;

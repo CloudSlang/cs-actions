@@ -25,6 +25,12 @@ public class Descriptions {
         public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL/TSL. " +
                 "A certificate is trusted even if no trusted certification authority issued it." +
                 "Default: false";
+        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response containing the messages.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
+        public static final String FAILURE_DESC = "There was an error while trying to get the messages.";
+        public static final String SUCCESS_DESC = "The request was successfully executed.";
+        public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
+        public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String X509_DESC = "Specifies the way the server hostname must match a domain name in " +
                 "the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to " +
                 "\"allow_all\" to skip any checking. For the value \"browser_compatible\" the hostname verifier " +
@@ -77,12 +83,6 @@ public class Descriptions {
 
 
     public static class ListOAuthClient {
-        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response containing the messages.";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
-        public static final String FAILURE_DESC = "There was an error while trying to get the messages.";
-        public static final String SUCCESS_DESC = "The request was successfully executed.";
-        public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
-        public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String OAUTH_TOKEN_ID_DESCRIPTION="The VCS Connection (OAuth Connection + Token) to use. " +
                 "This ID can be obtained from the oauth-tokens endpoint.";
         public static final String LIST_OAUTH_CLIENT_DESC = "List An OAuth Client Id";
@@ -151,6 +151,10 @@ public class Descriptions {
         public static final String VARIABLE_ID_DESC = "The Id of created variable.";
         public static final String CREATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while creating the variable.";
         public static final String CREATE_VARIABLE_RETURN_RESULT_DESC = "The response of the apply run.";
+    }
+
+    public static class ListVariables {
+        public static final String LIST_VARIABLE_DESC = "List all the variables in a workspace.";
     }
 
     public static class GetWorkspaceDetails {
