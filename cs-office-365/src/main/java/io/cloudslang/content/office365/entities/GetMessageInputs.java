@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.office365.entities;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,6 @@ public class GetMessageInputs {
     private final String folderId;
     private final String selectQuery;
     private final String oDataQuery;
-
     private final Office365CommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"messageId", "folderId", "selectQuery", "oDataQuery", "commonInputs"})

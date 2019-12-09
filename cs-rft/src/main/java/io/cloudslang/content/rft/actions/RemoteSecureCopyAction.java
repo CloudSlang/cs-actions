@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 
+
+
 package io.cloudslang.content.rft.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -22,12 +24,18 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.RemoteSecureCopyInputs;
 import io.cloudslang.content.rft.services.RemoteSecureCopyService;
-import io.cloudslang.content.rft.utils.Constants;
+
+import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
+import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 
 
 import java.util.Map;
+
+import static io.cloudslang.content.rft.utils.Inputs.RemoteSecureCopyInputs.*;
 
 /**
  * The operation copies a file on the remote machine using the SCP protocol.
@@ -68,33 +76,33 @@ public class RemoteSecureCopyAction {
 
     @Action(name = "Remote Secure Copy",
             outputs = {
-                    @Output(Constants.OutputNames.RETURN_CODE),
-                    @Output(Constants.OutputNames.RETURN_RESULT),
-                    @Output(Constants.OutputNames.EXCEPTION)
+                    @Output(RETURN_CODE),
+                    @Output(RETURN_RESULT),
+                    @Output(EXCEPTION)
             },
             responses = {
-                    @Response(text = Constants.ResponseNames.SUCCESS, field = Constants.OutputNames.RETURN_CODE, value = Constants.ReturnCodes.RETURN_CODE_SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Constants.ResponseNames.FAILURE, field = Constants.OutputNames.RETURN_CODE, value = Constants.ReturnCodes.RETURN_CODE_FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             }
     )
     public Map<String, String> copyTo(
-            @Param(value = Constants.InputNames.SOURCE_HOST) String sourceHost,
-            @Param(value = Constants.InputNames.SOURCE_PATH, required = true) String sourcePath,
-            @Param(Constants.InputNames.SOURCE_PORT) String sourcePort,
-            @Param(Constants.InputNames.SOURCE_USERNAME) String sourceUsername,
-            @Param(value = Constants.InputNames.SOURCE_PASSWORD, encrypted = true) String sourcePassword,
-            @Param(Constants.InputNames.SOURCE_PRIVATE_KEY_FILE) String sourcePrivateKeyFile,
-            @Param(value = Constants.InputNames.DESTINATION_HOST) String destinationHost,
-            @Param(value = Constants.InputNames.DESTINATION_PATH, required = true) String destinationPath,
-            @Param(Constants.InputNames.DESTINATION_PORT) String destinationPort,
-            @Param(value = Constants.InputNames.DESTINATION_USERNAME) String destinationUsername,
-            @Param(value = Constants.InputNames.DESTINATION_PASSWORD, encrypted = true) String destinationPassword,
-            @Param(Constants.InputNames.DESTINATION_PRIVATE_KEY_FILE) String destinationPrivateKeyFile,
-            @Param(Constants.InputNames.KNOWN_HOSTS_POLICY) String knownHostsPolicy,
-            @Param(Constants.InputNames.KNOWN_HOSTS_PATH) String knownHostsPath,
-            @Param(Constants.InputNames.TIMEOUT) String timeout,
-            @Param(Constants.InputNames.PROXY_HOST) String proxyHost,
-            @Param(Constants.InputNames.PROXY_PORT) String proxyPort) {
+            @Param(value = SOURCE_HOST) String sourceHost,
+            @Param(value = SOURCE_PATH, required = true) String sourcePath,
+            @Param(SOURCE_PORT) String sourcePort,
+            @Param(SOURCE_USERNAME) String sourceUsername,
+            @Param(value = SOURCE_PASSWORD, encrypted = true) String sourcePassword,
+            @Param(SOURCE_PRIVATE_KEY_FILE) String sourcePrivateKeyFile,
+            @Param(value = DESTINATION_HOST) String destinationHost,
+            @Param(value = DESTINATION_PATH, required = true) String destinationPath,
+            @Param(DESTINATION_PORT) String destinationPort,
+            @Param(value = DESTINATION_USERNAME) String destinationUsername,
+            @Param(value = DESTINATION_PASSWORD, encrypted = true) String destinationPassword,
+            @Param(DESTINATION_PRIVATE_KEY_FILE) String destinationPrivateKeyFile,
+            @Param(KNOWN_HOSTS_POLICY) String knownHostsPolicy,
+            @Param(KNOWN_HOSTS_PATH) String knownHostsPath,
+            @Param(TIMEOUT) String timeout,
+            @Param(PROXY_HOST) String proxyHost,
+            @Param(PROXY_PORT) String proxyPort) {
 
         RemoteSecureCopyInputs remoteSecureCopyInputs = new RemoteSecureCopyInputs(sourcePath, destinationHost, destinationPath, destinationUsername);
         remoteSecureCopyInputs.setSrcHost(sourceHost);

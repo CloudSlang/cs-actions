@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
 
 package io.cloudslang.content.database.constants;
 
@@ -48,4 +50,13 @@ public class DBInputNames extends InputNames {
     public static final String SCRIPT_FILE_NAME = "scriptFileName";
     public static final String GLOBAL_SESSION_OBJECT = "globalSessionObject";
     public static final String SQL_COMMANDS = "sqlCommands";
+
+
+    public static final String MS_DELIMITER = "Delimiter";
+    public static final String MS_DB_SERVER_NAME = "DBServerName";
+    public static final String MS_USERNAME = "Username";
+    public static final String MS_PASSWORD = "Password";
+    public static final String MS_DATABASE_NAME = "Database";
+    public static final String MS_COMMAND = "Command";
+    public static final String MS_KEY = "Key";
 }

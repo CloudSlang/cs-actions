@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+    * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
     * All rights reserved. This program and the accompanying materials
     * are made available under the terms of the Apache License v2.0 which accompany this distribution.
     *
@@ -92,6 +92,11 @@
             <version>${score-content-sdk.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-commons</artifactId>
+            <version>${cs-commons.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>0.1.52</version>
@@ -127,6 +132,29 @@
             <version>3.21.0-GA</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockftpserver</groupId>
+            <artifactId>MockFtpServer</artifactId>
+            <version>2.7.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>15.0</version>
+        </dependency>
+        <dependency>
+            <groupId>bouncycastle</groupId>
+            <artifactId>bcprov-jdk15</artifactId>
+            <version>140</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -186,7 +214,7 @@
                     </includes>
                     <!--Pass arguments using ${var} syntax in license.template file-->
                     <properties>
-                        <copyright.year>2017</copyright.year>
+                        <copyright.year>2019</copyright.year>
                     </properties>
                     <!--Custom mapping for java extensions-->
                     <useDefaultMapping>false</useDefaultMapping>

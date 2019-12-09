@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.office365.utils;
 
 public final class Constants {
@@ -67,6 +68,7 @@ public final class Constants {
     public static final String SEND = "/send";
     public static final String MOVE = "/move";
     public static final String SEND_MESSAGE = "Email sent. For the delivery status please check the Delivery Report Email.";
+    public static final String SEND_EMAIL = "Email sent.";
     public static final String UPDATE_USER = "User updated successfully.";
     public static final String ID = "id";
     public static final String COMMA = ",";
@@ -90,4 +92,10 @@ public final class Constants {
     public static final String FILE_PATH = "filePath";
     public static final String ODATA_TYPE = "@odata.type";
     public static final String MICROSOFT_GRAPH_FILE_ATTACHMENT = "#microsoft.graph.fileAttachment";
+    public static final String LOGIN_AUTHORITY_PREFIX = "https://login.windows.net/";
+    public static final String LOGIN_AUTHORITY_SUFFIX = "/oauth2/token";
+    public static final String SEND_MAIL_DEFAULT_IMPORTANCE = "normal";
+    public static final String SEND_MAIL_DEFAULT_INFERENCE_CLASSIFICATION = "focused";
+    public static final String ERROR = "error";
+    public static final String MESSAGE = "message";
 }

@@ -1,3 +1,5 @@
+dist: trusty
+
 language: java
 
 env:
@@ -5,7 +7,7 @@ env:
 
 jdk:
   - oraclejdk8
-  - openjdk7
+  - openjdk8
 
 cache:
   directories:
@@ -16,6 +18,7 @@ before_script:
   - "echo $JAVA_OPTS"
 
 before_install:
+  - rm ~/.m2/settings.xml
   - if [ ! -d "${M2_HOME}"/bin ]; then curl https://archive.apache.org/dist/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz | tar zxf - -C "${HOME}"; fi
 
 install:
