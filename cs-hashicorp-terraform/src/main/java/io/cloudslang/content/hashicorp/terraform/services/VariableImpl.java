@@ -62,14 +62,12 @@ public class VariableImpl {
     public static Map<String, String> listVariables(@NotNull final TerraformCommonInputs commonInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(listVariablesUrl());
-        System.out.println(httpClientInputs.getUrl());
         setCommonHttpInputs(httpClientInputs, commonInputs);
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        System.out.println("HEADER :" +httpClientInputs.getHeaders());
         return new HttpClientService().execute(httpClientInputs);
     }
 

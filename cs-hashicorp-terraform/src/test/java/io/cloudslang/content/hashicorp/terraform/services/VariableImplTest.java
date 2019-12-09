@@ -63,10 +63,30 @@ public class VariableImplTest {
             .hcl("false")
             .sensitive("false")
             .build();
+    private final TerraformCommonInputs listVariableInputs=TerraformCommonInputs.builder()
+            .authToken("")
+            .proxyHost("")
+            .proxyPort("")
+            .proxyUsername("")
+            .proxyPassword("")
+            .trustAllRoots("")
+            .trustPassword("")
+            .trustKeystore("")
+            .connectTimeout("")
+            .connectionsMaxTotal("")
+            .connectionsMaxPerRoot("")
+            .responseCharacterSet("")
+            .build();
+
 
     @Test(expected = IllegalArgumentException.class)
     public void createVariable() throws Exception {
         VariableImpl.createVariable(getCreateVariableInputs);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void listVariables()throws Exception{
+        VariableImpl.listVariables(listVariableInputs);
     }
 
     @Test
