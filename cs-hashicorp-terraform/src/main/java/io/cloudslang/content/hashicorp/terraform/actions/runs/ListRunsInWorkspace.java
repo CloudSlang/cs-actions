@@ -9,8 +9,8 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.ListRunsInWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformRunInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -23,9 +23,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListRunsInWorkspaceConstants.LIST_RUNS_IN_WORKSPACE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListRunsInWorkspace.LIST_RUNS_IN_WORKSPACE_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListRunsInWorkspace.LIST_RUNS_IN_WORKSPACE_EXCEPTION_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
@@ -48,7 +46,7 @@ public class ListRunsInWorkspace {
             description = LIST_RUNS_IN_WORKSPACE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = LIST_RUNS_IN_WORKSPACE_EXCEPTION_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
@@ -104,7 +102,7 @@ public class ListRunsInWorkspace {
         }
 
         try {
-            final Map<String, String> result = listRunsInWorkspaceClient(ListRunsInWorkspaceInputs.builder()
+            final Map<String, String> result = listRunsInWorkspaceClient(TerraformRunInputs.builder()
                     .workspaceId(workspaceId)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)

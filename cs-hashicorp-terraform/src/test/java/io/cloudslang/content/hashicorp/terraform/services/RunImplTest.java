@@ -16,10 +16,8 @@
 package io.cloudslang.content.hashicorp.terraform.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.ListRunsInWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformRunInputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -41,14 +39,14 @@ public class RunImplTest {
     private final String EXPECTED_GET_RUN_DETAILS_PATH = "https://app.terraform.io/api/v2/runs/test123";
     private final String EXPECTED_LIST_RUNS_IN_WORKSPACE_PATH = "https://app.terraform.io/api/v2/workspaces/ws-test123/runs";
 
-    private final ApplyRunInputs applyRunInputs = ApplyRunInputs.builder()
+    private final TerraformRunInputs applyRunInputs = TerraformRunInputs.builder()
             .runComment("test apply run comment")
             .runId("test-123")
             .build();
-    private final ApplyRunInputs applyRunInputsForURL = ApplyRunInputs.builder()
+    private final TerraformRunInputs applyRunInputsForURL = TerraformRunInputs.builder()
             .runId("run-456test")
             .build();
-    private final ApplyRunInputs getApplyRun = ApplyRunInputs.builder()
+    private final TerraformRunInputs getApplyRun = TerraformRunInputs.builder()
             .runId("")
             .runComment("")
             .commonInputs(TerraformCommonInputs.builder()
@@ -73,7 +71,7 @@ public class RunImplTest {
                     .responseCharacterSet("")
                     .build())
             .build();
-    private final ListRunsInWorkspaceInputs listRunsInWorkspaceInputs = ListRunsInWorkspaceInputs.builder()
+    private final TerraformRunInputs listRunsInWorkspaceInputs = TerraformRunInputs.builder()
             .workspaceId("")
             .commonInputs(TerraformCommonInputs.builder()
                     .organizationName("")
@@ -99,7 +97,7 @@ public class RunImplTest {
             .build();
 
 
-    private final CreateRunInputs invalidCreateRunInputs = CreateRunInputs.builder()
+    private final TerraformRunInputs invalidCreateRunInputs = TerraformRunInputs.builder()
             .workspaceId("")
             .runMessage("")
             .isDestroy("")
@@ -126,7 +124,7 @@ public class RunImplTest {
                     .build())
             .build();
 
-    private final CreateRunInputs createRunBody = CreateRunInputs.builder()
+    private final TerraformRunInputs createRunBody = TerraformRunInputs.builder()
             .workspaceId("test-123")
             .runMessage("test")
             .isDestroy("false")

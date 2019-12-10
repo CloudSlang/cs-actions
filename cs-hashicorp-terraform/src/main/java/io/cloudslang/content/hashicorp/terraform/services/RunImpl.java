@@ -37,14 +37,12 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWo
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetRunDetailsConstants.GET_RUN_DETAILS_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PAGE_NUMBER;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PAGE_SIZE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class RunImpl {
     @NotNull
-    public static Map<String, String> createRunClient(@NotNull final CreateRunInputs createRunInputs) throws Exception {
+    public static Map<String, String> createRunClient(@NotNull final TerraformRunInputs createRunInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = createRunInputs.getCommonInputs();
         httpClientInputs.setUrl(createRunClientUrl());
@@ -66,7 +64,7 @@ public class RunImpl {
     }
 
     @NotNull
-    public static Map<String, String> applyRunClient(@NotNull final ApplyRunInputs applyRunInputs) throws Exception {
+    public static Map<String, String> applyRunClient(@NotNull final TerraformRunInputs applyRunInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = applyRunInputs.getCommonInputs();
         httpClientInputs.setUrl(applyRunClientUrl(applyRunInputs.getRunId()));
@@ -88,7 +86,7 @@ public class RunImpl {
     }
 
     @NotNull
-    public static Map<String, String> listRunsInWorkspaceClient(@NotNull final ListRunsInWorkspaceInputs listRunsInWorkspaceInputs) throws Exception {
+    public static Map<String, String> listRunsInWorkspaceClient(@NotNull final TerraformRunInputs listRunsInWorkspaceInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = listRunsInWorkspaceInputs.getCommonInputs();
         httpClientInputs.setUrl(listRunsInWorkspaceClientUrl(listRunsInWorkspaceInputs.getWorkspaceId()));
@@ -104,7 +102,7 @@ public class RunImpl {
     }
 
     @NotNull
-    public static Map<String, String> getRunDetails(@NotNull final GetRunDetailsInputs getRunDetailsInputs) throws Exception {
+    public static Map<String, String> getRunDetails(@NotNull final TerraformRunInputs getRunDetailsInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = getRunDetailsInputs.getCommonInputs();
         httpClientInputs.setUrl(getRunDetailsUrl(getRunDetailsInputs.getRunId()));
@@ -172,7 +170,7 @@ public class RunImpl {
     }
 
     @NotNull
-    public static String createRunBody(CreateRunInputs createRunInputs) throws JsonProcessingException {
+    public static String createRunBody(TerraformRunInputs createRunInputs) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         CreateRunBody createBody = new CreateRunBody();
         CreateRunBody.CreateRunData createRundata = createBody.new CreateRunData();
@@ -202,7 +200,7 @@ public class RunImpl {
     }
 
     @NotNull
-    public static String applyRunBody(ApplyRunInputs applyRunInputs) throws JsonProcessingException {
+    public static String applyRunBody(TerraformRunInputs applyRunInputs) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ApplyRunRequestBody applyRunBody = new ApplyRunRequestBody();
         applyRunBody.setRunComment(applyRunInputs.getRunComment());

@@ -24,8 +24,8 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.GetRunDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformRunInputs;
 
 import java.util.Map;
 
@@ -38,8 +38,6 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetRunDe
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetRunDetails.GET_RUN_DETAILS_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetRunDetails.GET_RUN_DETAILS_RETURN_RESULT_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetRunDetails.GET_RUN_DETAILS_EXCEPTION_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.FAILURE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
@@ -58,8 +56,8 @@ public class GetRunDetails {
     @Action(name = GET_RUN_OPERATION_NAME,
             description = GET_RUN_DETAILS_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = GET_RUN_DETAILS_RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = GET_RUN_DETAILS_EXCEPTION_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
             },
             responses = {
@@ -100,7 +98,7 @@ public class GetRunDetails {
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
         try {
-            final Map<String, String> result = getRunDetails(GetRunDetailsInputs.builder()
+            final Map<String, String> result = getRunDetails(TerraformRunInputs.builder()
                     .runId(runId)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)

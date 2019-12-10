@@ -29,7 +29,7 @@ public class Constants {
         public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid proxy details.";
         public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
         public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
-        public static final String EXCEPTION_EMPTY_FILE_PATH_AND_CONTENT_BYTES = "The filePath or both contentName and contentBytes inputs are required.";
+        public static final String EXCEPTION_INVALID_NAME = "The %s can only contain letters, numbers, underscores, and hyphens";
         public static final String ANONYMOUS = "anonymous";
         public static final String GET = "GET";
         public static final String POST = "POST";
