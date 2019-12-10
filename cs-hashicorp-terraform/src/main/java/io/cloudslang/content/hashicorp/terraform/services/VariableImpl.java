@@ -17,7 +17,7 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.hashicorp.terraform.entities.CreateVariableInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.variables.CreateVariableRequestBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
@@ -29,7 +29,6 @@ import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_TYPE;
@@ -40,16 +39,16 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class VariableImpl {
 
     @NotNull
-    public static Map<String, String> createVariable(@NotNull final CreateVariableInputs createVariableInputs) throws Exception {
+    public static Map<String, String> createVariable(@NotNull final TerraformVariableInputs terraformVariableInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final TerraformCommonInputs commonInputs = createVariableInputs.getCommonInputs();
+        final TerraformCommonInputs commonInputs = terraformVariableInputs.getCommonInputs();
         httpClientInputs.setUrl(createVariableUrl());
         setCommonHttpInputs(httpClientInputs, commonInputs);
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
         if (commonInputs.getRequestBody().equals(EMPTY)) {
-            httpClientInputs.setBody(createVariableRequestBody(createVariableInputs));
+            httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
         } else {
             httpClientInputs.setBody(commonInputs.getRequestBody());
         }
@@ -101,7 +100,7 @@ public class VariableImpl {
     }
 
     @NotNull
-    public static String createVariableRequestBody(CreateVariableInputs createVariableInputs) {
+    public static String createVariableRequestBody(TerraformVariableInputs terraformVariableInputs) {
         String requestBody = EMPTY;
         ObjectMapper createVariableMapper = new ObjectMapper();
         CreateVariableRequestBody createVariableRequestBody = new CreateVariableRequestBody();
@@ -109,14 +108,14 @@ public class VariableImpl {
         createVariableData.setType(VARIABLE_TYPE);
 
         CreateVariableRequestBody.Attributes attributes = createVariableRequestBody.new Attributes();
-        attributes.setKey(createVariableInputs.getVariableName());
-        attributes.setValue(createVariableInputs.getVariableValue());
-        attributes.setCategory(createVariableInputs.getVariableCategory());
-        attributes.setHcl(createVariableInputs.getHcl());
-        attributes.setSensitive(createVariableInputs.getSensitive());
+        attributes.setKey(terraformVariableInputs.getVariableName());
+        attributes.setValue(terraformVariableInputs.getVariableValue());
+        attributes.setCategory(terraformVariableInputs.getVariableCategory());
+        attributes.setHcl(terraformVariableInputs.getHcl());
+        attributes.setSensitive(terraformVariableInputs.getSensitive());
 
         CreateVariableRequestBody.Data data = createVariableRequestBody.new Data();
-        data.setId(createVariableInputs.getWorkspaceId());
+        data.setId(terraformVariableInputs.getWorkspaceId());
         data.setType(WORKSPACE_TYPE);
         CreateVariableRequestBody.Workspace workspace = createVariableRequestBody.new Workspace();
         workspace.setData(data);

@@ -21,7 +21,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.CreateVariableInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -135,7 +135,7 @@ public class CreateVariable {
 
 
         try {
-            final Map<String, String> result = createVariable(CreateVariableInputs.builder()
+            final Map<String, String> result = createVariable(TerraformVariableInputs.builder()
                     .variableName(variableName)
                     .variableValue(variableValue)
                     .variableCategory(variableCategory)

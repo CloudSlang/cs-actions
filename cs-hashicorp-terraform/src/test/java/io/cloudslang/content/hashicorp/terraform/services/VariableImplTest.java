@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.hashicorp.terraform.services;
 
-import io.cloudslang.content.hashicorp.terraform.entities.CreateVariableInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 public class VariableImplTest {
     private final String EXPECTED_CREATE_VARIABLE_BODY = "{\"data\":{\"attributes\":{\"key\":\"test\",\"value\":\"test-123\",\"category\":\"env\",\"hcl\":\"false\",\"sensitive\":\"false\"},\"relationships\":{\"workspace\":{\"data\":{\"id\":\"ws-test123\",\"type\":\"workspaces\"}}},\"type\":\"vars\"}}";
 
-    private final CreateVariableInputs getCreateVariableInputs = CreateVariableInputs.builder()
+    private final TerraformVariableInputs getTerraformVariableInputs = TerraformVariableInputs.builder()
             .variableName("")
             .variableValue("")
             .variableCategory("")
@@ -55,7 +55,7 @@ public class VariableImplTest {
                     .responseCharacterSet("")
                     .build())
             .build();
-    private final CreateVariableInputs createVariableInputs = CreateVariableInputs.builder()
+    private final TerraformVariableInputs terraformVariableInputs = TerraformVariableInputs.builder()
             .workspaceId("ws-test123")
             .variableName("test")
             .variableValue("test-123")
@@ -81,7 +81,7 @@ public class VariableImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createVariable() throws Exception {
-        VariableImpl.createVariable(getCreateVariableInputs);
+        VariableImpl.createVariable(getTerraformVariableInputs);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -91,7 +91,7 @@ public class VariableImplTest {
 
     @Test
     public void getCreateVariableBody() throws Exception {
-        String createVariableBody = VariableImpl.createVariableRequestBody(createVariableInputs);
+        String createVariableBody = VariableImpl.createVariableRequestBody(terraformVariableInputs);
 
         assertEquals(EXPECTED_CREATE_VARIABLE_BODY, createVariableBody);
     }

@@ -57,8 +57,8 @@ public class ApplyRun {
     @Action(name = APPLY_RUN_OPERATION_NAME,
             description = APPLY_RUN_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = APPLY_RUN_RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = APPLY_RUN_EXCEPTION_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
