@@ -73,17 +73,20 @@ public class Descriptions {
         public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
                 "Default: 'false'";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
+        public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page.";
+        public static final String PAGE_SIZE_DESC = "Optional. If omitted, the endpoint will return 20 items per page. " +
+                "The maximum page size is 150.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
+        public static final String FAILURE_DESC = "There was an error while executing the request.";
+        public static final String SUCCESS_DESC = "The request was successfully executed.";
+        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
     }
 
 
     public static class ListOAuthClient {
-        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response containing the messages.";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
-        public static final String FAILURE_DESC = "There was an error while trying to get the messages.";
-        public static final String SUCCESS_DESC = "The request was successfully executed.";
         public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
-        public static final String OAUTH_TOKEN_ID_DESCRIPTION="The VCS Connection (OAuth Connection + Token) to use. " +
+        public static final String OAUTH_TOKEN_ID_DESCRIPTION = "The VCS Connection (OAuth Connection + Token) to use. " +
                 "This ID can be obtained from the oauth-tokens endpoint.";
         public static final String LIST_OAUTH_CLIENT_DESC = "List An OAuth Client Id";
     }
@@ -93,7 +96,7 @@ public class Descriptions {
         public static final String WORKSPACE_NAME_DESC = "The name of the workspace, which can only include letters, numbers, -, and _. " +
                 "This will be used as an identifier and must be unique in the organization.";
         public static final String WORKSPACE_DESCRIPTION_DESC = "A description of the workspace to be created.";
-        public static final String AUTO_APPLY_DESC = "Whether to automatically apply changes when a Terraform plan is successful, with some exceptions."+
+        public static final String AUTO_APPLY_DESC = "Whether to automatically apply changes when a Terraform plan is successful, with some exceptions." +
                 "Default: false";
         public static final String FILE_TRIGGERS_ENABLED_DESC = "Whether to filter runs based on the changed files in a VCS push. " +
                 "If enabled, the working-directory and trigger-prefixes describe a set of paths which must contain changes for a VCS" +
@@ -115,7 +118,7 @@ public class Descriptions {
         public static final String VCS_REPO_ID_DESC = "A reference to your VCS repository in the format :org/:repo where :org and :repo refer to the organization and " +
                 "repository in your VCS provider.";
         public static final String WORKSPACE_REQUEST_BODY_DESC = "The request body of the workspace.";
-        public static final String WORKSPACE_ID_DESC ="The Id of created workspace";
+        public static final String WORKSPACE_ID_DESC = "The Id of the workspace";
         public static final String CREATE_WORKSPACE_RETURN_RESULT_DESC = "The response of the workspace";
         public static final String CREATE_WORKSPACE_EXCEPTION_DESC = "An error message in case there was an error while creating the workspace.";
         public static final String FAILURE_DESC = "There was an error while creating workspace.";
@@ -123,20 +126,22 @@ public class Descriptions {
 
     }
 
-    public static class CreateRun{
+    public static class CreateRun {
         public static final String CREATE_RUN_DESC = "Creates a run in workspace.";
         public static final String CREATE_RUN_REQUEST_BODY_DESC = "The request body of the crate run.";
-        public static  final String RUN_MESSAGE_DESC = "Specifies the message to be associated with this run";
-        public static  final String IS_DESTROY_DESC = "Specifies if this plan is a destroy plan, which will destroy all provisioned resources.";
-        public static final String RUN_ID_DESC="Id of the run.";
+        public static final String RUN_MESSAGE_DESC = "Specifies the message to be associated with this run";
+        public static final String IS_DESTROY_DESC = "Specifies if this plan is a destroy plan, which will destroy all provisioned resources.";
+        public static final String RUN_ID_DESC = "Id of the run.";
+    }
+
+    public static class ListRunsInWorkspace {
+        public static final String LIST_RUNS_IN_WORKSPACE_DESC = "Lists the runs in a workspace.";
     }
 
     public static class ApplyRun {
         public static final String APPLY_RUN_DESC = "Applies a run that is paused waiting for confirmation after a plan. This includes runs in the \"needs confirmation\" and \"policy checked\" states. This action is only required for runs that can't be auto-applied.";
         public static final String RUN_COMMENT_DESC = "Specifies the comment to be associated with this run";
         public static final String RUN_DESC = "Specifies the run";
-        public static final String APPLY_RUN_RETURN_RESULT_DESC = "The response of the apply run.";
-        public static final String APPLY_RUN_EXCEPTION_DESC = "An error message in case there was an error while apply run.";
         public static final String APPLY_RUN_REQUEST_BODY_DESC = "Request Body for the apply run.";
     }
 
@@ -156,7 +161,7 @@ public class Descriptions {
     public static class GetWorkspaceDetails {
         public static final String GET_WORKSPACE_DETAILS_DESC = "Get details of workspace in an organization.";
         public static final String WORKSPACE_NAME_DESC = "The name of workspace whose description is to be fetched.";
-        public static final String WORKSPACE_ID_DESC ="The Id of the workspace";
+        public static final String WORKSPACE_ID_DESC = "The Id of the workspace";
         public static final String GET_WORKSPACE_DETAILS_RETURN_RESULT_DESC = "Workspace details in response";
         public static final String GET_WORKSPACE_DETAILS_EXCEPTION_DESC = "An error message in case there was an error while creating the message.";
         public static final String FAILURE_DESC = "There was an error while creating workspace.";

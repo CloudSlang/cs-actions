@@ -39,6 +39,8 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.CREATE_VARIABLE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_ID_JSON_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.FAILURE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
