@@ -26,7 +26,6 @@ import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -35,8 +34,8 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.listWorkspaces;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListWorkspaces.LIST_WORKSPACES_OPERATION_NAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListWorkspaces.WORKSPACES_LIST_JSON_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListWorkspacesConstants.LIST_WORKSPACES_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListWorkspacesConstants.WORKSPACES_LIST_JSON_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListWorkspaces.LIST_WORKSPACES_OPERATION_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListWorkspaces.WORKSPACE_LIST_DESC;
@@ -84,7 +83,6 @@ public class ListWorkspaces {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
-
         pageNumber = defaultIfEmpty(pageNumber, DEFAULT_PAGE_NUMBER);
         pageSize = defaultIfEmpty(pageSize, DEFAULT_PAGE_SIZE);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
@@ -109,28 +107,27 @@ public class ListWorkspaces {
         }
 
         try {
-            final Map<String, String> result = listWorkspaces(TerraformWorkspaceInputs.builder()
-                    .commonInputs(TerraformCommonInputs.builder()
-                            .organizationName(organizationName)
-                            .authToken(authToken)
-                            .pageNumber(pageNumber)
-                            .pageSize(pageSize)
-                            .proxyHost(proxyHost)
-                            .proxyPort(proxyPort)
-                            .proxyUsername(proxyUsername)
-                            .proxyPassword(proxyPassword)
-                            .trustAllRoots(trustAllRoots)
-                            .x509HostnameVerifier(x509HostnameVerifier)
-                            .trustKeystore(trustKeystore)
-                            .trustPassword(trustPassword)
-                            .connectTimeout(connectTimeout)
-                            .socketTimeout(socketTimeout)
-                            .keepAlive(keepAlive)
-                            .connectionsMaxPerRoot(connectionsMaxPerRoute)
-                            .connectionsMaxTotal(connectionsMaxTotal)
-                            .responseCharacterSet(responseCharacterSet)
-                            .build())
+            final Map<String, String> result = listWorkspaces(TerraformCommonInputs.builder()
+                    .organizationName(organizationName)
+                    .authToken(authToken)
+                    .pageNumber(pageNumber)
+                    .pageSize(pageSize)
+                    .proxyHost(proxyHost)
+                    .proxyPort(proxyPort)
+                    .proxyUsername(proxyUsername)
+                    .proxyPassword(proxyPassword)
+                    .trustAllRoots(trustAllRoots)
+                    .x509HostnameVerifier(x509HostnameVerifier)
+                    .trustKeystore(trustKeystore)
+                    .trustPassword(trustPassword)
+                    .connectTimeout(connectTimeout)
+                    .socketTimeout(socketTimeout)
+                    .keepAlive(keepAlive)
+                    .connectionsMaxPerRoot(connectionsMaxPerRoute)
+                    .connectionsMaxTotal(connectionsMaxTotal)
+                    .responseCharacterSet(responseCharacterSet)
                     .build());
+
 
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);

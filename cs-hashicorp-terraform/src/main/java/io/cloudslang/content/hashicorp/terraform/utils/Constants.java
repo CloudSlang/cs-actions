@@ -107,11 +107,11 @@ public class Constants {
         public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
     }
 
-    public static class DeleteWorkspace {
+    public static class DeleteWorkspaceConstants {
         public static final String DELETE_WORKSPACE_OPERATION_NAME = "Delete Workspace";
     }
 
-    public static class ListWorkspaces {
+    public static class ListWorkspacesConstants {
         public static final String LIST_WORKSPACES_OPERATION_NAME = "List Workspaces";
         public static final String WORKSPACES_LIST_JSON_PATH = "$.data[*].attributes.name";
 
