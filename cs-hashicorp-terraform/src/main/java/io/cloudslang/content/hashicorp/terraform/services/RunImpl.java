@@ -17,7 +17,8 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.hashicorp.terraform.entities.*;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformRunInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.runs.ApplyRunRequestBody;
 import io.cloudslang.content.hashicorp.terraform.services.models.runs.CreateRunBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
@@ -32,8 +33,8 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRun
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_TYPE;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_TYPE;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetRunDetailsConstants.GET_RUN_DETAILS_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;

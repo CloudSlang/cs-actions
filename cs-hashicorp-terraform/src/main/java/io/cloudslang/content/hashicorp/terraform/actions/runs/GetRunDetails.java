@@ -35,10 +35,7 @@ import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.getRunD
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetRunDetailsConstants.GET_RUN_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetRunDetails.GET_RUN_DETAILS_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.FAILURE_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.GetRunDetailInputs.RUN_ID;
