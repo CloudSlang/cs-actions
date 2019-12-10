@@ -161,10 +161,9 @@ public class CreateRun {
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                final List<String> runEventIdList = JsonPath.read(returnMessage, RUN_ID_PATH);
-                if (!runEventIdList.isEmpty()) {
-                    final String runEventIdListAsString = join(runEventIdList.toArray(), DELIMITER);
-                    results.put(RUN_ID, runEventIdListAsString);
+                final String runEventId = JsonPath.read(returnMessage, RUN_ID_PATH);
+                if (!runEventId.isEmpty()) {
+                    results.put(RUN_ID, runEventId);
                 } else {
                     results.put(RUN_ID, EMPTY);
                 }
