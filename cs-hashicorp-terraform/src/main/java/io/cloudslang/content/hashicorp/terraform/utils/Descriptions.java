@@ -118,7 +118,7 @@ public class Descriptions {
         public static final String VCS_REPO_ID_DESC = "A reference to your VCS repository in the format :org/:repo where :org and :repo refer to the organization and " +
                 "repository in your VCS provider.";
         public static final String WORKSPACE_REQUEST_BODY_DESC = "The request body of the workspace.";
-        public static final String WORKSPACE_ID_DESC = "The Id of created workspace";
+        public static final String WORKSPACE_ID_DESC = "The Id of the workspace";
         public static final String CREATE_WORKSPACE_RETURN_RESULT_DESC = "The response of the workspace";
         public static final String CREATE_WORKSPACE_EXCEPTION_DESC = "An error message in case there was an error while creating the workspace.";
         public static final String FAILURE_DESC = "There was an error while creating workspace.";

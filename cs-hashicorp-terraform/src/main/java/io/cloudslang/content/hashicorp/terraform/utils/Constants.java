@@ -29,7 +29,7 @@ public class Constants {
         public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid proxy details.";
         public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
         public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
-        public static final String EXCEPTION_EMPTY_FILE_PATH_AND_CONTENT_BYTES = "The filePath or both contentName and contentBytes inputs are required.";
+        public static final String EXCEPTION_INVALID_NAME = "The %s can only contain letters, numbers, underscores, and hyphens";
         public static final String ANONYMOUS = "anonymous";
         public static final String GET = "GET";
         public static final String POST = "POST";
@@ -67,6 +67,10 @@ public class Constants {
         public static final String SIZE = "size";
         public static final String PASSWORD_BODY = "password";
         public static final String VALUE = "value";
+        public static final String DEFAULT_PAGE_NUMBER = "1";
+        public static final String DEFAULT_PAGE_SIZE = "100";
+        public static final String PAGE_NUMBER = "page[number]=";
+        public static final String PAGE_SIZE = "page[size]=";
     }
 
     public static class CreateWorkspace {
@@ -85,7 +89,7 @@ public class Constants {
 
     public static class CreateRunConstants {
         public static final String CREATE_RUN_OPERATION_NAME = "Create Run";
-        public static final String CREATE_RUN_PATH = "/runs";
+        public static final String RUN_PATH = "/runs";
         public static final String RUN_TYPE = "runs";
         public static final String RUN_ID_PATH = "data.id";
 
@@ -93,8 +97,11 @@ public class Constants {
 
     public static class ApplyRunConstants {
         public static final String APPLY_RUN_OPERATION_NAME = "Apply Run";
-        public static final String RUN_PATH = "/runs/";
         public static final String APPLY_RUN_PATH = "/actions/apply";
+    }
+
+    public static class ListRunsInWorkspaceConstants {
+        public static final String LIST_RUNS_IN_WORKSPACE_OPERATION_NAME = "List Runs in a Workspace";
     }
 
     public static class CreateVariableConstants {
@@ -119,9 +126,7 @@ public class Constants {
         public static final String WORKSPACE_ID_JSON_PATH = "data.id";
     }
 
-    public static class GetRunDetailsConstants{
+    public static class GetRunDetailsConstants {
         public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
-        public static  final String GET_RUN_DETAILS_PATH="/runs/";
-
     }
 }
