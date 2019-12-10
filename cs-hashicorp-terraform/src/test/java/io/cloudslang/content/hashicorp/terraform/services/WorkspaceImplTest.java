@@ -85,7 +85,7 @@ public class WorkspaceImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createWorkspaceThrows() throws Exception {
-        WorkspaceImpl.createWorkspace(invalidTerraformWorkspaceInputs);
+        WorkspaceImpl.createWorkspace(invalidCreateWorkspaceInputs);
     }
 
     @Test

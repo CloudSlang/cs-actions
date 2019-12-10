@@ -105,7 +105,7 @@ public class Constants {
         public static final String WORKSPACE_NAME = "filter[workspace][name]";
     }
 
-    public static class GetWorkspaceDetails {
+    public static class GetWorkspaceDetailsConstants {
         public static final String GET_WORKSPACE_DETAILS_OPERATION_NAME = "Get Workspace Details";
     }
 
