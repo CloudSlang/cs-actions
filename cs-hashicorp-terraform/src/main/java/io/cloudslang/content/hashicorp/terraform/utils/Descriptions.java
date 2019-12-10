@@ -76,14 +76,14 @@ public class Descriptions {
         public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page.";
         public static final String PAGE_SIZE_DESC = "Optional. If omitted, the endpoint will return 20 items per page. " +
                 "The maximum page size is 150.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
+        public static final String FAILURE_DESC = "There was an error while trying to get the messages.";
+        public static final String SUCCESS_DESC = "The request was successfully executed.";
     }
 
 
     public static class ListOAuthClient {
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response containing the messages.";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
-        public static final String FAILURE_DESC = "There was an error while trying to get the messages.";
-        public static final String SUCCESS_DESC = "The request was successfully executed.";
         public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String OAUTH_TOKEN_ID_DESCRIPTION = "The VCS Connection (OAuth Connection + Token) to use. " +
