@@ -38,6 +38,8 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAut
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.*;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.FAILURE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;

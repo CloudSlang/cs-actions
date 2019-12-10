@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.ORGANIZATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.VCS_REPO_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.WORKSPACE_NAME;
@@ -67,6 +66,7 @@ public final class InputsValidation {
         if (requestBody.isEmpty()) {
             addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
             addVerifyString(exceptionMessages, variableName, VARIABLE_NAME);
+            validateInputPropertyName(exceptionMessages, variableName, VARIABLE_NAME);
             addVerifyString(exceptionMessages, variableValue, VARIABLE_VALUE);
             addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
         } else {
@@ -94,6 +94,7 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
         if (requestBody.isEmpty()) {
             addVerifyString(exceptionMessages, workspaceName, WORKSPACE_NAME);
+            validateInputPropertyName(exceptionMessages, workspaceName, WORKSPACE_NAME);
             addVerifyString(exceptionMessages, vcsRepoId, VCS_REPO_ID);
             addVerifyString(exceptionMessages, oauthTokenId, OAUTH_TOKEN_ID);
         } else {
@@ -106,7 +107,19 @@ public final class InputsValidation {
     public static List<String> verifyGetWorkspaceDetailsInputs(@Nullable final String workspaceName) {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyString(exceptionMessages, workspaceName, WORKSPACE_NAME);
+        validateInputPropertyName(exceptionMessages, workspaceName, WORKSPACE_NAME);
         return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> validateInputPropertyName(@NotNull List<String> exceptions, @Nullable final String input,
+                                                         @NotNull final String inputName) {
+        String regex = "[*a-zA-Z0-9_-]+";
+        boolean isWorkspaceNameValid = ((input.matches(regex)));
+        if (!isWorkspaceNameValid) {
+            exceptions.add(String.format(EXCEPTION_INVALID_NAME, input, inputName));
+        }
+        return exceptions;
     }
 
     @NotNull
@@ -120,24 +133,6 @@ public final class InputsValidation {
         return exceptionMessages;
     }
 
-    @NotNull
-    private static List<String> addVerifyUserInputs(@NotNull List<String> exceptions, @Nullable final
-    String organizationName) {
-        if (isEmpty(organizationName)) {
-            exceptions.add(String.format(ORGANIZATION_NAME));
-        }
-        return exceptions;
-    }
-
-
-    @NotNull
-    private static List<String> addVerifyNotNullOrEmpty(@NotNull List<String> exceptions, @Nullable final
-    String input, @NotNull final String inputName) {
-        if (isEmpty(input)) {
-            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
-        }
-        return exceptions;
-    }
 
     @NotNull
     private static List<String> addVerifyProxy(@NotNull List<String> exceptions, @Nullable final String input,

@@ -21,8 +21,8 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.GetWorkspaceDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -36,8 +36,8 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.getWorkspaceDetails;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetWorkspaceDetails.GET_WORKSPACE_DETAILS_OPERATION_NAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetWorkspaceDetails.WORKSPACE_ID_JSON_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_ID_JSON_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetWorkspaceDetailsConstants.GET_WORKSPACE_DETAILS_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
@@ -60,8 +60,8 @@ public class GetWorkspaceDetails {
     @Action(name = GET_WORKSPACE_DETAILS_OPERATION_NAME,
             description = GET_WORKSPACE_DETAILS_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = GET_WORKSPACE_DETAILS_RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = GET_WORKSPACE_DETAILS_EXCEPTION_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC),
             },
@@ -71,7 +71,7 @@ public class GetWorkspaceDetails {
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, encrypted = true, required = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = ORGANIZATION_NAME, required = true, description = ORGANIZATION_NAME_DESC) String organizationName,
-                                       @Param(value = WORKSPACE_NAME, description = WORKSPACE_NAME_DESC) String workspaceName,
+                                       @Param(value = WORKSPACE_NAME, required = true, description = WORKSPACE_NAME_DESC) String workspaceName,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -86,9 +86,7 @@ public class GetWorkspaceDetails {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
-        authToken = defaultIfEmpty(authToken, EMPTY);
-        organizationName = defaultIfEmpty(organizationName, EMPTY);
-        workspaceName = defaultIfEmpty(workspaceName, EMPTY);
+
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -116,7 +114,7 @@ public class GetWorkspaceDetails {
         }
 
         try {
-            final Map<String, String> result = getWorkspaceDetails(GetWorkspaceDetailsInputs.builder()
+            final Map<String, String> result = getWorkspaceDetails(TerraformWorkspaceInputs.builder()
                     .workspaceName(workspaceName)
                     .commonInputs(TerraformCommonInputs.builder()
                             .organizationName(organizationName)
@@ -144,7 +142,6 @@ public class GetWorkspaceDetails {
             if (statusCode >= 200 && statusCode < 300) {
                 final String workspaceId = JsonPath.read(returnMessage, WORKSPACE_ID_JSON_PATH);
                 if (!workspaceId.isEmpty()) {
-
                     results.put(WORKSPACE_ID, workspaceId);
                 } else {
                     results.put(WORKSPACE_ID, EMPTY);

@@ -20,8 +20,8 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.GetWorkspaceDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -37,9 +37,8 @@ import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.d
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.DeleteWorkspace.DELETE_WORKSPACE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_NAME_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.DeleteWorkspace.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.DeleteWorkspace.DELETE_WORKSPACE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -59,8 +58,8 @@ public class DeleteWorkspace {
     @Action(name = DELETE_WORKSPACE_OPERATION_NAME,
             description = DELETE_WORKSPACE_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = DELETE_WORKSPACE_RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = DELETE_WORKSPACE_EXCEPTION_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
             },
             responses = {
@@ -84,8 +83,7 @@ public class DeleteWorkspace {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
-        authToken = defaultIfEmpty(authToken, EMPTY);
-        organizationName = defaultIfEmpty(organizationName, EMPTY);
+
         workspaceName = defaultIfEmpty(workspaceName, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -114,7 +112,7 @@ public class DeleteWorkspace {
         }
 
         try {
-            final Map<String, String> result = deleteWorkspace(GetWorkspaceDetailsInputs.builder()
+            final Map<String, String> result = deleteWorkspace(TerraformWorkspaceInputs.builder()
                     .workspaceName(workspaceName)
                     .commonInputs(TerraformCommonInputs.builder()
                             .organizationName(organizationName)

@@ -17,7 +17,7 @@ package io.cloudslang.content.hashicorp.terraform.entities;
 
 import org.jetbrains.annotations.NotNull;
 
-public class CreateWorkspaceInputs {
+public class TerraformWorkspaceInputs {
 
     private final String workspaceName;
     private final String workspaceDescription;
@@ -35,8 +35,8 @@ public class CreateWorkspaceInputs {
 
     @java.beans.ConstructorProperties({"workspaceName", "workspaceDescription", "autoApply", "fileTriggersEnabled", "workingDirectory", "triggerPrefixes", "queueAllRuns",
             "speculativeEnabled", "ingressSubmodules", "vcsRepoId", "vcsBranchName", "oauthTokenId", "commonInputs"})
-    public CreateWorkspaceInputs(String workspaceName, String workspaceDescription, String autoApply, String fileTriggersEnabled, String workingDirectory, String triggerPrefixes, String queueAllRuns, String speculativeEnabled,
-                                 String ingressSubmodules, String vcsRepoId, String vcsBranchName, String oauthTokenId, TerraformCommonInputs commonInputs) {
+    public TerraformWorkspaceInputs(String workspaceName, String workspaceDescription, String autoApply, String fileTriggersEnabled, String workingDirectory, String triggerPrefixes, String queueAllRuns, String speculativeEnabled,
+                                    String ingressSubmodules, String vcsRepoId, String vcsBranchName, String oauthTokenId, TerraformCommonInputs commonInputs) {
         this.workspaceName = workspaceName;
         this.workspaceDescription = workspaceDescription;
         this.autoApply = autoApply;
@@ -53,8 +53,8 @@ public class CreateWorkspaceInputs {
     }
 
     @NotNull
-    public static CreateWorkspaceInputsBuilder builder() {
-        return new CreateWorkspaceInputsBuilder();
+    public static TerraformWorkspaceInputsBuilder builder() {
+        return new TerraformWorkspaceInputsBuilder();
     }
 
     @NotNull
@@ -123,7 +123,7 @@ public class CreateWorkspaceInputs {
     }
 
 
-    public static class CreateWorkspaceInputsBuilder {
+    public static class TerraformWorkspaceInputsBuilder {
         private String workspaceName;
         private String workspaceDescription;
         private String autoApply;
@@ -138,89 +138,89 @@ public class CreateWorkspaceInputs {
         private String oauthTokenId;
         private TerraformCommonInputs commonInputs;
 
-        CreateWorkspaceInputsBuilder() {
+        TerraformWorkspaceInputsBuilder() {
 
         }
 
         @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder workspaceName(@NotNull final String workspaceName) {
+        public TerraformWorkspaceInputs.TerraformWorkspaceInputsBuilder workspaceName(@NotNull final String workspaceName) {
             this.workspaceName = workspaceName;
             return this;
         }
 
         @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder workspaceDescription(@NotNull final String workspaceDescription) {
+        public TerraformWorkspaceInputs.TerraformWorkspaceInputsBuilder workspaceDescription(@NotNull final String workspaceDescription) {
             this.workspaceDescription = workspaceDescription;
             return this;
         }
 
         @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder autoApply(@NotNull final String autoApply) {
+        public TerraformWorkspaceInputs.TerraformWorkspaceInputsBuilder autoApply(@NotNull final String autoApply) {
             this.autoApply = autoApply;
             return this;
         }
 
         @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder fileTriggersEnabled(@NotNull final String fileTriggersEnabled) {
+        public TerraformWorkspaceInputs.TerraformWorkspaceInputsBuilder fileTriggersEnabled(@NotNull final String fileTriggersEnabled) {
             this.fileTriggersEnabled = fileTriggersEnabled;
             return this;
         }
 
         @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder workingDirectory(@NotNull final String workingDirectory) {
+        public TerraformWorkspaceInputs.TerraformWorkspaceInputsBuilder workingDirectory(@NotNull final String workingDirectory) {
             this.workingDirectory = workingDirectory;
             return this;
         }
 
         @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder triggerPrefixes(@NotNull final String triggerPrefixes) {
+        public TerraformWorkspaceInputs.TerraformWorkspaceInputsBuilder triggerPrefixes(@NotNull final String triggerPrefixes) {
             this.triggerPrefixes = triggerPrefixes;
             return this;
         }
 
         @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder queueAllRuns(@NotNull final String queueAllRuns) {
+        public TerraformWorkspaceInputs.TerraformWorkspaceInputsBuilder queueAllRuns(@NotNull final String queueAllRuns) {
             this.queueAllRuns = queueAllRuns;
             return this;
         }
 
         @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder speculativeEnabled(@NotNull final String speculativeEnabled) {
+        public TerraformWorkspaceInputs.TerraformWorkspaceInputsBuilder speculativeEnabled(@NotNull final String speculativeEnabled) {
             this.speculativeEnabled = speculativeEnabled;
             return this;
         }
 
         @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder ingressSubmodules(@NotNull final String ingressSubmodules) {
+        public TerraformWorkspaceInputs.TerraformWorkspaceInputsBuilder ingressSubmodules(@NotNull final String ingressSubmodules) {
             this.ingressSubmodules = ingressSubmodules;
             return this;
         }
 
         @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder vcsRepoId(@NotNull final String vcsRepoId) {
+        public TerraformWorkspaceInputs.TerraformWorkspaceInputsBuilder vcsRepoId(@NotNull final String vcsRepoId) {
             this.vcsRepoId = vcsRepoId;
             return this;
         }
 
         @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder vcsBranchName(@NotNull final String vcsBranchName) {
+        public TerraformWorkspaceInputs.TerraformWorkspaceInputsBuilder vcsBranchName(@NotNull final String vcsBranchName) {
             this.vcsBranchName = vcsBranchName;
             return this;
         }
 
         @NotNull
-        public CreateWorkspaceInputs.CreateWorkspaceInputsBuilder oauthTokenId(@NotNull final String oauthTokenId) {
+        public TerraformWorkspaceInputs.TerraformWorkspaceInputsBuilder oauthTokenId(@NotNull final String oauthTokenId) {
             this.oauthTokenId = oauthTokenId;
             return this;
         }
 
-        public CreateWorkspaceInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
+        public TerraformWorkspaceInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
-        public CreateWorkspaceInputs build() {
-            return new CreateWorkspaceInputs(workspaceName, workspaceDescription, autoApply, fileTriggersEnabled, workingDirectory, triggerPrefixes, queueAllRuns, speculativeEnabled, ingressSubmodules, vcsRepoId, vcsBranchName, oauthTokenId, commonInputs);
+        public TerraformWorkspaceInputs build() {
+            return new TerraformWorkspaceInputs(workspaceName, workspaceDescription, autoApply, fileTriggersEnabled, workingDirectory, triggerPrefixes, queueAllRuns, speculativeEnabled, ingressSubmodules, vcsRepoId, vcsBranchName, oauthTokenId, commonInputs);
         }
 
     }

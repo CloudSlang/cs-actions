@@ -17,9 +17,8 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.GetWorkspaceDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.workspace.CreateWorkspaceRequestBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
@@ -33,16 +32,15 @@ import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_PATH;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_TYPE;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetWorkspaceDetails.GET_WORKSPACE_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class WorkspaceImpl {
 
     @NotNull
-    public static Map<String, String> createWorkspace(@NotNull final CreateWorkspaceInputs createWorkspaceInputs)
+    public static Map<String, String> createWorkspace(@NotNull final TerraformWorkspaceInputs createWorkspaceInputs)
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = createWorkspaceInputs.getCommonInputs();
@@ -62,7 +60,7 @@ public class WorkspaceImpl {
     }
 
     @NotNull
-    public static Map<String, String> deleteWorkspace(@NotNull final GetWorkspaceDetailsInputs deleteWorkspaceInputs)
+    public static Map<String, String> deleteWorkspace(@NotNull final TerraformWorkspaceInputs deleteWorkspaceInputs)
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = deleteWorkspaceInputs.getCommonInputs();
@@ -78,7 +76,7 @@ public class WorkspaceImpl {
     }
 
     @NotNull
-    public static Map<String, String> listWorkspaces(@NotNull final GetWorkspaceDetailsInputs listWorkspacesInputs)
+    public static Map<String, String> listWorkspaces(@NotNull final TerraformWorkspaceInputs listWorkspacesInputs)
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = listWorkspacesInputs.getCommonInputs();
@@ -95,7 +93,7 @@ public class WorkspaceImpl {
     }
 
     @NotNull
-    public static Map<String, String> getWorkspaceDetails(@NotNull final GetWorkspaceDetailsInputs
+    public static Map<String, String> getWorkspaceDetails(@NotNull final TerraformWorkspaceInputs
                                                                   getWorkspaceDetailsInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = getWorkspaceDetailsInputs.getCommonInputs();
@@ -143,13 +141,14 @@ public class WorkspaceImpl {
                 .append(API_VERSION)
                 .append(ORGANIZATION_PATH)
                 .append(organizationName)
-                .append(GET_WORKSPACE_PATH)
+                .append(WORKSPACE_PATH)
+                .append(PATH_SEPARATOR)
                 .append(workspaceName);
         return pathString.toString();
     }
 
     @NotNull
-    public static String createWorkspaceBody(CreateWorkspaceInputs createWorkspaceInputs, String delimiter) {
+    public static String createWorkspaceBody(TerraformWorkspaceInputs createWorkspaceInputs, String delimiter) {
         String requestBody = EMPTY;
         final List<String> triggerPrefixesList = new ArrayList<>();
         ObjectMapper createWorkspaceMapper = new ObjectMapper();

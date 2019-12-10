@@ -28,6 +28,7 @@ public class Constants {
         public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid proxy details.";
         public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
         public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
+        public static final String EXCEPTION_INVALID_NAME = "The %s can only contain letters, numbers, underscores, and hyphens";
         public static final String ANONYMOUS = "anonymous";
         public static final String GET = "GET";
         public static final String POST = "POST";
@@ -60,7 +61,7 @@ public class Constants {
         public static final String PAGE_SIZE = "page[size]=";
     }
 
-    public static class CreateWorkspace {
+    public static class CreateWorkspaceConstants {
         public static final String CREATE_WORKSPACE_OPERATION_NAME = "Create Workspace";
         public static final String WORKSPACE_PATH = "/workspaces";
         public static final String WORKSPACE_ID_JSON_PATH = "$.data.id";
@@ -93,13 +94,10 @@ public class Constants {
         public static final String VARIABLE_PATH = "/vars";
         public static final String VARIABLE_TYPE = "vars";
         public static final String VARIABLE_ID_JSON_PATH = "$.data.id";
-
     }
 
-    public static class GetWorkspaceDetails {
+    public static class GetWorkspaceDetailsConstants {
         public static final String GET_WORKSPACE_DETAILS_OPERATION_NAME = "Get Workspace Details";
-        public static final String GET_WORKSPACE_PATH = "/workspaces/";
-        public static final String WORKSPACE_ID_JSON_PATH = "$.data.id";
     }
 
     public static class GetRunDetailsConstants{

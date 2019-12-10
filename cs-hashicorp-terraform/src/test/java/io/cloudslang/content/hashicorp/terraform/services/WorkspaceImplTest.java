@@ -15,8 +15,8 @@
 
 package io.cloudslang.content.hashicorp.terraform.services;
 
-import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -42,7 +42,7 @@ public class WorkspaceImplTest {
     private static final String EXPECTED_LIST_WORKSPACES_PATH = "/api/v2/organizations/test/workspaces";
 
 
-    private final CreateWorkspaceInputs invalidCreateWorkspaceInputs = CreateWorkspaceInputs.builder()
+    private final TerraformWorkspaceInputs invalidCreateWorkspaceInputs = TerraformWorkspaceInputs.builder()
             .workspaceName("test")
             .workspaceDescription("test")
             .autoApply("true")

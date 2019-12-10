@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyGetWorkspaceDetailsInputs;
 import static org.junit.Assert.assertEquals;
 
 public class InputsValidationUtilsTest {
@@ -21,6 +22,8 @@ public class InputsValidationUtilsTest {
     private static final String NUMBER_VALIDATOR_EXCEPTION = "The invalid for socketTimeout input is not a valid number value.";
     private static final String BOOLEAN_VALIDATOR = "The invalid for trustAllRoots input is not a valid boolean value.";
     private static final String INVALID = "invalid";
+    private static final String INVALID_WORKSPACE_NAME = "workspace@123";
+    private static final String INVALID_WORKSPACE_NAME_EXCEPTION = "The workspace@123 can only contain letters, numbers, underscores, and hyphens";
     private List<String> exceptionMessages = new ArrayList<>();
 
     @Test
@@ -39,4 +42,10 @@ public class InputsValidationUtilsTest {
         assertEquals(exceptionMessages.get(1), NUMBER_VALIDATOR_EXCEPTION);
     }
 
+    @Test
+    public void verifyGetWorkspaceDetailsInputsTest() {
+        exceptionMessages = verifyGetWorkspaceDetailsInputs(INVALID_WORKSPACE_NAME);
+        assertEquals(exceptionMessages.size(), 1);
+        assertEquals(exceptionMessages.get(0), INVALID_WORKSPACE_NAME_EXCEPTION);
+    }
 }

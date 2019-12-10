@@ -77,17 +77,18 @@ public class Descriptions {
         public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page.";
         public static final String PAGE_SIZE_DESC = "Optional. If omitted, the endpoint will return 20 items per page. " +
                 "The maximum page size is 150.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the " +
+                "request.";
+        public static final String FAILURE_DESC = "There was an error while executing the request.";
+        public static final String SUCCESS_DESC = "The request was successfully executed.";
+        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of " +
+                "an error this output will contain the error message.";
     }
 
 
     public static class ListOAuthClient {
-        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response containing " +
-                "the List of OAuth Client Id's.";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
         public static final String FAILURE_DESC = "There was an error while trying to get the OAuth Clients.";
         public static final String SUCCESS_DESC = "The request was successfully executed.";
-        public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
-        public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String OAUTH_TOKEN_ID_DESCRIPTION = "The VCS Connection (OAuth Connection + Token) to use. " +
                 "This ID can be obtained from the oauth-tokens endpoint.";
         public static final String LIST_OAUTH_CLIENT_DESC = "List An OAuth Client Id";
@@ -130,12 +131,6 @@ public class Descriptions {
                 "repository in your VCS provider.";
         public static final String WORKSPACE_REQUEST_BODY_DESC = "The request body of the workspace.";
         public static final String WORKSPACE_ID_DESC = "The Id of created workspace";
-        public static final String CREATE_WORKSPACE_RETURN_RESULT_DESC = "The response of the workspace";
-        public static final String CREATE_WORKSPACE_EXCEPTION_DESC = "An error message in case there was an error " +
-                "while creating the workspace.";
-        public static final String FAILURE_DESC = "There was an error while creating workspace.";
-        public static final String SUCCESS_DESC = "The request was successfully executed.";
-
     }
 
     public static class CreateRun {
@@ -179,11 +174,6 @@ public class Descriptions {
         public static final String GET_WORKSPACE_DETAILS_DESC = "Get details of workspace in an organization.";
         public static final String WORKSPACE_NAME_DESC = "The name of workspace whose description is to be fetched.";
         public static final String WORKSPACE_ID_DESC = "The Id of the workspace";
-        public static final String GET_WORKSPACE_DETAILS_RETURN_RESULT_DESC = "Workspace details in response";
-        public static final String GET_WORKSPACE_DETAILS_EXCEPTION_DESC = "An error message in case there was an error " +
-                "while retrieving the workspace details.";
-        public static final String FAILURE_DESC = "There was an error while creating workspace.";
-        public static final String SUCCESS_DESC = "The request was successfully executed.";
     }
 
     public static class GetRunDetails {
@@ -196,18 +186,10 @@ public class Descriptions {
     public static class DeleteWorkspace {
         public static final String DELETE_WORKSPACE_DESC = "Delete the workspace from an organization using workspace " +
                 "name and organization name";
-        public static final String DELETE_WORKSPACE_RETURN_RESULT_DESC = "Deleted workspace successfully";
-        public static final String DELETE_WORKSPACE_EXCEPTION_DESC = "An error occurred while deleting the workspace.";
-        public static final String FAILURE_DESC = "There was an error while deleting workspace.";
     }
 
     public static class ListWorkspaces {
         public static final String LIST_WORKSPACES_OPERATION_DESC = "List of workspaces present in given Organization";
-        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response containing " +
-                "the List of workspaces.";
-        public static final String FAILURE_DESC = "There was an error while trying to get the workspaces in " +
-                "an organization.";
-        public static final String SUCCESS_DESC = "The request of list workspaces was successfully executed.";
         public static final String WORKSPACE_LIST_DESC = "List of all workspaces under the organization.";
     }
 }
