@@ -63,8 +63,8 @@ public class CreateVariable {
     @Action(name = CREATE_VARIABLE_OPERATION_NAME,
             description = CREATE_VARIABLE_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = CREATE_VARIABLE_RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = CREATE_VARIABLE_EXCEPTION_DESC),
+                    @Output(value = RETURN_RESULT, description =RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = VARIABLE_ID, description = VARIABLE_ID_DESC)
             },

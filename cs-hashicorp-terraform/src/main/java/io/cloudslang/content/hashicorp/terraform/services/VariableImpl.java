@@ -17,9 +17,9 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.variables.CreateVariableRequestBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
@@ -63,22 +63,20 @@ public class VariableImpl {
     @NotNull
     public static Map<String, String> listVariables(@NotNull final TerraformWorkspaceInputs terraformWorkspaceInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(listVariablesUrl(terraformWorkspaceInputs.getCommonInputs().getOrganizationName(),terraformWorkspaceInputs.getWorkspaceName()));
+        httpClientInputs.setUrl(listVariablesUrl());
         setCommonHttpInputs(httpClientInputs, terraformWorkspaceInputs.getCommonInputs());
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
-        httpClientInputs.setQueryParams(getListVariableQueryParams(terraformWorkspaceInputs.getCommonInputs().getOrganizationName(),terraformWorkspaceInputs.getWorkspaceName()));
+        httpClientInputs.setQueryParams(getListVariableQueryParams(terraformWorkspaceInputs.getCommonInputs().getOrganizationName(), terraformWorkspaceInputs.getWorkspaceName()));
         httpClientInputs.setResponseCharacterSet(terraformWorkspaceInputs.getCommonInputs().getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(terraformWorkspaceInputs.getCommonInputs().getAuthToken()));
-        System.out.println(httpClientInputs.getUrl());
-        System.out.println(httpClientInputs.getQueryParams());
         return new HttpClientService().execute(httpClientInputs);
     }
 
 
     @NotNull
-    public static String listVariablesUrl(String organizationName ,String workspaceName) throws Exception {
+    public static String listVariablesUrl() throws Exception {
 
         final URIBuilder uriBuilder = getUriBuilder();
         StringBuilder pathString = new StringBuilder()
@@ -95,6 +93,7 @@ public class VariableImpl {
         uriBuilder.setPath(getVariablePath());
         return uriBuilder.build().toURL().toString();
     }
+
     @NotNull
     public static String getListVariableQueryParams(String organizationName,
                                                     final String workspaceName) {

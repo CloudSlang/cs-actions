@@ -53,7 +53,7 @@ public class ListVariables {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = ORGANIZATION_NAME, required = true, description = ORGANIZATION_NAME_DESC) String organizationName,
+                                       @Param(value = ORGANIZATION_NAME,description = ORGANIZATION_NAME_DESC) String organizationName,
                                        @Param(value = WORKSPACE_NAME, description = WORKSPACE_NAME_DESC) String workspaceName,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -70,6 +70,8 @@ public class ListVariables {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
         authToken = defaultIfEmpty(authToken, EMPTY);
+        organizationName=defaultIfEmpty(organizationName,EMPTY);
+        workspaceName=defaultIfEmpty(workspaceName,EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -96,6 +98,7 @@ public class ListVariables {
                     workspaceName(workspaceName)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
+                            .organizationName(organizationName)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
