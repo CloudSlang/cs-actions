@@ -67,6 +67,7 @@ public class Constants {
         public static final String SIZE = "size";
         public static final String PASSWORD_BODY = "password";
         public static final String VALUE = "value";
+        public static final String EXCEPTION_INVALID_NAME = "The %s can only contain letters, numbers, underscores, and hyphens";
     }
 
     public static class CreateWorkspace {
@@ -103,6 +104,10 @@ public class Constants {
         public static final String VARIABLE_TYPE = "vars";
         public static final String VARIABLE_ID_JSON_PATH = "$.data.id";
 
+    }
+
+    public static class UpdateVariableConstants {
+        public static final String UPDATE_VARIABLE_OPERATION_NAME = "Update Variable";
     }
 
     public static class GetWorkspaceDetails {
