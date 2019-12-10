@@ -77,7 +77,7 @@ public class Constants {
 
     public static class CreateRunConstants {
         public static final String CREATE_RUN_OPERATION_NAME = "Create Run";
-        public static final String CREATE_RUN_PATH = "/runs";
+        public static final String RUN_PATH = "/runs";
         public static final String RUN_TYPE = "runs";
         public static final String RUN_ID_PATH = "$.data[*].relationships.run-events.data[*].id";
 
@@ -85,8 +85,11 @@ public class Constants {
 
     public static class ApplyRunConstants {
         public static final String APPLY_RUN_OPERATION_NAME = "Apply Run";
-        public static final String RUN_PATH = "/runs/";
         public static final String APPLY_RUN_PATH = "/actions/apply";
+    }
+
+    public static class ListRunsInWorkspaceConstants {
+        public static final String LIST_RUNS_IN_WORKSPACE_OPERATION_NAME = "List Runs in a Workspace";
     }
 
     public static class CreateVariableConstants {
@@ -100,9 +103,8 @@ public class Constants {
         public static final String GET_WORKSPACE_DETAILS_OPERATION_NAME = "Get Workspace Details";
     }
 
-    public static class GetRunDetailsConstants{
+    public static class GetRunDetailsConstants {
         public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
-        public static  final String GET_RUN_DETAILS_PATH="/runs/";
     }
 
     public static class DeleteWorkspace {
@@ -112,5 +114,6 @@ public class Constants {
     public static class ListWorkspaces {
         public static final String LIST_WORKSPACES_OPERATION_NAME = "List Workspaces";
         public static final String WORKSPACES_LIST_JSON_PATH = "$.data[*].attributes.name";
+
     }
 }

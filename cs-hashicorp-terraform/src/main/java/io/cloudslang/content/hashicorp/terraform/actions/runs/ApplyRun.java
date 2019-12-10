@@ -24,8 +24,8 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformRunInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -38,8 +38,6 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRun
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ApplyRun.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.FAILURE_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyRunInputs.RUN_COMMENT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyRunInputs.RUN_ID;
@@ -59,8 +57,8 @@ public class ApplyRun {
     @Action(name = APPLY_RUN_OPERATION_NAME,
             description = APPLY_RUN_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = APPLY_RUN_RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = APPLY_RUN_EXCEPTION_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
@@ -123,7 +121,7 @@ public class ApplyRun {
         }
 
         try {
-            final Map<String, String> result = applyRunClient(ApplyRunInputs.builder()
+            final Map<String, String> result = applyRunClient(TerraformRunInputs.builder()
                     .runId(runId)
                     .runComment(runComment)
                     .commonInputs(TerraformCommonInputs.builder()

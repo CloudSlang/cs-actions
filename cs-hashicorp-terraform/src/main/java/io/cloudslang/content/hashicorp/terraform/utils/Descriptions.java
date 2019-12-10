@@ -87,8 +87,6 @@ public class Descriptions {
 
 
     public static class ListOAuthClient {
-        public static final String FAILURE_DESC = "There was an error while trying to get the OAuth Clients.";
-        public static final String SUCCESS_DESC = "The request was successfully executed.";
         public static final String OAUTH_TOKEN_ID_DESCRIPTION = "The VCS Connection (OAuth Connection + Token) to use. " +
                 "This ID can be obtained from the oauth-tokens endpoint.";
         public static final String LIST_OAUTH_CLIENT_DESC = "List An OAuth Client Id";
@@ -130,7 +128,7 @@ public class Descriptions {
                 "where :org and :repo refer to the organization and " +
                 "repository in your VCS provider.";
         public static final String WORKSPACE_REQUEST_BODY_DESC = "The request body of the workspace.";
-        public static final String WORKSPACE_ID_DESC = "The Id of created workspace";
+        public static final String WORKSPACE_ID_DESC = "The Id of the workspace";
     }
 
     public static class CreateRun {
@@ -142,14 +140,16 @@ public class Descriptions {
         public static final String RUN_ID_DESC = "Id of the run.";
     }
 
+    public static class ListRunsInWorkspace {
+        public static final String LIST_RUNS_IN_WORKSPACE_DESC = "Lists the runs in a workspace.";
+    }
+
     public static class ApplyRun {
         public static final String APPLY_RUN_DESC = "Applies a run that is paused waiting for confirmation after a " +
                 "plan. This includes runs in the \"needs confirmation\" and \"policy checked\" states. This action is " +
                 "only required for runs that can't be auto-applied.";
         public static final String RUN_COMMENT_DESC = "Specifies the comment to be associated with this run";
         public static final String RUN_DESC = "Specifies the run";
-        public static final String APPLY_RUN_RETURN_RESULT_DESC = "The response of the apply run.";
-        public static final String APPLY_RUN_EXCEPTION_DESC = "An error message in case there was an error while apply run.";
         public static final String APPLY_RUN_REQUEST_BODY_DESC = "Request Body for the apply run.";
     }
 
