@@ -41,7 +41,6 @@ public class WorkspaceImplTest {
     private static final String EXPECTED_DELETE_WORKSPACE_PATH = "/api/v2/organizations/test/workspaces/test";
     private static final String EXPECTED_LIST_WORKSPACES_PATH = "/api/v2/organizations/test/workspaces";
 
-
     private final TerraformWorkspaceInputs invalidCreateWorkspaceInputs = TerraformWorkspaceInputs.builder()
             .workspaceName("test")
             .workspaceDescription("test")
@@ -86,7 +85,7 @@ public class WorkspaceImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createWorkspaceThrows() throws Exception {
-        WorkspaceImpl.createWorkspace(invalidCreateWorkspaceInputs);
+        WorkspaceImpl.createWorkspace(invalidTerraformWorkspaceInputs);
     }
 
     @Test

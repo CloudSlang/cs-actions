@@ -170,6 +170,10 @@ public class Descriptions {
         public static final String CREATE_VARIABLE_RETURN_RESULT_DESC = "The response of the apply run.";
     }
 
+    public static class ListVariables {
+        public static final String LIST_VARIABLE_DESC = "List all the variables in a workspace.";
+    }
+
     public static class GetWorkspaceDetails {
         public static final String GET_WORKSPACE_DETAILS_DESC = "Get details of workspace in an organization.";
         public static final String WORKSPACE_NAME_DESC = "The name of workspace whose description is to be fetched.";
