@@ -31,6 +31,7 @@ import io.cloudslang.content.utils.StringUtilities;
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.listWorkspaces;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
@@ -58,6 +59,7 @@ public class ListWorkspaces {
             description = LIST_WORKSPACES_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = WORKSPACE_LIST, description = WORKSPACE_LIST_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
@@ -127,7 +129,6 @@ public class ListWorkspaces {
                     .connectionsMaxTotal(connectionsMaxTotal)
                     .responseCharacterSet(responseCharacterSet)
                     .build());
-
 
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);

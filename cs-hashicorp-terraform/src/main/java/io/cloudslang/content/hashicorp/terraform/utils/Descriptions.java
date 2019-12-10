@@ -25,7 +25,7 @@ public class Descriptions {
                 "input value.";
         public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL/TSL. " +
                 "A certificate is trusted even if no trusted certification authority issued it." +
-                "Default: false";
+                "Default: 'false'";
         public static final String X509_DESC = "Specifies the way the server hostname must match a domain name in " +
                 "the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to " +
                 "\"allow_all\" to skip any checking. For the value \"browser_compatible\" the hostname verifier " +
@@ -41,13 +41,13 @@ public class Descriptions {
         public static final String TRUST_PASSWORD_DESC = "The password associated with the TrustStore file. If " +
                 "trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied.";
         public static final String CONN_MAX_TOTAL_DESC = "The maximum limit of connections in total." +
-                "Default: 20";
+                "Default: '20'";
         public static final String CONN_MAX_ROUTE_DESC = "The maximum limit of connections on a per route basis." +
-                "Default: 2";
+                "Default: '2'";
         public static final String KEEP_ALIVE_DESC = "Specifies whether to create a shared connection that will be " +
                 "used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
                 " execution it will close it." +
-                "Default: true";
+                "Default: 'true'";
         public static final String SOCKET_TIMEOUT_DESC = "The timeout for waiting for data (a maximum period " +
                 "inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' " +
                 "represents an infinite timeout.";
@@ -56,17 +56,17 @@ public class Descriptions {
                 "Default: '1000'";
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout." +
-                "Default: 10000";
+                "Default: '10000'";
         public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP " +
                 "response. If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header " +
                 "will be used. If responseCharacterSet is empty and the charset from the HTTP response Content-Type " +
                 "header is empty, the default value will be used. You should not use this for method=HEAD or OPTIONS." +
-                "Default: UTF-8";
-        public static final String AUTH_TOKEN_DESC = "The authorization token for terraform";
-        public static final String ORGANIZATION_NAME_DESC = "The name of the organization";
+                "Default: 'UTF-8'";
+        public static final String AUTH_TOKEN_DESC = "The authorization token for terraform.";
+        public static final String ORGANIZATION_NAME_DESC = "The name of the organization.";
         public static final String TERRAFORM_VERSION_DESC = "The version of Terraform to use for this workspace. " +
                 "Upon creating a workspace,the latest version is selected unless otherwise specified (e.g. \"0.11.1\")." +
-                "Default: 0.12.1";
+                "Default: '0.12.1'";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in milliseconds) to allow the client " +
                 "to complete the execution of an API call. A value of '0' disables this feature." +
@@ -74,9 +74,11 @@ public class Descriptions {
         public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
                 "Default: 'false'";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
-        public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page.";
+        public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page." +
+                "Default: '1'";
         public static final String PAGE_SIZE_DESC = "Optional. If omitted, the endpoint will return 20 items per page. " +
-                "The maximum page size is 150.";
+                "The maximum page size is 150. " +
+                "Default: '100'";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the " +
                 "request.";
         public static final String FAILURE_DESC = "There was an error while executing the request.";
@@ -100,11 +102,11 @@ public class Descriptions {
         public static final String WORKSPACE_DESCRIPTION_DESC = "A description of the workspace to be created.";
         public static final String AUTO_APPLY_DESC = "Whether to automatically apply changes when a Terraform plan " +
                 "is successful, with some exceptions." +
-                "Default: false";
+                "Default: 'false'";
         public static final String FILE_TRIGGERS_ENABLED_DESC = "Whether to filter runs based on the changed files " +
                 "in a VCS push. If enabled, the working-directory and trigger-prefixes describe a set of paths which " +
                 "must contain changes for a VCS push to trigger a run. If disabled, any push will trigger a run." +
-                "Default: true";
+                "Default: 'true'";
         public static final String WORKING_DIRECTORY_DESC = "A relative path that Terraform will execute within. " +
                 "This defaults to the root of your repository and is typically set to a subdirectory matching the " +
                 "environment when multiple environments exist within the same repository.";
@@ -117,10 +119,10 @@ public class Descriptions {
         public static final String SPECULATIVE_ENABLED_DESC = "Whether this workspace allows speculative plans. " +
                 "Setting this to false prevents Terraform Cloud from running plans on pull requests, which can " +
                 "improve security if the VCS repository is public or includes untrusted contributors." +
-                "Default: true";
+                "Default: 'true'";
         public static final String INGRESS_SUBMODULES_DESC = "Whether submodules should be fetched when cloning the " +
                 "VCS repository." +
-                "Default: false";
+                "Default: 'false'";
         public static final String VCS_BRANCH_NAME_DESC = "The repository branch that Terraform will execute from. " +
                 "If omitted or submitted as an empty string, this defaults to the repository's default branch " +
                 "(e.g. master) .";
@@ -188,7 +190,7 @@ public class Descriptions {
     }
 
     public static class DeleteWorkspace {
-        public static final String DELETE_WORKSPACE_DESC = "Delete the workspace from an organization using workspace " +
+        public static final String DELETE_WORKSPACE_DESC = "Deletes the workspace from an organization using workspace " +
                 "name and organization name";
     }
 
