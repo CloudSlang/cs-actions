@@ -29,13 +29,11 @@ import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.APPLY_RUN_PATH;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_TYPE;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetRunDetailsConstants.GET_RUN_DETAILS_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -121,7 +119,7 @@ public class RunImpl {
         StringBuilder pathString = new StringBuilder()
                 .append(API)
                 .append(API_VERSION)
-                .append(CREATE_RUN_PATH);
+                .append(RUN_PATH);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
     }
@@ -133,7 +131,8 @@ public class RunImpl {
         StringBuilder pathString = new StringBuilder()
                 .append(API)
                 .append(API_VERSION)
-                .append(GET_RUN_DETAILS_PATH)
+                .append(RUN_PATH)
+                .append(PATH_SEPARATOR)
                 .append(runId);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
@@ -147,6 +146,7 @@ public class RunImpl {
                 .append(API)
                 .append(API_VERSION)
                 .append(RUN_PATH)
+                .append(PATH_SEPARATOR)
                 .append(runId)
                 .append(APPLY_RUN_PATH);
         uriBuilder.setPath(pathString.toString());
@@ -164,7 +164,7 @@ public class RunImpl {
                 .append(WORKSPACE_PATH)
                 .append(PATH_SEPARATOR)
                 .append(workspaceId)
-                .append(CREATE_RUN_PATH);
+                .append(RUN_PATH);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
     }
