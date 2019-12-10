@@ -21,7 +21,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -152,7 +152,7 @@ public class CreateWorkspace {
         }
 
         try {
-            final Map<String, String> result = createWorkspace(CreateWorkspaceInputs.builder()
+            final Map<String, String> result = createWorkspace(TerraformWorkspaceInputs.builder()
                     .workspaceName(workspaceName)
                     .workspaceDescription(workspaceDescription)
                     .autoApply(autoApply)

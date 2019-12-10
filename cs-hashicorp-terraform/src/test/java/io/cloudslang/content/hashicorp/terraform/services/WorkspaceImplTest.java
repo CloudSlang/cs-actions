@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.hashicorp.terraform.services;
 
-import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +38,7 @@ public class WorkspaceImplTest {
             "\"vcs-repo\":{\"identifier\":\"test\",\"branch\":\"test\",\"oauth-token-id\":\"test\",\"ingress-submodules\":true}},\"type\":\"workspaces\"}}";
     private static final String WORKSPACE_NAME="test";
     private static final String EXPECTED_GET_WORKSPACE_PATH = "/api/v2/organizations/test/workspaces/test";
-    private final CreateWorkspaceInputs invalidCreateWorkspaceInputs = CreateWorkspaceInputs.builder()
+    private final TerraformWorkspaceInputs invalidTerraformWorkspaceInputs = TerraformWorkspaceInputs.builder()
             .workspaceName("test")
             .workspaceDescription("test")
             .autoApply("true")
@@ -82,7 +82,7 @@ public class WorkspaceImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createWorkspaceThrows() throws Exception {
-        WorkspaceImpl.createWorkspace(invalidCreateWorkspaceInputs);
+        WorkspaceImpl.createWorkspace(invalidTerraformWorkspaceInputs);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class WorkspaceImplTest {
 
     @Test
     public void getWorkspaceRequestBody() {
-        final String requestBody = createWorkspaceBody(invalidCreateWorkspaceInputs, ",");
+        final String requestBody = createWorkspaceBody(invalidTerraformWorkspaceInputs, ",");
         assertEquals(EXPECTED_WORKSPACE_REQUEST_BODY, requestBody);
     }
     @Test

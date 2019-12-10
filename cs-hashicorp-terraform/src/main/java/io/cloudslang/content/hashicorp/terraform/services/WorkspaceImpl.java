@@ -17,9 +17,9 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.GetWorkspaceDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.workspace.CreateWorkspaceRequestBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
@@ -43,7 +43,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class WorkspaceImpl {
 
     @NotNull
-    public static Map<String, String> createWorkspace(@NotNull final CreateWorkspaceInputs createWorkspaceInputs) throws Exception {
+    public static Map<String, String> createWorkspace(@NotNull final TerraformWorkspaceInputs createWorkspaceInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = createWorkspaceInputs.getCommonInputs();
         httpClientInputs.setUrl(createWorkspaceUrl(createWorkspaceInputs.getCommonInputs().getOrganizationName()));
@@ -112,7 +112,7 @@ public class WorkspaceImpl {
     }
 
     @NotNull
-    public static String createWorkspaceBody(CreateWorkspaceInputs createWorkspaceInputs, String delimiter) {
+    public static String createWorkspaceBody(TerraformWorkspaceInputs createWorkspaceInputs, String delimiter) {
         String requestBody = EMPTY;
         final List<String> triggerPrefixesList = new ArrayList<>();
         ObjectMapper createWorkspaceMapper = new ObjectMapper();
