@@ -117,8 +117,8 @@ public class ListVariables {
                     .build());
             final String listVariables = result.get(RETURN_RESULT);
 
-            final Map<String, String> results = getOperationResults(result, listVariables, listVariables, listVariables);
-            return results;
+            return getOperationResults(result, listVariables, listVariables, listVariables);
+
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
