@@ -14,7 +14,6 @@
  */
 
 
-
 package io.cloudslang.content.json.utils;
 
 /**
@@ -22,6 +21,7 @@ package io.cloudslang.content.json.utils;
  * Date 1/12/2015.
  */
 public final class Constants {
+
 
     public static final class InputNames extends io.cloudslang.content.constants.InputNames {
         public static final String JSON_OBJECT = "jsonObject";
@@ -43,5 +43,14 @@ public final class Constants {
         static final String UPDATE_ACTION = "update";
         static final String DELETE_ACTION = "delete";
         static final String ADD_ACTION = "add";
+    }
+
+    public static final class AddPropertyToObject {
+
+        public static final String NEW_LINE = "\n";
+        static final String EMPTY_JSON = "Empty JSON string";
+        static final String JSON_EXCEPTION = "jsonObject is not a valid JSON Object";
+        public static final String ADD_PROPERTY_EXCEPTION = "The value could not be added!";
+
     }
 }
