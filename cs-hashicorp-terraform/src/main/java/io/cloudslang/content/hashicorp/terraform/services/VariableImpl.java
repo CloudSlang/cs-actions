@@ -17,6 +17,7 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.variables.CreateVariableRequestBody;
@@ -32,6 +33,8 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_TYPE;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListVariableConstants.ORGANIZATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListVariableConstants.WORKSPACE_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBuilder;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -58,21 +61,24 @@ public class VariableImpl {
     }
 
     @NotNull
-    public static Map<String, String> listVariables(@NotNull final TerraformCommonInputs commonInputs) throws Exception {
+    public static Map<String, String> listVariables(@NotNull final TerraformWorkspaceInputs terraformWorkspaceInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(listVariablesUrl());
-        setCommonHttpInputs(httpClientInputs, commonInputs);
+        httpClientInputs.setUrl(listVariablesUrl(terraformWorkspaceInputs.getCommonInputs().getOrganizationName(),terraformWorkspaceInputs.getWorkspaceName()));
+        setCommonHttpInputs(httpClientInputs, terraformWorkspaceInputs.getCommonInputs());
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.setQueryParams(getListVariableQueryParams(terraformWorkspaceInputs.getCommonInputs().getOrganizationName(),terraformWorkspaceInputs.getWorkspaceName()));
+        httpClientInputs.setResponseCharacterSet(terraformWorkspaceInputs.getCommonInputs().getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(terraformWorkspaceInputs.getCommonInputs().getAuthToken()));
+        System.out.println(httpClientInputs.getUrl());
+        System.out.println(httpClientInputs.getQueryParams());
         return new HttpClientService().execute(httpClientInputs);
     }
 
 
     @NotNull
-    public static String listVariablesUrl() throws Exception {
+    public static String listVariablesUrl(String organizationName ,String workspaceName) throws Exception {
 
         final URIBuilder uriBuilder = getUriBuilder();
         StringBuilder pathString = new StringBuilder()
@@ -88,6 +94,18 @@ public class VariableImpl {
         final URIBuilder uriBuilder = getUriBuilder();
         uriBuilder.setPath(getVariablePath());
         return uriBuilder.build().toURL().toString();
+    }
+    @NotNull
+    public static String getListVariableQueryParams(String organizationName,
+                                                    final String workspaceName) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(QUERY)
+                .append(ORGANIZATION_NAME)
+                .append(organizationName)
+                .append(AND)
+                .append(WORKSPACE_NAME)
+                .append(workspaceName);
+        return queryParams.toString();
     }
 
     @NotNull

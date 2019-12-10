@@ -107,6 +107,9 @@ public class Constants {
 
     public static class ListVariableConstants {
         public static final String LIST_VARIABLE_OPERATION_NAME = "List Variable";
+        public static final String ORGANIZATION_NAME = "filter[organization][name]";
+        public static final String WORKSPACE_NAME = "filter[workspace][name]";
+
 
     }
 

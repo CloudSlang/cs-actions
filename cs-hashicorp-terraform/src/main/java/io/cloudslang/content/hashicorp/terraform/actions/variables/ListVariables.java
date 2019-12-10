@@ -5,6 +5,7 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -23,7 +24,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListVari
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.FAILURE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.SUCCESS_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_NAME_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListVariables.LIST_VARIABLE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
@@ -31,6 +32,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInput
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.WORKSPACE_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
@@ -51,6 +53,8 @@ public class ListVariables {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
+                                       @Param(value = ORGANIZATION_NAME, required = true, description = ORGANIZATION_NAME_DESC) String organizationName,
+                                       @Param(value = WORKSPACE_NAME, description = WORKSPACE_NAME_DESC) String workspaceName,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -88,7 +92,9 @@ public class ListVariables {
         }
 
         try {
-            final Map<String, String> result = listVariables(TerraformCommonInputs.builder()
+            final Map<String, String> result = listVariables(TerraformWorkspaceInputs.builder().
+                    workspaceName(workspaceName)
+                    .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
@@ -104,7 +110,8 @@ public class ListVariables {
                             .connectionsMaxPerRoot(connectionsMaxPerRoute)
                             .connectionsMaxTotal(connectionsMaxTotal)
                             .responseCharacterSet(responseCharacterSet)
-                            .build());
+                            .build())
+                    .build());
             final String listVariables = result.get(RETURN_RESULT);
 
             final Map<String, String> results = getOperationResults(result, listVariables, listVariables, listVariables);

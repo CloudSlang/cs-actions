@@ -17,6 +17,7 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -63,7 +64,9 @@ public class VariableImplTest {
             .hcl("false")
             .sensitive("false")
             .build();
-    private final TerraformCommonInputs listVariableInputs=TerraformCommonInputs.builder()
+    private final TerraformWorkspaceInputs listVariableInputs=TerraformWorkspaceInputs.builder()
+            .workspaceName("")
+            .commonInputs(TerraformCommonInputs.builder()
             .authToken("")
             .proxyHost("")
             .proxyPort("")
@@ -76,6 +79,7 @@ public class VariableImplTest {
             .connectionsMaxTotal("")
             .connectionsMaxPerRoot("")
             .responseCharacterSet("")
+            .build())
             .build();
 
 
