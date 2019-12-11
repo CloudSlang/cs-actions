@@ -84,11 +84,7 @@ public class VariableImpl {
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(PATCH);
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
-        if (commonInputs.getRequestBody().equals(EMPTY)) {
-            httpClientInputs.setBody(updateVariableRequestBody(updateVariableInputs));
-        } else {
-            httpClientInputs.setBody(commonInputs.getRequestBody());
-        }
+        httpClientInputs.setBody(commonInputs.getRequestBody());
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
         return new HttpClientService().execute(httpClientInputs);

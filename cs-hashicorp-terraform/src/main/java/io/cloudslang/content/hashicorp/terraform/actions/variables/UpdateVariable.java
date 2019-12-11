@@ -60,8 +60,8 @@ public class UpdateVariable {
     @Action(name = UPDATE_VARIABLE_OPERATION_NAME,
             description = UPDATE_VARIABLE_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = UPDATE_VARIABLE_RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = UPDATE_VARIABLE_EXCEPTION_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
             },
             responses = {
@@ -70,11 +70,6 @@ public class UpdateVariable {
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = VARIABLE_ID, description = VARIABLE_ID_DESC) String variableId,
-                                       @Param(value = VARIABLE_NAME, description = VARIABLE_NAME_DESC) String variableName,
-                                       @Param(value = VARIABLE_VALUE, description = VARIABLE_VALUE_DESC) String variableValue,
-                                       @Param(value = VARIABLE_CATEGORY, description = VARIABLE_CATEGORY_DESC) String variableCategory,
-                                       @Param(value = SENSITIVE, description = SENSITIVE_DESC) String sensitive,
-                                       @Param(value = HCL, description = HCL_DESC) String hcl,
                                        @Param(value = REQUEST_BODY, description = VARIABLE_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -94,12 +89,7 @@ public class UpdateVariable {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
-        variableName = defaultIfEmpty(variableName, EMPTY);
-        variableValue = defaultIfEmpty(variableValue, EMPTY);
-        variableCategory = defaultIfEmpty(variableCategory, EMPTY);
-        hcl = defaultIfEmpty(hcl, BOOLEAN_FALSE);
-        sensitive = defaultIfEmpty(sensitive, BOOLEAN_FALSE);
-        requestBody = defaultIfEmpty(requestBody, EMPTY);
+
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -123,19 +113,10 @@ public class UpdateVariable {
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
-        final List<String> exceptionMessages = verifyUpdateVariableInputs(variableId, requestBody);
-        if (!exceptionMessages.isEmpty()) {
-            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
-        }
 
         try {
             final Map<String, String> result = updateVariable(TerraformVariableInputs.builder()
-                    .variableName(variableName)
                     .variableId(variableId)
-                    .variableValue(variableValue)
-                    .variableCategory(variableCategory)
-                    .sensitive(sensitive)
-                    .hcl(hcl)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
                             .requestBody(requestBody)
