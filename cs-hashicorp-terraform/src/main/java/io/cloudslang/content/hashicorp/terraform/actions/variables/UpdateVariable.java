@@ -48,9 +48,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInput
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyUpdateVariableInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateVariableOutputs.VARIABLE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -69,8 +67,8 @@ public class UpdateVariable {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = VARIABLE_ID, description = VARIABLE_ID_DESC) String variableId,
-                                       @Param(value = REQUEST_BODY, description = VARIABLE_REQUEST_BODY_DESC) String requestBody,
+                                       @Param(value = VARIABLE_ID, required = true, description = VARIABLE_ID_DESC) String variableId,
+                                       @Param(value = REQUEST_BODY, required = true, description = VARIABLE_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
