@@ -18,14 +18,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>cs-actions</artifactId>
-        <groupId>io.cloudslang.content</groupId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-excel</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <packaging>jar</packaging>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Microsoft Excel Integration</description>
+    <url>https://github.com/CloudSlang/cs-actions</url>
+
 
     <licenses>
         <license>
@@ -53,15 +57,6 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-
-    <developers>
-        <developer>
-            <name>Daniel Manciu</name>
-            <email>daniel.manciu@microfocus.com</email>
-            <organization>Micro Focus</organization>
-            <organizationUrl>https://www.microfocus.com/en-us/home</organizationUrl>
-        </developer>
-    </developers>
 
     <properties>
         <!--Maven versions-->
@@ -103,27 +98,15 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
         </dependency>
-
-        <!-- Unit Tests dependencies -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>4.0.1</version>
+            <version>4.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>3.14</version>
+            <version>4.1.1</version>
         </dependency>
     </dependencies>
 

@@ -42,7 +42,7 @@ import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLSX;
  */
 public class ExcelServiceImpl {
 
-    public static Workbook getWorkbook(final String fileName) throws Exception {
+    public static Workbook getWorkbook(final String fileName) throws IOException,InvalidFormatException,ExcelOperationException {
         final String format = getFileFormat(fileName);
         if (!isValidExcelFormat(format)) {
             throw new InvalidFormatException(BAD_EXCEL_FILE_MSG);
@@ -66,7 +66,7 @@ public class ExcelServiceImpl {
         return excelDoc;
     }
 
-    public static boolean isValidExcelFormat(final String format) throws Exception {
+    public static boolean isValidExcelFormat(final String format) throws ExcelOperationException {
         if (StringUtils.isBlank(format)) {
             throw new ExcelOperationException(BAD_EXCEL_FILE_MSG);
         } else
@@ -100,16 +100,12 @@ public class ExcelServiceImpl {
         return null;
     }
 
-    public static Workbook getExcelDoc(final String excelFileName) {
+    public static Workbook getExcelDoc(final String excelFileName) throws ExcelOperationException,InvalidFormatException,IOException{
         Workbook excelDoc = null;
-        try {
             excelDoc = getWorkbook(excelFileName);
             if (excelDoc == null) {
                 throw new ExcelOperationException("Could not open " + excelFileName);
             }
-        } catch (Exception e) {
-
-        }
         return excelDoc;
     }
 

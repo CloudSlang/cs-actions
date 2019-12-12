@@ -40,7 +40,6 @@ public class NewExcelDocumentService {
 
     @NotNull
     public static Map<String, String> newExcelDocument(@NotNull final NewExcelDocumentInputs newExcelDocumentInputs) {
-        final FileOutputStream output;
         final String excelFileName = newExcelDocumentInputs.getExcelFileName();
         final Workbook excelDoc;
         try {
@@ -69,13 +68,12 @@ public class NewExcelDocumentService {
             return OutputUtilities.getFailureResultsMap(BAD_CREATE_EXCEL_FILE_MSG);
         }
 
-        try {
-            output = new FileOutputStream(excelFileName);
+        try (final FileOutputStream output =  new FileOutputStream(excelFileName) ){
             excelDoc.write(output);
-            output.close();
         } catch (Exception exception) {
             return getFailureResultsMap(exception.getMessage());
         }
+
         return OutputUtilities.getSuccessResultsMap(excelFileName + " created successfully");
     }
 
