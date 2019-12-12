@@ -82,13 +82,12 @@ public class CreateExcelFile {
         }
 
         try {
-            final Map<String, String> result = CreateExcelFileService.newExcelDocument(CreateExcelFileInputs.builder()
+            return CreateExcelFileService.newExcelDocument(CreateExcelFileInputs.builder()
                     .excelFileName(excelFileName)
                     .worksheetNames(worksheetNames)
                     .delimiter(delimiter)
                     .build());
 
-            return result;
         } catch (Exception exception) {
             return OutputUtilities.getFailureResultsMap(exception);
         }

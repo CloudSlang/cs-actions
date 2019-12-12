@@ -118,7 +118,7 @@ public class GetCell {
         }
 
         try {
-            final Map<String, String> result = GetCellService.getCell(GetCellInputs.builder()
+            return GetCellService.getCell(GetCellInputs.builder()
                     .commonInputs(ExcelCommonInputs.builder()
                             .excelFileName(excelFileName)
                             .worksheetName(worksheetName)
@@ -131,7 +131,6 @@ public class GetCell {
                     .columnDelimiter(columnDelimiter)
                     .build());
 
-            return result;
         } catch (Exception exception) {
             return OutputUtilities.getFailureResultsMap(exception);
         }

@@ -32,6 +32,9 @@ import static io.cloudslang.content.excel.services.ExcelServiceImpl.isValidExcel
 import static io.cloudslang.content.excel.services.ExcelServiceImpl.processIndex;
 import static io.cloudslang.content.excel.services.ExcelServiceImpl.updateWorkbook;
 import static io.cloudslang.content.excel.utils.Constants.BAD_EXCEL_FILE_MSG;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_COLUMN_INDEX_SIZE;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_ROW_DATA;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_ROW_INDEX_SIZE;
 import static io.cloudslang.content.excel.utils.Constants.ROW_DATA_REQD_MSG;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -63,9 +66,9 @@ public class AddCellService {
             String columnDelimiter = addExcelDataInputs.getColumnDelimiter();
             String rowDelimiter = addExcelDataInputs.getRowDelimiter();
             final String[] specialChar = {"\\", "?", "|", "*", "$", ".", "+", "(", ")", "{", "}", "[", "]"};
-            for (int i = 0; i < specialChar.length; i++) {
-                rowDelimiter = rowDelimiter.replace(specialChar[i], "\\" + specialChar[i]);
-                columnDelimiter = columnDelimiter.replace(specialChar[i], "\\" + specialChar[i]);
+            for (String aSpecialChar : specialChar) {
+                rowDelimiter = rowDelimiter.replace(aSpecialChar, "\\" + aSpecialChar);
+                columnDelimiter = columnDelimiter.replace(aSpecialChar, "\\" + aSpecialChar);
             }
             final String headerData = addExcelDataInputs.getHeaderData();
             if (!StringUtils.isBlank(headerData)) {
@@ -116,7 +119,7 @@ public class AddCellService {
         String[] columns;
 
         if (rows.length != rowIndexList.size())
-            throw new IllegalArgumentException("Row index list size doesn't match rowData row count.");
+            throw new IllegalArgumentException(EXCEPTION_INVALID_ROW_INDEX_SIZE);
 
         for (int i = 0; i < rowIndexList.size(); i++) {
             Row row = worksheet.getRow(rowIndexList.get(i));
@@ -125,7 +128,7 @@ public class AddCellService {
             }
             columns = rows[i].split(columnDelimiter);
             if (columns.length != columnIndexList.size())
-                throw new IllegalArgumentException("Column index list size doesn't match rowData column count.");
+                throw new IllegalArgumentException(EXCEPTION_INVALID_COLUMN_INDEX_SIZE);
             for (int j = 0; j < columnIndexList.size(); j++) {
                 Cell cell = row.getCell(columnIndexList.get(j));
                 if (cell == null) {
@@ -139,7 +142,7 @@ public class AddCellService {
                 catch (NumberFormatException e) {
                     cell.setCellValue(columns[j].trim());
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("Invalid row data");
+                    throw new IllegalArgumentException(EXCEPTION_INVALID_ROW_DATA);
                 }
             }
         }

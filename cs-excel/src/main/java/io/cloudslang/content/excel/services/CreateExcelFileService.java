@@ -31,6 +31,7 @@ import java.util.StringTokenizer;
 import static io.cloudslang.content.excel.services.ExcelServiceImpl.getFileFormat;
 import static io.cloudslang.content.excel.utils.Constants.BAD_CREATE_EXCEL_FILE_MSG;
 import static io.cloudslang.content.excel.utils.Constants.BAD_EXCEL_FILE_MSG;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_EMPTY_FILE_NAME;
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_WORKSHEET_NAME_EMPTY;
 import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLS;
 import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLSX;
@@ -102,7 +103,7 @@ public class CreateExcelFileService {
         }
 
         if (StringUtils.isBlank(fileName)) {
-            throw new Exception("Excel file name cannot be empty.");
+            throw new Exception(EXCEPTION_EMPTY_FILE_NAME);
         }
 
         //if excelFileName doesn't contain '.'

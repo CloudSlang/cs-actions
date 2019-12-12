@@ -89,7 +89,7 @@ public class DeleteCell {
         }
 
         try {
-            final Map<String, String> result = DeleteCellService.deleteCell(DeleteCellInputs.builder()
+            return DeleteCellService.deleteCell(DeleteCellInputs.builder()
                     .commonInputs(ExcelCommonInputs.builder()
                             .excelFileName(excelFileName)
                             .worksheetName(worksheetName)
@@ -98,7 +98,6 @@ public class DeleteCell {
                     .columnIndex(columnIndex)
                     .build());
 
-            return result;
         } catch (Exception exception) {
             return OutputUtilities.getFailureResultsMap(exception);
         }

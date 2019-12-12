@@ -105,7 +105,7 @@ public class GetRowIndexByCondition {
         }
 
         try {
-            final Map<String, String> result = GetRowIndexByConditionService.getRowIndexbyCondition(GetRowIndexByConditionInputs.builder()
+            return GetRowIndexByConditionService.getRowIndexbyCondition(GetRowIndexByConditionInputs.builder()
                     .commonInputs(ExcelCommonInputs.builder()
                             .excelFileName(excelFileName)
                             .worksheetName(worksheetName)
@@ -117,7 +117,6 @@ public class GetRowIndexByCondition {
                     .value(value)
                     .build());
 
-            return result;
         } catch (Exception exception) {
             return OutputUtilities.getFailureResultsMap(exception);
         }

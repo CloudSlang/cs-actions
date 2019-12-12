@@ -77,17 +77,10 @@ public class ExcelServiceImpl {
     }
 
     public static void updateWorkbook(final Workbook workbook, final String fileName) throws IOException {
-        FileOutputStream output = null;
-        try {
-            output = new FileOutputStream(fileName);
+        try (FileOutputStream output = new FileOutputStream(fileName)) {
             workbook.write(output);
-            output.close();
         } catch (IOException e) {
             throw e;
-        } finally {
-            if (output != null) {
-                output.close();
-            }
         }
     }
 
@@ -165,18 +158,25 @@ public class ExcelServiceImpl {
      */
     public static boolean compareNumericValue(double value1, double value2, final String operator) {
         boolean result = false;
-        if (operator.equals("==")) {
-            if (value1 == value2) result = true;
-        } else if (operator.equals("!=")) {
-            if (value1 != value2) result = true;
-        } else if (operator.equals("<")) {
-            if (value1 < value2) result = true;
-        } else if (operator.equals(">")) {
-            if (value1 > value2) result = true;
-        } else if (operator.equals("<=")) {
-            if (value1 <= value2) result = true;
-        } else if (operator.equals(">=")) {
-            if (value1 >= value2) result = true;
+        switch (operator) {
+            case "==":
+                if (value1 == value2) result = true;
+                break;
+            case "!=":
+                if (value1 != value2) result = true;
+                break;
+            case "<":
+                if (value1 < value2) result = true;
+                break;
+            case ">":
+                if (value1 > value2) result = true;
+                break;
+            case "<=":
+                if (value1 <= value2) result = true;
+                break;
+            case ">=":
+                if (value1 >= value2) result = true;
+                break;
         }
 
         return result;

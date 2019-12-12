@@ -97,7 +97,7 @@ public class ModifyCell {
         }
 
         try {
-            final Map<String, String> result = ModifyCellService.modifyCell(ModifyCellInputs.builder()
+            return ModifyCellService.modifyCell(ModifyCellInputs.builder()
                     .commonInputs(ExcelCommonInputs.builder()
                             .excelFileName(excelFileName)
                             .worksheetName(worksheetName)
@@ -108,7 +108,6 @@ public class ModifyCell {
                     .columnDelimiter(columnDelimiter)
                     .build());
 
-            return result;
         } catch (Exception exception) {
             return OutputUtilities.getFailureResultsMap(exception);
         }

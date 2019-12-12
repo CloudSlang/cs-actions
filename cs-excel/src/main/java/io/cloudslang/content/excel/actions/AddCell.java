@@ -108,7 +108,7 @@ public class AddCell {
         }
 
         try {
-            final Map<String, String> result = AddCellService.addExcelData(AddCellInputs.builder()
+            return AddCellService.addExcelData(AddCellInputs.builder()
                     .commonInputs(ExcelCommonInputs.builder()
                             .excelFileName(excelFileName)
                             .worksheetName(worksheetName)
@@ -122,7 +122,6 @@ public class AddCell {
                     .overwriteData(overwriteData)
                     .build());
 
-            return result;
         } catch (Exception exception) {
             return OutputUtilities.getFailureResultsMap(exception);
         }
