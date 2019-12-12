@@ -81,17 +81,6 @@ public class Descriptions {
         public static final String FAILURE_DESC = "There was an error while executing the request.";
         public static final String SUCCESS_DESC = "The request was successfully executed.";
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
-        public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page." +
-                "Default: '1'";
-        public static final String PAGE_SIZE_DESC = "Optional. If omitted, the endpoint will return 20 items per page. " +
-                "The maximum page size is 150. " +
-                "Default: '100'";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the " +
-                "request.";
-        public static final String FAILURE_DESC = "There was an error while executing the request.";
-        public static final String SUCCESS_DESC = "The request was successfully executed.";
-        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of " +
-                "an error this output will contain the error message.";
     }
 
 

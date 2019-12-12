@@ -62,7 +62,6 @@ public class Constants {
         public static final String SIZE = "size";
         public static final String PASSWORD_BODY = "password";
         public static final String VALUE = "value";
-        public static final String EXCEPTION_INVALID_NAME = "The %s can only contain letters, numbers, underscores, and hyphens";
         public static final String DEFAULT_PAGE_NUMBER = "1";
         public static final String DEFAULT_PAGE_SIZE = "100";
         public static final String PAGE_NUMBER = "page[number]=";
