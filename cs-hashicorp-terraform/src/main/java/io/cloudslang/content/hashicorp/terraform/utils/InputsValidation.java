@@ -27,6 +27,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.VCS_REPO_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.WORKSPACE_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateVariableOutputs.VARIABLE_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.ListOAuthClientOutputs.OAUTH_TOKEN_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
@@ -104,10 +105,37 @@ public final class InputsValidation {
     }
 
     @NotNull
+    public static List<String> verifyUpdateVariableInputs(@Nullable final String variableId,
+                                                          @Nullable final String requestBody) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        if (requestBody.isEmpty()) {
+            addVerifyString(exceptionMessages, variableId, VARIABLE_ID);
+        } else {
+            addVerifyRequestBody(exceptionMessages, requestBody);
+        }
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyUpdateVariableInputs(@Nullable final String variableId, @Nullable final String variableName, @Nullable final String variableValue, @Nullable final String variableCategory,
+                                                          @Nullable final String requestBody) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        if (requestBody.isEmpty()) {
+            addVerifyString(exceptionMessages, variableId, VARIABLE_ID);
+            addVerifyString(exceptionMessages, variableName, VARIABLE_NAME);
+            addVerifyString(exceptionMessages, variableValue, VARIABLE_VALUE);
+            addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
+        } else {
+            addVerifyRequestBody(exceptionMessages, requestBody);
+        }
+        return exceptionMessages;
+    }
+
+    @NotNull
     public static List<String> verifyGetWorkspaceDetailsInputs(@Nullable final String workspaceName) {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyString(exceptionMessages, workspaceName, WORKSPACE_NAME);
-        validateInputPropertyName(exceptionMessages, workspaceName, WORKSPACE_NAME);
+        validateInputPropertyName(exceptionMessages,workspaceName, WORKSPACE_NAME);
         return exceptionMessages;
     }
 

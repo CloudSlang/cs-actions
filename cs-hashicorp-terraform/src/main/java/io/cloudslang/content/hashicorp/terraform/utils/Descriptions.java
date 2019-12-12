@@ -74,21 +74,19 @@ public class Descriptions {
         public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
                 "Default: 'false'";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
-        public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page." +
-                "Default: '1'";
+        public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page.";
         public static final String PAGE_SIZE_DESC = "Optional. If omitted, the endpoint will return 20 items per page. " +
-                "The maximum page size is 150. " +
-                "Default: '100'";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the " +
-                "request.";
+                "The maximum page size is 150.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
         public static final String FAILURE_DESC = "There was an error while executing the request.";
         public static final String SUCCESS_DESC = "The request was successfully executed.";
-        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of " +
-                "an error this output will contain the error message.";
+        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
     }
 
 
     public static class ListOAuthClient {
+        public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
+        public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String OAUTH_TOKEN_ID_DESCRIPTION = "The VCS Connection (OAuth Connection + Token) to use. " +
                 "This ID can be obtained from the oauth-tokens endpoint.";
         public static final String LIST_OAUTH_CLIENT_DESC = "List An OAuth Client Id";
@@ -197,5 +195,13 @@ public class Descriptions {
     public static class ListWorkspaces {
         public static final String LIST_WORKSPACES_OPERATION_DESC = "List of workspaces present in given Organization";
         public static final String WORKSPACE_LIST_DESC = "List of all workspaces under the organization.";
+    }
+    public static class UpdateVariable {
+        public static final String UPDATE_VARIABLE_DESC = "Updates a variable attributes in workspace.";
+        public static final String VARIABLE_ID_DESC = "The ID of the variable to be updated.";
+        public static final String UPDATE_VARIABLE_RETURN_RESULT_DESC = "The response of the update variable request.";
+        public static final String UPDATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while " +
+                "updating the variable.";
+        public static final String FAILURE_DESC = "There was an error while updating workspace.";
     }
 }

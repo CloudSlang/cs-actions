@@ -21,6 +21,7 @@ import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.variables.CreateVariableRequestBody;
+import io.cloudslang.content.hashicorp.terraform.services.models.variables.UpdateVariableRequestBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.http.client.utils.URIBuilder;
@@ -117,6 +118,39 @@ public class VariableImpl {
     }
 
     @NotNull
+    public static Map<String, String> updateVariable(@NotNull final TerraformVariableInputs updateVariableInputs)
+            throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformCommonInputs commonInputs = updateVariableInputs.getCommonInputs();
+        httpClientInputs.setUrl(updateVariableUrl(updateVariableInputs.getVariableId()));
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(PATCH);
+        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.setBody(commonInputs.getRequestBody());
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    private static String updateVariableUrl(@NotNull final String variableId) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder();
+        uriBuilder.setPath(getUpdateVariablePath(variableId));
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    public static String getUpdateVariablePath(@NotNull final String variableId ) {
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(API_VERSION)
+                .append(VARIABLE_PATH)
+                .append(PATH_SEPARATOR)
+                .append(variableId);
+        return pathString.toString();
+    }
+    @NotNull
     public static String createVariableRequestBody(TerraformVariableInputs terraformVariableInputs) {
         String requestBody = EMPTY;
         ObjectMapper createVariableMapper = new ObjectMapper();
@@ -151,5 +185,31 @@ public class VariableImpl {
 
         return requestBody;
 
+    }
+    @NotNull
+    public static String updateVariableRequestBody(TerraformVariableInputs updateVariableInputs) {
+        String requestBody = EMPTY;
+        ObjectMapper createVariableMapper = new ObjectMapper();
+        UpdateVariableRequestBody updateVariableRequestBody = new UpdateVariableRequestBody();
+        UpdateVariableRequestBody.UpdateVariableData updateVariableData = updateVariableRequestBody.new
+                UpdateVariableData();
+        updateVariableData.setVariableId(updateVariableInputs.getVariableId());
+        updateVariableData.setType(VARIABLE_TYPE);
+
+        UpdateVariableRequestBody.Attributes attributes = updateVariableRequestBody.new Attributes();
+        attributes.setKey(updateVariableInputs.getVariableName());
+        attributes.setValue(updateVariableInputs.getVariableValue());
+        attributes.setCategory(updateVariableInputs.getVariableCategory());
+        attributes.setHcl(updateVariableInputs.getHcl());
+        attributes.setSensitive(updateVariableInputs.getSensitive());
+        updateVariableData.setAttributes(attributes);
+        updateVariableRequestBody.setData(updateVariableData);
+
+        try {
+            requestBody = createVariableMapper.writeValueAsString(updateVariableRequestBody);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return requestBody;
     }
 }

@@ -55,6 +55,13 @@ public class Constants {
         public static final String STATUS_CODE = "statusCode";
         public static final String APPLICATION_VND_API_JSON = "application/vnd.api+json";
         public static final String DELIMITER = ",";
+        public static final String CONTENT_TYPE = "HTML";
+        public static final String ID = "id";
+        public static final String COMMA = ",";
+        public static final String NAME = "name";
+        public static final String SIZE = "size";
+        public static final String PASSWORD_BODY = "password";
+        public static final String VALUE = "value";
         public static final String DEFAULT_PAGE_NUMBER = "1";
         public static final String DEFAULT_PAGE_SIZE = "100";
         public static final String PAGE_NUMBER = "page[number]=";
@@ -103,6 +110,10 @@ public class Constants {
         public static final String LIST_VARIABLE_OPERATION_NAME = "List Variable";
         public static final String ORGANIZATION_NAME = "filter[organization][name]";
         public static final String WORKSPACE_NAME = "filter[workspace][name]";
+    }
+
+    public static class UpdateVariableConstants {
+        public static final String UPDATE_VARIABLE_OPERATION_NAME = "Update Variable";
     }
 
     public static class GetWorkspaceDetailsConstants {
