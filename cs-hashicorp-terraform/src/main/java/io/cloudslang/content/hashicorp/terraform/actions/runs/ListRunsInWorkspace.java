@@ -1,19 +1,4 @@
-/*
- * (c) Copyright 2020 Micro Focus
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package io.cloudslang.content.hashicorp.terraform.actions;
+package io.cloudslang.content.hashicorp.terraform.actions.runs;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -21,45 +6,47 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.ListOAuthClientInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformRunInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.hashicorp.terraform.services.ListOauthClientImpl.listOAuthClient;
+import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.listRunsInWorkspaceClient;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.LIST_OAUTH_CLIENT_OPERATION_NAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.OAUTH_TOKEN_LIST_JSON_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListRunsInWorkspaceConstants.LIST_RUNS_IN_WORKSPACE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.LIST_OAUTH_CLIENT_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.OAUTH_TOKEN_ID_DESCRIPTION;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListRunsInWorkspace.LIST_RUNS_IN_WORKSPACE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PAGE_NUMBER;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PAGE_SIZE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.ListOAuthClientOutputs.OAUTH_TOKEN_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
+public class ListRunsInWorkspace {
 
-public class ListOAuthClient {
-
-    @Action(name = LIST_OAUTH_CLIENT_OPERATION_NAME,
-            description = LIST_OAUTH_CLIENT_DESC,
+    @Action(name = LIST_RUNS_IN_WORKSPACE_OPERATION_NAME,
+            description = LIST_RUNS_IN_WORKSPACE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
-                    @Output(value = OAUTH_TOKEN_ID, description = OAUTH_TOKEN_ID_DESCRIPTION),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
@@ -67,7 +54,9 @@ public class ListOAuthClient {
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = ORGANIZATION_NAME, required = true, description = ORGANIZATION_NAME_DESC) String organizationName,
+                                       @Param(value = WORKSPACE_ID, required = true, description = WORKSPACE_ID_DESC) String workspaceId,
+                                       @Param(value = PAGE_NUMBER, description = PAGE_NUMBER_DESC) String pageNumber,
+                                       @Param(value = PAGE_SIZE, description = PAGE_SIZE_DESC) String pageSize,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -83,8 +72,8 @@ public class ListOAuthClient {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
-        organizationName = defaultIfEmpty(organizationName, EMPTY);
-        authToken = defaultIfEmpty(authToken, EMPTY);
+        pageNumber = defaultIfEmpty(pageNumber, DEFAULT_PAGE_NUMBER);
+        pageSize = defaultIfEmpty(pageSize, DEFAULT_PAGE_SIZE);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -106,12 +95,13 @@ public class ListOAuthClient {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
-
         try {
-            final Map<String, String> result = listOAuthClient(ListOAuthClientInputs.builder()
+            final Map<String, String> result = listRunsInWorkspaceClient(TerraformRunInputs.builder()
+                    .workspaceId(workspaceId)
                     .commonInputs(TerraformCommonInputs.builder()
-                            .organizationName(organizationName)
                             .authToken(authToken)
+                            .pageNumber(pageNumber)
+                            .pageSize(pageSize)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
@@ -129,26 +119,10 @@ public class ListOAuthClient {
                             .build())
                     .build());
 
-
             final String returnMessage = result.get(RETURN_RESULT);
-            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
-
-            if (statusCode >= 200 && statusCode < 300) {
-                final List<String> outhTokenIdList = JsonPath.read(returnMessage, OAUTH_TOKEN_LIST_JSON_PATH);
-                if (!outhTokenIdList.isEmpty()) {
-                    final String mouthTokenIdListAsString = join(outhTokenIdList.toArray(), DELIMITER);
-                    results.put(OAUTH_TOKEN_ID, mouthTokenIdListAsString);
-                } else {
-                    results.put(OAUTH_TOKEN_ID, EMPTY);
-                }
-            }
-
-            return results;
+            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
-
     }
-
 }

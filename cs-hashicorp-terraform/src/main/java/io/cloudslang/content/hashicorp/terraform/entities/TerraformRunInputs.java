@@ -16,25 +16,30 @@
 package io.cloudslang.content.hashicorp.terraform.entities;
 
 import org.jetbrains.annotations.NotNull;
+
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class CreateRunInputs {
+public class TerraformRunInputs {
 
     private String workspaceId;
     private String runMessage;
     private String isDestroy;
+    private String runId;
+    private String runComment;
     private TerraformCommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"workspaceId","workspaceName", "runMessage", "isDestroy"})
-    public CreateRunInputs(String workspaceId, String runMessage, String isDestroy, TerraformCommonInputs commonInputs) {
+    @java.beans.ConstructorProperties({"workspaceId", "workspaceName", "runMessage", "isDestroy", "runId", "runComment"})
+    public TerraformRunInputs(String workspaceId, String runMessage, String isDestroy, String runId, String runComment, TerraformCommonInputs commonInputs) {
         this.workspaceId = workspaceId;
         this.runMessage = runMessage;
         this.isDestroy = isDestroy;
+        this.runId = runId;
+        this.runComment = runComment;
         this.commonInputs = commonInputs;
     }
 
-    public static CreateRunInputsBuilder builder() {
-        return new CreateRunInputsBuilder();
+    public static TerraformRunInputsBuilder builder() {
+        return new TerraformRunInputsBuilder();
     }
 
     @NotNull
@@ -49,50 +54,76 @@ public class CreateRunInputs {
     }
 
     @NotNull
-    public String getIsDestroy() { return isDestroy; }
+    public String getIsDestroy() {
+        return isDestroy;
+    }
+
+    @NotNull
+    public String getRunId() {
+        return runId;
+    }
+
+    @NotNull
+    public String getRunComment() {
+        return runComment;
+    }
 
     @NotNull
     public TerraformCommonInputs getCommonInputs() {
         return commonInputs;
     }
 
-    public static class CreateRunInputsBuilder {
+    public static class TerraformRunInputsBuilder {
         private String workspaceId = EMPTY;
         private String runMessage = EMPTY;
         private String isDestroy = EMPTY;
+        private String runId = EMPTY;
+        private String runComment = EMPTY;
 
         private TerraformCommonInputs commonInputs;
 
-        CreateRunInputsBuilder() {
+        TerraformRunInputsBuilder() {
         }
 
         @NotNull
-        public CreateRunInputs.CreateRunInputsBuilder workspaceId(@NotNull final String workspaceId) {
+        public TerraformRunInputs.TerraformRunInputsBuilder workspaceId(@NotNull final String workspaceId) {
             this.workspaceId = workspaceId;
             return this;
         }
 
         @NotNull
-        public CreateRunInputs.CreateRunInputsBuilder runMessage(@NotNull final String runMessage) {
+        public TerraformRunInputs.TerraformRunInputsBuilder runMessage(@NotNull final String runMessage) {
             this.runMessage = runMessage;
             return this;
         }
 
         @NotNull
-        public CreateRunInputs.CreateRunInputsBuilder isDestroy(@NotNull final String isDestroy) {
+        public TerraformRunInputs.TerraformRunInputsBuilder isDestroy(@NotNull final String isDestroy) {
             this.isDestroy = isDestroy;
+            return this;
+        }
+
+        @NotNull
+        public TerraformRunInputs.TerraformRunInputsBuilder runId(@NotNull final String runId) {
+            this.runId = runId;
+            return this;
+        }
+
+        @NotNull
+        public TerraformRunInputs.TerraformRunInputsBuilder runComment(@NotNull final String runComment) {
+            this.runComment = runComment;
             return this;
         }
 
 
         @NotNull
-        public CreateRunInputs.CreateRunInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
+        public TerraformRunInputs.TerraformRunInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
-        public CreateRunInputs build() {
-            return new CreateRunInputs(workspaceId, runMessage, isDestroy, commonInputs);
+        public TerraformRunInputs build() {
+            return new TerraformRunInputs(workspaceId, runMessage, isDestroy, runId, runComment, commonInputs);
         }
     }
 

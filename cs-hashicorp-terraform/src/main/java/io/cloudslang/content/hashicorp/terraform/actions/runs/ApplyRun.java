@@ -24,8 +24,8 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformRunInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -121,7 +121,7 @@ public class ApplyRun {
         }
 
         try {
-            final Map<String, String> result = applyRunClient(ApplyRunInputs.builder()
+            final Map<String, String> result = applyRunClient(TerraformRunInputs.builder()
                     .runId(runId)
                     .runComment(runComment)
                     .commonInputs(TerraformCommonInputs.builder()

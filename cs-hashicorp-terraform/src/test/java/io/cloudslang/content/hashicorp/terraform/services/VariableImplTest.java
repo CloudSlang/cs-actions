@@ -17,6 +17,7 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -63,10 +64,33 @@ public class VariableImplTest {
             .hcl("false")
             .sensitive("false")
             .build();
+    private final TerraformWorkspaceInputs listVariableInputs=TerraformWorkspaceInputs.builder()
+            .workspaceName("")
+            .commonInputs(TerraformCommonInputs.builder()
+            .authToken("")
+            .proxyHost("")
+            .proxyPort("")
+            .proxyUsername("")
+            .proxyPassword("")
+            .trustAllRoots("")
+            .trustPassword("")
+            .trustKeystore("")
+            .connectTimeout("")
+            .connectionsMaxTotal("")
+            .connectionsMaxPerRoot("")
+            .responseCharacterSet("")
+            .build())
+            .build();
+
 
     @Test(expected = IllegalArgumentException.class)
     public void createVariable() throws Exception {
         VariableImpl.createVariable(getTerraformVariableInputs);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void listVariables()throws Exception{
+        VariableImpl.listVariables(listVariableInputs);
     }
 
     @Test
