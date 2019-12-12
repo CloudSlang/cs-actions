@@ -243,7 +243,7 @@
             <!--</includes>-->
             <!--&lt;!&ndash;Pass arguments using ${var} syntax in license.template file&ndash;&gt;-->
             <!--<properties>-->
-            <!--<copyright.year>2017</copyright.year>-->
+            <!--<copyright.year>2019</copyright.year>-->
             <!--</properties>-->
             <!--&lt;!&ndash;Custom mapping for java extensions&ndash;&gt;-->
             <!--<useDefaultMapping>false</useDefaultMapping>-->
@@ -333,9 +333,11 @@
         <module>cs-powershell</module>
         <module>cs-rft</module>
         <module>cs-ssh</module>
+        <module>cs-tesseract</module>
         <module>cs-utilities</module>
         <module>cs-vmware</module>
         <module>cs-xml</module>
+        <module>cs-hashicorp-terraform</module>
     </modules>
 
 </project>

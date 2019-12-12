@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.office365.actions.email;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -33,7 +34,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.office365.services.EmailServiceImpl.ListAttachment;
+import static io.cloudslang.content.office365.services.EmailServiceImpl.listAttachment;
 import static io.cloudslang.content.office365.services.EmailServiceImpl.retrieveAttachmentIdList;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
@@ -115,7 +116,7 @@ public class ListAttachments {
         }
 
         try {
-            final Map<String, String> result = ListAttachment(ListAttachmentsInputs.builder()
+            final Map<String, String> result = listAttachment(ListAttachmentsInputs.builder()
                     .messageId(messageId)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)

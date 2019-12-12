@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 
+
+
 package io.cloudslang.content.mail.services;
 
 import com.sun.mail.util.ASCIIUtility;
@@ -21,6 +23,8 @@ import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import io.cloudslang.content.mail.entities.StringOutputStream;
 import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
+import io.cloudslang.content.mail.utils.Constants;
+import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.cms.RecipientId;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.RecipientInformationStore;
@@ -42,8 +46,8 @@ import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.util.*;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static io.cloudslang.content.mail.utils.Constants.DEFAULT_JAVA_KEYSTORE;
+import static org.apache.commons.lang3.StringUtils.*;
 import static org.bouncycastle.mail.smime.SMIMEUtil.toMimeBodyPart;
 
 /**
@@ -478,9 +482,9 @@ public class GetMailMessage {
         enableSSL = (null != strEnableSSL && strEnableSSL.equalsIgnoreCase(STR_TRUE));
         String strEnableTLS = getMailMessageInputs.getEnableTLS();
         enableTLS = (null != strEnableTLS && strEnableTLS.equalsIgnoreCase(STR_TRUE));
-        keystore = getMailMessageInputs.getKeystore();
+        keystore = defaultIfEmpty(getMailMessageInputs.getKeystore(), DEFAULT_JAVA_KEYSTORE);
         keystorePassword = getMailMessageInputs.getKeystorePassword();
-        trustKeystoreFile = getMailMessageInputs.getTrustKeystore();
+        trustKeystoreFile = defaultIfEmpty(getMailMessageInputs.getTrustKeystore(), DEFAULT_JAVA_KEYSTORE);
         trustPassword = getMailMessageInputs.getTrustPassword();
         characterSet = getMailMessageInputs.getCharacterSet();
         String strDeleteUponRetrieval = getMailMessageInputs.getDeleteUponRetrieval();

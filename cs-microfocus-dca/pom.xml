@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    * (c) Copyright 2018 Micro Focus, L.P.
+    * (c) Copyright 2019 Micro Focus, L.P.
     * All rights reserved. This program and the accompanying materials
     * are made available under the terms of the Apache License v2.0 which accompany this distribution.
     *
@@ -79,7 +79,7 @@
         <cs-commons.version>0.0.5</cs-commons.version>
         <cs-xml.version>0.0.11</cs-xml.version>
         <cs-http-client.version>0.1.74</cs-http-client.version>
-        <jackson.version>2.9.5</jackson.version>
+        <jackson.version>2.9.10.1</jackson.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -200,7 +200,7 @@
                     </includes>
                     <!--Pass arguments using ${var} syntax in license.template file-->
                     <properties>
-                        <copyright.year>2018</copyright.year>
+                        <copyright.year>2019</copyright.year>
                     </properties>
                     <!--Custom mapping for java extensions-->
                     <useDefaultMapping>false</useDefaultMapping>
