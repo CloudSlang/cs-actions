@@ -19,9 +19,9 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.excel.entities.AddExcelDataInputs;
+import io.cloudslang.content.excel.entities.AddCellInputs;
 import io.cloudslang.content.excel.entities.ExcelCommonInputs;
-import io.cloudslang.content.excel.services.AddExcelDataService;
+import io.cloudslang.content.excel.services.AddCellService;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -41,27 +41,27 @@ import static io.cloudslang.content.excel.utils.Constants.DEFAULT_COLUMN_DELIMIT
 import static io.cloudslang.content.excel.utils.Constants.DEFAULT_ROW_DELIMITER;
 import static io.cloudslang.content.excel.utils.Constants.DEFAULT_WORKSHEET;
 import static io.cloudslang.content.excel.utils.Constants.NEW_LINE;
-import static io.cloudslang.content.excel.utils.Descriptions.AddExcelData.COLUMN_DELIMITER_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.AddExcelData.COLUMN_INDEX_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.AddExcelData.EXCEPTION_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.AddExcelData.FAILURE_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.AddExcelData.HEADER_DATA_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.AddExcelData.OVERWRITE_DATA_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.AddExcelData.RETURN_RESULT_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.AddExcelData.ROW_DATA_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.AddExcelData.ROW_DELIMITER_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.AddExcelData.ROW_INDEX_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.AddExcelData.SUCCESS_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.AddCell.COLUMN_DELIMITER_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.AddCell.COLUMN_INDEX_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.AddCell.EXCEPTION_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.AddCell.FAILURE_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.AddCell.HEADER_DATA_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.AddCell.OVERWRITE_DATA_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.AddCell.RETURN_RESULT_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.AddCell.ROW_DATA_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.AddCell.ROW_DELIMITER_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.AddCell.ROW_INDEX_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.AddCell.SUCCESS_DESC;
 import static io.cloudslang.content.excel.utils.Descriptions.Common.EXCEL_FILE_NAME_DESC;
 import static io.cloudslang.content.excel.utils.Descriptions.Common.RETURN_CODE_DESC;
 import static io.cloudslang.content.excel.utils.Descriptions.Common.WORKSHEET_NAME_DESC;
-import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.COLUMN_DELIMITER;
-import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.COLUMN_INDEX;
-import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.HEADER_DATA;
-import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.OVERWRITE_DATA;
-import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.ROW_DATA;
-import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.ROW_DELIMITER;
-import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.ROW_INDEX;
+import static io.cloudslang.content.excel.utils.Inputs.AddCell.COLUMN_DELIMITER;
+import static io.cloudslang.content.excel.utils.Inputs.AddCell.COLUMN_INDEX;
+import static io.cloudslang.content.excel.utils.Inputs.AddCell.HEADER_DATA;
+import static io.cloudslang.content.excel.utils.Inputs.AddCell.OVERWRITE_DATA;
+import static io.cloudslang.content.excel.utils.Inputs.AddCell.ROW_DATA;
+import static io.cloudslang.content.excel.utils.Inputs.AddCell.ROW_DELIMITER;
+import static io.cloudslang.content.excel.utils.Inputs.AddCell.ROW_INDEX;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.WORKSHEET_NAME;
 import static io.cloudslang.content.excel.utils.InputsValidation.verifyAddExcelData;
@@ -69,9 +69,9 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class AddExcelData {
+public class AddCell {
 
-    @Action(name = "Add Excel Data",
+    @Action(name = "Add Cell",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -108,7 +108,7 @@ public class AddExcelData {
         }
 
         try {
-            final Map<String, String> result = AddExcelDataService.addExcelData(AddExcelDataInputs.builder()
+            final Map<String, String> result = AddCellService.addExcelData(AddCellInputs.builder()
                     .commonInputs(ExcelCommonInputs.builder()
                             .excelFileName(excelFileName)
                             .worksheetName(worksheetName)

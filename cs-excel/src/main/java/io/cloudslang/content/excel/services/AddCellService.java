@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.excel.services;
 
-import io.cloudslang.content.excel.entities.AddExcelDataInputs;
+import io.cloudslang.content.excel.entities.AddCellInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -36,10 +36,10 @@ import static io.cloudslang.content.excel.utils.Constants.ROW_DATA_REQD_MSG;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 
-public class AddExcelDataService {
+public class AddCellService {
 
     @NotNull
-    public static Map<String, String> addExcelData(AddExcelDataInputs addExcelDataInputs) {
+    public static Map<String, String> addExcelData(AddCellInputs addExcelDataInputs) {
         boolean hasHeaderData = false;
         try {
             final String excelFileName = addExcelDataInputs.getCommonInputs().getExcelFileName();

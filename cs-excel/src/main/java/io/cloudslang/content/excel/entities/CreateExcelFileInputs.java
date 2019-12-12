@@ -22,13 +22,13 @@ import java.beans.ConstructorProperties;
 /**
  * Created by alexandra boicu 20/2/2019
  */
-public class NewExcelDocumentInputs {
+public class CreateExcelFileInputs {
     private final String excelFileName;
     private final String worksheetNames;
     private final String delimiter;
 
     @ConstructorProperties({"commonInputs", "delimiter"})
-    private NewExcelDocumentInputs(String excelFileName, String worksheetNames, String delimiter) {
+    private CreateExcelFileInputs(String excelFileName, String worksheetNames, String delimiter) {
         this.worksheetNames = worksheetNames;
         this.excelFileName = excelFileName;
         this.delimiter = delimiter;
@@ -80,8 +80,8 @@ public class NewExcelDocumentInputs {
             return this;
         }
 
-        public NewExcelDocumentInputs build() {
-            return new NewExcelDocumentInputs(excelFileName, worksheetNames, delimiter);
+        public CreateExcelFileInputs build() {
+            return new CreateExcelFileInputs(excelFileName, worksheetNames, delimiter);
         }
     }
 }

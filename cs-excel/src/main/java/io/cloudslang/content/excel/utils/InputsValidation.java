@@ -32,10 +32,10 @@ import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_INDE
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_INDEX_NOT_A_NUMBER;
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_NUMBER;
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_OPERATOR;
-import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.COLUMN_INDEX;
-import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.OVERWRITE_DATA;
-import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.ROW_DATA;
-import static io.cloudslang.content.excel.utils.Inputs.AddExcelData.ROW_INDEX;
+import static io.cloudslang.content.excel.utils.Inputs.AddCell.COLUMN_INDEX;
+import static io.cloudslang.content.excel.utils.Inputs.AddCell.OVERWRITE_DATA;
+import static io.cloudslang.content.excel.utils.Inputs.AddCell.ROW_DATA;
+import static io.cloudslang.content.excel.utils.Inputs.AddCell.ROW_INDEX;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
 import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.FIRST_ROW_INDEX;
 import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.HAS_HEADER;

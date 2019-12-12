@@ -40,7 +40,7 @@ public class Inputs extends InputNames {
         public static final String VALUE = "value";
     }
 
-    public static class NewExcelDocument {
+    public static class CreateExcelFile {
         public static final String DELIMITER = "delimiter";
         public static final String WORKSHEET_NAMES = "worksheetNames";
     }
@@ -57,7 +57,7 @@ public class Inputs extends InputNames {
         public static final String COLUMN_DELIMITER = "columnDelimiter";
     }
 
-    public static class AddExcelData {
+    public static class AddCell {
         public static final String HEADER_DATA = "headerData";
         public static final String ROW_DATA = "rowData";
         public static final String ROW_INDEX = "rowIndex";

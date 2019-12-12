@@ -16,7 +16,7 @@
 package io.cloudslang.content.excel.services;
 
 import io.cloudslang.content.excel.entities.ExcelOperationException;
-import io.cloudslang.content.excel.entities.NewExcelDocumentInputs;
+import io.cloudslang.content.excel.entities.CreateExcelFileInputs;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -36,10 +36,10 @@ import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLS;
 import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLSX;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 
-public class NewExcelDocumentService {
+public class CreateExcelFileService {
 
     @NotNull
-    public static Map<String, String> newExcelDocument(@NotNull final NewExcelDocumentInputs newExcelDocumentInputs) {
+    public static Map<String, String> newExcelDocument(@NotNull final CreateExcelFileInputs newExcelDocumentInputs) {
         final String excelFileName = newExcelDocumentInputs.getExcelFileName();
         final Workbook excelDoc;
         try {

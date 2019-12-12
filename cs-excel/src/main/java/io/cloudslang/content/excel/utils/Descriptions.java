@@ -67,7 +67,7 @@ public class Descriptions {
         public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the row data.";
     }
 
-    public static class NewExcelDocument {
+    public static class CreateExcelFile {
         public static final String WORKSHEET_NAMES_DESC = "A delimited list of names that will be created as worksheets in the document.\n" +
                 "Default value: Sheet1,Sheet2,Sheet3.";
         public static final String DELIMITER_DESC = "The character used to delimit worksheet names.\n" +
@@ -89,7 +89,7 @@ public class Descriptions {
         public static final String EXCEPTION_DESC = "An error message in case there was an error while deleting the cell.";
     }
 
-    public static class AddExcelData {
+    public static class AddCell {
         public static final String HEADER_DATA_DESC = "A delimited list of column names. If left blank, the document will not have a header for the data.";
         public static final String ROW_DATA_DESC = "A delimited list of data.";
         public static final String ROW_DELIMITER_DESC = "The delimiter used to separate the rows of the returnResult.\n" +

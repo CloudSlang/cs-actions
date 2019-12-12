@@ -19,8 +19,8 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.excel.entities.NewExcelDocumentInputs;
-import io.cloudslang.content.excel.services.NewExcelDocumentService;
+import io.cloudslang.content.excel.entities.CreateExcelFileInputs;
+import io.cloudslang.content.excel.services.CreateExcelFileService;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -39,15 +39,15 @@ import static io.cloudslang.content.excel.utils.Constants.DEFAULT_DELIMITER_WORK
 import static io.cloudslang.content.excel.utils.Constants.NEW_LINE;
 import static io.cloudslang.content.excel.utils.Descriptions.Common.EXCEL_FILE_NAME_DESC;
 import static io.cloudslang.content.excel.utils.Descriptions.Common.RETURN_CODE_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.NewExcelDocument.DELIMITER_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.NewExcelDocument.EXCEPTION_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.NewExcelDocument.FAILURE_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.NewExcelDocument.RETURN_RESULT_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.NewExcelDocument.SUCCESS_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.NewExcelDocument.WORKSHEET_NAMES_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.CreateExcelFile.DELIMITER_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.CreateExcelFile.EXCEPTION_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.CreateExcelFile.FAILURE_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.CreateExcelFile.RETURN_RESULT_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.CreateExcelFile.SUCCESS_DESC;
+import static io.cloudslang.content.excel.utils.Descriptions.CreateExcelFile.WORKSHEET_NAMES_DESC;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
-import static io.cloudslang.content.excel.utils.Inputs.NewExcelDocument.DELIMITER;
-import static io.cloudslang.content.excel.utils.Inputs.NewExcelDocument.WORKSHEET_NAMES;
+import static io.cloudslang.content.excel.utils.Inputs.CreateExcelFile.DELIMITER;
+import static io.cloudslang.content.excel.utils.Inputs.CreateExcelFile.WORKSHEET_NAMES;
 import static io.cloudslang.content.excel.utils.InputsValidation.verifyNewExcelDocument;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -56,9 +56,9 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 /**
  * Created by alexandra boicu 20/2/2019
  */
-public class NewExcelDocument {
+public class CreateExcelFile {
 
-    @Action(name = "New Excel Document",
+    @Action(name = "Create Excel File",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -82,7 +82,7 @@ public class NewExcelDocument {
         }
 
         try {
-            final Map<String, String> result = NewExcelDocumentService.newExcelDocument(NewExcelDocumentInputs.builder()
+            final Map<String, String> result = CreateExcelFileService.newExcelDocument(CreateExcelFileInputs.builder()
                     .excelFileName(excelFileName)
                     .worksheetNames(worksheetNames)
                     .delimiter(delimiter)

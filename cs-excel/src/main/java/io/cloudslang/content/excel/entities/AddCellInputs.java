@@ -20,7 +20,7 @@ import java.beans.ConstructorProperties;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class AddExcelDataInputs {
+public class AddCellInputs {
     private final ExcelCommonInputs commonInputs;
 
     private final String headerData;
@@ -32,8 +32,8 @@ public class AddExcelDataInputs {
     private final String overwriteData;
 
     @ConstructorProperties({"commonInputs", "headerData", "rowData", "rowIndex", "columnIndex", "rowDelimiter", "columnDelimiter", "overwriteData"})
-    private AddExcelDataInputs(ExcelCommonInputs commonInputs, String headerData, String rowData, String rowIndex,
-                               String columnIndex, String rowDelimiter, String columnDelimiter, String overwriteData) {
+    private AddCellInputs(ExcelCommonInputs commonInputs, String headerData, String rowData, String rowIndex,
+                          String columnIndex, String rowDelimiter, String columnDelimiter, String overwriteData) {
         this.commonInputs = commonInputs;
         this.headerData = headerData;
         this.rowData = rowData;
@@ -151,8 +151,8 @@ public class AddExcelDataInputs {
         }
 
         @NotNull
-        public AddExcelDataInputs build() {
-            return new AddExcelDataInputs(commonInputs, headerData, rowData, rowIndex, columnIndex, rowDelimiter, columnDelimiter, overwriteData);
+        public AddCellInputs build() {
+            return new AddCellInputs(commonInputs, headerData, rowData, rowIndex, columnIndex, rowDelimiter, columnDelimiter, overwriteData);
         }
     }
 }
