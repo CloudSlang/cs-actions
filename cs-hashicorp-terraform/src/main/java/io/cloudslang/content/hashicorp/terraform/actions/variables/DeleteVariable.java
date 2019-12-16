@@ -23,11 +23,13 @@ import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.de
 
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.NEW_LINE;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.DeleteVariableConstants.DELETE_VARIABLE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.UpdateVariableConstants.UPDATE_VARIABLE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.RESPONSE_CHARACTER_SET_DESC;
 
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.SUCCESS_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.DeleteVariable.DELETE_VARIABLE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.DeleteVariable.DELETE_VAR_SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariable.UPDATE_VARIABLE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariable.VARIABLE_ID_DESC;
@@ -47,8 +49,8 @@ import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class DeleteVariable {
-    @Action(name = UPDATE_VARIABLE_OPERATION_NAME,
-            description = UPDATE_VARIABLE_DESC,
+    @Action(name = DELETE_VARIABLE_OPERATION_NAME,
+            description = DELETE_VARIABLE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
