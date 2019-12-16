@@ -91,6 +91,21 @@ public class VariableImpl {
     }
 
     @NotNull
+    public static Map<String, String> deleteVariable(@NotNull final TerraformVariableInputs deleteVariableInputs)
+            throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformCommonInputs commonInputs = deleteVariableInputs.getCommonInputs();
+        httpClientInputs.setUrl(deleteVariableUrl(deleteVariableInputs.getVariableId()));
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(DELETE);
+        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
     private static String updateVariableUrl(@NotNull final String variableId) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
         uriBuilder.setPath(getUpdateVariablePath(variableId));
@@ -98,7 +113,14 @@ public class VariableImpl {
     }
 
     @NotNull
-    public static String getUpdateVariablePath(@NotNull final String variableId ) {
+    private static String deleteVariableUrl(@NotNull final String variableId) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder();
+        uriBuilder.setPath(getdeleteVariablePath(variableId));
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    public static String getUpdateVariablePath(@NotNull final String variableId) {
         StringBuilder pathString = new StringBuilder()
                 .append(API)
                 .append(API_VERSION)
@@ -107,6 +129,18 @@ public class VariableImpl {
                 .append(variableId);
         return pathString.toString();
     }
+
+    @NotNull
+    public static String getdeleteVariablePath(@NotNull final String variableId) {
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(API_VERSION)
+                .append(VARIABLE_PATH)
+                .append(PATH_SEPARATOR)
+                .append(variableId);
+        return pathString.toString();
+    }
+
     @NotNull
     public static String createVariableRequestBody(TerraformVariableInputs terraformVariableInputs) {
         String requestBody = EMPTY;
@@ -143,6 +177,7 @@ public class VariableImpl {
         return requestBody;
 
     }
+
     @NotNull
     public static String updateVariableRequestBody(TerraformVariableInputs updateVariableInputs) {
         String requestBody = EMPTY;

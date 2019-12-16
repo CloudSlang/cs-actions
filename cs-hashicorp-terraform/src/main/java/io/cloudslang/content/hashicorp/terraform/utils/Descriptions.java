@@ -175,6 +175,7 @@ public class Descriptions {
 
 
     }
+
     public static class UpdateVariable {
         public static final String UPDATE_VARIABLE_DESC = "Updates a variable attributes in workspace.";
         public static final String VARIABLE_ID_DESC = "The ID of the variable to be updated.";
@@ -182,5 +183,9 @@ public class Descriptions {
         public static final String UPDATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while " +
                 "updating the variable.";
         public static final String FAILURE_DESC = "There was an error while updating workspace.";
+    }
+
+    public static class DeleteVariable {
+        public static final String DELETE_VAR_SUCCESS_DESC = "The variable deleted successfully.";
     }
 }

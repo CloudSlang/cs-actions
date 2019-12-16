@@ -17,10 +17,13 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.getdeleteVariablePath;
 
 import static org.junit.Assert.assertEquals;
 
@@ -28,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 @PrepareForTest(io.cloudslang.content.hashicorp.terraform.services.VariableImpl.class)
 public class VariableImplTest {
     private final String EXPECTED_CREATE_VARIABLE_BODY = "{\"data\":{\"attributes\":{\"key\":\"test\",\"value\":\"test-123\",\"category\":\"env\",\"hcl\":\"false\",\"sensitive\":\"false\"},\"relationships\":{\"workspace\":{\"data\":{\"id\":\"ws-test123\",\"type\":\"workspaces\"}}},\"type\":\"vars\"}}";
-
+    private static final String EXPECTED_DELETE_VAR_PATH = "/api/v2/vars/var-test";
     private final TerraformVariableInputs getTerraformVariableInputs = TerraformVariableInputs.builder()
             .variableName("")
             .variableValue("")
@@ -64,6 +67,17 @@ public class VariableImplTest {
             .sensitive("false")
             .build();
 
+    private final TerraformVariableInputs terraformVariableDeleteInputs = TerraformVariableInputs.builder()
+            .variableId("var-test")
+            .build();
+
+    @Test
+    public void getDeleteVariablePath() {
+        String path = getdeleteVariablePath(terraformVariableDeleteInputs.getVariableId());
+        assertEquals(EXPECTED_DELETE_VAR_PATH, path);
+
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void createVariable() throws Exception {
         VariableImpl.createVariable(getTerraformVariableInputs);
@@ -75,4 +89,7 @@ public class VariableImplTest {
 
         assertEquals(EXPECTED_CREATE_VARIABLE_BODY, createVariableBody);
     }
+
+
 }
+
