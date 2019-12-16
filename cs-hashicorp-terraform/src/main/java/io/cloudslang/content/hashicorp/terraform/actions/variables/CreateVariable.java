@@ -21,7 +21,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.CreateVariableInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -39,6 +39,8 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.CREATE_VARIABLE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_ID_JSON_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.FAILURE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
@@ -61,8 +63,8 @@ public class CreateVariable {
     @Action(name = CREATE_VARIABLE_OPERATION_NAME,
             description = CREATE_VARIABLE_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = CREATE_VARIABLE_RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = CREATE_VARIABLE_EXCEPTION_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = VARIABLE_ID, description = VARIABLE_ID_DESC)
             },
@@ -133,7 +135,7 @@ public class CreateVariable {
 
 
         try {
-            final Map<String, String> result = createVariable(CreateVariableInputs.builder()
+            final Map<String, String> result = createVariable(TerraformVariableInputs.builder()
                     .variableName(variableName)
                     .variableValue(variableValue)
                     .variableCategory(variableCategory)

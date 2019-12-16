@@ -21,8 +21,8 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.CreateWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -36,9 +36,11 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.createWorkspace;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.CREATE_WORKSPACE_OPERATION_NAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_ID_JSON_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.CREATE_WORKSPACE_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_ID_JSON_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.FAILURE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.OAUTH_TOKEN_ID_DESCRIPTION;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
@@ -62,8 +64,8 @@ public class CreateWorkspace {
     @Action(name = CREATE_WORKSPACE_OPERATION_NAME,
             description = CREATE_WORKSPACE_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = CREATE_WORKSPACE_RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = CREATE_WORKSPACE_EXCEPTION_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC)
             },
@@ -85,7 +87,7 @@ public class CreateWorkspace {
                                        @Param(value = VCS_REPO_ID, description = VCS_REPO_ID_DESC) String vcsRepoId,
                                        @Param(value = VCS_BRANCH_NAME, description = VCS_BRANCH_NAME_DESC) String vcsBranchName,
                                        @Param(value = OAUTH_TOKEN_ID, description = OAUTH_TOKEN_ID_DESCRIPTION) String oauthTokenId,
-                                       @Param(value = TERRAFORM_VERSION, description = TERAAFORM_VERSION_DESC) String terraformVersion,
+                                       @Param(value = TERRAFORM_VERSION, description = TERRAFORM_VERSION_DESC) String terraformVersion,
                                        @Param(value = REQUEST_BODY, description = WORKSPACE_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -104,8 +106,6 @@ public class CreateWorkspace {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
-        authToken = defaultIfEmpty(authToken, EMPTY);
-        organizationName = defaultIfEmpty(organizationName, EMPTY);
         workspaceName = defaultIfEmpty(workspaceName, EMPTY);
         workspaceDescription = defaultIfEmpty(workspaceDescription, EMPTY);
         autoApply = defaultIfEmpty(autoApply, BOOLEAN_FALSE);
@@ -150,7 +150,7 @@ public class CreateWorkspace {
         }
 
         try {
-            final Map<String, String> result = createWorkspace(CreateWorkspaceInputs.builder()
+            final Map<String, String> result = createWorkspace(TerraformWorkspaceInputs.builder()
                     .workspaceName(workspaceName)
                     .workspaceDescription(workspaceDescription)
                     .autoApply(autoApply)
