@@ -25,8 +25,11 @@ import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInput
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
@@ -36,7 +39,7 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.createVariable;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.CREATE_VARIABLE_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.CREATE_VARIABLES_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_ID_JSON_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.FAILURE_DESC;
@@ -58,9 +61,9 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
 
-public class CreateVariable {
+public class CreateVariables {
 
-    @Action(name = CREATE_VARIABLE_OPERATION_NAME,
+    @Action(name = CREATE_VARIABLES_OPERATION_NAME,
             description = CREATE_VARIABLE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
@@ -80,6 +83,7 @@ public class CreateVariable {
                                        @Param(value = HCL, description = HCL_DESC) String hcl,
                                        @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
                                        @Param(value = REQUEST_BODY, description = VARIABLE_REQUEST_BODY_DESC) String requestBody,
+                                       @Param(value = VARIABLES_JSON,description = VARIABLES_JSON_DESC) String variablesJson,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -105,6 +109,7 @@ public class CreateVariable {
         sensitive = defaultIfEmpty(sensitive, BOOLEAN_FALSE);
         workspaceId = defaultIfEmpty(workspaceId, BOOLEAN_TRUE);
         requestBody = defaultIfEmpty(requestBody, EMPTY);
+        variablesJson = defaultIfEmpty(variablesJson,EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -128,7 +133,7 @@ public class CreateVariable {
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
-        final List<String> exceptionMessages = verifyCreateVariableInputs(workspaceId, variableName, variableValue, variableCategory, requestBody);
+        final List<String> exceptionMessages = verifyCreateVariableInputs(workspaceId, variableCategory, requestBody);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -163,7 +168,15 @@ public class CreateVariable {
                             .connectionsMaxTotal(connectionsMaxTotal)
                             .responseCharacterSet(responseCharacterSet)
                             .build())
-                    .build());
+                    .build(),variablesJson);
+            //System.out.println(result);
+            if(result.size()>1){
+
+                for(int i=0;i<result.size();i++){
+//                  Map resultString= Maps.asasresult.values();
+//                    System.out.println(result.get("returnResult"));
+                }
+            }
             final String returnMessage = result.get(RETURN_RESULT);
 
 

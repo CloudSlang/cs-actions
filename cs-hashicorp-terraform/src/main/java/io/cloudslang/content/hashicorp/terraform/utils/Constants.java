@@ -105,7 +105,7 @@ public class Constants {
     }
 
     public static class CreateVariableConstants {
-        public static final String CREATE_VARIABLE_OPERATION_NAME = "Create Variable";
+        public static final String CREATE_VARIABLES_OPERATION_NAME = "Create Variables";
         public static final String VARIABLE_PATH = "/vars";
         public static final String VARIABLE_TYPE = "vars";
         public static final String VARIABLE_ID_JSON_PATH = "$.data.id";

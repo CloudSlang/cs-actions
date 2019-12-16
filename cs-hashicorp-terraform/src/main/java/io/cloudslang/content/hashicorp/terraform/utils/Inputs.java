@@ -65,6 +65,7 @@ public class Inputs extends InputNames {
         public static final String VARIABLE_CATEGORY = "variableCategory";
         public static final String SENSITIVE = "sensitive";
         public static final String HCL = "hcl";
+        public static final String VARIABLES_JSON = "variablesJson";
     }
 
     public static class CreateRunInputs {

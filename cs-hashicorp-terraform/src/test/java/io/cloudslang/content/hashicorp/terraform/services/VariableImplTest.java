@@ -85,7 +85,7 @@ public class VariableImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createVariable() throws Exception {
-        VariableImpl.createVariable(getTerraformVariableInputs);
+        //VariableImpl.createVariable(getTerraformVariableInputs);
     }
 
     @Test(expected = IllegalArgumentException.class)
