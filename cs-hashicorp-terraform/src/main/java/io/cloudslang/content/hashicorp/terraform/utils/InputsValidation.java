@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.ORGANIZATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.VCS_REPO_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.WORKSPACE_NAME;
@@ -96,7 +95,7 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
         if (requestBody.isEmpty()) {
             addVerifyString(exceptionMessages, workspaceName, WORKSPACE_NAME);
-            validateInputPropertyName(exceptionMessages,workspaceName, WORKSPACE_NAME);
+            validateInputPropertyName(exceptionMessages, workspaceName, WORKSPACE_NAME);
             addVerifyString(exceptionMessages, vcsRepoId, VCS_REPO_ID);
             addVerifyString(exceptionMessages, oauthTokenId, OAUTH_TOKEN_ID);
         } else {
@@ -142,10 +141,10 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> validateInputPropertyName(@NotNull List<String> exceptions, @Nullable final String input,
-                                                         @NotNull final String inputName){
+                                                         @NotNull final String inputName) {
         String regex = "[*a-zA-Z0-9_-]+";
         boolean isWorkspaceNameValid = ((input.matches(regex)));
-        if(!isWorkspaceNameValid){
+        if (!isWorkspaceNameValid) {
             exceptions.add(String.format(EXCEPTION_INVALID_NAME, input, inputName));
         }
         return exceptions;

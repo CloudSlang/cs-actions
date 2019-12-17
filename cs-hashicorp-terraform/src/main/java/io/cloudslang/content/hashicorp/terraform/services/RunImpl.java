@@ -17,10 +17,8 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.hashicorp.terraform.entities.ApplyRunInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.CreateRunInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.GetRunDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformRunInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.runs.ApplyRunRequestBody;
 import io.cloudslang.content.hashicorp.terraform.services.models.runs.CreateRunBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
@@ -32,20 +30,18 @@ import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.APPLY_RUN_PATH;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.CREATE_RUN_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_TYPE;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_TYPE;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetRunDetailsConstants.GET_RUN_DETAILS_PATH;
-import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
-import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBuilder;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_TYPE;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class RunImpl {
     @NotNull
-    public static Map<String, String> createRunClient(@NotNull final CreateRunInputs createRunInputs) throws Exception {
+    public static Map<String, String> createRunClient(@NotNull final TerraformRunInputs createRunInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = createRunInputs.getCommonInputs();
         httpClientInputs.setUrl(createRunClientUrl());
@@ -67,7 +63,7 @@ public class RunImpl {
     }
 
     @NotNull
-    public static Map<String, String> applyRunClient(@NotNull final ApplyRunInputs applyRunInputs) throws Exception {
+    public static Map<String, String> applyRunClient(@NotNull final TerraformRunInputs applyRunInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = applyRunInputs.getCommonInputs();
         httpClientInputs.setUrl(applyRunClientUrl(applyRunInputs.getRunId()));
@@ -89,7 +85,23 @@ public class RunImpl {
     }
 
     @NotNull
-    public static Map<String, String> getRunDetails(@NotNull final GetRunDetailsInputs getRunDetailsInputs) throws Exception {
+    public static Map<String, String> listRunsInWorkspaceClient(@NotNull final TerraformRunInputs listRunsInWorkspaceInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformCommonInputs commonInputs = listRunsInWorkspaceInputs.getCommonInputs();
+        httpClientInputs.setUrl(listRunsInWorkspaceClientUrl(listRunsInWorkspaceInputs.getWorkspaceId()));
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+        httpClientInputs.setQueryParams(getQueryParams(listRunsInWorkspaceInputs.getCommonInputs().getPageNumber(),
+                listRunsInWorkspaceInputs.getCommonInputs().getPageSize()));
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static Map<String, String> getRunDetails(@NotNull final TerraformRunInputs getRunDetailsInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = getRunDetailsInputs.getCommonInputs();
         httpClientInputs.setUrl(getRunDetailsUrl(getRunDetailsInputs.getRunId()));
@@ -108,7 +120,7 @@ public class RunImpl {
         StringBuilder pathString = new StringBuilder()
                 .append(API)
                 .append(API_VERSION)
-                .append(CREATE_RUN_PATH);
+                .append(RUN_PATH);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
     }
@@ -120,7 +132,8 @@ public class RunImpl {
         StringBuilder pathString = new StringBuilder()
                 .append(API)
                 .append(API_VERSION)
-                .append(GET_RUN_DETAILS_PATH)
+                .append(RUN_PATH)
+                .append(PATH_SEPARATOR)
                 .append(runId);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
@@ -134,14 +147,31 @@ public class RunImpl {
                 .append(API)
                 .append(API_VERSION)
                 .append(RUN_PATH)
+                .append(PATH_SEPARATOR)
                 .append(runId)
                 .append(APPLY_RUN_PATH);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
     }
 
+
     @NotNull
-    public static String createRunBody(CreateRunInputs createRunInputs) throws JsonProcessingException {
+    public static String listRunsInWorkspaceClientUrl(@NotNull String workspaceId) throws Exception {
+
+        final URIBuilder uriBuilder = getUriBuilder();
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(API_VERSION)
+                .append(WORKSPACE_PATH)
+                .append(PATH_SEPARATOR)
+                .append(workspaceId)
+                .append(RUN_PATH);
+        uriBuilder.setPath(pathString.toString());
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    public static String createRunBody(TerraformRunInputs createRunInputs) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         CreateRunBody createBody = new CreateRunBody();
         CreateRunBody.CreateRunData createRundata = createBody.new CreateRunData();
@@ -171,7 +201,7 @@ public class RunImpl {
     }
 
     @NotNull
-    public static String applyRunBody(ApplyRunInputs applyRunInputs) throws JsonProcessingException {
+    public static String applyRunBody(TerraformRunInputs applyRunInputs) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ApplyRunRequestBody applyRunBody = new ApplyRunRequestBody();
         applyRunBody.setRunComment(applyRunInputs.getRunComment());

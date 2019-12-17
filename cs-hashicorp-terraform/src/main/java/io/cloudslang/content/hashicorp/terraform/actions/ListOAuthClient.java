@@ -15,36 +15,37 @@
 
 package io.cloudslang.content.hashicorp.terraform.actions;
 
+import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.jayway.jsonpath.JsonPath;
-import io.cloudslang.content.hashicorp.terraform.entities.ListOAuthClientInputs;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import com.hp.oo.sdk.content.annotations.Action;
+import io.cloudslang.content.hashicorp.terraform.entities.ListOAuthClientInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import io.cloudslang.content.hashicorp.terraform.utils.Inputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.hashicorp.terraform.services.ListOauthClientImpl.listOAuthClient;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.*;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.hashicorp.terraform.services.ListOauthClientImpl.listOAuthClient;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.LIST_OAUTH_CLIENT_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.OAUTH_TOKEN_LIST_JSON_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.LIST_OAUTH_CLIENT_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.OAUTH_TOKEN_ID_DESCRIPTION;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.ListOAuthClientOutputs.OAUTH_TOKEN_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;

@@ -1,4 +1,3 @@
-
 /*
  * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
@@ -43,15 +42,18 @@ public class TerraformCommonInputs {
     private final String responseCharacterSet;
     private final String connectionsMaxPerRoot;
     private final String connectionsMaxTotal;
+    private final String pageNumber;
+    private final String pageSize;
 
 
     @java.beans.ConstructorProperties({"authToken", "organizationName", "requestBody", "terraformVersion", "proxyHost", "proxyPort", "proxyUsername",
             "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "connectTimeout",
-            "socketTimeout", "executionTimeout", "pollingInterval", "async", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal"})
+            "socketTimeout", "executionTimeout", "pollingInterval", "async", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal",
+            "pageNumber", "pageSize"})
     private TerraformCommonInputs(String authToken, String organizationName, String requestBody, String terraformVersion, String proxyHost, String proxyPort,
                                   String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier,
                                   String trustKeystore, String trustPassword, String connectTimeout, String socketTimeout, String executionTimeout, String pollingInterval,
-                                  String async, String keepAlive, String responseCharacterSet, String connectionsMaxPerRoot, String connectionsMaxTotal) {
+                                  String async, String keepAlive, String responseCharacterSet, String connectionsMaxPerRoot, String connectionsMaxTotal, String pageNumber, String pageSize) {
         this.authToken = authToken;
         this.organizationName = organizationName;
         this.requestBody = requestBody;
@@ -73,6 +75,8 @@ public class TerraformCommonInputs {
         this.responseCharacterSet = responseCharacterSet;
         this.connectionsMaxPerRoot = connectionsMaxPerRoot;
         this.connectionsMaxTotal = connectionsMaxTotal;
+        this.pageNumber = pageNumber;
+        this.pageSize = pageSize;
     }
 
     @NotNull
@@ -186,6 +190,14 @@ public class TerraformCommonInputs {
         return this.responseCharacterSet;
     }
 
+    public String getPageNumber() {
+        return this.pageNumber;
+    }
+
+    public String getPageSize() {
+        return this.pageSize;
+    }
+
     public static class TerraformCommonInputsBuilder {
         private String authToken = EMPTY;
         private String organizationName = EMPTY;
@@ -208,6 +220,8 @@ public class TerraformCommonInputs {
         private String responseCharacterSet = EMPTY;
         private String connectionsMaxPerRoot = EMPTY;
         private String connectionsMaxTotal = EMPTY;
+        private String pageNumber = EMPTY;
+        private String pageSize = EMPTY;
 
         TerraformCommonInputsBuilder() {
         }
@@ -339,10 +353,22 @@ public class TerraformCommonInputs {
             return this;
         }
 
+        @NotNull
+        public TerraformCommonInputs.TerraformCommonInputsBuilder pageNumber(@NotNull final String pageNumber) {
+            this.pageNumber = pageNumber;
+            return this;
+        }
+
+        @NotNull
+        public TerraformCommonInputs.TerraformCommonInputsBuilder pageSize(@NotNull final String pageSize) {
+            this.pageSize = pageSize;
+            return this;
+        }
+
         public TerraformCommonInputs build() {
             return new TerraformCommonInputs(authToken, organizationName, requestBody, terraformVersion, proxyHost, proxyPort, proxyUsername, proxyPassword,
                     trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, connectTimeout,
-                    socketTimeout, executionTimeout, pollingInterval, async, keepAlive, responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal);
+                    socketTimeout, executionTimeout, pollingInterval, async, keepAlive, responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal, pageNumber, pageSize);
         }
     }
 }

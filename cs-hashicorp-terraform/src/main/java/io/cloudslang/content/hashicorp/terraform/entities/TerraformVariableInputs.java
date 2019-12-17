@@ -30,6 +30,7 @@ public class TerraformVariableInputs {
     private final String sensitive;
     private final TerraformCommonInputs commonInputs;
 
+
     @java.beans.ConstructorProperties({"variableName","variableId", "variableValue", "variableCategory", "hcl", "workspaceId", "sensitive", "commonInputs"})
     public TerraformVariableInputs(String variableName, String variableId, String variableValue, String variableCategory, String hcl, String workspaceId, String sensitive,
                                    TerraformCommonInputs commonInputs) {
@@ -45,8 +46,8 @@ public class TerraformVariableInputs {
     }
 
     @NotNull
-    public static TerraformVariableInputs.CreateVariableInputsBuilder builder() {
-        return new TerraformVariableInputs.CreateVariableInputsBuilder();
+    public static TerraformVariableInputs.TerraformVariableInputsBuilder builder() {
+        return new TerraformVariableInputs.TerraformVariableInputsBuilder();
     }
 
 
@@ -89,7 +90,7 @@ public class TerraformVariableInputs {
     }
 
 
-    public static class CreateVariableInputsBuilder {
+    public static class TerraformVariableInputsBuilder {
 
         private String variableName;
         private String variableId;
@@ -100,59 +101,61 @@ public class TerraformVariableInputs {
         private String sensitive;
         private TerraformCommonInputs commonInputs;
 
-        CreateVariableInputsBuilder() {
 
+        TerraformVariableInputsBuilder() {
         }
 
 
         @NotNull
-        public TerraformVariableInputs.CreateVariableInputsBuilder variableName(@NotNull final String variableName) {
+        public TerraformVariableInputs.TerraformVariableInputsBuilder variableName(@NotNull final String variableName) {
             this.variableName = variableName;
             return this;
         }
 
         @NotNull
-        public TerraformVariableInputs.CreateVariableInputsBuilder variableId(@NotNull final String variableId) {
+        public TerraformVariableInputs.TerraformVariableInputsBuilder variableId(@NotNull final String variableId) {
             this.variableId = variableId;
             return this;
         }
         @NotNull
-        public TerraformVariableInputs.CreateVariableInputsBuilder variableValue(@NotNull final String variableValue) {
+        public TerraformVariableInputs.TerraformVariableInputsBuilder variableValue(@NotNull final String variableValue) {
             this.variableValue = variableValue;
             return this;
         }
 
         @NotNull
-        public TerraformVariableInputs.CreateVariableInputsBuilder variableCategory(@NotNull final String variableCategory) {
+
+        public TerraformVariableInputs.TerraformVariableInputsBuilder variableCategory(@NotNull final String variableCategory) {
             this.variableCategory = variableCategory;
             return this;
         }
 
         @NotNull
-        public TerraformVariableInputs.CreateVariableInputsBuilder hcl(@NotNull final String hcl) {
+        public TerraformVariableInputs.TerraformVariableInputsBuilder hcl(@NotNull final String hcl) {
             this.hcl = hcl;
             return this;
         }
 
         @NotNull
-        public TerraformVariableInputs.CreateVariableInputsBuilder workspaceId(@NotNull final String workspaceId) {
+        public TerraformVariableInputs.TerraformVariableInputsBuilder workspaceId(@NotNull final String workspaceId) {
             this.workspaceId = workspaceId;
             return this;
         }
 
         @NotNull
-        public TerraformVariableInputs.CreateVariableInputsBuilder sensitive(@NotNull final String sensitive) {
+        public TerraformVariableInputs.TerraformVariableInputsBuilder sensitive(@NotNull final String sensitive) {
             this.sensitive = sensitive;
             return this;
         }
 
-        public TerraformVariableInputs.CreateVariableInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
+        public TerraformVariableInputs.TerraformVariableInputsBuilder commonInputs(@NotNull final TerraformCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
         public TerraformVariableInputs build() {
             return new TerraformVariableInputs(variableName, variableId,variableValue, variableCategory, hcl, workspaceId, sensitive, commonInputs);
+
         }
 
     }

@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 Micro Focus, L.P.
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,7 +13,20 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.hashicorp.terraform.utils;
+package io.cloudslang.content.excel.utils;
 
-public class SuccessMessages {
+import io.cloudslang.content.constants.OutputNames;
+
+public class Outputs extends OutputNames {
+    public static class GetCellOutputs {
+        public static final String HEADER = "header";
+        public static final String ROWS_COUNT = "rowsCount";
+        public static final String COLUMNS_COUNT = "columnsCount";
+    }
+
+    public static final class GetRowIndexByCondition {
+        public static final String ROWS_COUNT = "rowsCount";
+
+    }
+
 }

@@ -24,8 +24,8 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.GetRunDetailsInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformRunInputs;
 
 import java.util.Map;
 
@@ -33,24 +33,17 @@ import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.getRunDetails;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.STATUS_CODE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetRunDetailsConstants.GET_RUN_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetRunDetails.GET_RUN_DETAILS_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetRunDetails.GET_RUN_DETAILS_RETURN_RESULT_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetRunDetails.GET_RUN_DETAILS_EXCEPTION_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.FAILURE_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.GetRunDetailInputs.RUN_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.GetRunDetailInputs.RUN_ID_DESC;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class GetRunDetails {
 
@@ -58,8 +51,8 @@ public class GetRunDetails {
     @Action(name = GET_RUN_OPERATION_NAME,
             description = GET_RUN_DETAILS_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = GET_RUN_DETAILS_RETURN_RESULT_DESC),
-                    @Output(value = EXCEPTION, description = GET_RUN_DETAILS_EXCEPTION_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
             },
             responses = {
@@ -100,7 +93,7 @@ public class GetRunDetails {
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
         try {
-            final Map<String, String> result = getRunDetails(GetRunDetailsInputs.builder()
+            final Map<String, String> result = getRunDetails(TerraformRunInputs.builder()
                     .runId(runId)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
