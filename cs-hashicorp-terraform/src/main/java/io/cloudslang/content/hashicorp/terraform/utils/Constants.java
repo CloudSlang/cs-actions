@@ -115,6 +115,9 @@ public class Constants {
     public static class UpdateVariableConstants {
         public static final String UPDATE_VARIABLE_OPERATION_NAME = "Update Variable";
     }
+    public static class DeleteVariableConstants {
+        public static final String DELETE_VARIABLE_OPERATION_NAME = "Delete Variable";
+    }
 
     public static class GetWorkspaceDetailsConstants {
         public static final String GET_WORKSPACE_DETAILS_OPERATION_NAME = "Get Workspace Details";
