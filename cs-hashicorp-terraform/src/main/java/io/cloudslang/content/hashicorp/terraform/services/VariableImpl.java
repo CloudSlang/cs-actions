@@ -36,7 +36,7 @@ import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.set
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_TYPE;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspace.WORKSPACE_TYPE;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListVariableConstants.ORGANIZATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListVariableConstants.WORKSPACE_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
@@ -188,8 +188,59 @@ public class VariableImpl {
         }
 
 
+    public static Map<String, String> updateVariable(@NotNull final TerraformVariableInputs updateVariableInputs)
+            throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformCommonInputs commonInputs = updateVariableInputs.getCommonInputs();
+        httpClientInputs.setUrl(updateVariableUrl(updateVariableInputs.getVariableId()));
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(PATCH);
+        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.setBody(commonInputs.getRequestBody());
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        return new HttpClientService().execute(httpClientInputs);
+    }
 
+    @NotNull
+    public static Map<String, String> deleteVariable(@NotNull final TerraformVariableInputs deleteVariableInputs)
+            throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformCommonInputs commonInputs = deleteVariableInputs.getCommonInputs();
+        httpClientInputs.setUrl(deleteVariableUrl(deleteVariableInputs.getVariableId()));
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(DELETE);
+        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        return new HttpClientService().execute(httpClientInputs);
+    }
 
+    @NotNull
+    private static String updateVariableUrl(@NotNull final String variableId) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder();
+        uriBuilder.setPath(getVariablePath(variableId));
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    private static String deleteVariableUrl(@NotNull final String variableId) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder();
+        uriBuilder.setPath(getVariablePath(variableId));
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    public static String getVariablePath(@NotNull final String variableId) {
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(API_VERSION)
+                .append(VARIABLE_PATH)
+                .append(PATH_SEPARATOR)
+                .append(variableId);
+        return pathString.toString();
     }
 
     @NotNull
@@ -228,4 +279,5 @@ public class VariableImpl {
         return requestBody;
 
     }
+
 }

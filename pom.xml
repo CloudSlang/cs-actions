@@ -66,6 +66,7 @@
         <cs-http-client.version>0.1.74</cs-http-client.version>
         <cs-commons.version>0.0.5</cs-commons.version>
         <junit.version>4.12</junit.version>
+        <apache-poi.version>3.14</apache-poi.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -168,6 +169,21 @@
                 <groupId>org.jdom</groupId>
                 <artifactId>jdom</artifactId>
                 <version>2.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${apache-poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${apache-poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml-schemas</artifactId>
+                <version>${apache-poi.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -304,6 +320,7 @@
         <module>cs-database</module>
         <module>cs-date-time</module>
         <module>cs-dropbox</module>
+        <module>cs-excel</module>
         <module>cs-google</module>
         <module>cs-http-client</module>
         <module>cs-json</module>

@@ -23,13 +23,18 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.getVariablePath;
+
+
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(io.cloudslang.content.hashicorp.terraform.services.VariableImpl.class)
 public class VariableImplTest {
     private final String EXPECTED_CREATE_VARIABLE_BODY = "{\"data\":{\"attributes\":{\"key\":\"test\",\"value\":\"test-123\",\"category\":\"env\",\"hcl\":\"false\",\"sensitive\":\"false\"},\"relationships\":{\"workspace\":{\"data\":{\"id\":\"ws-test123\",\"type\":\"workspaces\"}}},\"type\":\"vars\"}}";
-
+    private static final String EXPECTED_DELETE_VAR_PATH = "/api/v2/vars/var-test";
+    private static final String EXPECTED_UPDATE_VAR_PATH = "/api/v2/vars/var-test1";
+    private final String EXPECTED_UPDATE_VARIABLE_BODY = "{\"data\": { \"id\":\"var-test1\", \"attributes\": { \"key\":\"dummyname\", \"value\":\"mars\", \"category\":\"terraform\" }, \"type\":\"vars\" }}";
     private final TerraformVariableInputs getTerraformVariableInputs = TerraformVariableInputs.builder()
             .sensitiveVariableName("test")
             .sensitiveVariableValue("test")
@@ -83,6 +88,30 @@ public class VariableImplTest {
             .build();
 
 
+    private final TerraformVariableInputs terraformVariableDeleteInputs = TerraformVariableInputs.builder()
+            .variableId("var-test")
+            .build();
+
+    private final TerraformVariableInputs terraformVariableDeleteInputs1 = TerraformVariableInputs.builder()
+            .variableId("var-test1")
+            .commonInputs(TerraformCommonInputs.builder()
+            .requestBody(EXPECTED_UPDATE_VARIABLE_BODY).build())
+            .build();
+
+    @Test
+    public void getDeleteVariablePath() {
+        String path = getVariablePath(terraformVariableDeleteInputs.getVariableId());
+        assertEquals(EXPECTED_DELETE_VAR_PATH, path);
+
+    }
+
+    @Test
+    public void getUpdateVariablePath() {
+        String path = getVariablePath(terraformVariableDeleteInputs1.getVariableId());
+        assertEquals(EXPECTED_UPDATE_VAR_PATH, path);
+
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void createVariable() throws Exception {
         VariableImpl.createVariable(getTerraformVariableInputs,"[]");
@@ -94,9 +123,12 @@ public class VariableImplTest {
     }
 
     @Test
-    public void getCreateVariableBody() throws Exception {
+    public void getCreateVariableBody() {
         String createVariableBody = VariableImpl.createVariableRequestBody(terraformVariableInputs);
 
         assertEquals(EXPECTED_CREATE_VARIABLE_BODY, createVariableBody);
     }
+
+
 }
+

@@ -22,6 +22,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.ZERO;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getQueryParams;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.httpclient.services.HttpClientService.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -36,6 +37,9 @@ public class HttpUtilsTest {
     private static final String FAILURE_CODE = "401";
     private static final String EXPECTED_HEADER = "Authorization:Bearer authToken";
     private static final String AUTH_TOKEN = "authToken";
+    private static final String PAGE_NUMBER = "1";
+    private static final String PAGE_SIZE = "20";
+    private static final String EXPECTED_QUERY_PARAMS = "?page[number]=1&page[size]=20";
 
     private Map<String, String> initializeSuccessResult() {
         final Map<String, String> result = new HashMap<>();
@@ -89,5 +93,11 @@ public class HttpUtilsTest {
     public void getAuthHeaderTest() {
         final String header = getAuthHeaders(AUTH_TOKEN);
         assertEquals(EXPECTED_HEADER, header);
+    }
+
+    @Test
+    public void getQueryParamsTestTwoArgs() {
+        String queryParams = getQueryParams(PAGE_NUMBER, PAGE_SIZE);
+        assertEquals(EXPECTED_QUERY_PARAMS, queryParams);
     }
 }

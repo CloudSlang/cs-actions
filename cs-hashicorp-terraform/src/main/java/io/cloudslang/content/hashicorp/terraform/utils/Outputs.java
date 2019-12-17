@@ -15,7 +15,6 @@
 
 package io.cloudslang.content.hashicorp.terraform.utils;
 
-
 import io.cloudslang.content.constants.OutputNames;
 
 public class Outputs extends OutputNames {
@@ -41,6 +40,8 @@ public class Outputs extends OutputNames {
         public static final String VARIABLE_ID = "variableId";
     }
 
-
+    public static class ListWorkspacesOutputs {
+        public static final String WORKSPACE_LIST = "workspaceList";
+    }
 
 }
