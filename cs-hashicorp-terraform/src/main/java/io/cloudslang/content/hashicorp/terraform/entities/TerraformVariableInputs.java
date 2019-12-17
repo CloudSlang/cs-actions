@@ -29,7 +29,7 @@ public class TerraformVariableInputs {
     private final String sensitive;
     private final TerraformCommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"variableName", "variableValue", "variableCategory", "hcl", "workspaceId", "sensitive", "commonInputs"})
+    @java.beans.ConstructorProperties({"sensitiveVariableName", "sensitiveVariableValue", "variableCategory", "hcl", "workspaceId", "sensitive", "commonInputs"})
     public TerraformVariableInputs(String sensitiveVariableName, String sensitiveVariableValue, String variableCategory, String hcl, String workspaceId, String sensitive,
                                    TerraformCommonInputs commonInputs) {
 
