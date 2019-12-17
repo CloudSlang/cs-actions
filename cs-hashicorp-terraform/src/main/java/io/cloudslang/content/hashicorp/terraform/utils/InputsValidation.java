@@ -59,16 +59,16 @@ public final class InputsValidation {
     }
 
     @NotNull
-    public static List<String> verifyCreateVariableInputs(@Nullable final String workspaceId, @Nullable final
-    String variableName, @Nullable final String variableValue, @Nullable final String variableCategory,
+    public static List<String> verifyCreateVariableInputs(@Nullable final String workspaceId,
+     @Nullable final String variableCategory,
                                                           @Nullable final String requestBody) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         if (requestBody.isEmpty()) {
             addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
-            addVerifyString(exceptionMessages, variableName, VARIABLE_NAME);
-            validateInputPropertyName(exceptionMessages, variableName, VARIABLE_NAME);
-            addVerifyString(exceptionMessages, variableValue, VARIABLE_VALUE);
+            //addVerifyString(exceptionMessages, , VARIABLE_NAME);
+            //validateInputPropertyName(exceptionMessages, variableName, VARIABLE_NAME);
+            //addVerifyString(exceptionMessages, variableValue, VARIABLE_VALUE);
             addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
         } else {
             addVerifyRequestBody(exceptionMessages, requestBody);
@@ -122,8 +122,6 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
         if (requestBody.isEmpty()) {
             addVerifyString(exceptionMessages, variableId, VARIABLE_ID);
-            addVerifyString(exceptionMessages, variableName, VARIABLE_NAME);
-            addVerifyString(exceptionMessages, variableValue, VARIABLE_VALUE);
             addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
         } else {
             addVerifyRequestBody(exceptionMessages, requestBody);

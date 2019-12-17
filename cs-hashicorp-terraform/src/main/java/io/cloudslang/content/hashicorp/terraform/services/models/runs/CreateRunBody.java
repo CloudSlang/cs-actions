@@ -61,7 +61,7 @@ public class CreateRunBody {
 
     public class Attributes {
 
-        String isDestroy;
+        boolean isDestroy;
         String runMessage;
 
         @JsonProperty("message")
@@ -75,12 +75,12 @@ public class CreateRunBody {
         }
 
         @JsonProperty("is-Destroy")
-        public String isDestroy() {
+        public boolean isDestroy() {
             return isDestroy;
         }
 
         @JsonProperty("is-Destroy")
-        public void setDestroy(String isDestroy) {
+        public void setDestroy(boolean isDestroy) {
             this.isDestroy = isDestroy;
         }
     }

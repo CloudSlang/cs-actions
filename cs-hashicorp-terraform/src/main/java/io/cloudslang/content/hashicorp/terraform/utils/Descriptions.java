@@ -155,15 +155,17 @@ public class Descriptions {
 
     public static class CreateVariable {
         public static final String CREATE_VARIABLE_DESC = "Creates a variable in workspace.";
-        public static final String VARIABLE_NAME_DESC = "The name of the variable.";
-        public static final String VARIABLE_VALUE_DESC = "The value of the variable.";
+        public static final String SENSITIVE_VARIABLE_NAME_DESC = "The name of the variable.";
+        public static final String SENSITIVE_VARIABLE_VALUE_DESC = "The value of the variable.";
         public static final String VARIABLE_CATEGORY_DESC = "Whether this is a Terraform or environment variable. Valid " +
                 "values are \"terraform\" or \"env\".";
         public static final String HCL_DESC = "Whether to evaluate the value of the variable as a string of HCL code." +
                 " Has no effect for environment variables.";
         public static final String SENSITIVE_DESC = "Whether the value is sensitive. If true then the variable is " +
                 "written once and not visible thereafter.";
+
         public static final String VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Variable.";
+        public static final String VARIABLES_JSON_DESC = "List of variables in json format.";
         public static final String VARIABLE_ID_DESC = "The Id of created variable.";
         public static final String CREATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while " +
                 "creating the variable.";
