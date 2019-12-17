@@ -46,12 +46,11 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class VariableImpl {
 
     @NotNull
-    public static Map<String, Map<String,String>> createVariable(@NotNull  TerraformVariableInputs terraformVariableInputs,String variablesJson) throws Exception {
+    public static Map<String, Map<String,String>> createVariable(@NotNull  TerraformVariableInputs terraformVariableInputs,String variablesJson)throws Exception  {
         String variableName;
         String variableValue;
         String hcl;
         String catagory;
-
         Map<String, Map<String,String>> createVariableMap = new HashMap<>();
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = terraformVariableInputs.getCommonInputs();
@@ -62,28 +61,31 @@ public class VariableImpl {
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
         if (terraformVariableInputs.getSensitiveVariableName().isEmpty() & terraformVariableInputs.getCommonInputs().getRequestBody().isEmpty()) {
-            JSONParser parser = new JSONParser();
-            JSONArray createVariableJsonArray = (JSONArray) parser.parse(variablesJson);
-            JSONObject createVariableJson;
-            for (int i = 0; i < createVariableJsonArray.size(); i++) {
-                createVariableJson = (JSONObject) createVariableJsonArray.get(i);
-                variableName = (String) createVariableJson.get("propertyName");
-                variableValue = (String) createVariableJson.get("propertyValue");
-                hcl = Boolean.toString((boolean) createVariableJson.get("HCL"));
-                catagory = (String) createVariableJson.get("Category");
+                JSONParser parser = new JSONParser();
+                JSONArray createVariableJsonArray = (JSONArray) parser.parse(variablesJson);
+                JSONObject createVariableJson;
+                for (int i = 0; i < createVariableJsonArray.size(); i++) {
+                    createVariableJson = (JSONObject) createVariableJsonArray.get(i);
+                    variableName = (String) createVariableJson.get("propertyName");
+                    variableValue = (String) createVariableJson.get("propertyValue");
+                    hcl = Boolean.toString((boolean) createVariableJson.get("HCL"));
+                    catagory = (String) createVariableJson.get("Category");
 
-                terraformVariableInputs = TerraformVariableInputs.builder()
-                        .variableName(variableName)
-                        .variableValue(variableValue)
-                        .variableCategory(catagory)
-                        .hcl(hcl)
-                        .workspaceId(terraformVariableInputs.getWorkspaceId())
-                        .sensitive("false").build();
-                httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
-                createVariableMap.put(variableName,new HttpClientService().execute(httpClientInputs));
+                    terraformVariableInputs = TerraformVariableInputs.builder()
+                            .sensitiveVariableValue(variableName)
+                            .sensitiveVariableValue(variableValue)
+                            .variableCategory(catagory)
+                            .hcl(hcl)
+                            .workspaceId(terraformVariableInputs.getWorkspaceId())
+                            .sensitive("false").build();
+                    httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
+                    createVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
 
-            }
-            return createVariableMap;
+                }
+
+                return createVariableMap;
+
+
 
         } else {
 
@@ -173,8 +175,8 @@ public class VariableImpl {
             catagory = (String)createVariableJson.get("Category");
 
             TerraformVariableInputs terraformVariableInputs = TerraformVariableInputs.builder()
-                    .variableName(variableName)
-                    .variableValue(variablevalue)
+                    .sensitiveVariableName(variableName)
+                    .sensitiveVariableValue(variablevalue)
                     .variableCategory(catagory)
                     .hcl(hcl)
                     .sensitive("false").build();

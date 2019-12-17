@@ -140,8 +140,8 @@ public class CreateVariables {
 
         try {
             final Map<String, Map<String, String>> result = createVariable(TerraformVariableInputs.builder()
-                    .variableName(sensitiveVariableName)
-                    .variableValue(sensitiveVariableValue)
+                    .sensitiveVariableName(sensitiveVariableName)
+                    .sensitiveVariableValue(sensitiveVariableValue)
                     .variableCategory(variableCategory)
                     .sensitive(sensitive)
                     .hcl(hcl)

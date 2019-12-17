@@ -31,8 +31,8 @@ public class VariableImplTest {
     private final String EXPECTED_CREATE_VARIABLE_BODY = "{\"data\":{\"attributes\":{\"key\":\"test\",\"value\":\"test-123\",\"category\":\"env\",\"hcl\":\"false\",\"sensitive\":\"false\"},\"relationships\":{\"workspace\":{\"data\":{\"id\":\"ws-test123\",\"type\":\"workspaces\"}}},\"type\":\"vars\"}}";
 
     private final TerraformVariableInputs getTerraformVariableInputs = TerraformVariableInputs.builder()
-            .variableName("")
-            .variableValue("")
+            .sensitiveVariableName("test")
+            .sensitiveVariableValue("test")
             .variableCategory("")
             .workspaceId("")
             .hcl("false")
@@ -58,8 +58,8 @@ public class VariableImplTest {
             .build();
     private final TerraformVariableInputs terraformVariableInputs = TerraformVariableInputs.builder()
             .workspaceId("ws-test123")
-            .variableName("test")
-            .variableValue("test-123")
+            .sensitiveVariableName("test")
+            .sensitiveVariableValue("test-123")
             .variableCategory("env")
             .hcl("false")
             .sensitive("false")
@@ -85,7 +85,7 @@ public class VariableImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createVariable() throws Exception {
-        //VariableImpl.createVariable(getTerraformVariableInputs);
+        VariableImpl.createVariable(getTerraformVariableInputs,"[]");
     }
 
     @Test(expected = IllegalArgumentException.class)

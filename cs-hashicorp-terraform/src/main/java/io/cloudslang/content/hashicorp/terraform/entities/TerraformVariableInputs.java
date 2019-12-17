@@ -84,8 +84,8 @@ public class TerraformVariableInputs {
 
     public static class TerraformVariableInputsBuilder {
 
-        private String variableName;
-        private String variableValue;
+        private String sensitiveVariableName;
+        private String sensitiveVariableValue;
         private String variableCategory;
         private String hcl;
         private String workspaceId;
@@ -98,14 +98,14 @@ public class TerraformVariableInputs {
 
 
         @NotNull
-        public TerraformVariableInputs.TerraformVariableInputsBuilder variableName(@NotNull final String variableName) {
-            this.variableName = variableName;
+        public TerraformVariableInputs.TerraformVariableInputsBuilder sensitiveVariableName(@NotNull final String sensitiveVariableName) {
+            this.sensitiveVariableName = sensitiveVariableName;
             return this;
         }
 
         @NotNull
-        public TerraformVariableInputs.TerraformVariableInputsBuilder variableValue(@NotNull final String variableValue) {
-            this.variableValue = variableValue;
+        public TerraformVariableInputs.TerraformVariableInputsBuilder sensitiveVariableValue(@NotNull final String sensitiveVariableValue) {
+            this.sensitiveVariableValue = sensitiveVariableValue;
             return this;
         }
 
@@ -139,7 +139,7 @@ public class TerraformVariableInputs {
         }
 
         public TerraformVariableInputs build() {
-            return new TerraformVariableInputs(variableName, variableValue, variableCategory, hcl, workspaceId, sensitive, commonInputs);
+            return new TerraformVariableInputs(sensitiveVariableName, sensitiveVariableValue, variableCategory, hcl, workspaceId, sensitive, commonInputs);
         }
 
     }
