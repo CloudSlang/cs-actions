@@ -122,8 +122,6 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
         if (requestBody.isEmpty()) {
             addVerifyString(exceptionMessages, variableId, VARIABLE_ID);
-            addVerifyString(exceptionMessages, variableName, VARIABLE_NAME);
-            addVerifyString(exceptionMessages, variableValue, VARIABLE_VALUE);
             addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
         } else {
             addVerifyRequestBody(exceptionMessages, requestBody);

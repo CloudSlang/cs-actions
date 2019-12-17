@@ -157,36 +157,6 @@ public class VariableImpl {
         return pathString.toString();
     }
 
-    @NotNull
-    public static void createVariables(String variablesJson)throws Exception{
-        String variableName;
-        String variablevalue;
-        String hcl;
-        String catagory;
-        JSONParser parser = new JSONParser();
-        JSONObject createVariableJson;
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        JSONArray createVariableJsonArray = (JSONArray) parser.parse(variablesJson);
-        for(int i = 0;i<createVariableJsonArray.size();i++){
-            createVariableJson=(JSONObject)createVariableJsonArray.get(i);
-            variableName = (String)createVariableJson.get("propertyName");
-            variablevalue = (String)createVariableJson.get("propertyValue");
-            hcl = Boolean.toString((boolean)createVariableJson.get("HCL"));
-            catagory = (String)createVariableJson.get("Category");
-
-            TerraformVariableInputs terraformVariableInputs = TerraformVariableInputs.builder()
-                    .sensitiveVariableName(variableName)
-                    .sensitiveVariableValue(variablevalue)
-                    .variableCategory(catagory)
-                    .hcl(hcl)
-                    .sensitive("false").build();
-
-             ;
-            httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
-
-
-        }
-
 
     public static Map<String, String> updateVariable(@NotNull final TerraformVariableInputs updateVariableInputs)
             throws Exception {
