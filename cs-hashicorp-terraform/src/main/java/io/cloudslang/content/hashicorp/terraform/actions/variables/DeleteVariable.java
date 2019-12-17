@@ -24,14 +24,12 @@ import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.de
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.NEW_LINE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.DeleteVariableConstants.DELETE_VARIABLE_OPERATION_NAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.UpdateVariableConstants.UPDATE_VARIABLE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.RESPONSE_CHARACTER_SET_DESC;
 
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.DeleteVariable.DELETE_VARIABLE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.DeleteVariable.DELETE_VAR_SUCCESS_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariable.UPDATE_VARIABLE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariable.VARIABLE_ID_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
