@@ -54,9 +54,6 @@ public class RunImpl {
         } else {
             httpClientInputs.setBody(commonInputs.getRequestBody());
         }
-
-        System.out.println(httpClientInputs.getBody());
-        System.out.println(httpClientInputs.getUrl());
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
