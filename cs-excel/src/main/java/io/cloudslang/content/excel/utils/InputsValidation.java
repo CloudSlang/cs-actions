@@ -32,6 +32,7 @@ import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_INDE
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_INDEX_NOT_A_NUMBER;
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_NUMBER;
 import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_INVALID_OPERATOR;
+import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_NEGATIVE_INDEX;
 import static io.cloudslang.content.excel.utils.Inputs.AddCell.COLUMN_INDEX;
 import static io.cloudslang.content.excel.utils.Inputs.AddCell.OVERWRITE_DATA;
 import static io.cloudslang.content.excel.utils.Inputs.AddCell.ROW_DATA;
@@ -90,7 +91,7 @@ public final class InputsValidation {
         addVerifyFile(exceptionMessages, excelFileName, EXCEL_FILE_NAME);
 
         addVerifyYesOrNo(exceptionMessages, hasHeader, HAS_HEADER);
-        addVerifyNumber(exceptionMessages, firstRowIndex, FIRST_ROW_INDEX);
+        addVerifyPositiveNumber(exceptionMessages, firstRowIndex, FIRST_ROW_INDEX);
         addVerifyIndex(exceptionMessages, rowIndex, ROW_INDEX);
         addVerifyIndex(exceptionMessages, columnIndex, COLUMN_INDEX);
 
@@ -122,8 +123,8 @@ public final class InputsValidation {
         addVerifyFile(exceptionMessages, excelFileName, EXCEL_FILE_NAME);
         addVerifyYesOrNo(exceptionMessages, hasHeader, HAS_HEADER);
         addVerifyOperator(exceptionMessages, operator, OPERATOR);
-        addVerifyNumber(exceptionMessages, firstRowIndex, FIRST_ROW_INDEX);
-        addVerifyNumber(exceptionMessages, columnIndextoQuery, COLUMN_INDEX_TO_QUERY);
+        addVerifyPositiveNumber(exceptionMessages, firstRowIndex, FIRST_ROW_INDEX);
+        addVerifyPositiveNumber(exceptionMessages, columnIndextoQuery, COLUMN_INDEX_TO_QUERY);
 
         return exceptionMessages;
     }
@@ -154,11 +155,13 @@ public final class InputsValidation {
     }
 
     @NotNull
-    private static List<String> addVerifyNumber(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+    private static List<String> addVerifyPositiveNumber(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_EMPTY, inputName));
         } else if (!NumberUtilities.isValidInt(input)) {
             exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
+        } else if(Integer.parseInt(input)< 0) {
+            exceptions.add(String.format(EXCEPTION_NEGATIVE_INDEX, input, inputName));
         }
         return exceptions;
     }
