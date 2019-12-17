@@ -71,14 +71,18 @@ public class VariableImpl {
                     hcl = Boolean.toString((boolean) createVariableJson.get("HCL"));
                     catagory = (String) createVariableJson.get("Category");
 
+                    System.out.println(catagory);
+
                     terraformVariableInputs = TerraformVariableInputs.builder()
-                            .sensitiveVariableValue(variableName)
+                            .sensitiveVariableName(variableName)
                             .sensitiveVariableValue(variableValue)
                             .variableCategory(catagory)
                             .hcl(hcl)
                             .workspaceId(terraformVariableInputs.getWorkspaceId())
                             .sensitive("false").build();
                     httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
+
+                    System.out.println(httpClientInputs.getBody());
                     createVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
 
                 }

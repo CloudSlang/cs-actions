@@ -132,7 +132,7 @@ public class CreateVariables {
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
-        final List<String> exceptionMessages = verifyCreateVariableInputs(workspaceId, variableCategory, requestBody);
+        final List<String> exceptionMessages = verifyCreateVariableInputs(workspaceId,variableCategory,variablesJson,sensitiveVariableName,sensitiveVariableValue, requestBody);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -186,7 +186,10 @@ public class CreateVariables {
 
                             for (String variableResult : result.keySet()) {
 
+                                results.put(RETURN_CODE,result.get(variableResult).get(RETURN_CODE));
                                 results.put(variableName, result.get(variableResult).get("returnResult"));
+                                results.put(STATUS_CODE,result.get(variableResult).get(STATUS_CODE));
+
                             }
                         }
                     }
