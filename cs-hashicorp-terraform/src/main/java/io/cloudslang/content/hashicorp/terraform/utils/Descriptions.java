@@ -205,6 +205,6 @@ public class Descriptions {
 
     public static class DeleteVariable {
         public static final String DELETE_VAR_SUCCESS_DESC = "The variable deleted successfully.";
-        public static final String DELETE_VARIABLE_DESC = "Deleted a variable from workspace.";
+        public static final String DELETE_VARIABLE_DESC = "Deletes a variable from workspace.";
     }
 }

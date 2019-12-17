@@ -123,7 +123,7 @@ public class VariableImplTest {
     }
 
     @Test
-    public void getCreateVariableBody() throws Exception {
+    public void getCreateVariableBody() {
         String createVariableBody = VariableImpl.createVariableRequestBody(terraformVariableInputs);
 
         assertEquals(EXPECTED_CREATE_VARIABLE_BODY, createVariableBody);
