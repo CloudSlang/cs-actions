@@ -53,6 +53,9 @@ public class RunImpl {
         } else {
             httpClientInputs.setBody(commonInputs.getRequestBody());
         }
+
+        System.out.println(httpClientInputs.getBody());
+        System.out.println(httpClientInputs.getUrl());
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
@@ -184,7 +187,7 @@ public class RunImpl {
         workspaceData.setId(createRunInputs.getWorkspaceId());
         workspaceData.setType(WORKSPACE_TYPE);
 
-        attributes.setDestroy(createRunInputs.getIsDestroy());
+        attributes.setDestroy(Boolean.valueOf(createRunInputs.getIsDestroy()));
         attributes.setRunMessage(createRunInputs.getRunMessage());
         relationships.setWorkspace(workspace);
         workspace.setData(workspaceData);

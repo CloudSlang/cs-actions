@@ -60,8 +60,8 @@ public class Inputs extends InputNames {
     }
 
     public static class CreateVariableInputs {
-        public static final String VARIABLE_NAME = "variableName";
-        public static final String VARIABLE_VALUE = "variableValue";
+        public static final String SENSITIVE_VARIABLE_NAME = "sensitiveVariableName";
+        public static final String SENSITIVE_VARIABLE_VALUE = "sensitiveVariableValue";
         public static final String VARIABLE_CATEGORY = "variableCategory";
         public static final String SENSITIVE = "sensitive";
         public static final String HCL = "hcl";

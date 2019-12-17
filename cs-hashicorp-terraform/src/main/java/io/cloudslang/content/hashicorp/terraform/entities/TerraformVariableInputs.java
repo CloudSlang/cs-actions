@@ -20,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
 public class TerraformVariableInputs {
 
 
-    private final String variableName;
-    private final String variableValue;
+    private final String sensitiveVariableName;
+    private final String sensitiveVariableValue;
     private final String variableCategory;
 
     private final String hcl;
@@ -30,11 +30,11 @@ public class TerraformVariableInputs {
     private final TerraformCommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"variableName", "variableValue", "variableCategory", "hcl", "workspaceId", "sensitive", "commonInputs"})
-    public TerraformVariableInputs(String variableName, String variableValue, String variableCategory, String hcl, String workspaceId, String sensitive,
+    public TerraformVariableInputs(String sensitiveVariableName, String sensitiveVariableValue, String variableCategory, String hcl, String workspaceId, String sensitive,
                                    TerraformCommonInputs commonInputs) {
 
-        this.variableName = variableName;
-        this.variableValue = variableValue;
+        this.sensitiveVariableName = sensitiveVariableName;
+        this.sensitiveVariableValue = sensitiveVariableValue;
         this.variableCategory = variableCategory;
         this.hcl = hcl;
         this.workspaceId = workspaceId;
@@ -49,13 +49,13 @@ public class TerraformVariableInputs {
 
 
     @NotNull
-    public String getVariableName() {
-        return variableName;
+    public String getSensitiveVariableName() {
+        return sensitiveVariableName;
     }
 
     @NotNull
-    public String getVariableValue() {
-        return variableValue;
+    public String getSensitiveVariableValue() {
+        return sensitiveVariableValue;
     }
 
     @NotNull
