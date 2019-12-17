@@ -33,7 +33,7 @@ public class RunImplTest {
 
     private final String EXPECTED_APPLY_RUN_REQUEST_BODY = "{\"comment\":\"test apply run comment\"}";
     private final String EXPECTED_APPLY_RUN_URL = "https://app.terraform.io/api/v2/runs/run-456test/actions/apply";
-    private final String EXPECTED_CREATE_RUN_BODY = "{\"data\":{\"attributes\":{\"is-Destroy\":\"false\",\"message\":\"test\"},\"type\":\"runs\",\"relationships\":{\"workspace\":{\"data\":{\"type\":\"workspaces\",\"id\":\"test-123\"}}}}}";
+    private final String EXPECTED_CREATE_RUN_BODY = "{\"data\":{\"attributes\":{\"message\":\"test\",\"is-Destroy\":false},\"type\":\"runs\",\"relationships\":{\"workspace\":{\"data\":{\"type\":\"workspaces\",\"id\":\"test-123\"}}}}}";
     private static final String RUN_ID = "test123";
     private static final String WORKSPACE_ID = "ws-test123";
     private final String EXPECTED_GET_RUN_DETAILS_PATH = "https://app.terraform.io/api/v2/runs/test123";
