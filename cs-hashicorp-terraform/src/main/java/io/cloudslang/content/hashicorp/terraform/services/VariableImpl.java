@@ -71,8 +71,10 @@ public class VariableImpl {
                     hcl = Boolean.toString((boolean) createVariableJson.get("HCL"));
                     catagory = (String) createVariableJson.get("Category");
 
+                    System.out.println(catagory);
+
                     terraformVariableInputs = TerraformVariableInputs.builder()
-                            .sensitiveVariableValue(variableName)
+                            .sensitiveVariableName(variableName)
                             .sensitiveVariableValue(variableValue)
                             .variableCategory(catagory)
                             .hcl(hcl)

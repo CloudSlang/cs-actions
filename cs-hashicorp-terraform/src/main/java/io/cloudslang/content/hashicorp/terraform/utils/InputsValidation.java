@@ -60,18 +60,20 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyCreateVariableInputs(@Nullable final String workspaceId,
-     @Nullable final String variableCategory,
+     @Nullable final String variableCategory,@Nullable final String variableJson,@Nullable final String sensitiveVariableName, @Nullable final String sensitiveVariableValue,
                                                           @Nullable final String requestBody) {
 
         final List<String> exceptionMessages = new ArrayList<>();
-        if (requestBody.isEmpty()) {
+        if (requestBody.isEmpty() & variableJson.isEmpty()) {
             addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
-            //addVerifyString(exceptionMessages, , VARIABLE_NAME);
-            //validateInputPropertyName(exceptionMessages, variableName, VARIABLE_NAME);
-            //addVerifyString(exceptionMessages, variableValue, VARIABLE_VALUE);
+            addVerifyString(exceptionMessages,sensitiveVariableName , SENSITIVE_VARIABLE_NAME);
+            validateInputPropertyName(exceptionMessages, sensitiveVariableName, SENSITIVE_VARIABLE_NAME);
+            addVerifyString(exceptionMessages, sensitiveVariableValue, SENSITIVE_VARIABLE_VALUE);
             addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
-        } else {
+        } else if(!requestBody.isEmpty()){
             addVerifyRequestBody(exceptionMessages, requestBody);
+        }else{
+            addVerifyRequestBody(exceptionMessages,variableJson);
         }
         return exceptionMessages;
     }
