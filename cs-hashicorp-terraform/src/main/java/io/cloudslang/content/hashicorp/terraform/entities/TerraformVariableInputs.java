@@ -20,24 +20,22 @@ import org.jetbrains.annotations.NotNull;
 public class TerraformVariableInputs {
 
 
-    private final String variableName;
+    private final String sensitiveVariableName;
+    private final String sensitiveVariableValue;
     private final String variableId;
-    private final String variableValue;
     private final String variableCategory;
-
     private final String hcl;
     private final String workspaceId;
     private final String sensitive;
     private final TerraformCommonInputs commonInputs;
 
-
-    @java.beans.ConstructorProperties({"variableName","variableId", "variableValue", "variableCategory", "hcl", "workspaceId", "sensitive", "commonInputs"})
-    public TerraformVariableInputs(String variableName, String variableId, String variableValue, String variableCategory, String hcl, String workspaceId, String sensitive,
+    @java.beans.ConstructorProperties({"sensitiveVariableName", "variableId" , "sensitiveVariableValue", "variableCategory", "hcl", "workspaceId", "sensitive", "commonInputs"})
+    public TerraformVariableInputs(String sensitiveVariableName, String variableId, String sensitiveVariableValue, String variableCategory, String hcl, String workspaceId, String sensitive,
                                    TerraformCommonInputs commonInputs) {
 
-        this.variableName = variableName;
+        this.sensitiveVariableName = sensitiveVariableName;
+        this.sensitiveVariableValue = sensitiveVariableValue;
         this.variableId = variableId;
-        this.variableValue = variableValue;
         this.variableCategory = variableCategory;
         this.hcl = hcl;
         this.workspaceId = workspaceId;
@@ -52,18 +50,13 @@ public class TerraformVariableInputs {
 
 
     @NotNull
-    public String getVariableName() {
-        return variableName;
-    }
+    public String getSensitiveVariableName() { return sensitiveVariableName; }
 
     @NotNull
+    public String getSensitiveVariableValue() { return sensitiveVariableValue; }
+  
     public String getVariableId() {
         return variableId;
-    }
-
-    @NotNull
-    public String getVariableValue() {
-        return variableValue;
     }
 
     @NotNull
@@ -92,9 +85,10 @@ public class TerraformVariableInputs {
 
     public static class TerraformVariableInputsBuilder {
 
-        private String variableName;
+
+        private String sensitiveVariableName;
+        private String sensitiveVariableValue;  
         private String variableId;
-        private String variableValue;
         private String variableCategory;
         private String hcl;
         private String workspaceId;
@@ -107,19 +101,19 @@ public class TerraformVariableInputs {
 
 
         @NotNull
-        public TerraformVariableInputs.TerraformVariableInputsBuilder variableName(@NotNull final String variableName) {
-            this.variableName = variableName;
+        public TerraformVariableInputs.TerraformVariableInputsBuilder sensitiveVariableName(@NotNull final String sensitiveVariableName) {
+            this.sensitiveVariableName = sensitiveVariableName;
             return this;
         }
 
         @NotNull
-        public TerraformVariableInputs.TerraformVariableInputsBuilder variableId(@NotNull final String variableId) {
-            this.variableId = variableId;
+        public TerraformVariableInputs.TerraformVariableInputsBuilder sensitiveVariableValue(@NotNull final String sensitiveVariableValue) {
+            this.sensitiveVariableValue = sensitiveVariableValue;
             return this;
         }
-        @NotNull
-        public TerraformVariableInputs.TerraformVariableInputsBuilder variableValue(@NotNull final String variableValue) {
-            this.variableValue = variableValue;
+
+        public TerraformVariableInputs.TerraformVariableInputsBuilder variableId(@NotNull final String variableId) {
+            this.variableId = variableId;
             return this;
         }
 
@@ -154,7 +148,8 @@ public class TerraformVariableInputs {
         }
 
         public TerraformVariableInputs build() {
-            return new TerraformVariableInputs(variableName, variableId,variableValue, variableCategory, hcl, workspaceId, sensitive, commonInputs);
+          
+            return new TerraformVariableInputs(sensitiveVariableName, variableId,sensitiveVariableValue, variableCategory, hcl, workspaceId, sensitive, commonInputs);
 
         }
 

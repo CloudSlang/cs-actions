@@ -155,15 +155,17 @@ public class Descriptions {
 
     public static class CreateVariable {
         public static final String CREATE_VARIABLE_DESC = "Creates a variable in workspace.";
-        public static final String VARIABLE_NAME_DESC = "The name of the variable.";
-        public static final String VARIABLE_VALUE_DESC = "The value of the variable.";
+        public static final String SENSITIVE_VARIABLE_NAME_DESC = "The name of the variable.";
+        public static final String SENSITIVE_VARIABLE_VALUE_DESC = "The value of the variable.";
         public static final String VARIABLE_CATEGORY_DESC = "Whether this is a Terraform or environment variable. Valid " +
                 "values are \"terraform\" or \"env\".";
         public static final String HCL_DESC = "Whether to evaluate the value of the variable as a string of HCL code." +
                 " Has no effect for environment variables.";
         public static final String SENSITIVE_DESC = "Whether the value is sensitive. If true then the variable is " +
                 "written once and not visible thereafter.";
+
         public static final String VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Variable.";
+        public static final String VARIABLES_JSON_DESC = "List of variables in json format.";
         public static final String VARIABLE_ID_DESC = "The Id of created variable.";
         public static final String CREATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while " +
                 "creating the variable.";
@@ -196,12 +198,15 @@ public class Descriptions {
         public static final String LIST_WORKSPACES_OPERATION_DESC = "List of workspaces present in given Organization";
         public static final String WORKSPACE_LIST_DESC = "List of all workspaces under the organization.";
     }
+
     public static class UpdateVariable {
         public static final String UPDATE_VARIABLE_DESC = "Updates a variable attributes in workspace.";
         public static final String VARIABLE_ID_DESC = "The ID of the variable to be updated.";
-        public static final String UPDATE_VARIABLE_RETURN_RESULT_DESC = "The response of the update variable request.";
-        public static final String UPDATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while " +
-                "updating the variable.";
-        public static final String FAILURE_DESC = "There was an error while updating workspace.";
+}
+
+
+    public static class DeleteVariable {
+        public static final String DELETE_VAR_SUCCESS_DESC = "The variable deleted successfully.";
+        public static final String DELETE_VARIABLE_DESC = "Deletes a variable from workspace.";
     }
 }
