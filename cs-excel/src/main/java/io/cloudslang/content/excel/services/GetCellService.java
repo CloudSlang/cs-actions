@@ -147,7 +147,7 @@ public class GetCellService {
                             //Fix for QCIM1D248808
                             if (!cell.toString().isEmpty() && isNumericCell(cell)) {
                                 double aCellValue = cell.getNumericCellValue();
-                                cellString = round(Double.toString(aCellValue));
+                                cellString = Double.toString(aCellValue);
                             }
                             result.append(cellString);
                         }
