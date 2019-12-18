@@ -42,6 +42,7 @@ import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.HEADER;
 import static io.cloudslang.content.excel.utils.Outputs.GetRowIndexByCondition.ROWS_COUNT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class GetCellService {
@@ -140,7 +141,6 @@ public class GetCellService {
                                 case FORMULA:
                                     break;
                             }
-
                         }
                         //string
                         else {
@@ -186,7 +186,8 @@ public class GetCellService {
         StringBuilder result = new StringBuilder();
         int headerIndex = firstRowIndex - 1;
         final Row headerRow = worksheet.getRow(headerIndex);
-
+        if(headerRow == null)
+            return EMPTY;
         for (int cIndex : columnIndex) {
             final Cell cell = headerRow.getCell(cIndex);
             if (cell != null) {

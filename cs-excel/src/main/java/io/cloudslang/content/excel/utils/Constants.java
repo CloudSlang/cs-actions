@@ -29,7 +29,8 @@ public class Constants {
     static final String EXCEPTION_EMPTY_FILE_PATH = "The excelFilName is required.";
     static final String EXCEPTION_INVALID_FILE = "The value '%s' for %s input is not a valid file path.";
     static final String EXCEPTION_INVALID_INDEX = "The value '%s' for %s input is not a valid index.";
-    static final String EXCEPTION_INVALID_INDEX_NOT_A_NUMBER = "The value '%s' in %s input is not a number.";
+    static final String EXCEPTION_NEGATIVE_INDEX = "The value '%s' for %s input cannot be a negative number.";
+    static final String EXCEPTION_INVALID_INDEX_NOT_A_NUMBER = "The value '%s' for %s input is not a valid number.";
     static final String EXCEPTION_EMPTY = "The %s input can't be empty.";
     static final String EXCEPTION_FILE_ALREADY_EXISTS = "File already exists";
     public static final String EXCEPTION_WORKSHEET_NAME_EMPTY = "The %s can't be null or empty.";
