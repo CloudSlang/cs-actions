@@ -81,8 +81,6 @@ public class VariableImpl {
                             .workspaceId(terraformVariableInputs.getWorkspaceId())
                             .sensitive("false").build();
                     httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
-
-                    System.out.println(httpClientInputs.getBody());
                     createVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
 
                 }
