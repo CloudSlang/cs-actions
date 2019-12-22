@@ -42,7 +42,7 @@ public class WorkspaceImplTest {
     private static final String EXPECTED_LIST_WORKSPACES_PATH = "/api/v2/organizations/test/workspaces";
 
     private final TerraformWorkspaceInputs invalidCreateWorkspaceInputs = TerraformWorkspaceInputs.builder()
-            .workspaceName("test")
+            .workspaceName(WORKSPACE_NAME)
             .workspaceDescription("test")
             .autoApply("true")
             .fileTriggersEnabled("true")
