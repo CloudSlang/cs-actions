@@ -40,6 +40,10 @@ public class Inputs extends InputNames {
         public static final String RUN_COMMENT = "runComment";
     }
 
+    public static class ApplyDetailsInputs {
+        public static final String APPLY_ID = "applyId";
+    }
+
     public static class CreateWorkspaceInputs {
         public static final String WORKSPACE_NAME = "workspaceName";
         public static final String WORKSPACE_DESCRIPTION = "workspaceDescription";
