@@ -140,6 +140,13 @@ public final class InputsValidation {
     }
 
     @NotNull
+    public static List<String> verifyGetCurrentStateVersionInputs(@Nullable final String workspaceId) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
+        return exceptionMessages;
+    }
+
+    @NotNull
     public static List<String> validateInputPropertyName(@NotNull List<String> exceptions, @Nullable final String input,
                                                          @NotNull final String inputName) {
         String regex = "[*a-zA-Z0-9_-]+";

@@ -44,4 +44,9 @@ public class Outputs extends OutputNames {
         public static final String WORKSPACE_LIST = "workspaceList";
     }
 
+    public static class GetCurrentStateVersionOutputs {
+        public static final String STATE_VERSION_ID = "stateVersionId";
+        public static final String HOSTED_STATE_DOWNLOAD_URL = "hostedStateDownloadUrl";
+    }
+
 }
