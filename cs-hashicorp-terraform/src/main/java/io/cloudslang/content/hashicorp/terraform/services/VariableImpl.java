@@ -45,13 +45,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class VariableImpl {
 
-    @NotNull
-    public static Map<String, Map<String,String>> createVariable(@NotNull  TerraformVariableInputs terraformVariableInputs,String variablesJson)throws Exception  {
-        String variableName;
-        String variableValue;
-        String hcl;
-        String catagory;
-        Map<String, Map<String,String>> createVariableMap = new HashMap<>();
+     @NotNull
+    public static Map<String,String> createVariable(@NotNull  TerraformVariableInputs terraformVariableInputs)throws Exception  {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = terraformVariableInputs.getCommonInputs();
         httpClientInputs.setUrl(createVariableUrl());
@@ -60,45 +55,137 @@ public class VariableImpl {
         httpClientInputs.setMethod(POST);
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        if (terraformVariableInputs.getSensitiveVariableName().isEmpty() & terraformVariableInputs.getCommonInputs().getRequestBody().isEmpty()) {
-                JSONParser parser = new JSONParser();
-                JSONArray createVariableJsonArray = (JSONArray) parser.parse(variablesJson);
-                JSONObject createVariableJson;
-                for (int i = 0; i < createVariableJsonArray.size(); i++) {
-                    createVariableJson = (JSONObject) createVariableJsonArray.get(i);
-                    variableName = (String) createVariableJson.get("propertyName");
-                    variableValue = (String) createVariableJson.get("propertyValue");
-                    hcl = Boolean.toString((boolean) createVariableJson.get("HCL"));
-                    catagory = (String) createVariableJson.get("Category");
 
-                    terraformVariableInputs = TerraformVariableInputs.builder()
-                            .sensitiveVariableName(variableName)
-                            .sensitiveVariableValue(variableValue)
-                            .variableCategory(catagory)
-                            .hcl(hcl)
-                            .workspaceId(terraformVariableInputs.getWorkspaceId())
-                            .sensitive("false").build();
-                    httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
-                    createVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
-
-                }
-
-                return createVariableMap;
-
-
-
-        } else {
-
-            if (commonInputs.getRequestBody().equals(EMPTY)) {
+            if (commonInputs.getRequestBody().isEmpty() & terraformVariableInputs.getSensitiveVariableRequestBody().isEmpty()) {
                 httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
-            } else {
+            } else if(!terraformVariableInputs.getSensitiveVariableRequestBody().isEmpty()){
+                httpClientInputs.setBody(terraformVariableInputs.getSensitiveVariableRequestBody());
+            }else{
                 httpClientInputs.setBody(commonInputs.getRequestBody());
             }
             httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-             createVariableMap.put(terraformVariableInputs.getSensitiveVariableName(),new HttpClientService().execute(httpClientInputs));
 
-             return createVariableMap;
+             return new HttpClientService().execute(httpClientInputs);
         }
+
+
+    @NotNull
+    public static Map<String, Map<String,String>> createVariables(@NotNull  TerraformVariableInputs terraformVariableInputs)throws Exception {
+        String variableName;
+        String variableValue;
+        String hcl;
+        String catagory;
+        Map<String, Map<String, String>> createVariableMap = new HashMap<>();
+        JSONParser parser = new JSONParser();
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformCommonInputs commonInputs = terraformVariableInputs.getCommonInputs();
+        httpClientInputs.setUrl(createVariableUrl());
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(POST);
+        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        if(!terraformVariableInputs.getVariableJson().isEmpty() & !terraformVariableInputs.getSensitiveVariableJson().isEmpty()){
+            String sensitiveVariableName;
+            String sensitiveVariableValue;
+
+            JSONArray createVariableJsonArray = (JSONArray) parser.parse(terraformVariableInputs.getVariableJson());
+            JSONArray createSensitiveVariableJsonArray = (JSONArray) parser.parse(terraformVariableInputs.getSensitiveVariableJson());
+            JSONObject createVariableJson;
+            JSONObject createSensitiveVariableJson;
+            for (int i = 0; i < createVariableJsonArray.size(); i++) {
+                createVariableJson = (JSONObject) createVariableJsonArray.get(i);
+                variableName = (String) createVariableJson.get("propertyName");
+                variableValue = (String) createVariableJson.get("propertyValue");
+                hcl = Boolean.toString((boolean) createVariableJson.get("HCL"));
+                catagory = (String) createVariableJson.get("Category");
+
+                terraformVariableInputs = TerraformVariableInputs.builder()
+                        .variableName(variableName)
+                        .variableValue(variableValue)
+                        .variableCategory(catagory)
+                        .hcl(hcl)
+                        .workspaceId(terraformVariableInputs.getWorkspaceId())
+                        .sensitive("false").build();
+                httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
+                createVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
+             
+            }
+            for (int i = 0; i < createSensitiveVariableJsonArray.size(); i++) {
+                createSensitiveVariableJson = (JSONObject) createSensitiveVariableJsonArray.get(i);
+                sensitiveVariableName = (String) createSensitiveVariableJson.get("propertyName");
+                sensitiveVariableValue = (String) createSensitiveVariableJson.get("propertyValue");
+                hcl = Boolean.toString((boolean) createSensitiveVariableJson.get("HCL"));
+                catagory = (String) createSensitiveVariableJson.get("Category");
+
+                terraformVariableInputs = TerraformVariableInputs.builder()
+                        .sensitiveVariableName(sensitiveVariableName)
+                        .sensitiveVariableValue(sensitiveVariableValue)
+                        .variableName(EMPTY)
+                        .variableValue(EMPTY)
+                        .variableCategory(catagory)
+                        .hcl(hcl)
+                        .workspaceId(terraformVariableInputs.getWorkspaceId())
+                        .sensitive("true").build();
+                httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
+                createVariableMap.put(sensitiveVariableName, new HttpClientService().execute(httpClientInputs));
+
+            }
+            return createVariableMap;
+
+        }else if (!terraformVariableInputs.getVariableJson().isEmpty()) {
+            JSONArray createVariableJsonArray = (JSONArray) parser.parse(terraformVariableInputs.getVariableJson());
+            JSONObject createVariableJson;
+            for (int i = 0; i < createVariableJsonArray.size(); i++) {
+                createVariableJson = (JSONObject) createVariableJsonArray.get(i);
+                variableName = (String) createVariableJson.get("propertyName");
+                variableValue = (String) createVariableJson.get("propertyValue");
+                hcl = Boolean.toString((boolean) createVariableJson.get("HCL"));
+                catagory = (String) createVariableJson.get("Category");
+                
+
+                terraformVariableInputs = TerraformVariableInputs.builder()
+                        .variableName(variableName)
+                        .variableValue(variableValue)
+                        .variableCategory(catagory)
+                        .hcl(hcl)
+                        .workspaceId(terraformVariableInputs.getWorkspaceId())
+                        .sensitive("false").build();
+                httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
+                createVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
+
+            }
+
+            return createVariableMap;
+        } else {
+            JSONArray createSensitiveVariableJsonArray = (JSONArray) parser.parse(terraformVariableInputs.getSensitiveVariableJson());
+            JSONObject createSensitiveVariableJson;
+            for (int i = 0; i < createSensitiveVariableJsonArray.size(); i++) {
+                createSensitiveVariableJson = (JSONObject) createSensitiveVariableJsonArray.get(i);
+                variableName = (String) createSensitiveVariableJson.get("propertyName");
+                variableValue = (String) createSensitiveVariableJson.get("propertyValue");
+                hcl = Boolean.toString((boolean) createSensitiveVariableJson.get("HCL"));
+                catagory = (String) createSensitiveVariableJson.get("Category");
+
+                terraformVariableInputs = TerraformVariableInputs.builder()
+
+                        .sensitiveVariableName(variableName)
+                        .sensitiveVariableValue(variableValue)
+                        .variableName(EMPTY)
+                        .variableValue(EMPTY)
+                        .variableCategory(catagory)
+                        .hcl(hcl)
+                        .workspaceId(terraformVariableInputs.getWorkspaceId())
+                        .sensitive("true").build();
+                httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
+                createVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
+
+            }
+
+            return createVariableMap;
+        }
+
+
     }
 
     @NotNull
@@ -222,8 +309,13 @@ public class VariableImpl {
         createVariableData.setType(VARIABLE_TYPE);
 
         CreateVariableRequestBody.Attributes attributes = createVariableRequestBody.new Attributes();
-        attributes.setKey(terraformVariableInputs.getSensitiveVariableName());
-        attributes.setValue(terraformVariableInputs.getSensitiveVariableValue());
+        if(terraformVariableInputs.getVariableName().isEmpty() & terraformVariableInputs.getVariableValue().isEmpty()) {
+            attributes.setKey(terraformVariableInputs.getSensitiveVariableName());
+            attributes.setValue(terraformVariableInputs.getSensitiveVariableValue());
+        }else{
+            attributes.setKey(terraformVariableInputs.getVariableName());
+            attributes.setValue(terraformVariableInputs.getVariableValue());
+        }
         attributes.setCategory(terraformVariableInputs.getVariableCategory());
         attributes.setHcl(terraformVariableInputs.getHcl());
         attributes.setSensitive(terraformVariableInputs.getSensitive());
@@ -249,5 +341,3 @@ public class VariableImpl {
         return requestBody;
 
     }
-
-}

@@ -60,23 +60,42 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyCreateVariableInputs(@Nullable final String workspaceId,
-     @Nullable final String variableCategory,@Nullable final String variableJson,@Nullable final String sensitiveVariableName, @Nullable final String sensitiveVariableValue,
+     @Nullable final String variableCategory,@Nullable final String variableName,@Nullable final String variableValue,@Nullable final String sensitiveVariableName, @Nullable final String sensitiveVariableValue,
                                                           @Nullable final String requestBody) {
 
         final List<String> exceptionMessages = new ArrayList<>();
-        if (requestBody.isEmpty() & variableJson.isEmpty()) {
+        if (!sensitiveVariableName.isEmpty()) {
             addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
             addVerifyString(exceptionMessages,sensitiveVariableName , SENSITIVE_VARIABLE_NAME);
             validateInputPropertyName(exceptionMessages, sensitiveVariableName, SENSITIVE_VARIABLE_NAME);
             addVerifyString(exceptionMessages, sensitiveVariableValue, SENSITIVE_VARIABLE_VALUE);
             addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
-        } else if(!requestBody.isEmpty()){
+        } else if(!variableName.isEmpty()) {
+            addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
+            addVerifyString(exceptionMessages,variableName , VARIABLE_NAME);
+            validateInputPropertyName(exceptionMessages, variableName, VARIABLE_NAME);
+            addVerifyString(exceptionMessages, variableValue, VARIABLE_VALUE);
+            addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
+        }else {
             addVerifyRequestBody(exceptionMessages, requestBody);
-        }else{
-            addVerifyRequestBody(exceptionMessages,variableJson);
         }
         return exceptionMessages;
     }
+
+    @NotNull
+    public static List<String> verifyCreateVariablesInput(@Nullable final String variableJson,@Nullable final String sensitiveVariableJson) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        if(!variableJson.isEmpty()){
+            addVerifyRequestBody(exceptionMessages,variableJson);
+        }else if(!sensitiveVariableJson.isEmpty()){
+            addVerifyRequestBody(exceptionMessages,sensitiveVariableJson);
+        } else{
+            addVerifyRequestBody(exceptionMessages,variableJson);
+            addVerifyRequestBody(exceptionMessages,sensitiveVariableJson);
+        }
+        return exceptionMessages;
+    }
+
 
     @NotNull
     public static List<String> verifyCreateRunInputs(@Nullable final String workspaceId,
@@ -136,13 +155,6 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyString(exceptionMessages, workspaceName, WORKSPACE_NAME);
         validateInputPropertyName(exceptionMessages,workspaceName, WORKSPACE_NAME);
-        return exceptionMessages;
-    }
-
-    @NotNull
-    public static List<String> verifyGetCurrentStateVersionInputs(@Nullable final String workspaceId) {
-        final List<String> exceptionMessages = new ArrayList<>();
-        addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
         return exceptionMessages;
     }
 

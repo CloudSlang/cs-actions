@@ -39,7 +39,6 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.createVariable;
-import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.createVariables;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.CREATE_VARIABLES_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_ID_JSON_PATH;
@@ -53,14 +52,15 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInput
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCreateVariableInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateVariableOutputs.VARIABLE_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
 
-public class CreateVariables {
+public class CreateVariable {
 
     @Action(name = CREATE_VARIABLES_OPERATION_NAME,
             description = CREATE_VARIABLE_DESC,
@@ -68,15 +68,23 @@ public class CreateVariables {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = VARIABLE_ID, description = VARIABLE_ID_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
+                                       @Param(value = VARIABLE_NAME, description = VARIABLE_NAME_DESC) String variableName,
+                                       @Param(value = VARIABLE_VALUE, description = VARIABLE_VALUE_DESC) String variableValue,
+                                       @Param(value = SENSITIVE_VARIABLE_NAME, description = SENSITIVE_VARIABLE_NAME_DESC) String sensitiveVariableName,
+                                       @Param(value = SENSITIVE_VARIABLE_VALUE, encrypted = true, description = SENSITIVE_VARIABLE_VALUE_DESC) String sensitiveVariableValue,
+                                       @Param(value = VARIABLE_CATEGORY, description = VARIABLE_CATEGORY_DESC) String variableCategory,
+                                       @Param(value = SENSITIVE, description = SENSITIVE_DESC) String sensitive,
+                                       @Param(value = HCL, description = HCL_DESC) String hcl,
                                        @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
-                                       @Param(value = VARIABLES_JSON, description = VARIABLES_JSON_DESC) String variablesJson,
-                                       @Param(value = SENSITIVE_VARIABLES_JSON,encrypted = true, description = SENSITIVE_VARIABLES_JSON_DESC) String sensitiveVariablesJson,
+                                       @Param(value = REQUEST_BODY, description = VARIABLE_REQUEST_BODY_DESC) String requestBody,
+                                       @Param(value = SENSITIVE_REQUEST_BODY,encrypted = true, description = VARIABLE_SENSITIVE_REQUEST_BODY_DESC) String sensitiveVariableRequestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -92,9 +100,16 @@ public class CreateVariables {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
         authToken = defaultIfEmpty(authToken, EMPTY);
+        variableName = defaultIfEmpty(variableName, EMPTY);
+        variableValue = defaultIfEmpty(variableValue, EMPTY);
+        sensitiveVariableName = defaultIfEmpty(sensitiveVariableName, EMPTY);
+        sensitiveVariableValue = defaultIfEmpty(sensitiveVariableValue, EMPTY);
+        variableCategory = defaultIfEmpty(variableCategory, EMPTY);
+        hcl = defaultIfEmpty(hcl, BOOLEAN_FALSE);
+        sensitive = defaultIfEmpty(sensitive, BOOLEAN_FALSE);
         workspaceId = defaultIfEmpty(workspaceId, BOOLEAN_TRUE);
-        variablesJson = defaultIfEmpty(variablesJson, EMPTY);
-        sensitiveVariablesJson = defaultIfEmpty(sensitiveVariablesJson, EMPTY);
+        requestBody = defaultIfEmpty(requestBody, EMPTY);
+        sensitiveVariableRequestBody = defaultIfEmpty(sensitiveVariableRequestBody, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -115,19 +130,29 @@ public class CreateVariables {
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
-        final List<String> exceptionMessages = verifyCreateVariablesInput(variablesJson,sensitiveVariablesJson);
+        if(!requestBody.isEmpty() & !sensitiveVariableRequestBody.isEmpty()){
+            return getFailureResultsMap("Please provide either requestBody or sensitiveVariableRequestBody");
+        }
+        final List<String> exceptionMessages = verifyCreateVariableInputs(workspaceId, variableCategory, variableName, variableValue, sensitiveVariableName, sensitiveVariableValue, requestBody);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
 
         try {
-            final Map<String, Map<String, String>> result = createVariables(TerraformVariableInputs.builder()
+            final Map<String, String> result = createVariable(TerraformVariableInputs.builder()
+                    .variableName(variableName)
+                    .variableValue(variableValue)
+                    .sensitiveVariableName(sensitiveVariableName)
+                    .sensitiveVariableValue(sensitiveVariableValue)
+                    .variableCategory(variableCategory)
+                    .sensitive(sensitive)
+                    .hcl(hcl)
                     .workspaceId(workspaceId)
-                    .variableJson(variablesJson)
-                    .sensitiveVariableJson(sensitiveVariablesJson)
+                    .sensitiveVariableRequestBody(sensitiveVariableRequestBody)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
+                            .requestBody(requestBody)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
@@ -146,95 +171,22 @@ public class CreateVariables {
                     .build());
 
 
-
-                try {
-                    final Map<String, String> results = new HashMap<>();
-                    JSONParser parser = new JSONParser();
-                    if(!variablesJson.isEmpty() & !sensitiveVariablesJson.isEmpty()) {
-                        JSONArray createVariableJsonArray = (JSONArray) parser.parse(variablesJson);
-                        JSONArray createSensitiveVariableJsonArray = (JSONArray) parser.parse(sensitiveVariablesJson);
-                        JSONObject createVariableJson;
-                        JSONObject createSensitiveVariableJson;
-                        String variableName = EMPTY;
-                        String sensitiveVariableName = EMPTY;
-
-                        for (int i = 0; i < createVariableJsonArray.size(); i++) {
-                            createVariableJson = (JSONObject) createVariableJsonArray.get(i);
-                            variableName = (String) createVariableJson.get("propertyName");
+                final String returnMessage = result.get(RETURN_RESULT);
 
 
-                            for (String variableResult : result.keySet()) {
+                final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+                final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
-                                results.put(RETURN_CODE, result.get(variableResult).get(RETURN_CODE));
-                                results.put(variableName, result.get(variableResult).get("returnResult"));
-                                results.put(STATUS_CODE, result.get(variableResult).get(STATUS_CODE));
-
-                            }
-                        }
-                        for (int i = 0; i < createSensitiveVariableJsonArray.size(); i++) {
-                            createSensitiveVariableJson = (JSONObject) createSensitiveVariableJsonArray.get(i);
-                            sensitiveVariableName = (String) createSensitiveVariableJson.get("propertyName");
-
-
-                            for (String variableResult : result.keySet()) {
-
-                                results.put(RETURN_CODE, result.get(variableResult).get(RETURN_CODE));
-                                results.put(sensitiveVariableName, result.get(variableResult).get("returnResult"));
-                                results.put(STATUS_CODE, result.get(variableResult).get(STATUS_CODE));
-
-                            }
-                        }
-                        return results;
-
-                    }else if(!sensitiveVariablesJson.isEmpty()){
-                        JSONArray createSensitiveVariableJsonArray = (JSONArray) parser.parse(sensitiveVariablesJson);
-                        JSONObject createSensitiveVariableJson;
-                        String sensitiveVariableName = EMPTY;
-                        for (int i = 0; i < createSensitiveVariableJsonArray.size(); i++) {
-                            createSensitiveVariableJson = (JSONObject) createSensitiveVariableJsonArray.get(i);
-                            sensitiveVariableName = (String) createSensitiveVariableJson.get("propertyName");
-
-
-                            for (String variableResult : result.keySet()) {
-
-                                results.put(RETURN_CODE, result.get(variableResult).get(RETURN_CODE));
-                                results.put(sensitiveVariableName, result.get(variableResult).get("returnResult"));
-                                results.put(STATUS_CODE, result.get(variableResult).get(STATUS_CODE));
-
-                            }
-                        }
-                        return results;
-
-                    }else {
-                        JSONArray createVariableJsonArray = (JSONArray) parser.parse(variablesJson);
-                        JSONArray createSensitiveVariableJsonArray = (JSONArray) parser.parse(sensitiveVariablesJson);
-                        JSONObject createVariableJson;
-                        JSONObject createSensitiveVariableJson;
-                        String variableName = EMPTY;
-
-
-                        for (int i = 0; i < createVariableJsonArray.size(); i++) {
-                            createVariableJson = (JSONObject) createVariableJsonArray.get(i);
-                            variableName = (String) createVariableJson.get("propertyName");
-
-
-                            for (String variableResult : result.keySet()) {
-
-                                results.put(RETURN_CODE, result.get(variableResult).get(RETURN_CODE));
-                                results.put(variableName, result.get(variableResult).get("returnResult"));
-                                results.put(STATUS_CODE, result.get(variableResult).get(STATUS_CODE));
-
-                            }
-                        }
-                        return results;
-
-
+                if (statusCode >= 200 && statusCode < 300) {
+                    final String variableId = JsonPath.read(returnMessage, VARIABLE_ID_JSON_PATH);
+                    if (!variableId.isEmpty()) {
+                        results.put(VARIABLE_ID, variableId);
+                    } else {
+                        results.put(VARIABLE_ID, EMPTY);
                     }
-
-                } catch (Exception e) {
-                    return getFailureResultsMap(StringUtilities.join(e, NEW_LINE));
-
                 }
+
+                return results;
 
         } catch (Exception exception) {
             return getFailureResultsMap(exception);

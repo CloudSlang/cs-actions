@@ -85,6 +85,7 @@ public class Descriptions {
 
 
     public static class ListOAuthClient {
+        public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
         public static final String OAUTH_TOKEN_ID_DESCRIPTION = "The VCS Connection (OAuth Connection + Token) to use. " +
                 "This ID can be obtained from the oauth-tokens endpoint.";
@@ -154,8 +155,10 @@ public class Descriptions {
 
     public static class CreateVariable {
         public static final String CREATE_VARIABLE_DESC = "Creates a variable in workspace.";
-        public static final String SENSITIVE_VARIABLE_NAME_DESC = "The name of the variable.";
-        public static final String SENSITIVE_VARIABLE_VALUE_DESC = "The value of the variable.";
+        public static final String VARIABLE_NAME_DESC = "The name of the variable.";
+        public static final String VARIABLE_VALUE_DESC = "The value of the variable.";
+        public static final String SENSITIVE_VARIABLE_NAME_DESC = "The name of the sensitive variable.";
+        public static final String SENSITIVE_VARIABLE_VALUE_DESC = "The value of the sensitive variable.";
         public static final String VARIABLE_CATEGORY_DESC = "Whether this is a Terraform or environment variable. Valid " +
                 "values are \"terraform\" or \"env\".";
         public static final String HCL_DESC = "Whether to evaluate the value of the variable as a string of HCL code." +
@@ -164,8 +167,13 @@ public class Descriptions {
                 "written once and not visible thereafter.";
 
         public static final String VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Variable.";
+        public static final String VARIABLE_SENSITIVE_REQUEST_BODY_DESC = "Request Body for the Create Sensitive Variable.";
         public static final String VARIABLES_JSON_DESC = "List of variables in json format.";
+        public static final String SENSITIVE_VARIABLES_JSON_DESC = "List of sensitive variables in json format.";
         public static final String VARIABLE_ID_DESC = "The Id of created variable.";
+        public static final String CREATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while " +
+                "creating the variable.";
+        public static final String CREATE_VARIABLE_RETURN_RESULT_DESC = "The response of the apply run.";
     }
 
     public static class ListVariables {
@@ -180,18 +188,14 @@ public class Descriptions {
 
     public static class GetRunDetails {
         public static final String GET_RUN_DETAILS_DESC = "Getting details about a run";
-    }
-
-    public static class GetApplyDetails {
-        public static final String GET_APPLY_DETAILS_DESC = "Getting details about a apply id";
-        public static final String APPLY_ID_DESC = "The ID of the apply to show";
-
+        public static final String GET_RUN_DETAILS_EXCEPTION_DESC = "An error message in case there was an error while " +
+                "getting run details.";
+        public static final String GET_RUN_DETAILS_RETURN_RESULT_DESC = "Run details or error message in case of failure.";
     }
 
     public static class DeleteWorkspace {
         public static final String DELETE_WORKSPACE_DESC = "Deletes the workspace from an organization using workspace " +
                 "name and organization name";
-        public static final String DELETE_WORKSPACE_SUCCESS_DESC = "The workspace deleted successfully.";
     }
 
     public static class ListWorkspaces {
@@ -202,17 +206,11 @@ public class Descriptions {
     public static class UpdateVariable {
         public static final String UPDATE_VARIABLE_DESC = "Updates a variable attributes in workspace.";
         public static final String VARIABLE_ID_DESC = "The ID of the variable to be updated.";
-    }
+}
+
 
     public static class DeleteVariable {
         public static final String DELETE_VAR_SUCCESS_DESC = "The variable deleted successfully.";
         public static final String DELETE_VARIABLE_DESC = "Deletes a variable from workspace.";
-    }
-
-    public static class GetCurrentStateVersion {
-        public static final String GET_CURRENT_STATE_VERSION_DESC = "Fetches the current state version for the " +
-                "given workspace.";
-        public static final String STATE_VERSION_ID_DESC = "The ID of the desired state version.";
-        public static final String HOSTED_STATE_DOWNLOAD_URL_DESC = "A url from which you can download the raw state ";
     }
 }

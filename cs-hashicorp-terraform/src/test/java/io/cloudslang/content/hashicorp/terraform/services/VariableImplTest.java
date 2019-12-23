@@ -36,6 +36,8 @@ public class VariableImplTest {
     private static final String EXPECTED_UPDATE_VAR_PATH = "/api/v2/vars/var-test1";
     private final String EXPECTED_UPDATE_VARIABLE_BODY = "{\"data\": { \"id\":\"var-test1\", \"attributes\": { \"key\":\"dummyname\", \"value\":\"mars\", \"category\":\"terraform\" }, \"type\":\"vars\" }}";
     private final TerraformVariableInputs getTerraformVariableInputs = TerraformVariableInputs.builder()
+            .variableName("test")
+            .variableValue("test")
             .sensitiveVariableName("test")
             .sensitiveVariableValue("test")
             .variableCategory("")
@@ -61,6 +63,7 @@ public class VariableImplTest {
                     .responseCharacterSet("")
                     .build())
             .build();
+
     private final TerraformVariableInputs terraformVariableInputs = TerraformVariableInputs.builder()
             .workspaceId("ws-test123")
             .sensitiveVariableName("test")
@@ -114,7 +117,7 @@ public class VariableImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createVariable() throws Exception {
-        VariableImpl.createVariable(getTerraformVariableInputs,"[]");
+        VariableImpl.createVariable(getTerraformVariableInputs);
     }
 
     @Test(expected = IllegalArgumentException.class)

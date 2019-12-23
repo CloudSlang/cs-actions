@@ -27,6 +27,7 @@ public class Inputs extends InputNames {
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String REQUEST_BODY = "requestBody";
+        public static final String SENSITIVE_REQUEST_BODY = "sensitiveRequestBody";
         public static final String TERRAFORM_VERSION = "terraformVersion";
         public static final String EXECUTION_TIMEOUT = "executionTimeout";
         public static final String POLLING_INTERVAL = "pollingInterval";
@@ -38,10 +39,6 @@ public class Inputs extends InputNames {
     public static class ApplyRunInputs {
         public static final String RUN_ID = "runId";
         public static final String RUN_COMMENT = "runComment";
-    }
-
-    public static class ApplyDetailsInputs {
-        public static final String APPLY_ID = "applyId";
     }
 
     public static class CreateWorkspaceInputs {
@@ -59,12 +56,15 @@ public class Inputs extends InputNames {
     }
 
     public static class CreateVariableInputs {
+        public static final String VARIABLE_NAME = "variableName";
+        public static final String VARIABLE_VALUE = "variableValue";
         public static final String SENSITIVE_VARIABLE_NAME = "sensitiveVariableName";
         public static final String SENSITIVE_VARIABLE_VALUE = "sensitiveVariableValue";
         public static final String VARIABLE_CATEGORY = "variableCategory";
         public static final String SENSITIVE = "sensitive";
         public static final String HCL = "hcl";
         public static final String VARIABLES_JSON = "variablesJson";
+        public static final String SENSITIVE_VARIABLES_JSON = "sensitiveVariablesJson";
     }
 
     public static class CreateRunInputs {
