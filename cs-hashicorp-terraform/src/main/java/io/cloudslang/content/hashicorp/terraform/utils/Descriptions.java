@@ -153,7 +153,8 @@ public class Descriptions {
     }
 
     public static class CreateVariable {
-        public static final String CREATE_VARIABLE_DESC = "Creates a variable in workspace.";
+        public static final String CREATE_VARIABLE_DESC = "Create either a sensitive or a non-sensitive variable in a given workspace.";
+        public static final String CREATE_VARIABLES_DESC = "Creates  multiple sensitive and non-sensitive variables or both in a workspace.";
         public static final String VARIABLE_NAME_DESC = "The name of the variable.";
         public static final String VARIABLE_VALUE_DESC = "The value of the variable.";
         public static final String SENSITIVE_VARIABLE_NAME_DESC = "The name of the sensitive variable.";

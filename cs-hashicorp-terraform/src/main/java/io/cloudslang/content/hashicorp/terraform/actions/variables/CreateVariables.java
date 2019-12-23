@@ -58,7 +58,7 @@ import static org.apache.commons.lang3.StringUtils.*;
 public class CreateVariables {
 
     @Action(name = CREATE_VARIABLES_OPERATION_NAME,
-            description = CREATE_VARIABLE_DESC,
+            description = CREATE_VARIABLES_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),

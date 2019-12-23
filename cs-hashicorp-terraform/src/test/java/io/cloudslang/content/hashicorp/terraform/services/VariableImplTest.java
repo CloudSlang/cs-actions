@@ -23,6 +23,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.Map;
+
 import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.getVariablePath;
 
 
@@ -44,6 +46,9 @@ public class VariableImplTest {
             .workspaceId("")
             .hcl("false")
             .sensitive("false")
+            .sensitiveVariableRequestBody("")
+            .variableJson("[]")
+            .sensitiveVariableJson("[]")
             .commonInputs(TerraformCommonInputs.builder()
                     .organizationName("")
                     .authToken("")
@@ -66,6 +71,10 @@ public class VariableImplTest {
 
     private final TerraformVariableInputs terraformVariableInputs = TerraformVariableInputs.builder()
             .workspaceId("ws-test123")
+            .variableCategory("test")
+            .variableValue("test")
+            .variableName("test")
+            .variableValue("test-123")
             .sensitiveVariableName("test")
             .sensitiveVariableValue("test-123")
             .variableCategory("env")
@@ -123,6 +132,11 @@ public class VariableImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void listVariables()throws Exception{
         VariableImpl.listVariables(listVariableInputs);
+    }
+    @Test
+    public void createVariables() throws  Exception{
+        Map<String,Map<String,String>> createVariablesResult= VariableImpl.createVariables(getTerraformVariableInputs);
+        assertEquals(0,createVariablesResult.size());
     }
 
     @Test
