@@ -35,6 +35,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRu
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_TYPE;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetApplyDetailsConstants.APPLY_DETAILS_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -114,6 +115,19 @@ public class RunImpl {
     }
 
     @NotNull
+    public static Map<String, String> getApplyIdDetails(@NotNull final TerraformRunInputs getApplyIdDetailsInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformCommonInputs commonInputs = getApplyIdDetailsInputs.getCommonInputs();
+        httpClientInputs.setUrl(getApplyDetailsUrl(getApplyIdDetailsInputs.getApplyIdId()));
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
     public static String createRunClientUrl() throws Exception {
 
         final URIBuilder uriBuilder = getUriBuilder();
@@ -135,6 +149,20 @@ public class RunImpl {
                 .append(RUN_PATH)
                 .append(PATH_SEPARATOR)
                 .append(runId);
+        uriBuilder.setPath(pathString.toString());
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    public static String getApplyDetailsUrl(@NotNull final String applyId) throws Exception {
+
+        final URIBuilder uriBuilder = getUriBuilder();
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(API_VERSION)
+                .append(APPLY_DETAILS_PATH)
+                .append(PATH_SEPARATOR)
+                .append(applyId);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
     }

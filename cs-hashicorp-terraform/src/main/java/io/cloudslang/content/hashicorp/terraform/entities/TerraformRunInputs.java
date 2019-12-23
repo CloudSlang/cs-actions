@@ -25,15 +25,18 @@ public class TerraformRunInputs {
     private String runMessage;
     private String isDestroy;
     private String runId;
+    private String applyId;
     private String runComment;
+
     private TerraformCommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"workspaceId", "workspaceName", "runMessage", "isDestroy", "runId", "runComment"})
-    public TerraformRunInputs(String workspaceId, String runMessage, String isDestroy, String runId, String runComment, TerraformCommonInputs commonInputs) {
+    @java.beans.ConstructorProperties({"workspaceId", "workspaceName", "runMessage", "isDestroy", "runId", "applyId", "runComment"})
+    public TerraformRunInputs(String workspaceId, String runMessage, String isDestroy, String runId, String applyId, String runComment, TerraformCommonInputs commonInputs) {
         this.workspaceId = workspaceId;
         this.runMessage = runMessage;
         this.isDestroy = isDestroy;
         this.runId = runId;
+        this.applyId = applyId;
         this.runComment = runComment;
         this.commonInputs = commonInputs;
     }
@@ -64,6 +67,11 @@ public class TerraformRunInputs {
     }
 
     @NotNull
+    public String getApplyIdId() {
+        return applyId;
+    }
+
+    @NotNull
     public String getRunComment() {
         return runComment;
     }
@@ -79,6 +87,7 @@ public class TerraformRunInputs {
         private String isDestroy = EMPTY;
         private String runId = EMPTY;
         private String runComment = EMPTY;
+        private String applyId = EMPTY;
 
         private TerraformCommonInputs commonInputs;
 
@@ -110,6 +119,13 @@ public class TerraformRunInputs {
         }
 
         @NotNull
+        public TerraformRunInputs.TerraformRunInputsBuilder applyId(@NotNull final String applyId) {
+            this.applyId = applyId;
+            return this;
+        }
+
+
+        @NotNull
         public TerraformRunInputs.TerraformRunInputsBuilder runComment(@NotNull final String runComment) {
             this.runComment = runComment;
             return this;
@@ -123,7 +139,7 @@ public class TerraformRunInputs {
         }
 
         public TerraformRunInputs build() {
-            return new TerraformRunInputs(workspaceId, runMessage, isDestroy, runId, runComment, commonInputs);
+            return new TerraformRunInputs(workspaceId, runMessage, isDestroy, runId, applyId, runComment, commonInputs);
         }
     }
 
