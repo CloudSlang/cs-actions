@@ -25,7 +25,9 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformRunInputs;
+import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
@@ -39,6 +41,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetAp
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyDetailsInputs.APPLY_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.AUTH_TOKEN;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -87,6 +90,12 @@ public class ApplyDetails {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
+
+        final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        if (!exceptionMessage.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
+        }
 
         try {
             final Map<String, String> result = getApplyDetails(TerraformRunInputs.builder()
