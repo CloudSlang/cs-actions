@@ -23,6 +23,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.Map;
+
 import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.getVariablePath;
 
 
@@ -36,12 +38,17 @@ public class VariableImplTest {
     private static final String EXPECTED_UPDATE_VAR_PATH = "/api/v2/vars/var-test1";
     private final String EXPECTED_UPDATE_VARIABLE_BODY = "{\"data\": { \"id\":\"var-test1\", \"attributes\": { \"key\":\"dummyname\", \"value\":\"mars\", \"category\":\"terraform\" }, \"type\":\"vars\" }}";
     private final TerraformVariableInputs getTerraformVariableInputs = TerraformVariableInputs.builder()
+            .variableName("test")
+            .variableValue("test")
             .sensitiveVariableName("test")
             .sensitiveVariableValue("test")
             .variableCategory("")
             .workspaceId("")
             .hcl("false")
             .sensitive("false")
+            .sensitiveVariableRequestBody("")
+            .variableJson("[]")
+            .sensitiveVariableJson("[]")
             .commonInputs(TerraformCommonInputs.builder()
                     .organizationName("")
                     .authToken("")
@@ -61,8 +68,13 @@ public class VariableImplTest {
                     .responseCharacterSet("")
                     .build())
             .build();
+
     private final TerraformVariableInputs terraformVariableInputs = TerraformVariableInputs.builder()
             .workspaceId("ws-test123")
+            .variableCategory("test")
+            .variableValue("test")
+            .variableName("test")
+            .variableValue("test-123")
             .sensitiveVariableName("test")
             .sensitiveVariableValue("test-123")
             .variableCategory("env")
@@ -114,12 +126,17 @@ public class VariableImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void createVariable() throws Exception {
-        VariableImpl.createVariable(getTerraformVariableInputs,"[]");
+        VariableImpl.createVariable(getTerraformVariableInputs);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void listVariables()throws Exception{
         VariableImpl.listVariables(listVariableInputs);
+    }
+    @Test
+    public void createVariables() throws  Exception{
+        Map<String,Map<String,String>> createVariablesResult= VariableImpl.createVariables(getTerraformVariableInputs);
+        assertEquals(0,createVariablesResult.size());
     }
 
     @Test

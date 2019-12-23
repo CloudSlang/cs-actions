@@ -153,9 +153,12 @@ public class Descriptions {
     }
 
     public static class CreateVariable {
-        public static final String CREATE_VARIABLE_DESC = "Creates a variable in workspace.";
-        public static final String SENSITIVE_VARIABLE_NAME_DESC = "The name of the variable.";
-        public static final String SENSITIVE_VARIABLE_VALUE_DESC = "The value of the variable.";
+        public static final String CREATE_VARIABLE_DESC = "Create either a sensitive or a non-sensitive variable in a given workspace.";
+        public static final String CREATE_VARIABLES_DESC = "Creates  multiple sensitive and non-sensitive variables or both in a workspace.";
+        public static final String VARIABLE_NAME_DESC = "The name of the variable.";
+        public static final String VARIABLE_VALUE_DESC = "The value of the variable.";
+        public static final String SENSITIVE_VARIABLE_NAME_DESC = "The name of the sensitive variable.";
+        public static final String SENSITIVE_VARIABLE_VALUE_DESC = "The value of the sensitive variable.";
         public static final String VARIABLE_CATEGORY_DESC = "Whether this is a Terraform or environment variable. Valid " +
                 "values are \"terraform\" or \"env\".";
         public static final String HCL_DESC = "Whether to evaluate the value of the variable as a string of HCL code." +
@@ -164,8 +167,13 @@ public class Descriptions {
                 "written once and not visible thereafter.";
 
         public static final String VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Variable.";
+        public static final String VARIABLE_SENSITIVE_REQUEST_BODY_DESC = "Request Body for the Create Sensitive Variable.";
         public static final String VARIABLES_JSON_DESC = "List of variables in json format.";
+        public static final String SENSITIVE_VARIABLES_JSON_DESC = "List of sensitive variables in json format.";
         public static final String VARIABLE_ID_DESC = "The Id of created variable.";
+        public static final String CREATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while " +
+                "creating the variable.";
+        public static final String CREATE_VARIABLE_RETURN_RESULT_DESC = "The response of the apply run.";
     }
 
     public static class ListVariables {
