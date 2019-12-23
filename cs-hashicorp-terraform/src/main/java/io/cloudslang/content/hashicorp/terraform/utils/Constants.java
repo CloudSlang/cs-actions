@@ -120,6 +120,11 @@ public class Constants {
         public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
     }
 
+    public static class GetApplyDetailsConstants {
+        public static final String GET_APPLY_DETAILS_OPERATION_NAME = "Get Apply Details";
+        public static final String APPLY_DETAILS_PATH = "/applies";
+    }
+
     public static class DeleteWorkspaceConstants {
         public static final String DELETE_WORKSPACE_OPERATION_NAME = "Delete Workspace";
     }

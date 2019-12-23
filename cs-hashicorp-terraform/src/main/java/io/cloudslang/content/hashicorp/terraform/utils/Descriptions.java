@@ -182,6 +182,12 @@ public class Descriptions {
         public static final String GET_RUN_DETAILS_DESC = "Getting details about a run";
     }
 
+    public static class GetApplyDetails {
+        public static final String GET_APPLY_DETAILS_DESC = "Getting details about a apply id";
+        public static final String APPLY_ID_DESC = "The ID of the apply to show";
+
+    }
+
     public static class DeleteWorkspace {
         public static final String DELETE_WORKSPACE_DESC = "Deletes the workspace from an organization using workspace " +
                 "name and organization name";
