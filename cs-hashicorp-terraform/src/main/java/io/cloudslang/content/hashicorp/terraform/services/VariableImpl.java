@@ -45,8 +45,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class VariableImpl {
 
-     @NotNull
-    public static Map<String,String> createVariable(@NotNull  TerraformVariableInputs terraformVariableInputs)throws Exception  {
+    @NotNull
+    public static Map<String, String> createVariable(@NotNull TerraformVariableInputs terraformVariableInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = terraformVariableInputs.getCommonInputs();
         httpClientInputs.setUrl(createVariableUrl());
@@ -56,21 +56,21 @@ public class VariableImpl {
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
-            if (commonInputs.getRequestBody().isEmpty() & terraformVariableInputs.getSensitiveVariableRequestBody().isEmpty()) {
-                httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
-            } else if(!terraformVariableInputs.getSensitiveVariableRequestBody().isEmpty()){
-                httpClientInputs.setBody(terraformVariableInputs.getSensitiveVariableRequestBody());
-            }else{
-                httpClientInputs.setBody(commonInputs.getRequestBody());
-            }
-            httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-
-             return new HttpClientService().execute(httpClientInputs);
+        if (commonInputs.getRequestBody().isEmpty() & terraformVariableInputs.getSensitiveVariableRequestBody().isEmpty()) {
+            httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
+        } else if (!terraformVariableInputs.getSensitiveVariableRequestBody().isEmpty()) {
+            httpClientInputs.setBody(terraformVariableInputs.getSensitiveVariableRequestBody());
+        } else {
+            httpClientInputs.setBody(commonInputs.getRequestBody());
         }
+        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
 
 
     @NotNull
-    public static Map<String, Map<String,String>> createVariables(@NotNull  TerraformVariableInputs terraformVariableInputs)throws Exception {
+    public static Map<String, Map<String, String>> createVariables(@NotNull TerraformVariableInputs terraformVariableInputs) throws Exception {
         String variableName;
         String variableValue;
         String hcl;
@@ -85,7 +85,7 @@ public class VariableImpl {
         httpClientInputs.setMethod(POST);
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        if(!terraformVariableInputs.getVariableJson().isEmpty() & !terraformVariableInputs.getSensitiveVariableJson().isEmpty()){
+        if (!terraformVariableInputs.getVariableJson().isEmpty() & !terraformVariableInputs.getSensitiveVariableJson().isEmpty()) {
             String sensitiveVariableName;
             String sensitiveVariableValue;
 
@@ -109,7 +109,7 @@ public class VariableImpl {
                         .sensitive("false").build();
                 httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
                 createVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
-             
+
             }
             for (int i = 0; i < createSensitiveVariableJsonArray.size(); i++) {
                 createSensitiveVariableJson = (JSONObject) createSensitiveVariableJsonArray.get(i);
@@ -133,7 +133,7 @@ public class VariableImpl {
             }
             return createVariableMap;
 
-        }else if (!terraformVariableInputs.getVariableJson().isEmpty()) {
+        } else if (!terraformVariableInputs.getVariableJson().isEmpty()) {
             JSONArray createVariableJsonArray = (JSONArray) parser.parse(terraformVariableInputs.getVariableJson());
             JSONObject createVariableJson;
             for (int i = 0; i < createVariableJsonArray.size(); i++) {
@@ -142,7 +142,7 @@ public class VariableImpl {
                 variableValue = (String) createVariableJson.get("propertyValue");
                 hcl = Boolean.toString((boolean) createVariableJson.get("HCL"));
                 catagory = (String) createVariableJson.get("Category");
-                
+
 
                 terraformVariableInputs = TerraformVariableInputs.builder()
                         .variableName(variableName)
@@ -309,10 +309,10 @@ public class VariableImpl {
         createVariableData.setType(VARIABLE_TYPE);
 
         CreateVariableRequestBody.Attributes attributes = createVariableRequestBody.new Attributes();
-        if(terraformVariableInputs.getVariableName().isEmpty() & terraformVariableInputs.getVariableValue().isEmpty()) {
+        if (terraformVariableInputs.getVariableName().isEmpty() & terraformVariableInputs.getVariableValue().isEmpty()) {
             attributes.setKey(terraformVariableInputs.getSensitiveVariableName());
             attributes.setValue(terraformVariableInputs.getSensitiveVariableValue());
-        }else{
+        } else {
             attributes.setKey(terraformVariableInputs.getVariableName());
             attributes.setValue(terraformVariableInputs.getVariableValue());
         }
@@ -341,3 +341,4 @@ public class VariableImpl {
         return requestBody;
 
     }
+}
