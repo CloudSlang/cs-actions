@@ -60,7 +60,7 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyCreateVariableInputs(@Nullable final String workspaceId,
-     @Nullable final String variableCategory,@Nullable final String variableName,@Nullable final String variableValue,@Nullable final String sensitiveVariableName, @Nullable final String sensitiveVariableValue,
+                                                          @Nullable final String variableCategory,@Nullable final String variableName,@Nullable final String variableValue,@Nullable final String sensitiveVariableName, @Nullable final String sensitiveVariableValue,
                                                           @Nullable final String requestBody) {
 
         final List<String> exceptionMessages = new ArrayList<>();
@@ -95,7 +95,6 @@ public final class InputsValidation {
         }
         return exceptionMessages;
     }
-
 
     @NotNull
     public static List<String> verifyCreateRunInputs(@Nullable final String workspaceId,
@@ -155,6 +154,13 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyString(exceptionMessages, workspaceName, WORKSPACE_NAME);
         validateInputPropertyName(exceptionMessages,workspaceName, WORKSPACE_NAME);
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyGetCurrentStateVersionInputs(@Nullable final String workspaceId) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
         return exceptionMessages;
     }
 

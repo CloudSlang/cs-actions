@@ -18,7 +18,6 @@ public class Constants {
     public static class Common {
         public static final String API = "/api";
         public static final String API_VERSION = "/v2";
-        public static final String NATIVE = "native";
         public static final String NEW_LINE = "\n";
         public static final String DEFAULT_PROXY_PORT = "8080";
         public static final String BOOLEAN_FALSE = "false";
@@ -28,7 +27,8 @@ public class Constants {
         public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid proxy details.";
         public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
         public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
-        public static final String EXCEPTION_INVALID_NAME = "The %s can only contain letters, numbers, underscores, and hyphens";
+        public static final String EXCEPTION_INVALID_NAME = "The %s can only contain letters, numbers, underscores, " +
+                "and hyphens";
         public static final String ANONYMOUS = "anonymous";
         public static final String GET = "GET";
         public static final String POST = "POST";
@@ -55,13 +55,6 @@ public class Constants {
         public static final String STATUS_CODE = "statusCode";
         public static final String APPLICATION_VND_API_JSON = "application/vnd.api+json";
         public static final String DELIMITER = ",";
-        public static final String CONTENT_TYPE = "HTML";
-        public static final String ID = "id";
-        public static final String COMMA = ",";
-        public static final String NAME = "name";
-        public static final String SIZE = "size";
-        public static final String PASSWORD_BODY = "password";
-        public static final String VALUE = "value";
         public static final String DEFAULT_PAGE_NUMBER = "1";
         public static final String DEFAULT_PAGE_SIZE = "100";
         public static final String PAGE_NUMBER = "page[number]=";
@@ -100,6 +93,7 @@ public class Constants {
     }
 
     public static class CreateVariableConstants {
+        public static final String CREATE_VARIABLE_OPERATION_NAME = "Create Variable";
         public static final String CREATE_VARIABLES_OPERATION_NAME = "Create Variables";
         public static final String VARIABLE_PATH = "/vars";
         public static final String VARIABLE_TYPE = "vars";
@@ -108,8 +102,8 @@ public class Constants {
 
     public static class ListVariableConstants {
         public static final String LIST_VARIABLE_OPERATION_NAME = "List Variable";
-        public static final String ORGANIZATION_NAME = "organization[name]=";
-        public static final String WORKSPACE_NAME = "workspace[name]=";
+        public static final String ORGANIZATION_NAME = "filter[organization][name]";
+        public static final String WORKSPACE_NAME = "filter[workspace][name]";
     }
 
     public static class UpdateVariableConstants {
@@ -127,6 +121,11 @@ public class Constants {
         public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
     }
 
+    public static class GetApplyDetailsConstants {
+        public static final String GET_APPLY_DETAILS_OPERATION_NAME = "Get Apply Details";
+        public static final String APPLY_DETAILS_PATH = "/applies";
+    }
+
     public static class DeleteWorkspaceConstants {
         public static final String DELETE_WORKSPACE_OPERATION_NAME = "Delete Workspace";
     }
@@ -134,6 +133,12 @@ public class Constants {
     public static class ListWorkspacesConstants {
         public static final String LIST_WORKSPACES_OPERATION_NAME = "List Workspaces";
         public static final String WORKSPACES_LIST_JSON_PATH = "$.data[*].attributes.name";
+    }
 
+    public static class GetCurrentStateVersionConstants {
+        public static final String GET_CURRENT_STATE_VERSION_OPERATION_NAME = "Get Current State Version";
+        public static final String CURRENT_STATE_VERSION_PATH = "/current-state-version";
+        public static final String STATE_VERSION_ID_JSON_PATH = "$.data.id";
+        public static final String HOSTED_STATE_DOWNLOAD_URL_JSON_PATH = "$.data.attributes.hosted-state-download-url";
     }
 }
