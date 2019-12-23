@@ -16,14 +16,14 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.getApplyIdDetails;
+import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.getApplyDetails;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetApplyDetailsConstants.GET_APPLY_DETAILS_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetApplyIdDetails.GET_APPLY_DETAILS_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetApplyDetails.APPLY_ID_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetApplyDetails.GET_APPLY_DETAILS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyDetailsInputs.APPLY_ID;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyDetailsInputs.APPLY_ID_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -59,8 +59,6 @@ public class ApplyDetails {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
-
-        applyId = defaultIfEmpty(applyId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -77,7 +75,7 @@ public class ApplyDetails {
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
         try {
-            final Map<String, String> result = getApplyIdDetails(TerraformRunInputs.builder()
+            final Map<String, String> result = getApplyDetails(TerraformRunInputs.builder()
                     .applyId(applyId)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)

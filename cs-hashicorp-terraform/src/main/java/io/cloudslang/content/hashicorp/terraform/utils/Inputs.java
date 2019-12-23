@@ -42,7 +42,6 @@ public class Inputs extends InputNames {
 
     public static class ApplyDetailsInputs {
         public static final String APPLY_ID = "applyId";
-        public static final String APPLY_ID_DESC = "applyIdDescription";
     }
 
     public static class CreateWorkspaceInputs {

@@ -189,8 +189,10 @@ public class Descriptions {
         public static final String GET_RUN_DETAILS_RETURN_RESULT_DESC = "Run details or error message in case of failure.";
     }
 
-    public static class GetApplyIdDetails {
+    public static class GetApplyDetails {
         public static final String GET_APPLY_DETAILS_DESC = "Getting details about a apply id";
+        public static final String APPLY_ID_DESC = "The ID of the apply to show";
+
     }
 
     public static class DeleteWorkspace {

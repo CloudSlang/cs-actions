@@ -115,10 +115,10 @@ public class RunImpl {
     }
 
     @NotNull
-    public static Map<String, String> getApplyIdDetails(@NotNull final TerraformRunInputs getApplyIdDetailsInputs) throws Exception {
+    public static Map<String, String> getApplyDetails(@NotNull final TerraformRunInputs getApplyDetailsInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final TerraformCommonInputs commonInputs = getApplyIdDetailsInputs.getCommonInputs();
-        httpClientInputs.setUrl(getApplyDetailsUrl(getApplyIdDetailsInputs.getApplyIdId()));
+        final TerraformCommonInputs commonInputs = getApplyDetailsInputs.getCommonInputs();
+        httpClientInputs.setUrl(getApplyDetailsUrl(getApplyDetailsInputs.getApplyIdId()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
