@@ -39,8 +39,6 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.CREATE_WORKSPACE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_ID_JSON_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.FAILURE_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.OAUTH_TOKEN_ID_DESCRIPTION;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
@@ -75,7 +73,7 @@ public class CreateWorkspace {
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, encrypted = true, required = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = ORGANIZATION_NAME, required = true, description = ORGANIZATION_NAME_DESC) String organizationName,
-                                       @Param(value = WORKSPACE_NAME, description = WORKSPACE_NAME_DESC) String workspaceName,
+                                       @Param(value = WORKSPACE_NAME, required = true, description = WORKSPACE_NAME_DESC) String workspaceName,
                                        @Param(value = WORKSPACE_DESCRIPTION, description = WORKSPACE_DESCRIPTION_DESC) String workspaceDescription,
                                        @Param(value = AUTO_APPLY, description = AUTO_APPLY_DESC) String autoApply,
                                        @Param(value = FILE_TRIGGERS_ENABLED, description = FILE_TRIGGERS_ENABLED_DESC) String fileTriggersEnabled,
@@ -106,7 +104,6 @@ public class CreateWorkspace {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
-        workspaceName = defaultIfEmpty(workspaceName, EMPTY);
         workspaceDescription = defaultIfEmpty(workspaceDescription, EMPTY);
         autoApply = defaultIfEmpty(autoApply, BOOLEAN_FALSE);
         fileTriggersEnabled = defaultIfEmpty(fileTriggersEnabled, BOOLEAN_TRUE);
