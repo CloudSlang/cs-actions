@@ -23,6 +23,7 @@ import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInpu
 import io.cloudslang.content.hashicorp.terraform.services.models.variables.CreateVariableRequestBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.utils.StringUtilities;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
@@ -32,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_PATH;
@@ -41,6 +43,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListVari
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListVariableConstants.WORKSPACE_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getUriBuilder;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class VariableImpl {
@@ -86,7 +89,6 @@ public class VariableImpl {
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
         if (!terraformVariableInputs.getVariableJson().isEmpty() & !terraformVariableInputs.getSensitiveVariableJson().isEmpty()) {
-            String sensitiveVariableName;
             String sensitiveVariableValue;
 
             JSONArray createVariableJsonArray = (JSONArray) parser.parse(terraformVariableInputs.getVariableJson());
@@ -113,22 +115,21 @@ public class VariableImpl {
             }
             for (int i = 0; i < createSensitiveVariableJsonArray.size(); i++) {
                 createSensitiveVariableJson = (JSONObject) createSensitiveVariableJsonArray.get(i);
-                sensitiveVariableName = (String) createSensitiveVariableJson.get("propertyName");
+                variableName = (String) createSensitiveVariableJson.get("propertyName");
                 sensitiveVariableValue = (String) createSensitiveVariableJson.get("propertyValue");
                 hcl = Boolean.toString((boolean) createSensitiveVariableJson.get("HCL"));
                 catagory = (String) createSensitiveVariableJson.get("Category");
 
                 terraformVariableInputs = TerraformVariableInputs.builder()
-                        .sensitiveVariableName(sensitiveVariableName)
+                        .variableName(variableName)
                         .sensitiveVariableValue(sensitiveVariableValue)
-                        .variableName(EMPTY)
                         .variableValue(EMPTY)
                         .variableCategory(catagory)
                         .hcl(hcl)
                         .workspaceId(terraformVariableInputs.getWorkspaceId())
                         .sensitive("true").build();
                 httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
-                createVariableMap.put(sensitiveVariableName, new HttpClientService().execute(httpClientInputs));
+                createVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
 
             }
             return createVariableMap;
@@ -169,9 +170,8 @@ public class VariableImpl {
 
                 terraformVariableInputs = TerraformVariableInputs.builder()
 
-                        .sensitiveVariableName(variableName)
+                        .variableName(variableName)
                         .sensitiveVariableValue(variableValue)
-                        .variableName(EMPTY)
                         .variableValue(EMPTY)
                         .variableCategory(catagory)
                         .hcl(hcl)
@@ -186,6 +186,96 @@ public class VariableImpl {
         }
 
 
+    }
+
+    @NotNull
+    public static Map<String, String> getVariablesOperationOutput(String variablesJson,String sensitiveVariablesJson,Map<String, Map<String, String>> result){
+        try {
+            final Map<String, String> results = new HashMap<>();
+            JSONParser parser = new JSONParser();
+            if(!variablesJson.isEmpty() & !sensitiveVariablesJson.isEmpty()) {
+                JSONArray createVariableJsonArray = (JSONArray) parser.parse(variablesJson);
+                JSONArray createSensitiveVariableJsonArray = (JSONArray) parser.parse(sensitiveVariablesJson);
+                JSONObject createVariableJson;
+                JSONObject createSensitiveVariableJson;
+                String variableName = EMPTY;
+                String sensitiveVariableName = EMPTY;
+
+                for (int i = 0; i < createVariableJsonArray.size(); i++) {
+                    createVariableJson = (JSONObject) createVariableJsonArray.get(i);
+                    variableName = (String) createVariableJson.get("propertyName");
+
+
+                    for (String variableResult : result.keySet()) {
+
+                        results.put(RETURN_CODE, result.get(variableResult).get(RETURN_CODE));
+                        results.put(variableName, result.get(variableResult).get("returnResult"));
+                        results.put(STATUS_CODE, result.get(variableResult).get(STATUS_CODE));
+
+                    }
+                }
+                for (int i = 0; i < createSensitiveVariableJsonArray.size(); i++) {
+                    createSensitiveVariableJson = (JSONObject) createSensitiveVariableJsonArray.get(i);
+                    sensitiveVariableName = (String) createSensitiveVariableJson.get("propertyName");
+
+
+                    for (String variableResult : result.keySet()) {
+
+                        results.put(RETURN_CODE, result.get(variableResult).get(RETURN_CODE));
+                        results.put(sensitiveVariableName, result.get(variableResult).get("returnResult"));
+                        results.put(STATUS_CODE, result.get(variableResult).get(STATUS_CODE));
+
+                    }
+                }
+                return results;
+
+            }else if(!sensitiveVariablesJson.isEmpty()){
+                JSONArray createSensitiveVariableJsonArray = (JSONArray) parser.parse(sensitiveVariablesJson);
+                JSONObject createSensitiveVariableJson;
+                String sensitiveVariableName = EMPTY;
+                for (int i = 0; i < createSensitiveVariableJsonArray.size(); i++) {
+                    createSensitiveVariableJson = (JSONObject) createSensitiveVariableJsonArray.get(i);
+                    sensitiveVariableName = (String) createSensitiveVariableJson.get("propertyName");
+
+
+                    for (String variableResult : result.keySet()) {
+
+                        results.put(RETURN_CODE, result.get(variableResult).get(RETURN_CODE));
+                        results.put(sensitiveVariableName, result.get(variableResult).get("returnResult"));
+                        results.put(STATUS_CODE, result.get(variableResult).get(STATUS_CODE));
+
+                    }
+                }
+                return results;
+
+            }else {
+                JSONArray createVariableJsonArray = (JSONArray) parser.parse(variablesJson);
+                JSONObject createVariableJson;
+                String variableName = EMPTY;
+
+
+                for (int i = 0; i < createVariableJsonArray.size(); i++) {
+                    createVariableJson = (JSONObject) createVariableJsonArray.get(i);
+                    variableName = (String) createVariableJson.get("propertyName");
+
+
+                    for (String variableResult : result.keySet()) {
+
+                        results.put(RETURN_CODE, result.get(variableResult).get(RETURN_CODE));
+                        results.put(variableName, result.get(variableResult).get("returnResult"));
+                        results.put(STATUS_CODE, result.get(variableResult).get(STATUS_CODE));
+
+                    }
+                }
+                return results;
+
+
+            }
+
+        } catch (Exception e) {
+            return getFailureResultsMap(StringUtilities.join(e, NEW_LINE));
+
+        }
     }
 
     @NotNull
@@ -309,11 +399,10 @@ public class VariableImpl {
         createVariableData.setType(VARIABLE_TYPE);
 
         CreateVariableRequestBody.Attributes attributes = createVariableRequestBody.new Attributes();
-        if (terraformVariableInputs.getVariableName().isEmpty() & terraformVariableInputs.getVariableValue().isEmpty()) {
-            attributes.setKey(terraformVariableInputs.getSensitiveVariableName());
+        attributes.setKey(terraformVariableInputs.getVariableName());
+        if (terraformVariableInputs.getVariableValue().isEmpty()) {
             attributes.setValue(terraformVariableInputs.getSensitiveVariableValue());
         } else {
-            attributes.setKey(terraformVariableInputs.getVariableName());
             attributes.setValue(terraformVariableInputs.getVariableValue());
         }
         attributes.setCategory(terraformVariableInputs.getVariableCategory());

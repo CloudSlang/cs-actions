@@ -60,24 +60,20 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyCreateVariableInputs(@Nullable final String workspaceId,
-                                                          @Nullable final String variableCategory,@Nullable final String variableName,@Nullable final String variableValue,@Nullable final String sensitiveVariableName, @Nullable final String sensitiveVariableValue,
-                                                          @Nullable final String requestBody) {
+                                                          @Nullable final String variableCategory,@Nullable final String variableName,
+                                                          @Nullable final String requestBody,String sensitiveRequestBody) {
 
         final List<String> exceptionMessages = new ArrayList<>();
-        if (!sensitiveVariableName.isEmpty()) {
-            addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
-            addVerifyString(exceptionMessages,sensitiveVariableName , SENSITIVE_VARIABLE_NAME);
-            validateInputPropertyName(exceptionMessages, sensitiveVariableName, SENSITIVE_VARIABLE_NAME);
-            addVerifyString(exceptionMessages, sensitiveVariableValue, SENSITIVE_VARIABLE_VALUE);
-            addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
-        } else if(!variableName.isEmpty()) {
+        if(!variableName.isEmpty()) {
             addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
             addVerifyString(exceptionMessages,variableName , VARIABLE_NAME);
             validateInputPropertyName(exceptionMessages, variableName, VARIABLE_NAME);
-            addVerifyString(exceptionMessages, variableValue, VARIABLE_VALUE);
             addVerifyString(exceptionMessages, variableCategory, VARIABLE_CATEGORY);
-        }else {
+        }else if(!requestBody.isEmpty()) {
             addVerifyRequestBody(exceptionMessages, requestBody);
+
+        }else{
+            addVerifyRequestBody(exceptionMessages, sensitiveRequestBody);
         }
         return exceptionMessages;
     }
