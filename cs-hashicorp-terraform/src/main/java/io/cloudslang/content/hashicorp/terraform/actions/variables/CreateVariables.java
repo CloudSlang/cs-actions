@@ -23,11 +23,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.utils.StringUtilities;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +34,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.createVariables;
+import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.getVariablesOperationOutput;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.CREATE_VARIABLES_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
@@ -141,95 +138,8 @@ public class CreateVariables {
                     .build());
 
 
+            return getVariablesOperationOutput(variablesJson,sensitiveVariablesJson,result);
 
-                try {
-                    final Map<String, String> results = new HashMap<>();
-                    JSONParser parser = new JSONParser();
-                    if(!variablesJson.isEmpty() & !sensitiveVariablesJson.isEmpty()) {
-                        JSONArray createVariableJsonArray = (JSONArray) parser.parse(variablesJson);
-                        JSONArray createSensitiveVariableJsonArray = (JSONArray) parser.parse(sensitiveVariablesJson);
-                        JSONObject createVariableJson;
-                        JSONObject createSensitiveVariableJson;
-                        String variableName = EMPTY;
-                        String sensitiveVariableName = EMPTY;
-
-                        for (int i = 0; i < createVariableJsonArray.size(); i++) {
-                            createVariableJson = (JSONObject) createVariableJsonArray.get(i);
-                            variableName = (String) createVariableJson.get("propertyName");
-
-
-                            for (String variableResult : result.keySet()) {
-
-                                results.put(RETURN_CODE, result.get(variableResult).get(RETURN_CODE));
-                                results.put(variableName, result.get(variableResult).get("returnResult"));
-                                results.put(STATUS_CODE, result.get(variableResult).get(STATUS_CODE));
-
-                            }
-                        }
-                        for (int i = 0; i < createSensitiveVariableJsonArray.size(); i++) {
-                            createSensitiveVariableJson = (JSONObject) createSensitiveVariableJsonArray.get(i);
-                            sensitiveVariableName = (String) createSensitiveVariableJson.get("propertyName");
-
-
-                            for (String variableResult : result.keySet()) {
-
-                                results.put(RETURN_CODE, result.get(variableResult).get(RETURN_CODE));
-                                results.put(sensitiveVariableName, result.get(variableResult).get("returnResult"));
-                                results.put(STATUS_CODE, result.get(variableResult).get(STATUS_CODE));
-
-                            }
-                        }
-                        return results;
-
-                    }else if(!sensitiveVariablesJson.isEmpty()){
-                        JSONArray createSensitiveVariableJsonArray = (JSONArray) parser.parse(sensitiveVariablesJson);
-                        JSONObject createSensitiveVariableJson;
-                        String sensitiveVariableName = EMPTY;
-                        for (int i = 0; i < createSensitiveVariableJsonArray.size(); i++) {
-                            createSensitiveVariableJson = (JSONObject) createSensitiveVariableJsonArray.get(i);
-                            sensitiveVariableName = (String) createSensitiveVariableJson.get("propertyName");
-
-
-                            for (String variableResult : result.keySet()) {
-
-                                results.put(RETURN_CODE, result.get(variableResult).get(RETURN_CODE));
-                                results.put(sensitiveVariableName, result.get(variableResult).get("returnResult"));
-                                results.put(STATUS_CODE, result.get(variableResult).get(STATUS_CODE));
-
-                            }
-                        }
-                        return results;
-
-                    }else {
-                        JSONArray createVariableJsonArray = (JSONArray) parser.parse(variablesJson);
-                        JSONArray createSensitiveVariableJsonArray = (JSONArray) parser.parse(sensitiveVariablesJson);
-                        JSONObject createVariableJson;
-                        JSONObject createSensitiveVariableJson;
-                        String variableName = EMPTY;
-
-
-                        for (int i = 0; i < createVariableJsonArray.size(); i++) {
-                            createVariableJson = (JSONObject) createVariableJsonArray.get(i);
-                            variableName = (String) createVariableJson.get("propertyName");
-
-
-                            for (String variableResult : result.keySet()) {
-
-                                results.put(RETURN_CODE, result.get(variableResult).get(RETURN_CODE));
-                                results.put(variableName, result.get(variableResult).get("returnResult"));
-                                results.put(STATUS_CODE, result.get(variableResult).get(STATUS_CODE));
-
-                            }
-                        }
-                        return results;
-
-
-                    }
-
-                } catch (Exception e) {
-                    return getFailureResultsMap(StringUtilities.join(e, NEW_LINE));
-
-                }
 
         } catch (Exception exception) {
             return getFailureResultsMap(exception);

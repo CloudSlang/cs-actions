@@ -72,10 +72,8 @@ public class CreateVariable {
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = VARIABLE_NAME, description = VARIABLE_NAME_DESC) String variableName,
                                        @Param(value = VARIABLE_VALUE, description = VARIABLE_VALUE_DESC) String variableValue,
-                                       @Param(value = SENSITIVE_VARIABLE_NAME, description = SENSITIVE_VARIABLE_NAME_DESC) String sensitiveVariableName,
                                        @Param(value = SENSITIVE_VARIABLE_VALUE, encrypted = true, description = SENSITIVE_VARIABLE_VALUE_DESC) String sensitiveVariableValue,
                                        @Param(value = VARIABLE_CATEGORY, description = VARIABLE_CATEGORY_DESC) String variableCategory,
-                                       @Param(value = SENSITIVE, description = SENSITIVE_DESC) String sensitive,
                                        @Param(value = HCL, description = HCL_DESC) String hcl,
                                        @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
                                        @Param(value = REQUEST_BODY, description = VARIABLE_REQUEST_BODY_DESC) String requestBody,
@@ -97,11 +95,9 @@ public class CreateVariable {
         authToken = defaultIfEmpty(authToken, EMPTY);
         variableName = defaultIfEmpty(variableName, EMPTY);
         variableValue = defaultIfEmpty(variableValue, EMPTY);
-        sensitiveVariableName = defaultIfEmpty(sensitiveVariableName, EMPTY);
         sensitiveVariableValue = defaultIfEmpty(sensitiveVariableValue, EMPTY);
         variableCategory = defaultIfEmpty(variableCategory, EMPTY);
         hcl = defaultIfEmpty(hcl, BOOLEAN_FALSE);
-        sensitive = defaultIfEmpty(sensitive, BOOLEAN_FALSE);
         workspaceId = defaultIfEmpty(workspaceId, BOOLEAN_TRUE);
         requestBody = defaultIfEmpty(requestBody, EMPTY);
         sensitiveVariableRequestBody = defaultIfEmpty(sensitiveVariableRequestBody, EMPTY);
@@ -128,42 +124,94 @@ public class CreateVariable {
         if(!requestBody.isEmpty() & !sensitiveVariableRequestBody.isEmpty()){
             return getFailureResultsMap("Please provide either requestBody or sensitiveVariableRequestBody");
         }
-        final List<String> exceptionMessages = verifyCreateVariableInputs(workspaceId, variableCategory, variableName, variableValue, sensitiveVariableName, sensitiveVariableValue, requestBody);
+        final List<String> exceptionMessages = verifyCreateVariableInputs(workspaceId, variableCategory, variableName, requestBody,sensitiveVariableRequestBody);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
 
         try {
-            final Map<String, String> result = createVariable(TerraformVariableInputs.builder()
-                    .variableName(variableName)
-                    .variableValue(variableValue)
-                    .sensitiveVariableName(sensitiveVariableName)
-                    .sensitiveVariableValue(sensitiveVariableValue)
-                    .variableCategory(variableCategory)
-                    .sensitive(sensitive)
-                    .hcl(hcl)
-                    .workspaceId(workspaceId)
-                    .sensitiveVariableRequestBody(sensitiveVariableRequestBody)
-                    .commonInputs(TerraformCommonInputs.builder()
-                            .authToken(authToken)
-                            .requestBody(requestBody)
-                            .proxyHost(proxyHost)
-                            .proxyPort(proxyPort)
-                            .proxyUsername(proxyUsername)
-                            .proxyPassword(proxyPassword)
-                            .trustAllRoots(trustAllRoots)
-                            .x509HostnameVerifier(x509HostnameVerifier)
-                            .trustKeystore(trustKeystore)
-                            .trustPassword(trustPassword)
-                            .connectTimeout(connectTimeout)
-                            .socketTimeout(socketTimeout)
-                            .keepAlive(keepAlive)
-                            .connectionsMaxPerRoot(connectionsMaxPerRoute)
-                            .connectionsMaxTotal(connectionsMaxTotal)
-                            .responseCharacterSet(responseCharacterSet)
-                            .build())
-                    .build());
+            final Map<String, String> result;
+            if(!variableValue.isEmpty()){
+                 result = createVariable(TerraformVariableInputs.builder()
+                        .variableName(variableName)
+                        .variableValue(variableValue)
+                        .variableCategory(variableCategory)
+                         .sensitive("false")
+                        .hcl(hcl)
+                        .workspaceId(workspaceId)
+                        .sensitiveVariableRequestBody(sensitiveVariableRequestBody)
+                        .commonInputs(TerraformCommonInputs.builder()
+                                .authToken(authToken)
+                                .requestBody(requestBody)
+                                .proxyHost(proxyHost)
+                                .proxyPort(proxyPort)
+                                .proxyUsername(proxyUsername)
+                                .proxyPassword(proxyPassword)
+                                .trustAllRoots(trustAllRoots)
+                                .x509HostnameVerifier(x509HostnameVerifier)
+                                .trustKeystore(trustKeystore)
+                                .trustPassword(trustPassword)
+                                .connectTimeout(connectTimeout)
+                                .socketTimeout(socketTimeout)
+                                .keepAlive(keepAlive)
+                                .connectionsMaxPerRoot(connectionsMaxPerRoute)
+                                .connectionsMaxTotal(connectionsMaxTotal)
+                                .responseCharacterSet(responseCharacterSet)
+                                .build())
+                        .build());
+            }else if(!sensitiveVariableValue.isEmpty()) {
+                result = createVariable(TerraformVariableInputs.builder()
+                        .variableName(variableName)
+                        .variableValue(EMPTY)
+                        .sensitiveVariableValue(sensitiveVariableValue)
+                        .variableCategory(variableCategory)
+                        .sensitive("true")
+                        .hcl(hcl)
+                        .workspaceId(workspaceId)
+                        .sensitiveVariableRequestBody(sensitiveVariableRequestBody)
+                        .commonInputs(TerraformCommonInputs.builder()
+                                .authToken(authToken)
+                                .requestBody(requestBody)
+                                .proxyHost(proxyHost)
+                                .proxyPort(proxyPort)
+                                .proxyUsername(proxyUsername)
+                                .proxyPassword(proxyPassword)
+                                .trustAllRoots(trustAllRoots)
+                                .x509HostnameVerifier(x509HostnameVerifier)
+                                .trustKeystore(trustKeystore)
+                                .trustPassword(trustPassword)
+                                .connectTimeout(connectTimeout)
+                                .socketTimeout(socketTimeout)
+                                .keepAlive(keepAlive)
+                                .connectionsMaxPerRoot(connectionsMaxPerRoute)
+                                .connectionsMaxTotal(connectionsMaxTotal)
+                                .responseCharacterSet(responseCharacterSet)
+                                .build())
+                        .build());
+            }else{
+                result = createVariable(TerraformVariableInputs.builder()
+                        .sensitiveVariableRequestBody(sensitiveVariableRequestBody)
+                        .commonInputs(TerraformCommonInputs.builder()
+                                .authToken(authToken)
+                                .requestBody(requestBody)
+                                .proxyHost(proxyHost)
+                                .proxyPort(proxyPort)
+                                .proxyUsername(proxyUsername)
+                                .proxyPassword(proxyPassword)
+                                .trustAllRoots(trustAllRoots)
+                                .x509HostnameVerifier(x509HostnameVerifier)
+                                .trustKeystore(trustKeystore)
+                                .trustPassword(trustPassword)
+                                .connectTimeout(connectTimeout)
+                                .socketTimeout(socketTimeout)
+                                .keepAlive(keepAlive)
+                                .connectionsMaxPerRoot(connectionsMaxPerRoute)
+                                .connectionsMaxTotal(connectionsMaxTotal)
+                                .responseCharacterSet(responseCharacterSet)
+                                .build())
+                        .build());
+            }
 
 
                 final String returnMessage = result.get(RETURN_RESULT);
