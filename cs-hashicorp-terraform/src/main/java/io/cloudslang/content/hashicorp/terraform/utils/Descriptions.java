@@ -168,7 +168,8 @@ public class Descriptions {
 
         public static final String VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Variable.";
         public static final String VARIABLE_SENSITIVE_REQUEST_BODY_DESC = "Request Body for the Create Sensitive Variable.";
-        public static final String VARIABLES_JSON_DESC = "List of variables in json format.";
+        public static final String VARIABLES_JSON_DESC = "List of variables in json format." +
+                                        "Examples : [{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"env\\\"}]\",\"[{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"terraform\\\"}]";
         public static final String SENSITIVE_VARIABLES_JSON_DESC = "List of sensitive variables in json format.";
         public static final String VARIABLE_ID_DESC = "The Id of created variable.";
         public static final String CREATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while " +
