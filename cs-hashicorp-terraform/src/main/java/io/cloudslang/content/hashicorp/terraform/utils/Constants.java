@@ -121,6 +121,11 @@ public class Constants {
         public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
     }
 
+    public static class PlanDetailsConstants {
+        public static final String PLAN_DETAILS_OPERATION_NAME = "Get Plan Details";
+        public static final String PLAN_DETAILS_PATH = "/plans";
+    }
+
     public static class GetApplyDetailsConstants {
         public static final String GET_APPLY_DETAILS_OPERATION_NAME = "Get Apply Details";
         public static final String APPLY_DETAILS_PATH = "/applies";

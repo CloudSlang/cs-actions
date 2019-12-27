@@ -34,9 +34,11 @@ public class RunImplTest {
     private final String EXPECTED_APPLY_RUN_URL = "https://app.terraform.io/api/v2/runs/run-456test/actions/apply";
     private final String EXPECTED_CREATE_RUN_BODY = "{\"data\":{\"attributes\":{\"message\":\"test\",\"is-Destroy\":false},\"type\":\"runs\",\"relationships\":{\"workspace\":{\"data\":{\"type\":\"workspaces\",\"id\":\"test-123\"}}}}}";
     private static final String RUN_ID = "test123";
+    private static final String PLAN_ID = "test123";
     private static final String APPLY_ID = "test321";
     private static final String WORKSPACE_ID = "ws-test123";
     private final String EXPECTED_GET_RUN_DETAILS_PATH = "https://app.terraform.io/api/v2/runs/test123";
+    private final String EXPECTED_PLAN_DETAILS_PATH = "https://app.terraform.io/api/v2/plans/test123";
     private final String EXPECTED_GET_APPLY_DETAILS_PATH = "https://app.terraform.io/api/v2/applies/test321";
     private final String EXPECTED_LIST_RUNS_IN_WORKSPACE_PATH = "https://app.terraform.io/api/v2/workspaces/ws-test123/runs";
 
@@ -167,6 +169,12 @@ public class RunImplTest {
     public void getRunDetailsPathTest() throws Exception {
         final String path = getRunDetailsUrl(RUN_ID);
         assertEquals(EXPECTED_GET_RUN_DETAILS_PATH, path);
+    }
+
+    @Test
+    public void planDetailsPathTest() throws Exception {
+        final String path = planDetailsUrl(PLAN_ID);
+        assertEquals(EXPECTED_PLAN_DETAILS_PATH, path);
     }
 
     @Test
