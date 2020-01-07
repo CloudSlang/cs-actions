@@ -116,11 +116,19 @@ public class RunImpl {
     }
 
     @NotNull
-    public static Map<String, String> getCancelRun(@NotNull final TerraformRunInputs CancelRunInputs) throws Exception {
+    public static Map<String, String> cancelRun(@NotNull final TerraformRunInputs cancelRunInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final TerraformCommonInputs commonInputs = CancelRunInputs.getCommonInputs();
-        httpClientInputs.setUrl(CancelRunUrl(CancelRunInputs.getRunId()));
-        System.out.println(httpClientInputs.getUrl());
+        final TerraformCommonInputs commonInputs = cancelRunInputs.getCommonInputs();
+        httpClientInputs.setUrl(cancelRunUrl(cancelRunInputs.getRunId()));
+        if (commonInputs.getRequestBody().isEmpty()) {
+            try {
+                httpClientInputs.setBody(applyRunBody(cancelRunInputs));
+            } catch (JsonProcessingException e) {
+                return getFailureResultsMap(e);
+            }
+        } else {
+            httpClientInputs.setBody(commonInputs.getRequestBody());
+        }
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
@@ -169,8 +177,7 @@ public class RunImpl {
     }
 
     @NotNull
-    public static String CancelRunUrl(@NotNull final String runId) throws Exception {
-
+    public static String cancelRunUrl(@NotNull final String runId) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
         StringBuilder pathString = new StringBuilder()
                 .append(API)
@@ -179,6 +186,7 @@ public class RunImpl {
                 .append(PATH_SEPARATOR)
                 .append(runId)
                 .append(CANCEL_RUN_PATH);
+        uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
     }
 

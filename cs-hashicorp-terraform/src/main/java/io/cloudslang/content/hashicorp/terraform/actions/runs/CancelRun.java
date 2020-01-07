@@ -16,13 +16,16 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.getCancelRun;
+import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.cancelRun;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CancelRunConstants.CANCEL_RUN_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CancelRun.CANCEL_RUN_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ApplyRun.RUN_COMMENT_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CancelRun.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyRunInputs.RUN_COMMENT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.AUTH_TOKEN;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.REQUEST_BODY;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.GetRunDetailInputs.RUN_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.GetRunDetailInputs.RUN_ID_DESC;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
@@ -44,6 +47,8 @@ public class CancelRun {
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, encrypted = true, required = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = RUN_ID, required = true, description = RUN_ID_DESC) String runId,
+                                       @Param(value = RUN_COMMENT, description = RUN_COMMENT_DESC) String runComment,
+                                       @Param(value = REQUEST_BODY, description = CANCEL_RUN_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -60,6 +65,8 @@ public class CancelRun {
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
         runId = defaultIfEmpty(runId, EMPTY);
+        runComment = defaultIfEmpty(runComment, EMPTY);
+        requestBody = defaultIfEmpty(requestBody, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -76,10 +83,12 @@ public class CancelRun {
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
         try {
-            final Map<String, String> result = getCancelRun(TerraformRunInputs.builder()
+            final Map<String, String> result = cancelRun(TerraformRunInputs.builder()
                     .runId(runId)
+                    .runComment(runComment)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
+                            .requestBody(requestBody)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
@@ -98,8 +107,13 @@ public class CancelRun {
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
 
-            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            return results;
+            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            if (statusCode >= 200 && statusCode < 300) {
+                return getOperationResults(result, CANCEL_RUN_SUCCESS_DESC, CANCEL_RUN_SUCCESS_DESC, CANCEL_RUN_SUCCESS_DESC);
+            }
+
+
+            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
