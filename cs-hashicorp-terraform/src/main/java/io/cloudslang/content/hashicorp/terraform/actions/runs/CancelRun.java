@@ -11,7 +11,9 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformRunInputs;
+import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
@@ -28,6 +30,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInput
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.REQUEST_BODY;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.GetRunDetailInputs.RUN_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.GetRunDetailInputs.RUN_ID_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -105,6 +108,13 @@ public class CancelRun {
                             .responseCharacterSet(responseCharacterSet)
                             .build())
                     .build());
+
+            final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
+                    connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+            if (!exceptionMessage.isEmpty()) {
+                return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
+            }
+
             final String returnMessage = result.get(RETURN_RESULT);
 
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
