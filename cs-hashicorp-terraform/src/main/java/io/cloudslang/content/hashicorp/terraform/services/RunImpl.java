@@ -30,6 +30,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.APPLY_RUN_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CancelRunConstants.CANCEL_RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRunConstants.RUN_TYPE;
@@ -115,6 +116,20 @@ public class RunImpl {
     }
 
     @NotNull
+    public static Map<String, String> getCancelRun(@NotNull final TerraformRunInputs CancelRunInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformCommonInputs commonInputs = CancelRunInputs.getCommonInputs();
+        httpClientInputs.setUrl(CancelRunUrl(CancelRunInputs.getRunId()));
+        System.out.println(httpClientInputs.getUrl());
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(POST);
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
     public static Map<String, String> getApplyDetails(@NotNull final TerraformRunInputs getApplyDetailsInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = getApplyDetailsInputs.getCommonInputs();
@@ -150,6 +165,20 @@ public class RunImpl {
                 .append(PATH_SEPARATOR)
                 .append(runId);
         uriBuilder.setPath(pathString.toString());
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    public static String CancelRunUrl(@NotNull final String runId) throws Exception {
+
+        final URIBuilder uriBuilder = getUriBuilder();
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(API_VERSION)
+                .append(RUN_PATH)
+                .append(PATH_SEPARATOR)
+                .append(runId)
+                .append(CANCEL_RUN_PATH);
         return uriBuilder.build().toURL().toString();
     }
 

@@ -191,6 +191,10 @@ public class Descriptions {
         public static final String GET_RUN_DETAILS_DESC = "Getting details about a run";
     }
 
+    public static class CancelRun {
+        public static final String CANCEL_RUN_DESC = "Cancel the run";
+    }
+
     public static class GetApplyDetails {
         public static final String GET_APPLY_DETAILS_DESC = "Getting details about a apply id";
         public static final String APPLY_ID_DESC = "The ID of the apply to show";

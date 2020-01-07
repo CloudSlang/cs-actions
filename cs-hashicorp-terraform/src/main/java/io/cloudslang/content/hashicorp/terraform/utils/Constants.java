@@ -88,6 +88,7 @@ public class Constants {
         public static final String APPLY_RUN_PATH = "/actions/apply";
     }
 
+
     public static class ListRunsInWorkspaceConstants {
         public static final String LIST_RUNS_IN_WORKSPACE_OPERATION_NAME = "List Runs in a Workspace";
     }
@@ -109,6 +110,7 @@ public class Constants {
     public static class UpdateVariableConstants {
         public static final String UPDATE_VARIABLE_OPERATION_NAME = "Update Variable";
     }
+
     public static class DeleteVariableConstants {
         public static final String DELETE_VARIABLE_OPERATION_NAME = "Delete Variable";
     }
@@ -120,6 +122,12 @@ public class Constants {
     public static class GetRunDetailsConstants {
         public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
     }
+
+    public static class CancelRunConstants {
+        public static final String CANCEL_RUN_OPERATION_NAME = "Cancel Run";
+        public static final String CANCEL_RUN_PATH = "/actions/cancel";
+    }
+
 
     public static class GetApplyDetailsConstants {
         public static final String GET_APPLY_DETAILS_OPERATION_NAME = "Get Apply Details";
