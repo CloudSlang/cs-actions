@@ -129,7 +129,6 @@ public class CreateVariable {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
-
         try {
             final Map<String, String> result;
             if(!variableValue.isEmpty()){
