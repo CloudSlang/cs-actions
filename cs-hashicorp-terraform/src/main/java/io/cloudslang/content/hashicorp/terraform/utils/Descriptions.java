@@ -183,6 +183,10 @@ public class Descriptions {
         public static final String GET_RUN_DETAILS_DESC = "Getting details about a run";
     }
 
+  public static class PlanDetails {
+        public static final String PLAN_DETAILS_DESC = "Getting details about plan";
+    }
+  
     public static class CancelRun {
         public static final String CANCEL_RUN_DESC = "Cancel the run";
         public static final String CANCEL_RUN_REQUEST_BODY_DESC = "Request Body for the cancel run.";

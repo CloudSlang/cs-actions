@@ -37,6 +37,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRu
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceConstants.WORKSPACE_TYPE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetApplyDetailsConstants.APPLY_DETAILS_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.PlanDetailsConstants.PLAN_DETAILS_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -115,7 +116,19 @@ public class RunImpl {
         return new HttpClientService().execute(httpClientInputs);
     }
 
-    @NotNull
+  @NotNull
+    public static Map<String, String> planDetails(@NotNull final TerraformRunInputs planDetailsInputs) throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformCommonInputs commonInputs = planDetailsInputs.getCommonInputs();
+        httpClientInputs.setUrl(planDetailsUrl(planDetailsInputs.getPlanId()));
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+        return new HttpClientService().execute(httpClientInputs);
+    }
+  
     public static Map<String, String> cancelRun(@NotNull final TerraformRunInputs cancelRunInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = cancelRunInputs.getCommonInputs();
@@ -177,6 +190,19 @@ public class RunImpl {
     }
 
     @NotNull
+    public static String planDetailsUrl(@NotNull final String planId) throws Exception {
+
+        final URIBuilder uriBuilder = getUriBuilder();
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(API_VERSION)
+                .append(PLAN_DETAILS_PATH)
+                .append(PATH_SEPARATOR)
+                .append(planId);
+        uriBuilder.setPath(pathString.toString());
+        return uriBuilder.build().toURL().toString();
+    }
+
     public static String cancelRunUrl(@NotNull final String runId) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
         StringBuilder pathString = new StringBuilder()
