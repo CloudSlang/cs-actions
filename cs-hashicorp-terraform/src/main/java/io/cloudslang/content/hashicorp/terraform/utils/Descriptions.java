@@ -183,6 +183,12 @@ public class Descriptions {
         public static final String GET_RUN_DETAILS_DESC = "Getting details about a run";
     }
 
+    public static class CancelRun {
+        public static final String CANCEL_RUN_DESC = "Cancel the run";
+        public static final String CANCEL_RUN_REQUEST_BODY_DESC = "Request Body for the cancel run.";
+        public static final String CANCEL_RUN_SUCCESS_DESC = "The run is cancelled successfully.";
+    }
+
     public static class GetApplyDetails {
         public static final String GET_APPLY_DETAILS_DESC = "Getting details about a apply id";
         public static final String APPLY_ID_DESC = "The ID of the apply to show";
@@ -209,6 +215,7 @@ public class Descriptions {
         public static final String DELETE_VAR_SUCCESS_DESC = "The variable deleted successfully.";
         public static final String DELETE_VARIABLE_DESC = "Deletes a variable from workspace.";
     }
+
 
     public static class GetCurrentStateVersion {
         public static final String GET_CURRENT_STATE_VERSION_DESC = "Fetches the current state version for the " +
