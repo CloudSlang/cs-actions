@@ -20,8 +20,8 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -37,10 +37,9 @@ import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.up
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.UpdateVariableConstants.UPDATE_VARIABLE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.FAILURE_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.VARIABLE_REQUEST_BODY_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariable.UPDATE_VARIABLE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariable.VARIABLE_ID_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariable.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -51,7 +50,8 @@ import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.v
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateVariableOutputs.VARIABLE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class UpdateVariable {
     @Action(name = UPDATE_VARIABLE_OPERATION_NAME,
@@ -78,9 +78,6 @@ public class UpdateVariable {
                                        @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
-                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
-                                       @Param(value = ASYNC, description = ASYNC_DESC) String async,
-                                       @Param(value = POLLING_INTERVAL, description = POLLING_INTERVAL_DESC) String pollingInterval,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
@@ -97,9 +94,6 @@ public class UpdateVariable {
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
         connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
-        executionTimeout = defaultIfEmpty(executionTimeout, EXEC_TIMEOUT);
-        async = defaultString(async, BOOLEAN_FALSE);
-        pollingInterval = defaultString(pollingInterval, POLLING_INTERVAL_DEFAULT);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
@@ -127,9 +121,6 @@ public class UpdateVariable {
                             .trustPassword(trustPassword)
                             .connectTimeout(connectTimeout)
                             .socketTimeout(socketTimeout)
-                            .executionTimeout(executionTimeout)
-                            .async(async)
-                            .pollingInterval(pollingInterval)
                             .keepAlive(keepAlive)
                             .connectionsMaxPerRoot(connectionsMaxPerRoute)
                             .connectionsMaxTotal(connectionsMaxTotal)

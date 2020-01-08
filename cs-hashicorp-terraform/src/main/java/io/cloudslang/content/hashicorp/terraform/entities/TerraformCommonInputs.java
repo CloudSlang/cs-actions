@@ -35,9 +35,6 @@ public class TerraformCommonInputs {
     private final String trustPassword;
     private final String connectTimeout;
     private final String socketTimeout;
-    private final String executionTimeout;
-    private final String pollingInterval;
-    private final String async;
     private final String keepAlive;
     private final String responseCharacterSet;
     private final String connectionsMaxPerRoot;
@@ -48,12 +45,11 @@ public class TerraformCommonInputs {
 
     @java.beans.ConstructorProperties({"authToken", "organizationName", "requestBody", "terraformVersion", "proxyHost", "proxyPort", "proxyUsername",
             "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "connectTimeout",
-            "socketTimeout", "executionTimeout", "pollingInterval", "async", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal",
+            "socketTimeout", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal",
             "pageNumber", "pageSize"})
     private TerraformCommonInputs(String authToken, String organizationName, String requestBody, String terraformVersion, String proxyHost, String proxyPort,
                                   String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier,
-                                  String trustKeystore, String trustPassword, String connectTimeout, String socketTimeout, String executionTimeout, String pollingInterval,
-                                  String async, String keepAlive, String responseCharacterSet, String connectionsMaxPerRoot, String connectionsMaxTotal, String pageNumber, String pageSize) {
+                                  String trustKeystore, String trustPassword, String connectTimeout, String socketTimeout, String keepAlive, String responseCharacterSet, String connectionsMaxPerRoot, String connectionsMaxTotal, String pageNumber, String pageSize) {
         this.authToken = authToken;
         this.organizationName = organizationName;
         this.requestBody = requestBody;
@@ -68,9 +64,6 @@ public class TerraformCommonInputs {
         this.trustPassword = trustPassword;
         this.connectTimeout = connectTimeout;
         this.socketTimeout = socketTimeout;
-        this.executionTimeout = executionTimeout;
-        this.pollingInterval = pollingInterval;
-        this.async = async;
         this.keepAlive = keepAlive;
         this.responseCharacterSet = responseCharacterSet;
         this.connectionsMaxPerRoot = connectionsMaxPerRoot;
@@ -166,21 +159,6 @@ public class TerraformCommonInputs {
     }
 
     @NotNull
-    public String getExecutionTimeout() {
-        return this.executionTimeout;
-    }
-
-    @NotNull
-    public String getPollingInterval() {
-        return this.pollingInterval;
-    }
-
-    @NotNull
-    public String getAsync() {
-        return this.async;
-    }
-
-    @NotNull
     public String getKeepAlive() {
         return this.keepAlive;
     }
@@ -213,9 +191,6 @@ public class TerraformCommonInputs {
         private String trustPassword = EMPTY;
         private String connectTimeout = EMPTY;
         private String socketTimeout = EMPTY;
-        private String executionTimeout = EMPTY;
-        private String pollingInterval = EMPTY;
-        private String async = EMPTY;
         private String keepAlive = EMPTY;
         private String responseCharacterSet = EMPTY;
         private String connectionsMaxPerRoot = EMPTY;
@@ -311,24 +286,6 @@ public class TerraformCommonInputs {
         }
 
         @NotNull
-        public TerraformCommonInputs.TerraformCommonInputsBuilder executionTimeout(@NotNull final String executionTimeout) {
-            this.executionTimeout = executionTimeout;
-            return this;
-        }
-
-        @NotNull
-        public TerraformCommonInputs.TerraformCommonInputsBuilder pollingInterval(@NotNull final String pollingInterval) {
-            this.pollingInterval = pollingInterval;
-            return this;
-        }
-
-        @NotNull
-        public TerraformCommonInputs.TerraformCommonInputsBuilder async(@NotNull final String async) {
-            this.async = async;
-            return this;
-        }
-
-        @NotNull
         public TerraformCommonInputs.TerraformCommonInputsBuilder keepAlive(@NotNull final String keepAlive) {
             this.keepAlive = keepAlive;
             return this;
@@ -368,7 +325,7 @@ public class TerraformCommonInputs {
         public TerraformCommonInputs build() {
             return new TerraformCommonInputs(authToken, organizationName, requestBody, terraformVersion, proxyHost, proxyPort, proxyUsername, proxyPassword,
                     trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, connectTimeout,
-                    socketTimeout, executionTimeout, pollingInterval, async, keepAlive, responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal, pageNumber, pageSize);
+                    socketTimeout, keepAlive, responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal, pageNumber, pageSize);
         }
     }
 }
