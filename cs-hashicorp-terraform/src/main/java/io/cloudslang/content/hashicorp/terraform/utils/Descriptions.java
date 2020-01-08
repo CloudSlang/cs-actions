@@ -51,9 +51,6 @@ public class Descriptions {
         public static final String SOCKET_TIMEOUT_DESC = "The timeout for waiting for data (a maximum period " +
                 "inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' " +
                 "represents an infinite timeout.";
-        public static final String POLLING_INTERVAL_DESC = "The time, in seconds, to wait before a new request that " +
-                "verifies if the operation finished is executed." +
-                "Default: '1000'";
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout." +
                 "Default: '10000'";
@@ -68,11 +65,6 @@ public class Descriptions {
                 "Upon creating a workspace,the latest version is selected unless otherwise specified (e.g. \"0.11.1\")." +
                 "Default: '0.12.1'";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
-        public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in milliseconds) to allow the client " +
-                "to complete the execution of an API call. A value of '0' disables this feature." +
-                "Default: '60000'";
-        public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
-                "Default: 'false'";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
         public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page.";
         public static final String PAGE_SIZE_DESC = "Optional. If omitted, the endpoint will return 20 items per page. " +
@@ -191,6 +183,16 @@ public class Descriptions {
         public static final String GET_RUN_DETAILS_DESC = "Getting details about a run";
     }
 
+  public static class PlanDetails {
+        public static final String PLAN_DETAILS_DESC = "Getting details about plan";
+    }
+  
+    public static class CancelRun {
+        public static final String CANCEL_RUN_DESC = "Cancel the run";
+        public static final String CANCEL_RUN_REQUEST_BODY_DESC = "Request Body for the cancel run.";
+        public static final String CANCEL_RUN_SUCCESS_DESC = "The run is cancelled successfully.";
+    }
+
     public static class GetApplyDetails {
         public static final String GET_APPLY_DETAILS_DESC = "Getting details about a apply id";
         public static final String APPLY_ID_DESC = "The ID of the apply to show";
@@ -217,6 +219,7 @@ public class Descriptions {
         public static final String DELETE_VAR_SUCCESS_DESC = "The variable deleted successfully.";
         public static final String DELETE_VARIABLE_DESC = "Deletes a variable from workspace.";
     }
+
 
     public static class GetCurrentStateVersion {
         public static final String GET_CURRENT_STATE_VERSION_DESC = "Fetches the current state version for the " +

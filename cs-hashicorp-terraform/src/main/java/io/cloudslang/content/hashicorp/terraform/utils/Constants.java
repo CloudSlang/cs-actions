@@ -38,8 +38,6 @@ public class Constants {
         public static final String CHANGEIT = "changeit";
         public static final String ZERO = "0";
         public static final String CONNECT_TIMEOUT_CONST = "10000";
-        public static final String POLLING_INTERVAL_DEFAULT = "1000";
-        public static final String EXEC_TIMEOUT = "600000";
         public static final String UTF8 = "UTF-8";
         public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
         public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
@@ -88,6 +86,7 @@ public class Constants {
         public static final String APPLY_RUN_PATH = "/actions/apply";
     }
 
+
     public static class ListRunsInWorkspaceConstants {
         public static final String LIST_RUNS_IN_WORKSPACE_OPERATION_NAME = "List Runs in a Workspace";
     }
@@ -109,6 +108,7 @@ public class Constants {
     public static class UpdateVariableConstants {
         public static final String UPDATE_VARIABLE_OPERATION_NAME = "Update Variable";
     }
+
     public static class DeleteVariableConstants {
         public static final String DELETE_VARIABLE_OPERATION_NAME = "Delete Variable";
     }
@@ -120,6 +120,17 @@ public class Constants {
     public static class GetRunDetailsConstants {
         public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
     }
+
+    public static class PlanDetailsConstants {
+        public static final String PLAN_DETAILS_OPERATION_NAME = "Get Plan Details";
+        public static final String PLAN_DETAILS_PATH = "/plans";
+    }
+
+    public static class CancelRunConstants {
+        public static final String CANCEL_RUN_OPERATION_NAME = "Cancel Run";
+        public static final String CANCEL_RUN_PATH = "/actions/cancel";
+    }
+
 
     public static class GetApplyDetailsConstants {
         public static final String GET_APPLY_DETAILS_OPERATION_NAME = "Get Apply Details";
