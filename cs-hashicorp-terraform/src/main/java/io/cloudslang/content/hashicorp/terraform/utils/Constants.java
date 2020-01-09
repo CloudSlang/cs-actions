@@ -49,6 +49,7 @@ public class Constants {
         public static final String PATH_SEPARATOR = "/";
         public static final String AND = "&";
         public static final String QUERY = "?";
+        public static final String ID = "id";
         public static final String HTTPS = "https";
         public static final String STATUS_CODE = "statusCode";
         public static final String APPLICATION_VND_API_JSON = "application/vnd.api+json";
@@ -101,12 +102,14 @@ public class Constants {
 
     public static class ListVariableConstants {
         public static final String LIST_VARIABLE_OPERATION_NAME = "List Variable";
-        public static final String ORGANIZATION_NAME = "filter[organization][name]";
-        public static final String WORKSPACE_NAME = "filter[workspace][name]";
+        public static final String ORGANIZATION_NAME = "filter[organization][name]=";
+        public static final String WORKSPACE_NAME = "filter[workspace][name]=";
     }
 
     public static class UpdateVariableConstants {
         public static final String UPDATE_VARIABLE_OPERATION_NAME = "Update Variable";
+        public static final String UPDATE_VARIABLES_OPERATION_NAME = "Update Variables";
+        public static final String VARIABLE_KEY_JSON_PATH = "attributes.key";
     }
 
     public static class DeleteVariableConstants {

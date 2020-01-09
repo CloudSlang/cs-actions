@@ -1,5 +1,6 @@
 package io.cloudslang.content.hashicorp.terraform.services.models.variables;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UpdateVariableRequestBody {
@@ -16,9 +17,8 @@ public class UpdateVariableRequestBody {
 
     public class UpdateVariableData {
         Attributes attributes;
-        @JsonProperty("id")
-        String variableId;
         String type;
+        String id;
 
         public Attributes getAttributes() {
             return attributes;
@@ -36,19 +36,20 @@ public class UpdateVariableRequestBody {
             this.type = type;
         }
 
-        public String getVariableId() {
-            return variableId;
+        public String getId() {
+            return id;
         }
 
-        public void setVariableId(String variableId) {
-            this.variableId = variableId;
+        public void setId(String id) {
+            this.id = id;
         }
+
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public class Attributes {
         String key;
         String value;
-        String category;
         String hcl;
         String sensitive;
 
@@ -68,14 +69,6 @@ public class UpdateVariableRequestBody {
             this.value = value;
         }
 
-        public String getCategory() {
-            return category;
-        }
-
-        public void setCategory(String category) {
-            this.category = category;
-        }
-
         public String getHcl() {
             return hcl;
         }
@@ -91,5 +84,6 @@ public class UpdateVariableRequestBody {
         public void setSensitive(String sensitive) {
             this.sensitive = sensitive;
         }
+
     }
 }

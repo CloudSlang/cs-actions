@@ -51,6 +51,9 @@ public class Descriptions {
         public static final String SOCKET_TIMEOUT_DESC = "The timeout for waiting for data (a maximum period " +
                 "inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' " +
                 "represents an infinite timeout.";
+        public static final String POLLING_INTERVAL_DESC = "The time, in seconds, to wait before a new request that " +
+                "verifies if the operation finished is executed." +
+                "Default: '1000'";
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout." +
                 "Default: '10000'";
@@ -65,6 +68,11 @@ public class Descriptions {
                 "Upon creating a workspace,the latest version is selected unless otherwise specified (e.g. \"0.11.1\")." +
                 "Default: '0.12.1'";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
+        public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in milliseconds) to allow the client " +
+                "to complete the execution of an API call. A value of '0' disables this feature." +
+                "Default: '60000'";
+        public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
+                "Default: 'false'";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
         public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page.";
         public static final String PAGE_SIZE_DESC = "Optional. If omitted, the endpoint will return 20 items per page. " +
@@ -210,9 +218,9 @@ public class Descriptions {
         public static final String WORKSPACE_LIST_DESC = "List of all workspaces under the organization.";
     }
 
-    public static class UpdateVariable {
-        public static final String UPDATE_VARIABLE_DESC = "Updates a variable attributes in workspace.";
-        public static final String VARIABLE_ID_DESC = "The ID of the variable to be updated.";
+    public static class UpdateVariables {
+        public static final String UPDATE_VARIABLES_DESC = "Updates  multiple sensitive and non-sensitive variables or both in a workspace.";
+        public static final String UPDATE_VARIABLE_DESC = "Updates  multiple sensitive and non-sensitive variable or both in a workspace.";
     }
 
     public static class DeleteVariable {
