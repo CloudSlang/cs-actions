@@ -1,18 +1,3 @@
-/*
- * (c) Copyright 2020 Micro Focus, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package io.cloudslang.content.hashicorp.terraform.actions.variables;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -22,8 +7,10 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,29 +20,33 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.updateVariable;
+import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.getVariablesOperationOutput;
+import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.updateVariables;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.UpdateVariableConstants.UPDATE_VARIABLE_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.UpdateVariableConstants.UPDATE_VARIABLES_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.VARIABLE_ID_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.VARIABLE_REQUEST_BODY_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariables.UPDATE_VARIABLE_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.SENSITIVE_VARIABLES_JSON_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.VARIABLES_JSON_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_NAME_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariables.UPDATE_VARIABLES_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.SENSITIVE_VARIABLES_JSON;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.VARIABLES_JSON;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.WORKSPACE_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateVariableOutputs.VARIABLE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class UpdateVariable {
-    @Action(name = UPDATE_VARIABLE_OPERATION_NAME,
-            description = UPDATE_VARIABLE_DESC,
+public class UpdateVariables {
+
+    @Action(name = UPDATE_VARIABLES_OPERATION_NAME,
+            description = UPDATE_VARIABLES_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
@@ -66,8 +57,10 @@ public class UpdateVariable {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = VARIABLE_ID, required = true, description = VARIABLE_ID_DESC) String variableId,
-                                       @Param(value = REQUEST_BODY, required = true, description = VARIABLE_REQUEST_BODY_DESC) String requestBody,
+                                       @Param(value = ORGANIZATION_NAME, description = ORGANIZATION_NAME_DESC) String organizationName,
+                                       @Param(value = WORKSPACE_NAME, description = WORKSPACE_NAME_DESC) String workspaceName,
+                                       @Param(value = VARIABLES_JSON, description = VARIABLES_JSON_DESC) String variablesJson,
+                                       @Param(value = SENSITIVE_VARIABLES_JSON, encrypted = true, description = SENSITIVE_VARIABLES_JSON_DESC) String sensitiveVariablesJson,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -83,7 +76,9 @@ public class UpdateVariable {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
-
+        workspaceName = defaultIfEmpty(workspaceName, EMPTY);
+        variablesJson = defaultIfEmpty(variablesJson, EMPTY);
+        sensitiveVariablesJson = defaultIfEmpty(sensitiveVariablesJson, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -106,11 +101,31 @@ public class UpdateVariable {
         }
 
         try {
-            final Map<String, String> result = updateVariable(TerraformVariableInputs.builder()
-                    .variableId(variableId)
+            final Map<String, Map<String, String>> result = updateVariables(TerraformVariableInputs.builder()
+                    .variableJson(variablesJson)
+                    .sensitiveVariableJson(sensitiveVariablesJson)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
-                            .requestBody(requestBody)
+                            .proxyHost(proxyHost)
+                            .proxyPort(proxyPort)
+                            .proxyUsername(proxyUsername)
+                            .proxyPassword(proxyPassword)
+                            .trustAllRoots(trustAllRoots)
+                            .x509HostnameVerifier(x509HostnameVerifier)
+                            .trustKeystore(trustKeystore)
+                            .trustPassword(trustPassword)
+                            .connectTimeout(connectTimeout)
+                            .socketTimeout(socketTimeout)
+                            .keepAlive(keepAlive)
+                            .connectionsMaxPerRoot(connectionsMaxPerRoute)
+                            .connectionsMaxTotal(connectionsMaxTotal)
+                            .responseCharacterSet(responseCharacterSet)
+                            .build())
+                    .build(), TerraformWorkspaceInputs.builder()
+                    .workspaceName(workspaceName)
+                    .commonInputs(TerraformCommonInputs.builder()
+                            .authToken(authToken)
+                            .organizationName(organizationName)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
@@ -127,8 +142,11 @@ public class UpdateVariable {
                             .responseCharacterSet(responseCharacterSet)
                             .build())
                     .build());
-            final String returnMessage = result.get(RETURN_RESULT);
-            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
+
+            final Map<String, String> results = new HashMap<>();
+            results.put(RETURN_RESULT, getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).toString());
+            return results;
+
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
