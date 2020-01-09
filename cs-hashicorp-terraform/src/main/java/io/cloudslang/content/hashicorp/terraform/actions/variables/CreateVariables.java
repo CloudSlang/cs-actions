@@ -140,7 +140,7 @@ public class CreateVariables {
 
             final Map<String,String> results=new HashMap<>();
             results.put(RETURN_RESULT, getVariablesOperationOutput(variablesJson,sensitiveVariablesJson,result).toString());
-            esults.put(RETURN_CODE,getVariablesOperationOutput(variablesJson,sensitiveVariablesJson,result).get(RETURN_CODE));
+            results.put(RETURN_CODE,getVariablesOperationOutput(variablesJson,sensitiveVariablesJson,result).get(RETURN_CODE));
             results.put(STATUS_CODE,getVariablesOperationOutput(variablesJson,sensitiveVariablesJson,result).get(STATUS_CODE));
             return results;
 
