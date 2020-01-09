@@ -87,6 +87,7 @@ public class Constants {
         public static final String APPLY_RUN_PATH = "/actions/apply";
     }
 
+
     public static class ListRunsInWorkspaceConstants {
         public static final String LIST_RUNS_IN_WORKSPACE_OPERATION_NAME = "List Runs in a Workspace";
     }
@@ -110,6 +111,7 @@ public class Constants {
         public static final String UPDATE_VARIABLES_OPERATION_NAME = "Update Variables";
         public static final String VARIABLE_KEY_JSON_PATH = "attributes.key";
     }
+
     public static class DeleteVariableConstants {
         public static final String DELETE_VARIABLE_OPERATION_NAME = "Delete Variable";
     }
@@ -121,6 +123,17 @@ public class Constants {
     public static class GetRunDetailsConstants {
         public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
     }
+
+    public static class PlanDetailsConstants {
+        public static final String PLAN_DETAILS_OPERATION_NAME = "Get Plan Details";
+        public static final String PLAN_DETAILS_PATH = "/plans";
+    }
+
+    public static class CancelRunConstants {
+        public static final String CANCEL_RUN_OPERATION_NAME = "Cancel Run";
+        public static final String CANCEL_RUN_PATH = "/actions/cancel";
+    }
+
 
     public static class GetApplyDetailsConstants {
         public static final String GET_APPLY_DETAILS_OPERATION_NAME = "Get Apply Details";

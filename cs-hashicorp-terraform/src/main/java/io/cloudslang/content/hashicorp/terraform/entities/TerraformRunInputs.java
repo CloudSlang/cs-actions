@@ -25,17 +25,19 @@ public class TerraformRunInputs {
     private String runMessage;
     private String isDestroy;
     private String runId;
+    private String planId;
     private String applyId;
     private String runComment;
 
     private TerraformCommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"workspaceId", "workspaceName", "runMessage", "isDestroy", "runId", "applyId", "runComment"})
-    public TerraformRunInputs(String workspaceId, String runMessage, String isDestroy, String runId, String applyId, String runComment, TerraformCommonInputs commonInputs) {
+    @java.beans.ConstructorProperties({"workspaceId", "workspaceName", "runMessage", "isDestroy", "runId", "planId", "applyId", "runComment"})
+    public TerraformRunInputs(String workspaceId, String runMessage, String isDestroy, String runId, String planId, String applyId, String runComment, TerraformCommonInputs commonInputs) {
         this.workspaceId = workspaceId;
         this.runMessage = runMessage;
         this.isDestroy = isDestroy;
         this.runId = runId;
+        this.planId = planId;
         this.applyId = applyId;
         this.runComment = runComment;
         this.commonInputs = commonInputs;
@@ -67,6 +69,11 @@ public class TerraformRunInputs {
     }
 
     @NotNull
+    public String getPlanId() {
+        return planId;
+    }
+
+    @NotNull
     public String getApplyIdId() {
         return applyId;
     }
@@ -86,6 +93,7 @@ public class TerraformRunInputs {
         private String runMessage = EMPTY;
         private String isDestroy = EMPTY;
         private String runId = EMPTY;
+        private String planId = EMPTY;
         private String runComment = EMPTY;
         private String applyId = EMPTY;
 
@@ -119,6 +127,12 @@ public class TerraformRunInputs {
         }
 
         @NotNull
+        public TerraformRunInputs.TerraformRunInputsBuilder planId(@NotNull final String planId) {
+            this.planId = planId;
+            return this;
+        }
+
+        @NotNull
         public TerraformRunInputs.TerraformRunInputsBuilder applyId(@NotNull final String applyId) {
             this.applyId = applyId;
             return this;
@@ -139,7 +153,7 @@ public class TerraformRunInputs {
         }
 
         public TerraformRunInputs build() {
-            return new TerraformRunInputs(workspaceId, runMessage, isDestroy, runId, applyId, runComment, commonInputs);
+            return new TerraformRunInputs(workspaceId, runMessage, isDestroy, runId, planId, applyId, runComment, commonInputs);
         }
     }
 
