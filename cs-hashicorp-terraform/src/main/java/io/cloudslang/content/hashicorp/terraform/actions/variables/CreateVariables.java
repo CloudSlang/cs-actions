@@ -24,6 +24,7 @@ import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,7 @@ public class CreateVariables {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
+    public Map<String,String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
                                        @Param(value = VARIABLES_JSON, description = VARIABLES_JSON_DESC) String variablesJson,
                                        @Param(value = SENSITIVE_VARIABLES_JSON,encrypted = true, description = SENSITIVE_VARIABLES_JSON_DESC) String sensitiveVariablesJson,
@@ -137,9 +138,9 @@ public class CreateVariables {
                             .build())
                     .build());
 
-
-            return getVariablesOperationOutput(variablesJson,sensitiveVariablesJson,result);
-
+            final Map<String,String> results=new HashMap<>();
+            results.put(RETURN_RESULT, getVariablesOperationOutput(variablesJson,sensitiveVariablesJson,result).toString());
+            return results;
 
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
