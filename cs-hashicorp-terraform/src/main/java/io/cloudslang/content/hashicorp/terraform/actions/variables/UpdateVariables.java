@@ -38,6 +38,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVaria
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.VARIABLES_JSON;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.WORKSPACE_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCreateVariablesInput;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -57,8 +58,8 @@ public class UpdateVariables {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = ORGANIZATION_NAME, description = ORGANIZATION_NAME_DESC) String organizationName,
-                                       @Param(value = WORKSPACE_NAME, description = WORKSPACE_NAME_DESC) String workspaceName,
+                                       @Param(value = ORGANIZATION_NAME, required = true, description = ORGANIZATION_NAME_DESC) String organizationName,
+                                       @Param(value = WORKSPACE_NAME, required = true, description = WORKSPACE_NAME_DESC) String workspaceName,
                                        @Param(value = VARIABLES_JSON, description = VARIABLES_JSON_DESC) String variablesJson,
                                        @Param(value = SENSITIVE_VARIABLES_JSON, encrypted = true, description = SENSITIVE_VARIABLES_JSON_DESC) String sensitiveVariablesJson,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
@@ -76,7 +77,6 @@ public class UpdateVariables {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
-        workspaceName = defaultIfEmpty(workspaceName, EMPTY);
         variablesJson = defaultIfEmpty(variablesJson, EMPTY);
         sensitiveVariablesJson = defaultIfEmpty(sensitiveVariablesJson, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
@@ -99,7 +99,10 @@ public class UpdateVariables {
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
-
+        final List<String> exceptionMessages = verifyCreateVariablesInput(variablesJson, sensitiveVariablesJson);
+        if (!exceptionMessages.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+        }
         try {
             final Map<String, Map<String, String>> result = updateVariables(TerraformVariableInputs.builder()
                     .variableJson(variablesJson)
