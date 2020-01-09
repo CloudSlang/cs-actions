@@ -78,4 +78,9 @@ public class Inputs extends InputNames {
         public static final String RUN_ID_DESC = "runIdDescription";
     }
 
+    public static class PlanDetailInputs {
+        public static final String PLAN_ID = "planId";
+        public static final String PLAN_ID_DESC = "planIdDescription";
+    }
+
 }

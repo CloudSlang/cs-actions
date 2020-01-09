@@ -13,63 +13,59 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.hashicorp.terraform.actions.variables;
+package io.cloudslang.content.hashicorp.terraform.actions.runs;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformRunInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.constants.ResponseNames.FAILURE;
-import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.createVariables;
-import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.getVariablesOperationOutput;
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.planDetails;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.CREATE_VARIABLES_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.CONNECTIONS_MAX_TOTAL_CONST;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.UTF8;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.PlanDetailsConstants.PLAN_DETAILS_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.RESPONSE_CHARACTER_SET_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.PlanDetails.PLAN_DETAILS_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.AUTH_TOKEN;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PlanDetailInputs.PLAN_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PlanDetailInputs.PLAN_ID_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class CreateVariables {
-
-    @Action(name = CREATE_VARIABLES_OPERATION_NAME,
-            description = CREATE_VARIABLES_DESC,
+public class PlanDetails {
+    @Action(name = PLAN_DETAILS_OPERATION_NAME,
+            description = PLAN_DETAILS_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
-    public Map<String,String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
-                                       @Param(value = VARIABLES_JSON, description = VARIABLES_JSON_DESC) String variablesJson,
-                                       @Param(value = SENSITIVE_VARIABLES_JSON,encrypted = true, description = SENSITIVE_VARIABLES_JSON_DESC) String sensitiveVariablesJson,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, encrypted = true, required = true, description = AUTH_TOKEN_DESC) String authToken,
+                                       @Param(value = PLAN_ID, required = true, description = PLAN_ID_DESC) String planId,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -84,10 +80,8 @@ public class CreateVariables {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
-        authToken = defaultIfEmpty(authToken, EMPTY);
-        workspaceId = defaultIfEmpty(workspaceId, BOOLEAN_TRUE);
-        variablesJson = defaultIfEmpty(variablesJson, EMPTY);
-        sensitiveVariablesJson = defaultIfEmpty(sensitiveVariablesJson, EMPTY);
+
+        planId = defaultIfEmpty(planId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -108,17 +102,10 @@ public class CreateVariables {
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
-        final List<String> exceptionMessages = verifyCreateVariablesInput(variablesJson,sensitiveVariablesJson);
-        if (!exceptionMessages.isEmpty()) {
-            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
-        }
-
 
         try {
-            final Map<String, Map<String, String>> result = createVariables(TerraformVariableInputs.builder()
-                    .workspaceId(workspaceId)
-                    .variableJson(variablesJson)
-                    .sensitiveVariableJson(sensitiveVariablesJson)
+            final Map<String, String> result = planDetails(TerraformRunInputs.builder()
+                    .planId(planId)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
                             .proxyHost(proxyHost)
@@ -137,11 +124,10 @@ public class CreateVariables {
                             .responseCharacterSet(responseCharacterSet)
                             .build())
                     .build());
+            final String returnMessage = result.get(RETURN_RESULT);
 
-            final Map<String,String> results=new HashMap<>();
-            results.put(RETURN_RESULT, getVariablesOperationOutput(variablesJson,sensitiveVariablesJson,result).toString());
+            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             return results;
-
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
