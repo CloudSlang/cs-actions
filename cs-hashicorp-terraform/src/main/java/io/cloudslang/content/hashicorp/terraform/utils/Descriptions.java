@@ -169,7 +169,7 @@ public class Descriptions {
         public static final String VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Variable.";
         public static final String VARIABLE_SENSITIVE_REQUEST_BODY_DESC = "Request Body for the Create Sensitive Variable.";
         public static final String VARIABLES_JSON_DESC = "List of variables in json format." +
-                                        "Examples : [{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"env\\\"}]\",\"[{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"terraform\\\"}]";
+                "Examples : [{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"env\\\"}]\",\"[{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"terraform\\\"}]";
         public static final String SENSITIVE_VARIABLES_JSON_DESC = "List of sensitive variables in json format.";
         public static final String VARIABLE_ID_DESC = "The Id of created variable.";
         public static final String CREATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while " +
@@ -191,6 +191,16 @@ public class Descriptions {
         public static final String GET_RUN_DETAILS_DESC = "Getting details about a run";
     }
 
+    public static class PlanDetails {
+        public static final String PLAN_DETAILS_DESC = "Getting details about plan";
+    }
+
+    public static class CancelRun {
+        public static final String CANCEL_RUN_DESC = "Cancel the run";
+        public static final String CANCEL_RUN_REQUEST_BODY_DESC = "Request Body for the cancel run.";
+        public static final String CANCEL_RUN_SUCCESS_DESC = "The run is cancelled successfully.";
+    }
+
     public static class GetApplyDetails {
         public static final String GET_APPLY_DETAILS_DESC = "Getting details about a apply id";
         public static final String APPLY_ID_DESC = "The ID of the apply to show";
@@ -208,9 +218,9 @@ public class Descriptions {
         public static final String WORKSPACE_LIST_DESC = "List of all workspaces under the organization.";
     }
 
-    public static class UpdateVariable {
-        public static final String UPDATE_VARIABLE_DESC = "Updates a variable attributes in workspace.";
-        public static final String VARIABLE_ID_DESC = "The ID of the variable to be updated.";
+    public static class UpdateVariables {
+        public static final String UPDATE_VARIABLES_DESC = "Updates  multiple sensitive and non-sensitive variables or both in a workspace.";
+        public static final String UPDATE_VARIABLE_DESC = "Updates  multiple sensitive and non-sensitive variable or both in a workspace.";
     }
 
     public static class DeleteVariable {
@@ -218,10 +228,16 @@ public class Descriptions {
         public static final String DELETE_VARIABLE_DESC = "Deletes a variable from workspace.";
     }
 
+
     public static class GetCurrentStateVersion {
         public static final String GET_CURRENT_STATE_VERSION_DESC = "Fetches the current state version for the " +
                 "given workspace.";
         public static final String STATE_VERSION_ID_DESC = "The ID of the desired state version.";
         public static final String HOSTED_STATE_DOWNLOAD_URL_DESC = "A url from which you can download the raw state ";
     }
+
+    public static class Counter{
+        public static final String FAILURE_MESSAGE="Something went wrong";
+    }
+
 }

@@ -38,8 +38,6 @@ public class Constants {
         public static final String CHANGEIT = "changeit";
         public static final String ZERO = "0";
         public static final String CONNECT_TIMEOUT_CONST = "10000";
-        public static final String POLLING_INTERVAL_DEFAULT = "1000";
-        public static final String EXEC_TIMEOUT = "600000";
         public static final String UTF8 = "UTF-8";
         public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
         public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
@@ -51,6 +49,7 @@ public class Constants {
         public static final String PATH_SEPARATOR = "/";
         public static final String AND = "&";
         public static final String QUERY = "?";
+        public static final String ID = "id";
         public static final String HTTPS = "https";
         public static final String STATUS_CODE = "statusCode";
         public static final String APPLICATION_VND_API_JSON = "application/vnd.api+json";
@@ -88,6 +87,7 @@ public class Constants {
         public static final String APPLY_RUN_PATH = "/actions/apply";
     }
 
+
     public static class ListRunsInWorkspaceConstants {
         public static final String LIST_RUNS_IN_WORKSPACE_OPERATION_NAME = "List Runs in a Workspace";
     }
@@ -102,13 +102,16 @@ public class Constants {
 
     public static class ListVariableConstants {
         public static final String LIST_VARIABLE_OPERATION_NAME = "List Variable";
-        public static final String ORGANIZATION_NAME = "filter[organization][name]";
-        public static final String WORKSPACE_NAME = "filter[workspace][name]";
+        public static final String ORGANIZATION_NAME = "filter[organization][name]=";
+        public static final String WORKSPACE_NAME = "filter[workspace][name]=";
     }
 
     public static class UpdateVariableConstants {
         public static final String UPDATE_VARIABLE_OPERATION_NAME = "Update Variable";
+        public static final String UPDATE_VARIABLES_OPERATION_NAME = "Update Variables";
+        public static final String VARIABLE_KEY_JSON_PATH = "attributes.key";
     }
+
     public static class DeleteVariableConstants {
         public static final String DELETE_VARIABLE_OPERATION_NAME = "Delete Variable";
     }
@@ -120,6 +123,17 @@ public class Constants {
     public static class GetRunDetailsConstants {
         public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
     }
+
+    public static class PlanDetailsConstants {
+        public static final String PLAN_DETAILS_OPERATION_NAME = "Get Plan Details";
+        public static final String PLAN_DETAILS_PATH = "/plans";
+    }
+
+    public static class CancelRunConstants {
+        public static final String CANCEL_RUN_OPERATION_NAME = "Cancel Run";
+        public static final String CANCEL_RUN_PATH = "/actions/cancel";
+    }
+
 
     public static class GetApplyDetailsConstants {
         public static final String GET_APPLY_DETAILS_OPERATION_NAME = "Get Apply Details";
@@ -140,5 +154,16 @@ public class Constants {
         public static final String CURRENT_STATE_VERSION_PATH = "/current-state-version";
         public static final String STATE_VERSION_ID_JSON_PATH = "$.data.id";
         public static final String HOSTED_STATE_DOWNLOAD_URL_JSON_PATH = "$.data.attributes.hosted-state-download-url";
+    }
+
+public static class CounterConstants{
+        public static final String RESULT_TEXT="resultString";
+        public static final String RESULT="result";
+        public static final String HASMORE="has more";
+        public static final String NOMORE="no more";
+        public static final String FAILURE="failure";
+        public static final String EXCEPTION="exception";
+        public static final String OPERATION_NAME="Counter";
+
     }
 }

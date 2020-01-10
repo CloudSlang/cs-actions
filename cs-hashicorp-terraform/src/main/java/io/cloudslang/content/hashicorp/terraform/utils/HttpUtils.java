@@ -17,6 +17,7 @@ package io.cloudslang.content.hashicorp.terraform.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,11 +25,11 @@ import java.net.Authenticator;
 import java.net.InetSocketAddress;
 import java.net.PasswordAuthentication;
 import java.net.Proxy;
+import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CommonOutputs.DOCUMENT;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.OAUTH_CLIENT_PATH;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
@@ -130,6 +131,33 @@ public class HttpUtils {
                 .append(PAGE_SIZE)
                 .append(pageSize);
         return queryParams.toString();
+    }
+
+    @NotNull
+    public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode, @NotNull Throwable throwable) {
+        Map<String, String> results = new HashMap();
+        results.put("returnCode", "-1");
+        if (statusCode.equals(404)) {
+            results.put("returnResult", inputName + "not found, or user unauthorized to perform action");
+            results.put("exception", statusCode + " : " + inputName + "not found, or user unauthorized to perform action");
+        } else {
+            results.put("returnResult", throwable.getMessage());
+            results.put("exception", ExceptionUtils.getStackTrace(throwable));
+        }
+        return results;
+    }
+
+    @NotNull
+    public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode, @NotNull String throwable) {
+        Map<String, String> results = new HashMap();
+        if (statusCode.equals(404)) {
+            results.put("returnResult", inputName + " not found, or user unauthorized to perform action");
+            results.put("exception ", "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
+        } else {
+            results.put("returnResult", throwable);
+            results.put("exception", throwable);
+        }
+        return results;
     }
 
 }
