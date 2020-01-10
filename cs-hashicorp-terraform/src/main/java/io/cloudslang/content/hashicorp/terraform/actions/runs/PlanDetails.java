@@ -33,43 +33,39 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.applyRunClient;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRunConstants.APPLY_RUN_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.planDetails;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ApplyRun.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.CONNECTIONS_MAX_TOTAL_CONST;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.UTF8;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.PlanDetailsConstants.PLAN_DETAILS_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.RESPONSE_CHARACTER_SET_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.PlanDetails.PLAN_DETAILS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyRunInputs.RUN_COMMENT;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyRunInputs.RUN_ID;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyApplyRunRequestBody;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.AUTH_TOKEN;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PlanDetailInputs.PLAN_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PlanDetailInputs.PLAN_ID_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class ApplyRun {
-
-    @Action(name = APPLY_RUN_OPERATION_NAME,
-            description = APPLY_RUN_DESC,
+public class PlanDetails {
+    @Action(name = PLAN_DETAILS_OPERATION_NAME,
+            description = PLAN_DETAILS_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = RUN_ID, required = true, description = RUN_DESC) String runId,
-                                       @Param(value = RUN_COMMENT, description = RUN_COMMENT_DESC) String runComment,
-                                       @Param(value = REQUEST_BODY, description = APPLY_RUN_REQUEST_BODY_DESC) String requestBody,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, encrypted = true, required = true, description = AUTH_TOKEN_DESC) String authToken,
+                                       @Param(value = PLAN_ID, required = true, description = PLAN_ID_DESC) String planId,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -85,10 +81,7 @@ public class ApplyRun {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
-
-        runId = defaultIfEmpty(runId, EMPTY);
-        runComment = defaultIfEmpty(runComment, EMPTY);
-        requestBody = defaultIfEmpty(requestBody, EMPTY);
+        planId = defaultIfEmpty(planId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -110,18 +103,11 @@ public class ApplyRun {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
-        final List<String> exceptionMessages = verifyApplyRunRequestBody(requestBody);
-        if (!exceptionMessages.isEmpty()) {
-            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
-        }
-
         try {
-            final Map<String, String> result = applyRunClient(TerraformRunInputs.builder()
-                    .runId(runId)
-                    .runComment(runComment)
+            final Map<String, String> result = planDetails(TerraformRunInputs.builder()
+                    .planId(planId)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
-                            .requestBody(requestBody)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
@@ -139,7 +125,9 @@ public class ApplyRun {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
-            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
+
+            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
