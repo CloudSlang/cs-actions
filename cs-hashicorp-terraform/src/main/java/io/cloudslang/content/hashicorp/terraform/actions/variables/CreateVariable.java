@@ -40,6 +40,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVa
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -226,6 +227,8 @@ public class CreateVariable {
                     } else {
                         results.put(VARIABLE_ID, EMPTY);
                     }
+                }else{
+                    return  getFailureResults(workspaceId,statusCode,returnMessage);
                 }
 
                 return results;

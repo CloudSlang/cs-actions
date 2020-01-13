@@ -40,6 +40,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Commo
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.VARIABLE_ID_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.VARIABLE_REQUEST_BODY_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariables.UPDATE_VARIABLE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -128,7 +129,12 @@ public class UpdateVariable {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
-            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            if (statusCode >= 200 && statusCode < 300) {
+                return  getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            }else{
+                return getFailureResults(variableId,statusCode,returnMessage);
+            }
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

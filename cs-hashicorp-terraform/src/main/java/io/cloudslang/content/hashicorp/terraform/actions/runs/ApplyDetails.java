@@ -38,6 +38,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetApply
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetApplyDetails.APPLY_ID_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetApplyDetails.GET_APPLY_DETAILS_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyDetailsInputs.APPLY_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.AUTH_TOKEN;
@@ -119,9 +120,14 @@ public class ApplyDetails {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
+            Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
-            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            return results;
+            if (statusCode >= 200 && statusCode < 300) {
+                return  getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            }else{
+                return getFailureResults(applyId,statusCode,returnMessage);
+            }
+
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

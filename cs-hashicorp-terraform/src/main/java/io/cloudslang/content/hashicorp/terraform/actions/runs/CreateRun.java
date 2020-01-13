@@ -41,6 +41,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateRu
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateRun.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -159,6 +160,8 @@ public class CreateRun {
                 } else {
                     results.put(RUN_ID, EMPTY);
                 }
+            }else{
+                return getFailureResults(workspaceId,statusCode,returnMessage);
             }
 
             return results;

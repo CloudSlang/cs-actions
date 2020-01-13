@@ -41,6 +41,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.PlanDeta
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.RESPONSE_CHARACTER_SET_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.PlanDetails.PLAN_DETAILS_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.PlanDetailInputs.PLAN_ID;
@@ -125,9 +126,14 @@ public class PlanDetails {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
+            Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
-            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            return results;
+            if (statusCode >= 200 && statusCode < 300) {
+                return  getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            }else{
+                return getFailureResults(planId,statusCode,returnMessage);
+            }
+
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

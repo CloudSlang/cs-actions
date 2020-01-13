@@ -134,15 +134,14 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode, @NotNull Throwable throwable) {
+    public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode, @NotNull String throwable) {
         Map<String, String> results = new HashMap();
-        results.put("returnCode", "-1");
         if (statusCode.equals(404)) {
-            results.put("returnResult", inputName + "not found, or user unauthorized to perform action");
-            results.put("exception", statusCode + " : " + inputName + "not found, or user unauthorized to perform action");
+            results.put("returnResult", inputName + " not found, or user unauthorized to perform action");
+            results.put("exception ", "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
         } else {
-            results.put("returnResult", throwable.getMessage());
-            results.put("exception", ExceptionUtils.getStackTrace(throwable));
+            results.put("returnResult", throwable);
+            results.put("exception", throwable);
         }
         return results;
     }

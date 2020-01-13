@@ -40,6 +40,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListWork
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListWorkspaces.LIST_WORKSPACES_OPERATION_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListWorkspaces.WORKSPACE_LIST_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PAGE_NUMBER;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PAGE_SIZE;
@@ -141,6 +142,8 @@ public class ListWorkspaces {
                 } else {
                     results.put(WORKSPACE_LIST, EMPTY);
                 }
+            }else{
+                return getFailureResults(organizationName,statusCode,returnMessage);
             }
             return results;
         } catch (Exception exception) {

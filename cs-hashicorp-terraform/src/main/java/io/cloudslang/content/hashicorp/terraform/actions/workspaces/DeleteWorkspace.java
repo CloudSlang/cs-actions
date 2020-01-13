@@ -40,6 +40,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Commo
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_NAME_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.DeleteWorkspace.DELETE_WORKSPACE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.DeleteWorkspace.DELETE_WORKSPACE_SUCCESS_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -138,8 +139,9 @@ public class DeleteWorkspace {
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
             if (statusCode >= 200 && statusCode < 300) {
                 return getOperationResults(result, DELETE_WORKSPACE_SUCCESS_DESC, DELETE_WORKSPACE_SUCCESS_DESC, DELETE_WORKSPACE_SUCCESS_DESC);
+            }else{
+                return  getFailureResults(workspaceName,statusCode,returnMessage);
             }
-            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

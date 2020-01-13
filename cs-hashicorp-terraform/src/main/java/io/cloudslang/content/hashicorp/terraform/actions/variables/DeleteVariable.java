@@ -25,6 +25,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Commo
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.VARIABLE_ID_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.DeleteVariable.DELETE_VARIABLE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.DeleteVariable.DELETE_VAR_SUCCESS_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -117,9 +118,9 @@ public class DeleteVariable {
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
             if (statusCode >= 200 && statusCode < 300) {
                 return getOperationResults(result, DELETE_VAR_SUCCESS_DESC, DELETE_VAR_SUCCESS_DESC, DELETE_VAR_SUCCESS_DESC);
+            }else{
+                return  getFailureResults(variableId,statusCode,returnMessage);
             }
-
-            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

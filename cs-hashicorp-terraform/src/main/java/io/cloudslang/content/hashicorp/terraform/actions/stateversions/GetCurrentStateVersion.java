@@ -40,6 +40,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetCurre
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetCurrentStateVersion.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetWorkspaceDetails.WORKSPACE_ID_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -148,6 +149,8 @@ public class GetCurrentStateVersion {
                     results.put(STATE_VERSION_ID, EMPTY);
                     results.put(HOSTED_STATE_DOWNLOAD_URL, EMPTY);
                 }
+            }else{
+                return  getFailureResults(workspaceId,statusCode,returnMessage);
             }
 
             return results;

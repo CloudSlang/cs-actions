@@ -24,6 +24,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListRuns
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListRunsInWorkspace.LIST_RUNS_IN_WORKSPACE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
@@ -120,7 +121,12 @@ public class ListRunsInWorkspace {
                     .build());
 
             final String returnMessage = result.get(RETURN_RESULT);
-            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            if (statusCode >= 200 && statusCode < 300) {
+                return  getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            }else{
+                return getFailureResults(workspaceId,statusCode,returnMessage);
+            }
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
