@@ -235,4 +235,8 @@ public class Descriptions {
         public static final String STATE_VERSION_ID_DESC = "The ID of the desired state version.";
         public static final String HOSTED_STATE_DOWNLOAD_URL_DESC = "A url from which you can download the raw state ";
     }
+
+    public static class Counter{
+        public static final String FAILURE_MESSAGE="Something went wrong";
+    }
 }
