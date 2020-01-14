@@ -146,8 +146,8 @@ public class SendMail {
                 props.put("mail.smtp.password", password);
                 props.put("mail.smtp.auth", "true");
             }
-            if (enableTLS) {
-                props.put("mail.smtp.starttls.enable", "true");
+            if (!enableTLS) {
+                props.put("mail.smtp.starttls.enable", "false");
             }
             if (timeout > 0) {
                 props.put("mail.smtp.timeout", timeout);
