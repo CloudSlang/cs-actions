@@ -28,7 +28,7 @@ public class Counter {
 
     @Action(name = COUNTER_OPERATION_NAME, description = COUNTER_DESC,
             outputs = {
-                    @Output(value = RESULT_TEXT, description = RESULT_TEXT_DESC),
+                    @Output(value = RESULT_STRING, description = RESULT_STRING_DESC),
                     @Output(value = RESULT, description = RESULT_DESC)},
             responses = {
                     @Response(text = HASMORE, field = RESULT, value = HASMORE, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -52,11 +52,11 @@ public class Counter {
             counter.init(to, from, incrementBy, Boolean.valueOf(reset), sessionObject);
             if (counter.hasNext()) {
                 returnResult.put(RESULT_DBG_INDEX, Long.toString(counter.getIndex()));
-                returnResult.put(RESULT_TEXT, counter.getNext(sessionObject));
+                returnResult.put(RESULT_STRING, counter.getNext(sessionObject));
                 returnResult.put(RESULT, HASMORE);
             } else {
                 counter.setStepSessionEnd(sessionObject);
-                returnResult.put(RESULT_TEXT, "");
+                returnResult.put(RESULT_STRING, "");
                 returnResult.put(RESULT, NOMORE);
             }
         } catch (CounterImplException e) {
