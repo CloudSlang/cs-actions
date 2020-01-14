@@ -58,13 +58,17 @@ public class Descriptions {
 
     public static class GetEmail {
         public static final String AUTH_TOKEN_DESC = "The authorization token for Office 365.";
+        public static final String EMAIL_ADDRESS_DESC = "The email address on which to perform the action.";
         public static final String USER_PRINCIPAL_NAME_DESC = "The email address of the user to perform the action on. " +
                 "The input is mutually exclusive with the userId input.";
         public static final String USER_ID_DESC = "The ID of the user to perform the action on.";
         public static final String O_DATA_QUERY_DESC = "Query parameters which can be used to specify and control the amount of data returned " +
                 "in a response specified in 'key1=val1&key2=val2' format. $top and $select options should be not passed for this input because the values" +
                 "for these options can be passed in topQuery and selectQuery inputs." +
-                " Example: $format=json";
+                " Example: &filter=Subject eq 'Test' AND IsRead eq true " +
+                "          &filter=HasAttachments eq true"+
+                "          &search=\"from:help@contoso.com\""+
+                "          &search=\"subject:Test\"";
         public static final String TOP_QUERY_DESC = "Query parameter use to specify the number of results. Default value: 10";
         public static final String SELECT_QUERY_DESC = "A list of query parameters in the form of a comma delimited list." +
                 " Example: id,internetMessageHeaders";
@@ -107,10 +111,16 @@ public class Descriptions {
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
     }
 
+    public static class SendMail {
+        public static final String TENANT_NAME_DESC = "Your application tenant.";
+        public static final String MESSAGE_ID_DESC = "The ID of the sent mail.";
+    }
+
     public static class SendMessage {
 
         public static final String MESSAGE_ID_DESC = "The ID of the message to send.";
         public static final String RETURN_RESULT_DESC = "A message is returned in case of success, an error message is returned in case of failure.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while sending the email.";
 
     }
 
