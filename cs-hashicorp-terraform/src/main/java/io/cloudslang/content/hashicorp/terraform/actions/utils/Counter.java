@@ -15,6 +15,8 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CounterConstants.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.FAILURE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Counter.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
@@ -22,16 +24,16 @@ import static org.apache.commons.lang3.StringUtils.*;
 public class Counter {
 
     public static final String RESULT_DBG_INDEX = "index";
-    StepSerializableSessionObject sessionObject=new StepSerializableSessionObject("name");
+    public static final StepSerializableSessionObject sessionObject=new StepSerializableSessionObject("name");
 
-    @Action(name = OPERATION_NAME, description = COUNTER_DESC,
+    @Action(name = COUNTER_OPERATION_NAME, description = COUNTER_DESC,
             outputs = {
                     @Output(value = RESULT_TEXT, description = RESULT_TEXT_DESC),
                     @Output(value = RESULT, description = RESULT_DESC)},
             responses = {
-                    @Response(text = HASMORE, field = RESULT, value = HASMORE, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED),
-                    @Response(text = NOMORE, field = RESULT, value = NOMORE, matchType = MatchType.COMPARE_EQUAL,responseType = RESOLVED),
-                    @Response(text = FAILURE, field = RESULT, value = FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true,responseType = ERROR)})
+                    @Response(text = HASMORE, field = RESULT, value = HASMORE, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = NOMORE, field = RESULT, value = NOMORE, matchType = MatchType.COMPARE_EQUAL,responseType = RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RESULT, value = FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true,responseType = ERROR, description = FAILURE_DESC)})
     public Map<String, String> execute(@Param(value = FROM , required = true, description = FROM_DESC) String from,
                                        @Param(value = TO, required = true, description = TO_DESC) String to,
                                        @Param(value = INCREMENT_BY, description = INCREMENT_BY_DESC) String incrementBy,
