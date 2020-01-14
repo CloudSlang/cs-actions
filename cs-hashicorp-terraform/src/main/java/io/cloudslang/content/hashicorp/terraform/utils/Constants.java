@@ -156,13 +156,19 @@ public class Constants {
         public static final String HOSTED_STATE_DOWNLOAD_URL_JSON_PATH = "$.data.attributes.hosted-state-download-url";
     }
     public static class CounterConstants{
-        public static final String RESULT_TEXT="resultString";
+        public static final String RESULT_STRING="resultString";
         public static final String RESULT="result";
         public static final String HASMORE="has more";
         public static final String NOMORE="no more";
         public static final String FAILURE="failure";
         public static final String EXCEPTION="exception";
-        public static final String OPERATION_NAME="Counter";
+        public static final String COUNTER_OPERATION_NAME="Counter";
+        public static final String TO="to";
+        public static final String FROM="from";
+        public static final String INCREMENT_BY="incrementBy";
+        public static final String SESSION_COUNTER="sessionCounter";
+        public static final String RESET="reset";
+
 
     }
 }
