@@ -237,6 +237,15 @@ public class Descriptions {
     }
 
     public static class Counter{
-        public static final String FAILURE_MESSAGE="Something went wrong";
+        public static final String FAILURE_MESSAGE = "Something went wrong";
+        public static final String COUNTER_DESC = "Counts from one number to another number.";
+        public static final String RESULT_TEXT_DESC = "he primary result is resultString, Result can also be used. result (All lower case) should not be used as it is the response code.";
+        public static final String RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
+        public static final String FROM_DESC = "The number to start counting at.";
+        public static final String TO_DESC = "The number to count to.";
+        public static final String RESET_DESC = "If true, then the counter will restart counting from the beginning.";
+        public static final String INCREMENT_BY_DESC = "he number to increment by while counting. If unspecified this is 1. If you wanted to count 2,4,6,8 this would be 2.";
+
+
     }
 }

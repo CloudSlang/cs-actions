@@ -12,36 +12,48 @@ import io.cloudslang.content.hashicorp.terraform.services.models.CounterImplExce
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CounterConstants.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Counter.FAILURE_MESSAGE;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Counter.*;
+import static org.apache.commons.lang3.StringUtils.*;
 
 
 public class Counter {
 
     public static final String RESULT_DBG_INDEX = "index";
+    StepSerializableSessionObject sessionObject=new StepSerializableSessionObject("name");
 
-    @Action(name = OPERATION_NAME,
+    @Action(name = OPERATION_NAME, description = COUNTER_DESC,
             outputs = {
-                    @Output(RESULT_TEXT),
-                    @Output(RESULT)},
+                    @Output(value = RESULT_TEXT, description = RESULT_TEXT_DESC),
+                    @Output(value = RESULT, description = RESULT_DESC)},
             responses = {
-                    @Response(text = HASMORE, field = RESULT, value = "has more", matchType = MatchType.COMPARE_EQUAL),
-                    @Response(text = NOMORE, field = RESULT, value = "no more", matchType = MatchType.COMPARE_EQUAL),
-                    @Response(text = FAILURE, field = RESULT, value = "failure", matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true)})
-    public Map<String, String> execute(@Param("from") String from, @Param("to") String to, @Param("incrementBy") String incrementBy, @Param("reset") boolean reset,
-                                       @Param("sessionCounter") StepSerializableSessionObject sessionCounter) {
+                    @Response(text = HASMORE, field = RESULT, value = HASMORE, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED),
+                    @Response(text = NOMORE, field = RESULT, value = NOMORE, matchType = MatchType.COMPARE_EQUAL,responseType = RESOLVED),
+                    @Response(text = FAILURE, field = RESULT, value = FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true,responseType = ERROR)})
+    public Map<String, String> execute(@Param(value = FROM , description = FROM_DESC) String from,
+                                       @Param(value = TO, description = TO_DESC) String to,
+                                       @Param(value = INCREMENT_BY, description = INCREMENT_BY_DESC) String incrementBy,
+                                       @Param(value = RESET, description = RESET_DESC) String reset) {
+
+        from = defaultIfEmpty(from, EMPTY);
+        to = defaultIfEmpty(to, EMPTY);
+        reset = defaultIfEmpty(reset, EMPTY);
+        incrementBy = defaultIfEmpty(incrementBy, EMPTY);
+
         CounterImpl counter = new CounterImpl();
         Map<String, String> returnResult = new HashMap<String, String>();
         returnResult.put(RESULT, FAILURE_MESSAGE);
 
         try {
-            counter.init(to, from, incrementBy, reset, sessionCounter);
+            counter.init(to, from, incrementBy, Boolean.valueOf(reset), sessionObject);
             if (counter.hasNext()) {
                 returnResult.put(RESULT_DBG_INDEX, Long.toString(counter.getIndex()));
-                returnResult.put(RESULT_TEXT, counter.getNext(sessionCounter));
+                returnResult.put(RESULT_TEXT, counter.getNext(sessionObject));
                 returnResult.put(RESULT, HASMORE);
             } else {
-                counter.setStepSessionEnd(sessionCounter);
+                counter.setStepSessionEnd(sessionObject);
                 returnResult.put(RESULT_TEXT, "");
                 returnResult.put(RESULT, NOMORE);
             }

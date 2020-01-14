@@ -163,6 +163,12 @@ public class Constants {
         public static final String FAILURE="failure";
         public static final String EXCEPTION="exception";
         public static final String OPERATION_NAME="Counter";
+        public static final String TO="to";
+        public static final String FROM="from";
+        public static final String INCREMENT_BY="incrementBy";
+        public static final String SESSION_COUNTER="sessionCounter";
+        public static final String RESET="reset";
+
 
     }
 }
