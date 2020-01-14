@@ -32,8 +32,8 @@ public class Counter {
                     @Response(text = HASMORE, field = RESULT, value = HASMORE, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED),
                     @Response(text = NOMORE, field = RESULT, value = NOMORE, matchType = MatchType.COMPARE_EQUAL,responseType = RESOLVED),
                     @Response(text = FAILURE, field = RESULT, value = FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true,responseType = ERROR)})
-    public Map<String, String> execute(@Param(value = FROM , description = FROM_DESC) String from,
-                                       @Param(value = TO, description = TO_DESC) String to,
+    public Map<String, String> execute(@Param(value = FROM , required = true, description = FROM_DESC) String from,
+                                       @Param(value = TO, required = true, description = TO_DESC) String to,
                                        @Param(value = INCREMENT_BY, description = INCREMENT_BY_DESC) String incrementBy,
                                        @Param(value = RESET, description = RESET_DESC) String reset) {
 
