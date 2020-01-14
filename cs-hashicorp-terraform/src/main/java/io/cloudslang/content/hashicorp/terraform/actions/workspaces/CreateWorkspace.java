@@ -41,6 +41,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWo
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.OAUTH_TOKEN_ID_DESCRIPTION;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -187,6 +188,8 @@ public class CreateWorkspace {
                 } else {
                     results.put(WORKSPACE_ID, EMPTY);
                 }
+            }else{
+                return  getFailureResults(organizationName,statusCode,returnMessage);
             }
             return results;
         } catch (Exception exception) {

@@ -220,8 +220,8 @@ public class VariableImpl {
                 updateVariableJson = (JSONObject) updateVariableJsonArray.get(i);
                 variableName = (String) updateVariableJson.get("propertyName");
                 variableValue = (String) updateVariableJson.get("propertyValue");
-                hcl = (String) updateVariableJson.get("HCL");
-                sensitive = (String) updateVariableJson.get("sensitive");
+                hcl = Boolean.toString((boolean) updateVariableJson.get("HCL"));
+                sensitive = Boolean.toString((boolean)updateVariableJson.get("sensitive"));
                 JSONObject variableJsonObj = (JSONObject) parser.parse(listVariablesResult.get("returnResult"));
                 JSONArray variableJsonArray = (JSONArray) variableJsonObj.get("data");
                 for (int j = 0; j < variableJsonArray.size(); j++) {
@@ -271,8 +271,8 @@ public class VariableImpl {
                 updateVariableJson = (JSONObject) updateVariableJsonArray.get(i);
                 variableName = (String) updateVariableJson.get("propertyName");
                 variableValue = (String) updateVariableJson.get("propertyValue");
-                hcl = (String) updateVariableJson.get("HCL");
-                sensitive = (String) updateVariableJson.get("sensitive");
+                hcl = Boolean.toString((boolean) updateVariableJson.get("HCL"));
+                sensitive = Boolean.toString((boolean)updateVariableJson.get("sensitive"));
                 JSONObject variableJsonObj = (JSONObject) parser.parse(listVariablesResult.get("returnResult"));
                 JSONArray variableJsonArray = (JSONArray) variableJsonObj.get("data");
                 for (int j = 0; j < variableJsonArray.size(); j++) {

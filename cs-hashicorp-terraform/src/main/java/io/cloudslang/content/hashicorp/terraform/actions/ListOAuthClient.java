@@ -40,6 +40,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAut
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.LIST_OAUTH_CLIENT_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.OAUTH_TOKEN_ID_DESCRIPTION;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -142,6 +143,8 @@ public class ListOAuthClient {
                 } else {
                     results.put(OAUTH_TOKEN_ID, EMPTY);
                 }
+            }else{
+                return getFailureResults(organizationName,statusCode,returnMessage);
             }
 
             return results;

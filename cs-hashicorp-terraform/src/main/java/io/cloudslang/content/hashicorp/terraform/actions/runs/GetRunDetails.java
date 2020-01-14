@@ -36,6 +36,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.GetRunDetailsConstants.GET_RUN_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.GetRunDetails.GET_RUN_DETAILS_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.GetRunDetailInputs.RUN_ID;
@@ -114,9 +115,12 @@ public class GetRunDetails {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
-
-            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            return results;
+            Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            if (statusCode >= 200 && statusCode < 300) {
+                return  getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            }else{
+                return getFailureResults(runId,statusCode,returnMessage);
+            }
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

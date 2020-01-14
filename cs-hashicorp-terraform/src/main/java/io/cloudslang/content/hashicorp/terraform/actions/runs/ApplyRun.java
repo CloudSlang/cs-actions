@@ -38,6 +38,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ApplyRun
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ApplyRun.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyRunInputs.RUN_COMMENT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyRunInputs.RUN_ID;
@@ -139,7 +140,13 @@ public class ApplyRun {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
-            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+
+            if (statusCode >= 200 && statusCode < 300) {
+                return  getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            }else{
+                return getFailureResults(runId,statusCode,returnMessage);
+            }
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

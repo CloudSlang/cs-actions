@@ -24,6 +24,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ApplyRun.RUN_COMMENT_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CancelRun.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.ApplyRunInputs.RUN_COMMENT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.AUTH_TOKEN;
@@ -120,10 +121,9 @@ public class CancelRun {
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
             if (statusCode >= 200 && statusCode < 300) {
                 return getOperationResults(result, CANCEL_RUN_SUCCESS_DESC, CANCEL_RUN_SUCCESS_DESC, CANCEL_RUN_SUCCESS_DESC);
+            }else{
+                return getFailureResults(runId,statusCode,returnMessage);
             }
-
-
-            return getOperationResults(result, returnMessage, returnMessage, returnMessage);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

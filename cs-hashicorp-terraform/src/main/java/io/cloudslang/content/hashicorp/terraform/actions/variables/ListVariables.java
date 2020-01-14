@@ -41,6 +41,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Commo
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_NAME_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListVariables.LIST_VARIABLE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
@@ -131,8 +132,13 @@ public class ListVariables {
                             .build())
                     .build());
             final String listVariables = result.get(RETURN_RESULT);
+            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
-            return getOperationResults(result, listVariables, listVariables, listVariables);
+            if (statusCode >= 200 && statusCode < 300) {
+                return getOperationResults(result, listVariables, listVariables, listVariables);
+            }else{
+                return  getFailureResults(organizationName,statusCode,listVariables);
+            }
 
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
