@@ -11,6 +11,7 @@ import io.cloudslang.content.hashicorp.terraform.services.models.CounterImplExce
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
@@ -23,8 +24,8 @@ import static org.apache.commons.lang3.StringUtils.*;
 
 public class Counter {
 
-    public static final String RESULT_DBG_INDEX = "index";
-    public static final StepSerializableSessionObject sessionObject=new StepSerializableSessionObject("name");
+    public final String RESULT_DBG_INDEX = "index";
+    public final StepSerializableSessionObject sessionObject=new StepSerializableSessionObject("name");
 
     @Action(name = COUNTER_OPERATION_NAME, description = COUNTER_DESC,
             outputs = {

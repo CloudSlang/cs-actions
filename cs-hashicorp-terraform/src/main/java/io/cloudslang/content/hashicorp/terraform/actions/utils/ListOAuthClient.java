@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.hashicorp.terraform.actions;
+package io.cloudslang.content.hashicorp.terraform.actions.utils;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;

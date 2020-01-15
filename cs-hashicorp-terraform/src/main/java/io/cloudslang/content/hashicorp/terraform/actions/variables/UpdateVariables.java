@@ -29,6 +29,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Creat
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.VARIABLES_JSON_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_NAME_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariables.UPDATE_VARIABLES_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
@@ -147,10 +148,15 @@ public class UpdateVariables {
                     .build());
 
             final Map<String, String> results = new HashMap<>();
-            results.put(RETURN_RESULT, getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).toString());
-            results.put(RETURN_CODE, getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).get(RETURN_CODE));
-            results.put(STATUS_CODE, getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).get(STATUS_CODE));
-            return results;
+            final int statusCode = Integer.parseInt(getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).get(STATUS_CODE));
+            if (statusCode >= 200 && statusCode < 300) {
+                results.put(RETURN_RESULT, getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).toString());
+                results.put(RETURN_CODE, getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).get(RETURN_CODE));
+                results.put(STATUS_CODE, getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).get(STATUS_CODE));
+                return  results;
+            } else {
+                return getFailureResults(workspaceName, statusCode, getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).toString());
+            }
 
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
