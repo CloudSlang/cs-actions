@@ -24,8 +24,10 @@ import static org.apache.commons.lang3.StringUtils.*;
 
 public class Counter {
 
-    public final String RESULT_DBG_INDEX = "index";
-    public final StepSerializableSessionObject sessionObject=new StepSerializableSessionObject("name");
+    public static final String RESULT_DBG_INDEX = "index";
+    final static Random rand = new Random();
+    static int number=rand.nextInt(1000);
+    public static final StepSerializableSessionObject sessionObject=new StepSerializableSessionObject("name" +number);
 
     @Action(name = COUNTER_OPERATION_NAME, description = COUNTER_DESC,
             outputs = {
