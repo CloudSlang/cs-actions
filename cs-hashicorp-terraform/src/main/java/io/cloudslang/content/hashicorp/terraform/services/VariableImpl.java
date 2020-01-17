@@ -197,8 +197,8 @@ public class VariableImpl {
         String variableValue;
         String sensitiveVariableValue;
         String variableId;
-        String hcl;
-        String sensitive;
+        String hcl = null;
+        String sensitive = null;
         Map<String, Map<String, String>> updateVariableMap = new HashMap<>();
         Map<String, String> listVariablesResult = listVariables(terraformWorkspaceInputs);
         JSONParser parser = new JSONParser();
@@ -220,8 +220,12 @@ public class VariableImpl {
                 updateVariableJson = (JSONObject) updateVariableJsonArray.get(i);
                 variableName = (String) updateVariableJson.get("propertyName");
                 variableValue = (String) updateVariableJson.get("propertyValue");
-                hcl = Boolean.toString((boolean) updateVariableJson.get("HCL"));
-                sensitive = Boolean.toString((boolean)updateVariableJson.get("sensitive"));
+                if (updateVariableJson.containsKey("HCL")) {
+                    hcl = Boolean.toString((boolean) updateVariableJson.get("HCL"));
+                }
+                if (updateVariableJson.containsKey("sensitive")) {
+                    sensitive = Boolean.toString((boolean) updateVariableJson.get("sensitive"));
+                }
                 JSONObject variableJsonObj = (JSONObject) parser.parse(listVariablesResult.get("returnResult"));
                 JSONArray variableJsonArray = (JSONArray) variableJsonObj.get("data");
                 for (int j = 0; j < variableJsonArray.size(); j++) {
@@ -271,8 +275,12 @@ public class VariableImpl {
                 updateVariableJson = (JSONObject) updateVariableJsonArray.get(i);
                 variableName = (String) updateVariableJson.get("propertyName");
                 variableValue = (String) updateVariableJson.get("propertyValue");
-                hcl = Boolean.toString((boolean) updateVariableJson.get("HCL"));
-                sensitive = Boolean.toString((boolean)updateVariableJson.get("sensitive"));
+                if (updateVariableJson.containsKey("HCL")) {
+                    hcl = Boolean.toString((boolean) updateVariableJson.get("HCL"));
+                }
+                if (updateVariableJson.containsKey("sensitive")) {
+                    sensitive = Boolean.toString((boolean) updateVariableJson.get("sensitive"));
+                }
                 JSONObject variableJsonObj = (JSONObject) parser.parse(listVariablesResult.get("returnResult"));
                 JSONArray variableJsonArray = (JSONArray) variableJsonObj.get("data");
                 for (int j = 0; j < variableJsonArray.size(); j++) {

@@ -143,7 +143,7 @@ public class TerraformVariableInputs {
         }
 
 
-        public TerraformVariableInputs.TerraformVariableInputsBuilder hcl(@NotNull final String hcl) {
+        public TerraformVariableInputs.TerraformVariableInputsBuilder hcl(final String hcl) {
             this.hcl = hcl;
             return this;
         }
