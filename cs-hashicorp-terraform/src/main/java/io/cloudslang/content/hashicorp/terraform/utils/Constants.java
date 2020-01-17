@@ -157,6 +157,7 @@ public class Constants {
     }
     public static class CounterConstants{
         public static final String RESULT_STRING="resultString";
+        public static final String INCREMENT_BY_DEFAULT_VALUE="1";
         public static final String RESULT="result";
         public static final String HASMORE="has more";
         public static final String NOMORE="no more";
