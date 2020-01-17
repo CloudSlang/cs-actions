@@ -136,6 +136,8 @@ public class HttpUtils {
     @NotNull
     public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode, @NotNull String throwable) {
         Map<String, String> results = new HashMap();
+        results.put("returnCode", "-1");
+        results.put("statusCode",statusCode.toString());
         if (statusCode.equals(404)) {
             results.put("returnResult", inputName + " not found, or user unauthorized to perform action");
             results.put("exception ", "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
