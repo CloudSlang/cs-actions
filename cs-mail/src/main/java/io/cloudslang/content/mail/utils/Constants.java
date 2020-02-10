@@ -38,6 +38,7 @@ public class Constants {
     public static final String DECRYPTION_KEY_ALIAS = "decryptionKeyAlias";
     public static final String DECRYPTION_KEYSTORE_PASSWORD = "decryptionKeystorePassword";
     public static final String TIMEOUT = "timeout";
+    public static final String MARK_MESSAGE_AS_READ = "markMessageAsRead";
     public static final String VERIFY_CERTIFICATE = "verifyCertificate";
     public static final String PROXY_HOST = "proxyHost";
     public static final String PROXY_PORT = "proxyPort";

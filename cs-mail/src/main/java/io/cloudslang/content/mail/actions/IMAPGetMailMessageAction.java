@@ -138,6 +138,7 @@ public class IMAPGetMailMessageAction {
             @Param(value = PROXY_USERNAME) String proxyUsername,
             @Param(value = PROXY_PASSWORD) String proxyPassword,
             @Param(value = TIMEOUT) String timeout,
+            @Param(value = MARK_MESSAGE_AS_READ) String markAsRead,
             @Param(value = VERIFY_CERTIFICATE) String verifyCertificate
     ) {
         IMAPGetMailMessageInput getMailMessageInputs = new IMAPGetMailMessageInput();
@@ -166,6 +167,7 @@ public class IMAPGetMailMessageAction {
         getMailMessageInputs.setDecryptionKeyAlias(decryptionKeyAlias);
         getMailMessageInputs.setDecryptionKeystorePassword(decryptionKeystorePassword);
         getMailMessageInputs.setTimeout(timeout);
+        getMailMessageInputs.setMarkMessageAsRead(markAsRead);
         getMailMessageInputs.setVerifyCertificate(verifyCertificate);
 
         try {

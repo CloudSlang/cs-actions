@@ -43,6 +43,16 @@ public class IMAPGetMailMessageInput {
     private String proxyUsername;
     private String proxyPassword;
 
+    private String markMessageAsRead;
+
+    public String getMarkMessageAsRead() {
+        return markMessageAsRead;
+    }
+
+    public void setMarkMessageAsRead(String markMessageAsRead) {
+        this.markMessageAsRead = markMessageAsRead;
+    }
+
 
     public String getProxyHost() {
         return proxyHost;
