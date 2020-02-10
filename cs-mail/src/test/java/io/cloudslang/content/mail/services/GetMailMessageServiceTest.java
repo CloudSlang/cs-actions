@@ -14,15 +14,15 @@
  */
 
 
-
 package io.cloudslang.content.mail.services;
 
 import com.sun.mail.util.ASCIIUtility;
-import io.cloudslang.content.mail.entities.GetMailMessageInputs;
+import io.cloudslang.content.mail.entities.GetMailMessageInput;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import io.cloudslang.content.mail.entities.StringOutputStream;
 import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
+import io.cloudslang.content.mail.utils.Constants.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -73,25 +73,19 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-//import javax.net.ssl.SSLContext;
-
 /**
  * Created by giloan on 11/6/2014.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({GetMailMessage.class, MimeUtility.class, URLName.class, Session.class, System.class, SSLContext.class,
+@PrepareForTest({GetMailMessageService.class, MimeUtility.class, URLName.class, Session.class, System.class, SSLContext.class,
         SSLUtils.class, ASCIIUtility.class, ByteArrayInputStream.class})
-public class GetMailMessageTest {
+public class GetMailMessageServiceTest {
 
     public static final int READ_ONLY = 1;
     public static final String SUBJECT_TEST = "subjectTest";
     private static final String FOLDER_DOES_NOT_EXIST = "The specified folder does not exist on the remote server.";
     // operation inputs
     private static final String HOST = "host";
-    private static final String POP3_PORT = "110";
-    private static final String IMAP_PORT = "143";
-    private static final String POP3_PROTOCOL = "pop3";
-    private static final String IMAP_PROTOCOL = "imap";
     private static final String USERNAME = "testUser";
     private static final String PASSWORD = "testPass";
     private static final String FOLDER = "INBOX";
@@ -129,10 +123,11 @@ public class GetMailMessageTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-    private GetMailMessage getMailMessage;
-    private GetMailMessageInputs inputs;
     @Spy
-    private GetMailMessage getMailMessageSpy = new GetMailMessage();
+    private GetMailMessageService serviceSpy = new GetMailMessageService();
+    private GetMailMessageInput.Builder inputBuilder;
+    @Spy
+    private GetMailMessageInput.Builder inputBuilderSpy = new GetMailMessageInput.Builder();
     @Mock
     private Store storeMock;
     @Mock
@@ -172,19 +167,15 @@ public class GetMailMessageTest {
     @Mock
     private ByteArrayInputStream byteArrayInputStreamMock;
 
-    private GetMailMessageInputs mailMessagePopulatedInputs;
-
     @Before
-    public void setUp() throws Exception {
-        getMailMessage = new GetMailMessage();
-        inputs = new GetMailMessageInputs();
-        mailMessagePopulatedInputs = getGetMailMessagePopulatedInputs();
+    public void setUp() {
+        inputBuilder = new GetMailMessageInput.Builder();
+        addRequiredInputs();
     }
 
     @After
-    public void tearDown() throws Exception {
-        getMailMessage = null;
-        inputs = null;
+    public void tearDown() {
+        inputBuilder = null;
     }
 
     /**
@@ -194,14 +185,14 @@ public class GetMailMessageTest {
      */
     @Test
     public void testGetMessageThrowsFolderNotFoundException() throws Exception {
-        doReturn(storeMock).when(getMailMessageSpy).createMessageStore();
-        doNothing().when(getMailMessageSpy).processInputs(inputs);
+        doReturn(storeMock).when(serviceSpy).createMessageStore();
         doReturn(folderMock).when(storeMock).getFolder(anyString());
         doReturn(false).when(folderMock).exists();
+        serviceSpy.input = inputBuilder.build();
 
         exception.expect(Exception.class);
         exception.expectMessage(FOLDER_DOES_NOT_EXIST);
-        getMailMessageSpy.getMessage();
+        serviceSpy.getMessage();
     }
 
     /**
@@ -212,19 +203,20 @@ public class GetMailMessageTest {
      */
     @Test
     public void testGetMessageThrowsMessageNumberException() throws Exception {
-        doReturn(storeMock).when(getMailMessageSpy).createMessageStore();
+        doReturn(storeMock).when(serviceSpy).createMessageStore();
         doReturn(folderMock).when(storeMock).getFolder(anyString());
         doReturn(true).when(folderMock).exists();
-        doReturn(READ_ONLY).when(getMailMessageSpy).getFolderOpenMode();
+        doReturn(READ_ONLY).when(serviceSpy).getFolderOpenMode();
         doNothing().when(folderMock).open(READ_ONLY);
         doReturn(0).when(folderMock).getMessageCount();
 
         addRequiredInputs();
-        getMailMessageSpy.processInputs(inputs);
+        serviceSpy.input = inputBuilder.build();
+
         exception.expect(Exception.class);
         exception.expectMessage("message value was: " + MESSAGE_NUMBER + " there are only " + 0 +
                 " messages in folder");
-        getMailMessageSpy.getMessage();
+        serviceSpy.getMessage();
     }
 
     /**
@@ -235,21 +227,21 @@ public class GetMailMessageTest {
      */
     @Test
     public void testExecuteWithTrueSubjectOnlyAndDeleteUponRetrievalAndEmptyCharacterSet() throws Exception {
-        doReturn(messageMock).when(getMailMessageSpy).getMessage();
+        doReturn(messageMock).when(serviceSpy).getMessage();
         doNothing().when(messageMock).setFlag(Flags.Flag.DELETED, true);
         doReturn(folderMock).when(messageMock).getFolder();
         String subjectTest = SUBJECT_TEST;
         doReturn(subjectTest).when(messageMock).getSubject();
 
         addRequiredInputs();
-        inputs.setSubjectOnly(STR_TRUE);
-        inputs.setDeleteUponRetrieval(STR_TRUE);
-        inputs.setCharacterSet("");
+        inputBuilder.subjectOnly(STR_TRUE);
+        inputBuilder.deleteUponRetrieval(STR_TRUE);
+        inputBuilder.characterSet(Strings.EMPTY);
 
-        Map<String, String> result = getMailMessageSpy.execute(inputs);
+        Map<String, String> result = serviceSpy.execute(inputBuilder.build());
         assertEquals(subjectTest, result.get(RETURN_RESULT));
         assertEquals(subjectTest, result.get(SUBJECT_RESULT));
-        verify(getMailMessageSpy).getMessage();
+        verify(serviceSpy).getMessage();
         verify(messageMock).setFlag(Flags.Flag.DELETED, true);
         verify(messageMock).getSubject();
     }
@@ -262,23 +254,23 @@ public class GetMailMessageTest {
      */
     @Test
     public void testExecuteWithGivenCharacterSet() throws Exception {
-        doReturn(messageMock).when(getMailMessageSpy).getMessage();
+        doReturn(messageMock).when(serviceSpy).getMessage();
         doNothing().when(messageMock).setFlag(Flags.Flag.DELETED, true);
         doReturn(folderMock).when(messageMock).getFolder();
         doReturn(new String[]{"1"}).when(messageMock).getHeader(anyString());
-        doReturn(SUBJECT_TEST).when(getMailMessageSpy).changeHeaderCharset("1", CHARACTERSET);
+        doReturn(SUBJECT_TEST).when(serviceSpy).changeHeaderCharset("1", CHARACTERSET);
 
         addRequiredInputs();
-        inputs.setSubjectOnly(STR_TRUE);
-        inputs.setDeleteUponRetrieval(STR_TRUE);
-        inputs.setCharacterSet(CHARACTERSET);
+        inputBuilder.subjectOnly(STR_TRUE);
+        inputBuilder.deleteUponRetrieval(STR_TRUE);
+        inputBuilder.characterSet(CHARACTERSET);
 
-        Map<String, String> result = getMailMessageSpy.execute(inputs);
+        Map<String, String> result = serviceSpy.execute(inputBuilder.build());
         assertEquals(SUBJECT_TEST, result.get(RETURN_RESULT));
         assertEquals(SUBJECT_TEST, result.get(SUBJECT_RESULT));
-        verify(getMailMessageSpy).getMessage();
+        verify(serviceSpy).getMessage();
         verify(messageMock).getHeader("Subject");
-        verify(getMailMessageSpy).changeHeaderCharset(anyString(), anyString());
+        verify(serviceSpy).changeHeaderCharset(anyString(), anyString());
     }
 
     /**
@@ -288,41 +280,41 @@ public class GetMailMessageTest {
      */
     @Test
     public void testExecuteWithFalseSubjectOnly() throws Exception {
-        doReturn(messageMock).when(getMailMessageSpy).getMessage();
+        doReturn(messageMock).when(serviceSpy).getMessage();
         doNothing().when(messageMock).setFlag(Flags.Flag.DELETED, true);
         doReturn(folderMock).when(messageMock).getFolder();
         doReturn(new String[]{"1"}).when(messageMock).getHeader(anyString());
-        doReturn(SUBJECT_TEST).when(getMailMessageSpy).changeHeaderCharset("1", CHARACTERSET);
+        doReturn(SUBJECT_TEST).when(serviceSpy).changeHeaderCharset("1", CHARACTERSET);
         String attachedFileNames = "testAttachedFileNames";
-        doReturn(attachedFileNames).when(getMailMessageSpy).getAttachedFileNames(messageMock);
-        doReturn(attachedFileNames).when(getMailMessageSpy).changeHeaderCharset(attachedFileNames, CHARACTERSET);
-        doReturn(attachedFileNames).when(getMailMessageSpy).decodeAttachedFileNames(attachedFileNames);
+        doReturn(attachedFileNames).when(serviceSpy).getAttachedFileNames(messageMock);
+        doReturn(attachedFileNames).when(serviceSpy).changeHeaderCharset(attachedFileNames, CHARACTERSET);
+        doReturn(attachedFileNames).when(serviceSpy).decodeAttachedFileNames(attachedFileNames);
         // Get the message body test
         String messageContent = "testMessageContent";
         Map<String, String> messageContentByType = new HashMap<>();
         messageContentByType.put("text/html", messageContent);
-        doReturn(messageContentByType).when(getMailMessageSpy).getMessageByContentTypes(messageMock, CHARACTERSET);
+        doReturn(messageContentByType).when(serviceSpy).getMessageByContentTypes(messageMock, CHARACTERSET);
         PowerMockito.whenNew(StringOutputStream.class).withNoArguments().thenReturn(stringOutputStreamMock);
         doNothing().when(messageMock).writeTo(stringOutputStreamMock);
         String stringOutputStreamMockToString = "testStream";
         doReturn(stringOutputStreamMockToString).when(stringOutputStreamMock).toString();
 
         addRequiredInputs();
-        inputs.setSubjectOnly("");
-        inputs.setCharacterSet(CHARACTERSET);
+        inputBuilder.subjectOnly(Strings.EMPTY);
+        inputBuilder.characterSet(CHARACTERSET);
 
-        Map<String, String> result = getMailMessageSpy.execute(inputs);
-        verify(getMailMessageSpy).getMessage();
+        Map<String, String> result = serviceSpy.execute(inputBuilder.build());
+        verify(serviceSpy).getMessage();
         verify(messageMock).getHeader("Subject");
         assertEquals(SUBJECT_TEST, result.get(SUBJECT_RESULT));
-        verify(getMailMessageSpy).changeHeaderCharset("1", CHARACTERSET);
-        verify(getMailMessageSpy, times(2)).changeHeaderCharset(anyString(), anyString());
-        verify(getMailMessageSpy).decodeAttachedFileNames(attachedFileNames);
+        verify(serviceSpy).changeHeaderCharset("1", CHARACTERSET);
+        verify(serviceSpy, times(2)).changeHeaderCharset(anyString(), anyString());
+        verify(serviceSpy).decodeAttachedFileNames(attachedFileNames);
         assertEquals(attachedFileNames, result.get(ATTACHED_FILE_NAMES_RESULT));
 
         assertEquals(messageContent, result.get(BODY_RESULT));
 
-        verify(getMailMessageSpy).getMessageByContentTypes(messageMock, CHARACTERSET);
+        verify(serviceSpy).getMessageByContentTypes(messageMock, CHARACTERSET);
         PowerMockito.verifyNew(StringOutputStream.class).withNoArguments();
         verify(messageMock).writeTo(stringOutputStreamMock);
         assertEquals(stringOutputStreamMockToString, result.get(RETURN_RESULT));
@@ -336,18 +328,18 @@ public class GetMailMessageTest {
      */
     @Test
     public void testExecuteWithFalseSubjectOnlyAndNullCharacterSet() throws Exception {
-        doReturn(messageMock).when(getMailMessageSpy).getMessage();
+        doReturn(messageMock).when(serviceSpy).getMessage();
         doNothing().when(messageMock).setFlag(Flags.Flag.DELETED, true);
         doReturn(SUBJECT_TEST).when(messageMock).getSubject();
         doReturn(folderMock).when(messageMock).getFolder();
         String attachedFileNames = "testAttachedFileNames";
-        doReturn(attachedFileNames).when(getMailMessageSpy).getAttachedFileNames(messageMock);
-        doReturn(attachedFileNames).when(getMailMessageSpy).decodeAttachedFileNames(attachedFileNames);
+        doReturn(attachedFileNames).when(serviceSpy).getAttachedFileNames(messageMock);
+        doReturn(attachedFileNames).when(serviceSpy).decodeAttachedFileNames(attachedFileNames);
         // Get the message body test
         Map<String, String> messageContentByType = new HashMap<>();
         String messageContent = "testMessageContent";
         messageContentByType.put("text/html", messageContent);
-        doReturn(messageContentByType).when(getMailMessageSpy).getMessageByContentTypes(messageMock, null);
+        doReturn(messageContentByType).when(serviceSpy).getMessageByContentTypes(messageMock, null);
         PowerMockito.whenNew(StringOutputStream.class).withNoArguments().thenReturn(stringOutputStreamMock);
         doNothing().when(messageMock).writeTo(stringOutputStreamMock);
         String stringOutputStreamMockToString = "testStream";
@@ -355,16 +347,16 @@ public class GetMailMessageTest {
         doReturn(fiddledStringOutputStreamMockToString).when(stringOutputStreamMock).toString();
 
         addRequiredInputs();
-        inputs.setSubjectOnly("");
+        inputBuilder.subjectOnly(Strings.EMPTY);
 
-        Map<String, String> result = getMailMessageSpy.execute(inputs);
-        verify(getMailMessageSpy).getMessage();
+        Map<String, String> result = serviceSpy.execute(inputBuilder.build());
+        verify(serviceSpy).getMessage();
         assertEquals(SUBJECT_TEST, result.get(SUBJECT_RESULT));
-        verify(getMailMessageSpy).getAttachedFileNames(messageMock);
-        verify(getMailMessageSpy).decodeAttachedFileNames(attachedFileNames);
+        verify(serviceSpy).getAttachedFileNames(messageMock);
+        verify(serviceSpy).decodeAttachedFileNames(attachedFileNames);
         assertEquals(attachedFileNames, result.get(ATTACHED_FILE_NAMES_RESULT));
         assertEquals(messageContent, result.get(BODY_RESULT));
-        verify(getMailMessageSpy).getMessageByContentTypes(messageMock, null);
+        verify(serviceSpy).getMessageByContentTypes(messageMock, null);
         PowerMockito.verifyNew(StringOutputStream.class).withNoArguments();
         verify(messageMock).writeTo(stringOutputStreamMock);
         assertEquals(stringOutputStreamMockToString, result.get(RETURN_RESULT));
@@ -378,20 +370,20 @@ public class GetMailMessageTest {
      */
     @Test
     public void testExecuteUnsupportedEncodingException() throws Exception {
-        doReturn(messageMock).when(getMailMessageSpy).getMessage();
+        doReturn(messageMock).when(serviceSpy).getMessage();
         doNothing().when(messageMock).setFlag(Flags.Flag.DELETED, true);
         doReturn(new String[]{"1"}).when(messageMock).getHeader(anyString());
-        doReturn(SUBJECT_TEST).when(getMailMessageSpy).changeHeaderCharset("1", CHARACTERSET);
+        doReturn(SUBJECT_TEST).when(serviceSpy).changeHeaderCharset("1", CHARACTERSET);
         PowerMockito.mockStatic(MimeUtility.class);
-        PowerMockito.doThrow(new UnsupportedEncodingException("")).when(MimeUtility.class, "decodeText", anyString());
+        PowerMockito.doThrow(new UnsupportedEncodingException(Strings.EMPTY)).when(MimeUtility.class, "decodeText", anyString());
 
         addRequiredInputs();
-        inputs.setSubjectOnly("");
-        inputs.setCharacterSet(BAD_CHARACTERSET);
+        inputBuilder.subjectOnly(Strings.EMPTY);
+        inputBuilder.characterSet(BAD_CHARACTERSET);
 
         exception.expect(Exception.class);
         exception.expectMessage("The given encoding (" + BAD_CHARACTERSET + ") is invalid or not supported.");
-        getMailMessageSpy.execute(inputs);
+        serviceSpy.execute(inputBuilder.build());
     }
 
     /**
@@ -401,16 +393,17 @@ public class GetMailMessageTest {
     public void testCreateMessageStoreWithEnableSSLInputFalse() throws Exception {
         PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
         PowerMockito.whenNew(SimpleAuthenticator.class).withArguments(anyString(), anyString()).thenReturn(authenticatorMock);
-        doReturn(storeMock).when(getMailMessageSpy).configureStoreWithoutSSL(propertiesMock, authenticatorMock);
+        doReturn(storeMock).when(serviceSpy).configureStoreWithoutSSL(propertiesMock, authenticatorMock);
         doNothing().when(storeMock).connect();
 
         addRequiredInputs();
-        inputs.setEnableSSL(STR_FALSE);
-        getMailMessageSpy.processInputs(inputs);
-        assertEquals(storeMock, getMailMessageSpy.createMessageStore());
+        inputBuilder.enableSSL(STR_FALSE);
+        serviceSpy.input = inputBuilder.build();
+
+        assertEquals(storeMock, serviceSpy.createMessageStore());
         PowerMockito.verifyNew(Properties.class).withNoArguments();
         PowerMockito.verifyNew(SimpleAuthenticator.class).withArguments(anyString(), anyString());
-        verify(getMailMessageSpy).configureStoreWithoutSSL(propertiesMock, authenticatorMock);
+        verify(serviceSpy).configureStoreWithoutSSL(propertiesMock, authenticatorMock);
         verify(storeMock).connect();
     }
 
@@ -421,60 +414,63 @@ public class GetMailMessageTest {
     public void testCreateMessageStoreWithEnableSSLInputTrue() throws Exception {
         PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
         PowerMockito.whenNew(SimpleAuthenticator.class).withArguments(anyString(), anyString()).thenReturn(authenticatorMock);
-        doNothing().when(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
-        doReturn(storeMock).when(getMailMessageSpy).configureStoreWithSSL(propertiesMock, authenticatorMock);
+        doNothing().when(serviceSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        doReturn(storeMock).when(serviceSpy).configureStoreWithSSL(propertiesMock, authenticatorMock);
         doNothing().when(storeMock).connect();
 
         addRequiredInputs();
-        inputs.setEnableSSL(STR_TRUE);
-        inputs.setEnableTLS(STR_FALSE);
-        getMailMessageSpy.processInputs(inputs);
-        assertEquals(storeMock, getMailMessageSpy.createMessageStore());
+        inputBuilder.enableSSL(STR_TRUE);
+        inputBuilder.enableTLS(STR_FALSE);
+        serviceSpy.input = inputBuilder.build();
+
+        assertEquals(storeMock, serviceSpy.createMessageStore());
         PowerMockito.verifyNew(Properties.class).withNoArguments();
         PowerMockito.verifyNew(SimpleAuthenticator.class).withArguments(anyString(), anyString());
-        verify(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
-        verify(getMailMessageSpy).configureStoreWithSSL(propertiesMock, authenticatorMock);
+        verify(serviceSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        verify(serviceSpy).configureStoreWithSSL(propertiesMock, authenticatorMock);
     }
 
     @Test
     public void testCreateMessageStoreWithEnableTLSInputTrueAndEnableSSLInputFalse() throws Exception {
         PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
         PowerMockito.whenNew(SimpleAuthenticator.class).withArguments(anyString(), anyString()).thenReturn(authenticatorMock);
-        doNothing().when(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
-        doReturn(storeMock).when(getMailMessageSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
+        doNothing().when(serviceSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        doReturn(storeMock).when(serviceSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
         doNothing().when(storeMock).connect(HOST, USERNAME, PASSWORD);
 
         addRequiredInputs();
-        inputs.setEnableSSL(STR_FALSE);
-        inputs.setEnableTLS(STR_TRUE);
-        getMailMessageSpy.processInputs(inputs);
-        assertEquals(storeMock, getMailMessageSpy.createMessageStore());
+        inputBuilder.enableSSL(STR_FALSE);
+        inputBuilder.enableTLS(STR_TRUE);
+        serviceSpy.input = inputBuilder.build();
+
+        assertEquals(storeMock, serviceSpy.createMessageStore());
         PowerMockito.verifyNew(Properties.class).withNoArguments();
         PowerMockito.verifyNew(SimpleAuthenticator.class).withArguments(anyString(), anyString());
-        verify(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
-        verify(getMailMessageSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
+        verify(serviceSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        verify(serviceSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
     }
 
     @Test
     public void testCreateMessageStoreWithEnableTLSInputTrueExceptionAndEnableSSLInputTrue() throws Exception {
         PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
         PowerMockito.whenNew(SimpleAuthenticator.class).withArguments(anyString(), anyString()).thenReturn(authenticatorMock);
-        doNothing().when(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
-        doReturn(storeMock).when(getMailMessageSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
+        doNothing().when(serviceSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        doReturn(storeMock).when(serviceSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
         doThrow(AuthenticationFailedException.class).when(storeMock).connect(HOST, USERNAME, PASSWORD);
-        doReturn(storeMock).when(getMailMessageSpy).configureStoreWithSSL(propertiesMock, authenticatorMock);
+        doReturn(storeMock).when(serviceSpy).configureStoreWithSSL(propertiesMock, authenticatorMock);
         doNothing().when(storeMock).connect();
 
         addRequiredInputs();
-        inputs.setEnableSSL(STR_TRUE);
-        inputs.setEnableTLS(STR_TRUE);
-        getMailMessageSpy.processInputs(inputs);
-        assertEquals(storeMock, getMailMessageSpy.createMessageStore());
+        inputBuilder.enableSSL(STR_TRUE);
+        inputBuilder.enableTLS(STR_TRUE);
+        serviceSpy.input = inputBuilder.build();
+
+        assertEquals(storeMock, serviceSpy.createMessageStore());
         PowerMockito.verifyNew(Properties.class).withNoArguments();
         PowerMockito.verifyNew(SimpleAuthenticator.class).withArguments(anyString(), anyString());
-        verify(getMailMessageSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
-        verify(getMailMessageSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
-        verify(getMailMessageSpy).configureStoreWithSSL(propertiesMock, authenticatorMock);
+        verify(serviceSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        verify(serviceSpy).configureStoreWithTLS(propertiesMock, authenticatorMock);
+        verify(serviceSpy).configureStoreWithSSL(propertiesMock, authenticatorMock);
     }
 
     /**
@@ -484,10 +480,10 @@ public class GetMailMessageTest {
      */
     @Test
     public void testConfigureStoreWithSSL() throws Exception {
-        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.class", SSL_FACTORY);
-        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.fallback", STR_FALSE);
-        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
-        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.port", POP3_PORT);
+        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_CLASS, SSL_FACTORY);
+        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_FALLBACK, STR_FALSE);
+        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.PORT, POPProps.PORT);
+        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_PORT, POPProps.PORT);
         PowerMockito.whenNew(URLName.class)
                 .withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString())
                 .thenReturn(urlNameMock);
@@ -497,14 +493,14 @@ public class GetMailMessageTest {
         doReturn(storeMock).when(sessionMock).getStore(urlNameMock);
 
         addRequiredInputs();
-        getMailMessageSpy.processInputs(inputs);
+        serviceSpy.input = inputBuilder.build();
 
-        Store store = getMailMessageSpy.configureStoreWithSSL(propertiesMock, authenticatorMock);
+        Store store = serviceSpy.configureStoreWithSSL(propertiesMock, authenticatorMock);
         assertEquals(storeMock, store);
-        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.class", SSL_FACTORY);
-        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.fallback", STR_FALSE);
-        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
-        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".socketFactory.port", POP3_PORT);
+        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_CLASS, SSL_FACTORY);
+        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_FALLBACK, STR_FALSE);
+        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.PORT, POPProps.PORT);
+        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_PORT, POPProps.PORT);
         PowerMockito.verifyNew(URLName.class)
                 .withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString());
         PowerMockito.verifyStatic();
@@ -514,9 +510,9 @@ public class GetMailMessageTest {
 
     @Test
     public void testConfigureStoreWithTLS() throws Exception {
-        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".ssl.enable", STR_FALSE);
-        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.enable", STR_TRUE);
-        doReturn(objectMock).when(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.required", STR_TRUE);
+        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SSL_ENABLE, STR_FALSE);
+        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.START_TLS_ENABLE, STR_TRUE);
+        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.START_TLS_REQUIRED, STR_TRUE);
 
         PowerMockito.whenNew(URLName.class)
                 .withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString())
@@ -527,16 +523,16 @@ public class GetMailMessageTest {
         doReturn(storeMock).when(sessionMock).getStore(any(String.class));
 
         addRequiredInputs();
-        getMailMessageSpy.processInputs(inputs);
+        serviceSpy.input = inputBuilder.build();
 
-        Store store = getMailMessageSpy.configureStoreWithTLS(propertiesMock, authenticatorMock);
+        Store store = serviceSpy.configureStoreWithTLS(propertiesMock, authenticatorMock);
         assertEquals(storeMock, store);
-        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".ssl.enable", STR_FALSE);
-        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.enable", STR_TRUE);
-        verify(propertiesMock).setProperty("mail." + POP3_PROTOCOL + ".starttls.required", STR_TRUE);
+        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SSL_ENABLE, STR_FALSE);
+        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.START_TLS_ENABLE, STR_TRUE);
+        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.START_TLS_REQUIRED, STR_TRUE);
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        verify(sessionMock).getStore(POP3_PROTOCOL + SECURE_SUFFIX_FOR_POP3_AND_IMAP);
+        verify(sessionMock).getStore(POPProps.POP3 + SECURE_SUFFIX_FOR_POP3_AND_IMAP);
     }
 
     /**
@@ -546,23 +542,23 @@ public class GetMailMessageTest {
      */
     @Test
     public void testConfigureStoreWithoutSSL() throws Exception {
-        doReturn(objectMock).when(propertiesMock).put("mail." + POP3_PROTOCOL + ".host", HOST);
-        doReturn(objectMock).when(propertiesMock).put("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
+        doReturn(objectMock).when(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.HOST, HOST);
+        doReturn(objectMock).when(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.PORT, Short.parseShort(POPProps.PORT));
         PowerMockito.mockStatic(Session.class);
         PowerMockito.doReturn(sessionMock)
                 .when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        doReturn(storeMock).when(sessionMock).getStore(POP3_PROTOCOL);
+        doReturn(storeMock).when(sessionMock).getStore(POPProps.POP3);
 
         addRequiredInputs();
-        getMailMessageSpy.processInputs(inputs);
+        serviceSpy.input = inputBuilder.build();
 
-        Store store = getMailMessageSpy.configureStoreWithoutSSL(propertiesMock, authenticatorMock);
+        Store store = serviceSpy.configureStoreWithoutSSL(propertiesMock, authenticatorMock);
         assertEquals(storeMock, store);
-        verify(propertiesMock).put("mail." + POP3_PROTOCOL + ".host", HOST);
-        verify(propertiesMock).put("mail." + POP3_PROTOCOL + ".port", POP3_PORT);
+        verify(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.HOST, HOST);
+        verify(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.PORT, Short.parseShort(POPProps.PORT));
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        verify(sessionMock).getStore(POP3_PROTOCOL);
+        verify(sessionMock).getStore(POPProps.POP3);
     }
 
     /**
@@ -582,7 +578,7 @@ public class GetMailMessageTest {
         PowerMockito.doReturn(sslContextMock).when(SSLContext.class, "getInstance", anyString());
         commonStubbedMethodsForAddSSLSettings();
 
-        getMailMessageSpy.addSSLSettings(Boolean.parseBoolean(TRUST_ALL_ROOTS_FALSE), "", "", "", "");
+        serviceSpy.addSSLSettings(Boolean.parseBoolean(TRUST_ALL_ROOTS_FALSE), Strings.EMPTY, Strings.EMPTY, Strings.EMPTY, Strings.EMPTY);
         verifyGetSystemFileSeparatorAndGetSystemJavaHomeInvocation();
         PowerMockito.verifyNew(File.class, times(2))
                 .withArguments(testJavaHome + testSeparator + "lib" + testSeparator + "security" + testSeparator + "cacerts");
@@ -605,7 +601,7 @@ public class GetMailMessageTest {
         PowerMockito.whenNew(EasyX509TrustManager.class).withNoArguments().thenReturn(easyX509TrustManagerMock);
         commonStubbedMethodsForAddSSLSettings();
 
-        getMailMessageSpy.addSSLSettings(Boolean.parseBoolean(TRUST_ALL_ROOTS_TRUE), KEYSTORE, KEYSTORE_PASSWORD,
+        serviceSpy.addSSLSettings(Boolean.parseBoolean(TRUST_ALL_ROOTS_TRUE), KEYSTORE, KEYSTORE_PASSWORD,
                 TRUST_KEYSTORE, TRUST_PASSWORD);
         verifyGetSystemFileSeparatorAndGetSystemJavaHomeInvocation();
         PowerMockito.verifyStatic();
@@ -623,7 +619,7 @@ public class GetMailMessageTest {
     public void testGetMessageContentWithTextPlain() throws Exception {
         commonStubbingForGetMessageContentMethod(TEXT_PLAIN);
 
-        Map<String, String> messageByType = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
+        Map<String, String> messageByType = serviceSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
         assertEquals(cmessageMock, messageByType.get(TEXT_PLAIN));
         commonVerifiesForGetMessageContentMethod(messageByType, TEXT_PLAIN);
     }
@@ -636,12 +632,12 @@ public class GetMailMessageTest {
     @Test
     public void testGetMessageContentWithTextHtml() throws Exception {
         commonStubbingForGetMessageContentMethod(TEXT_HTML);
-        doReturn(messageMockToString).when(getMailMessageSpy).convertMessage(messageMockToString);
+        doReturn(messageMockToString).when(serviceSpy).convertMessage(messageMockToString);
 
-        Map<String, String> messageByType = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
+        Map<String, String> messageByType = serviceSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
         assertEquals(cmessageMock, messageByType.get(TEXT_HTML));
         commonVerifiesForGetMessageContentMethod(messageByType, TEXT_HTML);
-        verify(getMailMessageSpy).convertMessage(messageMockToString);
+        verify(serviceSpy).convertMessage(messageMockToString);
     }
 
     /**
@@ -671,8 +667,9 @@ public class GetMailMessageTest {
         String testCMessage = "testCMessage";
         PowerMockito.mockStatic(MimeUtility.class);
         PowerMockito.doReturn(testCMessage).when(MimeUtility.class, "decodeText", anyString());
+        serviceSpy.input = inputBuilder.build();
 
-        Map<String, String> contentMessage = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
+        Map<String, String> contentMessage = serviceSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
         assertEquals(testCMessage, contentMessage.get("text/plain"));
         verify(messageMock).isMimeType(TEXT_PLAIN);
         verify(messageMock).isMimeType(TEXT_HTML);
@@ -703,8 +700,9 @@ public class GetMailMessageTest {
         String testDisposition = "testDisposition";
         doReturn(testDisposition).when(partMock).getDisposition();
         doReturn("text/plain; charset=utf-8; format=flowed").when(partMock).getContentType();
+        serviceSpy.input = inputBuilder.build();
 
-        Map<String, String> contentMessage = getMailMessageSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
+        Map<String, String> contentMessage = serviceSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
         assertEquals(0, contentMessage.size());
         verify(messageMock).isMimeType(TEXT_PLAIN);
         verify(messageMock).isMimeType(TEXT_HTML);
@@ -724,238 +722,68 @@ public class GetMailMessageTest {
         String testFileName = "testFileName";
         doReturn(testFileName).when(partMock).getFileName();
         doReturn(inputStreamMock).when(partMock).getInputStream();
+        serviceSpy.input = inputBuilder.build();
 
-        String fileNames = getMailMessageSpy.getAttachedFileNames(partMock);
+        String fileNames = serviceSpy.getAttachedFileNames(partMock);
         assertEquals(testFileName, fileNames);
     }
 
     @Test
     public void testConvertMessageSimple() throws Exception {
         final String expectedMessage = "message";
-        final String message = getMailMessageSpy.convertMessage(expectedMessage);
+        final String message = serviceSpy.convertMessage(expectedMessage);
         assertEquals(expectedMessage, message);
     }
 
     @Test
     public void testConvertMessageWithBr() throws Exception {
         final String expectedMessage = "mes sage<br>";
-        final String message = getMailMessageSpy.convertMessage(expectedMessage);
+        final String message = serviceSpy.convertMessage(expectedMessage);
         assertEquals(expectedMessage, message);
     }
 
     @Test
     public void testConvertMessageWithEoL() throws Exception {
         final String expectedMessage = "message\n";
-        final String message = getMailMessageSpy.convertMessage(expectedMessage);
+        final String message = serviceSpy.convertMessage(expectedMessage);
         assertEquals("message<br>", message);
     }
 
     @Test
     public void testGetFolderOpenMode() throws Exception {
-        final int folderOpenMode = getMailMessageSpy.getFolderOpenMode();
+        final int folderOpenMode = serviceSpy.getFolderOpenMode();
         assertEquals(2, folderOpenMode);
     }
 
     @Test
     public void testDecodeAttachedFileNameSimple() throws Exception {
         final String expectedFileName = "fileName";
-        final String message = getMailMessageSpy.decodeAttachedFileNames(expectedFileName);
+        final String message = serviceSpy.decodeAttachedFileNames(expectedFileName);
         assertEquals(expectedFileName, message);
     }
 
     @Test
     public void testDecodeAttachedFileNameWithSpaces() throws Exception {
         final String fileName = "file Name";
-        final String message = getMailMessageSpy.decodeAttachedFileNames(fileName);
+        final String message = serviceSpy.decodeAttachedFileNames(fileName);
         assertEquals("file Name", message);
     }
 
     @Test
     public void testDecodeAttachedFileNames() throws Exception {
         final String fileNames = "file Name, fileName1, fileName2 ";
-        final String message = getMailMessageSpy.decodeAttachedFileNames(fileNames);
+        final String message = serviceSpy.decodeAttachedFileNames(fileNames);
         assertEquals("file Name, fileName1, fileName2 ", message);
     }
 
     @Test
     public void testDecodeAttachedFileNamesEncoded() throws Exception {
         final String fileNames = "?\u009D??\u009D???? ?????????,?\u009D??\u009D????";
-        final String message = getMailMessageSpy.decodeAttachedFileNames(fileNames);
+        final String message = serviceSpy.decodeAttachedFileNames(fileNames);
         assertEquals("?\u009D??\u009D???? ?????????,?\u009D??\u009D????", message);
     }
 
-    @Test
-    public void testProcessInputHostNull() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("The required host input is not specified!");
-        getMailMessageSpy.processInputs(inputs);
-    }
 
-    @Test
-    public void testProcessInputHostEmpty() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("The required host input is not specified!");
-        mailMessagePopulatedInputs.setHostname("");
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputUsernameNull() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("The required username input is not specified!");
-        mailMessagePopulatedInputs.setUsername(null);
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputUsernameEmpty() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("The required username input is not specified!");
-        mailMessagePopulatedInputs.setUsername("");
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputPasswordEmpty() throws Exception {
-        mailMessagePopulatedInputs.setPassword("");
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputPasswordNull() throws Exception {
-        mailMessagePopulatedInputs.setPassword(null);
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputMessageNumberEmpty() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("The required messageNumber input is not specified!");
-        mailMessagePopulatedInputs.setMessageNumber("");
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputMessageNumberNull() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("The required messageNumber input is not specified!");
-        mailMessagePopulatedInputs.setMessageNumber(null);
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputMessageNumberZero() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("Messages are numbered starting at 1 through the total number of messages in the folder!");
-        mailMessagePopulatedInputs.setMessageNumber("0");
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputProtocolNull() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("Please specify the protocol for the indicated port.");
-        mailMessagePopulatedInputs.setProtocol(null);
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputProtocolEmpty() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("Please specify the protocol for the indicated port.");
-        mailMessagePopulatedInputs.setProtocol("");
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputPortEmpty() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("Please specify the port for the indicated protocol.");
-        mailMessagePopulatedInputs.setPort("");
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputPortNull() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("Please specify the port for the indicated protocol.");
-        mailMessagePopulatedInputs.setPort(null);
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputPortProtocolNull() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("Please specify the port, the protocol, or both.");
-        mailMessagePopulatedInputs.setPort(null);
-        mailMessagePopulatedInputs.setProtocol(null);
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputPortProtocolEmpty() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("Please specify the port, the protocol, or both.");
-        mailMessagePopulatedInputs.setPort("");
-        mailMessagePopulatedInputs.setProtocol("");
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputProtocolNullPortImap() throws Exception {
-        mailMessagePopulatedInputs.setPort("143");
-        mailMessagePopulatedInputs.setProtocol("");
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputProtocolNullPortPop3() throws Exception {
-        mailMessagePopulatedInputs.setPort("110");
-        mailMessagePopulatedInputs.setProtocol("");
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputPortEmptyProtocolImap() throws Exception {
-        mailMessagePopulatedInputs.setPort("");
-        mailMessagePopulatedInputs.setProtocol("imap");
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputPortEmptyProtocolImap4() throws Exception {
-        mailMessagePopulatedInputs.setPort("");
-        mailMessagePopulatedInputs.setProtocol("imap4");
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    @Test
-    public void testProcessInputPortEmptyProtocolPop3() throws Exception {
-        mailMessagePopulatedInputs.setPort("");
-        mailMessagePopulatedInputs.setProtocol("pop3");
-        getMailMessageSpy.processInputs(mailMessagePopulatedInputs);
-    }
-
-    private GetMailMessageInputs getGetMailMessagePopulatedInputs() {
-        final GetMailMessageInputs getMailMessageInputs = new GetMailMessageInputs();
-        getMailMessageInputs.setHostname("test");
-        getMailMessageInputs.setPort("test");
-        getMailMessageInputs.setProtocol("test");
-        getMailMessageInputs.setUsername("test");
-        getMailMessageInputs.setPassword("test");
-        getMailMessageInputs.setFolder("test");
-        getMailMessageInputs.setTrustAllRoots("test");
-        getMailMessageInputs.setMessageNumber("3");
-        getMailMessageInputs.setSubjectOnly("test");
-        getMailMessageInputs.setEnableSSL("test");
-        getMailMessageInputs.setKeystore("test");
-        getMailMessageInputs.setKeystorePassword("test");
-        getMailMessageInputs.setTrustKeystore("test");
-        getMailMessageInputs.setTrustPassword("test");
-        getMailMessageInputs.setCharacterSet("test");
-        getMailMessageInputs.setDeleteUponRetrieval("test");
-        return getMailMessageInputs;
-    }
 
     private void commonVerifiesForGetMessageContentMethod(Map<String, String> messageByType, String messageType)
             throws MessagingException, IOException {
@@ -997,26 +825,26 @@ public class GetMailMessageTest {
     }
 
     private void verifyGetSystemFileSeparatorAndGetSystemJavaHomeInvocation() {
-        verify(getMailMessageSpy).getSystemFileSeparator();
-        verify(getMailMessageSpy).getSystemJavaHome();
+        verify(serviceSpy).getSystemFileSeparator();
+        verify(serviceSpy).getSystemJavaHome();
     }
 
     private void mockGetSystemFileSeparatorAndGetSystemJavaHomeMethods() {
-        doReturn(testSeparator).when(getMailMessageSpy).getSystemFileSeparator();
-        doReturn(testJavaHome).when(getMailMessageSpy).getSystemJavaHome();
+        doReturn(testSeparator).when(serviceSpy).getSystemFileSeparator();
+        doReturn(testJavaHome).when(serviceSpy).getSystemJavaHome();
     }
 
     /**
      * Set the required inputs.
      */
     private void addRequiredInputs() {
-        inputs.setHostname(HOST);
-        inputs.setPort(POP3_PORT);
-        inputs.setProtocol(POP3_PROTOCOL);
-        inputs.setUsername(USERNAME);
-        inputs.setPassword(PASSWORD);
-        inputs.setFolder(FOLDER);
-        inputs.setMessageNumber(MESSAGE_NUMBER);
+        inputBuilder.hostname(HOST);
+        inputBuilder.port(POPProps.PORT);
+        inputBuilder.protocol(POPProps.POP3);
+        inputBuilder.username(USERNAME);
+        inputBuilder.password(PASSWORD);
+        inputBuilder.folder(FOLDER);
+        inputBuilder.messageNumber(MESSAGE_NUMBER);
     }
 }
 
