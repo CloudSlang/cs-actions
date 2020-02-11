@@ -77,7 +77,7 @@ public final class Constants {
 
         public static final String POP = "pop";
         public static final String POP3 = "pop3";
-        public static final String PORT = "110";
+        public static final String POP3_PORT = "110";
         public static final String PROXY_HOST = MAIL_POP3 + "proxy.host";
         public static final String PROXY_PORT = MAIL_POP3 + "proxy.port";
         public static final String PROXY_USER = MAIL_POP3 + "proxy.user";
@@ -116,9 +116,16 @@ public final class Constants {
     }
 
 
+    public static final class Encryption {
+        public static final String PKCS_KEYSTORE_TYPE = "PKCS12";
+        public static final String BOUNCY_CASTLE_PROVIDER = "BC";
+    }
+
+
     public static final class Inputs {
         // for both GetMailMessage and SendMail Actions
-        public static final String HOSTNAME = "host";
+        public static final String HOST = "host";
+        public static final String HOSTNAME = "hostname";
         public static final String PORT = "port";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
@@ -132,7 +139,7 @@ public final class Constants {
         // for GetMailMessage
         public static final String PROTOCOL = "protocol";
         public static final String FOLDER = "folder";
-        public static final String TRUSTALLROOTS = "trustAllRoots";
+        public static final String TRUST_ALL_ROOTS = "trustAllRoots";
         public static final String MESSAGE_NUMBER = "messageNumber";
         public static final String SUBJECT_ONLY = "subjectOnly";
         public static final String ENABLE_SSL = "enableSSL";
@@ -165,6 +172,9 @@ public final class Constants {
         public static final String ENCRYPTION_KEY_ALIAS = "encryptionKeyAlias";
         public static final String ENCRYPTION_KEYSTORE_PASSWORD = "encryptionKeystorePassword";
         public static final String ENCRYPTION_ALGORITHM = "encryptionAlgorithm";
+        public static final String ATTACHMENT_NAME = "attachmentName";
+        public static final String DESTINATION = "destination";
+        public static final String OVERWRITE = "overwrite";
     }
 
 
@@ -208,6 +218,7 @@ public final class Constants {
         public static final String BODY_RESULT = "body";
         public static final String PLAIN_TEXT_BODY_RESULT = "plainTextBody";
         public static final String ATTACHED_FILE_NAMES_RESULT = "attachedFileNames";
+        public static final String TEMPORARY_FILE = "temporaryFile";
     }
 
 

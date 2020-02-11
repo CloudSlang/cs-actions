@@ -204,7 +204,7 @@ public class GetMailMessageInputTest {
 
     @Test
     public void testProcessInputProtocolNullPortPop3() throws Exception {
-        inputsBuilder.port(POPProps.PORT)
+        inputsBuilder.port(POPProps.POP3_PORT)
                 .protocol(Strings.EMPTY);
 
         inputsBuilder.build();

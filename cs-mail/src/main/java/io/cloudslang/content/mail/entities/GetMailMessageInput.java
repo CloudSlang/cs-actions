@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.mail.entities;
 
+import org.apache.commons.lang3.StringUtils;
+
 import static io.cloudslang.content.mail.utils.Constants.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
@@ -36,7 +38,6 @@ public class GetMailMessageInput {
     private String trustPassword;
     private String characterSet;
     private boolean deleteUponRetrieval;
-    private boolean decryptMessage;
     private String decryptionKeystore;
     private String decryptionKeyAlias;
     private String decryptionKeystorePassword;
@@ -192,8 +193,8 @@ public class GetMailMessageInput {
     }
 
 
-    public boolean isDecryptMessage() {
-        return decryptMessage;
+    public boolean isEncryptedMessage() {
+        return !StringUtils.isEmpty(decryptionKeystore);
     }
 
 
@@ -479,14 +480,14 @@ public class GetMailMessageInput {
                     isEmpty(port)) {
                 throw new Exception(ExceptionMsgs.SPECIFY_PORT_FOR_PROTOCOL);
             } else if (isEmpty(protocol) && !isEmpty(port) &&
-                    (!port.equalsIgnoreCase(IMAPProps.PORT)) && (!port.equalsIgnoreCase(POPProps.PORT))) {
+                    (!port.equalsIgnoreCase(IMAPProps.PORT)) && (!port.equalsIgnoreCase(POPProps.POP3_PORT))) {
                 throw new Exception(ExceptionMsgs.SPECIFY_PROTOCOL_FOR_GIVEN_PORT);
             } else if (isEmpty(protocol) && port.trim().equalsIgnoreCase(IMAPProps.PORT)) {
                 input.protocol = IMAPProps.IMAP;
-            } else if (isEmpty(protocol) && port.trim().equalsIgnoreCase(POPProps.PORT)) {
+            } else if (isEmpty(protocol) && port.trim().equalsIgnoreCase(POPProps.POP3_PORT)) {
                 input.protocol = POPProps.POP3;
             } else if (protocol.trim().equalsIgnoreCase(POPProps.POP3) && isEmpty(port)) {
-                input.port = Short.parseShort(POPProps.PORT);
+                input.port = Short.parseShort(POPProps.POP3_PORT);
             } else if (protocol.trim().equalsIgnoreCase(IMAPProps.IMAP) && isEmpty(port)) {
                 input.port = Short.parseShort(IMAPProps.PORT);
             } else if (protocol.trim().equalsIgnoreCase(IMAPProps.IMAP4) && (isEmpty(port))) {
@@ -499,12 +500,10 @@ public class GetMailMessageInput {
             }
 
             input.decryptionKeystore = decryptionKeystore;
-            if (isNotEmpty(input.decryptionKeystore)) {
+            if (input.isEncryptedMessage()) {
                 if (!input.decryptionKeystore.startsWith(HTTP)) {
                     input.decryptionKeystore = FILE + decryptionKeystore;
                 }
-
-                input.decryptMessage = true;
 
                 input.decryptionKeyAlias = decryptionKeyAlias;
                 if (null == decryptionKeyAlias) {
@@ -515,8 +514,6 @@ public class GetMailMessageInput {
                 if (null == input.decryptionKeystorePassword) {
                     input.decryptionKeystorePassword = Strings.EMPTY;
                 }
-            } else {
-                input.decryptMessage = false;
             }
 
             if (isNotEmpty(timeout)) {

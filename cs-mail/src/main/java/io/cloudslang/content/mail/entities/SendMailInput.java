@@ -53,7 +53,6 @@ public class SendMailInput {
     private String characterSet;
     private String contentTransferEncoding;
     private String encodingScheme;
-    private boolean encryptedMessage;
     private String encryptionKeystore;
     private String encryptionKeyAlias;
     private String encryptionKeystorePassword;
@@ -61,6 +60,9 @@ public class SendMailInput {
     private String user;
     private int timeout = -1;
     private String encryptionAlgorithm;
+
+    private SendMailInput(){
+    }
 
     public String getHostname() {
         return hostname;
@@ -147,7 +149,7 @@ public class SendMailInput {
     }
 
     public boolean isEncryptedMessage() {
-        return encryptedMessage;
+        return !StringUtils.isEmpty(encryptionKeystore);
     }
 
     public String getEncryptionKeystore() {
@@ -412,18 +414,14 @@ public class SendMailInput {
             input.encodingScheme = (contentTransferEncoding != null && contentTransferEncoding.equals(Encodings.QUOTED_PRINTABLE)) ? "Q" : "B";
 
             input.encryptionKeystore = encryptionKeystore;
-            if (!StringUtils.isEmpty(input.encryptionKeystore)) {
+            if (input.isEncryptedMessage()) {
                 if (!encryptionKeystore.startsWith(Constants.HTTP)) {
                     encryptionKeystore = Constants.FILE + encryptionKeystore;
                 }
 
-                input.encryptedMessage = true;
-
                 input.encryptionKeyAlias = (encryptionKeyAlias == null) ? Strings.EMPTY : encryptionKeyAlias;
 
                 input.encryptionKeystorePassword = (encryptionKeystorePassword == null) ? Strings.EMPTY : encryptionKeystorePassword;
-            } else {
-                input.encryptedMessage = false;
             }
 
             try {

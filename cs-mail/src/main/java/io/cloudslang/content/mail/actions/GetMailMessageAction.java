@@ -24,9 +24,6 @@ import io.cloudslang.content.mail.entities.GetMailMessageInput;
 import io.cloudslang.content.mail.services.GetMailMessageService;
 import io.cloudslang.content.mail.utils.ResultUtils;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.mail.utils.Constants.*;
@@ -107,13 +104,13 @@ public class GetMailMessageAction {
             }
     )
     public Map<String, String> execute(
-            @Param(value = Inputs.HOSTNAME, required = true) String hostname,
+            @Param(value = Inputs.HOST, required = true) String hostname,
             @Param(value = Inputs.PORT) String port,
             @Param(value = Inputs.PROTOCOL) String protocol,
             @Param(value = Inputs.USERNAME, required = true) String username,
             @Param(value = Inputs.PASSWORD, required = true) String password,
             @Param(value = Inputs.FOLDER, required = true) String folder,
-            @Param(value = Inputs.TRUSTALLROOTS) String trustAllRoots,
+            @Param(value = Inputs.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = Inputs.MESSAGE_NUMBER, required = true) String messageNumber,
             @Param(value = Inputs.SUBJECT_ONLY) String subjectOnly,
             @Param(value = Inputs.ENABLE_TLS) String enableTLS,

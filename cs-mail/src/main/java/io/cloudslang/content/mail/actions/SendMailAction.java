@@ -26,9 +26,6 @@ import io.cloudslang.content.mail.entities.SendMailInput;
 import io.cloudslang.content.mail.services.SendMailService;
 import io.cloudslang.content.mail.utils.ResultUtils;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.mail.utils.Constants.*;

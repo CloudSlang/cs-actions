@@ -482,8 +482,8 @@ public class GetMailMessageServiceTest {
     public void testConfigureStoreWithSSL() throws Exception {
         doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_CLASS, SSL_FACTORY);
         doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_FALLBACK, STR_FALSE);
-        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.PORT, POPProps.PORT);
-        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_PORT, POPProps.PORT);
+        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.PORT, POPProps.POP3_PORT);
+        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_PORT, POPProps.POP3_PORT);
         PowerMockito.whenNew(URLName.class)
                 .withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString())
                 .thenReturn(urlNameMock);
@@ -499,8 +499,8 @@ public class GetMailMessageServiceTest {
         assertEquals(storeMock, store);
         verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_CLASS, SSL_FACTORY);
         verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_FALLBACK, STR_FALSE);
-        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.PORT, POPProps.PORT);
-        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_PORT, POPProps.PORT);
+        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.PORT, POPProps.POP3_PORT);
+        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_PORT, POPProps.POP3_PORT);
         PowerMockito.verifyNew(URLName.class)
                 .withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString());
         PowerMockito.verifyStatic();
@@ -543,7 +543,7 @@ public class GetMailMessageServiceTest {
     @Test
     public void testConfigureStoreWithoutSSL() throws Exception {
         doReturn(objectMock).when(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.HOST, HOST);
-        doReturn(objectMock).when(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.PORT, Short.parseShort(POPProps.PORT));
+        doReturn(objectMock).when(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.PORT, Short.parseShort(POPProps.POP3_PORT));
         PowerMockito.mockStatic(Session.class);
         PowerMockito.doReturn(sessionMock)
                 .when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
@@ -555,7 +555,7 @@ public class GetMailMessageServiceTest {
         Store store = serviceSpy.configureStoreWithoutSSL(propertiesMock, authenticatorMock);
         assertEquals(storeMock, store);
         verify(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.HOST, HOST);
-        verify(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.PORT, Short.parseShort(POPProps.PORT));
+        verify(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.PORT, Short.parseShort(POPProps.POP3_PORT));
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
         verify(sessionMock).getStore(POPProps.POP3);
@@ -839,7 +839,7 @@ public class GetMailMessageServiceTest {
      */
     private void addRequiredInputs() {
         inputBuilder.hostname(HOST);
-        inputBuilder.port(POPProps.PORT);
+        inputBuilder.port(POPProps.POP3_PORT);
         inputBuilder.protocol(POPProps.POP3);
         inputBuilder.username(USERNAME);
         inputBuilder.password(PASSWORD);

@@ -20,6 +20,7 @@ import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import io.cloudslang.content.mail.entities.StringOutputStream;
 import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
+import org.bouncycastle.cms.PasswordRecipientId;
 import org.bouncycastle.cms.RecipientId;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.RecipientInformationStore;
@@ -58,7 +59,7 @@ public class GetMailMessageService {
             this.input = getMailMessageInput;
             Message message = getMessage();
 
-            if (input.isDecryptMessage()) {
+            if (input.isEncryptedMessage()) {
                 addDecryptionSettings();
             }
 
@@ -311,7 +312,7 @@ public class GetMailMessageService {
         char[] smimePw = new String(input.getDecryptionKeystorePassword()).toCharArray();
 
         Security.addProvider(new BouncyCastleProvider());
-        ks = KeyStore.getInstance(PKCS_KEYSTORE_TYPE, BOUNCY_CASTLE_PROVIDER);
+        ks = KeyStore.getInstance(Encryption.PKCS_KEYSTORE_TYPE, Encryption.BOUNCY_CASTLE_PROVIDER);
 
         InputStream decryptionStream = new URL(input.getDecryptionKeystore()).openStream();
         try {
@@ -348,7 +349,7 @@ public class GetMailMessageService {
             cert.checkValidity();
         }
 
-        recId = new RecipientId();
+        recId = new PasswordRecipientId();
         recId.setSerialNumber(cert.getSerialNumber());
         recId.setIssuer(cert.getIssuerX500Principal().getEncoded());
     }
@@ -382,7 +383,7 @@ public class GetMailMessageService {
 
                 Part part = mpart.getBodyPart(i);
 
-                if (input.isDecryptMessage() && part.getContentType() != null &&
+                if (input.isEncryptedMessage() && part.getContentType() != null &&
                         part.getContentType().equals(ENCRYPTED_CONTENT_TYPE)) {
                     part = decryptPart((MimeBodyPart) part);
                 }
@@ -439,7 +440,7 @@ public class GetMailMessageService {
         for (int i = 0, n = mpart.getCount(); i < n; i++) {
 
             Part part = mpart.getBodyPart(i);
-            if (input.isDecryptMessage() && part.getContentType() != null &&
+            if (input.isEncryptedMessage() && part.getContentType() != null &&
                     part.getContentType().equals(ENCRYPTED_CONTENT_TYPE)) {
                 part = decryptPart((MimeBodyPart) part);
             }
@@ -543,7 +544,7 @@ public class GetMailMessageService {
         String fileNames = Strings.EMPTY;
         Object content = part.getContent();
         if (!(content instanceof Multipart)) {
-            if (input.isDecryptMessage() && part.getContentType() != null &&
+            if (input.isEncryptedMessage() && part.getContentType() != null &&
                     part.getContentType().equals(ENCRYPTED_CONTENT_TYPE)) {
                 part = decryptPart((MimeBodyPart) part);
             }
