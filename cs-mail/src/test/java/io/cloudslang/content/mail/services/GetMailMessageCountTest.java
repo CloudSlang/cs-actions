@@ -1,10 +1,25 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.mail.services;
 
-import io.cloudslang.content.mail.constants.OutputNames;
+import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.mail.constants.PopPropNames;
+import io.cloudslang.content.mail.entities.GetMailBaseInput;
 import io.cloudslang.content.mail.entities.GetMailMessageCountInput;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
-import io.cloudslang.content.mail.constants.Constants;
+import io.cloudslang.content.mail.utils.MessageStoreUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +42,9 @@ public class GetMailMessageCountTest {
 
     @Spy
     private GetMailMessageCountService serviceSpy = new GetMailMessageCountService();
+
+    @Spy
+    private MessageStoreUtils storeUtilsSpy = new MessageStoreUtils();
     @Mock
     private Folder folderMock;
     @Mock
@@ -51,12 +69,12 @@ public class GetMailMessageCountTest {
         doNothing().when(folderMock).open(Matchers.anyInt());
         doReturn(folderMock).when(storeMock).getFolder(Matchers.anyString());
         doNothing().when(storeMock).connect();
-        doReturn(storeMock).when(serviceSpy).configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class));
-        doReturn(storeMock).when(serviceSpy).configureStoreWithSSL(any(Properties.class), any(SimpleAuthenticator.class));
-        doNothing().when(serviceSpy).addSSLSettings(anyInt(), anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        doReturn(storeMock).when(storeUtilsSpy).configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailBaseInput.class));
+        doReturn(storeMock).when(storeUtilsSpy).configureStoreWithSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailBaseInput.class));
+        doNothing().when(storeUtilsSpy).addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
 
 
-        inputBuilder.enableTLS(Constants.Strings.TRUE);
+        inputBuilder.enableTLS(String.valueOf(true));
         Map<String, String> results = serviceSpy.execute(inputBuilder.build());
 
         assertEquals(results.get(OutputNames.RETURN_RESULT), "3");

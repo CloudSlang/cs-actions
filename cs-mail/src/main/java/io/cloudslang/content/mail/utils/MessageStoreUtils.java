@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.mail.utils;
 
 import io.cloudslang.content.mail.constants.Constants;
@@ -21,7 +35,7 @@ import java.util.Properties;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-public final class MessageStoreUtils {
+public class MessageStoreUtils {
 
     public static Store createMessageStore(GetMailBaseInput input) throws Exception {
         Properties props = new Properties();
@@ -65,7 +79,7 @@ public final class MessageStoreUtils {
     }
 
 
-    public static void addSSLSettings(boolean trustAllRoots, String keystore,
+    public static Void addSSLSettings(boolean trustAllRoots, String keystore,
                                String keystorePassword, String trustKeystore, String trustPassword) throws Exception {
         boolean useClientCert = false;
         boolean useTrustCert = false;
@@ -129,6 +143,8 @@ public final class MessageStoreUtils {
         SSLContext context = SSLContext.getInstance(SecurityConstants.SSL);
         context.init(keyManagers, trustManagers, new SecureRandom());
         SSLContext.setDefault(context);
+
+        return null;
     }
 
 

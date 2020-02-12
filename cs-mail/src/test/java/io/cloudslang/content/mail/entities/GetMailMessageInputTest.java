@@ -17,6 +17,7 @@ package io.cloudslang.content.mail.entities;
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import io.cloudslang.content.mail.constants.ImapPropNames;
 import io.cloudslang.content.mail.constants.PopPropNames;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -64,7 +65,7 @@ public class GetMailMessageInputTest {
     public void testProcessInputHostEmpty() throws Exception {
         exception.expect(Exception.class);
         exception.expectMessage(ExceptionMsgs.HOST_NOT_SPECIFIED);
-        inputsBuilder.hostname(Strings.EMPTY);
+        inputsBuilder.hostname(StringUtils.EMPTY);
 
         inputsBuilder.build();
     }
@@ -84,7 +85,7 @@ public class GetMailMessageInputTest {
     public void testProcessInputUsernameEmpty() throws Exception {
         exception.expect(Exception.class);
         exception.expectMessage(ExceptionMsgs.USERNAME_NOT_SPECIFIED);
-        inputsBuilder.username(Strings.EMPTY);
+        inputsBuilder.username(StringUtils.EMPTY);
 
         inputsBuilder.build();
     }
@@ -92,7 +93,7 @@ public class GetMailMessageInputTest {
 
     @Test
     public void testProcessInputPasswordEmpty() throws Exception {
-        inputsBuilder.password(Strings.EMPTY);
+        inputsBuilder.password(StringUtils.EMPTY);
 
         inputsBuilder.build();
     }
@@ -110,7 +111,7 @@ public class GetMailMessageInputTest {
     public void testProcessInputMessageNumberEmpty() throws Exception {
         exception.expect(Exception.class);
         exception.expectMessage(ExceptionMsgs.MESSAGE_NUMBER_NOT_SPECIFIED);
-        inputsBuilder.messageNumber(Strings.EMPTY);
+        inputsBuilder.messageNumber(StringUtils.EMPTY);
 
         inputsBuilder.build();
     }
@@ -149,7 +150,7 @@ public class GetMailMessageInputTest {
     public void testProcessInputProtocolEmpty() throws Exception {
         exception.expect(Exception.class);
         exception.expectMessage(ExceptionMsgs.SPECIFY_PROTOCOL_FOR_GIVEN_PORT);
-        inputsBuilder.protocol(Strings.EMPTY);
+        inputsBuilder.protocol(StringUtils.EMPTY);
 
         inputsBuilder.build();
     }
@@ -159,7 +160,7 @@ public class GetMailMessageInputTest {
     public void testProcessInputPortEmpty() throws Exception {
         exception.expect(Exception.class);
         exception.expectMessage(ExceptionMsgs.SPECIFY_PORT_FOR_PROTOCOL);
-        inputsBuilder.port(Strings.EMPTY);
+        inputsBuilder.port(StringUtils.EMPTY);
 
         inputsBuilder.build();
     }
@@ -189,8 +190,8 @@ public class GetMailMessageInputTest {
     public void testProcessInputPortProtocolEmpty() throws Exception {
         exception.expect(Exception.class);
         exception.expectMessage(ExceptionMsgs.SPECIFY_PORT_OR_PROTOCOL_OR_BOTH);
-        inputsBuilder.port(Strings.EMPTY)
-                .protocol(Strings.EMPTY);
+        inputsBuilder.port(StringUtils.EMPTY)
+                .protocol(StringUtils.EMPTY);
 
         inputsBuilder.build();
     }
@@ -199,7 +200,7 @@ public class GetMailMessageInputTest {
     @Test
     public void testProcessInputProtocolNullPortImap() throws Exception {
         inputsBuilder.port(ImapPropNames.PORT)
-                .protocol(Strings.EMPTY);
+                .protocol(StringUtils.EMPTY);
 
         inputsBuilder.build();
     }
@@ -208,7 +209,7 @@ public class GetMailMessageInputTest {
     @Test
     public void testProcessInputProtocolNullPortPop3() throws Exception {
         inputsBuilder.port(PopPropNames.POP3_PORT)
-                .protocol(Strings.EMPTY);
+                .protocol(StringUtils.EMPTY);
 
         inputsBuilder.build();
     }
@@ -216,7 +217,7 @@ public class GetMailMessageInputTest {
 
     @Test
     public void testProcessInputPortEmptyProtocolImap() throws Exception {
-        inputsBuilder.port(Strings.EMPTY)
+        inputsBuilder.port(StringUtils.EMPTY)
                 .protocol(ImapPropNames.IMAP);
 
         inputsBuilder.build();
@@ -225,7 +226,7 @@ public class GetMailMessageInputTest {
 
     @Test
     public void testProcessInputPortEmptyProtocolImap4() throws Exception {
-        inputsBuilder.port(Strings.EMPTY)
+        inputsBuilder.port(StringUtils.EMPTY)
                 .protocol(ImapPropNames.IMAP4);
 
         inputsBuilder.build();
@@ -234,7 +235,7 @@ public class GetMailMessageInputTest {
 
     @Test
     public void testProcessInputPortEmptyProtocolPop3() throws Exception {
-        inputsBuilder.port(Strings.EMPTY)
+        inputsBuilder.port(StringUtils.EMPTY)
                 .protocol(PopPropNames.POP3);
 
         inputsBuilder.build();
