@@ -22,13 +22,15 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ResponseNames;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.mail.entities.SendMailInput;
 import io.cloudslang.content.mail.services.SendMailService;
+import io.cloudslang.content.mail.constants.InputNames;
 import io.cloudslang.content.mail.utils.ResultUtils;
 
 import java.util.Map;
-
-import static io.cloudslang.content.mail.utils.Constants.*;
 
 
 /**
@@ -79,44 +81,44 @@ public class SendMailAction {
      */
     @Action(name = "Send Mail",
             outputs = {
-                    @Output(Outputs.RETURN_RESULT),
-                    @Output(Outputs.RETURN_CODE),
-                    @Output(Outputs.EXCEPTION)
+                    @Output(OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.RETURN_CODE),
+                    @Output(OutputNames.EXCEPTION)
             },
             responses = {
-                    @Response(text = Responses.SUCCESS, field = Outputs.RETURN_CODE,
-                            value = ReturnCodes.SUCCESS_RETURN_CODE,
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE,
+                            value = ReturnCodes.SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Responses.FAILURE, field = Outputs.RETURN_CODE,
-                            value = ReturnCodes.FAILURE_RETURN_CODE,
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE,
+                            value = ReturnCodes.FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             })
     public Map<String, String> execute(
-            @Param(value = Inputs.HOSTNAME, required = true) String hostname,
-            @Param(value = Inputs.PORT, required = true) String port,
-            @Param(value = Inputs.HTML_EMAIL) String htmlEmail,
-            @Param(value = Inputs.FROM, required = true) String from,
-            @Param(value = Inputs.TO, required = true) String to,
-            @Param(Inputs.CC) String cc,
-            @Param(Inputs.BCC) String bcc,
-            @Param(value = Inputs.SUBJECT, required = true) String subject,
-            @Param(value = Inputs.BODY, required = true) String body,
-            @Param(Inputs.READ_RECEIPT) String readReceipt,
-            @Param(Inputs.ATTACHMENTS) String attachments,
-            @Param(Inputs.HEADERS) String headers,
-            @Param(Inputs.HEADERS_ROW_DELIMITER) String rowDelimiter,
-            @Param(Inputs.HEADERS_COLUMN_DELIMITER) String columnDelimiter,
-            @Param(Inputs.USERNAME) String user,
-            @Param(Inputs.PASSWORD) String password,
-            @Param(Inputs.DELIMITER) String delimiter,
-            @Param(Inputs.CHARACTER_SET) String characterSet,
-            @Param(Inputs.CONTENT_TRANSFER_ENCODING) String contentTransferEncoding,
-            @Param(Inputs.ENCRYPTION_KEYSTORE) String encryptionKeystore,
-            @Param(Inputs.ENCRYPTION_KEY_ALIAS) String encryptionKeyAlias,
-            @Param(Inputs.ENCRYPTION_KEYSTORE_PASSWORD) String encryptionKeystorePassword,
-            @Param(Inputs.ENABLE_TLS) String enableTLS,
-            @Param(Inputs.TIMEOUT) String timeout,
-            @Param(Inputs.ENCRYPTION_ALGORITHM) String encryptionAlgorithm) {
+            @Param(value = InputNames.HOSTNAME, required = true) String hostname,
+            @Param(value = InputNames.PORT, required = true) String port,
+            @Param(value = InputNames.HTML_EMAIL) String htmlEmail,
+            @Param(value = InputNames.FROM, required = true) String from,
+            @Param(value = InputNames.TO, required = true) String to,
+            @Param(InputNames.CC) String cc,
+            @Param(InputNames.BCC) String bcc,
+            @Param(value = InputNames.SUBJECT, required = true) String subject,
+            @Param(value = InputNames.BODY, required = true) String body,
+            @Param(InputNames.READ_RECEIPT) String readReceipt,
+            @Param(InputNames.ATTACHMENTS) String attachments,
+            @Param(InputNames.HEADERS) String headers,
+            @Param(InputNames.HEADERS_ROW_DELIMITER) String rowDelimiter,
+            @Param(InputNames.HEADERS_COLUMN_DELIMITER) String columnDelimiter,
+            @Param(InputNames.USERNAME) String user,
+            @Param(InputNames.PASSWORD) String password,
+            @Param(InputNames.DELIMITER) String delimiter,
+            @Param(InputNames.CHARACTER_SET) String characterSet,
+            @Param(InputNames.CONTENT_TRANSFER_ENCODING) String contentTransferEncoding,
+            @Param(InputNames.ENCRYPTION_KEYSTORE) String encryptionKeystore,
+            @Param(InputNames.ENCRYPTION_KEY_ALIAS) String encryptionKeyAlias,
+            @Param(InputNames.ENCRYPTION_KEYSTORE_PASSWORD) String encryptionKeystorePassword,
+            @Param(InputNames.ENABLE_TLS) String enableTLS,
+            @Param(InputNames.TIMEOUT) String timeout,
+            @Param(InputNames.ENCRYPTION_ALGORITHM) String encryptionAlgorithm) {
         SendMailInput.Builder inputBuilder = new SendMailInput.Builder()
                 .hostname(hostname)
                 .port(port)

@@ -6,9 +6,12 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ResponseNames;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.mail.entities.GetMailMessageCountInput;
 import io.cloudslang.content.mail.services.GetMailMessageCountService;
-import io.cloudslang.content.mail.utils.Constants.*;
+import io.cloudslang.content.mail.constants.InputNames;
 import io.cloudslang.content.mail.utils.ResultUtils;
 
 import java.util.Map;
@@ -50,30 +53,30 @@ public class GetMailMessageCountAction {
      */
     @Action(name = "Get Mail Attachment",
             outputs = {
-                    @Output(Outputs.RETURN_RESULT),
+                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
             },
             responses = {
-                    @Response(text = Responses.SUCCESS, field = Outputs.RETURN_CODE,
-                            value = ReturnCodes.SUCCESS_RETURN_CODE,
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE,
+                            value = ReturnCodes.SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Responses.FAILURE, field = Outputs.RETURN_CODE,
-                            value = ReturnCodes.FAILURE_RETURN_CODE,
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE,
+                            value = ReturnCodes.FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             })
     public Map<String, String> execute(
-            @Param(value = Inputs.HOST, required = true) String hostname,
-            @Param(value = Inputs.USERNAME, required = true) String username,
-            @Param(value = Inputs.PASSWORD, required = true, encrypted = true) String password,
-            @Param(value = Inputs.FOLDER, required = true) String folder,
-            @Param(value = Inputs.PORT) String port,
-            @Param(value = Inputs.PROTOCOL) String protocol,
-            @Param(value = Inputs.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(value = Inputs.ENABLE_TLS) String enableTLS,
-            @Param(value = Inputs.ENABLE_SSL) String enableSSL,
-            @Param(value = Inputs.KEYSTORE) String keystore,
-            @Param(value = Inputs.KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
-            @Param(value = Inputs.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = Inputs.TRUST_PASSWORD, encrypted = true) String trustPassword
+            @Param(value = InputNames.HOST, required = true) String hostname,
+            @Param(value = InputNames.USERNAME, required = true) String username,
+            @Param(value = InputNames.PASSWORD, required = true, encrypted = true) String password,
+            @Param(value = InputNames.FOLDER, required = true) String folder,
+            @Param(value = InputNames.PORT) String port,
+            @Param(value = InputNames.PROTOCOL) String protocol,
+            @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
+            @Param(value = InputNames.ENABLE_TLS) String enableTLS,
+            @Param(value = InputNames.ENABLE_SSL) String enableSSL,
+            @Param(value = InputNames.KEYSTORE) String keystore,
+            @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
+            @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword
             //        @Param(value = Inputs.PROXY_PORT) String proxyPort,
 //        @Param(value = Inputs.PROXY_USERNAME) String proxyUsername,
 //        @Param(value = Inputs.PROXY_PASSWORD) String proxyPassword,

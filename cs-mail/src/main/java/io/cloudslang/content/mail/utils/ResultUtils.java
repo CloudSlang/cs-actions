@@ -14,6 +14,11 @@
  */
 package io.cloudslang.content.mail.utils;
 
+import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.mail.constants.ExceptionMsgs;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -24,12 +29,16 @@ public final class ResultUtils {
     public static Map<String, String> fromException(Exception e) {
         StringWriter writer = new StringWriter();
         e.printStackTrace(new PrintWriter(writer));
-        String exStr = writer.toString().replace(Constants.Strings.EMPTY + (char) 0x00, Constants.Strings.EMPTY);
+        String exStr = writer.toString().replace(StringUtils.EMPTY + (char) 0x00, StringUtils.EMPTY);
 
-        Map<String, String> returnResult = new HashMap<>();
-        returnResult.put(Constants.Outputs.RETURN_RESULT, e.getMessage());
-        returnResult.put(Constants.Outputs.RETURN_CODE, Constants.ReturnCodes.FAILURE_RETURN_CODE);
-        returnResult.put(Constants.Outputs.EXCEPTION, exStr);
-        return returnResult;
+        Map<String, String> results = new HashMap<>();
+        if(e.toString().contains(ExceptionMsgs.UNRECOGNIZED_SSL_MESSAGE)){
+            results.put(OutputNames.RETURN_RESULT, ExceptionMsgs.UNRECOGNIZED_SSL_MESSAGE_PLAINTEXT_CONNECTION);
+        } else {
+            results.put(OutputNames.RETURN_RESULT, e.getMessage());
+        }
+        results.put(OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
+        results.put(OutputNames.EXCEPTION, exStr);
+        return results;
     }
 }

@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.mail.entities;
 
+import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -28,7 +29,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static io.cloudslang.content.mail.utils.Constants.*;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;

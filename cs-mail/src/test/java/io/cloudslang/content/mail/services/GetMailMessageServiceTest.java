@@ -17,12 +17,14 @@
 package io.cloudslang.content.mail.services;
 
 import com.sun.mail.util.ASCIIUtility;
+import io.cloudslang.content.mail.constants.PopPropNames;
+import io.cloudslang.content.mail.constants.PropNames;
 import io.cloudslang.content.mail.entities.GetMailMessageInput;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import io.cloudslang.content.mail.entities.StringOutputStream;
 import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
-import io.cloudslang.content.mail.utils.Constants.*;
+import io.cloudslang.content.mail.constants.Constants.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -480,10 +482,10 @@ public class GetMailMessageServiceTest {
      */
     @Test
     public void testConfigureStoreWithSSL() throws Exception {
-        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_CLASS, SSL_FACTORY);
-        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_FALLBACK, STR_FALSE);
-        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.PORT, POPProps.POP3_PORT);
-        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_PORT, POPProps.POP3_PORT);
+        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SOCKET_FACTORY_CLASS, SSL_FACTORY);
+        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SOCKET_FACTORY_FALLBACK, STR_FALSE);
+        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.PORT, PopPropNames.POP3_PORT);
+        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SOCKET_FACTORY_PORT, PopPropNames.POP3_PORT);
         PowerMockito.whenNew(URLName.class)
                 .withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString())
                 .thenReturn(urlNameMock);
@@ -497,10 +499,10 @@ public class GetMailMessageServiceTest {
 
         Store store = serviceSpy.configureStoreWithSSL(propertiesMock, authenticatorMock);
         assertEquals(storeMock, store);
-        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_CLASS, SSL_FACTORY);
-        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_FALLBACK, STR_FALSE);
-        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.PORT, POPProps.POP3_PORT);
-        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SOCKET_FACTORY_PORT, POPProps.POP3_PORT);
+        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SOCKET_FACTORY_CLASS, SSL_FACTORY);
+        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SOCKET_FACTORY_FALLBACK, STR_FALSE);
+        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.PORT, PopPropNames.POP3_PORT);
+        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SOCKET_FACTORY_PORT, PopPropNames.POP3_PORT);
         PowerMockito.verifyNew(URLName.class)
                 .withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString());
         PowerMockito.verifyStatic();
@@ -510,9 +512,9 @@ public class GetMailMessageServiceTest {
 
     @Test
     public void testConfigureStoreWithTLS() throws Exception {
-        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SSL_ENABLE, STR_FALSE);
-        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.START_TLS_ENABLE, STR_TRUE);
-        doReturn(objectMock).when(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.START_TLS_REQUIRED, STR_TRUE);
+        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SSL_ENABLE, STR_FALSE);
+        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.START_TLS_ENABLE, STR_TRUE);
+        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.START_TLS_REQUIRED, STR_TRUE);
 
         PowerMockito.whenNew(URLName.class)
                 .withArguments(anyString(), anyString(), anyInt(), anyString(), anyString(), anyString())
@@ -527,12 +529,12 @@ public class GetMailMessageServiceTest {
 
         Store store = serviceSpy.configureStoreWithTLS(propertiesMock, authenticatorMock);
         assertEquals(storeMock, store);
-        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.SSL_ENABLE, STR_FALSE);
-        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.START_TLS_ENABLE, STR_TRUE);
-        verify(propertiesMock).setProperty(Props.MAIL + POPProps.POP3 + Props.START_TLS_REQUIRED, STR_TRUE);
+        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SSL_ENABLE, STR_FALSE);
+        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.START_TLS_ENABLE, STR_TRUE);
+        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.START_TLS_REQUIRED, STR_TRUE);
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        verify(sessionMock).getStore(POPProps.POP3 + SECURE_SUFFIX_FOR_POP3_AND_IMAP);
+        verify(sessionMock).getStore(PopPropNames.POP3 + SECURE_SUFFIX_FOR_POP3_AND_IMAP);
     }
 
     /**
@@ -542,23 +544,23 @@ public class GetMailMessageServiceTest {
      */
     @Test
     public void testConfigureStoreWithoutSSL() throws Exception {
-        doReturn(objectMock).when(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.HOST, HOST);
-        doReturn(objectMock).when(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.PORT, Short.parseShort(POPProps.POP3_PORT));
+        doReturn(objectMock).when(propertiesMock).put(PropNames.MAIL + PopPropNames.POP3 + PropNames.HOST, HOST);
+        doReturn(objectMock).when(propertiesMock).put(PropNames.MAIL + PopPropNames.POP3 + PropNames.PORT, Short.parseShort(PopPropNames.POP3_PORT));
         PowerMockito.mockStatic(Session.class);
         PowerMockito.doReturn(sessionMock)
                 .when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        doReturn(storeMock).when(sessionMock).getStore(POPProps.POP3);
+        doReturn(storeMock).when(sessionMock).getStore(PopPropNames.POP3);
 
         addRequiredInputs();
         serviceSpy.input = inputBuilder.build();
 
         Store store = serviceSpy.configureStoreWithoutSSL(propertiesMock, authenticatorMock);
         assertEquals(storeMock, store);
-        verify(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.HOST, HOST);
-        verify(propertiesMock).put(Props.MAIL + POPProps.POP3 + Props.PORT, Short.parseShort(POPProps.POP3_PORT));
+        verify(propertiesMock).put(PropNames.MAIL + PopPropNames.POP3 + PropNames.HOST, HOST);
+        verify(propertiesMock).put(PropNames.MAIL + PopPropNames.POP3 + PropNames.PORT, Short.parseShort(PopPropNames.POP3_PORT));
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        verify(sessionMock).getStore(POPProps.POP3);
+        verify(sessionMock).getStore(PopPropNames.POP3);
     }
 
     /**
@@ -839,8 +841,8 @@ public class GetMailMessageServiceTest {
      */
     private void addRequiredInputs() {
         inputBuilder.hostname(HOST);
-        inputBuilder.port(POPProps.POP3_PORT);
-        inputBuilder.protocol(POPProps.POP3);
+        inputBuilder.port(PopPropNames.POP3_PORT);
+        inputBuilder.protocol(PopPropNames.POP3);
         inputBuilder.username(USERNAME);
         inputBuilder.password(PASSWORD);
         inputBuilder.folder(FOLDER);

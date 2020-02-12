@@ -14,6 +14,9 @@
  */
 package io.cloudslang.content.mail.entities;
 
+import io.cloudslang.content.mail.constants.ExceptionMsgs;
+import io.cloudslang.content.mail.constants.ImapPropNames;
+import io.cloudslang.content.mail.constants.PopPropNames;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,7 +26,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static io.cloudslang.content.mail.utils.Constants.*;
+import static io.cloudslang.content.mail.constants.Constants.*;
 
 
 @RunWith(PowerMockRunner.class)
@@ -195,7 +198,7 @@ public class GetMailMessageInputTest {
 
     @Test
     public void testProcessInputProtocolNullPortImap() throws Exception {
-        inputsBuilder.port(IMAPProps.PORT)
+        inputsBuilder.port(ImapPropNames.PORT)
                 .protocol(Strings.EMPTY);
 
         inputsBuilder.build();
@@ -204,7 +207,7 @@ public class GetMailMessageInputTest {
 
     @Test
     public void testProcessInputProtocolNullPortPop3() throws Exception {
-        inputsBuilder.port(POPProps.POP3_PORT)
+        inputsBuilder.port(PopPropNames.POP3_PORT)
                 .protocol(Strings.EMPTY);
 
         inputsBuilder.build();
@@ -214,7 +217,7 @@ public class GetMailMessageInputTest {
     @Test
     public void testProcessInputPortEmptyProtocolImap() throws Exception {
         inputsBuilder.port(Strings.EMPTY)
-                .protocol(IMAPProps.IMAP);
+                .protocol(ImapPropNames.IMAP);
 
         inputsBuilder.build();
     }
@@ -223,7 +226,7 @@ public class GetMailMessageInputTest {
     @Test
     public void testProcessInputPortEmptyProtocolImap4() throws Exception {
         inputsBuilder.port(Strings.EMPTY)
-                .protocol(IMAPProps.IMAP4);
+                .protocol(ImapPropNames.IMAP4);
 
         inputsBuilder.build();
     }
@@ -232,7 +235,7 @@ public class GetMailMessageInputTest {
     @Test
     public void testProcessInputPortEmptyProtocolPop3() throws Exception {
         inputsBuilder.port(Strings.EMPTY)
-                .protocol(POPProps.POP3);
+                .protocol(PopPropNames.POP3);
 
         inputsBuilder.build();
     }

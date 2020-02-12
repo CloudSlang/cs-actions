@@ -15,41 +15,29 @@
 package io.cloudslang.content.mail.services;
 
 import com.sun.mail.util.ASCIIUtility;
+import io.cloudslang.content.mail.constants.MimeTypes;
+import io.cloudslang.content.mail.constants.SecurityConstants;
+import io.cloudslang.content.mail.constants.ExceptionMsgs;
+import io.cloudslang.content.mail.constants.OutputNames;
 import io.cloudslang.content.mail.entities.GetMailAttachmentInput;
-import io.cloudslang.content.mail.entities.SimpleAuthenticator;
-import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
-import io.cloudslang.content.mail.sslconfig.SSLUtils;
-import io.cloudslang.content.mail.utils.Constants;
-import io.cloudslang.content.mail.utils.Constants.*;
+import io.cloudslang.content.mail.utils.MessageStoreUtils;
+import io.cloudslang.content.mail.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.cms.KeyTransRecipientId;
 import org.bouncycastle.cms.RecipientId;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.RecipientInformationStore;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnveloped;
 import org.bouncycastle.mail.smime.SMIMEUtil;
 
 import javax.mail.*;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeUtility;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 import java.io.*;
-import java.net.URL;
 import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.Security;
-import java.security.cert.X509Certificate;
 import java.util.*;
 
 public class GetMailAttachmentService {
-
-    public static final String SECURE_SUFFIX_FOR_POP3_AND_IMAP = "s";
-    public static final String ENCRYPTED_CONTENT_TYPE = "application/pkcs7-mime; name=\"smime.p7m\"; smime-type=enveloped-data";
-
-    private static final String SSLSOCKET_FACTORY = "javax.net.ssl.SSLSocketFactory";
 
     protected GetMailAttachmentInput input;
 
@@ -57,11 +45,11 @@ public class GetMailAttachmentService {
     private RecipientId recId = null;
     private KeyStore ks = null;
 
-    public Map<String, String> execute(GetMailAttachmentInput getMailAttachmentInput) {
+    public Map<String, String> execute(GetMailAttachmentInput getMailAttachmentInput) throws Exception {
         this.results = new HashMap<>();
         this.input = getMailAttachmentInput;
 
-        try (Store store = createMessageStore()) {
+        try (Store store = MessageStoreUtils.createMessageStore(input)) {
             Folder folder = store.getFolder(input.getFolder());
             if (!folder.exists()) {
                 throw new Exception(ExceptionMsgs.THE_SPECIFIED_FOLDER_DOES_NOT_EXIST_ON_THE_REMOTE_SERVER);
@@ -75,7 +63,9 @@ public class GetMailAttachmentService {
             Message message = folder.getMessage(input.getMessageNumber());
 
             if (input.isEncryptedMessage()) {
-                addDecryptionSettings();
+                ks = KeyStore.getInstance(SecurityConstants.PKCS_KEYSTORE_TYPE, SecurityConstants.BOUNCY_CASTLE_PROVIDER);
+                recId = new KeyTransRecipientId(new byte[]{});
+                SecurityUtils.addDecryptionSettings(ks, recId, input);
             }
 
             try {
@@ -84,193 +74,12 @@ public class GetMailAttachmentService {
                 } else
                     downloadAttachment(message, input.getAttachmentName(), input.getCharacterSet(),
                             input.getDestination(), input.isOverwrite());
-
             } catch (UnsupportedEncodingException except) {
                 throw new UnsupportedEncodingException("The given encoding (" + input.getCharacterSet() + ") is invalid or not supported.");
             }
-        } catch (Throwable e) {
-            e.printStackTrace();
-            results.put(Outputs.EXCEPTION, e.toString());
-            String resultMessage = e.getMessage();
-            if (e.toString().contains("Unrecognized SSL message")) {
-                resultMessage = "Unrecognized SSL message, plaintext connection?";
-            }
-            results.put(Outputs.RETURN_RESULT, resultMessage);
-            results.put(Outputs.RETURN_CODE, ReturnCodes.FAILURE_RETURN_CODE);
+
+            return results;
         }
-
-        return results;
-    }
-
-
-    protected Store createMessageStore() throws Exception {
-        Properties props = new Properties();
-        Authenticator auth = new SimpleAuthenticator(input.getUsername(), input.getPassword());
-        Store store;
-        if (input.isEnableTLS() || input.isEnableSSL()) {
-            addSSLSettings(input.getPort(), input.isTrustAllRoots(), input.getKeystore(), input.getKeystorePassword(),
-                    Strings.EMPTY, Strings.EMPTY);
-        }
-        if (input.isEnableTLS()) {
-            store = tryTLSOtherwiseTrySSL(auth, props);
-        } else if (input.isEnableSSL()) {
-            store = connectUsingSSL(props, auth);
-        } else {
-            props.put(Props.MAIL + input.getProtocol() + Props.HOST, input.getHostname());
-            props.put(Props.MAIL + input.getProtocol() + Props.PORT, input.getPort());
-            Session s = Session.getInstance(props, auth);
-            store = s.getStore(input.getProtocol());
-            store.connect();
-        }
-        return store;
-    }
-
-
-    private Store connectUsingSSL(Properties props, Authenticator auth) throws MessagingException {
-        Store store = configureStoreWithSSL(props, auth);
-        store.connect();
-        return store;
-    }
-
-
-    protected Store configureStoreWithSSL(Properties props, Authenticator auth) throws NoSuchProviderException {
-        props.setProperty(Props.MAIL + input.getProtocol() + Props.SOCKET_FACTORY_CLASS, SSLSOCKET_FACTORY);
-        props.setProperty(Props.MAIL + input.getProtocol() + Props.SOCKET_FACTORY_FALLBACK, Strings.FALSE);
-        props.setProperty(Props.MAIL + input.getProtocol() + Props.PORT, String.valueOf(input.getPort()));
-        props.setProperty(Props.MAIL + input.getProtocol() + Props.SOCKET_FACTORY_PORT, String.valueOf(input.getPort()));
-        URLName url = new URLName(input.getProtocol(), input.getHostname(), input.getPort(), Strings.EMPTY,
-                input.getUsername(), input.getPassword());
-        Session session = Session.getInstance(props, auth);
-        return session.getStore(url);
-    }
-
-
-    public void addSSLSettings(int port, boolean trustAllRoots, String keystore,
-                               String keystorePassword, String trustKeystore, String trustPassword) throws Exception {
-        boolean useClientCert = false;
-        boolean useTrustCert = false;
-
-        String separator = System.getProperty(Props.FILE_SEPARATOR);
-        String javaKeystore = System.getProperty(Props.JAVA_HOME) + separator + "lib" + separator + "security" + separator + "cacerts";
-        if (keystore.length() == 0 && !trustAllRoots) {
-            boolean storeExists = new File(javaKeystore).exists();
-            keystore = (storeExists) ? Constants.FILE + javaKeystore : null;
-            keystorePassword = (storeExists) ? ((keystorePassword.equals(Strings.EMPTY)) ? "changeit" : keystorePassword) : null;
-
-            useClientCert = storeExists;
-        } else {
-            if (!trustAllRoots) {
-                if (!keystore.startsWith(Constants.HTTP))
-                    keystore = Constants.FILE + keystore;
-                useClientCert = true;
-            }
-        }
-        if (trustKeystore.length() == 0 && !trustAllRoots) {
-            boolean storeExists = new File(javaKeystore).exists();
-            trustKeystore = (storeExists) ? Constants.FILE + javaKeystore : null;
-            trustPassword = (storeExists) ? ((trustPassword.equals(Strings.EMPTY)) ? "changeit" : trustPassword) : null;
-
-            useTrustCert = storeExists;
-        } else {
-            if (!trustAllRoots) {
-                if (!trustKeystore.startsWith(Constants.HTTP))
-                    trustKeystore = Constants.FILE + trustKeystore;
-                useTrustCert = true;
-            }
-
-        }
-
-        SSLContext context = SSLContext.getInstance("SSL");
-        TrustManager[] trustManagers = null;
-        KeyManager[] keyManagers = null;
-
-        if (trustAllRoots) {
-            trustManagers = new TrustManager[]{new EasyX509TrustManager()};
-        }
-
-        if (useTrustCert) {
-            KeyStore trustKeyStore = SSLUtils.createKeyStore(new URL(trustKeystore), trustPassword);
-            trustManagers = SSLUtils.createAuthTrustManagers(trustKeyStore);
-        }
-        if (useClientCert) {
-            KeyStore clientKeyStore = SSLUtils.createKeyStore(new URL(keystore), keystorePassword);
-            keyManagers = SSLUtils.createKeyManagers(clientKeyStore, keystorePassword);
-        }
-        context.init(keyManagers, trustManagers, new SecureRandom());
-        SSLContext.setDefault(context);
-    }
-
-
-    private Store tryTLSOtherwiseTrySSL(Authenticator auth, Properties props) throws MessagingException {
-        Store store = configureStoreWithTLS(props, auth);
-        try {
-            store.connect(input.getHostname(), input.getUsername(), input.getPassword());
-        } catch (Exception e) {
-            if (input.isEnableSSL()) {
-                clearTLSProperties(props);
-                store = connectUsingSSL(props, auth);
-            } else {
-                throw e;
-            }
-        }
-        return store;
-    }
-
-
-    protected Store configureStoreWithTLS(Properties props, Authenticator auth) throws NoSuchProviderException {
-        props.setProperty(Props.MAIL + input.getProtocol() + Props.SSL_ENABLE, Strings.FALSE);
-        props.setProperty(Props.MAIL + input.getProtocol() + Props.START_TLS_ENABLE, Strings.TRUE);
-        props.setProperty(Props.MAIL + input.getProtocol() + Props.START_TLS_REQUIRED, Strings.TRUE);
-        Session session = Session.getInstance(props, auth);
-        return session.getStore(input.getProtocol() + SECURE_SUFFIX_FOR_POP3_AND_IMAP);
-    }
-
-
-    private void clearTLSProperties(Properties props) {
-        props.remove(Props.MAIL + input.getProtocol() + Props.SSL_ENABLE);
-        props.remove(Props.MAIL + input.getProtocol() + Props.START_TLS_ENABLE);
-        props.remove(Props.MAIL + input.getProtocol() + Props.START_TLS_REQUIRED);
-    }
-
-
-    private void addDecryptionSettings() throws Exception {
-        char[] smimePw = input.getDecryptionKeystorePassword().toCharArray();
-
-        Security.addProvider(new BouncyCastleProvider());
-        ks = KeyStore.getInstance(Encryption.PKCS_KEYSTORE_TYPE, Encryption.BOUNCY_CASTLE_PROVIDER);
-
-        InputStream decryptionStream = new URL(input.getDecryptionKeystore()).openStream();
-        try {
-            ks.load(decryptionStream, smimePw);
-        } finally {
-            decryptionStream.close();
-        }
-
-        if (input.getDecryptionKeyAlias().equals(Strings.EMPTY)) {
-            Enumeration e = ks.aliases();
-            while (e.hasMoreElements()) {
-                String alias = (String) e.nextElement();
-
-                if (ks.isKeyEntry(alias)) {
-                    input.setDecryptionKeyAlias(alias);
-                }
-            }
-
-            if (input.getDecryptionKeyAlias().equals(Strings.EMPTY)) {
-                throw new Exception(ExceptionMsgs.PRIVATE_KEY_ERROR_MESSAGE);
-            }
-        }
-
-        // find the certificate for the private key and generate a
-        // suitable recipient identifier.
-        X509Certificate cert = (X509Certificate) ks.getCertificate(input.getDecryptionKeyAlias());
-        if (null == cert) {
-            throw new Exception("Can't find a key pair with alias \"" + input.getDecryptionKeyAlias() + "\" in the given keystore");
-        }
-
-        recId = new KeyTransRecipientId(cert.getIssuerX500Principal().getEncoded());
-        recId.setSerialNumber(cert.getSerialNumber());
-        recId.setIssuer(cert.getIssuerX500Principal().getEncoded());
     }
 
 
@@ -283,21 +92,24 @@ public class GetMailAttachmentService {
                 for (int i = 0, n = mpart.getCount(); i < n; i++) {
                     Part part = mpart.getBodyPart(i);
 
-                    if (input.isEncryptedMessage() && part.getContentType() != null && part.getContentType().equals(ENCRYPTED_CONTENT_TYPE)) {
+                    if (input.isEncryptedMessage() && part.getContentType() != null &&
+                            part.getContentType().equals(SecurityConstants.ENCRYPTED_CONTENT_TYPE)) {
                         part = decryptPart((MimeBodyPart) part);
                     }
 
-                    if (part != null && part.getFileName() != null
-                            && (MimeUtility.decodeText(part.getFileName()).equalsIgnoreCase(attachment) || (part.getFileName().equalsIgnoreCase(attachment)))) {
+                    if (part != null && part.getFileName() != null &&
+                            (MimeUtility.decodeText(part.getFileName()).equalsIgnoreCase(attachment) ||
+                                    part.getFileName().equalsIgnoreCase(attachment))
+                    ) {
                         String disposition = part.getDisposition();
                         if (disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT)) {
                             String partPrefix = part.getContentType().toLowerCase();
                             if (partPrefix.startsWith(MimeTypes.TEXT_PLAIN)) {
                                 String attachmentContent = attachmentToString(part, characterSet);
-                                results.put(Outputs.RETURN_RESULT, MimeUtility.decodeText(attachmentContent));
-                                results.put(Outputs.TEMPORARY_FILE, writeTextToTempFile(attachmentContent));
+                                results.put(io.cloudslang.content.constants.OutputNames.RETURN_RESULT, MimeUtility.decodeText(attachmentContent));
+                                results.put(OutputNames.TEMPORARY_FILE, writeTextToTempFile(attachmentContent));
                             } else
-                                results.put(Outputs.TEMPORARY_FILE, writeToTempFile(part));
+                                results.put(OutputNames.TEMPORARY_FILE, writeToTempFile(part));
                         }
                         return MimeUtility.decodeText(part.getFileName());
                     }
@@ -348,7 +160,7 @@ public class GetMailAttachmentService {
 
         return SMIMEUtil.toMimeBodyPart(recipient.getContent(
                 ks.getKey(input.getDecryptionKeyAlias(), null),
-                Encryption.BOUNCY_CASTLE_PROVIDER)
+                SecurityConstants.BOUNCY_CASTLE_PROVIDER)
         );
     }
 
@@ -371,15 +183,9 @@ public class GetMailAttachmentService {
 
     private static String writeTextToTempFile(String text) throws IOException {
         File f = File.createTempFile("attachment", null);
-        FileWriter fw = null;
 
-        try {
-            fw = new FileWriter(f);
+        try (FileWriter fw = new FileWriter(f)) {
             fw.write(text);
-        } finally {
-            if (fw != null) {
-                fw.close();
-            }
         }
 
         return f.getCanonicalPath();
@@ -390,16 +196,10 @@ public class GetMailAttachmentService {
         InputStream is = part.getInputStream();
         File f = File.createTempFile("attachment", null);
 
-        OutputStream os = null;
-        try {
-            os = new FileOutputStream(f);
+        try (OutputStream os = new FileOutputStream(f)) {
             int readChar;
             while ((readChar = is.read()) != -1) {
                 os.write(readChar);
-            }
-        } finally {
-            if (os != null) {
-                os.close();
             }
         }
 
@@ -418,20 +218,21 @@ public class GetMailAttachmentService {
                         Part part = mpart.getBodyPart(i);
 
                         if (input.isEncryptedMessage() && part.getContentType() != null &&
-                                part.getContentType().equals(ENCRYPTED_CONTENT_TYPE)) {
+                                part.getContentType().equals(SecurityConstants.ENCRYPTED_CONTENT_TYPE)) {
                             part = decryptPart((MimeBodyPart) part);
                         }
 
                         if (part != null && part.getFileName() != null &&
                                 (MimeUtility.decodeText(part.getFileName()).equalsIgnoreCase(attachment) ||
-                                        (part.getFileName().equalsIgnoreCase(attachment)))) {
+                                        part.getFileName().equalsIgnoreCase(attachment))
+                        ) {
                             String disposition = part.getDisposition();
                             if (disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT)) {
                                 String partPrefix = part.getContentType().toLowerCase();
-                                if (partPrefix.startsWith(MimeTypes.TEXT_PLAIN)) {
+                                if (partPrefix.startsWith(io.cloudslang.content.mail.constants.MimeTypes.TEXT_PLAIN)) {
                                     String attachmentContent = attachmentToString(part, characterSet);
                                     writeTextToNewFile(path + "/" + attachment, attachmentContent, overwrite);
-                                    results.put(Outputs.RETURN_RESULT, MimeUtility.decodeText(attachmentContent));
+                                    results.put(io.cloudslang.content.constants.OutputNames.RETURN_RESULT, MimeUtility.decodeText(attachmentContent));
                                 } else {
                                     writeNewFile(path + "/" + attachment, part, overwrite);
                                 }

@@ -1,11 +1,12 @@
 package io.cloudslang.content.mail.entities;
 
-import io.cloudslang.content.mail.utils.Constants;
+import io.cloudslang.content.mail.constants.InputNames;
+import io.cloudslang.content.mail.constants.PopPropNames;
+import io.cloudslang.content.mail.constants.PropNames;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.cloudslang.content.mail.utils.Constants.Inputs.*;
-import static io.cloudslang.content.mail.utils.Constants.SMTPProps.PASSWORD;
+import static io.cloudslang.content.mail.constants.SmtpPropNames.PASSWORD;
 
 public class GetMailAttachmentInputTest {
     private GetMailAttachmentInput.Builder inputBuilder;
@@ -13,13 +14,13 @@ public class GetMailAttachmentInputTest {
     @Before
     public void setUp() {
         inputBuilder = new GetMailAttachmentInput.Builder();
-        inputBuilder.hostname(Constants.Props.HOST);
-        inputBuilder.port(Constants.POPProps.POP3_PORT);
-        inputBuilder.protocol(Constants.POPProps.POP3);
-        inputBuilder.username(USERNAME);
+        inputBuilder.hostname(PropNames.HOST);
+        inputBuilder.port(PopPropNames.POP3_PORT);
+        inputBuilder.protocol(PopPropNames.POP3);
+        inputBuilder.username(InputNames.USERNAME);
         inputBuilder.password(PASSWORD);
-        inputBuilder.folder(FOLDER);
-        inputBuilder.messageNumber(MESSAGE_NUMBER);
+        inputBuilder.folder(InputNames.FOLDER);
+        inputBuilder.messageNumber(InputNames.MESSAGE_NUMBER);
     }
 
     @Test(expected = Exception.class)

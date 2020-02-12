@@ -20,13 +20,15 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.constants.ResponseNames;
+import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.mail.constants.OutputNames;
 import io.cloudslang.content.mail.entities.GetMailMessageInput;
 import io.cloudslang.content.mail.services.GetMailMessageService;
+import io.cloudslang.content.mail.constants.InputNames;
 import io.cloudslang.content.mail.utils.ResultUtils;
 
 import java.util.Map;
-
-import static io.cloudslang.content.mail.utils.Constants.*;
 
 public class GetMailMessageAction {
     /**
@@ -86,51 +88,51 @@ public class GetMailMessageAction {
      */
     @Action(name = "Get Mail Message",
             outputs = {
-                    @Output(Outputs.RETURN_CODE),
-                    @Output(Outputs.RETURN_RESULT),
-                    @Output(Outputs.SUBJECT),
-                    @Output(Outputs.BODY_RESULT),
-                    @Output(Outputs.PLAIN_TEXT_BODY_RESULT),
-                    @Output(Outputs.ATTACHED_FILE_NAMES_RESULT),
-                    @Output(Outputs.EXCEPTION)
+                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
+                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.SUBJECT),
+                    @Output(OutputNames.BODY_RESULT),
+                    @Output(OutputNames.PLAIN_TEXT_BODY_RESULT),
+                    @Output(OutputNames.ATTACHED_FILE_NAMES_RESULT),
+                    @Output(io.cloudslang.content.constants.OutputNames.EXCEPTION)
             },
             responses = {
-                    @Response(text = Responses.SUCCESS, field = Outputs.RETURN_CODE,
-                            value = ReturnCodes.SUCCESS_RETURN_CODE,
+                    @Response(text = ResponseNames.SUCCESS, field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
+                            value = ReturnCodes.SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Responses.FAILURE, field = Outputs.RETURN_CODE,
-                            value = ReturnCodes.FAILURE_RETURN_CODE,
+                    @Response(text = ResponseNames.FAILURE, field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
+                            value = ReturnCodes.FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             }
     )
     public Map<String, String> execute(
-            @Param(value = Inputs.HOST, required = true) String hostname,
-            @Param(value = Inputs.PORT) String port,
-            @Param(value = Inputs.PROTOCOL) String protocol,
-            @Param(value = Inputs.USERNAME, required = true) String username,
-            @Param(value = Inputs.PASSWORD, required = true) String password,
-            @Param(value = Inputs.FOLDER, required = true) String folder,
-            @Param(value = Inputs.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(value = Inputs.MESSAGE_NUMBER, required = true) String messageNumber,
-            @Param(value = Inputs.SUBJECT_ONLY) String subjectOnly,
-            @Param(value = Inputs.ENABLE_TLS) String enableTLS,
-            @Param(value = Inputs.ENABLE_SSL) String enableSSL,
-            @Param(value = Inputs.KEYSTORE) String keystore,
-            @Param(value = Inputs.KEYSTORE_PASSWORD) String keystorePassword,
-            @Param(value = Inputs.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = Inputs.TRUST_PASSWORD) String trustPassword,
-            @Param(value = Inputs.CHARACTER_SET) String characterSet,
-            @Param(value = Inputs.DELETE_UPON_RETRIVAL) String deleteUponRetrieval,
-            @Param(value = Inputs.DECRYPTION_KEYSTORE) String decryptionKeystore,
-            @Param(value = Inputs.DECRYPTION_KEY_ALIAS) String decryptionKeyAlias,
-            @Param(value = Inputs.DECRYPTION_KEYSTORE_PASSWORD) String decryptionKeystorePassword,
-            @Param(value = Inputs.PROXY_HOST) String proxyHost,
-            @Param(value = Inputs.PROXY_PORT) String proxyPort,
-            @Param(value = Inputs.PROXY_USERNAME) String proxyUsername,
-            @Param(value = Inputs.PROXY_PASSWORD) String proxyPassword,
-            @Param(value = Inputs.TIMEOUT) String timeout,
-            @Param(value = Inputs.MARK_MESSAGE_AS_READ) String markAsRead,
-            @Param(value = Inputs.VERIFY_CERTIFICATE) String verifyCertificate) {
+            @Param(value = InputNames.HOST, required = true) String hostname,
+            @Param(value = InputNames.PORT) String port,
+            @Param(value = InputNames.PROTOCOL) String protocol,
+            @Param(value = InputNames.USERNAME, required = true) String username,
+            @Param(value = InputNames.PASSWORD, required = true) String password,
+            @Param(value = InputNames.FOLDER, required = true) String folder,
+            @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
+            @Param(value = InputNames.MESSAGE_NUMBER, required = true) String messageNumber,
+            @Param(value = InputNames.SUBJECT_ONLY) String subjectOnly,
+            @Param(value = InputNames.ENABLE_TLS) String enableTLS,
+            @Param(value = InputNames.ENABLE_SSL) String enableSSL,
+            @Param(value = InputNames.KEYSTORE) String keystore,
+            @Param(value = InputNames.KEYSTORE_PASSWORD) String keystorePassword,
+            @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
+            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword,
+            @Param(value = InputNames.CHARACTER_SET) String characterSet,
+            @Param(value = InputNames.DELETE_UPON_RETRIVAL) String deleteUponRetrieval,
+            @Param(value = InputNames.DECRYPTION_KEYSTORE) String decryptionKeystore,
+            @Param(value = InputNames.DECRYPTION_KEY_ALIAS) String decryptionKeyAlias,
+            @Param(value = InputNames.DECRYPTION_KEYSTORE_PASSWORD) String decryptionKeystorePassword,
+            @Param(value = InputNames.PROXY_HOST) String proxyHost,
+            @Param(value = InputNames.PROXY_PORT) String proxyPort,
+            @Param(value = InputNames.PROXY_USERNAME) String proxyUsername,
+            @Param(value = InputNames.PROXY_PASSWORD) String proxyPassword,
+            @Param(value = InputNames.TIMEOUT) String timeout,
+            @Param(value = InputNames.MARK_MESSAGE_AS_READ) String markAsRead,
+            @Param(value = InputNames.VERIFY_CERTIFICATE) String verifyCertificate) {
         GetMailMessageInput.Builder inputBuilder = new GetMailMessageInput.Builder()
                 .hostname(hostname)
                 .port(port)

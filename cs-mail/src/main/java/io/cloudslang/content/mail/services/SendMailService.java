@@ -17,8 +17,10 @@
 package io.cloudslang.content.mail.services;
 
 import com.sun.mail.smtp.SMTPMessage;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.mail.constants.*;
 import io.cloudslang.content.mail.entities.SendMailInput;
-import io.cloudslang.content.mail.utils.Constants;
 import io.cloudslang.content.mail.utils.HtmlImageNodeVisitor;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -40,11 +42,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
-import java.security.InvalidParameterException;
-import java.security.KeyStore;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.Security;
+import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
@@ -54,7 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static io.cloudslang.content.mail.utils.Constants.*;
 import static com.sun.mail.smtp.SMTPMessage.NOTIFY_DELAY;
 import static com.sun.mail.smtp.SMTPMessage.NOTIFY_FAILURE;
 import static com.sun.mail.smtp.SMTPMessage.NOTIFY_SUCCESS;
@@ -75,19 +72,19 @@ public class SendMailService {
             this.input = sendMailInput;
             // Create a mail session
             java.util.Properties props = new java.util.Properties();
-            props.put(SMTPProps.HOST, input.getHostname());
-            props.put(SMTPProps.PORT, Strings.EMPTY + input.getPort());
+            props.put(SmtpPropNames.HOST, input.getHostname());
+            props.put(SmtpPropNames.PORT, StringUtils.EMPTY + input.getPort());
 
             if (null != input.getUser() && input.getUser().length() > 0) {
-                props.put(SMTPProps.USER, input.getUser());
-                props.put(SMTPProps.PASSWORD, input.getPassword());
-                props.put(SMTPProps.AUTH, Strings.TRUE);
+                props.put(SmtpPropNames.USER, input.getUser());
+                props.put(SmtpPropNames.PASSWORD, input.getPassword());
+                props.put(SmtpPropNames.AUTH, String.valueOf(true));
             }
             if (!input.isEnableTLS()) {
-                props.put(SMTPProps.START_TLS_ENABLE, Strings.FALSE);
+                props.put(SmtpPropNames.START_TLS_ENABLE, String.valueOf(false));
             }
             if (input.getTimeout() > 0) {
-                props.put(SMTPProps.TIMEOUT, input.getTimeout());
+                props.put(SmtpPropNames.TIMEOUT, input.getTimeout());
             }
 
             //construct encryption SMIMEEnvelopedGenerator
@@ -184,14 +181,14 @@ public class SendMailService {
             msg.saveChanges();
 
             if(!StringUtils.isEmpty(input.getUser())) {
-                transport = session.getTransport(SMTPProps.SMTP);
+                transport = session.getTransport(SmtpPropNames.SMTP);
                 transport.connect(input.getHostname(), input.getPort(), input.getUser(), input.getPassword());
                 transport.sendMessage(msg, msg.getAllRecipients());
             } else {
                 Transport.send(msg);
             }
-            result.put(Constants.Outputs.RETURN_RESULT, Constants.MAIL_WAS_SENT);
-            result.put(Constants.Outputs.RETURN_CODE, Constants.ReturnCodes.SUCCESS_RETURN_CODE);
+            result.put(OutputNames.RETURN_RESULT, Constants.MAIL_WAS_SENT);
+            result.put(OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
         } finally {
             if (null != transport) {
                 transport.close();
@@ -234,7 +231,7 @@ public class SendMailService {
     private MimeBodyPart encryptMimeBodyPart(MimeBodyPart mimeBodyPart) throws NoSuchAlgorithmException,
             NoSuchProviderException, SMIMEException {
         if (input.isEncryptedMessage()) {
-            mimeBodyPart = gen.generate(mimeBodyPart, input.getEncryptionAlgorithm(), Constants.BOUNCY_CASTLE_PROVIDER);
+            mimeBodyPart = gen.generate(mimeBodyPart, input.getEncryptionAlgorithm(), SecurityConstants.BOUNCY_CASTLE_PROVIDER);
         }
         return mimeBodyPart;
     }
@@ -247,14 +244,14 @@ public class SendMailService {
 
         gen = new SMIMEEnvelopedGenerator();
         Security.addProvider(new BouncyCastleProvider());
-        KeyStore ks = KeyStore.getInstance(Constants.PKCS_KEYSTORE_TYPE, Constants.BOUNCY_CASTLE_PROVIDER);
+        KeyStore ks = KeyStore.getInstance(SecurityConstants.PKCS_KEYSTORE_TYPE, SecurityConstants.BOUNCY_CASTLE_PROVIDER);
         try {
             ks.load(publicKeystoreInputStream, smimePw);
         } finally {
             publicKeystoreInputStream.close();
         }
 
-        if (Strings.EMPTY.equals(input.getEncryptionKeyAlias())) {
+        if (StringUtils.EMPTY.equals(input.getEncryptionKeyAlias())) {
             Enumeration aliases = ks.aliases();
             while (aliases.hasMoreElements()) {
                 String alias = (String) aliases.nextElement();
@@ -265,7 +262,7 @@ public class SendMailService {
             }
         }
 
-        if (Strings.EMPTY.equals(input.getEncryptionKeyAlias())) {
+        if (StringUtils.EMPTY.equals(input.getEncryptionKeyAlias())) {
             throw new Exception(ExceptionMsgs.PUBLIC_KEY_ERROR_MESSAGE);
         }
 

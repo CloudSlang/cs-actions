@@ -15,25 +15,12 @@
 package io.cloudslang.content.mail.entities;
 
 
-import io.cloudslang.content.mail.utils.Constants;
-import io.cloudslang.content.mail.utils.Constants.*;
+import io.cloudslang.content.mail.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+public class GetMailAttachmentInput extends GetMailBaseInput implements DecryptableMessageInput {
 
-public class GetMailAttachmentInput {
-
-    private String hostname;
-    private Short port;
-    private String protocol;
-    private String username;
-    private String password;
     private String folder;
-    private boolean trustAllRoots;
-    private boolean enableSSL;
-    private boolean enableTLS;
-    private String keystore;
-    private String keystorePassword;
     private int messageNumber;
     private String attachmentName;
     private String characterSet;
@@ -46,48 +33,8 @@ public class GetMailAttachmentInput {
     private GetMailAttachmentInput() {
     }
 
-    public String getHostname() {
-        return hostname;
-    }
-
-    public Short getPort() {
-        return port;
-    }
-
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     public String getFolder() {
         return folder;
-    }
-
-    public boolean isTrustAllRoots() {
-        return trustAllRoots;
-    }
-
-    public boolean isEnableSSL() {
-        return enableSSL;
-    }
-
-    public boolean isEnableTLS() {
-        return enableTLS;
-    }
-
-    public String getKeystore() {
-        return keystore;
-    }
-
-    public String getKeystorePassword() {
-        return keystorePassword;
     }
 
     public int getMessageNumber() {
@@ -130,19 +77,14 @@ public class GetMailAttachmentInput {
         return !StringUtils.isEmpty(decryptionKeystore);
     }
 
-    public static class Builder {
+    @Override
+    public boolean isVerifyCertificate() {
+        return false;
+    }
 
-        private String hostname;
-        private String port;
-        private String protocol;
-        private String username;
-        private String password;
+    public static class Builder extends GetMailBaseInput.Builder {
+
         private String folder;
-        private String trustAllRoots;
-        private String enableSSL;
-        private String enableTLS;
-        private String keystore;
-        private String keystorePassword;
         private String messageNumber;
         private String attachmentName;
         private String characterSet;
@@ -152,68 +94,9 @@ public class GetMailAttachmentInput {
         private String decryptionKeyAlias;
         private String decryptionKeystorePassword;
 
-        public Builder hostname(String hostname) {
-            this.hostname = hostname;
-            return this;
-        }
-
-
-        public Builder port(String port) {
-            this.port = port;
-            return this;
-        }
-
-
-        public Builder protocol(String protocol) {
-            this.protocol = protocol;
-            return this;
-        }
-
-
-        public Builder username(String username) {
-            this.username = username;
-            return this;
-        }
-
-
-        public Builder password(String password) {
-            this.password = password;
-            return this;
-        }
-
 
         public Builder folder(String folder) {
             this.folder = folder;
-            return this;
-        }
-
-
-        public Builder trustAllRoots(String trustAllRoots) {
-            this.trustAllRoots = trustAllRoots;
-            return this;
-        }
-
-
-        public Builder enableSSL(String enableSSL) {
-            this.enableSSL = enableSSL;
-            return this;
-        }
-
-
-        public Builder enableTLS(String enableTLS) {
-            this.enableTLS = enableTLS;
-            return this;
-        }
-
-
-        public Builder keystore(String keystore) {
-            this.keystore = keystore;
-            return this;
-        }
-
-
-        public Builder keystorePassword(String keystorePassword) {
-            this.keystorePassword = keystorePassword;
             return this;
         }
 
@@ -265,65 +148,68 @@ public class GetMailAttachmentInput {
             return this;
         }
 
+        @Override
+        public Builder hostname(String hostname) {
+            return (Builder) super.hostname(hostname);
+        }
+
+        @Override
+        public Builder port(String port) {
+            return (Builder) super.port(port);
+        }
+
+        @Override
+        public Builder protocol(String protocol) {
+            return (Builder) super.protocol(protocol);
+        }
+
+        @Override
+        public Builder username(String username) {
+            return (Builder) super.username(username);
+        }
+
+        @Override
+        public Builder password(String password) {
+            return (Builder) super.password(password);
+        }
+
+        @Override
+        public Builder trustAllRoots(String trustAllRoots) {
+            return (Builder) super.trustAllRoots(trustAllRoots);
+        }
+
+        @Override
+        public Builder enableSSL(String enableSSL) {
+            return (Builder) super.enableSSL(enableSSL);
+        }
+
+        @Override
+        public Builder enableTLS(String enableTLS) {
+            return (Builder) super.enableTLS(enableTLS);
+        }
+
+        @Override
+        public Builder keystore(String keystore) {
+            return (Builder) super.keystore(keystore);
+        }
+
+        @Override
+        public Builder keystorePassword(String keystorePassword) {
+            return (Builder) super.keystorePassword(keystorePassword);
+        }
 
         public GetMailAttachmentInput build() throws Exception {
             GetMailAttachmentInput input = new GetMailAttachmentInput();
-
-            input.hostname = hostname;
-
-            if (!StringUtils.isEmpty(port)) {
-                input.port = Short.parseShort(port);
-            }
-
-            input.protocol = protocol;
-            if (isEmpty(protocol) && isEmpty(port)) {
-                throw new Exception(ExceptionMsgs.SPECIFY_PORT_OR_PROTOCOL_OR_BOTH);
-            } else if ((protocol != null && !protocol.isEmpty()) && (!protocol.equalsIgnoreCase(IMAPProps.IMAP)) &&
-                    (!protocol.equalsIgnoreCase(POPProps.POP3)) && (!protocol.equalsIgnoreCase(IMAPProps.IMAP4)) &&
-                    isEmpty(port)) {
-                throw new Exception(ExceptionMsgs.SPECIFY_PORT_FOR_PROTOCOL);
-            } else if (isEmpty(protocol) && !isEmpty(port) &&
-                    (!port.equalsIgnoreCase(IMAPProps.PORT)) && (!port.equalsIgnoreCase(POPProps.POP3_PORT))) {
-                throw new Exception(ExceptionMsgs.SPECIFY_PROTOCOL_FOR_GIVEN_PORT);
-            } else if (isEmpty(protocol) && port.trim().equalsIgnoreCase(IMAPProps.PORT)) {
-                input.protocol = IMAPProps.IMAP;
-            } else if (isEmpty(protocol) && port.trim().equalsIgnoreCase(POPProps.POP3_PORT)) {
-                input.protocol = POPProps.POP3;
-            } else if (protocol.trim().equalsIgnoreCase(POPProps.POP3) && isEmpty(port)) {
-                input.port = Short.parseShort(POPProps.POP3_PORT);
-            } else if (protocol.trim().equalsIgnoreCase(IMAPProps.IMAP) && isEmpty(port)) {
-                input.port = Short.parseShort(IMAPProps.PORT);
-            } else if (protocol.trim().equalsIgnoreCase(IMAPProps.IMAP4) && (isEmpty(port))) {
-                input.port = Short.parseShort(IMAPProps.PORT);
-            }
-            //The protocol should be given in lowercase to be recognised.
-            input.protocol = input.protocol.toLowerCase();
-            if (input.protocol.trim().equalsIgnoreCase(IMAPProps.IMAP4)) {
-                input.protocol = IMAPProps.IMAP;
-            }
-
-            input.username = username;
-
-            input.password = password;
+            super.build(input);
 
             input.folder = folder;
 
-            input.trustAllRoots = StringUtils.isEmpty(trustAllRoots) ? true : Boolean.parseBoolean(trustAllRoots);
-
-            input.enableTLS = enableTLS != null && enableTLS.equalsIgnoreCase(Strings.TRUE);
-
-            input.enableSSL = enableSSL != null && enableSSL.equalsIgnoreCase(Strings.TRUE);
-
-            input.keystore = keystore;
-
-            input.keystorePassword = keystorePassword;
-
             if (StringUtils.isEmpty(messageNumber)) {
-                throw new Exception(ExceptionMsgs.MESSAGE_NUMBER_NOT_SPECIFIED);
+                throw new Exception(io.cloudslang.content.mail.constants.ExceptionMsgs.MESSAGE_NUMBER_NOT_SPECIFIED);
             }
             input.messageNumber = Integer.parseInt(messageNumber);
             if (input.messageNumber < 1) {
-                throw new Exception(ExceptionMsgs.MESSAGES_ARE_NUMBERED_STARTING_AT_1);
+                throw new Exception(io.cloudslang.content.mail.constants.ExceptionMsgs.MESSAGES_ARE_NUMBERED_STARTING_AT_1);
             }
 
             input.attachmentName = attachmentName;
@@ -340,9 +226,9 @@ public class GetMailAttachmentInput {
                     decryptionKeystore = Constants.FILE + decryptionKeystore;
                 }
 
-                input.decryptionKeyAlias = (decryptionKeyAlias == null) ? Strings.EMPTY : decryptionKeyAlias;
+                input.decryptionKeyAlias = (decryptionKeyAlias == null) ? StringUtils.EMPTY : decryptionKeyAlias;
 
-                input.decryptionKeystorePassword = (decryptionKeystorePassword == null) ? Strings.EMPTY : decryptionKeystorePassword;
+                input.decryptionKeystorePassword = (decryptionKeystorePassword == null) ? StringUtils.EMPTY : decryptionKeystorePassword;
             }
 
             return input;

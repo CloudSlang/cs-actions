@@ -16,15 +16,17 @@
 
 package io.cloudslang.content.mail.entities;
 
-import io.cloudslang.content.mail.utils.Constants;
-import io.cloudslang.content.mail.utils.Constants.*;
+import io.cloudslang.content.mail.constants.Constants;
+import io.cloudslang.content.mail.constants.Constants.*;
+import io.cloudslang.content.mail.constants.Encodings;
+import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static io.cloudslang.content.mail.utils.Constants.ONE_SECOND;
+import static io.cloudslang.content.mail.constants.Constants.ONE_SECOND;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -365,6 +367,7 @@ public class SendMailInput {
         public SendMailInput build() throws Exception {
             SendMailInput input = new SendMailInput();
 
+
             try {
                 input.htmlEmail = Boolean.parseBoolean(htmlEmail);
             } catch (Exception ex) {
@@ -393,23 +396,23 @@ public class SendMailInput {
 
             input.body = body;
 
-            input.attachments = (attachments != null) ? attachments : Strings.EMPTY;
+            input.attachments = (attachments != null) ? attachments : StringUtils.EMPTY;
 
-            input.delimiter = StringUtils.isEmpty(delimiter) ? Strings.COMMA : delimiter;
+            input.delimiter = StringUtils.isEmpty(delimiter) ? "," : delimiter;
 
             input.user = user;
 
-            input.password = (password == null) ? Strings.EMPTY : password;
+            input.password = (password == null) ? StringUtils.EMPTY : password;
 
             input.characterSet = StringUtils.isEmpty(characterSet) ? "UTF-8" : characterSet;
 
             input.contentTransferEncoding = StringUtils.isEmpty(contentTransferEncoding) ?
-                    Encodings.QUOTED_PRINTABLE :
+                    io.cloudslang.content.mail.constants.Encodings.QUOTED_PRINTABLE :
                     contentTransferEncoding;
 
-            input.htmlEmail = (htmlEmail != null && htmlEmail.equalsIgnoreCase(Strings.TRUE));
+            input.htmlEmail = (htmlEmail != null && htmlEmail.equalsIgnoreCase(String.valueOf(true)));
 
-            input.readReceipt = (readReceipt != null && readReceipt.equalsIgnoreCase(Strings.TRUE));
+            input.readReceipt = (readReceipt != null && readReceipt.equalsIgnoreCase(String.valueOf(true)));
 
             input.encodingScheme = (contentTransferEncoding != null && contentTransferEncoding.equals(Encodings.QUOTED_PRINTABLE)) ? "Q" : "B";
 
@@ -419,9 +422,9 @@ public class SendMailInput {
                     encryptionKeystore = Constants.FILE + encryptionKeystore;
                 }
 
-                input.encryptionKeyAlias = (encryptionKeyAlias == null) ? Strings.EMPTY : encryptionKeyAlias;
+                input.encryptionKeyAlias = (encryptionKeyAlias == null) ? StringUtils.EMPTY : encryptionKeyAlias;
 
-                input.encryptionKeystorePassword = (encryptionKeystorePassword == null) ? Strings.EMPTY : encryptionKeystorePassword;
+                input.encryptionKeystorePassword = (encryptionKeystorePassword == null) ? StringUtils.EMPTY : encryptionKeystorePassword;
             }
 
             try {
@@ -432,7 +435,7 @@ public class SendMailInput {
 
             input.rowDelimiter = StringUtils.isEmpty(rowDelimiter) ? "\n" : rowDelimiter;
 
-            input.columnDelimiter = StringUtils.isEmpty(columnDelimiter) ? Strings.COLON : columnDelimiter;
+            input.columnDelimiter = StringUtils.isEmpty(columnDelimiter) ? ":" : columnDelimiter;
 
             validateDelimiters(input.rowDelimiter, input.columnDelimiter);
 
@@ -458,10 +461,10 @@ public class SendMailInput {
 
         public void validateDelimiters(String rowDelimiter, String columnDelimiter) throws Exception {
             if (rowDelimiter.equals(columnDelimiter)) {
-                throw new Exception(ExceptionMsgs.INVALID_DELIMITERS);
+                throw new Exception(io.cloudslang.content.mail.constants.ExceptionMsgs.INVALID_DELIMITERS);
             }
             if (StringUtils.contains(columnDelimiter, rowDelimiter)) {
-                throw new Exception(ExceptionMsgs.INVALID_ROW_DELIMITER);
+                throw new Exception(io.cloudslang.content.mail.constants.ExceptionMsgs.INVALID_ROW_DELIMITER);
             }
         }
 
@@ -488,14 +491,14 @@ public class SendMailInput {
         public boolean validateRow(String row, String columnDelimiter, int rowNumber) throws Exception {
             if (row.contains(columnDelimiter)) {
                 if (row.equals(columnDelimiter)) {
-                    throw new Exception(format(ExceptionMsgs.ROW_WITH_EMPTY_HEADERS_INPUT, rowNumber + 1));
+                    throw new Exception(format(io.cloudslang.content.mail.constants.ExceptionMsgs.ROW_WITH_EMPTY_HEADERS_INPUT, rowNumber + 1));
                 } else {
                     String[] headerNameAndValue = row.split(Pattern.quote(columnDelimiter));
                     if (StringUtils.countMatches(row, columnDelimiter) > 1) {
-                        throw new Exception(format(ExceptionMsgs.ROW_WITH_MULTIPLE_COLUMN_DELIMITERS_IN_HEADERS_INPUT, rowNumber + 1));
+                        throw new Exception(format(io.cloudslang.content.mail.constants.ExceptionMsgs.ROW_WITH_MULTIPLE_COLUMN_DELIMITERS_IN_HEADERS_INPUT, rowNumber + 1));
                     } else {
                         if (headerNameAndValue.length == 1) {
-                            throw new Exception(format(ExceptionMsgs.ROW_WITH_MISSING_VALUE_FOR_HEADER, rowNumber + 1));
+                            throw new Exception(format(io.cloudslang.content.mail.constants.ExceptionMsgs.ROW_WITH_MISSING_VALUE_FOR_HEADER, rowNumber + 1));
                         } else {
                             return true;
                         }

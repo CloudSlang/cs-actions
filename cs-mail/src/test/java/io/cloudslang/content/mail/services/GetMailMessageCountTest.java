@@ -1,8 +1,10 @@
 package io.cloudslang.content.mail.services;
 
+import io.cloudslang.content.mail.constants.OutputNames;
+import io.cloudslang.content.mail.constants.PopPropNames;
 import io.cloudslang.content.mail.entities.GetMailMessageCountInput;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
-import io.cloudslang.content.mail.utils.Constants;
+import io.cloudslang.content.mail.constants.Constants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,8 +37,8 @@ public class GetMailMessageCountTest {
     public void setUp(){
         inputBuilder = new GetMailMessageCountInput.Builder();
         inputBuilder.hostname("host");
-        inputBuilder.port(Constants.POPProps.POP3_PORT);
-        inputBuilder.protocol(Constants.POPProps.POP3);
+        inputBuilder.port(PopPropNames.POP3_PORT);
+        inputBuilder.protocol(PopPropNames.POP3);
         inputBuilder.username("username");
         inputBuilder.password("password");
         inputBuilder.folder("folder");
@@ -57,7 +59,7 @@ public class GetMailMessageCountTest {
         inputBuilder.enableTLS(Constants.Strings.TRUE);
         Map<String, String> results = serviceSpy.execute(inputBuilder.build());
 
-        assertEquals(results.get(Constants.Outputs.RETURN_RESULT), "3");
+        assertEquals(results.get(OutputNames.RETURN_RESULT), "3");
     }
 
 }

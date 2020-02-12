@@ -20,9 +20,12 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.constants.ResponseNames;
+import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.mail.constants.OutputNames;
 import io.cloudslang.content.mail.entities.GetMailAttachmentInput;
 import io.cloudslang.content.mail.services.GetMailAttachmentService;
-import io.cloudslang.content.mail.utils.Constants.*;
+import io.cloudslang.content.mail.constants.InputNames;
 import io.cloudslang.content.mail.utils.ResultUtils;
 
 import java.util.Map;
@@ -91,38 +94,38 @@ public class GetMailAttachmentAction {
      */
     @Action(name = "Get Mail Attachment",
             outputs = {
-                    @Output(Outputs.RETURN_RESULT),
-                    @Output(Outputs.TEMPORARY_FILE),
-                    @Output(Outputs.EXCEPTION)
+                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.TEMPORARY_FILE),
+                    @Output(io.cloudslang.content.constants.OutputNames.EXCEPTION)
             },
             responses = {
-                    @Response(text = Responses.SUCCESS, field = Outputs.RETURN_CODE,
-                            value = ReturnCodes.SUCCESS_RETURN_CODE,
+                    @Response(text = ResponseNames.SUCCESS, field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
+                            value = ReturnCodes.SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Responses.FAILURE, field = Outputs.RETURN_CODE,
-                            value = ReturnCodes.FAILURE_RETURN_CODE,
+                    @Response(text = ResponseNames.FAILURE, field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
+                            value = ReturnCodes.FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             })
     public Map<String, String> execute(
-            @Param(value = Inputs.HOST, required = true) String hostname,
-            @Param(value = Inputs.PORT) String port,
-            @Param(value = Inputs.PROTOCOL) String protocol,
-            @Param(value = Inputs.USERNAME, required = true) String username,
-            @Param(value = Inputs.PASSWORD, required = true, encrypted = true) String password,
-            @Param(value = Inputs.FOLDER, required = true) String folder,
-            @Param(value = Inputs.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(value = Inputs.ENABLE_TLS) String enableTLS,
-            @Param(value = Inputs.ENABLE_SSL) String enableSSL,
-            @Param(value = Inputs.KEYSTORE) String keystore,
-            @Param(value = Inputs.KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
-            @Param(value = Inputs.MESSAGE_NUMBER, required = true) String messageNumber,
-            @Param(value = Inputs.ATTACHMENT_NAME, required = true) String attachmentName,
-            @Param(value = Inputs.CHARACTER_SET) String characterSet,
-            @Param(value = Inputs.DESTINATION) String destination,
-            @Param(value = Inputs.OVERWRITE) String overwrite,
-            @Param(value = Inputs.DECRYPTION_KEYSTORE) String decryptionKeystore,
-            @Param(value = Inputs.DECRYPTION_KEY_ALIAS) String decryptionKeyAlias,
-            @Param(value = Inputs.DECRYPTION_KEYSTORE_PASSWORD, encrypted = true) String decryptionKeystorePassword
+            @Param(value = InputNames.HOST, required = true) String hostname,
+            @Param(value = InputNames.PORT) String port,
+            @Param(value = InputNames.PROTOCOL) String protocol,
+            @Param(value = InputNames.USERNAME, required = true) String username,
+            @Param(value = InputNames.PASSWORD, required = true, encrypted = true) String password,
+            @Param(value = InputNames.FOLDER, required = true) String folder,
+            @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
+            @Param(value = InputNames.ENABLE_TLS) String enableTLS,
+            @Param(value = InputNames.ENABLE_SSL) String enableSSL,
+            @Param(value = InputNames.KEYSTORE) String keystore,
+            @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
+            @Param(value = InputNames.MESSAGE_NUMBER, required = true) String messageNumber,
+            @Param(value = InputNames.ATTACHMENT_NAME, required = true) String attachmentName,
+            @Param(value = InputNames.CHARACTER_SET) String characterSet,
+            @Param(value = InputNames.DESTINATION) String destination,
+            @Param(value = InputNames.OVERWRITE) String overwrite,
+            @Param(value = InputNames.DECRYPTION_KEYSTORE) String decryptionKeystore,
+            @Param(value = InputNames.DECRYPTION_KEY_ALIAS) String decryptionKeyAlias,
+            @Param(value = InputNames.DECRYPTION_KEYSTORE_PASSWORD, encrypted = true) String decryptionKeystorePassword
 //        @Param(value = Inputs.PROXY_PORT) String proxyPort,
 //        @Param(value = Inputs.PROXY_USERNAME) String proxyUsername,
 //        @Param(value = Inputs.PROXY_PASSWORD) String proxyPassword,
