@@ -65,49 +65,88 @@ public class GetMailMessageCountInput extends GetMailBaseInput {
             return (Builder) super.hostname(hostname);
         }
 
+
         @Override
         public Builder port(String port) {
             return (Builder) super.port(port);
         }
+
 
         @Override
         public Builder protocol(String protocol) {
             return (Builder) super.protocol(protocol);
         }
 
+
         @Override
         public Builder username(String username) {
             return (Builder) super.username(username);
         }
+
 
         @Override
         public Builder password(String password) {
             return (Builder) super.password(password);
         }
 
+
         @Override
         public Builder trustAllRoots(String trustAllRoots) {
             return (Builder) super.trustAllRoots(trustAllRoots);
         }
+
 
         @Override
         public Builder enableSSL(String enableSSL) {
             return (Builder) super.enableSSL(enableSSL);
         }
 
+
         @Override
         public Builder enableTLS(String enableTLS) {
             return (Builder) super.enableTLS(enableTLS);
         }
+
 
         @Override
         public Builder keystore(String keystore) {
             return (Builder) super.keystore(keystore);
         }
 
+
         @Override
         public Builder keystorePassword(String keystorePassword) {
             return (Builder) super.keystorePassword(keystorePassword);
+        }
+
+
+        @Override
+        public Builder proxyHost(String proxyHost) {
+            return (Builder) super.proxyHost(proxyHost);
+        }
+
+
+        @Override
+        public Builder proxyPort(String proxyPort) {
+            return (Builder) super.proxyPort(proxyPort);
+        }
+
+
+        @Override
+        public Builder proxyUsername(String proxyUsername) {
+            return (Builder) super.proxyUsername(proxyUsername);
+        }
+
+
+        @Override
+        public Builder proxyPassword(String proxyPassword) {
+            return (Builder) super.proxyPassword(proxyPassword);
+        }
+
+
+        @Override
+        public Builder timeout(String timeout) {
+            return (Builder) super.timeout(timeout);
         }
 
 

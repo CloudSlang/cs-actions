@@ -125,12 +125,12 @@ public class GetMailAttachmentAction {
             @Param(value = InputNames.OVERWRITE) String overwrite,
             @Param(value = InputNames.DECRYPTION_KEYSTORE) String decryptionKeystore,
             @Param(value = InputNames.DECRYPTION_KEY_ALIAS) String decryptionKeyAlias,
-            @Param(value = InputNames.DECRYPTION_KEYSTORE_PASSWORD, encrypted = true) String decryptionKeystorePassword
-//        @Param(value = Inputs.PROXY_PORT) String proxyPort,
-//        @Param(value = Inputs.PROXY_USERNAME) String proxyUsername,
-//        @Param(value = Inputs.PROXY_PASSWORD) String proxyPassword,
-//        @Param(value = Inputs.TIMEOUT) String timeout,
-    ) {
+            @Param(value = InputNames.DECRYPTION_KEYSTORE_PASSWORD, encrypted = true) String decryptionKeystorePassword,
+            @Param(value = InputNames.PROXY_HOST) String proxyHost,
+            @Param(value = InputNames.PROXY_PORT) String proxyPort,
+            @Param(value = InputNames.PROXY_USERNAME) String proxyUsername,
+            @Param(value = InputNames.PROXY_PASSWORD) String proxyPassword,
+            @Param(value = InputNames.TIMEOUT) String timeout) {
         GetMailAttachmentInput.Builder inputBuilder = new GetMailAttachmentInput.Builder()
                 .hostname(hostname)
                 .port(port)
@@ -150,7 +150,12 @@ public class GetMailAttachmentAction {
                 .overwrite(overwrite)
                 .decryptionKeystore(decryptionKeystore)
                 .decryptionKeyAlias(decryptionKeyAlias)
-                .decryptionKeystorePassword(decryptionKeystorePassword);
+                .decryptionKeystorePassword(decryptionKeystorePassword)
+                .proxyHost(proxyHost)
+                .proxyPort(proxyPort)
+                .proxyUsername(proxyUsername)
+                .proxyPassword(proxyPassword)
+                .timeout(timeout);
         try {
             return new GetMailAttachmentService().execute(inputBuilder.build());
         } catch (Exception ex) {

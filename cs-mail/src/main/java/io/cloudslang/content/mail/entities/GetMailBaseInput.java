@@ -20,10 +20,10 @@ import io.cloudslang.content.mail.constants.PopPropNames;
 import io.cloudslang.content.mail.constants.SecurityConstants;
 import org.apache.commons.lang3.StringUtils;
 
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static io.cloudslang.content.mail.constants.Constants.ONE_SECOND;
+import static org.apache.commons.lang3.StringUtils.*;
 
-public abstract class GetMailBaseInput {
+public abstract class GetMailBaseInput implements ProxyInput {
 
     protected String hostname;
     protected Short port;
@@ -35,6 +35,11 @@ public abstract class GetMailBaseInput {
     protected boolean enableTLS;
     protected String keystore;
     protected String keystorePassword;
+    private String proxyHost;
+    private String proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
+    private int timeout = -1;
 
     public String getHostname() {
         return hostname;
@@ -76,6 +81,25 @@ public abstract class GetMailBaseInput {
         return keystorePassword;
     }
 
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public String getProxyPort() {
+        return proxyPort;
+    }
+
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
 
     public static abstract class Builder {
 
@@ -89,6 +113,12 @@ public abstract class GetMailBaseInput {
         private String enableTLS;
         private String keystore;
         private String keystorePassword;
+        private String proxyHost;
+        private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
+        private String timeout;
+
 
         public Builder hostname(String hostname) {
             this.hostname = hostname;
@@ -145,6 +175,36 @@ public abstract class GetMailBaseInput {
 
         public Builder keystorePassword(String keystorePassword) {
             this.keystorePassword = keystorePassword;
+            return this;
+        }
+
+
+        public Builder proxyHost(String proxyHost) {
+            this.proxyHost = proxyHost;
+            return this;
+        }
+
+
+        public Builder proxyPort(String proxyPort) {
+            this.proxyPort = proxyPort;
+            return this;
+        }
+
+
+        public Builder proxyUsername(String proxyUsername) {
+            this.proxyUsername = proxyUsername;
+            return this;
+        }
+
+
+        public Builder proxyPassword(String proxyPassword) {
+            this.proxyPassword = proxyPassword;
+            return this;
+        }
+
+
+        public Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 
@@ -208,6 +268,22 @@ public abstract class GetMailBaseInput {
             input.keystore = defaultIfEmpty(keystore, SecurityConstants.DEFAULT_JAVA_KEYSTORE);
 
             input.keystorePassword = keystorePassword;
+
+            input.proxyHost = proxyHost;
+
+            input.proxyPort = proxyPort;
+
+            input.proxyUsername = proxyUsername;
+
+            input.proxyPassword = proxyPassword;
+
+            if (isNotEmpty(timeout)) {
+                input.timeout = Integer.parseInt(timeout);
+                if (input.timeout <= 0) {
+                    throw new Exception(ExceptionMsgs.TIMEOUT_MUST_BE_POSITIVE);
+                }
+                input.timeout *= ONE_SECOND; //timeouts in seconds
+            }
         }
     }
 }

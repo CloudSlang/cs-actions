@@ -18,10 +18,7 @@ import com.sun.mail.util.ASCIIUtility;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.mail.constants.*;
 import io.cloudslang.content.mail.entities.GetMailMessageInput;
-import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import io.cloudslang.content.mail.entities.StringOutputStream;
-import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
-import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import io.cloudslang.content.mail.utils.MessageStoreUtils;
 import io.cloudslang.content.mail.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,25 +26,17 @@ import org.bouncycastle.cms.PasswordRecipientId;
 import org.bouncycastle.cms.RecipientId;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.RecipientInformationStore;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnveloped;
 
 import java.io.*;
-import java.net.URL;
 import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 
 import static io.cloudslang.content.mail.constants.Constants.*;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.bouncycastle.mail.smime.SMIMEUtil.toMimeBodyPart;
 
 public class GetMailMessageService {
@@ -79,7 +68,7 @@ public class GetMailMessageService {
             if (input.isSubjectOnly()) {
                 String subject;
                 // need to force the decode charset
-                if ((input.getCharacterSet() != null) && (input.getCharacterSet().trim().length() > 0)) { 
+                if ((input.getCharacterSet() != null) && (input.getCharacterSet().trim().length() > 0)) {
                     subject = message.getHeader(SUBJECT_HEADER)[0];
                     subject = changeHeaderCharset(subject, input.getCharacterSet());
                     subject = MimeUtility.decodeText(subject);
@@ -100,7 +89,7 @@ public class GetMailMessageService {
                         subject = changeHeaderCharset(subject, input.getCharacterSet());
                         result.put(OutputNames.SUBJECT, MimeUtility.decodeText(subject));
                         String attachedFileNames = changeHeaderCharset(getAttachedFileNames(message), input.getCharacterSet());
-                        result.put(OutputNames.ATTACHED_FILE_NAMES_RESULT, decodeAttachedFileNames(attachedFileNames));
+                        result.put(OutputNames.ATTACHED_FILE_NAMES, decodeAttachedFileNames(attachedFileNames));
                     } else {
                         //let everything as the sender intended it to be :)
                         String subject = message.getSubject();
@@ -108,7 +97,7 @@ public class GetMailMessageService {
                             subject = StringUtils.EMPTY;
                         }
                         result.put(OutputNames.SUBJECT, MimeUtility.decodeText(subject));
-                        result.put(OutputNames.ATTACHED_FILE_NAMES_RESULT,
+                        result.put(OutputNames.ATTACHED_FILE_NAMES,
                                 decodeAttachedFileNames((getAttachedFileNames(message))));
                     }
                     // Get the message body
@@ -121,16 +110,16 @@ public class GetMailMessageService {
                         lastMessageBody = StringUtils.EMPTY;
                     }
 
-                    result.put(OutputNames.BODY_RESULT, MimeUtility.decodeText(lastMessageBody));
+                    result.put(OutputNames.BODY, MimeUtility.decodeText(lastMessageBody));
 
                     String plainTextBody = messageByTypes.containsKey(MimeTypes.TEXT_PLAIN) ?
                             messageByTypes.get(MimeTypes.TEXT_PLAIN) :
                             StringUtils.EMPTY;
-                    result.put(OutputNames.PLAIN_TEXT_BODY_RESULT, MimeUtility.decodeText(plainTextBody));
+                    result.put(OutputNames.PLAIN_TEXT_BODY, MimeUtility.decodeText(plainTextBody));
 
                     StringOutputStream stream = new StringOutputStream();
                     message.writeTo(stream);
-                    result.put(io.cloudslang.content.constants.OutputNames.RETURN_RESULT, 
+                    result.put(io.cloudslang.content.constants.OutputNames.RETURN_RESULT,
                             stream.toString().replaceAll(StringUtils.EMPTY + (char) 0, StringUtils.EMPTY));
                 } catch (UnsupportedEncodingException except) {
                     throw new UnsupportedEncodingException("The given encoding (" + input.getCharacterSet() +
@@ -159,7 +148,7 @@ public class GetMailMessageService {
 
 
     protected Message getMessage() throws Exception {
-        store = createMessageStore();
+        store = MessageStoreUtils.createMessageStore(input);
         Folder folder = store.getFolder(input.getFolder());
         if (!folder.exists()) {
             throw new Exception(ExceptionMsgs.THE_SPECIFIED_FOLDER_DOES_NOT_EXIST_ON_THE_REMOTE_SERVER);
@@ -170,31 +159,6 @@ public class GetMailMessageService {
                     folder.getMessageCount() + ExceptionMsgs.COUNT_MESSAGES_IN_FOLDER_ERROR_MESSAGE);
         }
         return folder.getMessage(input.getMessageNumber());
-    }
-
-
-    protected Store createMessageStore() throws Exception {
-        Properties props = new Properties();
-        if (input.getTimeout() > 0) {
-            props.put(PropNames.MAIL + input.getProtocol() + PropNames.TIMEOUT, input.getTimeout());
-            setPropertiesProxy(props);
-        }
-        Authenticator auth = new SimpleAuthenticator(input.getUsername(), input.getPassword());
-        Store store;
-        if (input.isEnableTLS() || input.isEnableSSL()) {
-            MessageStoreUtils.addSSLSettings(input.isTrustAllRoots(), input.getKeystore(), input.getKeystorePassword(),
-                    input.getTrustKeystore(), input.getTrustPassword());
-        }
-        if (input.isEnableTLS()) {
-            store = MessageStoreUtils.tryTLSOtherwiseTrySSL(auth, props, input);
-        } else if (input.isEnableSSL()) {
-            store = MessageStoreUtils.connectUsingSSL(props, auth, input);
-        } else {
-            store = MessageStoreUtils.configureStoreWithoutSSL(props, auth, input);
-            store.connect();
-        }
-
-        return store;
     }
 
 
@@ -424,7 +388,6 @@ public class GetMailMessageService {
 
 
     protected String convertMessage(String msg) throws Exception {
-
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < msg.length(); i++) {
@@ -439,7 +402,7 @@ public class GetMailMessageService {
         return sb.toString();
     }
 
-    protected int getFolderOpenMode() {
+    int getFolderOpenMode() {
         return Folder.READ_WRITE;
     }
 
@@ -457,24 +420,8 @@ public class GetMailMessageService {
      * @param newCharset - The new charset that will be replaced in the given header.
      * @return The header with the new charset.
      */
-    public String changeHeaderCharset(String header, String newCharset) {
+    String changeHeaderCharset(String header, String newCharset) {
         //match for =?charset?
         return header.replaceAll("=\\?[^\\(\\)<>@,;:/\\[\\]\\?\\.= ]+\\?", "=?" + newCharset + "?");
-    }
-
-    protected void setPropertiesProxy(Properties prop) {
-        if (input.getProtocol().contains(ImapPropNames.IMAP)) {
-            prop.setProperty(ImapPropNames.PROXY_HOST, input.getProxyHost());
-            prop.setProperty(ImapPropNames.PROXY_PORT, input.getProxyPort());
-            prop.setProperty(ImapPropNames.PROXY_USER, input.getProxyUsername());
-            prop.setProperty(ImapPropNames.PROXY_PASSWORD, input.getProxyPassword());
-
-        }
-        if (input.getProtocol().contains(PopPropNames.POP)) {
-            prop.setProperty(PopPropNames.PROXY_HOST, input.getProxyHost());
-            prop.setProperty(PopPropNames.PROXY_PORT, input.getProxyPort());
-            prop.setProperty(PopPropNames.PROXY_USER, input.getProxyUsername());
-            prop.setProperty(PopPropNames.PROXY_PASSWORD, input.getProxyPassword());
-        }
     }
 }

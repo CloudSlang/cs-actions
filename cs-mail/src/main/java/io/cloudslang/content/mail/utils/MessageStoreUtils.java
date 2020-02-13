@@ -14,9 +14,7 @@
  */
 package io.cloudslang.content.mail.utils;
 
-import io.cloudslang.content.mail.constants.Constants;
-import io.cloudslang.content.mail.constants.PropNames;
-import io.cloudslang.content.mail.constants.SecurityConstants;
+import io.cloudslang.content.mail.constants.*;
 import io.cloudslang.content.mail.entities.GetMailBaseInput;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
@@ -39,6 +37,10 @@ public class MessageStoreUtils {
 
     public static Store createMessageStore(GetMailBaseInput input) throws Exception {
         Properties props = new Properties();
+        if (input.getTimeout() > 0) {
+            props.put(PropNames.MAIL + input.getProtocol() + PropNames.TIMEOUT, input.getTimeout());
+            ProxyUtils.setPropertiesProxy(props, input);
+        }
         Authenticator auth = new SimpleAuthenticator(input.getUsername(), input.getPassword());
         Store store;
         if (input.isEnableTLS() || input.isEnableSSL()) {
@@ -50,17 +52,15 @@ public class MessageStoreUtils {
         } else if (input.isEnableSSL()) {
             store = connectUsingSSL(props, auth, input);
         } else {
-            props.put(PropNames.MAIL + input.getProtocol() + PropNames.HOST, input.getHostname());
-            props.put(PropNames.MAIL + input.getProtocol() + PropNames.PORT, input.getPort());
-            Session s = Session.getInstance(props, auth);
-            store = s.getStore(input.getProtocol());
+            store = configureStoreWithoutSSL(props, auth, input);
             store.connect();
         }
+
         return store;
     }
 
 
-    public static Store connectUsingSSL(Properties props, Authenticator auth, GetMailBaseInput input) throws MessagingException {
+    static Store connectUsingSSL(Properties props, Authenticator auth, GetMailBaseInput input) throws MessagingException {
         Store store = configureStoreWithSSL(props, auth, input);
         store.connect();
         return store;
@@ -79,7 +79,7 @@ public class MessageStoreUtils {
     }
 
 
-    public static Void addSSLSettings(boolean trustAllRoots, String keystore,
+    public static void addSSLSettings(boolean trustAllRoots, String keystore,
                                String keystorePassword, String trustKeystore, String trustPassword) throws Exception {
         boolean useClientCert = false;
         boolean useTrustCert = false;
@@ -143,8 +143,6 @@ public class MessageStoreUtils {
         SSLContext context = SSLContext.getInstance(SecurityConstants.SSL);
         context.init(keyManagers, trustManagers, new SecureRandom());
         SSLContext.setDefault(context);
-
-        return null;
     }
 
 
@@ -173,7 +171,7 @@ public class MessageStoreUtils {
     }
 
 
-    public static void clearTLSProperties(Properties props, GetMailBaseInput input) {
+    private static void clearTLSProperties(Properties props, GetMailBaseInput input) {
         props.remove(PropNames.MAIL + input.getProtocol() + PropNames.SSL_ENABLE);
         props.remove(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_ENABLE);
         props.remove(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_REQUIRED);

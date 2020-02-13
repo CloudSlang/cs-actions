@@ -12,12 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.mail.constants;
+package io.cloudslang.content.mail.entities;
 
-public final class OutputNames {
-    public static final String SUBJECT = "subject";
-    public static final String BODY = "body";
-    public static final String PLAIN_TEXT_BODY = "plainTextBody";
-    public static final String ATTACHED_FILE_NAMES = "attachedFileNames";
-    public static final String TEMPORARY_FILE = "temporaryFile";
+public interface ProxyInput {
+    String getProtocol();
+
+    String getProxyHost();
+
+    String getProxyPort();
+
+    String getProxyUsername();
+
+    String getProxyPassword();
 }

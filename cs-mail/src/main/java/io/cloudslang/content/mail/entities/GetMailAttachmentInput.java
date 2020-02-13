@@ -198,6 +198,31 @@ public class GetMailAttachmentInput extends GetMailBaseInput implements Decrypta
             return (Builder) super.keystorePassword(keystorePassword);
         }
 
+        @Override
+        public Builder proxyHost(String proxyHost) {
+            return (Builder) super.proxyHost(proxyHost);
+        }
+
+        @Override
+        public Builder proxyPort(String proxyPort) {
+            return (Builder) super.proxyPort(proxyPort);
+        }
+
+        @Override
+        public Builder proxyUsername(String proxyUsername) {
+            return (Builder) super.proxyUsername(proxyUsername);
+        }
+
+        @Override
+        public Builder proxyPassword(String proxyPassword) {
+            return (Builder) super.proxyPassword(proxyPassword);
+        }
+
+        @Override
+        public Builder timeout(String timeout) {
+            return (Builder) super.timeout(timeout);
+        }
+
         public GetMailAttachmentInput build() throws Exception {
             GetMailAttachmentInput input = new GetMailAttachmentInput();
             super.build(input);

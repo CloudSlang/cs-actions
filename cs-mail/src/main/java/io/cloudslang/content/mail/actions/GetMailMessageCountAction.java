@@ -90,12 +90,12 @@ public class GetMailMessageCountAction {
             @Param(value = InputNames.KEYSTORE) String keystore,
             @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword
-            //        @Param(value = Inputs.PROXY_PORT) String proxyPort,
-//        @Param(value = Inputs.PROXY_USERNAME) String proxyUsername,
-//        @Param(value = Inputs.PROXY_PASSWORD) String proxyPassword,
-//        @Param(value = Inputs.TIMEOUT) String timeout,
-    ) {
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
+            @Param(value = InputNames.PROXY_HOST) String proxyHost,
+            @Param(value = InputNames.PROXY_PORT) String proxyPort,
+            @Param(value = InputNames.PROXY_USERNAME) String proxyUsername,
+            @Param(value = InputNames.PROXY_PASSWORD) String proxyPassword,
+            @Param(value = InputNames.TIMEOUT) String timeout) {
         GetMailMessageCountInput.Builder inputBuilder = new GetMailMessageCountInput.Builder()
                 .hostname(hostname)
                 .username(username)
@@ -109,7 +109,12 @@ public class GetMailMessageCountAction {
                 .keystore(keystore)
                 .keystorePassword(keystorePassword)
                 .trustKeystore(trustKeystore)
-                .trustPassword(trustPassword);
+                .trustPassword(trustPassword)
+                .proxyHost(proxyHost)
+                .proxyPort(proxyPort)
+                .proxyUsername(proxyUsername)
+                .proxyPassword(proxyPassword)
+                .timeout(timeout);
         try {
             return new GetMailMessageCountService().execute(inputBuilder.build());
         } catch (Exception ex) {

@@ -33,7 +33,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 /**
  * Created by giloan on 10/30/2014.
  */
-public class SendMailInput {
+public class SendMailInput implements ProxyInput {
 
     private String hostname;
     private short port;
@@ -60,8 +60,12 @@ public class SendMailInput {
     private String encryptionKeystorePassword;
     private boolean enableTLS;
     private String user;
-    private int timeout = -1;
     private String encryptionAlgorithm;
+    private String proxyHost;
+    private String proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
+    private int timeout = -1;
 
     private SendMailInput(){
     }
@@ -186,6 +190,27 @@ public class SendMailInput {
         return encryptionAlgorithm;
     }
 
+    @Override
+    public String getProtocol() {
+        return StringUtils.EMPTY;
+    }
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public String getProxyPort() {
+        return proxyPort;
+    }
+
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
     public static class Builder {
 
         private String hostname;
@@ -211,8 +236,12 @@ public class SendMailInput {
         private String encryptionKeystorePassword;
         private String enableTLS;
         private String user;
-        private String timeout;
         private String encryptionAlgorithm;
+        private String proxyHost;
+        private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
+        private String timeout;
 
         public Builder hostname(String hostname) {
             this.hostname = hostname;
@@ -364,9 +393,32 @@ public class SendMailInput {
         }
 
 
+        public Builder proxyHost(String proxyHost) {
+            this.proxyHost = proxyHost;
+            return this;
+        }
+
+
+        public Builder proxyPort(String proxyPort) {
+            this.proxyPort = proxyPort;
+            return this;
+        }
+
+
+        public Builder proxyUsername(String proxyUsername) {
+            this.proxyUsername = proxyUsername;
+            return this;
+        }
+
+
+        public Builder proxyPassword(String proxyPassword) {
+            this.proxyPassword = proxyPassword;
+            return this;
+        }
+
+
         public SendMailInput build() throws Exception {
             SendMailInput input = new SendMailInput();
-
 
             try {
                 input.htmlEmail = Boolean.parseBoolean(htmlEmail);
@@ -454,6 +506,14 @@ public class SendMailInput {
             }
 
             input.encryptionAlgorithm = EncryptionAlgorithmsEnum.getEncryptionAlgorithm(encryptionAlgorithm).getEncryptionOID();
+
+            input.proxyHost = proxyHost;
+
+            input.proxyPort = proxyPort;
+
+            input.proxyUsername = proxyUsername;
+
+            input.proxyPassword = proxyPassword;
 
             return input;
         }

@@ -33,13 +33,13 @@ public class GetMailMessageInput extends GetMailBaseInput implements Decryptable
     private String decryptionKeystore;
     private String decryptionKeyAlias;
     private String decryptionKeystorePassword;
-    private int timeout = -1;
     private boolean verifyCertificate;
+    private boolean markMessageAsRead;
     private String proxyHost;
     private String proxyPort;
     private String proxyUsername;
     private String proxyPassword;
-    private boolean markMessageAsRead;
+    private int timeout = -1;
 
 
     private GetMailMessageInput(){
@@ -370,25 +370,9 @@ public class GetMailMessageInput extends GetMailBaseInput implements Decryptable
                 }
             }
 
-            if (isNotEmpty(timeout)) {
-                input.timeout = Integer.parseInt(timeout);
-                if (input.timeout <= 0) {
-                    throw new Exception(ExceptionMsgs.TIMEOUT_MUST_BE_POSITIVE);
-                }
-                input.timeout *= ONE_SECOND; //timeouts in seconds
-            }
-
             if (!isEmpty(verifyCertificate)) {
                 input.verifyCertificate = Boolean.parseBoolean(verifyCertificate);
             }
-
-            input.proxyHost = proxyHost;
-
-            input.proxyPort = proxyPort;
-
-            input.proxyUsername = proxyUsername;
-
-            input.proxyPassword = proxyPassword;
 
             return input;
         }

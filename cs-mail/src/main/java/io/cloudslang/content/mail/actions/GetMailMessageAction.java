@@ -91,9 +91,9 @@ public class GetMailMessageAction {
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
                     @Output(OutputNames.SUBJECT),
-                    @Output(OutputNames.BODY_RESULT),
-                    @Output(OutputNames.PLAIN_TEXT_BODY_RESULT),
-                    @Output(OutputNames.ATTACHED_FILE_NAMES_RESULT),
+                    @Output(OutputNames.BODY),
+                    @Output(OutputNames.PLAIN_TEXT_BODY),
+                    @Output(OutputNames.ATTACHED_FILE_NAMES),
                     @Output(io.cloudslang.content.constants.OutputNames.EXCEPTION)
             },
             responses = {

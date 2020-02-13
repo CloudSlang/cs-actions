@@ -99,26 +99,30 @@ public class SendMailAction {
             @Param(value = InputNames.HTML_EMAIL) String htmlEmail,
             @Param(value = InputNames.FROM, required = true) String from,
             @Param(value = InputNames.TO, required = true) String to,
-            @Param(InputNames.CC) String cc,
-            @Param(InputNames.BCC) String bcc,
+            @Param(value = InputNames.CC) String cc,
+            @Param(value = InputNames.BCC) String bcc,
             @Param(value = InputNames.SUBJECT, required = true) String subject,
             @Param(value = InputNames.BODY, required = true) String body,
-            @Param(InputNames.READ_RECEIPT) String readReceipt,
-            @Param(InputNames.ATTACHMENTS) String attachments,
-            @Param(InputNames.HEADERS) String headers,
-            @Param(InputNames.HEADERS_ROW_DELIMITER) String rowDelimiter,
-            @Param(InputNames.HEADERS_COLUMN_DELIMITER) String columnDelimiter,
-            @Param(InputNames.USERNAME) String user,
-            @Param(InputNames.PASSWORD) String password,
-            @Param(InputNames.DELIMITER) String delimiter,
-            @Param(InputNames.CHARACTER_SET) String characterSet,
-            @Param(InputNames.CONTENT_TRANSFER_ENCODING) String contentTransferEncoding,
-            @Param(InputNames.ENCRYPTION_KEYSTORE) String encryptionKeystore,
-            @Param(InputNames.ENCRYPTION_KEY_ALIAS) String encryptionKeyAlias,
-            @Param(InputNames.ENCRYPTION_KEYSTORE_PASSWORD) String encryptionKeystorePassword,
-            @Param(InputNames.ENABLE_TLS) String enableTLS,
-            @Param(InputNames.TIMEOUT) String timeout,
-            @Param(InputNames.ENCRYPTION_ALGORITHM) String encryptionAlgorithm) {
+            @Param(value = InputNames.READ_RECEIPT) String readReceipt,
+            @Param(value = InputNames.ATTACHMENTS) String attachments,
+            @Param(value = InputNames.HEADERS) String headers,
+            @Param(value = InputNames.HEADERS_ROW_DELIMITER) String rowDelimiter,
+            @Param(value = InputNames.HEADERS_COLUMN_DELIMITER) String columnDelimiter,
+            @Param(value = InputNames.USERNAME) String user,
+            @Param(value = InputNames.PASSWORD) String password,
+            @Param(value = InputNames.DELIMITER) String delimiter,
+            @Param(value = InputNames.CHARACTER_SET) String characterSet,
+            @Param(value = InputNames.CONTENT_TRANSFER_ENCODING) String contentTransferEncoding,
+            @Param(value = InputNames.ENCRYPTION_KEYSTORE) String encryptionKeystore,
+            @Param(value = InputNames.ENCRYPTION_KEY_ALIAS) String encryptionKeyAlias,
+            @Param(value = InputNames.ENCRYPTION_KEYSTORE_PASSWORD) String encryptionKeystorePassword,
+            @Param(value = InputNames.ENABLE_TLS) String enableTLS,
+            @Param(value = InputNames.TIMEOUT) String timeout,
+            @Param(value = InputNames.ENCRYPTION_ALGORITHM) String encryptionAlgorithm,
+            @Param(value = InputNames.PROXY_HOST) String proxyHost,
+            @Param(value = InputNames.PROXY_PORT) String proxyPort,
+            @Param(value = InputNames.PROXY_USERNAME) String proxyUsername,
+            @Param(value = InputNames.PROXY_PASSWORD) String proxyPassword) {
         SendMailInput.Builder inputBuilder = new SendMailInput.Builder()
                 .hostname(hostname)
                 .port(port)
@@ -144,7 +148,11 @@ public class SendMailAction {
                 .encryptionKeystorePassword(encryptionKeystorePassword)
                 .enableTLS(enableTLS)
                 .timeout(timeout)
-                .encryptionAlgorithm(encryptionAlgorithm);
+                .encryptionAlgorithm(encryptionAlgorithm)
+                .proxyHost(proxyHost)
+                .proxyPort(proxyPort)
+                .proxyUsername(proxyUsername)
+                .proxyPassword(proxyPassword);
         try {
             return new SendMailService().execute(inputBuilder.build());
         } catch (Exception e) {
