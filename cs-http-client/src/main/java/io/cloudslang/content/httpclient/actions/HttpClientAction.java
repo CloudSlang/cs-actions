@@ -271,6 +271,8 @@ public class HttpClientAction {
     )
     public Map<String, String> execute(
             @Param(value = HttpClientInputs.URL, required = true) String url,
+            @Param(HttpClientInputs.TLS_VERSION) String tlsVersion,
+            @Param(HttpClientInputs.ALLOWED_CYPHERS) String allowedCyphers,
             @Param(HttpClientInputs.AUTH_TYPE) String authType,
             @Param(HttpClientInputs.PREEMPTIVE_AUTH) String preemptiveAuth,
             @Param(HttpClientInputs.USERNAME) String username,
@@ -362,6 +364,8 @@ public class HttpClientAction {
         httpClientInputs.setMultipartValuesAreURLEncoded(multipartValuesAreURLEncoded);
         httpClientInputs.setChunkedRequestEntity(chunkedRequestEntity);
         httpClientInputs.setMethod(method);
+        httpClientInputs.setTlsVersion(tlsVersion);
+        httpClientInputs.setAllowedCyphers(allowedCyphers);
         httpClientInputs.setCookieStoreSessionObject(httpClientCookieSession);
         httpClientInputs.setConnectionPoolSessionObject(httpClientPoolingConnectionManager);
 

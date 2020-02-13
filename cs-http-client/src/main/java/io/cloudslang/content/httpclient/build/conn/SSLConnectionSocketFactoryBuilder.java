@@ -14,7 +14,6 @@
  */
 
 
-
 package io.cloudslang.content.httpclient.build.conn;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +26,7 @@ import java.net.URL;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,13 +44,32 @@ public class SSLConnectionSocketFactoryBuilder {
     public static final String TLSv10 = "TLSv1";
     public static final String TLSv11 = "TLSv1.1";
     public static final String TLSv12 = "TLSv1.2";
+    public static final String[] ARRAY_TLSv12 = new String[]{"TLSv1.2"};
     public static final String[] SUPPORTED_PROTOCOLS = new String[]{SSLv3, TLSv10, TLSv11, TLSv12};
+    public static final String[] SUPPORTED_CYPHERS = new String[]{"TLS_DHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "THS_DHE_RSA_WITH_AES_256_CBC_SHA256", "THS_DHE_RSA_WITH_AES_128_CBC_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256", "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
+            "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_WITH_AES_256_CBC_SHA384", "TLS_ECDHE_WITH_AES_256_GCM_SHA384", "TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_RSA_WITH_AES_256_CBC_SHA256", "TLS_RSA_WITH_AES_128_CBC_SHA256"};
+    public String[] cypherArray;
     private String trustAllRootsStr = "false";
     private String keystore;
+    private String inputTLS;
     private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
+    private String allowedCyphers;
     private String x509HostnameVerifierInputValue = "strict";
+    private boolean flag = false;
+    private boolean hasTLS2;
+
+    public static boolean checkEquality(String[] subArray, String[] largeArray) {
+
+        for (int i = 0; i < subArray.length; i++)
+            subArray[i] = subArray[i].toUpperCase();
+        return Arrays.asList(largeArray).containsAll(Arrays.asList(subArray));
+    }
+
+    public static boolean checkIfTLS2(String[] arr, String targetValue) {
+        return Arrays.asList(arr).contains(targetValue);
+    }
 
     protected KeyStore createKeyStore(final URL url, final String password)
             throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
@@ -128,6 +147,7 @@ public class SSLConnectionSocketFactoryBuilder {
         SSLConnectionSocketFactory sslsf;
         try {
             String x509HostnameVerifierStr = x509HostnameVerifierInputValue.toLowerCase();
+
             X509HostnameVerifier x509HostnameVerifier;
             switch (x509HostnameVerifierStr) {
                 case "strict":
@@ -142,8 +162,39 @@ public class SSLConnectionSocketFactoryBuilder {
                 default:
                     throw new IllegalArgumentException("Invalid value '" + x509HostnameVerifierInputValue + "' for input 'x509HostnameVerifier'. Valid values: 'strict','browser_compatible','allow_all'.");
             }
-            // Allow SSLv3, TLSv1, TLSv1.1 and TLSv1.2 protocols only. Client-server communication starts with TLSv1.2 and fallbacks to SSLv3 if needed.
+
             sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);
+            // Allow SSLv3, TLSv1, TLSv1.1 and TLSv1.2 protocols only. Client-server communication starts with TLSv1.2 and fallbacks to SSLv3 if needed.
+
+            if (!StringUtils.isEmpty(inputTLS)) {
+                String[] protocolArray = inputTLS.split(",");
+
+                for (int i = 0; i < protocolArray.length; i++)
+                    protocolArray[i] = protocolArray[i].toUpperCase();
+
+                if (!checkEquality(protocolArray, SUPPORTED_PROTOCOLS)) {
+                    throw new Exception("Error protocol");
+                }
+
+                if (checkIfTLS2(protocolArray, TLSv12))
+                    flag = true;
+
+                if (protocolArray.length == 1 && protocolArray[0].equals(TLSv12)) {
+                    if (!StringUtils.isEmpty(allowedCyphers)) {
+                        String[] cypherArray = inputTLS.split(",");
+                        sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), protocolArray, cypherArray, x509HostnameVerifier);
+                    } else
+                        sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);
+                } else if (protocolArray.length > 1 && flag) {
+                    try {
+                        sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), ARRAY_TLSv12, cypherArray, x509HostnameVerifier);
+                    } catch (Exception e) {
+                        sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);
+                    }
+                }
+            } else
+                sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);
+
         } catch (Exception e) {
             if (e instanceof IllegalArgumentException) {
                 throw new IllegalArgumentException(e.getMessage());
@@ -189,6 +240,12 @@ public class SSLConnectionSocketFactoryBuilder {
         return this;
     }
 
+
+    public SSLConnectionSocketFactoryBuilder setInputTLS(String inputTLSversion) {
+        this.inputTLS = inputTLSversion;
+        return this;
+    }
+
     public SSLConnectionSocketFactoryBuilder setKeystore(String keystore) {
         this.keystore = keystore;
         return this;
@@ -206,6 +263,11 @@ public class SSLConnectionSocketFactoryBuilder {
 
     public SSLConnectionSocketFactoryBuilder setTrustPassword(String trustPassword) {
         this.trustPassword = trustPassword;
+        return this;
+    }
+
+    public SSLConnectionSocketFactoryBuilder setallowedCyphers(String allowedCyphers) {
+        this.allowedCyphers = allowedCyphers;
         return this;
     }
 
