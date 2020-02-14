@@ -22,7 +22,7 @@ import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import io.cloudslang.content.mail.constants.MimeTypes;
 import io.cloudslang.content.mail.constants.OutputNames;
 import io.cloudslang.content.mail.constants.PopPropNames;
-import io.cloudslang.content.mail.entities.GetMailBaseInput;
+import io.cloudslang.content.mail.entities.GetMailInput;
 import io.cloudslang.content.mail.entities.GetMailMessageInput;
 import io.cloudslang.content.mail.entities.StringOutputStream;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
@@ -34,7 +34,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.powermock.api.mockito.PowerMockito;
@@ -56,9 +55,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.security.KeyStore;
-import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -129,7 +125,7 @@ public class GetMailMessageServiceTest {
     @Test
     public void testGetMessageThrowsFolderNotFoundException() throws Exception {
         PowerMockito.mockStatic(MessageStoreUtils.class);
-        when(MessageStoreUtils.createMessageStore(any(GetMailBaseInput.class))).thenReturn(storeMock);
+        when(MessageStoreUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
         doReturn(folderMock).when(storeMock).getFolder(anyString());
         doReturn(false).when(folderMock).exists();
         serviceSpy.input = inputBuilder.build();
@@ -148,7 +144,7 @@ public class GetMailMessageServiceTest {
     @Test
     public void testGetMessageThrowsMessageNumberException() throws Exception {
         PowerMockito.mockStatic(MessageStoreUtils.class);
-        when(MessageStoreUtils.createMessageStore(any(GetMailBaseInput.class))).thenReturn(storeMock);
+        when(MessageStoreUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
         doReturn(folderMock).when(storeMock).getFolder(anyString());
         doReturn(true).when(folderMock).exists();
         doReturn(READ_ONLY).when(serviceSpy).getFolderOpenMode();
@@ -330,7 +326,7 @@ public class GetMailMessageServiceTest {
         exception.expectMessage("The given encoding (" + BAD_CHARACTERSET + ") is invalid or not supported.");
         serviceSpy.execute(inputBuilder.build());
     }
-    
+
     /**
      * Test getMessageContent method with text/plain message.
      *
@@ -503,7 +499,6 @@ public class GetMailMessageServiceTest {
         final String message = serviceSpy.decodeAttachedFileNames(fileNames);
         assertEquals("?\u009D??\u009D???? ?????????,?\u009D??\u009D????", message);
     }
-
 
 
     private void commonVerifiesForGetMessageContentMethod(Map<String, String> messageByType, String messageType)

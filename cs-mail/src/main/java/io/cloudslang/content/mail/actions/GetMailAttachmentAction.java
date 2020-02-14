@@ -87,6 +87,11 @@ public class GetMailAttachmentAction {
      *                                   The private key from the pair will be used to decrypt the mail.
      *                                   The key pair must not have password.
      * @param decryptionKeystorePassword The password for the decryptionKeystore.
+     * @param proxyHost                  The proxy server used.
+     * @param proxyPort                  The proxy server port.
+     * @param proxyUsername              The user name used when connecting to the proxy.
+     * @param proxyPassword              The proxy server password associated with the proxyUsername input value.
+     * @param timeout                    The timeout (seconds) for retrieving the mail message attachment.
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - The text content of the attachment, if the attachment is in plain text format.
      * <br><b>temporaryFile</b> - The path to the temporary file where the attachment was saved.
@@ -96,6 +101,7 @@ public class GetMailAttachmentAction {
             outputs = {
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
                     @Output(OutputNames.TEMPORARY_FILE),
+                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
                     @Output(io.cloudslang.content.constants.OutputNames.EXCEPTION)
             },
             responses = {

@@ -43,4 +43,5 @@ public final class ExceptionMsgs {
             "of the header values.";
     public static final String TIMEOUT_MUST_BE_POSITIVE = "timeout value must be a positive number";
     public static final String INVALID_PORT_NUMBER = "Invalid port number";
+    public static final String PORT_NOT_SPECIFIED = "The required 'port' input is not specified";
 }

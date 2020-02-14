@@ -18,11 +18,24 @@ import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import io.cloudslang.content.mail.constants.SecurityConstants;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Map;
+
 import static io.cloudslang.content.mail.constants.Constants.*;
+import static io.cloudslang.content.mail.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
-public class GetMailMessageInput extends GetMailBaseInput implements DecryptableMessageInput {
+public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
 
+    private String hostname;
+    private Short port;
+    private String protocol;
+    private String username;
+    private String password;
+    private boolean trustAllRoots;
+    private boolean enableSSL;
+    private boolean enableTLS;
+    private String keystore;
+    private String keystorePassword;
     private String folder;
     private int messageNumber;
     private boolean subjectOnly;
@@ -41,9 +54,59 @@ public class GetMailMessageInput extends GetMailBaseInput implements Decryptable
     private String proxyPassword;
     private int timeout = -1;
 
-
-    private GetMailMessageInput(){
+    private GetMailMessageInput() {
     }
+
+
+    public String getHostname() {
+        return hostname;
+    }
+
+
+    public Short getPort() {
+        return port;
+    }
+
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+
+    public String getUsername() {
+        return username;
+    }
+
+
+    public String getPassword() {
+        return password;
+    }
+
+
+    public boolean isTrustAllRoots() {
+        return trustAllRoots;
+    }
+
+
+    public boolean isEnableSSL() {
+        return enableSSL;
+    }
+
+
+    public boolean isEnableTLS() {
+        return enableTLS;
+    }
+
+
+    public String getKeystore() {
+        return keystore;
+    }
+
+
+    public String getKeystorePassword() {
+        return keystorePassword;
+    }
+
 
     public boolean isMarkMessageAsRead() {
         return markMessageAsRead;
@@ -140,8 +203,23 @@ public class GetMailMessageInput extends GetMailBaseInput implements Decryptable
     }
 
 
-    public static class Builder extends GetMailBaseInput.Builder {
+    public static class Builder {
 
+        private String hostname;
+        private String port;
+        private String protocol;
+        private String username;
+        private String password;
+        private String trustAllRoots;
+        private String enableSSL;
+        private String enableTLS;
+        private String keystore;
+        private String keystorePassword;
+        private String proxyHost;
+        private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
+        private String timeout;
         private String folder;
         private String messageNumber;
         private String subjectOnly;
@@ -152,13 +230,68 @@ public class GetMailMessageInput extends GetMailBaseInput implements Decryptable
         private String decryptionKeystore;
         private String decryptionKeyAlias;
         private String decryptionKeystorePassword;
-        private String timeout;
         private String verifyCertificate;
         private String markMessageAsRead;
-        private String proxyHost;
-        private String proxyPort;
-        private String proxyUsername;
-        private String proxyPassword;
+
+
+        public Builder hostname(String hostname) {
+            this.hostname = hostname;
+            return this;
+        }
+
+
+        public Builder port(String port) {
+            this.port = port;
+            return this;
+        }
+
+
+        public Builder protocol(String protocol) {
+            this.protocol = protocol;
+            return this;
+        }
+
+
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+
+        public Builder trustAllRoots(String trustAllRoots) {
+            this.trustAllRoots = trustAllRoots;
+            return this;
+        }
+
+
+        public Builder enableSSL(String enableSSL) {
+            this.enableSSL = enableSSL;
+            return this;
+        }
+
+
+        public Builder enableTLS(String enableTLS) {
+            this.enableTLS = enableTLS;
+            return this;
+        }
+
+
+        public Builder keystore(String keystore) {
+            this.keystore = keystore;
+            return this;
+        }
+
+
+        public Builder keystorePassword(String keystorePassword) {
+            this.keystorePassword = keystorePassword;
+            return this;
+        }
 
 
         public Builder folder(String folder) {
@@ -238,6 +371,7 @@ public class GetMailMessageInput extends GetMailBaseInput implements Decryptable
             return this;
         }
 
+
         public Builder proxyHost(String proxyHost) {
             this.proxyHost = proxyHost;
             return this;
@@ -261,60 +395,45 @@ public class GetMailMessageInput extends GetMailBaseInput implements Decryptable
             return this;
         }
 
-        @Override
-        public Builder hostname(String hostname) {
-            return (Builder) super.hostname(hostname);
-        }
-
-        @Override
-        public Builder port(String port) {
-            return (Builder) super.port(port);
-        }
-
-        @Override
-        public Builder protocol(String protocol) {
-            return (Builder) super.protocol(protocol);
-        }
-
-        @Override
-        public Builder username(String username) {
-            return (Builder) super.username(username);
-        }
-
-        @Override
-        public Builder password(String password) {
-            return (Builder) super.password(password);
-        }
-
-        @Override
-        public Builder trustAllRoots(String trustAllRoots) {
-            return (Builder) super.trustAllRoots(trustAllRoots);
-        }
-
-        @Override
-        public Builder enableSSL(String enableSSL) {
-            return (Builder) super.enableSSL(enableSSL);
-        }
-
-        @Override
-        public Builder enableTLS(String enableTLS) {
-            return (Builder) super.enableTLS(enableTLS);
-        }
-
-        @Override
-        public Builder keystore(String keystore) {
-            return (Builder) super.keystore(keystore);
-        }
-
-        @Override
-        public Builder keystorePassword(String keystorePassword) {
-            return (Builder) super.keystorePassword(keystorePassword);
-        }
-
 
         public GetMailMessageInput build() throws Exception {
             GetMailMessageInput input = new GetMailMessageInput();
-            super.build(input);
+
+            input.hostname = buildHostname(hostname);
+
+            input.port = buildPort(port, false);
+
+            Map<String, Object> portAndProtocol = buildPortAndProtocol(protocol, port);
+
+            if (portAndProtocol.containsKey("port")) {
+                input.port = (Short) portAndProtocol.get("port");
+            }
+
+            input.protocol = (String) portAndProtocol.get("protocol");
+
+            input.username = buildUsername(username, true);
+
+            input.password = buildPassword(password);
+
+            input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
+
+            input.enableTLS = buildEnableTLS(enableTLS);
+
+            input.enableSSL = buildEnableSSL(enableSSL);
+
+            input.keystore = buildKeystore(keystore);
+
+            input.keystorePassword = keystorePassword;
+
+            input.proxyHost = StringUtils.defaultString(proxyHost);
+
+            input.proxyPort = StringUtils.defaultString(proxyPort);
+
+            input.proxyUsername = StringUtils.defaultString(proxyUsername);
+
+            input.proxyPassword = StringUtils.defaultString(proxyPassword);
+
+            input.timeout = buildTimeout(timeout);
 
             if (isEmpty(folder)) {
                 throw new Exception(ExceptionMsgs.FOLDER_NOT_SPECIFIED);

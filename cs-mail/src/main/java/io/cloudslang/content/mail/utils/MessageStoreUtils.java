@@ -15,7 +15,7 @@
 package io.cloudslang.content.mail.utils;
 
 import io.cloudslang.content.mail.constants.*;
-import io.cloudslang.content.mail.entities.GetMailBaseInput;
+import io.cloudslang.content.mail.entities.GetMailInput;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
@@ -35,7 +35,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class MessageStoreUtils {
 
-    public static Store createMessageStore(GetMailBaseInput input) throws Exception {
+    public static Store createMessageStore(GetMailInput input) throws Exception {
         Properties props = new Properties();
         if (input.getTimeout() > 0) {
             props.put(PropNames.MAIL + input.getProtocol() + PropNames.TIMEOUT, input.getTimeout());
@@ -60,14 +60,14 @@ public class MessageStoreUtils {
     }
 
 
-    static Store connectUsingSSL(Properties props, Authenticator auth, GetMailBaseInput input) throws MessagingException {
+    static Store connectUsingSSL(Properties props, Authenticator auth, GetMailInput input) throws MessagingException {
         Store store = configureStoreWithSSL(props, auth, input);
         store.connect();
         return store;
     }
 
 
-    public static Store configureStoreWithSSL(Properties props, Authenticator auth, GetMailBaseInput input) throws NoSuchProviderException {
+    public static Store configureStoreWithSSL(Properties props, Authenticator auth, GetMailInput input) throws NoSuchProviderException {
         props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SOCKET_FACTORY_CLASS, SecurityConstants.SSL_SOCKET_FACTORY);
         props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SOCKET_FACTORY_FALLBACK, String.valueOf(false));
         props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.PORT, String.valueOf(input.getPort()));
@@ -80,7 +80,7 @@ public class MessageStoreUtils {
 
 
     public static void addSSLSettings(boolean trustAllRoots, String keystore,
-                               String keystorePassword, String trustKeystore, String trustPassword) throws Exception {
+                                      String keystorePassword, String trustKeystore, String trustPassword) throws Exception {
         boolean useClientCert = false;
         boolean useTrustCert = false;
 
@@ -146,7 +146,7 @@ public class MessageStoreUtils {
     }
 
 
-    public static Store tryTLSOtherwiseTrySSL(Authenticator auth, Properties props, GetMailBaseInput input) throws MessagingException {
+    public static Store tryTLSOtherwiseTrySSL(Authenticator auth, Properties props, GetMailInput input) throws MessagingException {
         Store store = configureStoreWithTLS(props, auth, input);
         try {
             store.connect(input.getHostname(), input.getUsername(), input.getPassword());
@@ -162,7 +162,7 @@ public class MessageStoreUtils {
     }
 
 
-    public static Store configureStoreWithTLS(Properties props, Authenticator auth, GetMailBaseInput input) throws NoSuchProviderException {
+    public static Store configureStoreWithTLS(Properties props, Authenticator auth, GetMailInput input) throws NoSuchProviderException {
         props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SSL_ENABLE, String.valueOf(false));
         props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_ENABLE, String.valueOf(true));
         props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_REQUIRED, String.valueOf(true));
@@ -171,14 +171,14 @@ public class MessageStoreUtils {
     }
 
 
-    private static void clearTLSProperties(Properties props, GetMailBaseInput input) {
+    private static void clearTLSProperties(Properties props, GetMailInput input) {
         props.remove(PropNames.MAIL + input.getProtocol() + PropNames.SSL_ENABLE);
         props.remove(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_ENABLE);
         props.remove(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_REQUIRED);
     }
 
 
-    public static Store configureStoreWithoutSSL(Properties props, Authenticator auth, GetMailBaseInput input) throws NoSuchProviderException {
+    public static Store configureStoreWithoutSSL(Properties props, Authenticator auth, GetMailInput input) throws NoSuchProviderException {
         props.put(PropNames.MAIL + input.getProtocol() + PropNames.HOST, input.getHostname());
         props.put(PropNames.MAIL + input.getProtocol() + PropNames.PORT, input.getPort());
         Session session = Session.getInstance(props, auth);

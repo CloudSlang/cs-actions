@@ -16,12 +16,14 @@ package io.cloudslang.content.mail.utils;
 
 import io.cloudslang.content.mail.constants.ImapPropNames;
 import io.cloudslang.content.mail.constants.PopPropNames;
-import io.cloudslang.content.mail.entities.ProxyInput;
+import io.cloudslang.content.mail.constants.SmtpPropNames;
+import io.cloudslang.content.mail.entities.GetMailInput;
+import io.cloudslang.content.mail.entities.ProxyMailInput;
 
 import java.util.Properties;
 
 public final class ProxyUtils {
-    public static void setPropertiesProxy(Properties prop, ProxyInput input) {
+    public static void setPropertiesProxy(Properties prop, ProxyMailInput input) {
         if (input.getProtocol().contains(ImapPropNames.IMAP)) {
             prop.setProperty(ImapPropNames.PROXY_HOST, input.getProxyHost());
             prop.setProperty(ImapPropNames.PROXY_PORT, input.getProxyPort());
@@ -34,6 +36,12 @@ public final class ProxyUtils {
             prop.setProperty(PopPropNames.PROXY_PORT, input.getProxyPort());
             prop.setProperty(PopPropNames.PROXY_USER, input.getProxyUsername());
             prop.setProperty(PopPropNames.PROXY_PASSWORD, input.getProxyPassword());
+        }
+        if (input.getProtocol().contains(PopPropNames.SMTP)) {
+            prop.setProperty(SmtpPropNames.PROXY_HOST, input.getProxyHost());
+            prop.setProperty(SmtpPropNames.PROXY_PORT, input.getProxyPort());
+            prop.setProperty(SmtpPropNames.PROXY_USER, input.getProxyUsername());
+            prop.setProperty(SmtpPropNames.PROXY_PASSWORD, input.getProxyPassword());
         }
     }
 }

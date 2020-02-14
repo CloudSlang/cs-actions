@@ -15,6 +15,7 @@
 package io.cloudslang.content.mail.services;
 
 import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import io.cloudslang.content.mail.entities.GetMailMessageCountInput;
 import io.cloudslang.content.mail.utils.MessageStoreUtils;
@@ -41,6 +42,7 @@ public class GetMailMessageCountService {
             folder.open(Folder.READ_ONLY);
 
             results.put(OutputNames.RETURN_RESULT, String.valueOf(folder.getMessageCount()));
+            results.put(OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
 
             return results;
         }

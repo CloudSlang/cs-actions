@@ -17,26 +17,25 @@
 package io.cloudslang.content.mail.entities;
 
 import io.cloudslang.content.mail.constants.Constants;
-import io.cloudslang.content.mail.constants.Constants.*;
 import io.cloudslang.content.mail.constants.Encodings;
-import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static io.cloudslang.content.mail.constants.Constants.ONE_SECOND;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static io.cloudslang.content.mail.utils.InputBuilderUtils.*;
 
 /**
  * Created by giloan on 10/30/2014.
  */
-public class SendMailInput implements ProxyInput {
+public class SendMailInput implements ProxyMailInput {
 
     private String hostname;
-    private short port;
+    private Short port;
     private boolean htmlEmail;
     private String from;
     private String to;
@@ -67,149 +66,185 @@ public class SendMailInput implements ProxyInput {
     private String proxyPassword;
     private int timeout = -1;
 
-    private SendMailInput(){
+
+    private SendMailInput() {
     }
+
 
     public String getHostname() {
         return hostname;
     }
 
+
     public short getPort() {
         return port;
     }
+
 
     public boolean isHtmlEmail() {
         return htmlEmail;
     }
 
+
     public String getFrom() {
         return from;
     }
+
 
     public String getTo() {
         return to;
     }
 
+
     public String getCc() {
         return cc;
     }
+
 
     public String getBcc() {
         return bcc;
     }
 
+
     public String getSubject() {
         return subject;
     }
+
 
     public String getBody() {
         return body;
     }
 
+
     public void setBody(String body) {
         this.body = body;
     }
+
 
     public boolean isReadReceipt() {
         return readReceipt;
     }
 
+
     public String getAttachments() {
         return attachments;
     }
+
 
     public List<String> getHeaderNames() {
         return headerNames;
     }
 
+
     public List<String> getHeaderValues() {
         return headerValues;
     }
+
 
     public String getRowDelimiter() {
         return rowDelimiter;
     }
 
+
     public String getColumnDelimiter() {
         return columnDelimiter;
     }
+
 
     public String getPassword() {
         return password;
     }
 
+
     public String getDelimiter() {
         return delimiter;
     }
+
 
     public String getCharacterSet() {
         return characterSet;
     }
 
+
     public String getContentTransferEncoding() {
         return contentTransferEncoding;
     }
+
 
     public String getEncodingScheme() {
         return encodingScheme;
     }
 
+
     public boolean isEncryptedMessage() {
         return !StringUtils.isEmpty(encryptionKeystore);
     }
+
 
     public String getEncryptionKeystore() {
         return encryptionKeystore;
     }
 
+
     public String getEncryptionKeyAlias() {
         return encryptionKeyAlias;
     }
+
 
     public void setEncryptionKeyAlias(String encryptionKeyAlias) {
         this.encryptionKeyAlias = encryptionKeyAlias;
     }
 
+
     public String getEncryptionKeystorePassword() {
         return encryptionKeystorePassword;
     }
+
 
     public boolean isEnableTLS() {
         return enableTLS;
     }
 
+
     public String getUser() {
         return user;
     }
+
 
     public int getTimeout() {
         return timeout;
     }
 
+
     public String getEncryptionAlgorithm() {
         return encryptionAlgorithm;
     }
 
-    @Override
+
     public String getProtocol() {
         return StringUtils.EMPTY;
     }
+
 
     public String getProxyHost() {
         return proxyHost;
     }
 
+
     public String getProxyPort() {
         return proxyPort;
     }
+
 
     public String getProxyUsername() {
         return proxyUsername;
     }
 
+
     public String getProxyPassword() {
         return proxyPassword;
     }
+
 
     public static class Builder {
 
@@ -242,6 +277,7 @@ public class SendMailInput implements ProxyInput {
         private String proxyUsername;
         private String proxyPassword;
         private String timeout;
+
 
         public Builder hostname(String hostname) {
             this.hostname = hostname;
@@ -432,34 +468,34 @@ public class SendMailInput implements ProxyInput {
                 input.readReceipt = false;
             }
 
-            input.hostname = hostname;
+            input.hostname = buildHostname(hostname);
 
-            input.port = Short.parseShort(port);
+            input.port = buildPort(port, true);
 
-            input.from = from;
+            input.from = StringUtils.defaultString(from);
 
-            input.to = to;
+            input.to = StringUtils.defaultString(to);
 
-            input.cc = cc;
+            input.cc = StringUtils.defaultString(cc);
 
-            input.bcc = bcc;
+            input.bcc = StringUtils.defaultString(bcc);
 
-            input.subject = subject;
+            input.subject = StringUtils.defaultString(subject);
 
-            input.body = body;
+            input.body = StringUtils.defaultString(body);
 
             input.attachments = (attachments != null) ? attachments : StringUtils.EMPTY;
 
             input.delimiter = StringUtils.isEmpty(delimiter) ? "," : delimiter;
 
-            input.user = user;
+            input.user = buildUsername(user, false);
 
-            input.password = (password == null) ? StringUtils.EMPTY : password;
+            input.password = buildPassword(password);
 
             input.characterSet = StringUtils.isEmpty(characterSet) ? "UTF-8" : characterSet;
 
             input.contentTransferEncoding = StringUtils.isEmpty(contentTransferEncoding) ?
-                    io.cloudslang.content.mail.constants.Encodings.QUOTED_PRINTABLE :
+                    Encodings.QUOTED_PRINTABLE :
                     contentTransferEncoding;
 
             input.htmlEmail = (htmlEmail != null && htmlEmail.equalsIgnoreCase(String.valueOf(true)));
@@ -477,13 +513,11 @@ public class SendMailInput implements ProxyInput {
                 input.encryptionKeyAlias = (encryptionKeyAlias == null) ? StringUtils.EMPTY : encryptionKeyAlias;
 
                 input.encryptionKeystorePassword = (encryptionKeystorePassword == null) ? StringUtils.EMPTY : encryptionKeystorePassword;
+
+                input.encryptionAlgorithm = EncryptionAlgorithmsEnum.getEncryptionAlgorithm(encryptionAlgorithm).getEncryptionOID();
             }
 
-            try {
-                input.enableTLS = Boolean.parseBoolean(enableTLS);
-            } catch (Exception e) {
-                input.enableTLS = false;
-            }
+            input.enableTLS = buildEnableTLS(enableTLS);
 
             input.rowDelimiter = StringUtils.isEmpty(rowDelimiter) ? "\n" : rowDelimiter;
 
@@ -497,29 +531,21 @@ public class SendMailInput implements ProxyInput {
                 input.headerValues = (ArrayList<String>) headersMap[1];
             }
 
-            if (timeout != null && !timeout.isEmpty()) {
-                input.timeout = Integer.parseInt(timeout);
-                if (input.timeout <= 0) {
-                    throw new Exception(ExceptionMsgs.TIMEOUT_MUST_BE_POSITIVE);
-                }
-                input.timeout *= ONE_SECOND; //timeouts in seconds
-            }
+            input.timeout = buildTimeout(timeout);
 
-            input.encryptionAlgorithm = EncryptionAlgorithmsEnum.getEncryptionAlgorithm(encryptionAlgorithm).getEncryptionOID();
+            input.proxyHost = StringUtils.defaultString(proxyHost);
 
-            input.proxyHost = proxyHost;
+            input.proxyPort = StringUtils.defaultString(proxyPort);
 
-            input.proxyPort = proxyPort;
+            input.proxyUsername = StringUtils.defaultString(proxyUsername);
 
-            input.proxyUsername = proxyUsername;
-
-            input.proxyPassword = proxyPassword;
+            input.proxyPassword = StringUtils.defaultString(proxyPassword);
 
             return input;
         }
 
 
-        public void validateDelimiters(String rowDelimiter, String columnDelimiter) throws Exception {
+        void validateDelimiters(String rowDelimiter, String columnDelimiter) throws Exception {
             if (rowDelimiter.equals(columnDelimiter)) {
                 throw new Exception(io.cloudslang.content.mail.constants.ExceptionMsgs.INVALID_DELIMITERS);
             }
@@ -529,7 +555,7 @@ public class SendMailInput implements ProxyInput {
         }
 
 
-        public Object[] extractHeaderNamesAndValues(String headersMap, String rowDelimiter, String columnDelimiter)
+        Object[] extractHeaderNamesAndValues(String headersMap, String rowDelimiter, String columnDelimiter)
                 throws Exception {
             String[] rows = headersMap.split(Pattern.quote(rowDelimiter));
             ArrayList<String> headerNames = new ArrayList<>();
@@ -548,7 +574,7 @@ public class SendMailInput implements ProxyInput {
         }
 
 
-        public boolean validateRow(String row, String columnDelimiter, int rowNumber) throws Exception {
+        boolean validateRow(String row, String columnDelimiter, int rowNumber) throws Exception {
             if (row.contains(columnDelimiter)) {
                 if (row.equals(columnDelimiter)) {
                     throw new Exception(format(io.cloudslang.content.mail.constants.ExceptionMsgs.ROW_WITH_EMPTY_HEADERS_INPUT, rowNumber + 1));

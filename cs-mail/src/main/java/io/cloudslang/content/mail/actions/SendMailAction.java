@@ -72,6 +72,10 @@ public class SendMailAction {
      * @param encryptionKeyAlias         The alias of the key from the encryptionKeystore to use to encrypt the mail.
      * @param encryptionKeystorePassword The password for the encryptionKeystore.
      * @param timeout                    The timeout (seconds) for sending the mail messages.
+     * @param proxyHost                  The proxy server used.
+     * @param proxyPort                  The proxy server port.
+     * @param proxyUsername              The user name used when connecting to the proxy.
+     * @param proxyPassword              The proxy server password associated with the proxyUsername input value.
      * @return a map containing the output of the operation. The keys present in the map are
      * <br><b>returnResult</b> - that will contain the SentMailSuccessfully if the mail was sent successfully.
      * <br><b>returnCode</b> - the return code of the operation. 0 if the operation goes to success, -1 if the
