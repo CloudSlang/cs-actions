@@ -14,30 +14,145 @@
  */
 package io.cloudslang.content.mail.entities;
 
-public class GetMailMessageCountInput extends GetMailBaseInput {
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Map;
+
+import static io.cloudslang.content.mail.utils.InputBuilderUtils.*;
+
+public class GetMailMessageCountInput implements GetMailInput {
+
+    private String hostname;
+    private Short port;
+    private String protocol;
+    private String username;
+    private String password;
+    private boolean trustAllRoots;
+    private boolean enableSSL;
+    private boolean enableTLS;
+    private String keystore;
+    private String keystorePassword;
+    private String proxyHost;
+    private String proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
+    private int timeout = -1;
     private String folder;
     private String trustKeystore;
     private String trustPassword;
 
+
     private GetMailMessageCountInput() {
     }
+
+
+    public String getHostname() {
+        return hostname;
+    }
+
+
+    public Short getPort() {
+        return port;
+    }
+
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+
+    public String getUsername() {
+        return username;
+    }
+
+
+    public String getPassword() {
+        return password;
+    }
+
+
+    public boolean isTrustAllRoots() {
+        return trustAllRoots;
+    }
+
+
+    public boolean isEnableSSL() {
+        return enableSSL;
+    }
+
+
+    public boolean isEnableTLS() {
+        return enableTLS;
+    }
+
+
+    public String getKeystore() {
+        return keystore;
+    }
+
+
+    public String getKeystorePassword() {
+        return keystorePassword;
+    }
+
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+
+    public String getProxyPort() {
+        return proxyPort;
+    }
+
+
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+
+    public int getTimeout() {
+        return timeout;
+    }
+
 
     public String getFolder() {
         return folder;
     }
 
+
     public String getTrustKeystore() {
         return trustKeystore;
     }
 
+
     public String getTrustPassword() {
         return trustPassword;
     }
-    
-    
-    public static class Builder extends GetMailBaseInput.Builder{
 
+
+    public static class Builder {
+
+        private String hostname;
+        private String port;
+        private String protocol;
+        private String username;
+        private String password;
+        private String trustAllRoots;
+        private String enableSSL;
+        private String enableTLS;
+        private String keystore;
+        private String keystorePassword;
+        private String proxyHost;
+        private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
+        private String timeout;
         private String folder;
         private String trustKeystore;
         private String trustPassword;
@@ -60,105 +175,141 @@ public class GetMailMessageCountInput extends GetMailBaseInput {
             return this;
         }
 
-        @Override
+
         public Builder hostname(String hostname) {
-            return (Builder) super.hostname(hostname);
+            this.hostname = hostname;
+            return this;
         }
 
 
-        @Override
         public Builder port(String port) {
-            return (Builder) super.port(port);
+            this.port = port;
+            return this;
         }
 
 
-        @Override
         public Builder protocol(String protocol) {
-            return (Builder) super.protocol(protocol);
+            this.protocol = protocol;
+            return this;
         }
 
 
-        @Override
         public Builder username(String username) {
-            return (Builder) super.username(username);
+            this.username = username;
+            return this;
         }
 
 
-        @Override
         public Builder password(String password) {
-            return (Builder) super.password(password);
+            this.password = password;
+            return this;
         }
 
 
-        @Override
         public Builder trustAllRoots(String trustAllRoots) {
-            return (Builder) super.trustAllRoots(trustAllRoots);
+            this.trustAllRoots = trustAllRoots;
+            return this;
         }
 
 
-        @Override
         public Builder enableSSL(String enableSSL) {
-            return (Builder) super.enableSSL(enableSSL);
+            this.enableSSL = enableSSL;
+            return this;
         }
 
 
-        @Override
         public Builder enableTLS(String enableTLS) {
-            return (Builder) super.enableTLS(enableTLS);
+            this.enableTLS = enableTLS;
+            return this;
         }
 
 
-        @Override
         public Builder keystore(String keystore) {
-            return (Builder) super.keystore(keystore);
+            this.keystore = keystore;
+            return this;
         }
 
 
-        @Override
         public Builder keystorePassword(String keystorePassword) {
-            return (Builder) super.keystorePassword(keystorePassword);
+            this.keystorePassword = keystorePassword;
+            return this;
         }
 
 
-        @Override
         public Builder proxyHost(String proxyHost) {
-            return (Builder) super.proxyHost(proxyHost);
+            this.proxyHost = proxyHost;
+            return this;
         }
 
 
-        @Override
         public Builder proxyPort(String proxyPort) {
-            return (Builder) super.proxyPort(proxyPort);
+            this.proxyPort = proxyPort;
+            return this;
         }
 
 
-        @Override
         public Builder proxyUsername(String proxyUsername) {
-            return (Builder) super.proxyUsername(proxyUsername);
+            this.proxyUsername = proxyUsername;
+            return this;
         }
 
 
-        @Override
         public Builder proxyPassword(String proxyPassword) {
-            return (Builder) super.proxyPassword(proxyPassword);
+            this.proxyPassword = proxyPassword;
+            return this;
         }
 
 
-        @Override
         public Builder timeout(String timeout) {
-            return (Builder) super.timeout(timeout);
+            this.timeout = timeout;
+            return this;
         }
 
 
         public GetMailMessageCountInput build() throws Exception {
             GetMailMessageCountInput input = new GetMailMessageCountInput();
-            super.build(input);
 
-            input.folder = folder;
+            input.hostname = buildHostname(hostname);
 
-            input.trustKeystore = trustKeystore;
+            input.port = buildPort(port, false);
 
-            input.trustPassword = trustPassword;
+            Map<String, Object> portAndProtocol = buildPortAndProtocol(protocol, port);
+
+            if (portAndProtocol.containsKey("port")) {
+                input.port = (Short) portAndProtocol.get("port");
+            }
+
+            input.protocol = (String) portAndProtocol.get("protocol");
+
+            input.username = buildUsername(username, true);
+
+            input.password = buildPassword(password);
+
+            input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
+
+            input.enableTLS = buildEnableTLS(enableTLS);
+
+            input.enableSSL = buildEnableSSL(enableSSL);
+
+            input.keystore = buildKeystore(keystore);
+
+            input.keystorePassword = keystorePassword;
+
+            input.proxyHost = StringUtils.defaultString(proxyHost);
+
+            input.proxyPort = StringUtils.defaultString(proxyPort);
+
+            input.proxyUsername = StringUtils.defaultString(proxyUsername);
+
+            input.proxyPassword = StringUtils.defaultString(proxyPassword);
+
+            input.timeout = buildTimeout(timeout);
+
+            input.folder = StringUtils.defaultString(folder);
+
+            input.trustKeystore = StringUtils.defaultString(trustKeystore);
+
+            input.trustPassword = StringUtils.defaultString(trustPassword);
 
             return input;
         }

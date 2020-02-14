@@ -15,7 +15,7 @@
 package io.cloudslang.content.mail.utils;
 
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
-import io.cloudslang.content.mail.entities.DecryptableMessageInput;
+import io.cloudslang.content.mail.entities.DecryptableMailInput;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.cms.RecipientId;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -28,7 +28,7 @@ import java.util.Enumeration;
 
 public final class SecurityUtils {
 
-    public static void addDecryptionSettings(KeyStore ks, RecipientId recId, DecryptableMessageInput input) throws Exception {
+    public static void addDecryptionSettings(KeyStore ks, RecipientId recId, DecryptableMailInput input) throws Exception {
         char[] smimePw = input.getDecryptionKeystorePassword().toCharArray();
 
         java.security.Security.addProvider(new BouncyCastleProvider());

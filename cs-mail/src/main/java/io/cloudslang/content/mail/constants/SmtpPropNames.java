@@ -24,4 +24,8 @@ public final class SmtpPropNames {
     public static final String USER = MAIL_SMTP + "user";
     public static final String PORT = MAIL_SMTP + "port";
     public static final String HOST = MAIL_SMTP + "host";
+    public static final String PROXY_HOST = MAIL_SMTP + ".proxy.host";
+    public static final String PROXY_PORT = MAIL_SMTP + ".proxy.port";
+    public static final String PROXY_USER = MAIL_SMTP + ".proxy.user";
+    public static final String PROXY_PASSWORD = MAIL_SMTP + ".proxy.password";
 }

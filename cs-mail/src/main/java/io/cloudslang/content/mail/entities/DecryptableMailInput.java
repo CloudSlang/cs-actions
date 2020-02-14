@@ -14,7 +14,7 @@
  */
 package io.cloudslang.content.mail.entities;
 
-public interface DecryptableMessageInput {
+public interface DecryptableMailInput {
     String getDecryptionKeystorePassword();
 
     String getDecryptionKeystore();

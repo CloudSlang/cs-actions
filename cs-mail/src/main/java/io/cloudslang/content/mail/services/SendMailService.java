@@ -22,6 +22,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.mail.constants.*;
 import io.cloudslang.content.mail.entities.SendMailInput;
 import io.cloudslang.content.mail.utils.HtmlImageNodeVisitor;
+import io.cloudslang.content.mail.utils.ProxyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
@@ -85,6 +86,7 @@ public class SendMailService {
             }
             if (input.getTimeout() > 0) {
                 props.put(SmtpPropNames.TIMEOUT, input.getTimeout());
+                ProxyUtils.setPropertiesProxy(props, input);
             }
 
             //construct encryption SMIMEEnvelopedGenerator
@@ -180,7 +182,7 @@ public class SendMailService {
 
             msg.saveChanges();
 
-            if(!StringUtils.isEmpty(input.getUser())) {
+            if (!StringUtils.isEmpty(input.getUser())) {
                 transport = session.getTransport(SmtpPropNames.SMTP);
                 transport.connect(input.getHostname(), input.getPort(), input.getUser(), input.getPassword());
                 transport.sendMessage(msg, msg.getAllRecipients());
@@ -238,44 +240,39 @@ public class SendMailService {
 
     private void addEncryptionSettings() throws Exception {
         URL keystoreUrl = new URL(input.getEncryptionKeystore());
-        InputStream publicKeystoreInputStream = keystoreUrl.openStream();
-        char[] smimePw = new String(input.getEncryptionKeystorePassword()).toCharArray();
-
-
-        gen = new SMIMEEnvelopedGenerator();
-        Security.addProvider(new BouncyCastleProvider());
-        KeyStore ks = KeyStore.getInstance(SecurityConstants.PKCS_KEYSTORE_TYPE, SecurityConstants.BOUNCY_CASTLE_PROVIDER);
-        try {
+        try (InputStream publicKeystoreInputStream = keystoreUrl.openStream()) {
+            char[] smimePw = input.getEncryptionKeystorePassword().toCharArray();
+            gen = new SMIMEEnvelopedGenerator();
+            Security.addProvider(new BouncyCastleProvider());
+            KeyStore ks = KeyStore.getInstance(SecurityConstants.PKCS_KEYSTORE_TYPE, SecurityConstants.BOUNCY_CASTLE_PROVIDER);
             ks.load(publicKeystoreInputStream, smimePw);
-        } finally {
-            publicKeystoreInputStream.close();
-        }
 
-        if (StringUtils.EMPTY.equals(input.getEncryptionKeyAlias())) {
-            Enumeration aliases = ks.aliases();
-            while (aliases.hasMoreElements()) {
-                String alias = (String) aliases.nextElement();
+            if (StringUtils.EMPTY.equals(input.getEncryptionKeyAlias())) {
+                Enumeration aliases = ks.aliases();
+                while (aliases.hasMoreElements()) {
+                    String alias = (String) aliases.nextElement();
 
-                if (ks.isKeyEntry(alias)) {
-                    input.setEncryptionKeyAlias(alias);
+                    if (ks.isKeyEntry(alias)) {
+                        input.setEncryptionKeyAlias(alias);
+                    }
                 }
             }
+
+            if (StringUtils.EMPTY.equals(input.getEncryptionKeyAlias())) {
+                throw new Exception(ExceptionMsgs.PUBLIC_KEY_ERROR_MESSAGE);
+            }
+
+            Certificate[] chain = ks.getCertificateChain(input.getEncryptionKeyAlias());
+
+            if (chain == null) {
+                throw new Exception("The key with alias \"" + input.getEncryptionKeyAlias() + "\" can't be found in given keystore.");
+            }
+
+            //
+            // create the generator for creating an smime/encrypted message
+            //
+            gen.addKeyTransRecipient((X509Certificate) chain[0]);
         }
-
-        if (StringUtils.EMPTY.equals(input.getEncryptionKeyAlias())) {
-            throw new Exception(ExceptionMsgs.PUBLIC_KEY_ERROR_MESSAGE);
-        }
-
-        Certificate[] chain = ks.getCertificateChain(input.getEncryptionKeyAlias());
-
-        if (chain == null) {
-            throw new Exception("The key with alias \"" + input.getEncryptionKeyAlias() + "\" can't be found in given keystore.");
-        }
-
-        //
-        // create the generator for creating an smime/encrypted message
-        //
-        gen.addKeyTransRecipient((X509Certificate) chain[0]);
     }
 
 

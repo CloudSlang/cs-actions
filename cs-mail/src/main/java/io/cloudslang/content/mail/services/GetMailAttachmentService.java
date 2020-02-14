@@ -15,6 +15,7 @@
 package io.cloudslang.content.mail.services;
 
 import com.sun.mail.util.ASCIIUtility;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.mail.constants.MimeTypes;
 import io.cloudslang.content.mail.constants.SecurityConstants;
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
@@ -74,6 +75,7 @@ public class GetMailAttachmentService {
                 } else
                     downloadAttachment(message, input.getAttachmentName(), input.getCharacterSet(),
                             input.getDestination(), input.isOverwrite());
+                results.put(io.cloudslang.content.constants.OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
             } catch (UnsupportedEncodingException except) {
                 throw new UnsupportedEncodingException("The given encoding (" + input.getCharacterSet() + ") is invalid or not supported.");
             }

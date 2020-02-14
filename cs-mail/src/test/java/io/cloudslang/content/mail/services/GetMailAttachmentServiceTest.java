@@ -16,7 +16,7 @@ package io.cloudslang.content.mail.services;
 
 import io.cloudslang.content.mail.constants.PopPropNames;
 import io.cloudslang.content.mail.entities.GetMailAttachmentInput;
-import io.cloudslang.content.mail.entities.GetMailBaseInput;
+import io.cloudslang.content.mail.entities.GetMailInput;
 import io.cloudslang.content.mail.utils.MessageStoreUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -66,7 +66,7 @@ public class GetMailAttachmentServiceTest {
         doReturn(folderMock).when(storeMock).getFolder(Matchers.anyString());
         doReturn(1).when(folderMock).getMessageCount();
         doReturn(true).when(folderMock).exists();
-        when(MessageStoreUtils.createMessageStore(any(GetMailBaseInput.class))).thenReturn(storeMock);
+        when(MessageStoreUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
         inputBuilder.messageNumber("2");
 
         try {
