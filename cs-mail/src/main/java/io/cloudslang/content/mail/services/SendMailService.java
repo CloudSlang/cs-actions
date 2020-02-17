@@ -22,6 +22,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.mail.constants.*;
 import io.cloudslang.content.mail.entities.SendMailInput;
 import io.cloudslang.content.mail.utils.HtmlImageNodeVisitor;
+import io.cloudslang.content.mail.utils.MessageStoreUtils;
 import io.cloudslang.content.mail.utils.ProxyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -81,11 +82,15 @@ public class SendMailService {
                 props.put(SmtpPropNames.PASSWORD, input.getPassword());
                 props.put(SmtpPropNames.AUTH, String.valueOf(true));
             }
-            if (!input.isEnableTLS()) {
+            if(input.isEnableTLS()){
+                MessageStoreUtils.configureWithTLS(props, input);
+            } else {
                 props.put(SmtpPropNames.START_TLS_ENABLE, String.valueOf(false));
             }
             if (input.getTimeout() > 0) {
                 props.put(SmtpPropNames.TIMEOUT, input.getTimeout());
+            }
+            if (StringUtils.isNotEmpty(input.getProxyHost())){
                 ProxyUtils.setPropertiesProxy(props, input);
             }
 

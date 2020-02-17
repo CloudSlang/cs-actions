@@ -121,4 +121,53 @@ public final class InputBuilderUtils {
         }
         return -1;
     }
+
+
+    public static Map<String, String> buildDecryptionKeystore(String decryptionKeystore, String decryptionKeyAlias,
+                                                              String decryptionKeystorePassword) {
+        final String decryptionKeystoreKey = "decryptionKeystore";
+        final String decryptionKeyAliasKey = "decryptionKeyAlias";
+        final String decryptionKeystorePasswordKey = "decryptionKeystorePassword";
+        Map<String, String> result = new HashMap<>();
+
+        result.put(decryptionKeystoreKey, decryptionKeystore);
+        if (StringUtils.isNotEmpty(decryptionKeystore)) {
+            if (!decryptionKeystore.startsWith(Constants.HTTP)) {
+                result.put(decryptionKeystoreKey, Constants.FILE + decryptionKeystore);
+            }
+
+            result.put(decryptionKeyAliasKey, StringUtils.defaultString(decryptionKeyAlias));
+
+            result.put(decryptionKeystorePasswordKey, StringUtils.defaultString(decryptionKeystorePassword));
+        }
+
+        return result;
+    }
+
+
+    public static List<String> buildTlsVersions(String tlsVersionInput) throws Exception {
+        if (StringUtils.isEmpty(tlsVersionInput)) {
+            return Collections.emptyList();
+        }
+
+        String[] tlsVersionsArray = tlsVersionInput.replaceAll("\\s+", StringUtils.EMPTY).split(",");
+        List<String> tlsVersions = new ArrayList<>();
+        for (String tlsVersion : tlsVersionsArray) {
+            if (!TlsVersions.validate(tlsVersion)) {
+                throw new IllegalArgumentException("Illegal value of input 'tlsVersion'");
+            }
+            tlsVersions.add(tlsVersion);
+        }
+        return tlsVersions;
+    }
+
+
+    public static List<String> buildAllowedCiphers(String cipherSuite) {
+        if (StringUtils.isEmpty(cipherSuite)) {
+            return Collections.emptyList();
+        }
+
+        String[] cipherSuites = cipherSuite.replaceAll("\\s+", StringUtils.EMPTY).split(",");
+        return Arrays.asList(cipherSuites);
+    }
 }

@@ -66,13 +66,29 @@ public class GetMailMessageCountAction {
      * @param proxyUsername    The user name used when connecting to the proxy.
      * @param proxyPassword    The proxy server password associated with the proxyUsername input value.
      * @param timeout          The timeout (seconds) for retrieving the mail message count.
+     * @param tlsVersion                 The version of TLS to use. The value of this input will be ignored if
+     *                                   'enableTLS' / 'enableSSL' is set to 'false'.
+     *                                   Valid values: 'SSLv3', 'TLSv1.0', 'TLSv1.1', 'TLSv1.2'.
+     *                                   Default value: TLSv1.2.
+     * @param encryptionAlgorithm        A list of ciphers to use. The value of this input will be ignored if
+     *                                   'tlsVersion' does not contain 'TLSv1.2'.
+     *                                   Default value is TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,
+     *                                   TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+     *                                   TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,
+     *                                   TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+     *                                   TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+     *                                   TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+     *                                   TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_CBC_SHA256,
+     *                                   TLS_RSA_WITH_AES_128_CBC_SHA256.
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - The text content of the attachment, if the attachment is in plain text format.
      * <br><b>exception</b> - the exception message if the operation goes to failure.
      */
     @Action(name = "Get Mail Message Count",
             outputs = {
-                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.RETURN_CODE),
+                    @Output(OutputNames.EXCEPTION)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE,
@@ -100,7 +116,9 @@ public class GetMailMessageCountAction {
             @Param(value = InputNames.PROXY_PORT) String proxyPort,
             @Param(value = InputNames.PROXY_USERNAME) String proxyUsername,
             @Param(value = InputNames.PROXY_PASSWORD) String proxyPassword,
-            @Param(value = InputNames.TIMEOUT) String timeout) {
+            @Param(value = InputNames.TIMEOUT) String timeout,
+            @Param(value = InputNames.TLS_VERSION) String tlsVersion,
+            @Param(value = InputNames.ENCRYPTION_ALGORITHM) String encryptionAlgorithm) {
         GetMailMessageCountInput.Builder inputBuilder = new GetMailMessageCountInput.Builder()
                 .hostname(hostname)
                 .username(username)
@@ -119,7 +137,9 @@ public class GetMailMessageCountAction {
                 .proxyPort(proxyPort)
                 .proxyUsername(proxyUsername)
                 .proxyPassword(proxyPassword)
-                .timeout(timeout);
+                .timeout(timeout)
+                .tlsVersion(tlsVersion)
+                .allowedCiphers(encryptionAlgorithm);
         try {
             return new GetMailMessageCountService().execute(inputBuilder.build());
         } catch (Exception ex) {

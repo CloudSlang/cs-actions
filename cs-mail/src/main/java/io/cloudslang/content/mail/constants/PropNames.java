@@ -27,4 +27,6 @@ public final class PropNames {
     public static final String TIMEOUT = ".timeout";
     public static final String JAVA_HOME = "java.home";
     public static final String FILE_SEPARATOR = "file.separator";
+    public static final String SSL_PROTOCOLS = ".ssl.protocols";
+    public static final String SSL_CIPHER_SUITES = ".ssl.ciphersuites";
 }

@@ -16,6 +16,7 @@ package io.cloudslang.content.mail.utils;
 
 import io.cloudslang.content.mail.constants.*;
 import io.cloudslang.content.mail.entities.GetMailInput;
+import io.cloudslang.content.mail.entities.MailInput;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
@@ -33,7 +34,7 @@ import java.util.Properties;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-public class MessageStoreUtils {
+public final class MessageStoreUtils {
 
     public static Store createMessageStore(GetMailInput input) throws Exception {
         Properties props = new Properties();
@@ -162,17 +163,36 @@ public class MessageStoreUtils {
     }
 
 
-    public static Store configureStoreWithTLS(Properties props, Authenticator auth, GetMailInput input) throws NoSuchProviderException {
-        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SSL_ENABLE, String.valueOf(false));
-        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_ENABLE, String.valueOf(true));
-        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_REQUIRED, String.valueOf(true));
+    public static Store configureStoreWithTLS(Properties props, Authenticator auth, MailInput input) throws NoSuchProviderException {
+        configureWithTLS(props, input);
         Session session = Session.getInstance(props, auth);
         return session.getStore(input.getProtocol() + SecurityConstants.SECURE_SUFFIX_FOR_POP3_AND_IMAP);
     }
 
 
+    public static void configureWithTLS(Properties props, MailInput input) {
+        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SSL_ENABLE, String.valueOf(false));
+
+        if (!input.getTlsVersions().isEmpty()) {
+            props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SSL_PROTOCOLS,
+                    StringUtils.join(input.getTlsVersions(), ' '));
+
+            if (input.getTlsVersions().contains(TlsVersions.TLSv1_2) && !input.getAllowedCiphers().isEmpty()) {
+                props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SSL_CIPHER_SUITES,
+                        StringUtils.join(input.getAllowedCiphers(), ' '));
+            }
+        }
+
+        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_ENABLE, String.valueOf(true));
+
+        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_REQUIRED, String.valueOf(true));
+    }
+
+
     private static void clearTLSProperties(Properties props, GetMailInput input) {
         props.remove(PropNames.MAIL + input.getProtocol() + PropNames.SSL_ENABLE);
+        props.remove(PropNames.MAIL + input.getProtocol() + PropNames.SSL_PROTOCOLS);
+        props.remove(PropNames.MAIL + input.getProtocol() + PropNames.SSL_CIPHER_SUITES);
         props.remove(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_ENABLE);
         props.remove(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_REQUIRED);
     }

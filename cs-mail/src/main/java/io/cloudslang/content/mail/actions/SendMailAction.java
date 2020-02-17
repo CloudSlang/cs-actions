@@ -76,12 +76,25 @@ public class SendMailAction {
      * @param proxyPort                  The proxy server port.
      * @param proxyUsername              The user name used when connecting to the proxy.
      * @param proxyPassword              The proxy server password associated with the proxyUsername input value.
+     * @param tlsVersion                 The version of TLS to use. The value of this input will be ignored if
+     *                                   'enableTLS' / 'enableSSL' is set to 'false'.
+     *                                   Valid values: 'SSLv3', 'TLSv1.0', 'TLSv1.1', 'TLSv1.2'.
+     *                                   Default value: TLSv1.2.
+     * @param encryptionAlgorithm        A list of ciphers to use. The value of this input will be ignored if
+     *                                   'tlsVersion' does not contain 'TLSv1.2'.
+     *                                   Default value is TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,
+     *                                   TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+     *                                   TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,
+     *                                   TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+     *                                   TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+     *                                   TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+     *                                   TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_CBC_SHA256,
+     *                                   TLS_RSA_WITH_AES_128_CBC_SHA256.
      * @return a map containing the output of the operation. The keys present in the map are
      * <br><b>returnResult</b> - that will contain the SentMailSuccessfully if the mail was sent successfully.
      * <br><b>returnCode</b> - the return code of the operation. 0 if the operation goes to success, -1 if the
      * operation goes to failure.
      * <br><b>exception</b> - the exception message if the operation goes to failure.
-     * @throws Exception
      */
     @Action(name = "Send Mail",
             outputs = {
@@ -126,7 +139,8 @@ public class SendMailAction {
             @Param(value = InputNames.PROXY_HOST) String proxyHost,
             @Param(value = InputNames.PROXY_PORT) String proxyPort,
             @Param(value = InputNames.PROXY_USERNAME) String proxyUsername,
-            @Param(value = InputNames.PROXY_PASSWORD) String proxyPassword) {
+            @Param(value = InputNames.PROXY_PASSWORD) String proxyPassword,
+            @Param(value = InputNames.TLS_VERSION) String tlsVersion) {
         SendMailInput.Builder inputBuilder = new SendMailInput.Builder()
                 .hostname(hostname)
                 .port(port)
@@ -156,7 +170,9 @@ public class SendMailAction {
                 .proxyHost(proxyHost)
                 .proxyPort(proxyPort)
                 .proxyUsername(proxyUsername)
-                .proxyPassword(proxyPassword);
+                .proxyPassword(proxyPassword)
+                .tlsVersion(tlsVersion)
+                .allowedCiphers(encryptionAlgorithm);
         try {
             return new SendMailService().execute(inputBuilder.build());
         } catch (Exception e) {

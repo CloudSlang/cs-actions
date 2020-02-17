@@ -16,6 +16,7 @@ package io.cloudslang.content.mail.entities;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.mail.utils.InputBuilderUtils.*;
@@ -40,6 +41,8 @@ public class GetMailMessageCountInput implements GetMailInput {
     private String folder;
     private String trustKeystore;
     private String trustPassword;
+    private List<String> tlsVersions;
+    private List<String> cipherSuites;
 
 
     private GetMailMessageCountInput() {
@@ -136,6 +139,16 @@ public class GetMailMessageCountInput implements GetMailInput {
     }
 
 
+    public List<String> getTlsVersions() {
+        return tlsVersions;
+    }
+
+
+    public List<String> getAllowedCiphers() {
+        return cipherSuites;
+    }
+
+
     public static class Builder {
 
         private String hostname;
@@ -156,6 +169,8 @@ public class GetMailMessageCountInput implements GetMailInput {
         private String folder;
         private String trustKeystore;
         private String trustPassword;
+        private String tlsVersion;
+        private String allowedCiphers;
 
 
         public Builder folder(String folder) {
@@ -266,6 +281,18 @@ public class GetMailMessageCountInput implements GetMailInput {
         }
 
 
+        public Builder tlsVersion(String tlsVersion) {
+            this.tlsVersion = tlsVersion;
+            return this;
+        }
+
+
+        public Builder allowedCiphers(String allowedCiphers) {
+            this.allowedCiphers = allowedCiphers;
+            return this;
+        }
+
+
         public GetMailMessageCountInput build() throws Exception {
             GetMailMessageCountInput input = new GetMailMessageCountInput();
 
@@ -310,6 +337,10 @@ public class GetMailMessageCountInput implements GetMailInput {
             input.trustKeystore = StringUtils.defaultString(trustKeystore);
 
             input.trustPassword = StringUtils.defaultString(trustPassword);
+
+            input.tlsVersions = buildTlsVersions(tlsVersion);
+
+            input.cipherSuites = buildAllowedCiphers(allowedCiphers);
 
             return input;
         }

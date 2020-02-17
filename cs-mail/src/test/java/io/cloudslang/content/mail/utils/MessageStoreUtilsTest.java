@@ -20,6 +20,7 @@ import io.cloudslang.content.mail.constants.PropNames;
 import io.cloudslang.content.mail.constants.SecurityConstants;
 import io.cloudslang.content.mail.entities.GetMailAttachmentInput;
 import io.cloudslang.content.mail.entities.GetMailInput;
+import io.cloudslang.content.mail.entities.MailInput;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import io.cloudslang.content.mail.sslconfig.EasyX509TrustManager;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
@@ -131,6 +132,8 @@ public class MessageStoreUtilsTest {
         PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
         doReturn(storeMock).when(sessionMock).getStore(any(String.class));
         when(MessageStoreUtils.configureStoreWithTLS(propertiesMock, authenticatorMock, input)).thenCallRealMethod();
+        PowerMockito.doCallRealMethod()
+                .when(MessageStoreUtils.class, "configureWithTLS", any(Properties.class), any(MailInput.class));
 
         Store store = MessageStoreUtils.configureStoreWithTLS(propertiesMock, authenticatorMock, input);
 

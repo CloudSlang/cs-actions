@@ -1,6 +1,8 @@
 package io.cloudslang.content.mail.entities;
 
-public interface ProxyMailInput {
+import java.util.List;
+
+public interface MailInput {
     String getProxyHost();
 
     String getProxyPort();
@@ -10,4 +12,8 @@ public interface ProxyMailInput {
     String getProxyPassword();
 
     String getProtocol();
+
+    List<String> getTlsVersions();
+
+    List<String> getAllowedCiphers();
 }

@@ -1,6 +1,6 @@
 package io.cloudslang.content.mail.entities;
 
-public interface GetMailInput extends ProxyMailInput {
+public interface GetMailInput extends MailInput {
 
     int getTimeout();
 
