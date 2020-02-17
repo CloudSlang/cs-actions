@@ -26,7 +26,7 @@ import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 public class HttpClientInputs {
 
     public static final String URL = "url";
-    public static final String TLS_VERSION = "TLSVersion";
+    public static final String TLS_VERSION = "tlsVersion";
     public static final String ALLOWED_CYPHERS = "allowedCyphers";
     public static final String METHOD = "method";
     public static final String FOLLOW_REDIRECTS = "followRedirects";
