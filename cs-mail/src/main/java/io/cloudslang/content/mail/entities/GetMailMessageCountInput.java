@@ -42,7 +42,7 @@ public class GetMailMessageCountInput implements GetMailInput {
     private String trustKeystore;
     private String trustPassword;
     private List<String> tlsVersions;
-    private List<String> cipherSuites;
+    private List<String> allowedCiphers;
 
 
     private GetMailMessageCountInput() {
@@ -145,7 +145,7 @@ public class GetMailMessageCountInput implements GetMailInput {
 
 
     public List<String> getAllowedCiphers() {
-        return cipherSuites;
+        return allowedCiphers;
     }
 
 
@@ -340,7 +340,7 @@ public class GetMailMessageCountInput implements GetMailInput {
 
             input.tlsVersions = buildTlsVersions(tlsVersion);
 
-            input.cipherSuites = buildAllowedCiphers(allowedCiphers);
+            input.allowedCiphers = buildAllowedCiphers(allowedCiphers);
 
             return input;
         }

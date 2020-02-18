@@ -16,13 +16,11 @@ package io.cloudslang.content.mail.entities;
 
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import io.cloudslang.content.mail.constants.SecurityConstants;
-import io.cloudslang.content.mail.constants.TlsVersions;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.mail.constants.Constants.*;
 import static io.cloudslang.content.mail.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
@@ -56,7 +54,7 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
     private String proxyPassword;
     private int timeout = -1;
     private List<String> tlsVersions;
-    private List<String> cipherSuites;
+    private List<String> allowedCiphers;
 
     private GetMailMessageInput() {
     }
@@ -213,7 +211,7 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
 
 
     public List<String> getAllowedCiphers() {
-        return cipherSuites;
+        return allowedCiphers;
     }
 
 
@@ -521,7 +519,7 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
 
             input.tlsVersions = buildTlsVersions(tlsVersion);
 
-            input.cipherSuites = buildAllowedCiphers(allowedCiphers);
+            input.allowedCiphers = buildAllowedCiphers(allowedCiphers);
 
             return input;
         }

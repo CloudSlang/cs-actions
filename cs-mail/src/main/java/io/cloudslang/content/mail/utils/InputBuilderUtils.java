@@ -162,12 +162,12 @@ public final class InputBuilderUtils {
     }
 
 
-    public static List<String> buildAllowedCiphers(String cipherSuite) {
-        if (StringUtils.isEmpty(cipherSuite)) {
+    public static List<String> buildAllowedCiphers(String allowedCiphers) {
+        if (StringUtils.isEmpty(allowedCiphers)) {
             return Collections.emptyList();
         }
 
-        String[] cipherSuites = cipherSuite.replaceAll("\\s+", StringUtils.EMPTY).split(",");
+        String[] cipherSuites = allowedCiphers.replaceAll("\\s+", StringUtils.EMPTY).split(",");
         return Arrays.asList(cipherSuites);
     }
 }

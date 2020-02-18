@@ -15,7 +15,6 @@
 package io.cloudslang.content.mail.entities;
 
 
-import io.cloudslang.content.mail.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;

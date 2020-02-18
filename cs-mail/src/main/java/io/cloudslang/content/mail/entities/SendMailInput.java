@@ -69,7 +69,7 @@ public class SendMailInput implements MailInput {
     private List<String> allowedCiphers;
 
 
-    private SendMailInput() {
+    private SendMailInput(){
     }
 
 

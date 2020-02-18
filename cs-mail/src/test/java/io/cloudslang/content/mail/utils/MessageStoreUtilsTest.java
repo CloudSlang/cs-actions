@@ -58,8 +58,6 @@ public class MessageStoreUtilsTest {
     private static final String USERNAME = "testUser";
     private static final String PASSWORD = "testPass";
     private static final String FOLDER = "INBOX";
-    private String testSeparator = "\\";
-    private String testJavaHome = "HDD:\\java";
     @Mock
     private Properties propertiesMock;
     @Mock

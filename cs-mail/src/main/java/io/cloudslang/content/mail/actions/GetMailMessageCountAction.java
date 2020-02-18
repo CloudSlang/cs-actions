@@ -61,25 +61,6 @@ public class GetMailMessageCountAction {
      * @param keystorePassword The path to the keystore to use for SSL Client Certificates.
      * @param trustKeystore    The path to the trustKeystore to use for SSL Server Certificates.
      * @param trustPassword    The password for the trustKeystore.
-     * @param proxyHost        The proxy server used.
-     * @param proxyPort        The proxy server port.
-     * @param proxyUsername    The user name used when connecting to the proxy.
-     * @param proxyPassword    The proxy server password associated with the proxyUsername input value.
-     * @param timeout          The timeout (seconds) for retrieving the mail message count.
-     * @param tlsVersion                 The version of TLS to use. The value of this input will be ignored if
-     *                                   'enableTLS' / 'enableSSL' is set to 'false'.
-     *                                   Valid values: 'SSLv3', 'TLSv1.0', 'TLSv1.1', 'TLSv1.2'.
-     *                                   Default value: TLSv1.2.
-     * @param encryptionAlgorithm        A list of ciphers to use. The value of this input will be ignored if
-     *                                   'tlsVersion' does not contain 'TLSv1.2'.
-     *                                   Default value is TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,
-     *                                   TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
-     *                                   TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,
-     *                                   TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
-     *                                   TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
-     *                                   TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
-     *                                   TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_CBC_SHA256,
-     *                                   TLS_RSA_WITH_AES_128_CBC_SHA256.
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - The text content of the attachment, if the attachment is in plain text format.
      * <br><b>exception</b> - the exception message if the operation goes to failure.

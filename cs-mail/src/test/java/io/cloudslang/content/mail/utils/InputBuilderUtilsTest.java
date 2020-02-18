@@ -13,6 +13,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({InputBuilderUtils.class})
