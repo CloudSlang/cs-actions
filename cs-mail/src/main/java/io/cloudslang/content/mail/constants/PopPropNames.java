@@ -12,11 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.mail.utils;
+package io.cloudslang.content.mail.constants;
 
-public class Constants {
-    public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
-
-    public Constants() {
-    }
+public final class PopPropNames {
+    public static final String POP = "pop";
+    public static final String POP3 = "pop3";
+    public static final String POP3_PORT = "110";
+    public static final String SMTP = "smtp";
+    private static final String MAIL_POP3 = "mail.pop3.";
+    public static final String PROXY_PASSWORD = MAIL_POP3 + "proxy.password";
+    public static final String PROXY_USER = MAIL_POP3 + "proxy.user";
+    public static final String PROXY_PORT = MAIL_POP3 + "proxy.port";
+    public static final String PROXY_HOST = MAIL_POP3 + "proxy.host";
 }
