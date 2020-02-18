@@ -327,8 +327,12 @@ public class EmailServiceImpl {
                 addOutput(results, responseJson, CONTENT_BYTES, CONTENT_BYTES);
                 addOutput(results, responseJson, SIZE, CONTENT_SIZE);
 
-                if (!isEmpty(filePath))
-                    downloadAttachment(filePath, responseJson.get(CONTENT_BYTES).getAsString(), responseJson.get(NAME).getAsString());
+                try {
+                    if (!isEmpty(filePath))
+                        downloadAttachment(filePath, responseJson.get(CONTENT_BYTES).getAsString(), responseJson.get(NAME).getAsString());
+                } catch (NullPointerException e) {
+                    throw new RuntimeException("Unsupported file format.");
+                }
             }
         } catch (NullPointerException | IOException e) {
             return String.valueOf(e);
