@@ -17,7 +17,7 @@ package io.cloudslang.content.mail.services;
 import io.cloudslang.content.mail.constants.PopPropNames;
 import io.cloudslang.content.mail.entities.GetMailAttachmentInput;
 import io.cloudslang.content.mail.entities.GetMailInput;
-import io.cloudslang.content.mail.utils.MessageStoreUtils;
+import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,7 +35,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MessageStoreUtils.class})
+@PrepareForTest({SSLUtils.class})
 public class GetMailAttachmentServiceTest {
 
     @Rule
@@ -62,11 +62,11 @@ public class GetMailAttachmentServiceTest {
 
     @Test
     public void executeMessageNumberGreaterThanFolderMessageCountThrowsException() throws Exception {
-        PowerMockito.mockStatic(MessageStoreUtils.class);
+        PowerMockito.mockStatic(SSLUtils.class);
         doReturn(folderMock).when(storeMock).getFolder(Matchers.anyString());
         doReturn(1).when(folderMock).getMessageCount();
         doReturn(true).when(folderMock).exists();
-        when(MessageStoreUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
+        when(SSLUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
         inputBuilder.messageNumber("2");
 
         try {

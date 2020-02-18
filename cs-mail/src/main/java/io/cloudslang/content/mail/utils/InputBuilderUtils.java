@@ -154,7 +154,7 @@ public final class InputBuilderUtils {
         List<String> tlsVersions = new ArrayList<>();
         for (String tlsVersion : tlsVersionsArray) {
             if (!TlsVersions.validate(tlsVersion)) {
-                throw new IllegalArgumentException("Illegal value of input 'tlsVersion'");
+                throw new IllegalArgumentException("Illegal value of input '" + InputNames.TLS_VERSION + "'");
             }
             tlsVersions.add(tlsVersion);
         }
@@ -162,12 +162,20 @@ public final class InputBuilderUtils {
     }
 
 
-    public static List<String> buildAllowedCiphers(String allowedCiphers) {
-        if (StringUtils.isEmpty(allowedCiphers)) {
+    public static List<String> buildAllowedCiphers(String allowedCiphersInput) throws Exception {
+        if (StringUtils.isEmpty(allowedCiphersInput)) {
             return Collections.emptyList();
         }
 
-        String[] cipherSuites = allowedCiphers.replaceAll("\\s+", StringUtils.EMPTY).split(",");
-        return Arrays.asList(cipherSuites);
+        String[] cipherSuites = allowedCiphersInput.replaceAll("\\s+", StringUtils.EMPTY).split(",");
+        List<String> allowedCiphers = Arrays.asList(cipherSuites);
+
+        for(String cipher : allowedCiphers) {
+            if(!CipherSuites.validate(cipher)) {
+                throw new IllegalArgumentException("Illegal value of input '" + InputNames.ENCRYPTION_ALGORITHM + "'");
+            }
+        }
+
+        return allowedCiphers;
     }
 }

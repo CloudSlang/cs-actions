@@ -159,7 +159,7 @@ public class InputBuilderUtilsTest {
 
 
     @Test
-    public void buildCipherSuites_CipherSuiteIsNull_EmptyList() {
+    public void buildCipherSuites_CipherSuiteIsNull_EmptyList() throws Exception {
         final String cipherSuite = null;
 
         List<String> result = InputBuilderUtils.buildAllowedCiphers(cipherSuite);
@@ -169,7 +169,7 @@ public class InputBuilderUtilsTest {
 
 
     @Test
-    public void buildCipherSuites_CipherSuiteIsEmpty_EmptyList() {
+    public void buildCipherSuites_CipherSuiteIsEmpty_EmptyList() throws Exception {
         final String cipherSuite = StringUtils.EMPTY;
 
         List<String> result = InputBuilderUtils.buildAllowedCiphers(cipherSuite);
@@ -179,7 +179,7 @@ public class InputBuilderUtilsTest {
 
 
     @Test
-    public void buildCipherSuites_CipherSuiteIsMicroFocusAccepted_ValidResult() {
+    public void buildCipherSuites_CipherSuiteIsMicroFocusAccepted_ValidResult() throws Exception {
         final String cipherSuite = CipherSuites.TLS_DHE_RSA_WITH_AES_128_CBC_SHA256 + ", \n\t" +
                 CipherSuites.TLS_DHE_RSA_WITH_AES_256_CBC_SHA256;
 
@@ -191,7 +191,7 @@ public class InputBuilderUtilsTest {
 
 
     @Test
-    public void buildCipherSuites_CipherSuiteContainsNonMicrofocusAccepted_ValidResult() {
+    public void buildCipherSuites_CipherSuiteContainsNonMicrofocusAccepted_ValidResult() throws Exception {
         final String unknownCipher = "asd";
         final String cipherSuite = CipherSuites.TLS_DHE_RSA_WITH_AES_128_CBC_SHA256 + ", \n\t" + unknownCipher;
 

@@ -21,7 +21,7 @@ import io.cloudslang.content.mail.constants.SecurityConstants;
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import io.cloudslang.content.mail.constants.OutputNames;
 import io.cloudslang.content.mail.entities.GetMailAttachmentInput;
-import io.cloudslang.content.mail.utils.MessageStoreUtils;
+import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import io.cloudslang.content.mail.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.cms.KeyTransRecipientId;
@@ -50,7 +50,7 @@ public class GetMailAttachmentService {
         this.results = new HashMap<>();
         this.input = getMailAttachmentInput;
 
-        try (Store store = MessageStoreUtils.createMessageStore(input)) {
+        try (Store store = SSLUtils.createMessageStore(input)) {
             Folder folder = store.getFolder(input.getFolder());
             if (!folder.exists()) {
                 throw new Exception(ExceptionMsgs.THE_SPECIFIED_FOLDER_DOES_NOT_EXIST_ON_THE_REMOTE_SERVER);

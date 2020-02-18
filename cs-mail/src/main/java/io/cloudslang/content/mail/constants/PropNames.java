@@ -19,6 +19,7 @@ public final class PropNames {
     public static final String SSL_ENABLE = ".ssl.enable";
     public static final String START_TLS_ENABLE = ".starttls.enable";
     public static final String START_TLS_REQUIRED = ".starttls.required";
+    public static final String SOCKET_FACTORY = ".socketFactory";
     public static final String SOCKET_FACTORY_CLASS = ".socketFactory.class";
     public static final String SOCKET_FACTORY_FALLBACK = ".socketFactory.fallback";
     public static final String SOCKET_FACTORY_PORT = ".socketFactory.port";

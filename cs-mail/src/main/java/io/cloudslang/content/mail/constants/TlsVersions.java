@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 
 public final class TlsVersions {
     public static final String SSLv3 = "SSLv3";
-    public static final String TLSv1_0 = "TLSv1.0";
+    public static final String TLSv1_0 = "TLSv1";
     public static final String TLSv1_1 = "TLSv1.1";
     public static final String TLSv1_2 = "TLSv1.2";
 

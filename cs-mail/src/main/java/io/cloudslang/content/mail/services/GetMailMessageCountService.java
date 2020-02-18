@@ -18,7 +18,7 @@ import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import io.cloudslang.content.mail.entities.GetMailMessageCountInput;
-import io.cloudslang.content.mail.utils.MessageStoreUtils;
+import io.cloudslang.content.mail.sslconfig.SSLUtils;
 
 import javax.mail.*;
 import java.util.HashMap;
@@ -34,7 +34,7 @@ public class GetMailMessageCountService {
         this.results = new HashMap<>();
         this.input = getMailMessageCountInput;
 
-        try (Store store = MessageStoreUtils.createMessageStore(input)) {
+        try (Store store = SSLUtils.createMessageStore(input)) {
             Folder folder = store.getFolder(input.getFolder());
             if (!folder.exists()) {
                 throw new Exception(ExceptionMsgs.THE_SPECIFIED_FOLDER_DOES_NOT_EXIST_ON_THE_REMOTE_SERVER);
