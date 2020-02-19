@@ -69,10 +69,9 @@ public class SSLConnectionSocketFactoryBuilder {
             for (int j = 0; j < subArray.length; j++)
                 if ((aLargeArray.toUpperCase()).equals((subArray[j]).toUpperCase())) {
                     subArray[j] = aLargeArray;
-                    checkArray = true;
                 }
 
-        return checkArray;
+        return Arrays.asList(largeArray).containsAll(Arrays.asList(subArray));
     }
 
     public static boolean checkIfTLS2(String[] arr, String targetValue) {
@@ -189,8 +188,9 @@ public class SSLConnectionSocketFactoryBuilder {
                 if (flag) {
                     if (cypherArray != null) {
                         sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), ARRAY_TLSv12, cypherArray, x509HostnameVerifier);
-                    } else
-                        sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), protocolArray, null, x509HostnameVerifier);
+                    }
+                }else{
+                    sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), protocolArray, null, x509HostnameVerifier);
                 }
             } else {
                 sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);

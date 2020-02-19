@@ -53,8 +53,9 @@ public class HttpClientExecutor {
     }
 
     public CloseableHttpResponse execute() {
-        try (CloseableHttpResponse response = closeableHttpClient.execute(httpRequestBase, context)) {
-            return response;
+        CloseableHttpResponse response;
+        try  {
+             response = closeableHttpClient.execute(httpRequestBase, context);
         } catch (SocketTimeoutException ste) {
             throw new RuntimeException("Socket timeout: " + ste.getMessage(), ste);
         } catch (HttpHostConnectException connectEx) {
@@ -63,5 +64,6 @@ public class HttpClientExecutor {
 
             throw new RuntimeException("Error while executing http request: " + e.getMessage(), e);
         }
+        return response;
     }
 }
