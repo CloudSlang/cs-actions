@@ -28,16 +28,17 @@ import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+import static io.cloudslang.content.httpclient.build.conn.SSLConnectionSocketFactoryBuilder.TLSv12;
 import static io.cloudslang.content.httpclient.entities.Constants.CHANGEIT;
 import static io.cloudslang.content.httpclient.entities.Constants.DEFAULT_JAVA_KEYSTORE;
 import static io.cloudslang.content.httpclient.services.HttpClientService.EXCEPTION;
@@ -369,11 +370,42 @@ public class HttpClientAction {
         httpClientInputs.setCookieStoreSessionObject(httpClientCookieSession);
         httpClientInputs.setConnectionPoolSessionObject(httpClientPoolingConnectionManager);
 
+//        try {
+//            return new HttpClientService().execute(httpClientInputs);
+//        } catch (Exception e) {
+//            return exceptionResult(e.getMessage(), e);
+//        }
+        boolean flag = false;
+        String remainingProtocol = "";
+
+        if (!StringUtils.isEmpty(tlsVersion)) {
+            Set<String> protocolSet = new HashSet<>(Arrays.asList(tlsVersion.trim().split(",")));
+
+            if (protocolSet.toString().toUpperCase().contains(TLSv12.toUpperCase())) {
+                flag = true;
+                protocolSet.remove(TLSv12);
+                for (int i = 0; i < protocolSet.size(); i++)
+                    remainingProtocol = protocolSet.toString().replace("[", "").replace("]", "");
+
+            }
+        }
+
         try {
-            return new HttpClientService().execute(httpClientInputs);
+            if (flag) {
+                try {
+                    httpClientInputs.setTlsVersion(TLSv12);
+                    return new HttpClientService().execute(httpClientInputs);
+                } catch (Exception e) {
+                    httpClientInputs.setTlsVersion(remainingProtocol);
+                    return new HttpClientService().execute(httpClientInputs);
+                }
+            } else {
+                return new HttpClientService().execute(httpClientInputs);
+            }
         } catch (Exception e) {
             return exceptionResult(e.getMessage(), e);
         }
+
     }
 
     private Map<String, String> exceptionResult(String message, Exception e) {

@@ -47,7 +47,7 @@ public class SSLConnectionSocketFactoryBuilder {
     public static final String TLSv12 = "TLSv1.2";
     public static final String[] ARRAY_TLSv12 = new String[]{"TLSv1.2"};
     public static final String[] array = new String[0];
-    public static final String[] SUPPORTED_PROTOCOLS = new String[]{SSLv3, TLSv10, TLSv11, TLSv12};
+    public static final String[] SUPPORTED_PROTOCOLS = new String[]{SSLv3, TLSv10, TLSv11,TLSv12};
     public static final String[] SUPPORTED_CYPHERS = new String[]{"TLS_DHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "THS_DHE_RSA_WITH_AES_256_CBC_SHA256", "THS_DHE_RSA_WITH_AES_128_CBC_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256", "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
             "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_WITH_AES_256_CBC_SHA384", "TLS_ECDHE_WITH_AES_256_GCM_SHA384", "TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_RSA_WITH_AES_256_CBC_SHA256", "TLS_RSA_WITH_AES_128_CBC_SHA256"};
     private static boolean checkArray = false;
@@ -171,7 +171,6 @@ public class SSLConnectionSocketFactoryBuilder {
                     throw new IllegalArgumentException("Invalid value '" + x509HostnameVerifierInputValue + "' for input 'x509HostnameVerifier'. Valid values: 'strict','browser_compatible','allow_all'.");
             }
 
-
             // Allow SSLv3, TLSv1, TLSv1.1 and TLSv1.2 protocols only. Client-server communication starts with TLSv1.2 and fallbacks to SSLv3 if needed.
             if (!StringUtils.isEmpty(inputTLS)) {
                 Set<String> protocolSet = new HashSet<>(Arrays.asList(inputTLS.trim().split(",")));
@@ -187,22 +186,11 @@ public class SSLConnectionSocketFactoryBuilder {
                 if (!StringUtils.isEmpty(inputCyphers))
                     cypherArray = inputCyphers.trim().split(",");
 
-                if (protocolArray.length == 1 && protocolArray[0].equals(TLSv12)) {
-                    if (!StringUtils.isEmpty(inputCyphers)) {
-                        sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), protocolArray, cypherArray, x509HostnameVerifier);
+                if (flag) {
+                    if (cypherArray != null) {
+                        sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), ARRAY_TLSv12, cypherArray, x509HostnameVerifier);
                     } else
                         sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), protocolArray, null, x509HostnameVerifier);
-                } else if (protocolArray.length > 1 && flag) {
-                    try {
-                        sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), ARRAY_TLSv12, cypherArray, x509HostnameVerifier);
-                        List<String> list = new ArrayList<>(Arrays.asList(protocolArray));
-                        list.remove(TLSv12);
-                        protocolArray = list.toArray(new String[0]);
-                    } catch (Exception e) {
-                        sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), protocolArray, null, x509HostnameVerifier);
-                    }
-                } else {
-                    sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), protocolArray, null, x509HostnameVerifier);
                 }
             } else {
                 sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);
@@ -214,7 +202,7 @@ public class SSLConnectionSocketFactoryBuilder {
             }
             throw new RuntimeException(e.getMessage() + ". " + SSL_CONNECTION_ERROR, e);
         }
-        return sslsf;
+            return sslsf;
     }
 
     protected void createKeystore(SSLContextBuilder sslContextBuilder, boolean useClientCert) {
