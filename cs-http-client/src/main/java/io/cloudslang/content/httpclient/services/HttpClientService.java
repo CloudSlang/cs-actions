@@ -224,6 +224,8 @@ public class HttpClientService {
                 .setTrustKeystore(httpClientInputs.getTrustKeystore())
                 .setTrustPassword(httpClientInputs.getTrustPassword())
                 .setX509HostnameVerifier(httpClientInputs.getX509HostnameVerifier())
+                .setInputTLS(httpClientInputs.getTlsVersion())
+                .setallowedCyphers(httpClientInputs.getAllowedCyphers())
                 .build();
 
         String connectionKey = ConnectionManagerBuilder.buildConnectionManagerMapKey(httpClientInputs.getTrustAllRoots(),
