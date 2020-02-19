@@ -365,13 +365,8 @@ public class HttpClientAction {
         httpClientInputs.setCookieStoreSessionObject(httpClientCookieSession);
         httpClientInputs.setConnectionPoolSessionObject(httpClientPoolingConnectionManager);
 
-//        try {
-//            return new HttpClientService().execute(httpClientInputs);
-//        } catch (Exception e) {
-//            return exceptionResult(e.getMessage(), e);
-//        }
         if (!isEmpty(tlsVersion)) {
-            if (tlsVersion.toUpperCase().contains(TLSv12.toUpperCase())) {
+            if (tlsVersion.toUpperCase().contains(TLSv12.toUpperCase()) && tlsVersion.split(",").length > 1) {
                 try {
                     httpClientInputs.setTlsVersion(TLSv12);
                     return new HttpClientService().execute(httpClientInputs);

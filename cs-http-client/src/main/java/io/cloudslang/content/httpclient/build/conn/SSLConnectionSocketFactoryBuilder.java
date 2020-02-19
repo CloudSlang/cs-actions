@@ -16,18 +16,27 @@
 
 package io.cloudslang.content.httpclient.build.conn;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.conn.ssl.*;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.security.*;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,7 +56,7 @@ public class SSLConnectionSocketFactoryBuilder {
     public static final String TLSv12 = "TLSv1.2";
     public static final String[] ARRAY_TLSv12 = new String[]{"TLSv1.2"};
     public static final String[] array = new String[0];
-    public static final String[] SUPPORTED_PROTOCOLS = new String[]{SSLv3, TLSv10, TLSv11,TLSv12};
+    public static final String[] SUPPORTED_PROTOCOLS = new String[]{SSLv3, TLSv10, TLSv11, TLSv12};
     public static final String[] SUPPORTED_CYPHERS = new String[]{"TLS_DHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "THS_DHE_RSA_WITH_AES_256_CBC_SHA256", "THS_DHE_RSA_WITH_AES_128_CBC_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256", "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
             "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_WITH_AES_256_CBC_SHA384", "TLS_ECDHE_WITH_AES_256_GCM_SHA384", "TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_RSA_WITH_AES_256_CBC_SHA256", "TLS_RSA_WITH_AES_128_CBC_SHA256"};
     private static boolean checkArray = false;
@@ -188,8 +197,10 @@ public class SSLConnectionSocketFactoryBuilder {
                 if (flag) {
                     if (cypherArray != null) {
                         sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), ARRAY_TLSv12, cypherArray, x509HostnameVerifier);
+                    } else {
+                        sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), protocolArray, null, x509HostnameVerifier);
                     }
-                }else{
+                } else {
                     sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), protocolArray, null, x509HostnameVerifier);
                 }
             } else {
@@ -202,7 +213,7 @@ public class SSLConnectionSocketFactoryBuilder {
             }
             throw new RuntimeException(e.getMessage() + ". " + SSL_CONNECTION_ERROR, e);
         }
-            return sslsf;
+        return sslsf;
     }
 
     protected void createKeystore(SSLContextBuilder sslContextBuilder, boolean useClientCert) {
