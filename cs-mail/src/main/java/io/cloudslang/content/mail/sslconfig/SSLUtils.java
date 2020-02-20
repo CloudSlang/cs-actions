@@ -257,7 +257,7 @@ public class SSLUtils {
     }
 
 
-    private static void clearTLSProperties(Properties props, MailInput input) {
+    public static void clearTLSProperties(Properties props, MailInput input) {
         props.remove(String.format(PropNames.MAIL_SSL_ENABLE, input.getProtocol() + SecurityConstants.SECURE_SUFFIX));
         props.remove(String.format(PropNames.MAIL_STARTTLS_ENABLE, input.getProtocol() + SecurityConstants.SECURE_SUFFIX));
         props.remove(String.format(PropNames.MAIL_STARTTLS_REQUIRED, input.getProtocol() + SecurityConstants.SECURE_SUFFIX));

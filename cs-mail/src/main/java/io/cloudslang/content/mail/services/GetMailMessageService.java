@@ -130,9 +130,6 @@ public class GetMailMessageService {
             try {
                 message.getFolder().close(true);
             } catch (Throwable ignore) {
-            } finally {
-                if (store != null)
-                    store.close();
             }
 
             result.put(io.cloudslang.content.constants.OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
@@ -141,6 +138,10 @@ public class GetMailMessageService {
                 throw new Exception(ExceptionMsgs.UNRECOGNIZED_SSL_MESSAGE_PLAINTEXT_CONNECTION);
             } else {
                 throw e;
+            }
+        } finally {
+            if (store != null) {
+                store.close();
             }
         }
         return result;
