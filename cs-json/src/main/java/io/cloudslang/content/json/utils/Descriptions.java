@@ -32,4 +32,10 @@ public class Descriptions {
         public static final String NEW_PROPERTY_NAME_DESC = "The name of the new property to add to the JSON object. There is no rule as to which character to use. Examples: property1, some_property, another property";
         public static final String NEW_PROPERTY_VALUE_DESC = "The value for the new property. This is interpreted as a string, no matter what the contents of the input. Examples: value, 1, [1,2,3]";
     }
+
+    public static class GetObjectKeys {
+        public static final String GET_OBJECT_KEYS = "Get Object Keys";
+
+        public static final String RETURN_RESULT_DESC = "This will contain the keys of the JSON object, in arbitrary order.";
+    }
 }

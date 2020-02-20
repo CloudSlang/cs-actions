@@ -14,7 +14,6 @@
  */
 
 
-
 package io.cloudslang.content.httpclient.entities;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
@@ -27,6 +26,8 @@ import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 public class HttpClientInputs {
 
     public static final String URL = "url";
+    public static final String TLS_VERSION = "tlsVersion";
+    public static final String ALLOWED_CYPHERS = "allowedCyphers";
     public static final String METHOD = "method";
     public static final String FOLLOW_REDIRECTS = "followRedirects";
     public static final String QUERY_PARAMS = "queryParams";
@@ -117,10 +118,20 @@ public class HttpClientInputs {
     private String multipartFilesContentType;
     private String chunkedRequestEntity;
     private String method;
+    private String tlsVersion;
+    private String allowedCyphers;
 
     private SerializableSessionObject cookieStoreSessionObject;
     private GlobalSessionObject connectionPoolSessionObject;
     private String queryParamsAreFormEncoded;
+
+    public String getAllowedCyphers() {
+        return allowedCyphers;
+    }
+
+    public void setAllowedCyphers(String allowedCyphers) {
+        this.allowedCyphers = allowedCyphers;
+    }
 
     public String getUrl() {
         return url;
@@ -144,6 +155,14 @@ public class HttpClientInputs {
 
     public void setPreemptiveAuth(String preemptiveAuth) {
         this.preemptiveAuth = preemptiveAuth;
+    }
+
+    public String getTlsVersion() {
+        return tlsVersion;
+    }
+
+    public void setTlsVersion(String tlsVersion) {
+        this.tlsVersion = tlsVersion;
     }
 
     public String getUsername() {
@@ -294,6 +313,10 @@ public class HttpClientInputs {
         return keepAlive;
     }
 
+    public void setKeepAlive(String keepAlive) {
+        this.keepAlive = keepAlive;
+    }
+
     public String getConnectionsMaxPerRoute() {
         return connectionsMaxPerRoute;
     }
@@ -308,10 +331,6 @@ public class HttpClientInputs {
 
     public void setConnectionsMaxTotal(String connectionsMaxTotal) {
         this.connectionsMaxTotal = connectionsMaxTotal;
-    }
-
-    public void setKeepAlive(String keepAlive) {
-        this.keepAlive = keepAlive;
     }
 
     public String getHeaders() {
@@ -482,11 +501,11 @@ public class HttpClientInputs {
         this.connectionPoolSessionObject = connectionPoolSessionObject;
     }
 
-    public void setQueryParamsAreFormEncoded(String queryParamsAreFormEncoded) {
-        this.queryParamsAreFormEncoded = queryParamsAreFormEncoded;
-    }
-
     public String getQueryParamsAreFormEncoded() {
         return queryParamsAreFormEncoded;
+    }
+
+    public void setQueryParamsAreFormEncoded(String queryParamsAreFormEncoded) {
+        this.queryParamsAreFormEncoded = queryParamsAreFormEncoded;
     }
 }

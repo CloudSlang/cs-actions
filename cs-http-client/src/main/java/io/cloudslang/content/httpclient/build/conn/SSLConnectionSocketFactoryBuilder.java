@@ -14,19 +14,29 @@
  */
 
 
-
 package io.cloudslang.content.httpclient.build.conn;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.conn.ssl.*;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.security.*;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,13 +54,38 @@ public class SSLConnectionSocketFactoryBuilder {
     public static final String TLSv10 = "TLSv1";
     public static final String TLSv11 = "TLSv1.1";
     public static final String TLSv12 = "TLSv1.2";
+    public static final String[] ARRAY_TLSv12 = new String[]{"TLSv1.2"};
+    public static final String[] array = new String[0];
     public static final String[] SUPPORTED_PROTOCOLS = new String[]{SSLv3, TLSv10, TLSv11, TLSv12};
+    public static final String[] SUPPORTED_CYPHERS = new String[]{"TLS_DHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "THS_DHE_RSA_WITH_AES_256_CBC_SHA256", "THS_DHE_RSA_WITH_AES_128_CBC_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256", "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
+            "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_WITH_AES_256_CBC_SHA384", "TLS_ECDHE_WITH_AES_256_GCM_SHA384", "TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_RSA_WITH_AES_256_CBC_SHA256", "TLS_RSA_WITH_AES_128_CBC_SHA256"};
+    private static boolean checkArray = false;
+    public String[] cypherArray;
     private String trustAllRootsStr = "false";
     private String keystore;
+    private String inputTLS;
     private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
+    private String inputCyphers;
     private String x509HostnameVerifierInputValue = "strict";
+    private boolean flag = false;
+    private boolean hasTLS2;
+
+    public static boolean checkEquality(String[] subArray, String[] largeArray) {
+
+        for (String aLargeArray : largeArray)
+            for (int j = 0; j < subArray.length; j++)
+                if ((aLargeArray.toUpperCase()).equals((subArray[j]).toUpperCase())) {
+                    subArray[j] = aLargeArray;
+                }
+
+        return Arrays.asList(largeArray).containsAll(Arrays.asList(subArray));
+    }
+
+    public static boolean checkIfTLS2(String[] arr, String targetValue) {
+        return Arrays.asList(arr).contains(targetValue);
+    }
 
     protected KeyStore createKeyStore(final URL url, final String password)
             throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
@@ -125,9 +160,10 @@ public class SSLConnectionSocketFactoryBuilder {
         sslContextBuilder.useSSL();
         sslContextBuilder.useTLS();
 
-        SSLConnectionSocketFactory sslsf;
+        SSLConnectionSocketFactory sslsf = null;
         try {
             String x509HostnameVerifierStr = x509HostnameVerifierInputValue.toLowerCase();
+
             X509HostnameVerifier x509HostnameVerifier;
             switch (x509HostnameVerifierStr) {
                 case "strict":
@@ -142,8 +178,35 @@ public class SSLConnectionSocketFactoryBuilder {
                 default:
                     throw new IllegalArgumentException("Invalid value '" + x509HostnameVerifierInputValue + "' for input 'x509HostnameVerifier'. Valid values: 'strict','browser_compatible','allow_all'.");
             }
+
             // Allow SSLv3, TLSv1, TLSv1.1 and TLSv1.2 protocols only. Client-server communication starts with TLSv1.2 and fallbacks to SSLv3 if needed.
-            sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);
+            if (!StringUtils.isEmpty(inputTLS)) {
+                Set<String> protocolSet = new HashSet<>(Arrays.asList(inputTLS.trim().split(",")));
+                String[] protocolArray = protocolSet.toArray(new String[0]);
+
+                if (!checkEquality(protocolArray, SUPPORTED_PROTOCOLS)) {
+                    throw new IllegalArgumentException("Protocol not supported");
+                }
+
+                if (checkIfTLS2(protocolArray, TLSv12))
+                    flag = true;
+
+                if (!StringUtils.isEmpty(inputCyphers))
+                    cypherArray = inputCyphers.trim().split(",");
+
+                if (flag) {
+                    if (cypherArray != null) {
+                        sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), ARRAY_TLSv12, cypherArray, x509HostnameVerifier);
+                    } else {
+                        sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), protocolArray, null, x509HostnameVerifier);
+                    }
+                } else {
+                    sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), protocolArray, null, x509HostnameVerifier);
+                }
+            } else {
+                sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);
+            }
+
         } catch (Exception e) {
             if (e instanceof IllegalArgumentException) {
                 throw new IllegalArgumentException(e.getMessage());
@@ -189,6 +252,12 @@ public class SSLConnectionSocketFactoryBuilder {
         return this;
     }
 
+
+    public SSLConnectionSocketFactoryBuilder setInputTLS(String inputTLSversion) {
+        this.inputTLS = inputTLSversion;
+        return this;
+    }
+
     public SSLConnectionSocketFactoryBuilder setKeystore(String keystore) {
         this.keystore = keystore;
         return this;
@@ -206,6 +275,11 @@ public class SSLConnectionSocketFactoryBuilder {
 
     public SSLConnectionSocketFactoryBuilder setTrustPassword(String trustPassword) {
         this.trustPassword = trustPassword;
+        return this;
+    }
+
+    public SSLConnectionSocketFactoryBuilder setallowedCyphers(String allowedCyphers) {
+        this.inputCyphers = allowedCyphers;
         return this;
     }
 

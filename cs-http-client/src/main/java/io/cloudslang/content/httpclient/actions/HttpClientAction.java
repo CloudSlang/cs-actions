@@ -31,8 +31,7 @@ import io.cloudslang.content.httpclient.services.HttpClientService;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -40,13 +39,10 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.Constants.CHANGEIT;
 import static io.cloudslang.content.httpclient.entities.Constants.DEFAULT_JAVA_KEYSTORE;
-import static io.cloudslang.content.httpclient.services.HttpClientService.EXCEPTION;
-import static io.cloudslang.content.httpclient.services.HttpClientService.FINAL_LOCATION;
-import static io.cloudslang.content.httpclient.services.HttpClientService.PROTOCOL_VERSION;
-import static io.cloudslang.content.httpclient.services.HttpClientService.REASON_PHRASE;
-import static io.cloudslang.content.httpclient.services.HttpClientService.RESPONSE_HEADERS;
-import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
+import static io.cloudslang.content.httpclient.entities.Constants.TLSv12;
+import static io.cloudslang.content.httpclient.services.HttpClientService.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created with IntelliJ IDEA.
@@ -271,6 +267,8 @@ public class HttpClientAction {
     )
     public Map<String, String> execute(
             @Param(value = HttpClientInputs.URL, required = true) String url,
+            @Param(HttpClientInputs.TLS_VERSION) String tlsVersion,
+            @Param(HttpClientInputs.ALLOWED_CYPHERS) String allowedCyphers,
             @Param(HttpClientInputs.AUTH_TYPE) String authType,
             @Param(HttpClientInputs.PREEMPTIVE_AUTH) String preemptiveAuth,
             @Param(HttpClientInputs.USERNAME) String username,
@@ -362,13 +360,46 @@ public class HttpClientAction {
         httpClientInputs.setMultipartValuesAreURLEncoded(multipartValuesAreURLEncoded);
         httpClientInputs.setChunkedRequestEntity(chunkedRequestEntity);
         httpClientInputs.setMethod(method);
+        httpClientInputs.setTlsVersion(tlsVersion);
+        httpClientInputs.setAllowedCyphers(allowedCyphers);
         httpClientInputs.setCookieStoreSessionObject(httpClientCookieSession);
         httpClientInputs.setConnectionPoolSessionObject(httpClientPoolingConnectionManager);
 
-        try {
-            return new HttpClientService().execute(httpClientInputs);
-        } catch (Exception e) {
-            return exceptionResult(e.getMessage(), e);
+        if (!isEmpty(tlsVersion)) {
+            if (tlsVersion.toUpperCase().contains(TLSv12.toUpperCase()) && tlsVersion.split(",").length > 1) {
+                try {
+                    httpClientInputs.setTlsVersion(TLSv12);
+                    return new HttpClientService().execute(httpClientInputs);
+                } catch (Exception e) {
+                    Set<String> otherTls = new HashSet<>(Arrays.asList(tlsVersion.split(",")));
+                    String tls12 = "";
+                    for (String protocol : otherTls) {
+                        if (protocol.toUpperCase().equals(TLSv12.toUpperCase()))
+                            tls12 = protocol;
+                    }
+                    otherTls.remove(tls12);
+                    httpClientInputs.setTlsVersion(otherTls.toString().replace("[", "").replace("]", ""));
+                    httpClientInputs.setCookieStoreSessionObject(new SerializableSessionObject());
+                    httpClientInputs.setConnectionPoolSessionObject(new GlobalSessionObject());
+                    try {
+                        return new HttpClientService().execute(httpClientInputs);
+                    } catch (Exception ex) {
+                        return exceptionResult(ex.getMessage(), ex);
+                    }
+                }
+            } else {
+                try {
+                    return new HttpClientService().execute(httpClientInputs);
+                } catch (Exception e) {
+                    return exceptionResult(e.getMessage(), e);
+                }
+            }
+        }else {
+            try {
+                return new HttpClientService().execute(httpClientInputs);
+            } catch (Exception e) {
+                return exceptionResult(e.getMessage(), e);
+            }
         }
     }
 
