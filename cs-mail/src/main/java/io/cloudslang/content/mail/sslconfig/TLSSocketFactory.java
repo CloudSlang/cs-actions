@@ -1,6 +1,19 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.mail.sslconfig;
 
-import io.cloudslang.content.mail.constants.SecurityConstants;
 import io.cloudslang.content.mail.constants.TlsVersions;
 
 import javax.net.ssl.SSLContext;
@@ -27,13 +40,22 @@ class TLSSocketFactory extends SSLSocketFactory {
 
     @Override
     public String[] getDefaultCipherSuites() {
-        return getSSLSocketFactory().getDefaultCipherSuites();
+        if(shouldUseSpecificCipherSuite()) {
+            return getSupportedCipherSuites();
+        } else {
+            return getSSLSocketFactory().getDefaultCipherSuites();
+        }
     }
 
 
     @Override
     public String[] getSupportedCipherSuites() {
-        return getSSLSocketFactory().getSupportedCipherSuites();
+        if(shouldUseSpecificCipherSuite()) {
+            String[] enabledCipherSuites = new String[this.cipherSuites.size()];
+            return this.cipherSuites.toArray(enabledCipherSuites);
+        } else {
+            return getSSLSocketFactory().getSupportedCipherSuites();
+        }
     }
 
 
@@ -84,7 +106,7 @@ class TLSSocketFactory extends SSLSocketFactory {
         this.protocols.toArray(enabledProtocols);
         sslSocket.setEnabledProtocols(enabledProtocols);
 
-        if (this.protocols.contains(TlsVersions.TLSv1_2) && !this.cipherSuites.isEmpty()) {
+        if (shouldUseSpecificCipherSuite()) {
             String[] enabledCipherSuites = new String[this.cipherSuites.size()];
             this.cipherSuites.toArray(enabledCipherSuites);
             sslSocket.setEnabledCipherSuites(enabledCipherSuites);
@@ -99,6 +121,9 @@ class TLSSocketFactory extends SSLSocketFactory {
             throw new RuntimeException(e);
         }
     }
-};
 
 
+    private boolean shouldUseSpecificCipherSuite() {
+        return this.protocols.contains(TlsVersions.TLSv1_2) && !this.cipherSuites.isEmpty();
+    }
+}

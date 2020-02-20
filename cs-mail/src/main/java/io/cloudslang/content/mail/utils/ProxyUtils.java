@@ -14,33 +14,21 @@
  */
 package io.cloudslang.content.mail.utils;
 
-import io.cloudslang.content.mail.constants.ImapPropNames;
-import io.cloudslang.content.mail.constants.PopPropNames;
-import io.cloudslang.content.mail.constants.SmtpPropNames;
+import io.cloudslang.content.mail.constants.*;
 import io.cloudslang.content.mail.entities.MailInput;
 
 import java.util.Properties;
 
 public final class ProxyUtils {
-    public static void setPropertiesProxy(Properties prop, MailInput input) {
-        if (input.getProtocol().contains(ImapPropNames.IMAP)) {
-            prop.setProperty(ImapPropNames.PROXY_HOST, input.getProxyHost());
-            prop.setProperty(ImapPropNames.PROXY_PORT, input.getProxyPort());
-            prop.setProperty(ImapPropNames.PROXY_USER, input.getProxyUsername());
-            prop.setProperty(ImapPropNames.PROXY_PASSWORD, input.getProxyPassword());
+    public static void setPropertiesProxy(Properties props, MailInput input) {
+        props.setProperty(String.format(PropNames.MAIL_PROXY_HOST, input.getProtocol()), input.getProxyHost());
+        props.setProperty(String.format(PropNames.MAIL_PROXY_PORT, input.getProtocol()), String.valueOf(input.getProxyPort()));
+        props.setProperty(String.format(PropNames.MAIL_PROXY_USER, input.getProtocol()), input.getProxyUsername());
+        props.setProperty(String.format(PropNames.MAIL_PROXY_PASSWORD, input.getProtocol()), input.getProxyPassword());
 
-        }
-        if (input.getProtocol().contains(PopPropNames.POP)) {
-            prop.setProperty(PopPropNames.PROXY_HOST, input.getProxyHost());
-            prop.setProperty(PopPropNames.PROXY_PORT, input.getProxyPort());
-            prop.setProperty(PopPropNames.PROXY_USER, input.getProxyUsername());
-            prop.setProperty(PopPropNames.PROXY_PASSWORD, input.getProxyPassword());
-        }
-        if (input.getProtocol().contains(PopPropNames.SMTP)) {
-            prop.setProperty(SmtpPropNames.PROXY_HOST, input.getProxyHost());
-            prop.setProperty(SmtpPropNames.PROXY_PORT, input.getProxyPort());
-            prop.setProperty(SmtpPropNames.PROXY_USER, input.getProxyUsername());
-            prop.setProperty(SmtpPropNames.PROXY_PASSWORD, input.getProxyPassword());
-        }
+        props.setProperty(String.format(PropNames.MAIL_PROXY_HOST, input.getProtocol() + SecurityConstants.SECURE_SUFFIX), input.getProxyHost());
+        props.setProperty(String.format(PropNames.MAIL_PROXY_PORT, input.getProtocol() + SecurityConstants.SECURE_SUFFIX), String.valueOf(input.getProxyPort()));
+        props.setProperty(String.format(PropNames.MAIL_PROXY_USER, input.getProtocol() + SecurityConstants.SECURE_SUFFIX), input.getProxyUsername());
+        props.setProperty(String.format(PropNames.MAIL_PROXY_PASSWORD, input.getProtocol() + SecurityConstants.SECURE_SUFFIX), input.getProxyPassword());
     }
 }

@@ -35,7 +35,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
     private String keystore;
     private String keystorePassword;
     private String proxyHost;
-    private String proxyPort;
+    private Short proxyPort;
     private String proxyUsername;
     private String proxyPassword;
     private int timeout = -1;
@@ -172,7 +172,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
     }
 
 
-    public String getProxyPort() {
+    public Short getProxyPort() {
         return proxyPort;
     }
 
@@ -416,7 +416,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
 
             input.proxyHost = StringUtils.defaultString(proxyHost);
 
-            input.proxyPort = StringUtils.defaultString(proxyPort);
+            input.proxyPort = buildPort(proxyPort, false);
 
             input.proxyUsername = StringUtils.defaultString(proxyUsername);
 

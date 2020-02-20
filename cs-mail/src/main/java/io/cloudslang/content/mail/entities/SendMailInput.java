@@ -18,6 +18,7 @@ package io.cloudslang.content.mail.entities;
 
 import io.cloudslang.content.mail.constants.Constants;
 import io.cloudslang.content.mail.constants.Encodings;
+import io.cloudslang.content.mail.constants.SmtpPropNames;
 import io.cloudslang.content.mail.constants.TlsVersions;
 import org.apache.commons.lang3.StringUtils;
 
@@ -58,10 +59,10 @@ public class SendMailInput implements MailInput {
     private String encryptionKeyAlias;
     private String encryptionKeystorePassword;
     private boolean enableTLS;
-    private String user;
+    private String username;
     private String encryptionAlgorithm;
     private String proxyHost;
-    private String proxyPort;
+    private Short proxyPort;
     private String proxyUsername;
     private String proxyPassword;
     private int timeout = -1;
@@ -78,7 +79,7 @@ public class SendMailInput implements MailInput {
     }
 
 
-    public short getPort() {
+    public Short getPort() {
         return port;
     }
 
@@ -208,8 +209,8 @@ public class SendMailInput implements MailInput {
     }
 
 
-    public String getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
 
@@ -224,7 +225,7 @@ public class SendMailInput implements MailInput {
 
 
     public String getProtocol() {
-        return StringUtils.EMPTY;
+        return SmtpPropNames.SMTP;
     }
 
 
@@ -233,7 +234,7 @@ public class SendMailInput implements MailInput {
     }
 
 
-    public String getProxyPort() {
+    public Short getProxyPort() {
         return proxyPort;
     }
 
@@ -514,7 +515,7 @@ public class SendMailInput implements MailInput {
 
             input.delimiter = StringUtils.isEmpty(delimiter) ? "," : delimiter;
 
-            input.user = buildUsername(user, false);
+            input.username = buildUsername(user, false);
 
             input.password = buildPassword(password);
 
@@ -568,7 +569,7 @@ public class SendMailInput implements MailInput {
 
             input.proxyHost = StringUtils.defaultString(proxyHost);
 
-            input.proxyPort = StringUtils.defaultString(proxyPort);
+            input.proxyPort = buildPort(proxyPort, false);
 
             input.proxyUsername = StringUtils.defaultString(proxyUsername);
 

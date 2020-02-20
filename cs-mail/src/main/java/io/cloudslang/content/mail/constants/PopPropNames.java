@@ -18,7 +18,6 @@ public final class PopPropNames {
     public static final String POP = "pop";
     public static final String POP3 = "pop3";
     public static final String POP3_PORT = "110";
-    public static final String SMTP = "smtp";
     private static final String MAIL_POP3 = "mail.pop3.";
     public static final String PROXY_PASSWORD = MAIL_POP3 + "proxy.password";
     public static final String PROXY_USER = MAIL_POP3 + "proxy.user";

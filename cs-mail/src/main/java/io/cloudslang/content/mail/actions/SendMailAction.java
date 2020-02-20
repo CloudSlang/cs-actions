@@ -78,7 +78,7 @@ public class SendMailAction {
      * @param proxyPassword              The proxy server password associated with the proxyUsername input value.
      * @param tlsVersion                 The version of TLS to use. The value of this input will be ignored if
      *                                   'enableTLS' / 'enableSSL' is set to 'false'.
-     *                                   Valid values: 'SSLv3', 'TLSv1.0', 'TLSv1.1', 'TLSv1.2'.
+     *                                   Valid values: 'SSLv3', 'TLSv1', 'TLSv1.1', 'TLSv1.2'.
      *                                   Default value: TLSv1.2.
      * @param encryptionAlgorithm        A list of ciphers to use. The value of this input will be ignored if
      *                                   'tlsVersion' does not contain 'TLSv1.2'.
@@ -114,7 +114,7 @@ public class SendMailAction {
             @Param(value = InputNames.HOSTNAME, required = true) String hostname,
             @Param(value = InputNames.PORT, required = true) String port,
             @Param(value = InputNames.HTML_EMAIL) String htmlEmail,
-            @Param(value = InputNames.FROM, required = true) String from,
+            @Param(value = InputNames.FROM_ADDRESS, required = true) String from,
             @Param(value = InputNames.TO, required = true) String to,
             @Param(value = InputNames.CC) String cc,
             @Param(value = InputNames.BCC) String bcc,

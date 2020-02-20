@@ -16,6 +16,7 @@
 
 package io.cloudslang.content.mail.sslconfig;
 
+import com.sun.mail.util.MailSSLSocketFactory;
 import io.cloudslang.content.mail.constants.Constants;
 import io.cloudslang.content.mail.constants.PropNames;
 import io.cloudslang.content.mail.constants.SecurityConstants;
@@ -177,7 +178,7 @@ public class SSLUtils {
             keyManagers = SSLUtils.createKeyManagers(clientKeyStore, keystorePassword);
         }
 
-        SSLContext context = SSLContext.getInstance("TLS");
+        SSLContext context = SSLContext.getInstance(SecurityConstants.SSL);
         context.init(keyManagers, trustManagers, new SecureRandom());
         SSLContext.setDefault(context);
     }
@@ -190,15 +191,19 @@ public class SSLUtils {
     }
 
 
-    public static Store configureStoreWithSSL(Properties props, Authenticator auth, GetMailInput input) throws NoSuchProviderException {
-        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SOCKET_FACTORY_CLASS, SecurityConstants.SSL_SOCKET_FACTORY);
-        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SOCKET_FACTORY_FALLBACK, String.valueOf(false));
-        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.PORT, String.valueOf(input.getPort()));
-        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SOCKET_FACTORY_PORT, String.valueOf(input.getPort()));
+    public static Store configureStoreWithSSL(Properties props, Authenticator auth, MailInput input) throws NoSuchProviderException {
+        configureWithSSL(props, input);
         URLName url = new URLName(input.getProtocol(), input.getHostname(), input.getPort(), StringUtils.EMPTY,
                 input.getUsername(), input.getPassword());
         Session session = Session.getInstance(props, auth);
         return session.getStore(url);
+    }
+
+    private static void configureWithSSL(Properties props, MailInput input) {
+        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SOCKET_FACTORY_CLASS, SecurityConstants.SSL_SOCKET_FACTORY);
+        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SOCKET_FACTORY_FALLBACK, String.valueOf(false));
+        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.PORT, String.valueOf(input.getPort()));
+        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SOCKET_FACTORY_PORT, String.valueOf(input.getPort()));
     }
 
 
@@ -226,42 +231,41 @@ public class SSLUtils {
 
 
     public static void configureWithTLS(Properties props, final MailInput input) {
+        final String mailSecureSSLEnable = String.format(PropNames.MAIL_SSL_ENABLE, input.getProtocol() + SecurityConstants.SECURE_SUFFIX);
+        final String mailSecureStartTLSEnable = String.format(PropNames.MAIL_STARTTLS_ENABLE, input.getProtocol() + SecurityConstants.SECURE_SUFFIX);
+        final String mailSecureStartTLSRequired = String.format(PropNames.MAIL_STARTTLS_REQUIRED, input.getProtocol() + SecurityConstants.SECURE_SUFFIX);
+        final String mailSecureSocketFactory = String.format(PropNames.MAIL_SOCKET_FACTORY, input.getProtocol() + SecurityConstants.SECURE_SUFFIX);
+        final String mailSecureSocketFactoryFallback = String.format(PropNames.MAIL_SOCKET_FACTORY_FALLBACK, input.getProtocol() + SecurityConstants.SECURE_SUFFIX);
+
         final boolean sslEnable = false;
         final boolean startTlsEnable = true;
         final boolean startTlsRequired = true;
         final SSLSocketFactory socketFactory = new TLSSocketFactory(input.getTlsVersions(), input.getAllowedCiphers());
+        final boolean socketFactoryFallback = false;
 
         if (!input.getTlsVersions().isEmpty()) {
-            props.setProperty(PropNames.MAIL + input.getProtocol() + SecurityConstants.SECURE_SUFFIX +
-                    PropNames.SSL_ENABLE, String.valueOf(sslEnable));
-
-            props.setProperty(PropNames.MAIL + input.getProtocol() + SecurityConstants.SECURE_SUFFIX +
-                    PropNames.START_TLS_ENABLE, String.valueOf(startTlsEnable));
-
-            props.setProperty(PropNames.MAIL + input.getProtocol() + SecurityConstants.SECURE_SUFFIX +
-                    PropNames.START_TLS_REQUIRED, String.valueOf(startTlsRequired));
-
-            props.put(PropNames.MAIL + input.getProtocol() + SecurityConstants.SECURE_SUFFIX +
-                            PropNames.SOCKET_FACTORY, socketFactory);
+            props.setProperty(mailSecureSSLEnable, String.valueOf(sslEnable));
+            props.setProperty(mailSecureStartTLSEnable, String.valueOf(startTlsEnable));
+            props.setProperty(mailSecureStartTLSRequired, String.valueOf(startTlsRequired));
+            props.put(mailSecureSocketFactory, socketFactory);
+            props.setProperty(mailSecureSocketFactoryFallback, String.valueOf(socketFactoryFallback));
         } else {
-            props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SSL_ENABLE, String.valueOf(sslEnable));
-
-            props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_ENABLE, String.valueOf(startTlsEnable));
-
-            props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_REQUIRED, String.valueOf(startTlsRequired));
+            props.setProperty(mailSecureSSLEnable, String.valueOf(sslEnable));
+            props.setProperty(mailSecureStartTLSEnable, String.valueOf(startTlsEnable));
+            props.setProperty(mailSecureStartTLSRequired, String.valueOf(startTlsRequired));
         }
     }
 
 
-    private static void clearTLSProperties(Properties props, GetMailInput input) {
-        props.remove(PropNames.MAIL + input.getProtocol() + SecurityConstants.SECURE_SUFFIX + PropNames.SSL_ENABLE);
-        props.remove(PropNames.MAIL + input.getProtocol() + SecurityConstants.SECURE_SUFFIX + PropNames.START_TLS_ENABLE);
-        props.remove(PropNames.MAIL + input.getProtocol() + SecurityConstants.SECURE_SUFFIX + PropNames.START_TLS_REQUIRED);
-        props.remove(PropNames.MAIL + input.getProtocol() + SecurityConstants.SECURE_SUFFIX + PropNames.SOCKET_FACTORY);
+    private static void clearTLSProperties(Properties props, MailInput input) {
+        props.remove(String.format(PropNames.MAIL_SSL_ENABLE, input.getProtocol() + SecurityConstants.SECURE_SUFFIX));
+        props.remove(String.format(PropNames.MAIL_STARTTLS_ENABLE, input.getProtocol() + SecurityConstants.SECURE_SUFFIX));
+        props.remove(String.format(PropNames.MAIL_STARTTLS_REQUIRED, input.getProtocol() + SecurityConstants.SECURE_SUFFIX));
+        props.remove(String.format(PropNames.MAIL_SOCKET_FACTORY, input.getProtocol() + SecurityConstants.SECURE_SUFFIX));
 
-        props.remove(PropNames.MAIL + input.getProtocol() + PropNames.SSL_ENABLE);
-        props.remove(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_ENABLE);
-        props.remove(PropNames.MAIL + input.getProtocol() + PropNames.START_TLS_REQUIRED);
+        props.remove(String.format(PropNames.MAIL_SSL_ENABLE, input.getProtocol()));
+        props.remove(String.format(PropNames.MAIL_STARTTLS_ENABLE, input.getProtocol()));
+        props.remove(String.format(PropNames.MAIL_STARTTLS_REQUIRED, input.getProtocol()));
     }
 
 

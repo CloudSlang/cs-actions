@@ -49,7 +49,7 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
     private boolean verifyCertificate;
     private boolean markMessageAsRead;
     private String proxyHost;
-    private String proxyPort;
+    private Short proxyPort;
     private String proxyUsername;
     private String proxyPassword;
     private int timeout = -1;
@@ -120,7 +120,7 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
     }
 
 
-    public String getProxyPort() {
+    public Short getProxyPort() {
         return proxyPort;
     }
 
@@ -453,7 +453,7 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
 
             input.proxyHost = StringUtils.defaultString(proxyHost);
 
-            input.proxyPort = StringUtils.defaultString(proxyPort);
+            input.proxyPort = buildPort(proxyPort, false);
 
             input.proxyUsername = StringUtils.defaultString(proxyUsername);
 

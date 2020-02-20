@@ -77,12 +77,12 @@ public class SendMailService {
             props.put(SmtpPropNames.HOST, input.getHostname());
             props.put(SmtpPropNames.PORT, StringUtils.EMPTY + input.getPort());
 
-            if (null != input.getUser() && input.getUser().length() > 0) {
-                props.put(SmtpPropNames.USER, input.getUser());
+            if (null != input.getUsername() && input.getUsername().length() > 0) {
+                props.put(SmtpPropNames.USER, input.getUsername());
                 props.put(SmtpPropNames.PASSWORD, input.getPassword());
                 props.put(SmtpPropNames.AUTH, String.valueOf(true));
             }
-            if(input.isEnableTLS()){
+            if (input.isEnableTLS()) {
                 SSLUtils.addSSLSettings(true, StringUtils.EMPTY,
                         StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY);
                 SSLUtils.configureWithTLS(props, input);
@@ -92,7 +92,7 @@ public class SendMailService {
             if (input.getTimeout() > 0) {
                 props.put(SmtpPropNames.TIMEOUT, input.getTimeout());
             }
-            if (StringUtils.isNotEmpty(input.getProxyHost())){
+            if (StringUtils.isNotEmpty(input.getProxyHost())) {
                 ProxyUtils.setPropertiesProxy(props, input);
             }
 
@@ -189,9 +189,9 @@ public class SendMailService {
 
             msg.saveChanges();
 
-            if (!StringUtils.isEmpty(input.getUser())) {
-                transport = session.getTransport(SmtpPropNames.SMTP);
-                transport.connect(input.getHostname(), input.getPort(), input.getUser(), input.getPassword());
+            if (!StringUtils.isEmpty(input.getUsername())) {
+                transport = session.getTransport(SmtpPropNames.SMTP + SecurityConstants.SECURE_SUFFIX);
+                transport.connect(input.getHostname(), input.getPort(), input.getUsername(), input.getPassword());
                 transport.sendMessage(msg, msg.getAllRecipients());
             } else {
                 Transport.send(msg);

@@ -44,7 +44,7 @@ public final class InputNames {
     public static final String VERIFY_CERTIFICATE = "verifyCertificate";
     public static final String HOSTNAME = "hostname";
     public static final String HTML_EMAIL = "htmlEmail";
-    public static final String FROM = "from";
+    public static final String FROM_ADDRESS = "fromAddress";
     public static final String TO = "to";
     public static final String CC = "cc";
     public static final String BCC = "bcc";
