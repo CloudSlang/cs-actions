@@ -26,7 +26,6 @@ import io.cloudslang.content.mail.entities.GetMailInput;
 import io.cloudslang.content.mail.entities.GetMailMessageInput;
 import io.cloudslang.content.mail.entities.StringOutputStream;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
-import io.cloudslang.content.mail.utils.MessageStoreUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -67,7 +66,7 @@ import static org.mockito.Mockito.*;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({GetMailMessageService.class, MimeUtility.class, URLName.class, Session.class, System.class, SSLContext.class,
-        SSLUtils.class, ASCIIUtility.class, ByteArrayInputStream.class, MessageStoreUtils.class})
+        SSLUtils.class, ASCIIUtility.class, ByteArrayInputStream.class, SSLUtils.class})
 public class GetMailMessageServiceTest {
 
     public static final int READ_ONLY = 1;
@@ -124,8 +123,8 @@ public class GetMailMessageServiceTest {
      */
     @Test
     public void testGetMessageThrowsFolderNotFoundException() throws Exception {
-        PowerMockito.mockStatic(MessageStoreUtils.class);
-        when(MessageStoreUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
+        PowerMockito.mockStatic(SSLUtils.class);
+        when(SSLUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
         doReturn(folderMock).when(storeMock).getFolder(anyString());
         doReturn(false).when(folderMock).exists();
         serviceSpy.input = inputBuilder.build();
@@ -143,8 +142,8 @@ public class GetMailMessageServiceTest {
      */
     @Test
     public void testGetMessageThrowsMessageNumberException() throws Exception {
-        PowerMockito.mockStatic(MessageStoreUtils.class);
-        when(MessageStoreUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
+        PowerMockito.mockStatic(SSLUtils.class);
+        when(SSLUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
         doReturn(folderMock).when(storeMock).getFolder(anyString());
         doReturn(true).when(folderMock).exists();
         doReturn(READ_ONLY).when(serviceSpy).getFolderOpenMode();

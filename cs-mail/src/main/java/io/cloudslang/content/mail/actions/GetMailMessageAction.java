@@ -80,6 +80,20 @@ public class GetMailMessageAction {
      * @param proxyPort                  The proxy server port.
      * @param proxyUsername              The user name used when connecting to the proxy.
      * @param proxyPassword              The proxy server password associated with the proxyUsername input value.
+     * @param tlsVersion                 The version of TLS to use. The value of this input will be ignored if
+     *                                   'enableTLS' / 'enableSSL' is set to 'false'.
+     *                                   Valid values: 'SSLv3', 'TLSv1', 'TLSv1.1', 'TLSv1.2'.
+     *                                   Default value: TLSv1.2.
+     * @param encryptionAlgorithm        A list of ciphers to use. The value of this input will be ignored if
+     *                                   'tlsVersion' does not contain 'TLSv1.2'.
+     *                                   Default value is TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,
+     *                                   TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+     *                                   TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,
+     *                                   TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+     *                                   TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+     *                                   TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+     *                                   TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_CBC_SHA256,
+     *                                   TLS_RSA_WITH_AES_128_CBC_SHA256.
      * @return a map containing the output of the operation. Keys present in the map are:
      * <br><b>returnCode</b> - This is the primary output. It is 0 if the operation succeeded and -1 for failure.
      * <br><b>subject</b> - Subject of the email.
@@ -136,7 +150,9 @@ public class GetMailMessageAction {
             @Param(value = InputNames.PROXY_PASSWORD) String proxyPassword,
             @Param(value = InputNames.TIMEOUT) String timeout,
             @Param(value = InputNames.MARK_MESSAGE_AS_READ) String markAsRead,
-            @Param(value = InputNames.VERIFY_CERTIFICATE) String verifyCertificate) {
+            @Param(value = InputNames.VERIFY_CERTIFICATE) String verifyCertificate,
+            @Param(value = InputNames.TLS_VERSION) String tlsVersion,
+            @Param(value = InputNames.ENCRYPTION_ALGORITHM) String encryptionAlgorithm) {
         GetMailMessageInput.Builder inputBuilder = new GetMailMessageInput.Builder()
                 .hostname(hostname)
                 .port(port)
@@ -164,7 +180,9 @@ public class GetMailMessageAction {
                 .proxyHost(proxyHost)
                 .proxyPort(proxyPort)
                 .proxyUsername(proxyUsername)
-                .proxyPassword(proxyPassword);
+                .proxyPassword(proxyPassword)
+                .tlsVersion(tlsVersion)
+                .allowedCiphers(encryptionAlgorithm);
         try {
             return new GetMailMessageService().execute(inputBuilder.build());
         } catch (Exception e) {

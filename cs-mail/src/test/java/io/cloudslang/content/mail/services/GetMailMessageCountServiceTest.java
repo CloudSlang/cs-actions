@@ -19,7 +19,7 @@ import io.cloudslang.content.mail.constants.PopPropNames;
 import io.cloudslang.content.mail.entities.GetMailInput;
 import io.cloudslang.content.mail.entities.GetMailMessageCountInput;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
-import io.cloudslang.content.mail.utils.MessageStoreUtils;
+import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +40,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MessageStoreUtils.class})
+@PrepareForTest({SSLUtils.class})
 public class GetMailMessageCountServiceTest {
 
     @Spy
@@ -69,12 +69,12 @@ public class GetMailMessageCountServiceTest {
         doNothing().when(folderMock).open(Matchers.anyInt());
         doReturn(folderMock).when(storeMock).getFolder(Matchers.anyString());
         doNothing().when(storeMock).connect();
-        PowerMockito.mockStatic(MessageStoreUtils.class);
-        when(MessageStoreUtils.createMessageStore(any(GetMailInput.class))).thenCallRealMethod();
-        when(MessageStoreUtils.tryTLSOtherwiseTrySSL(any(SimpleAuthenticator.class), any(Properties.class), any(GetMailInput.class))).thenCallRealMethod();
-        when(MessageStoreUtils.configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
-        when(MessageStoreUtils.configureStoreWithSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
-        PowerMockito.doNothing().when(MessageStoreUtils.class, "addSSLSettings", anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        PowerMockito.mockStatic(SSLUtils.class);
+        when(SSLUtils.createMessageStore(any(GetMailInput.class))).thenCallRealMethod();
+        when(SSLUtils.tryTLSOtherwiseTrySSL(any(SimpleAuthenticator.class), any(Properties.class), any(GetMailInput.class))).thenCallRealMethod();
+        when(SSLUtils.configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
+        when(SSLUtils.configureStoreWithSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
+        PowerMockito.doNothing().when(SSLUtils.class, "addSSLSettings", anyBoolean(), anyString(), anyString(), anyString(), anyString());
         inputBuilder.enableTLS(String.valueOf(true));
 
         Map<String, String> results = serviceSpy.execute(inputBuilder.build());

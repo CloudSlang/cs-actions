@@ -14,13 +14,21 @@
  */
 package io.cloudslang.content.mail.constants;
 
-public final class PopPropNames {
-    public static final String POP = "pop";
-    public static final String POP3 = "pop3";
-    public static final String POP3_PORT = "110";
-    private static final String MAIL_POP3 = "mail.pop3.";
-    public static final String PROXY_PASSWORD = MAIL_POP3 + "proxy.password";
-    public static final String PROXY_USER = MAIL_POP3 + "proxy.user";
-    public static final String PROXY_PORT = MAIL_POP3 + "proxy.port";
-    public static final String PROXY_HOST = MAIL_POP3 + "proxy.host";
+import java.lang.reflect.Field;
+
+public final class TlsVersions {
+    public static final String SSLv3 = "SSLv3";
+    public static final String TLSv1_0 = "TLSv1";
+    public static final String TLSv1_1 = "TLSv1.1";
+    public static final String TLSv1_2 = "TLSv1.2";
+
+    public static boolean validate(String tlsVersion) throws IllegalAccessException {
+        Field[] possibleVersions = TlsVersions.class.getFields();
+        for(Field possibleVersion : possibleVersions) {
+            if(possibleVersion.get(null) != null && possibleVersion.get(null).toString().equals(tlsVersion)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

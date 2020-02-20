@@ -24,5 +24,5 @@ public final class SecurityConstants {
     public static final String SSL = "SSL";
     public static final String DEFAULT_PASSWORD_FOR_STORE = "changeit";
     public static final String SSL_SOCKET_FACTORY = "javax.net.ssl.SSLSocketFactory";
-    public static final String SECURE_SUFFIX_FOR_POP3_AND_IMAP = "s";
+    public static final String SECURE_SUFFIX = "s";
 }

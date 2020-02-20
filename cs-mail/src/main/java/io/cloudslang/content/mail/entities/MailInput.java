@@ -14,17 +14,28 @@
  */
 package io.cloudslang.content.mail.entities;
 
-public interface GetMailInput extends MailInput {
+import java.util.List;
 
-    int getTimeout();
+public interface MailInput {
+    String getPassword();
 
-    boolean isEnableTLS();
+    String getUsername();
 
-    boolean isEnableSSL();
+    String getHostname();
 
-    boolean isTrustAllRoots();
+    Short getPort();
 
-    String getKeystore();
+    String getProxyHost();
 
-    String getKeystorePassword();
+    Short getProxyPort();
+
+    String getProxyUsername();
+
+    String getProxyPassword();
+
+    String getProtocol();
+
+    List<String> getTlsVersions();
+
+    List<String> getAllowedCiphers();
 }

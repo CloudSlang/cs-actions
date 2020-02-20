@@ -15,9 +15,9 @@
 package io.cloudslang.content.mail.entities;
 
 
-import io.cloudslang.content.mail.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.mail.utils.InputBuilderUtils.*;
@@ -35,7 +35,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
     private String keystore;
     private String keystorePassword;
     private String proxyHost;
-    private String proxyPort;
+    private Short proxyPort;
     private String proxyUsername;
     private String proxyPassword;
     private int timeout = -1;
@@ -48,6 +48,8 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
     private String decryptionKeystore;
     private String decryptionKeyAlias;
     private String decryptionKeystorePassword;
+    private List<String> tlsVersions;
+    private List<String> allowedCiphers;
 
 
     private GetMailAttachmentInput() {
@@ -170,7 +172,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
     }
 
 
-    public String getProxyPort() {
+    public Short getProxyPort() {
         return proxyPort;
     }
 
@@ -187,6 +189,16 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
 
     public int getTimeout() {
         return timeout;
+    }
+
+
+    public List<String> getTlsVersions() {
+        return tlsVersions;
+    }
+
+
+    public List<String> getAllowedCiphers() {
+        return allowedCiphers;
     }
 
 
@@ -216,6 +228,8 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
         private String decryptionKeystore;
         private String decryptionKeyAlias;
         private String decryptionKeystorePassword;
+        private String tlsVersion;
+        private String allowedCiphers;
 
 
         public Builder folder(String folder) {
@@ -362,6 +376,18 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
         }
 
 
+        public Builder tlsVersion(String tlsVersion) {
+            this.tlsVersion = tlsVersion;
+            return this;
+        }
+
+
+        public Builder allowedCiphers(String allowedCiphers) {
+            this.allowedCiphers = allowedCiphers;
+            return this;
+        }
+
+
         public GetMailAttachmentInput build() throws Exception {
             GetMailAttachmentInput input = new GetMailAttachmentInput();
 
@@ -390,7 +416,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
 
             input.proxyHost = StringUtils.defaultString(proxyHost);
 
-            input.proxyPort = StringUtils.defaultString(proxyPort);
+            input.proxyPort = buildPort(proxyPort, false);
 
             input.proxyUsername = StringUtils.defaultString(proxyUsername);
 
@@ -416,16 +442,24 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
 
             input.overwrite = !StringUtils.isEmpty(overwrite) && Boolean.parseBoolean(overwrite.trim());
 
-            input.decryptionKeystore = decryptionKeystore;
-            if (input.isEncryptedMessage()) {
-                if (!decryptionKeystore.startsWith(Constants.HTTP)) {
-                    decryptionKeystore = Constants.FILE + decryptionKeystore;
-                }
+            Map<String, String> decryption = buildDecryptionKeystore(decryptionKeystore, decryptionKeyAlias,
+                    decryptionKeystorePassword);
 
-                input.decryptionKeyAlias = (decryptionKeyAlias == null) ? StringUtils.EMPTY : decryptionKeyAlias;
-
-                input.decryptionKeystorePassword = (decryptionKeystorePassword == null) ? StringUtils.EMPTY : decryptionKeystorePassword;
+            if (decryption.containsKey("decryptionKeystore")) {
+                input.decryptionKeystore = decryption.get("decryptionKeystore");
             }
+
+            if (decryption.containsKey("decryptionKeyAlias")) {
+                input.decryptionKeyAlias = decryption.get("decryptionKeyAlias");
+            }
+
+            if (decryption.containsKey("decryptionKeystorePassword")) {
+                input.decryptionKeystorePassword = decryption.get("decryptionKeystorePassword");
+            }
+
+            input.tlsVersions = buildTlsVersions(tlsVersion);
+
+            input.allowedCiphers = buildAllowedCiphers(allowedCiphers);
 
             return input;
         }

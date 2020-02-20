@@ -19,7 +19,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.mail.constants.*;
 import io.cloudslang.content.mail.entities.GetMailMessageInput;
 import io.cloudslang.content.mail.entities.StringOutputStream;
-import io.cloudslang.content.mail.utils.MessageStoreUtils;
+import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import io.cloudslang.content.mail.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.cms.PasswordRecipientId;
@@ -130,9 +130,6 @@ public class GetMailMessageService {
             try {
                 message.getFolder().close(true);
             } catch (Throwable ignore) {
-            } finally {
-                if (store != null)
-                    store.close();
             }
 
             result.put(io.cloudslang.content.constants.OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
@@ -142,13 +139,17 @@ public class GetMailMessageService {
             } else {
                 throw e;
             }
+        } finally {
+            if (store != null) {
+                store.close();
+            }
         }
         return result;
     }
 
 
     protected Message getMessage() throws Exception {
-        store = MessageStoreUtils.createMessageStore(input);
+        store = SSLUtils.createMessageStore(input);
         Folder folder = store.getFolder(input.getFolder());
         if (!folder.exists()) {
             throw new Exception(ExceptionMsgs.THE_SPECIFIED_FOLDER_DOES_NOT_EXIST_ON_THE_REMOTE_SERVER);

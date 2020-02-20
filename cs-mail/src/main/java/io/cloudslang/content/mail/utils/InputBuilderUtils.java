@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.mail.utils;
 
 import io.cloudslang.content.mail.constants.*;
@@ -120,5 +134,62 @@ public final class InputBuilderUtils {
             return Constants.ONE_SECOND; //timeouts in seconds
         }
         return -1;
+    }
+
+
+    public static Map<String, String> buildDecryptionKeystore(String decryptionKeystore, String decryptionKeyAlias,
+                                                              String decryptionKeystorePassword) {
+        final String decryptionKeystoreKey = "decryptionKeystore";
+        final String decryptionKeyAliasKey = "decryptionKeyAlias";
+        final String decryptionKeystorePasswordKey = "decryptionKeystorePassword";
+        Map<String, String> result = new HashMap<>();
+
+        result.put(decryptionKeystoreKey, decryptionKeystore);
+        if (StringUtils.isNotEmpty(decryptionKeystore)) {
+            if (!decryptionKeystore.startsWith(Constants.HTTP)) {
+                result.put(decryptionKeystoreKey, Constants.FILE + decryptionKeystore);
+            }
+
+            result.put(decryptionKeyAliasKey, StringUtils.defaultString(decryptionKeyAlias));
+
+            result.put(decryptionKeystorePasswordKey, StringUtils.defaultString(decryptionKeystorePassword));
+        }
+
+        return result;
+    }
+
+
+    public static List<String> buildTlsVersions(String tlsVersionInput) throws Exception {
+        if (StringUtils.isEmpty(tlsVersionInput)) {
+            return Collections.emptyList();
+        }
+
+        String[] tlsVersionsArray = tlsVersionInput.replaceAll("\\s+", StringUtils.EMPTY).split(",");
+        List<String> tlsVersions = new ArrayList<>();
+        for (String tlsVersion : tlsVersionsArray) {
+            if (!TlsVersions.validate(tlsVersion)) {
+                throw new IllegalArgumentException("Illegal value of input '" + InputNames.TLS_VERSION + "'");
+            }
+            tlsVersions.add(tlsVersion);
+        }
+        return tlsVersions;
+    }
+
+
+    public static List<String> buildAllowedCiphers(String allowedCiphersInput) throws Exception {
+        if (StringUtils.isEmpty(allowedCiphersInput)) {
+            return Collections.emptyList();
+        }
+
+        String[] cipherSuites = allowedCiphersInput.replaceAll("\\s+", StringUtils.EMPTY).split(",");
+        List<String> allowedCiphers = Arrays.asList(cipherSuites);
+
+        for(String cipher : allowedCiphers) {
+            if(!CipherSuites.validate(cipher)) {
+                throw new IllegalArgumentException("Illegal value of input '" + InputNames.ENCRYPTION_ALGORITHM + "'");
+            }
+        }
+
+        return allowedCiphers;
     }
 }

@@ -18,10 +18,11 @@ package io.cloudslang.content.mail.entities;
 
 import io.cloudslang.content.mail.constants.Constants;
 import io.cloudslang.content.mail.constants.Encodings;
+import io.cloudslang.content.mail.constants.SmtpPropNames;
+import io.cloudslang.content.mail.constants.TlsVersions;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -32,7 +33,7 @@ import static io.cloudslang.content.mail.utils.InputBuilderUtils.*;
 /**
  * Created by giloan on 10/30/2014.
  */
-public class SendMailInput implements ProxyMailInput {
+public class SendMailInput implements MailInput {
 
     private String hostname;
     private Short port;
@@ -58,16 +59,18 @@ public class SendMailInput implements ProxyMailInput {
     private String encryptionKeyAlias;
     private String encryptionKeystorePassword;
     private boolean enableTLS;
-    private String user;
+    private String username;
     private String encryptionAlgorithm;
     private String proxyHost;
-    private String proxyPort;
+    private Short proxyPort;
     private String proxyUsername;
     private String proxyPassword;
     private int timeout = -1;
+    private List<String> tlsVersions;
+    private List<String> allowedCiphers;
 
 
-    private SendMailInput() {
+    private SendMailInput(){
     }
 
 
@@ -76,7 +79,7 @@ public class SendMailInput implements ProxyMailInput {
     }
 
 
-    public short getPort() {
+    public Short getPort() {
         return port;
     }
 
@@ -206,8 +209,8 @@ public class SendMailInput implements ProxyMailInput {
     }
 
 
-    public String getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
 
@@ -222,7 +225,7 @@ public class SendMailInput implements ProxyMailInput {
 
 
     public String getProtocol() {
-        return StringUtils.EMPTY;
+        return SmtpPropNames.SMTP;
     }
 
 
@@ -231,7 +234,7 @@ public class SendMailInput implements ProxyMailInput {
     }
 
 
-    public String getProxyPort() {
+    public Short getProxyPort() {
         return proxyPort;
     }
 
@@ -243,6 +246,16 @@ public class SendMailInput implements ProxyMailInput {
 
     public String getProxyPassword() {
         return proxyPassword;
+    }
+
+
+    public List<String> getTlsVersions() {
+        return tlsVersions;
+    }
+
+
+    public List<String> getAllowedCiphers() {
+        return allowedCiphers;
     }
 
 
@@ -277,6 +290,8 @@ public class SendMailInput implements ProxyMailInput {
         private String proxyUsername;
         private String proxyPassword;
         private String timeout;
+        private String tlsVersion;
+        private String allowedCiphers;
 
 
         public Builder hostname(String hostname) {
@@ -453,6 +468,18 @@ public class SendMailInput implements ProxyMailInput {
         }
 
 
+        public Builder tlsVersion(String tlsVersion) {
+            this.tlsVersion = tlsVersion;
+            return this;
+        }
+
+
+        public Builder allowedCiphers(String allowedCiphers) {
+            this.allowedCiphers = allowedCiphers;
+            return this;
+        }
+
+
         public SendMailInput build() throws Exception {
             SendMailInput input = new SendMailInput();
 
@@ -488,7 +515,7 @@ public class SendMailInput implements ProxyMailInput {
 
             input.delimiter = StringUtils.isEmpty(delimiter) ? "," : delimiter;
 
-            input.user = buildUsername(user, false);
+            input.username = buildUsername(user, false);
 
             input.password = buildPassword(password);
 
@@ -504,17 +531,24 @@ public class SendMailInput implements ProxyMailInput {
 
             input.encodingScheme = (contentTransferEncoding != null && contentTransferEncoding.equals(Encodings.QUOTED_PRINTABLE)) ? "Q" : "B";
 
-            input.encryptionKeystore = encryptionKeystore;
-            if (input.isEncryptedMessage()) {
-                if (!encryptionKeystore.startsWith(Constants.HTTP)) {
-                    encryptionKeystore = Constants.FILE + encryptionKeystore;
+            input.tlsVersions = buildTlsVersions(tlsVersion);
+
+            if(input.tlsVersions.contains(TlsVersions.TLSv1_2)) {
+                input.allowedCiphers = buildAllowedCiphers(allowedCiphers);
+
+            } else {
+                input.encryptionKeystore = encryptionKeystore;
+                if (input.isEncryptedMessage()) {
+                    if (!encryptionKeystore.startsWith(Constants.HTTP)) {
+                        encryptionKeystore = Constants.FILE + encryptionKeystore;
+                    }
+
+                    input.encryptionKeyAlias = (encryptionKeyAlias == null) ? StringUtils.EMPTY : encryptionKeyAlias;
+
+                    input.encryptionKeystorePassword = (encryptionKeystorePassword == null) ? StringUtils.EMPTY : encryptionKeystorePassword;
+
+                    input.encryptionAlgorithm = EncryptionAlgorithmsEnum.getEncryptionAlgorithm(encryptionAlgorithm).getEncryptionOID();
                 }
-
-                input.encryptionKeyAlias = (encryptionKeyAlias == null) ? StringUtils.EMPTY : encryptionKeyAlias;
-
-                input.encryptionKeystorePassword = (encryptionKeystorePassword == null) ? StringUtils.EMPTY : encryptionKeystorePassword;
-
-                input.encryptionAlgorithm = EncryptionAlgorithmsEnum.getEncryptionAlgorithm(encryptionAlgorithm).getEncryptionOID();
             }
 
             input.enableTLS = buildEnableTLS(enableTLS);
@@ -535,7 +569,7 @@ public class SendMailInput implements ProxyMailInput {
 
             input.proxyHost = StringUtils.defaultString(proxyHost);
 
-            input.proxyPort = StringUtils.defaultString(proxyPort);
+            input.proxyPort = buildPort(proxyPort, false);
 
             input.proxyUsername = StringUtils.defaultString(proxyUsername);
 
