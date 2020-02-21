@@ -114,7 +114,7 @@ public class SendMailAction {
             @Param(value = InputNames.HOSTNAME, required = true) String hostname,
             @Param(value = InputNames.PORT, required = true) String port,
             @Param(value = InputNames.HTML_EMAIL) String htmlEmail,
-            @Param(value = InputNames.FROM_ADDRESS, required = true) String from,
+            @Param(value = InputNames.FROM, required = true) String from,
             @Param(value = InputNames.TO, required = true) String to,
             @Param(value = InputNames.CC) String cc,
             @Param(value = InputNames.BCC) String bcc,
