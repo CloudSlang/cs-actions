@@ -29,4 +29,6 @@ public class Inputs {
     public static final String IGNORE_CASE = "ignoreCase";
     public static final String PATH_TO_FILE = "pathToFile";
     public static final String PASSWORD = "password";
+    public static final String VERSION = "version";
+    public static final String NAME = "name";
 }
