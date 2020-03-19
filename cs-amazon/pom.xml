@@ -128,9 +128,9 @@
             <version>1.5.1</version>
         </dependency>
         <dependency>
-            <groupId>bouncycastle</groupId>
-            <artifactId>bcprov-jdk16</artifactId>
-            <version>140</version>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>1.64</version>
         </dependency>
         <dependency>
             <groupId>io.cloudslang.content</groupId>
