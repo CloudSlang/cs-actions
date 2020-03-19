@@ -135,12 +135,23 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-xml</artifactId>
-            <version>0.0.11</version>
+            <version>0.0.12</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-core</artifactId>
             <version>${aws-sdk.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.10.3</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>

@@ -75,7 +75,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
-        <cs-xml.version>0.0.11</cs-xml.version>
+        <cs-xml.version>0.0.12</cs-xml.version>
         <cs-http-client.version>0.1.74</cs-http-client.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
