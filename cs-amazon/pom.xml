@@ -135,7 +135,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-xml</artifactId>
-            <version>0.0.11</version>
+            <version>0.0.13</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
