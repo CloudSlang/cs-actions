@@ -96,6 +96,8 @@ public class SSLUtils {
         Properties props = new Properties();
         if (input.getTimeout() > 0) {
             props.put(PropNames.MAIL + input.getProtocol() + PropNames.TIMEOUT, input.getTimeout());
+        }
+        if(StringUtils.isNotEmpty(input.getProxyHost())) {
             ProxyUtils.setPropertiesProxy(props, input);
         }
         Authenticator auth = new SimpleAuthenticator(input.getUsername(), input.getPassword());
