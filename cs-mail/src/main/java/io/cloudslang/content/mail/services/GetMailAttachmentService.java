@@ -50,12 +50,13 @@ public class GetMailAttachmentService {
         this.results = new HashMap<>();
         this.input = getMailAttachmentInput;
 
-        try (Store store = SSLUtils.createMessageStore(input)) {
-            Folder folder = store.getFolder(input.getFolder());
+        try (Store store = SSLUtils.createMessageStore(input);
+             Folder folder = store.getFolder(input.getFolder())) {
+
             if (!folder.exists()) {
                 throw new Exception(ExceptionMsgs.THE_SPECIFIED_FOLDER_DOES_NOT_EXIST_ON_THE_REMOTE_SERVER);
             }
-            folder.open(Folder.READ_ONLY);
+            folder.open(Folder.READ_WRITE);
 
             if (input.getMessageNumber() > folder.getMessageCount()) {
                 throw new IndexOutOfBoundsException("Message value was: " + input.getMessageNumber() + " there are only " +
@@ -72,9 +73,15 @@ public class GetMailAttachmentService {
             try {
                 if (StringUtils.isEmpty(input.getDestination())) {
                     readAttachment(message, input.getAttachmentName(), input.getCharacterSet());
-                } else
+                } else{
                     downloadAttachment(message, input.getAttachmentName(), input.getCharacterSet(),
                             input.getDestination(), input.isOverwrite());
+                }
+
+                if(input.isDeleteUponRetrieval()) {
+                    message.setFlag(Flags.Flag.DELETED, true);
+                }
+
                 results.put(io.cloudslang.content.constants.OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
             } catch (UnsupportedEncodingException except) {
                 throw new UnsupportedEncodingException("The given encoding (" + input.getCharacterSet() + ") is invalid or not supported.");

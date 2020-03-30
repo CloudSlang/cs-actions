@@ -36,7 +36,7 @@ public final class InputNames {
     public static final String KEYSTORE_PASSWORD = "keystorePassword";
     public static final String TRUST_KEYSTORE = "trustKeystore";
     public static final String TRUST_PASSWORD = "trustPassword";
-    public static final String DELETE_UPON_RETRIVAL = "deleteUponRetrieval";
+    public static final String DELETE_UPON_RETRIEVAL = "deleteUponRetrieval";
     public static final String DECRYPTION_KEYSTORE = "decryptionKeystore";
     public static final String DECRYPTION_KEY_ALIAS = "decryptionKeyAlias";
     public static final String DECRYPTION_KEYSTORE_PASSWORD = "decryptionKeystorePassword";
