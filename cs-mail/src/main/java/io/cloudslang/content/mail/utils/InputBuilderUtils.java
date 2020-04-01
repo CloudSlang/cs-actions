@@ -120,6 +120,11 @@ public final class InputBuilderUtils {
     }
 
 
+    public static boolean buildDeleteUponRetrieval(String deleteUponRetrieval) {
+        return deleteUponRetrieval != null && deleteUponRetrieval.equalsIgnoreCase(String.valueOf(true));
+    }
+
+
     public static String buildKeystore(String keystore) {
         return defaultIfEmpty(keystore, SecurityConstants.DEFAULT_JAVA_KEYSTORE);
     }

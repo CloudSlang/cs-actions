@@ -82,6 +82,9 @@ public class GetMailAttachmentAction {
      *                                   in destination.
      *                                   Valid values: true, false.
      *                                   Default value: false.
+     * @param deleteUponRetrieval        If true the email from which the attachment is retrieved will be deleted.
+     *                                   For any other values the email will not be deleted.
+     *                                   Valid values: true, false. Default value: false.
      * @param decryptionKeystore         The path to the pks12 formatted keystore used to decrypt the mail.
      * @param decryptionKeyAlias         The alias of a RSA key pair from the decryptionKeystore.
      *                                   The private key from the pair will be used to decrypt the mail.
@@ -143,6 +146,7 @@ public class GetMailAttachmentAction {
             @Param(value = InputNames.CHARACTER_SET) String characterSet,
             @Param(value = InputNames.DESTINATION) String destination,
             @Param(value = InputNames.OVERWRITE) String overwrite,
+            @Param(value = InputNames.DELETE_UPON_RETRIEVAL) String deleteUponRetrieval,
             @Param(value = InputNames.DECRYPTION_KEYSTORE) String decryptionKeystore,
             @Param(value = InputNames.DECRYPTION_KEY_ALIAS) String decryptionKeyAlias,
             @Param(value = InputNames.DECRYPTION_KEYSTORE_PASSWORD, encrypted = true) String decryptionKeystorePassword,
@@ -170,6 +174,7 @@ public class GetMailAttachmentAction {
                 .characterSet(characterSet)
                 .destination(destination)
                 .overwrite(overwrite)
+                .deleteUponRetrieval(deleteUponRetrieval)
                 .decryptionKeystore(decryptionKeystore)
                 .decryptionKeyAlias(decryptionKeyAlias)
                 .decryptionKeystorePassword(decryptionKeystorePassword)

@@ -486,11 +486,7 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
 
             input.characterSet = characterSet;
 
-            if (deleteUponRetrieval != null && deleteUponRetrieval.equalsIgnoreCase(String.valueOf(true))) {
-                input.deleteUponRetrieval = true;
-            } else {
-                input.deleteUponRetrieval = false;
-            }
+            input.deleteUponRetrieval = buildDeleteUponRetrieval(deleteUponRetrieval);
 
             if (markMessageAsRead != null && markMessageAsRead.equalsIgnoreCase(String.valueOf(true))) {
                 input.markMessageAsRead = true;
