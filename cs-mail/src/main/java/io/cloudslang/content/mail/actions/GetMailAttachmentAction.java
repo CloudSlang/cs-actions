@@ -84,6 +84,7 @@ public class GetMailAttachmentAction {
      *                                   Default value: false.
      * @param deleteUponRetrieval        If true the email from which the attachment is retrieved will be deleted.
      *                                   For any other values the email will not be deleted.
+     *                                   Valid values: true, false. Default value: false.
      * @param decryptionKeystore         The path to the pks12 formatted keystore used to decrypt the mail.
      * @param decryptionKeyAlias         The alias of a RSA key pair from the decryptionKeystore.
      *                                   The private key from the pair will be used to decrypt the mail.
