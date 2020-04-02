@@ -140,7 +140,7 @@ public class GetMailMessageAction {
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD) String trustPassword,
             @Param(value = InputNames.CHARACTER_SET) String characterSet,
-            @Param(value = InputNames.DELETE_UPON_RETRIVAL) String deleteUponRetrieval,
+            @Param(value = InputNames.DELETE_UPON_RETRIEVAL) String deleteUponRetrieval,
             @Param(value = InputNames.DECRYPTION_KEYSTORE) String decryptionKeystore,
             @Param(value = InputNames.DECRYPTION_KEY_ALIAS) String decryptionKeyAlias,
             @Param(value = InputNames.DECRYPTION_KEYSTORE_PASSWORD) String decryptionKeystorePassword,

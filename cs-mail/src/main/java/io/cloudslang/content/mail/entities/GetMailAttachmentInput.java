@@ -45,6 +45,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
     private String characterSet;
     private String destination;
     private boolean overwrite;
+    private boolean deleteUponRetrieval;
     private String decryptionKeystore;
     private String decryptionKeyAlias;
     private String decryptionKeystorePassword;
@@ -83,6 +84,11 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
 
     public boolean isOverwrite() {
         return overwrite;
+    }
+
+
+    public boolean isDeleteUponRetrieval() {
+        return deleteUponRetrieval;
     }
 
 
@@ -225,6 +231,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
         private String characterSet;
         private String destination;
         private String overwrite;
+        private String deleteUponRetrieval;
         private String decryptionKeystore;
         private String decryptionKeyAlias;
         private String decryptionKeystorePassword;
@@ -264,6 +271,12 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
 
         public Builder overwrite(String overwrite) {
             this.overwrite = overwrite;
+            return this;
+        }
+
+
+        public Builder deleteUponRetrieval(String deleteUponRetrieval) {
+            this.deleteUponRetrieval = deleteUponRetrieval;
             return this;
         }
 
@@ -441,6 +454,8 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
             input.destination = destination;
 
             input.overwrite = !StringUtils.isEmpty(overwrite) && Boolean.parseBoolean(overwrite.trim());
+
+            input.deleteUponRetrieval = buildDeleteUponRetrieval(deleteUponRetrieval);
 
             Map<String, String> decryption = buildDecryptionKeystore(decryptionKeystore, decryptionKeyAlias,
                     decryptionKeystorePassword);

@@ -46,16 +46,18 @@ public class GetMailAttachmentService {
     private RecipientId recId = null;
     private KeyStore ks = null;
 
+
     public Map<String, String> execute(GetMailAttachmentInput getMailAttachmentInput) throws Exception {
         this.results = new HashMap<>();
         this.input = getMailAttachmentInput;
 
-        try (Store store = SSLUtils.createMessageStore(input)) {
-            Folder folder = store.getFolder(input.getFolder());
+        try (Store store = SSLUtils.createMessageStore(input);
+             Folder folder = store.getFolder(input.getFolder())) {
+
             if (!folder.exists()) {
                 throw new Exception(ExceptionMsgs.THE_SPECIFIED_FOLDER_DOES_NOT_EXIST_ON_THE_REMOTE_SERVER);
             }
-            folder.open(Folder.READ_ONLY);
+            folder.open(Folder.READ_WRITE);
 
             if (input.getMessageNumber() > folder.getMessageCount()) {
                 throw new IndexOutOfBoundsException("Message value was: " + input.getMessageNumber() + " there are only " +
@@ -72,9 +74,15 @@ public class GetMailAttachmentService {
             try {
                 if (StringUtils.isEmpty(input.getDestination())) {
                     readAttachment(message, input.getAttachmentName(), input.getCharacterSet());
-                } else
+                } else {
                     downloadAttachment(message, input.getAttachmentName(), input.getCharacterSet(),
                             input.getDestination(), input.isOverwrite());
+                }
+
+                if (input.isDeleteUponRetrieval()) {
+                    message.setFlag(Flags.Flag.DELETED, true);
+                }
+
                 results.put(io.cloudslang.content.constants.OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
             } catch (UnsupportedEncodingException except) {
                 throw new UnsupportedEncodingException("The given encoding (" + input.getCharacterSet() + ") is invalid or not supported.");
@@ -250,56 +258,41 @@ public class GetMailAttachmentService {
 
 
     private static String writeNewFile(String path, Part part, boolean overwrite) throws Exception {
+        File file = createFilePath(path, overwrite);
 
-        InputStream is = null;
-        OutputStream os = null;
-
-        try {
-            is = part.getInputStream();
-
-            File f = new File(path);
-            if (!f.exists() || overwrite) {
-                if (!f.createNewFile()) {
-                    throw new IOException("Could not create file at path: " + path);
-                }
-
-                os = new FileOutputStream(f);
-
-                int readChar;
-                while ((readChar = is.read()) != -1) {
-                    os.write(readChar);
-                }
-                return f.getCanonicalPath();
-            } else {//return writeToTempFile(part);
-                throw new Exception("The file " + path + " already exists.");
+        try (InputStream is = part.getInputStream();
+             OutputStream os = new FileOutputStream(file)) {
+            int readChar;
+            while ((readChar = is.read()) != -1) {
+                os.write(readChar);
             }
-        } finally {
-            if (is != null)
-                is.close();
-
-            if (os != null)
-                os.close();
+            return file.getCanonicalPath();
         }
     }
 
 
     private static String writeTextToNewFile(String path, String text, boolean overwrite) throws Exception {
-        File f = new File(path);
-        FileWriter fw = null;
+        File file = createFilePath(path, overwrite);
 
-        try {
-            if (!f.exists() || overwrite) {
-                if (!f.createNewFile()) {
-                    throw new IOException("Could not create file at path: " + path);
-                }
-                fw = new FileWriter(f);
-                fw.write(text);
-                return f.getCanonicalPath();
-            }
-            throw new Exception("The file " + path + " already exists. ");
-        } finally {
-            if (fw != null)
-                fw.close();
+        try(FileWriter fw = new FileWriter(file)) {
+            fw.write(text);
+            return file.getCanonicalPath();
         }
+    }
+
+
+    protected static File createFilePath(String path, boolean overwrite) throws Exception {
+        File file = new File(path);
+
+        if (!file.exists()) {
+            boolean couldCreateFile = file.createNewFile();
+            if (!couldCreateFile) {
+                throw new IOException("Could not create file at path: " + path);
+            }
+        } else if (file.exists() && !overwrite) {
+            throw new Exception("The file " + path + " already exists.");
+        }
+
+        return file;
     }
 }
