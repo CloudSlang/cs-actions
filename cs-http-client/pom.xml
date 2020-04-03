@@ -168,13 +168,6 @@
             <version>3.21.0-GA</version>
             <scope>test</scope>
         </dependency>
-       <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-       <dependency>
-           <groupId>com.google.guava</groupId>
-           <artifactId>guava</artifactId>
-           <version>28.2-jre</version>
-           <scope>test</scope>
-       </dependency>
     </dependencies>
 
     <build>
