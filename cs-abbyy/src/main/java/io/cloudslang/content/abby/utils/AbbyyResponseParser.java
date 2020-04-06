@@ -12,22 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.abby.services;
+package io.cloudslang.content.abby.utils;
 
-import io.cloudslang.content.abby.entities.ProcessTextFieldInput;
-import io.cloudslang.content.abby.utils.ResultUtils;
+import io.cloudslang.content.abby.entities.AbbyyResponse;
 
 import java.util.Map;
 
-public class ProcessTextFieldService {
+public interface AbbyyResponseParser {
+    AbbyyResponse parseResponse(short statusCode, String responseBody) throws Exception;
 
-    private ProcessTextFieldInput input;
-
-
-    public Map<String, String> execute(ProcessTextFieldInput processTextFieldInput) {
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
-        this.input = processTextFieldInput;
-        //TODO
-        return results;
-    }
+    AbbyyResponse parseResponse(Map<String, String> response) throws Exception;
 }

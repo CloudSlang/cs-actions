@@ -1,13 +1,25 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.abby.entities;
 
 import java.util.List;
 
-public class ProcessTextFieldInput {
-    private String locationId;
+public class ProcessTextFieldInput implements AbbyyRequest {
+    private LocationId locationId;
     private String applicationId;
     private String password;
-    private int timeToWait;
-    private int numberOfRetries;
     private String proxyHost;
     private short proxyPort;
     private String proxyUsername;
@@ -18,15 +30,12 @@ public class ProcessTextFieldInput {
     private String trustPassword;
     private int connectTimeout;
     private int socketTimeout;
-    private boolean useCookies;
     private boolean keepAlive;
     private int connectionsMaxPerRoute;
     private int connectionsMaxTotal;
-    private String headers;
     private String responseCharacterSet;
     private String destinationFile;
     private String sourceFile;
-    private String chunkedRequestEntity;
     private Region region;
     private List<String> languages;
     private String letterSet;
@@ -41,7 +50,11 @@ public class ProcessTextFieldInput {
     private String pdfPassword;
 
 
-    public String getLocationId() {
+    private ProcessTextFieldInput() {
+    }
+
+
+    public LocationId getLocationId() {
         return locationId;
     }
 
@@ -53,16 +66,6 @@ public class ProcessTextFieldInput {
 
     public String getPassword() {
         return password;
-    }
-
-
-    public int getTimeToWait() {
-        return timeToWait;
-    }
-
-
-    public int getNumberOfRetries() {
-        return numberOfRetries;
     }
 
 
@@ -116,11 +119,6 @@ public class ProcessTextFieldInput {
     }
 
 
-    public boolean isUseCookies() {
-        return useCookies;
-    }
-
-
     public boolean isKeepAlive() {
         return keepAlive;
     }
@@ -136,11 +134,6 @@ public class ProcessTextFieldInput {
     }
 
 
-    public String getHeaders() {
-        return headers;
-    }
-
-
     public String getResponseCharacterSet() {
         return responseCharacterSet;
     }
@@ -153,11 +146,6 @@ public class ProcessTextFieldInput {
 
     public String getSourceFile() {
         return sourceFile;
-    }
-
-
-    public String getChunkedRequestEntity() {
-        return chunkedRequestEntity;
     }
 
 
@@ -225,8 +213,6 @@ public class ProcessTextFieldInput {
         private String locationId;
         private String applicationId;
         private String password;
-        private String timeToWait;
-        private String numberOfRetries;
         private String proxyHost;
         private String proxyPort;
         private String proxyUsername;
@@ -237,15 +223,12 @@ public class ProcessTextFieldInput {
         private String trustPassword;
         private String connectTimeout;
         private String socketTimeout;
-        private String useCookies;
         private String keepAlive;
         private String connectionsMaxPerRoute;
         private String connectionsMaxTotal;
-        private String headers;
         private String responseCharacterSet;
         private String destinationFile;
         private String sourceFile;
-        private String chunkedRequestEntity;
         private String region;
         private String language;
         private String letterSet;
@@ -274,18 +257,6 @@ public class ProcessTextFieldInput {
 
         public Builder password(String password) {
             this.password = password;
-            return this;
-        }
-
-
-        public Builder timeToWait(String timeToWait) {
-            this.timeToWait = timeToWait;
-            return this;
-        }
-
-
-        public Builder numberOfRetries(String numberOfRetries) {
-            this.numberOfRetries = numberOfRetries;
             return this;
         }
 
@@ -350,12 +321,6 @@ public class ProcessTextFieldInput {
         }
 
 
-        public Builder useCookies(String useCookies) {
-            this.useCookies = useCookies;
-            return this;
-        }
-
-
         public Builder keepAlive(String keepAlive) {
             this.keepAlive = keepAlive;
             return this;
@@ -374,12 +339,6 @@ public class ProcessTextFieldInput {
         }
 
 
-        public Builder headers(String headers) {
-            this.headers = headers;
-            return this;
-        }
-
-
         public Builder responseCharacterSet(String responseCharacterSet) {
             this.responseCharacterSet = responseCharacterSet;
             return this;
@@ -394,12 +353,6 @@ public class ProcessTextFieldInput {
 
         public Builder sourceFile(String sourceFile) {
             this.sourceFile = sourceFile;
-            return this;
-        }
-
-
-        public Builder chunkedRequestEntity(String chunkedRequestEntity) {
-            this.chunkedRequestEntity = chunkedRequestEntity;
             return this;
         }
 

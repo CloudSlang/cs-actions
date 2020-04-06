@@ -12,22 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.abby.services;
+package io.cloudslang.content.abby.constants;
 
-import io.cloudslang.content.abby.entities.ProcessTextFieldInput;
-import io.cloudslang.content.abby.utils.ResultUtils;
-
-import java.util.Map;
-
-public class ProcessTextFieldService {
-
-    private ProcessTextFieldInput input;
-
-
-    public Map<String, String> execute(ProcessTextFieldInput processTextFieldInput) {
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
-        this.input = processTextFieldInput;
-        //TODO
-        return results;
+public final class MiscConstants {
+    private MiscConstants() {
     }
+
+
+    public static final String HTTP_STATUS_CODE_OUTPUT = "statusCode";
+    public static final String HTTP_RETURN_RESULT_OUTPUT = "returnResult";
+    public static final String HTTP_EXCEPTION_OUTPUT = "exception";
+    public static final String DOCUMENT_PROCESSED_SUCCESSFULLY = "The document was processed successfully. " +
+            "Results can be retrieved by accessing one of the URLs from " + OutputNames.RESULT_URL + " output.";
 }

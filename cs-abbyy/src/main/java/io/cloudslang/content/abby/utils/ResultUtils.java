@@ -33,9 +33,7 @@ public final class ResultUtils {
         results.put(OutputNames.STATUS_CODE, StringUtils.EMPTY);
         results.put(io.cloudslang.content.constants.OutputNames.EXCEPTION, StringUtils.EMPTY);
         results.put(io.cloudslang.content.constants.OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
-        results.put(OutputNames.FAILURE_MESSAGE, StringUtils.EMPTY);
-        results.put(OutputNames.TIMED_OUT, StringUtils.EMPTY);
-        results.put(OutputNames.RESPONSE_HEADERS, StringUtils.EMPTY);
+        results.put(OutputNames.TIMED_OUT, String.valueOf(false));
 
         return results;
     }

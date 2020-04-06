@@ -12,22 +12,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.abby.services;
+package io.cloudslang.content.abby.exceptions;
 
-import io.cloudslang.content.abby.entities.ProcessTextFieldInput;
-import io.cloudslang.content.abby.utils.ResultUtils;
+public class AbbyySdkException extends Exception {
+    private String lastStatusCode;
 
-import java.util.Map;
+    AbbyySdkException(String msg) {
+        super(msg);
+    }
 
-public class ProcessTextFieldService {
+    AbbyySdkException(String msg, String lastStatusCode) {
+        super(msg);
+        this.lastStatusCode = lastStatusCode;
+    }
 
-    private ProcessTextFieldInput input;
+
+    AbbyySdkException(Throwable innerEx, String lastStatusCode) {
+        super(innerEx);
+        this.lastStatusCode = lastStatusCode;
+    }
 
 
-    public Map<String, String> execute(ProcessTextFieldInput processTextFieldInput) {
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
-        this.input = processTextFieldInput;
-        //TODO
-        return results;
+    public String getLastStatusCode() {
+        return lastStatusCode;
+    }
+
+
+    public void setLastStatusCode(String lastStatusCode) {
+        this.lastStatusCode = lastStatusCode;
     }
 }

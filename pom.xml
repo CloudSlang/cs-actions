@@ -312,7 +312,7 @@
     </profiles>
 
     <modules>
-        <module>cs-abby</module>
+        <module>cs-abbyy</module>
         <module>cs-alibaba</module>
         <module>cs-amazon</module>
         <module>cs-azure</module>
@@ -339,7 +339,6 @@
         <module>cs-vmware</module>
         <module>cs-xml</module>
         <module>cs-hashicorp-terraform</module>
-        <module>cs-abby</module>
     </modules>
 
 </project>

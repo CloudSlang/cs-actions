@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.abby.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -28,8 +42,6 @@ public class ProcessTextFieldAction {
      *                               Valid values: 'cloud-eu', 'cloud-westus'.
      * @param applicationId          The ID of the application to be used.
      * @param password               The password for the application.
-     * @param timeToWait             //TODO
-     * @param numberOfRetries        //TODO
      * @param proxyHost              The proxy server used to access the web site.
      * @param proxyPort              The proxy server port. The value '-1' indicates that the proxy port is not set
      *                               and the scheme default port will be used, e.g. if the scheme is 'http://' and
@@ -65,9 +77,6 @@ public class ProcessTextFieldAction {
      * @param socketTimeout          The timeout for waiting for data (a maximum period inactivity between two consecutive data packets),
      *                               in seconds. A socketTimeout value of '0' represents an infinite timeout.
      *                               Default value: '0'.
-     * @param useCookies             Specifies whether to enable cookie tracking or not. Cookies are stored between consecutive calls
-     *                               in a serializable session object therefore they will be available on a branch level.
-     *                               Default value: 'true'.
      * @param keepAlive              Specifies whether to create a shared connection that will be used in subsequent calls.
      *                               If keepAlive is 'false', the already open connection will be used and after execution it will close it.
      *                               The operation will use a connection pool stored in a GlobalSessionObject that will be available throughout
@@ -79,9 +88,6 @@ public class ProcessTextFieldAction {
      * @param connectionsMaxTotal    The maximum limit of connections in total.
      *                               The default will create no more than 2 concurrent connections in total.
      *                               Default value: '20'.
-     * @param headers                The list containing the headers to use for the request separated by new line (CRLF).
-     *                               The header name - value pair will be separated by ":". Format: According to HTTP standard for headers (RFC 2616).
-     *                               Examples: 'Accept:text/plain'
      * @param responseCharacterSet   The character encoding to be used for the HTTP response.
      *                               If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.
      *                               If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty,
@@ -91,13 +97,6 @@ public class ProcessTextFieldAction {
      *                               'returnResult' will no longer be populated with the entity if this is specified.
      *                               Example: 'C:\temp\destinationFile.txt'.
      * @param sourceFile             The absolute path of the image to be loaded and converted using the SDK.
-     * @param chunkedRequestEntity   Data is sent in a series of "chunks". It uses the Transfer-Encoding HTTP header in place
-     *                               of the Content-Length header. Generally it is recommended to let HttpClient choose the
-     *                               most appropriate transfer encoding based on the properties of the HTTP message being transferred.
-     *                               It is possible, however, to inform HttpClient that chunk coding is preferred by setting this input to "true".
-     *                               Please note that HttpClient will use this flag as a hint only.
-     *                               This value will be ignored when using HTTP protocol versions that do not support chunk coding, such as HTTP/1.0.
-     *                               This setting is ignored for multipart post entities.
      * @param region                 Specifies the region of the text field on the image. The coordinates of the region are measured
      *                               in pixels relative to the left top corner of the image and are specified in the following order:
      *                               left, top, right, bottom. By default, the region of the whole image is used.
@@ -152,9 +151,7 @@ public class ProcessTextFieldAction {
      * <br><b>statusCode</b> - The status_code returned by the server.
      * <br><b>returnCode</b> - The returnCode of the operation: 0 for success, -1 for failure.
      * <br><b>exception</b> - The exception message if the operation goes to failure.
-     * <br><b>failureMessage</b> //TODO
-     * <br><b>timedOut</b> //TODO
-     * <br><b>responseHeaders</b> //TODO
+     * <br><b>timedOut</b> - True if the operation timed out before the document was processed, false otherwise.
      */
     @Action(name = "Process Text Field",
             outputs = {
@@ -165,9 +162,7 @@ public class ProcessTextFieldAction {
                     @Output(OutputNames.STATUS_CODE),
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
                     @Output(io.cloudslang.content.constants.OutputNames.EXCEPTION),
-                    @Output(OutputNames.FAILURE_MESSAGE),
                     @Output(OutputNames.TIMED_OUT),
-                    @Output(OutputNames.RESPONSE_HEADERS)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
@@ -181,8 +176,6 @@ public class ProcessTextFieldAction {
             @Param(value = InputNames.LOCATION_ID, required = true) String locationId,
             @Param(value = InputNames.APPLICATION_ID, required = true) String applicationId,
             @Param(value = InputNames.PASSWORD, required = true, encrypted = true) String password,
-            @Param(value = InputNames.TIME_TO_WAIT) String timeToWait,
-            @Param(value = InputNames.NUMBER_OF_RETRIES) String numberOfRetries,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST) String proxyHost,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT) String proxyPort,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_USERNAME) String proxyUsername,
@@ -193,15 +186,12 @@ public class ProcessTextFieldAction {
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD, encrypted = true) String trustPassword,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECT_TIMEOUT) String connectTimeout,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOCKET_TIMEOUT) String socketTimeout,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.USE_COOKIES) String useCookies,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE) String keepAlive,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoute,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.HEADERS) String headers,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.DESTINATION_FILE) String destinationFile,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOURCE_FILE, required = true) String sourceFile,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CHUNKED_REQUEST_ENTITY) String chunkedRequestEntity,
             @Param(value = InputNames.REGION) String region,
             @Param(value = InputNames.LANGUAGE) String language,
             @Param(value = InputNames.LETTER_SET) String letterSet,
@@ -218,8 +208,6 @@ public class ProcessTextFieldAction {
                 .locationId(locationId)
                 .applicationId(applicationId)
                 .password(password)
-                .timeToWait(timeToWait)
-                .numberOfRetries(numberOfRetries)
                 .proxyHost(proxyHost)
                 .proxyPort(proxyPort)
                 .proxyUsername(proxyUsername)
@@ -230,15 +218,12 @@ public class ProcessTextFieldAction {
                 .trustPassword(trustPassword)
                 .connectTimeout(connectTimeout)
                 .socketTimeout(socketTimeout)
-                .useCookies(useCookies)
                 .keepAlive(keepAlive)
                 .connectionsMaxPerRoute(connectionsMaxPerRoute)
                 .connectionsMaxTotal(connectionsMaxTotal)
-                .headers(headers)
                 .responseCharacterSet(responseCharacterSet)
                 .destinationFile(destinationFile)
                 .sourceFile(sourceFile)
-                .chunkedRequestEntity(chunkedRequestEntity)
                 .region(region)
                 .language(language)
                 .letterSet(letterSet)

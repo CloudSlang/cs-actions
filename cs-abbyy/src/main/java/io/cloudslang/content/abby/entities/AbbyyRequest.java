@@ -14,20 +14,42 @@
  */
 package io.cloudslang.content.abby.entities;
 
-import io.cloudslang.content.abby.constants.ExceptionMsgs;
+public interface AbbyyRequest {
+    LocationId getLocationId();
 
-public enum ImageSource {
-    AUTO,
-    PHOTO,
-    SCANNER;
+    String getApplicationId();
 
+    String getPassword();
 
-    public static ImageSource fromString(String str) throws Exception {
-        for (ImageSource is : ImageSource.values()) {
-            if (is.name().equals(str)) {
-                return is;
-            }
-        }
-        throw new IllegalArgumentException(String.format(ExceptionMsgs.INVALID_IMAGE_SOURCE, str));
-    }
+    String getProxyHost();
+
+    short getProxyPort();
+
+    String getProxyUsername();
+
+    String getProxyPassword();
+
+    boolean isTrustAllRoots();
+
+    String getX509HostnameVerifier();
+
+    String getTrustKeystore();
+
+    String getTrustPassword();
+
+    int getConnectTimeout();
+
+    int getSocketTimeout();
+
+    boolean isKeepAlive();
+
+    int getConnectionsMaxPerRoute();
+
+    int getConnectionsMaxTotal();
+
+    String getResponseCharacterSet();
+
+    String getDestinationFile();
+
+    String getSourceFile();
 }

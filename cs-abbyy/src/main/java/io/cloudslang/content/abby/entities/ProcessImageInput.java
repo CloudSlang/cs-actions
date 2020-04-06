@@ -1,13 +1,29 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.abby.entities;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class ProcessImageInput {
-    private String locationId;
+public class ProcessImageInput implements AbbyyRequest {
+    private LocationId locationId;
     private String applicationId;
     private String password;
-    private int timeToWait;
-    private int numberOfRetries;
     private String proxyHost;
     private short proxyPort;
     private String proxyUsername;
@@ -18,15 +34,12 @@ public class ProcessImageInput {
     private String trustPassword;
     private int connectTimeout;
     private int socketTimeout;
-    private boolean useCookies;
     private boolean keepAlive;
     private int connectionsMaxPerRoute;
     private int connectionsMaxTotal;
-    private String headers;
     private String responseCharacterSet;
     private String destinationFile;
     private String sourceFile;
-    private String chunkedRequestEntity;
     private List<String> languages;
     private Profile profile;
     private List<TextType> textTypes;
@@ -34,7 +47,7 @@ public class ProcessImageInput {
     private boolean correctOrientation;
     private boolean correctSkew;
     private boolean readBarcodes;
-    private ExportFormat exportFormat;
+    private List<ExportFormat> exportFormats;
     private boolean writeFormatting;
     private boolean writeRecognitionVariants;
     private WriteTags writeTags;
@@ -42,7 +55,11 @@ public class ProcessImageInput {
     private String pdfPassword;
 
 
-    public String getLocationId() {
+    private ProcessImageInput() {
+    }
+
+
+    public LocationId getLocationId() {
         return locationId;
     }
 
@@ -54,16 +71,6 @@ public class ProcessImageInput {
 
     public String getPassword() {
         return password;
-    }
-
-
-    public int getTimeToWait() {
-        return timeToWait;
-    }
-
-
-    public int getNumberOfRetries() {
-        return numberOfRetries;
     }
 
 
@@ -117,11 +124,6 @@ public class ProcessImageInput {
     }
 
 
-    public boolean isUseCookies() {
-        return useCookies;
-    }
-
-
     public boolean isKeepAlive() {
         return keepAlive;
     }
@@ -137,11 +139,6 @@ public class ProcessImageInput {
     }
 
 
-    public String getHeaders() {
-        return headers;
-    }
-
-
     public String getResponseCharacterSet() {
         return responseCharacterSet;
     }
@@ -154,11 +151,6 @@ public class ProcessImageInput {
 
     public String getSourceFile() {
         return sourceFile;
-    }
-
-
-    public String getChunkedRequestEntity() {
-        return chunkedRequestEntity;
     }
 
 
@@ -197,8 +189,8 @@ public class ProcessImageInput {
     }
 
 
-    public ExportFormat getExportFormat() {
-        return exportFormat;
+    public List<ExportFormat> getExportFormats() {
+        return exportFormats;
     }
 
 
@@ -231,8 +223,6 @@ public class ProcessImageInput {
         private String locationId;
         private String applicationId;
         private String password;
-        private String timeToWait;
-        private String numberOfRetries;
         private String proxyHost;
         private String proxyPort;
         private String proxyUsername;
@@ -243,15 +233,12 @@ public class ProcessImageInput {
         private String trustPassword;
         private String connectTimeout;
         private String socketTimeout;
-        private String useCookies;
         private String keepAlive;
         private String connectionsMaxPerRoute;
         private String connectionsMaxTotal;
-        private String headers;
         private String responseCharacterSet;
         private String destinationFile;
         private String sourceFile;
-        private String chunkedRequestEntity;
         private String language;
         private String profile;
         private String textType;
@@ -281,18 +268,6 @@ public class ProcessImageInput {
 
         public Builder password(String password) {
             this.password = password;
-            return this;
-        }
-
-
-        public Builder timeToWait(String timeToWait) {
-            this.timeToWait = timeToWait;
-            return this;
-        }
-
-
-        public Builder numberOfRetries(String numberOfRetries) {
-            this.numberOfRetries = numberOfRetries;
             return this;
         }
 
@@ -357,12 +332,6 @@ public class ProcessImageInput {
         }
 
 
-        public Builder useCookies(String useCookies) {
-            this.useCookies = useCookies;
-            return this;
-        }
-
-
         public Builder keepAlive(String keepAlive) {
             this.keepAlive = keepAlive;
             return this;
@@ -381,12 +350,6 @@ public class ProcessImageInput {
         }
 
 
-        public Builder headers(String headers) {
-            this.headers = headers;
-            return this;
-        }
-
-
         public Builder responseCharacterSet(String responseCharacterSet) {
             this.responseCharacterSet = responseCharacterSet;
             return this;
@@ -401,12 +364,6 @@ public class ProcessImageInput {
 
         public Builder sourceFile(String sourceFile) {
             this.sourceFile = sourceFile;
-            return this;
-        }
-
-
-        public Builder chunkedRequestEntity(String chunkedRequestEntity) {
-            this.chunkedRequestEntity = chunkedRequestEntity;
             return this;
         }
 
@@ -490,7 +447,80 @@ public class ProcessImageInput {
 
 
         public ProcessImageInput build() throws Exception {
-            //TODO
+            ProcessImageInput input = new ProcessImageInput();
+
+            input.locationId = LocationId.fromString(this.locationId);
+
+            input.applicationId = this.applicationId;
+
+            input.password = this.password;
+
+            input.proxyHost = this.proxyHost;
+
+            input.proxyPort = Short.parseShort(this.proxyPort);
+
+            input.proxyUsername = this.proxyUsername;
+
+            input.proxyPassword = this.proxyPassword;
+
+            input.trustAllRoots = Boolean.parseBoolean(this.trustAllRoots);
+
+            input.x509HostnameVerifier = this.x509HostnameVerifier;
+
+            input.trustKeystore = this.trustKeystore;
+
+            input.trustPassword = this.trustPassword;
+
+            input.connectTimeout = Integer.parseInt(this.connectTimeout);
+
+            input.socketTimeout = Integer.parseInt(this.socketTimeout);
+
+            input.keepAlive = Boolean.parseBoolean(this.keepAlive);
+
+            input.connectionsMaxPerRoute = Integer.parseInt(this.connectionsMaxPerRoute);
+
+            input.connectionsMaxTotal = Integer.parseInt(this.connectionsMaxTotal);
+
+            input.responseCharacterSet = this.responseCharacterSet;
+
+            input.destinationFile = this.destinationFile;
+
+            input.sourceFile = this.sourceFile;
+
+            String[] languages = this.language.split("[,]");
+            input.languages = Arrays.asList(languages);
+
+            input.profile = Profile.fromString(this.profile);
+
+            String[] textTypes = this.textType.split("[,]");
+            input.textTypes = new ArrayList<>();
+            for (String textType : textTypes) {
+                input.textTypes.add(TextType.fromString(textType));
+            }
+
+            input.imageSource = ImageSource.fromString(this.imageSource);
+
+            input.correctOrientation = Boolean.parseBoolean(this.correctOrientation);
+
+            input.correctSkew = Boolean.parseBoolean(this.correctSkew);
+
+            String[] exportFormats = this.exportFormat.split("[,]");
+            input.exportFormats = new ArrayList<>();
+            for(String exportFormat : exportFormats) {
+                input.exportFormats.add(ExportFormat.fromString(exportFormat));
+            }
+
+            if(StringUtils.isEmpty(this.readBarcodes)){
+                input.readBarcodes = input.exportFormats.contains(ExportFormat.XML) ||
+                        input.exportFormats.contains(ExportFormat.XML_FOR_CORRECTED_IMAGE);
+            } else {
+                input.readBarcodes = Boolean.parseBoolean(this.readBarcodes);
+            }
+
+            input.description = this.description;
+
+            input.pdfPassword = this.pdfPassword;
+
             return null;
         }
     }
