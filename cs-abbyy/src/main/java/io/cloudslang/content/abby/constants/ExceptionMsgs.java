@@ -16,11 +16,6 @@ package io.cloudslang.content.abby.constants;
 
 public final class ExceptionMsgs {
 
-    private ExceptionMsgs() {
-
-    }
-
-
     public static final String INVALID_PROFILE = "Invalid profile '%s'.";
     public static final String INVALID_TEXT_TYPE = "Invalid text type '%s'.";
     public static final String INVALID_IMAGE_SOURCE = "Invalid image source '%s'.";
@@ -36,7 +31,7 @@ public final class ExceptionMsgs {
     public static final String EMPTY_ID = "Value of attribute 'id' was empty.";
     public static final String EMPTY_CREDITS = "Value of attribute 'credits' was empty.";
     public static final String EMPTY_STATUS = "Value of attribute 'status' was empty.";
-    public static final String NOT_ENOUGH_CREDITS = "Not enough credits to complete task.";
+    public static final String NOT_ENOUGH_CREDITS = "Not enough credits to complete task. Required nr of credits: %d";
     public static final String TASK_PROCESSING_FAILED = "Task processing failed. Reason: %s";
     public static final String TASK_DELETED = "Task was deleted prematurely.";
     public static final String PROCESSING_RESULT_COULD_NOT_BE_RETRIEVED = "Processing result could not be retrieved.";
@@ -44,4 +39,10 @@ public final class ExceptionMsgs {
     public static final String INVALID_ESTIMATED_PROCESSING_TIME = "Invalid number of milliseconds for estimated processing time was received.";
     public static final String OPERATION_TIMEOUT = "Processing of the document was not finished in the expected time.";
     public static final String TOO_MANY_EXPORT_FORMATS = "Maximum number of export formats exceeded.";
+    public static final String UNEXPECTED_STATUS = "Unexpected status.";
+
+
+    private ExceptionMsgs() {
+
+    }
 }

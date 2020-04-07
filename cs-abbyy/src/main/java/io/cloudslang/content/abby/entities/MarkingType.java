@@ -34,18 +34,18 @@ public enum MarkingType {
     }
 
 
-    @Override
-    public String toString() {
-        return this.str;
-    }
-
-
     public static MarkingType fromString(String str) throws Exception {
         for (MarkingType mt : MarkingType.values()) {
-            if (mt.name().equals(str)) {
+            if (mt.str.equals(str)) {
                 return mt;
             }
         }
         throw new IllegalArgumentException(String.format(ExceptionMsgs.INVALID_MARKING_TYPE, str));
+    }
+
+
+    @Override
+    public String toString() {
+        return this.str;
     }
 }

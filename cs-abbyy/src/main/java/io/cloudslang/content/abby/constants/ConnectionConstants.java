@@ -15,37 +15,34 @@
 package io.cloudslang.content.abby.constants;
 
 public final class ConnectionConstants {
+    public static final String PROTOCOL = "https";
+    public static final String HOST_TEMPLATE = "%s.ocrsdk.com/%s";
+
+
     private ConnectionConstants() {
     }
 
 
-    public static final String PROTOCOL = "https";
-    public static final String HOST_TEMPLATE = "%s.ocrsdk.com/%s";
-
     public static final class Endpoints {
-        private Endpoints() {
-        }
-
-
         public static final String PROCESS_IMAGE = "processImage";
         public static final String GET_TASK_STATUS = "getTaskStatus";
+
+
+        private Endpoints() {
+        }
     }
 
     public static final class Headers {
+        public static final String AUTH_TYPE = "basic";
+        public static final String CONTENT_TYPE = "application/octet-stream";
+
+
         private Headers() {
 
         }
-
-
-        public static final String AUTH_TYPE = "basic";
-        public static final String CONTENT_TYPE = "application/octet-stream";
     }
 
     public static final class QueryParams {
-        private QueryParams() {
-        }
-
-
         public static final String LANGUAGE = "language";
         public static final String PROFILE = "profile";
         public static final String TEXT_TYPE = "textType";
@@ -68,14 +65,19 @@ public final class ConnectionConstants {
         public static final String PLACEHOLDERS_COUNT = "placeholdersCount";
         public static final String WRITING_STYLE = "writingStyle";
         public static final String TASK_ID = "taskId";
+
+
+        private QueryParams() {
+        }
     }
 
     public static final class HttpMethods {
+        public static final String GET = "GET";
+        public static final String POST = "POST";
+
+
         private HttpMethods() {
 
         }
-
-        public static final String GET = "GET";
-        public static final String POST = "POST";
     }
 }

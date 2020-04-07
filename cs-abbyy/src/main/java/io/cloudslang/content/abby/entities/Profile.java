@@ -30,12 +30,6 @@ public enum Profile {
     }
 
 
-    @Override
-    public String toString() {
-        return this.str;
-    }
-
-
     public static Profile fromString(String str) throws Exception {
         for (Profile p : Profile.values()) {
             if (p.str.equals(str)) {
@@ -43,5 +37,11 @@ public enum Profile {
             }
         }
         throw new IllegalArgumentException(String.format(ExceptionMsgs.INVALID_PROFILE, str));
+    }
+
+
+    @Override
+    public String toString() {
+        return this.str;
     }
 }

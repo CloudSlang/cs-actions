@@ -14,16 +14,20 @@
  */
 package io.cloudslang.content.abby.exceptions;
 
+import java.util.Map;
+
 public class ServerSideException extends AbbyySdkException {
     public ServerSideException(String msg) {
         super(msg);
     }
 
-    public ServerSideException(Throwable innerEx, String lastStatusCode) {
-        super(innerEx, lastStatusCode);
+
+    public ServerSideException(Throwable innerEx, Map<String, String> resultsMap) {
+        super(innerEx, resultsMap);
     }
 
-    public ServerSideException(String msg, String lastStatusCode) {
-        super(msg, lastStatusCode);
+
+    public ServerSideException(String msg, Map<String, String> resultsMap) {
+        super(msg, resultsMap);
     }
 }

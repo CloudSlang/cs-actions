@@ -19,7 +19,5 @@ import io.cloudslang.content.abby.entities.AbbyyResponse;
 import java.util.Map;
 
 public interface AbbyyResponseParser {
-    AbbyyResponse parseResponse(short statusCode, String responseBody) throws Exception;
-
     AbbyyResponse parseResponse(Map<String, String> response) throws Exception;
 }

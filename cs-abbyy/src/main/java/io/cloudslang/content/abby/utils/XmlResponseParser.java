@@ -17,8 +17,9 @@ package io.cloudslang.content.abby.utils;
 import io.cloudslang.content.abby.constants.ExceptionMsgs;
 import io.cloudslang.content.abby.constants.MiscConstants;
 import io.cloudslang.content.abby.entities.AbbyyResponse;
-import io.cloudslang.content.abby.exceptions.ServerSideException;
+import io.cloudslang.content.abby.exceptions.AbbyySdkException;
 import io.cloudslang.content.abby.exceptions.ClientSideException;
+import io.cloudslang.content.abby.exceptions.ServerSideException;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
@@ -35,7 +36,7 @@ import java.util.Map;
 public class XmlResponseParser implements AbbyyResponseParser {
 
     private static final String MESSAGE_TAG_NAME = "message";
-    private static final String TASK_TAG_NAME = "tag";
+    private static final String TASK_TAG_NAME = "task";
     private static final String ID_ATTR_NAME = "id";
     private static final String STATUS_ATTR_NAME = "status";
     private static final String CREDITS_ATTR_NAME = "credits";
@@ -54,8 +55,7 @@ public class XmlResponseParser implements AbbyyResponseParser {
     }
 
 
-    @Override
-    public AbbyyResponse parseResponse(short statusCode, String responseBody) throws Exception {
+    private AbbyyResponse parseResponse(short statusCode, String responseBody) throws Exception {
         Document xml = this.xmlDocBuilder.parse(new InputSource(new StringReader(responseBody)));
         xml.normalize();
         return (statusCode == 200 || statusCode == 550 || statusCode == 501) ?
@@ -66,6 +66,10 @@ public class XmlResponseParser implements AbbyyResponseParser {
 
     @Override
     public AbbyyResponse parseResponse(Map<String, String> response) throws Exception {
+        if (response == null) {
+            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "response"));
+        }
+
         if (StringUtils.isNotEmpty(response.get(MiscConstants.HTTP_EXCEPTION_OUTPUT))) {
             throw new Exception(response.get(MiscConstants.HTTP_EXCEPTION_OUTPUT));
         }
@@ -80,29 +84,28 @@ public class XmlResponseParser implements AbbyyResponseParser {
     private AbbyyResponse parseSuccessResponse(Document xml) throws Exception {
         NodeList tasks = xml.getElementsByTagName(TASK_TAG_NAME);
         if (tasks.getLength() == 0) {
-            throw new ClientSideException(ExceptionMsgs.INVALID_RESPONSE);
+            throw new AbbyySdkException(ExceptionMsgs.INVALID_RESPONSE);
         }
         Element task = (Element) tasks.item(0);
 
         AbbyyResponse.Builder responseBuilder = new AbbyyResponse.Builder();
 
         if (StringUtils.isEmpty(task.getAttribute(ID_ATTR_NAME))) {
-            throw new ClientSideException(ExceptionMsgs.EMPTY_ID);
+            throw new AbbyySdkException(ExceptionMsgs.EMPTY_ID);
         }
         responseBuilder.taskId(task.getAttribute(ID_ATTR_NAME));
 
         if (StringUtils.isEmpty(task.getAttribute(CREDITS_ATTR_NAME))) {
-            throw new ClientSideException(ExceptionMsgs.EMPTY_CREDITS);
-
+            throw new AbbyySdkException(ExceptionMsgs.EMPTY_CREDITS);
         }
         try {
             int taskCredits = Integer.parseInt(task.getAttribute(CREDITS_ATTR_NAME));
             if (taskCredits < 0) {
-                throw new ClientSideException(ExceptionMsgs.INVALID_CREDITS);
+                throw new AbbyySdkException(ExceptionMsgs.INVALID_CREDITS);
             }
-            responseBuilder.taskCredits(taskCredits);
+            responseBuilder.credits(taskCredits);
         } catch (NumberFormatException ex) {
-            throw new ClientSideException(ExceptionMsgs.INVALID_CREDITS);
+            throw new AbbyySdkException(ExceptionMsgs.INVALID_CREDITS);
         }
 
         if (StringUtils.isEmpty(task.getAttribute(STATUS_ATTR_NAME))) {
@@ -110,29 +113,29 @@ public class XmlResponseParser implements AbbyyResponseParser {
         }
         responseBuilder.taskStatus(AbbyyResponse.TaskStatus.fromString(task.getAttribute(STATUS_ATTR_NAME)));
 
-        responseBuilder.taskError(task.getAttribute(ERROR_ATTR_NAME));
+        responseBuilder.errorMessage(task.getAttribute(ERROR_ATTR_NAME));
 
         if (StringUtils.isNotEmpty(task.getAttribute(RESULT_URL_ATTR_NAME))) {
-            responseBuilder.taskResultUrl(StringEscapeUtils.escapeHtml4(task.getAttribute(RESULT_URL_ATTR_NAME)));
+            responseBuilder.resultUrl(StringEscapeUtils.unescapeHtml4(task.getAttribute(RESULT_URL_ATTR_NAME)));
         }
 
         if (StringUtils.isNotEmpty(task.getAttribute(RESULT_URL2_ATTR_NAME))) {
-            responseBuilder.taskResultUrl2(StringEscapeUtils.escapeHtml4(task.getAttribute(RESULT_URL2_ATTR_NAME)));
+            responseBuilder.resultUrl2(StringEscapeUtils.unescapeHtml4(task.getAttribute(RESULT_URL2_ATTR_NAME)));
         }
 
         if (StringUtils.isNotEmpty(task.getAttribute(RESULT_URL3_ATTR_NAME))) {
-            responseBuilder.taskResultUrl3(StringEscapeUtils.escapeHtml4(task.getAttribute(RESULT_URL3_ATTR_NAME)));
+            responseBuilder.resultUrl3(StringEscapeUtils.unescapeHtml4(task.getAttribute(RESULT_URL3_ATTR_NAME)));
         }
 
         if (StringUtils.isNotEmpty(task.getAttribute(ESTIMATED_PROCESSING_TIME_ATTR_NAME))) {
             try {
                 long millis = Long.parseLong(task.getAttribute(ESTIMATED_PROCESSING_TIME_ATTR_NAME));
                 if (millis < 0) {
-                    throw new ClientSideException(ExceptionMsgs.INVALID_ESTIMATED_PROCESSING_TIME);
+                    throw new AbbyySdkException(ExceptionMsgs.INVALID_ESTIMATED_PROCESSING_TIME);
                 }
-                responseBuilder.taskEstimatedProcessingTime(millis);
+                responseBuilder.estimatedProcessingTime(millis);
             } catch (NumberFormatException ex) {
-                throw new ClientSideException(ExceptionMsgs.INVALID_ESTIMATED_PROCESSING_TIME);
+                throw new AbbyySdkException(ExceptionMsgs.INVALID_ESTIMATED_PROCESSING_TIME);
             }
         }
 

@@ -56,4 +56,10 @@ public enum WritingStyle {
         }
         throw new IllegalArgumentException(String.format(ExceptionMsgs.INVALID_WRITING_STYLE, str));
     }
+
+
+    @Override
+    public String toString() {
+        return this.name().toLowerCase();
+    }
 }

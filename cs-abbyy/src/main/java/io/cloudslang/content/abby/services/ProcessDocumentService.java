@@ -20,7 +20,10 @@ import io.cloudslang.content.abby.constants.MiscConstants;
 import io.cloudslang.content.abby.entities.AbbyyResponse;
 import io.cloudslang.content.abby.entities.ExportFormat;
 import io.cloudslang.content.abby.entities.ProcessDocumentInput;
+import io.cloudslang.content.abby.exceptions.AbbyySdkException;
+import io.cloudslang.content.abby.utils.AbbyyResponseParser;
 import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.httpclient.actions.HttpClientAction;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
@@ -30,6 +33,11 @@ import java.util.Map;
 public class ProcessDocumentService extends AbstractPostRequestService<ProcessDocumentInput> {
 
     public ProcessDocumentService() throws ParserConfigurationException {
+    }
+
+
+    public ProcessDocumentService(AbbyyResponseParser responseParser, HttpClientAction httpClientAction) throws ParserConfigurationException {
+        super(responseParser, httpClientAction);
     }
 
 
@@ -55,8 +63,7 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
             urlBuilder.addParameter(ConnectionConstants.QueryParams.WRITE_FORMATTING, String.valueOf(input.isWriteFormatting()))
                     .addParameter(ConnectionConstants.QueryParams.WRITE_RECOGNITION_VARIANTS, String.valueOf(input.isWriteRecognitionVariants()));
         }
-        if (input.getExportFormats().contains(ExportFormat.PDF_A) ||
-                input.getExportFormats().contains(ExportFormat.PDF_SEARCHABLE) ||
+        if (input.getExportFormats().contains(ExportFormat.PDF_SEARCHABLE) ||
                 input.getExportFormats().contains(ExportFormat.PDF_TEXT_AND_IMAGES)) {
             urlBuilder.addParameter(ConnectionConstants.QueryParams.WRITE_TAGS, input.getWriteTags().toString());
 
@@ -70,24 +77,22 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
     protected void handleTaskCompleted(ProcessDocumentInput request, AbbyyResponse response, Map<String, String> results) throws Exception {
         super.handleTaskCompleted(request, response, results);
 
-        Map<String, String> processingResult = null;
-        if (request.getExportFormats().contains(ExportFormat.TXT)) {
-            if (request.getExportFormats().get(0).equals(ExportFormat.TXT)) {
-                processingResult = getProcessingResult(request, response.getTaskResultUrl());
+        for (int i = 0; i < request.getExportFormats().size(); i++) {
+            if (!request.getExportFormats().get(i).equals(ExportFormat.TXT) &&
+                    !request.getExportFormats().get(i).equals(ExportFormat.TXT_UNSTRUCTURED)) {
+                continue;
             }
-            if (request.getExportFormats().size() >= 2 && request.getExportFormats().get(1).equals(ExportFormat.TXT)) {
-                processingResult = getProcessingResult(request, response.getTaskResultUrl2());
-            }
-            if (request.getExportFormats().size() >= 3 && request.getExportFormats().get(2).equals(ExportFormat.TXT)) {
-                processingResult = getProcessingResult(request, response.getTaskResultUrl3());
-            }
+
+            Map<String, String> processingResult = getProcessingResult(request, response.getResultUrls().get(i));
 
             this.lastStatusCode = processingResult.get(MiscConstants.HTTP_STATUS_CODE_OUTPUT);
             if (!processingResult.get(MiscConstants.HTTP_STATUS_CODE_OUTPUT).equals(String.valueOf(200))) {
-                throw new Exception(ExceptionMsgs.PROCESSING_RESULT_COULD_NOT_BE_RETRIEVED);
+                throw new AbbyySdkException(ExceptionMsgs.PROCESSING_RESULT_COULD_NOT_BE_RETRIEVED);
             }
 
             results.put(OutputNames.RETURN_RESULT, processingResult.get(MiscConstants.HTTP_RETURN_RESULT_OUTPUT));
+
+            break;
         }
     }
 
@@ -97,7 +102,7 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
                 resultUrl,
                 null,
                 null,
-                StringUtils.EMPTY,
+                "anonymous",
                 String.valueOf(false),
                 null,
                 null,

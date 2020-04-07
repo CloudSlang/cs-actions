@@ -15,11 +15,6 @@
 package io.cloudslang.content.abby.constants;
 
 public final class InputNames {
-    private InputNames() {
-
-    }
-
-
     public static final String LOCATION_ID = "locationId";
     public static final String APPLICATION_ID = "applicationId";
     public static final String PASSWORD = "password";
@@ -44,4 +39,9 @@ public final class InputNames {
     public static final String MARKING_TYPE = "markingType";
     public static final String PLACEHOLDERS_COUNT = "placeholdersCount";
     public static final String WRITING_STYLE = "writingStyle";
+
+
+    private InputNames() {
+
+    }
 }

@@ -29,18 +29,18 @@ public enum WriteTags {
     }
 
 
-    @Override
-    public String toString() {
-        return this.str;
-    }
-
-
     public static WriteTags fromString(String str) throws Exception {
         for (WriteTags wt : WriteTags.values()) {
-            if (wt.name().equals(str)) {
+            if (wt.str.equals(str)) {
                 return wt;
             }
         }
         throw new IllegalArgumentException(String.format(ExceptionMsgs.INVALID_WRITE_TAGS, str));
+    }
+
+
+    @Override
+    public String toString() {
+        return this.str;
     }
 }

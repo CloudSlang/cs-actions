@@ -15,8 +15,10 @@
 package io.cloudslang.content.abby.utils;
 
 import io.cloudslang.content.abby.constants.OutputNames;
+import io.cloudslang.content.abby.exceptions.AbbyySdkException;
 import io.cloudslang.content.constants.ReturnCodes;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,10 +42,17 @@ public final class ResultUtils {
 
 
     public static Map<String, String> fromException(Exception ex) {
-        Map<String, String> results = createNewEmptyMap();
+        Map<String, String> results;
+
+        if(ex instanceof AbbyySdkException) {
+            AbbyySdkException abbyySdkException = (AbbyySdkException) ex;
+            results = abbyySdkException.getResultsMap();
+        } else {
+            results = createNewEmptyMap();
+        }
 
         results.put(io.cloudslang.content.constants.OutputNames.RETURN_RESULT, ex.getMessage());
-        results.put(io.cloudslang.content.constants.OutputNames.EXCEPTION, ex.toString());
+        results.put(io.cloudslang.content.constants.OutputNames.EXCEPTION, ExceptionUtils.getStackTrace(ex));
         results.put(io.cloudslang.content.constants.OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
 
         return results;

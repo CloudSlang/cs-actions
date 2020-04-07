@@ -26,6 +26,7 @@ import io.cloudslang.content.abby.exceptions.ServerSideException;
 import io.cloudslang.content.abby.utils.AbbyyResponseParser;
 import io.cloudslang.content.abby.utils.ResultUtils;
 import io.cloudslang.content.abby.utils.XmlResponseParser;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientAction;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
@@ -37,16 +38,13 @@ import java.util.concurrent.TimeoutException;
 
 public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
 
-    private final AbbyyResponseParser responseParser;
-
     protected final HttpClientAction httpClientAction;
-
+    private final AbbyyResponseParser responseParser;
     String lastStatusCode;
 
 
     AbstractPostRequestService() throws ParserConfigurationException {
-        this.responseParser = new XmlResponseParser();
-        this.httpClientAction = new HttpClientAction();
+        this(null, null);
     }
 
 
@@ -65,36 +63,37 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
 
         try {
             AbbyyResponse response = postRequest(request);
-            results.put(OutputNames.TASK_ID, response.getTaskId());
-            results.put(OutputNames.CREDITS, String.valueOf(response.getTaskCredits()));
             if (response.getTaskStatus() == AbbyyResponse.TaskStatus.NOT_ENOUGH_CREDITS) {
-                throw new Exception(ExceptionMsgs.NOT_ENOUGH_CREDITS);
+                throw new AbbyySdkException(String.format(ExceptionMsgs.NOT_ENOUGH_CREDITS, response.getCredits()));
             }
+            results.put(OutputNames.TASK_ID, response.getTaskId());
+            results.put(OutputNames.CREDITS, String.valueOf(response.getCredits()));
 
-            response = waitTaskToFinish(request, response.getTaskId(), response.getTaskEstimatedProcessingTime());
+            response = waitTaskToFinish(request, response.getTaskId(), response.getEstimatedProcessingTime());
             switch (response.getTaskStatus()) {
-                case PROCESSING_FAILED:
-                    throw new ServerSideException(
-                            String.format(ExceptionMsgs.TASK_PROCESSING_FAILED, response.getTaskError()),
-                            this.lastStatusCode
-                    );
-                case DELETED:
-                    throw new ClientSideException(ExceptionMsgs.TASK_DELETED, this.lastStatusCode);
-                case NOT_ENOUGH_CREDITS:
-                    throw new ClientSideException(ExceptionMsgs.NOT_ENOUGH_CREDITS, this.lastStatusCode);
                 case COMPLETED:
                     handleTaskCompleted(request, response, results);
+                    break;
+                case PROCESSING_FAILED:
+                    throw new ServerSideException(String.format(ExceptionMsgs.TASK_PROCESSING_FAILED, response.getErrorMessage()));
+                case DELETED:
+                    throw new AbbyySdkException(ExceptionMsgs.TASK_DELETED);
+                case NOT_ENOUGH_CREDITS:
+                    throw new AbbyySdkException(ExceptionMsgs.NOT_ENOUGH_CREDITS);
+                default:
+                    throw new ClientSideException(ExceptionMsgs.UNEXPECTED_STATUS);
             }
+            return results;
         } catch (AbbyySdkException ex) {
-            if (ex.getLastStatusCode() == null) {
-                ex.setLastStatusCode(this.lastStatusCode);
+            if(ex.getResultsMap() == null) {
+                ex.setResultsMap(results);
             }
             throw ex;
         } catch (Exception ex) {
-            throw new ClientSideException(ex, this.lastStatusCode);
+            throw new ClientSideException(ex, results);
+        } finally {
+            results.put(OutputNames.STATUS_CODE, this.lastStatusCode);
         }
-
-        return results;
     }
 
 
@@ -250,20 +249,9 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
 
 
     protected void handleTaskCompleted(R request, AbbyyResponse response, Map<String, String> results) throws Exception {
-        results.put(OutputNames.RESULT_URL, buildResultUrlOutput(response));
+        results.put(OutputNames.RESULT_URL, StringUtils.join(response.getResultUrls(), '\n'));
         results.put(io.cloudslang.content.constants.OutputNames.RETURN_RESULT, MiscConstants.DOCUMENT_PROCESSED_SUCCESSFULLY);
-    }
-
-
-    private String buildResultUrlOutput(AbbyyResponse response) {
-        StringBuilder sb = new StringBuilder(response.getTaskResultUrl());
-        if (response.getTaskResultUrl2() != null) {
-            sb.append('\n').append(response.getTaskResultUrl2());
-        }
-        if (response.getTaskResultUrl3() != null) {
-            sb.append('\n').append(response.getTaskResultUrl3());
-        }
-        return sb.toString();
+        results.put(io.cloudslang.content.constants.OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
     }
 
 

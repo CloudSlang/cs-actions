@@ -14,18 +14,20 @@
  */
 package io.cloudslang.content.abby.exceptions;
 
+import java.util.Map;
+
 public class ClientSideException extends AbbyySdkException {
     public ClientSideException(String msg) {
         super(msg);
     }
 
 
-    public ClientSideException(Throwable innerEx, String lastStatusCode) {
-        super(innerEx, lastStatusCode);
+    public ClientSideException(Throwable innerEx, Map<String, String> resultsMap) {
+        super(innerEx, resultsMap);
     }
 
 
-    public ClientSideException(String msg, String lastStatusCode) {
-        super(msg, lastStatusCode);
+    public ClientSideException(String msg, Map<String, String> resultsMap) {
+        super(msg, resultsMap);
     }
 }

@@ -15,6 +15,7 @@
 package io.cloudslang.content.abby.entities;
 
 import io.cloudslang.content.abby.constants.ExceptionMsgs;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -513,13 +514,23 @@ public class ProcessDocumentInput implements AbbyyRequest {
                 input.exportFormats.add(ExportFormat.fromString(exportFormat));
             }
 
+            input.writeFormatting = Boolean.parseBoolean(this.writeFormatting);
+
+            input.writeRecognitionVariants = Boolean.parseBoolean(this.writeRecognitionVariants);
+
+            input.writeTags = WriteTags.fromString(this.writeTags);
+
             input.readBarcodes = Boolean.parseBoolean(this.readBarcodes);
 
-            input.description = (this.description.length() <= 255) ? this.description : this.description.substring(0, 255);
+            if(StringUtils.isNotEmpty(this.description)) {
+                input.description = (this.description.length() <= 255) ? this.description : this.description.substring(0, 255);
+            } else {
+                input.description = StringUtils.EMPTY;
+            }
 
-            input.pdfPassword = this.pdfPassword;
+            input.pdfPassword = StringUtils.defaultString(this.pdfPassword);
 
-            return null;
+            return input;
         }
     }
 }

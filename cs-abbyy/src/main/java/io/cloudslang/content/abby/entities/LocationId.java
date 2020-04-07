@@ -30,10 +30,16 @@ public enum LocationId {
 
     public static LocationId fromString(String str) throws Exception {
         for (LocationId id : LocationId.values()) {
-            if (id.name().equals(str)) {
+            if (id.str.equals(str)) {
                 return id;
             }
         }
         throw new IllegalArgumentException(String.format(ExceptionMsgs.INVALID_LOCATION_ID, str));
+    }
+
+
+    @Override
+    public String toString() {
+        return this.str;
     }
 }

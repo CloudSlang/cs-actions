@@ -15,13 +15,13 @@
 package io.cloudslang.content.abby.constants;
 
 public final class MiscConstants {
-    private MiscConstants() {
-    }
-
-
     public static final String HTTP_STATUS_CODE_OUTPUT = "statusCode";
     public static final String HTTP_RETURN_RESULT_OUTPUT = "returnResult";
     public static final String HTTP_EXCEPTION_OUTPUT = "exception";
     public static final String DOCUMENT_PROCESSED_SUCCESSFULLY = "The document was processed successfully. " +
             "Results can be retrieved by accessing one of the URLs from " + OutputNames.RESULT_URL + " output.";
+
+
+    private MiscConstants() {
+    }
 }

@@ -14,31 +14,35 @@
  */
 package io.cloudslang.content.abby.exceptions;
 
+import java.util.Map;
+
 public class AbbyySdkException extends Exception {
-    private String lastStatusCode;
 
-    AbbyySdkException(String msg) {
+    private Map<String, String> resultsMap;
+
+    public AbbyySdkException(String msg) {
         super(msg);
     }
 
-    AbbyySdkException(String msg, String lastStatusCode) {
+
+    public AbbyySdkException(String msg, Map<String, String> resultsMap) {
         super(msg);
-        this.lastStatusCode = lastStatusCode;
+        this.resultsMap = resultsMap;
     }
 
 
-    AbbyySdkException(Throwable innerEx, String lastStatusCode) {
+    public AbbyySdkException(Throwable innerEx, Map<String, String> resultsMap) {
         super(innerEx);
-        this.lastStatusCode = lastStatusCode;
+        this.resultsMap = resultsMap;
     }
 
 
-    public String getLastStatusCode() {
-        return lastStatusCode;
+    public Map<String, String> getResultsMap() {
+        return resultsMap;
     }
 
 
-    public void setLastStatusCode(String lastStatusCode) {
-        this.lastStatusCode = lastStatusCode;
+    public void setResultsMap(Map<String, String> resultsMap) {
+        this.resultsMap = resultsMap;
     }
 }

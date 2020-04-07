@@ -38,18 +38,18 @@ public enum ExportFormat {
     }
 
 
-    @Override
-    public String toString() {
-        return this.str;
-    }
-
-
     public static ExportFormat fromString(String str) throws Exception {
         for (ExportFormat ef : ExportFormat.values()) {
-            if (ef.name().equals(str)) {
+            if (ef.str.equals(str)) {
                 return ef;
             }
         }
         throw new IllegalArgumentException(String.format(ExceptionMsgs.INVALID_EXPORT_FORMAT, str));
+    }
+
+
+    @Override
+    public String toString() {
+        return this.str;
     }
 }

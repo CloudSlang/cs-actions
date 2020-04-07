@@ -37,12 +37,6 @@ public enum TextType {
     }
 
 
-    @Override
-    public String toString() {
-        return this.str;
-    }
-
-
     public static TextType fromString(String str) throws Exception {
         for (TextType t : TextType.values()) {
             if (t.str.equals(str)) {
@@ -50,5 +44,11 @@ public enum TextType {
             }
         }
         throw new IllegalArgumentException(String.format(ExceptionMsgs.INVALID_TEXT_TYPE, str));
+    }
+
+
+    @Override
+    public String toString() {
+        return this.str;
     }
 }

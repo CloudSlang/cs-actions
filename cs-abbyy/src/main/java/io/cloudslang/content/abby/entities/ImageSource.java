@@ -17,17 +17,30 @@ package io.cloudslang.content.abby.entities;
 import io.cloudslang.content.abby.constants.ExceptionMsgs;
 
 public enum ImageSource {
-    AUTO,
-    PHOTO,
-    SCANNER;
+    AUTO("auto"),
+    PHOTO("photo"),
+    SCANNER("scanner");
+
+    private final String str;
+
+
+    ImageSource(String str) {
+        this.str = str;
+    }
 
 
     public static ImageSource fromString(String str) throws Exception {
         for (ImageSource is : ImageSource.values()) {
-            if (is.name().equals(str)) {
+            if (is.str.equals(str)) {
                 return is;
             }
         }
         throw new IllegalArgumentException(String.format(ExceptionMsgs.INVALID_IMAGE_SOURCE, str));
+    }
+
+
+    @Override
+    public String toString() {
+        return this.str;
     }
 }
