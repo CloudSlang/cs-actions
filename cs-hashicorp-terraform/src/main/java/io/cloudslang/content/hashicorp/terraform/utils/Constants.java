@@ -67,6 +67,16 @@ public class Constants {
         public static final String WORKSPACE_TYPE = "workspaces";
     }
 
+    public static class CreateOrganizationConstants {
+        public static final String CREATE_ORGANIZATION_OPERATION_NAME = "Create Organization";
+        public static final String ORGANIZATION_ID_JSON_PATH = "$.data.id";
+        public static final String ORGANIZATION_TYPE = "organizations";
+    }
+
+    public static class UpdateOrganizationConstants {
+        public static final String UPDATE_ORGANIZATION_OPERATION_NAME = "Update Organization";
+    }
+
     public static class ListOAuthClientConstants {
         public static final String LIST_OAUTH_CLIENT_OPERATION_NAME = "List OAuth Client";
         public static final String OAUTH_CLIENT_PATH = "/oauth-clients";
@@ -120,6 +130,11 @@ public class Constants {
         public static final String GET_WORKSPACE_DETAILS_OPERATION_NAME = "Get Workspace Details";
     }
 
+    public static class GetOrganizationDetailsConstants {
+        public static final String GET_ORGANIZATION_DETAILS_OPERATION_NAME = "Get Organization Details";
+    }
+
+
     public static class GetRunDetailsConstants {
         public static final String GET_RUN_OPERATION_NAME = "Get Run Details";
     }
@@ -144,10 +159,20 @@ public class Constants {
         public static final String DELETE_WORKSPACE_OPERATION_NAME = "Delete Workspace";
     }
 
+    public static class DeleteOrganizationConstants {
+        public static final String DELETE_ORGANIZATION_OPERATION_NAME = "Delete Organization";
+    }
+
     public static class ListWorkspacesConstants {
         public static final String LIST_WORKSPACES_OPERATION_NAME = "List Workspaces";
         public static final String WORKSPACES_LIST_JSON_PATH = "$.data[*].attributes.name";
     }
+
+    public static class ListOrganizationsConstants {
+        public static final String LIST_ORGANIZATIONS_OPERATION_NAME = "List Organizations";
+        public static final String ORGANIZATIONS_LIST_JSON_PATH = "$.data[*].attributes.name";
+    }
+
 
     public static class GetCurrentStateVersionConstants {
         public static final String GET_CURRENT_STATE_VERSION_OPERATION_NAME = "Get Current State Version";
