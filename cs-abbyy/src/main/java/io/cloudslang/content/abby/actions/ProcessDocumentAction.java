@@ -22,8 +22,9 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.abby.constants.InputNames;
 import io.cloudslang.content.abby.constants.OutputNames;
-import io.cloudslang.content.abby.entities.ProcessImageInput;
-import io.cloudslang.content.abby.services.ProcessImageService;
+import io.cloudslang.content.abby.entities.ProcessDocumentInput;
+import io.cloudslang.content.abby.entities.Profile;
+import io.cloudslang.content.abby.services.ProcessDocumentService;
 import io.cloudslang.content.abby.utils.ResultUtils;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
@@ -32,7 +33,7 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 
-public class ProcessImageAction {
+public class ProcessDocumentAction {
 
     /**
      * Converts a given image to text in the specified output format using the ABBYY Cloud OCR SDK.
@@ -43,6 +44,48 @@ public class ProcessImageAction {
      *                                 Valid values: 'cloud-eu', 'cloud-westus'.
      * @param applicationId            The ID of the application to be used.
      * @param password                 The password for the application.
+     * @param language                 Specifies recognition language of the document. This parameter can contain several language
+     *                                 names separated with commas, for example "English,French,German".
+     *                                 Valid: see the official ABBYY CLoud OCR SDK documentation.
+     *                                 Default: 'English'.
+     * @param textType                 Specifies the type of the text on a page.
+     *                                 This parameter may also contain several text types separated with commas, for example "normal,matrix".
+     *                                 Valid values: 'normal', 'typewriter', 'matrix', 'index', 'ocrA', 'ocrB', 'e13b', 'cmc7', 'gothic'.
+     *                                 Default: 'normal'.
+     * @param imageSource              Specifies the source of the image. It can be either a scanned image, or a photograph created
+     *                                 with a digital camera. Special preprocessing operations can be performed with the image depending
+     *                                 on the selected source. For example, the system can automatically correct distorted text lines,
+     *                                 poor focus and lighting on photos.
+     *                                 Valid values: 'auto', 'photo', 'scanner'.
+     *                                 Default: 'auto'.
+     * @param correctOrientation       Specifies whether the orientation of the image should be automatically detected and corrected.
+     *                                 Valid values: 'true', 'false'.
+     *                                 Default: 'true'.
+     * @param correctSkew              Specifies whether the skew of the image should be automatically detected and corrected.
+     *                                 Valid values: 'true', 'false'.
+     *                                 Default: 'true'.
+     * @param exportFormat             Specifies the export format.
+     *                                 This parameter can contain up to three export formats, separated with commas (example: "pdfa,txt,xml").
+     *                                 Valid values: 'txt', 'txtUnstructured', 'rtf', 'docx', 'xlsx', 'pptx', 'pdfSearchable',
+     *                                 'pdfTextAndImages', 'pdfa', 'xml', 'xmlForCorrectedImage', 'alto'.
+     *                                 Default: 'xml'.
+     * @param writeFormatting          Specifies whether the paragraph and character styles should be written to an output file
+     *                                 in XML format. This parameter can be used only if the 'exportFormat' parameter contains 'xml'
+     *                                 or 'xmlForCorrectedImage' value.
+     *                                 Valid values: 'true', 'false'.
+     *                                 Default: 'false'.
+     * @param writeRecognitionVariants Specifies whether the variants of characters recognition should be written to an output file
+     *                                 in XML format. This parameter can be used only if the 'exportFormat' parameter contains 'xml'
+     *                                 or xmlForCorrectedImage value.
+     *                                 Valid values: 'true', 'false'.
+     *                                 Default: 'false'.
+     * @param writeTags                Specifies whether the result must be written as tagged PDF. This parameter can be
+     *                                 used only if the exportFormat parameter contains one of the values for export to PDF.
+     *                                 Valid values: 'auto', 'write', 'dontWrite'.
+     *                                 Default: 'auto'.
+     * @param description              Contains the description of the processing task. Cannot contain more than 255 characters.
+     *                                 If the description contains more than 255 characters, then the text will be truncated.
+     * @param pdfPassword              Contains a password for accessing password-protected images in PDF format.
      * @param proxyHost                The proxy server used to access the web site.
      * @param proxyPort                The proxy server port. The value '-1' indicates that the proxy port is not set
      *                                 and the scheme default port will be used, e.g. if the scheme is 'http://' and
@@ -97,53 +140,6 @@ public class ProcessImageAction {
      *                                 'returnResult' will no longer be populated with the entity if this is specified.
      *                                 Example: 'C:\temp\destinationFile.txt'.
      * @param sourceFile               The absolute path of the image to be loaded and converted using the SDK.
-     * @param language                 Specifies recognition language of the document. This parameter can contain several language
-     *                                 names separated with commas, for example "English,French,German".
-     *                                 Valid: see the official ABBYY CLoud OCR SDK documentation.
-     *                                 Default: 'English'.
-     * @param profile                  Specifies a profile with predefined processing settings.
-     *                                 Valid values: 'documentConversion', 'documentArchiving', 'textExtraction', 'barcodeRecognition'.
-     *                                 Default: 'documentConversion'.
-     * @param textType                 Specifies the type of the text on a page.
-     *                                 This parameter may also contain several text types separated with commas, for example "normal,matrix".
-     *                                 Valid values: 'normal', 'typewriter', 'matrix', 'index', 'ocrA', 'ocrB', 'e13b', 'cmc7', 'gothic'.
-     *                                 Default: 'normal'.
-     * @param imageSource              Specifies the source of the image. It can be either a scanned image, or a photograph created
-     *                                 with a digital camera. Special preprocessing operations can be performed with the image depending
-     *                                 on the selected source. For example, the system can automatically correct distorted text lines,
-     *                                 poor focus and lighting on photos.
-     *                                 Valid values: 'auto', 'photo', 'scanner'.
-     *                                 Default: 'auto'.
-     * @param correctOrientation       Specifies whether the orientation of the image should be automatically detected and corrected.
-     *                                 Valid values: 'true', 'false'.
-     *                                 Default: 'true'.
-     * @param correctSkew              Specifies whether the skew of the image should be automatically detected and corrected.
-     *                                 Valid values: 'true', 'false'.
-     *                                 Default: 'true'.
-     * @param readBarcodes             Specifies whether barcodes must be detected on the image, recognized and exported to the result file.
-     *                                 Valid values: 'true', 'false'.
-     *                                 Default: 'true' if 'exportFormat' input value is set to 'xml', 'false' otherwise.
-     * @param exportFormat             Specifies the export format.
-     *                                 This parameter can contain up to three export formats, separated with commas (example: "pdfa,txt,xml").
-     *                                 Valid values: 'txt', 'txtUnstructured', 'rtf', 'docx', 'xlsx', 'pptx', 'pdfSearchable',
-     *                                 'pdfTextAndImages', 'pdfa', 'xml', 'xmlForCorrectedImage', 'alto'.
-     *                                 Default: 'xml'.
-     * @param writeFormatting          Specifies whether the paragraph and character styles should be written to an output file
-     *                                 in XML format. This parameter can be used only if the 'exportFormat' parameter contains 'xml'
-     *                                 or 'xmlForCorrectedImage' value.
-     *                                 Valid values: 'true', 'false'.
-     *                                 Default: 'false'.
-     * @param writeRecognitionVariants Specifies whether the variants of characters recognition should be written to an output file
-     *                                 in XML format. This parameter can be used only if the 'exportFormat' parameter contains 'xml'
-     *                                 or xmlForCorrectedImage value.
-     *                                 Valid values: 'true', 'false'.
-     *                                 Default: 'false'.
-     * @param writeTags                Specifies whether the result must be written as tagged PDF. This parameter can be
-     *                                 used only if the exportFormat parameter contains one of the values for export to PDF.
-     *                                 Valid values: 'auto', 'write', 'dontWrite'.
-     *                                 Default: 'auto'.
-     * @param description              Contains the description of the processing task. Cannot contain more than 255 characters.
-     * @param pdfPassword              Contains a password for accessing password-protected images in PDF format.
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - Contains the text returned in the response body, if the output source was TXT,
      * otherwise if will contain a human readable message mentioning the success or failure of the task.
@@ -155,7 +151,7 @@ public class ProcessImageAction {
      * <br><b>exception</b> - The exception message if the operation goes to failure.
      * <br><b>timedOut</b> - True if the operation timed out before the document was processed, false otherwise.
      */
-    @Action(name = "Process Image",
+    @Action(name = "Process Document",
             outputs = {
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
                     @Output(OutputNames.TASK_ID),
@@ -178,6 +174,17 @@ public class ProcessImageAction {
             @Param(value = InputNames.LOCATION_ID, required = true) String locationId,
             @Param(value = InputNames.APPLICATION_ID, required = true) String applicationId,
             @Param(value = InputNames.PASSWORD, required = true, encrypted = true) String password,
+            @Param(value = InputNames.LANGUAGE) String language,
+            @Param(value = InputNames.TEXT_TYPE) String textType,
+            @Param(value = InputNames.IMAGE_SOURCE) String imageSource,
+            @Param(value = InputNames.CORRECT_ORIENTATION) String correctOrientation,
+            @Param(value = InputNames.CORRECT_SKEW) String correctSkew,
+            @Param(value = InputNames.EXPORT_FORMAT) String exportFormat,
+            @Param(value = InputNames.WRITE_FORMATTING) String writeFormatting,
+            @Param(value = InputNames.WRITE_RECOGNITION_VARIANTS) String writeRecognitionVariants,
+            @Param(value = InputNames.WRITE_TAGS) String writeTags,
+            @Param(value = InputNames.DESCRIPTION) String description,
+            @Param(value = InputNames.PDF_PASSWORD, encrypted = true) String pdfPassword,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST) String proxyHost,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT) String proxyPort,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_USERNAME) String proxyUsername,
@@ -193,24 +200,24 @@ public class ProcessImageAction {
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.DESTINATION_FILE) String destinationFile,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOURCE_FILE, required = true) String sourceFile,
-            @Param(value = InputNames.LANGUAGE) String language,
-            @Param(value = InputNames.PROFILE) String profile,
-            @Param(value = InputNames.TEXT_TYPE) String textType,
-            @Param(value = InputNames.IMAGE_SOURCE) String imageSource,
-            @Param(value = InputNames.CORRECT_ORIENTATION) String correctOrientation,
-            @Param(value = InputNames.CORRECT_SKEW) String correctSkew,
-            @Param(value = InputNames.READ_BARCODES) String readBarcodes,
-            @Param(value = InputNames.EXPORT_FORMAT) String exportFormat,
-            @Param(value = InputNames.WRITE_FORMATTING) String writeFormatting,
-            @Param(value = InputNames.WRITE_RECOGNITION_VARIANTS) String writeRecognitionVariants,
-            @Param(value = InputNames.WRITE_TAGS) String writeTags,
-            @Param(value = InputNames.DESCRIPTION) String description,
-            @Param(value = InputNames.PDF_PASSWORD, encrypted = true) String pdfPassword) {
-        ProcessImageInput.Builder inputBuilder = new ProcessImageInput.Builder()
+            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOURCE_FILE, required = true) String sourceFile) {
+        ProcessDocumentInput.Builder inputBuilder = new ProcessDocumentInput.Builder()
                 .locationId(locationId)
                 .applicationId(applicationId)
                 .password(password)
+                .language(language)
+                .profile(Profile.TEXT_EXTRACTION.toString())
+                .textType(textType)
+                .imageSource(imageSource)
+                .correctOrientation(correctOrientation)
+                .correctSkew(correctSkew)
+                .readBarcodes(String.valueOf(false))
+                .exportFormat(exportFormat)
+                .writeFormatting(writeFormatting)
+                .writeRecognitionVariants(writeRecognitionVariants)
+                .writeTags(writeTags)
+                .description(description)
+                .pdfPassword(pdfPassword)
                 .proxyHost(proxyHost)
                 .proxyPort(proxyPort)
                 .proxyUsername(proxyUsername)
@@ -226,22 +233,9 @@ public class ProcessImageAction {
                 .connectionsMaxTotal(connectionsMaxTotal)
                 .responseCharacterSet(responseCharacterSet)
                 .destinationFile(destinationFile)
-                .sourceFile(sourceFile)
-                .language(language)
-                .profile(profile)
-                .textType(textType)
-                .imageSource(imageSource)
-                .correctOrientation(correctOrientation)
-                .correctSkew(correctSkew)
-                .readBarcodes(readBarcodes)
-                .exportFormat(exportFormat)
-                .writeFormatting(writeFormatting)
-                .writeRecognitionVariants(writeRecognitionVariants)
-                .writeTags(writeTags)
-                .description(description)
-                .pdfPassword(pdfPassword);
+                .sourceFile(sourceFile);
         try {
-            return new ProcessImageService().execute(inputBuilder.build());
+            return new ProcessDocumentService().execute(inputBuilder.build());
         } catch (TimeoutException ex) {
             Map<String, String> results = ResultUtils.fromException(ex);
             results.put(OutputNames.TIMED_OUT, String.valueOf(true));

@@ -58,7 +58,9 @@ public class XmlResponseParser implements AbbyyResponseParser {
     public AbbyyResponse parseResponse(short statusCode, String responseBody) throws Exception {
         Document xml = this.xmlDocBuilder.parse(new InputSource(new StringReader(responseBody)));
         xml.normalize();
-        return (statusCode == 200) ? parseSuccessResponse(xml) : parseFailureResponse(xml);
+        return (statusCode == 200 || statusCode == 550 || statusCode == 501) ?
+                parseSuccessResponse(xml) :
+                parseFailureResponse(xml);
     }
 
 

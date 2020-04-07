@@ -21,6 +21,7 @@ public enum TextType {
     TYPEWRITER("typewriter"),
     MATRIX("matrix"),
     INDEX("index"),
+    HANDPRINTED("handprinted"),
     OCR_A("ocrA"),
     OCR_B("ocrB"),
     E13B("e13b"),

@@ -19,24 +19,23 @@ import io.cloudslang.content.abby.constants.ExceptionMsgs;
 import io.cloudslang.content.abby.constants.MiscConstants;
 import io.cloudslang.content.abby.entities.AbbyyResponse;
 import io.cloudslang.content.abby.entities.ExportFormat;
-import io.cloudslang.content.abby.entities.ProcessImageInput;
+import io.cloudslang.content.abby.entities.ProcessDocumentInput;
 import io.cloudslang.content.constants.OutputNames;
-import io.cloudslang.content.httpclient.actions.HttpClientAction;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.Map;
 
-public class ProcessImageService extends AbstractPostRequestService<ProcessImageInput> {
+public class ProcessDocumentService extends AbstractPostRequestService<ProcessDocumentInput> {
 
-    public ProcessImageService() throws ParserConfigurationException {
+    public ProcessDocumentService() throws ParserConfigurationException {
     }
 
 
     @Override
-    protected String buildUrl(ProcessImageInput input) throws Exception {
-        return new URIBuilder()
+    protected String buildUrl(ProcessDocumentInput input) throws Exception {
+        URIBuilder urlBuilder = new URIBuilder()
                 .setScheme(ConnectionConstants.PROTOCOL)
                 .setHost(String.format(ConnectionConstants.HOST_TEMPLATE, input.getLocationId().toString(),
                         ConnectionConstants.Endpoints.PROCESS_IMAGE))
@@ -48,17 +47,27 @@ public class ProcessImageService extends AbstractPostRequestService<ProcessImage
                 .addParameter(ConnectionConstants.QueryParams.CORRECT_SKEW, String.valueOf(input.isCorrectSkew()))
                 .addParameter(ConnectionConstants.QueryParams.READ_BARCODES, String.valueOf(input.isReadBarcodes()))
                 .addParameter(ConnectionConstants.QueryParams.EXPORT_FORMAT, StringUtils.join(input.getExportFormats(), ','))
-                .addParameter(ConnectionConstants.QueryParams.WRITE_FORMATTING, String.valueOf(input.isWriteFormatting()))
-                .addParameter(ConnectionConstants.QueryParams.WRITE_RECOGNITION_VARIANTS, String.valueOf(input.isWriteRecognitionVariants()))
-                .addParameter(ConnectionConstants.QueryParams.WRITE_TAGS, input.getWriteTags().toString())
                 .addParameter(ConnectionConstants.QueryParams.DESCRIPTION, input.getDescription())
-                .addParameter(ConnectionConstants.QueryParams.PDF_PASSWORD, input.getPdfPassword())
-                .build().toString();
+                .addParameter(ConnectionConstants.QueryParams.PDF_PASSWORD, input.getPdfPassword());
+
+        if (input.getExportFormats().contains(ExportFormat.XML) ||
+                input.getExportFormats().contains(ExportFormat.XML_FOR_CORRECTED_IMAGE)) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.WRITE_FORMATTING, String.valueOf(input.isWriteFormatting()))
+                    .addParameter(ConnectionConstants.QueryParams.WRITE_RECOGNITION_VARIANTS, String.valueOf(input.isWriteRecognitionVariants()));
+        }
+        if (input.getExportFormats().contains(ExportFormat.PDF_A) ||
+                input.getExportFormats().contains(ExportFormat.PDF_SEARCHABLE) ||
+                input.getExportFormats().contains(ExportFormat.PDF_TEXT_AND_IMAGES)) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.WRITE_TAGS, input.getWriteTags().toString());
+
+        }
+
+        return urlBuilder.build().toString();
     }
 
 
     @Override
-    protected void handleTaskCompleted(ProcessImageInput request, AbbyyResponse response, Map<String, String> results) throws Exception {
+    protected void handleTaskCompleted(ProcessDocumentInput request, AbbyyResponse response, Map<String, String> results) throws Exception {
         super.handleTaskCompleted(request, response, results);
 
         Map<String, String> processingResult = null;
@@ -83,7 +92,7 @@ public class ProcessImageService extends AbstractPostRequestService<ProcessImage
     }
 
 
-    private Map<String, String> getProcessingResult(ProcessImageInput request, String resultUrl) {
+    private Map<String, String> getProcessingResult(ProcessDocumentInput request, String resultUrl) {
         return this.httpClientAction.execute(
                 resultUrl,
                 null,

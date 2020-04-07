@@ -43,4 +43,5 @@ public final class ExceptionMsgs {
     public static final String NULL_ARGUMENT = "Value of argument '%s' was null.";
     public static final String INVALID_ESTIMATED_PROCESSING_TIME = "Invalid number of milliseconds for estimated processing time was received.";
     public static final String OPERATION_TIMEOUT = "Processing of the document was not finished in the expected time.";
+    public static final String TOO_MANY_EXPORT_FORMATS = "Maximum number of export formats exceeded.";
 }

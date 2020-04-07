@@ -14,13 +14,13 @@
  */
 package io.cloudslang.content.abby.entities;
 
-import org.apache.commons.lang3.StringUtils;
+import io.cloudslang.content.abby.constants.ExceptionMsgs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ProcessImageInput implements AbbyyRequest {
+public class ProcessDocumentInput implements AbbyyRequest {
     private LocationId locationId;
     private String applicationId;
     private String password;
@@ -55,7 +55,7 @@ public class ProcessImageInput implements AbbyyRequest {
     private String pdfPassword;
 
 
-    private ProcessImageInput() {
+    private ProcessDocumentInput() {
     }
 
 
@@ -446,8 +446,8 @@ public class ProcessImageInput implements AbbyyRequest {
         }
 
 
-        public ProcessImageInput build() throws Exception {
-            ProcessImageInput input = new ProcessImageInput();
+        public ProcessDocumentInput build() throws Exception {
+            ProcessDocumentInput input = new ProcessDocumentInput();
 
             input.locationId = LocationId.fromString(this.locationId);
 
@@ -505,19 +505,17 @@ public class ProcessImageInput implements AbbyyRequest {
             input.correctSkew = Boolean.parseBoolean(this.correctSkew);
 
             String[] exportFormats = this.exportFormat.split("[,]");
+            if (exportFormats.length > 3) {
+                throw new Exception(ExceptionMsgs.TOO_MANY_EXPORT_FORMATS);
+            }
             input.exportFormats = new ArrayList<>();
-            for(String exportFormat : exportFormats) {
+            for (String exportFormat : exportFormats) {
                 input.exportFormats.add(ExportFormat.fromString(exportFormat));
             }
 
-            if(StringUtils.isEmpty(this.readBarcodes)){
-                input.readBarcodes = input.exportFormats.contains(ExportFormat.XML) ||
-                        input.exportFormats.contains(ExportFormat.XML_FOR_CORRECTED_IMAGE);
-            } else {
-                input.readBarcodes = Boolean.parseBoolean(this.readBarcodes);
-            }
+            input.readBarcodes = Boolean.parseBoolean(this.readBarcodes);
 
-            input.description = this.description;
+            input.description = (this.description.length() <= 255) ? this.description : this.description.substring(0, 255);
 
             input.pdfPassword = this.pdfPassword;
 

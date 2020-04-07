@@ -42,6 +42,52 @@ public class ProcessTextFieldAction {
      *                               Valid values: 'cloud-eu', 'cloud-westus'.
      * @param applicationId          The ID of the application to be used.
      * @param password               The password for the application.
+     * @param region                 Specifies the region of the text field on the image. The coordinates of the region are measured
+     *                               in pixels relative to the left top corner of the image and are specified in the following order:
+     *                               left, top, right, bottom. By default, the region of the whole image is used.
+     *                               Valid values: a list of exactly 4 numbers greater than or equal to 0 or equal to -1.
+     *                               Default: '-1,-1,-1,-1'.
+     * @param language               Specifies recognition language of the document. This parameter can contain several language
+     *                               names separated with commas, for example "English,French,German".
+     *                               For all languages supported, see the official ABBYY CLoud OCR SDK documentation.
+     *                               Default: 'English'.
+     * @param letterSet              Specifies the letter set, which should be used during recognition. Contains a string with
+     *                               the letter set characters. For example, "ABCDabcd'-.".
+     *                               By default, the letter set of the language, specified in the language parameter, is used.
+     *                               Default: ''.
+     * @param regExp                 Specifies the regular expression which defines which words are allowed in the field and which are not.
+     *                               See the description of regular expressions. By default, the set of allowed words is defined
+     *                               by the dictionary of the language, specified in the language parameter.
+     *                               Default: ''.
+     * @param textType               Specifies the type of the text on a page.
+     *                               This parameter may also contain several text types separated with commas, for example "normal,matrix".
+     *                               Valid values: 'normal', 'typewriter', 'matrix', 'index', 'ocrA', 'ocrB', 'e13b', 'cmc7', 'gothic'.
+     *                               Default: 'normal'.
+     * @param oneTextLine            Specifies whether the field contains only one text line. The value should be true,
+     *                               if there is one text line in the field; otherwise it should be false.
+     *                               Default: 'false'.
+     * @param oneWordPerTextLine     Specifies whether the field contains only one word in each text line. The value should be true,
+     *                               if no text line contains more than one word (so the lines of text will be recognized as a single word);
+     *                               otherwise it should be false.
+     *                               Default: 'false'.
+     * @param markingType            This property is valid only for the handprint recognition. Specifies the type of marking around letters
+     *                               (for example, underline, frame, box, etc.). By default, there is no marking around letters.
+     *                               Valid values: 'simpleText', 'underlinedText', 'textInFrame', 'greyBoxes', 'charBoxSeries,
+     *                               'simpleComb', combInFrame', 'partitionedFrame'.
+     *                               Default: 'simpleText'.
+     * @param placeholdersCount      Specifies the number of character cells for the field. This property has a sense only for the field
+     *                               marking types (the markingType parameter) that imply splitting the text in cells.
+     *                               Valid values: an integer greater than or equal to 0.
+     *                               Default: '1'.
+     * @param writingStyle           Provides additional information about handprinted letters writing style.
+     *                               Valid values: 'default', 'american', 'german', 'russian', 'polish', 'thai', 'japanese',
+     *                               'arabic', 'baltic', 'british', 'bulgarian', 'canadian', 'czech', 'croatian', 'french',
+     *                               'greek', 'hungarian', 'italian', 'romanian', 'slovak', 'spanish', 'turkish', 'ukrainian'
+     *                               'common', 'chinese', 'azerbaijan', 'kazakh', 'kirgiz', 'latvian'.
+     *                               Default: 'default'.
+     * @param description            Contains the description of the processing task. Cannot contain more than 255 characters.
+     *                               If the description contains more than 255 characters, then the text will be truncated.
+     * @param pdfPassword            Contains a password for accessing password-protected images in PDF format.
      * @param proxyHost              The proxy server used to access the web site.
      * @param proxyPort              The proxy server port. The value '-1' indicates that the proxy port is not set
      *                               and the scheme default port will be used, e.g. if the scheme is 'http://' and
@@ -97,51 +143,6 @@ public class ProcessTextFieldAction {
      *                               'returnResult' will no longer be populated with the entity if this is specified.
      *                               Example: 'C:\temp\destinationFile.txt'.
      * @param sourceFile             The absolute path of the image to be loaded and converted using the SDK.
-     * @param region                 Specifies the region of the text field on the image. The coordinates of the region are measured
-     *                               in pixels relative to the left top corner of the image and are specified in the following order:
-     *                               left, top, right, bottom. By default, the region of the whole image is used.
-     *                               Valid values: a list of exactly 4 numbers greater than or equal to 0 or equal to -1.
-     *                               Default: '-1,-1,-1,-1'.
-     * @param language               Specifies recognition language of the document. This parameter can contain several language
-     *                               names separated with commas, for example "English,French,German".
-     *                               For all languages supported, see the official ABBYY CLoud OCR SDK documentation.
-     *                               Default: 'English'.
-     * @param letterSet              Specifies the letter set, which should be used during recognition. Contains a string with
-     *                               the letter set characters. For example, "ABCDabcd'-.".
-     *                               By default, the letter set of the language, specified in the language parameter, is used.
-     *                               Default: ''.
-     * @param regExp                 Specifies the regular expression which defines which words are allowed in the field and which are not.
-     *                               See the description of regular expressions. By default, the set of allowed words is defined
-     *                               by the dictionary of the language, specified in the language parameter.
-     *                               Default: ''.
-     * @param textType               Specifies the type of the text on a page.
-     *                               This parameter may also contain several text types separated with commas, for example "normal,matrix".
-     *                               Valid values: 'normal', 'typewriter', 'matrix', 'index', 'ocrA', 'ocrB', 'e13b', 'cmc7', 'gothic'.
-     *                               Default: 'normal'.
-     * @param oneTextLine            Specifies whether the field contains only one text line. The value should be true,
-     *                               if there is one text line in the field; otherwise it should be false.
-     *                               Default: 'false'.
-     * @param oneWordPerTextLine     Specifies whether the field contains only one word in each text line. The value should be true,
-     *                               if no text line contains more than one word (so the lines of text will be recognized as a single word);
-     *                               otherwise it should be false.
-     *                               Default: 'false'.
-     * @param markingType            This property is valid only for the handprint recognition. Specifies the type of marking around letters
-     *                               (for example, underline, frame, box, etc.). By default, there is no marking around letters.
-     *                               Valid values: 'simpleText', 'underlinedText', 'textInFrame', 'greyBoxes', 'charBoxSeries,
-     *                               'simpleComb', combInFrame', 'partitionedFrame'.
-     *                               Default: 'simpleText'.
-     * @param placeholdersCount      Specifies the number of character cells for the field. This property has a sense only for the field
-     *                               marking types (the markingType parameter) that imply splitting the text in cells.
-     *                               Valid values: an integer greater than or equal to 0.
-     *                               Default: '1'.
-     * @param writingStyle           Provides additional information about handprinted letters writing style.
-     *                               Valid values: 'default', 'american', 'german', 'russian', 'polish', 'thai', 'japanese',
-     *                               'arabic', 'baltic', 'british', 'bulgarian', 'canadian', 'czech', 'croatian', 'french',
-     *                               'greek', 'hungarian', 'italian', 'romanian', 'slovak', 'spanish', 'turkish', 'ukrainian'
-     *                               'common', 'chinese', 'azerbaijan', 'kazakh', 'kirgiz', 'latvian'.
-     *                               Default: 'default'.
-     * @param description            Contains the description of the processing task. Cannot contain more than 255 characters.
-     * @param pdfPassword            Contains a password for accessing password-protected images in PDF format.
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - Contains the text returned in the response body, if the output source was TXT,
      * otherwise if will contain a human readable message mentioning the success or failure of the task.
@@ -176,6 +177,18 @@ public class ProcessTextFieldAction {
             @Param(value = InputNames.LOCATION_ID, required = true) String locationId,
             @Param(value = InputNames.APPLICATION_ID, required = true) String applicationId,
             @Param(value = InputNames.PASSWORD, required = true, encrypted = true) String password,
+            @Param(value = InputNames.REGION) String region,
+            @Param(value = InputNames.LANGUAGE) String language,
+            @Param(value = InputNames.LETTER_SET) String letterSet,
+            @Param(value = InputNames.REG_EXP) String regExp,
+            @Param(value = InputNames.TEXT_TYPE) String textType,
+            @Param(value = InputNames.ONE_TEXT_LINE) String oneTextLine,
+            @Param(value = InputNames.ONE_WORD_PER_TEXT_LINE) String oneWordPerTextLine,
+            @Param(value = InputNames.MARKING_TYPE) String markingType,
+            @Param(value = InputNames.PLACEHOLDERS_COUNT) String placeholdersCount,
+            @Param(value = InputNames.WRITING_STYLE) String writingStyle,
+            @Param(value = InputNames.DESCRIPTION) String description,
+            @Param(value = InputNames.PDF_PASSWORD, encrypted = true) String pdfPassword,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST) String proxyHost,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT) String proxyPort,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_USERNAME) String proxyUsername,
@@ -191,23 +204,23 @@ public class ProcessTextFieldAction {
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.DESTINATION_FILE) String destinationFile,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOURCE_FILE, required = true) String sourceFile,
-            @Param(value = InputNames.REGION) String region,
-            @Param(value = InputNames.LANGUAGE) String language,
-            @Param(value = InputNames.LETTER_SET) String letterSet,
-            @Param(value = InputNames.REG_EXP) String regExp,
-            @Param(value = InputNames.TEXT_TYPE) String textType,
-            @Param(value = InputNames.ONE_TEXT_LINE) String oneTextLine,
-            @Param(value = InputNames.ONE_WORD_PER_TEXT_LINE) String oneWordPerTextLine,
-            @Param(value = InputNames.MARKING_TYPE) String markingType,
-            @Param(value = InputNames.PLACEHOLDERS_COUNT) String placeholdersCount,
-            @Param(value = InputNames.WRITING_STYLE) String writingStyle,
-            @Param(value = InputNames.DESCRIPTION) String description,
-            @Param(value = InputNames.PDF_PASSWORD, encrypted = true) String pdfPassword) {
+            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOURCE_FILE, required = true) String sourceFile) {
         ProcessTextFieldInput.Builder inputBuilder = new ProcessTextFieldInput.Builder()
                 .locationId(locationId)
                 .applicationId(applicationId)
                 .password(password)
+                .region(region)
+                .language(language)
+                .letterSet(letterSet)
+                .regExp(regExp)
+                .textType(textType)
+                .oneTextLine(oneTextLine)
+                .oneWordPerTextLine(oneWordPerTextLine)
+                .markingType(markingType)
+                .placeholdersCount(placeholdersCount)
+                .writingStyle(writingStyle)
+                .description(description)
+                .pdfPassword(pdfPassword)
                 .proxyHost(proxyHost)
                 .proxyPort(proxyPort)
                 .proxyUsername(proxyUsername)
@@ -223,19 +236,7 @@ public class ProcessTextFieldAction {
                 .connectionsMaxTotal(connectionsMaxTotal)
                 .responseCharacterSet(responseCharacterSet)
                 .destinationFile(destinationFile)
-                .sourceFile(sourceFile)
-                .region(region)
-                .language(language)
-                .letterSet(letterSet)
-                .regExp(regExp)
-                .textType(textType)
-                .oneTextLine(oneTextLine)
-                .oneWordPerTextLine(oneWordPerTextLine)
-                .markingType(markingType)
-                .placeholdersCount(placeholdersCount)
-                .writingStyle(writingStyle)
-                .description(description)
-                .pdfPassword(pdfPassword);
+                .sourceFile(sourceFile);
         try {
             return new ProcessTextFieldService().execute(inputBuilder.build());
         } catch (Exception ex) {
