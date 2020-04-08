@@ -139,7 +139,7 @@ public class ProcessDocumentAction {
      * @param destinationFile          The absolute path of a directory on disk where to save the entities returned by the response.
      *                                 For each export format selected a file will be created in the specified directory with name of
      *                                 'sourceFile' and corresponding extension (e.g. for exportFormat=xml,txt and sourceFile=source.jpg
-     *                                 the files 'source.xml' and 'source.txt' will be created).
+     *                                 the files 'source.xml' and 'source.txt' will be created). Files already existing will be overwritten.
      * @param sourceFile               The absolute path of the image to be loaded and converted using the SDK.
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - Contains a human readable message mentioning the success or failure of the task.

@@ -19,6 +19,7 @@ public final class MiscConstants {
     public static final String HTTP_RETURN_RESULT_OUTPUT = "returnResult";
     public static final String HTTP_EXCEPTION_OUTPUT = "exception";
     public static final String DOCUMENT_PROCESSED_SUCCESSFULLY = "The document was processed successfully.";
+    public static final String ABBYY_XML_RESULT_XSD_SCHEMA_PATH = "/xml_result.xsd";
 
 
     private MiscConstants() {

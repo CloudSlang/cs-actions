@@ -88,6 +88,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>javax.xml</groupId>
+            <artifactId>jaxp-api</artifactId>
+            <version>1.4.2</version>
+        </dependency>
         <!-- Utils -->
         <dependency>
             <groupId>com.hp.score.sdk</groupId>

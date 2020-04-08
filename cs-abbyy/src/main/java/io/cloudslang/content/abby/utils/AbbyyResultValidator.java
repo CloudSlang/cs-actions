@@ -12,13 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.abby.validators;
+package io.cloudslang.content.abby.utils;
 
 import io.cloudslang.content.abby.exceptions.AbbyySdkException;
 
-public class FineReaderXmlValidator implements ResultValidator {
-    @Override
-    public AbbyySdkException validate(String result) {
-        return null;
-    }
+import java.io.IOException;
+
+public interface AbbyyResultValidator {
+    AbbyySdkException validate(String result) throws IOException;
 }

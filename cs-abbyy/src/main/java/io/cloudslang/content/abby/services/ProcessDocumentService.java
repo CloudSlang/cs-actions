@@ -23,12 +23,13 @@ import io.cloudslang.content.abby.entities.ExportFormat;
 import io.cloudslang.content.abby.entities.ProcessDocumentInput;
 import io.cloudslang.content.abby.exceptions.AbbyySdkException;
 import io.cloudslang.content.abby.utils.AbbyyResponseParser;
-import io.cloudslang.content.abby.validators.FineReaderXmlValidator;
-import io.cloudslang.content.abby.validators.ResultValidator;
+import io.cloudslang.content.abby.utils.JavaxXmlValidatorAdapter;
+import io.cloudslang.content.abby.utils.AbbyyResultValidator;
 import io.cloudslang.content.httpclient.actions.HttpClientAction;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileWriter;
@@ -42,15 +43,19 @@ import java.util.Map;
 
 public class ProcessDocumentService extends AbstractPostRequestService<ProcessDocumentInput> {
 
-    private ResultValidator resultValidator;
+    private AbbyyResultValidator resultValidator;
 
 
-    public ProcessDocumentService() throws ParserConfigurationException {
+    public ProcessDocumentService() throws ParserConfigurationException, SAXException {
+        this.resultValidator = new JavaxXmlValidatorAdapter(MiscConstants.ABBYY_XML_RESULT_XSD_SCHEMA_PATH);
     }
 
-    public ProcessDocumentService(AbbyyResponseParser responseParser, HttpClientAction httpClientAction, ResultValidator resultValidator) throws ParserConfigurationException {
+    public ProcessDocumentService(AbbyyResponseParser responseParser, HttpClientAction httpClientAction,
+                                  AbbyyResultValidator resultValidator) throws ParserConfigurationException, SAXException {
         super(responseParser, httpClientAction);
-        this.resultValidator = (resultValidator != null) ? resultValidator : new FineReaderXmlValidator();
+        this.resultValidator = (resultValidator != null) ?
+                resultValidator :
+                new JavaxXmlValidatorAdapter(MiscConstants.ABBYY_XML_RESULT_XSD_SCHEMA_PATH);
     }
 
 

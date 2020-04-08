@@ -20,8 +20,14 @@ public class AbbyySdkException extends Exception {
 
     private Map<String, String> resultsMap;
 
+
     public AbbyySdkException(String msg) {
         super(msg);
+    }
+
+
+    public AbbyySdkException(Throwable innerEx) {
+        super(innerEx);
     }
 
 

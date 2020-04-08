@@ -33,6 +33,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.Arrays;
@@ -59,7 +60,7 @@ public abstract class AbstractPostRequestServiceTest<R extends AbbyyRequest> {
     protected AbbyyResponseParser responseParserMock;
 
 
-    protected abstract AbstractPostRequestService<R> newSutInstance() throws ParserConfigurationException;
+    protected abstract AbstractPostRequestService<R> newSutInstance() throws ParserConfigurationException, SAXException;
 
 
     @Before

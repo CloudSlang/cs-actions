@@ -20,14 +20,14 @@ import io.cloudslang.content.abby.constants.MiscConstants;
 import io.cloudslang.content.abby.constants.OutputNames;
 import io.cloudslang.content.abby.entities.*;
 import io.cloudslang.content.abby.exceptions.AbbyySdkException;
-import io.cloudslang.content.abby.validators.ResultValidator;
+import io.cloudslang.content.abby.utils.AbbyyResultValidator;
 import io.cloudslang.content.constants.ReturnCodes;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
@@ -59,11 +59,11 @@ public class ProcessDocumentServiceTest extends AbstractPostRequestServiceTest<P
     private static final String PDF_PASSWORD = "dummy";
 
     @Mock
-    private ResultValidator resultValidatorMock;
+    private AbbyyResultValidator resultValidatorMock;
 
 
     @Override
-    protected AbstractPostRequestService<ProcessDocumentInput> newSutInstance() throws ParserConfigurationException {
+    protected AbstractPostRequestService<ProcessDocumentInput> newSutInstance() throws ParserConfigurationException, SAXException {
         return new ProcessDocumentService(this.responseParserMock, this.httpClientMock, this.resultValidatorMock);
     }
 
