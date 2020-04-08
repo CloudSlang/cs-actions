@@ -15,12 +15,13 @@
 package io.cloudslang.content.abby.constants;
 
 public final class OutputNames {
+    public static final String TXT_RESULT = "txtResult";
+    public static final String XML_RESULT = "xmlResult";
+    public static final String PDF_URL = "pdfUrl";
     public static final String TASK_ID = "taskId";
     public static final String CREDITS = "credits";
-    public static final String RESULT_URL = "resultUrl";
     public static final String STATUS_CODE = "statusCode";
     public static final String TIMED_OUT = "timedOut";
-
 
     private OutputNames() {
 

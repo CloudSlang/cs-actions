@@ -19,7 +19,7 @@ public final class ExceptionMsgs {
     public static final String INVALID_PROFILE = "Invalid profile '%s'.";
     public static final String INVALID_TEXT_TYPE = "Invalid text type '%s'.";
     public static final String INVALID_IMAGE_SOURCE = "Invalid image source '%s'.";
-    public static final String INVALID_EXPORT_FORMAT = "Invalid export format '%s'.";
+    public static final String INVALID_EXPORT_FORMAT = "Invalid or unsupported export format '%s'.";
     public static final String INVALID_WRITE_TAGS = "Invalid write tags value '%s'.";
     public static final String INVALID_MARKING_TYPE = "Invalid marking type '%s'.";
     public static final String INVALID_WRITING_STYLE = "Invalid writing style '%s'.";
@@ -34,12 +34,14 @@ public final class ExceptionMsgs {
     public static final String NOT_ENOUGH_CREDITS = "Not enough credits to complete task. Required nr of credits: %d";
     public static final String TASK_PROCESSING_FAILED = "Task processing failed. Reason: %s";
     public static final String TASK_DELETED = "Task was deleted prematurely.";
-    public static final String PROCESSING_RESULT_COULD_NOT_BE_RETRIEVED = "Processing result could not be retrieved.";
+    public static final String PROCESSING_RESULT_COULD_NOT_BE_RETRIEVED = "Processing result could not be retrieved for export format '%s'.";
     public static final String NULL_ARGUMENT = "Value of argument '%s' was null.";
     public static final String INVALID_ESTIMATED_PROCESSING_TIME = "Invalid number of milliseconds for estimated processing time was received.";
     public static final String OPERATION_TIMEOUT = "Processing of the document was not finished in the expected time.";
     public static final String TOO_MANY_EXPORT_FORMATS = "Maximum number of export formats exceeded.";
     public static final String UNEXPECTED_STATUS = "Unexpected status.";
+    public static final String DESTINATION_FILE_IS_NOT_DIRECTORY = "Given destination file is not a directory.";
+    public static final String SOURCE_FILE_IS_NOT_FILE = "Given source file is actually not a file.";
 
 
     private ExceptionMsgs() {

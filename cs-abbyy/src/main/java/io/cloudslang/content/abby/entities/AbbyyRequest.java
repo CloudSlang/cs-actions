@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.abby.entities;
 
+import java.io.File;
+
 public interface AbbyyRequest {
     LocationId getLocationId();
 
@@ -49,7 +51,7 @@ public interface AbbyyRequest {
 
     String getResponseCharacterSet();
 
-    String getDestinationFile();
+    File getDestinationFile();
 
-    String getSourceFile();
+    File getSourceFile();
 }

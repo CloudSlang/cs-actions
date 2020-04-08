@@ -17,6 +17,7 @@ package io.cloudslang.content.abby.entities;
 import io.cloudslang.content.abby.constants.ExceptionMsgs;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,8 +40,8 @@ public class ProcessDocumentInput implements AbbyyRequest {
     private int connectionsMaxPerRoute;
     private int connectionsMaxTotal;
     private String responseCharacterSet;
-    private String destinationFile;
-    private String sourceFile;
+    private File destinationFile;
+    private File sourceFile;
     private List<String> languages;
     private Profile profile;
     private List<TextType> textTypes;
@@ -145,12 +146,12 @@ public class ProcessDocumentInput implements AbbyyRequest {
     }
 
 
-    public String getDestinationFile() {
+    public File getDestinationFile() {
         return destinationFile;
     }
 
 
-    public String getSourceFile() {
+    public File getSourceFile() {
         return sourceFile;
     }
 
@@ -484,9 +485,17 @@ public class ProcessDocumentInput implements AbbyyRequest {
 
             input.responseCharacterSet = this.responseCharacterSet;
 
-            input.destinationFile = this.destinationFile;
+            if(StringUtils.isNotEmpty(this.destinationFile)) {
+                input.destinationFile = new File(this.destinationFile);
+                if (!input.destinationFile.isDirectory()) {
+                    throw new Exception(ExceptionMsgs.DESTINATION_FILE_IS_NOT_DIRECTORY);
+                }
+            }
 
-            input.sourceFile = this.sourceFile;
+            input.sourceFile = new File(this.sourceFile);
+            if(!input.sourceFile.isFile()) {
+                throw new Exception(ExceptionMsgs.SOURCE_FILE_IS_NOT_FILE);
+            }
 
             String[] languages = this.language.split("[,]");
             input.languages = Arrays.asList(languages);
@@ -522,7 +531,7 @@ public class ProcessDocumentInput implements AbbyyRequest {
 
             input.readBarcodes = Boolean.parseBoolean(this.readBarcodes);
 
-            if(StringUtils.isNotEmpty(this.description)) {
+            if (StringUtils.isNotEmpty(this.description)) {
                 input.description = (this.description.length() <= 255) ? this.description : this.description.substring(0, 255);
             } else {
                 input.description = StringUtils.EMPTY;

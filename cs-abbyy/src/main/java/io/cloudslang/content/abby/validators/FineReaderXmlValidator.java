@@ -12,15 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.abby.constants;
+package io.cloudslang.content.abby.validators;
 
-public final class MiscConstants {
-    public static final String HTTP_STATUS_CODE_OUTPUT = "statusCode";
-    public static final String HTTP_RETURN_RESULT_OUTPUT = "returnResult";
-    public static final String HTTP_EXCEPTION_OUTPUT = "exception";
-    public static final String DOCUMENT_PROCESSED_SUCCESSFULLY = "The document was processed successfully.";
+import io.cloudslang.content.abby.exceptions.AbbyySdkException;
 
-
-    private MiscConstants() {
+public class FineReaderXmlValidator implements ResultValidator {
+    @Override
+    public AbbyySdkException validate(String result) {
+        return null;
     }
 }

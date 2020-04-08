@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.abby.entities;
 
+import java.io.File;
 import java.util.List;
 
 public class ProcessTextFieldInput implements AbbyyRequest {
@@ -34,8 +35,8 @@ public class ProcessTextFieldInput implements AbbyyRequest {
     private int connectionsMaxPerRoute;
     private int connectionsMaxTotal;
     private String responseCharacterSet;
-    private String destinationFile;
-    private String sourceFile;
+    private File destinationFile;
+    private File sourceFile;
     private Region region;
     private List<String> languages;
     private String letterSet;
@@ -139,12 +140,12 @@ public class ProcessTextFieldInput implements AbbyyRequest {
     }
 
 
-    public String getDestinationFile() {
+    public File getDestinationFile() {
         return destinationFile;
     }
 
 
-    public String getSourceFile() {
+    public File getSourceFile() {
         return sourceFile;
     }
 

@@ -239,9 +239,7 @@ public abstract class AbstractPostRequestServiceTest<R extends AbbyyRequest> {
         assertEquals(taskId, results.get(OutputNames.TASK_ID));
         assertEquals(String.valueOf(credits), results.get(OutputNames.CREDITS));
         assertEquals(statusCode, results.get(OutputNames.STATUS_CODE));
-        assertTrue(results.get(OutputNames.RESULT_URL).contains(resultUrls.get(0)));
-        assertTrue(results.get(OutputNames.RESULT_URL).contains(resultUrls.get(1)));
-        assertTrue(results.get(OutputNames.RESULT_URL).contains(resultUrls.get(2)));
+        assertTrue(results.get(OutputNames.PDF_URL).contains(resultUrls.get(0)));
         assertEquals(ReturnCodes.SUCCESS, results.get(io.cloudslang.content.constants.OutputNames.RETURN_CODE));
         assertEquals(StringUtils.EMPTY, results.get(io.cloudslang.content.constants.OutputNames.EXCEPTION));
     }

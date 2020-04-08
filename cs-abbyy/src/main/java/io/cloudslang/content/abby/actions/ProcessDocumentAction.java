@@ -135,17 +135,19 @@ public class ProcessDocumentAction {
      *                                 If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.
      *                                 If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty,
      *                                 the default value will be used. You should not use this for method=HEAD or OPTIONS.
-     *                                 Default value: 'ISO-8859-1'.
-     * @param destinationFile          The absolute path of a file on disk where to save the entity returned by the response.
-     *                                 'returnResult' will no longer be populated with the entity if this is specified.
-     *                                 Example: 'C:\temp\destinationFile.txt'.
+     *                                 Default value: 'UTF-8'.
+     * @param destinationFile          The absolute path of a directory on disk where to save the entities returned by the response.
+     *                                 For each export format selected a file will be created in the specified directory with name of
+     *                                 'sourceFile' and corresponding extension (e.g. for exportFormat=xml,txt and sourceFile=source.jpg
+     *                                 the files 'source.xml' and 'source.txt' will be created).
      * @param sourceFile               The absolute path of the image to be loaded and converted using the SDK.
      * @return a map containing the output of the operations. Keys present in the map are:
-     * <br><b>returnResult</b> - Contains the text returned in the response body, if the output source was TXT,
-     * otherwise if will contain a human readable message mentioning the success or failure of the task.
+     * <br><b>returnResult</b> - Contains a human readable message mentioning the success or failure of the task.
+     * <br><b>txtResult</b> - The result for 'txt' export format in clear text (empty if 'txt' was not provided in 'exportFormat' input).
+     * <br><b>xmlResult</b> - The result for 'xml' export format in clear text (empty if 'xml' was not provided in 'exportFormat' input).
+     * <br><b>pdfUrl</b> - The URL at which the PDF result of the recognition process can be found.
      * <br><b>taskId</b> - The ID of the task registered in the ABBYY server.
      * <br><b>credits</b> - The amount of ABBYY credits spent on the action.
-     * <br><b>resultUrl</b> - The URL at which the result of the recognition process can be found.
      * <br><b>statusCode</b> - The status_code returned by the server.
      * <br><b>returnCode</b> - The returnCode of the operation: 0 for success, -1 for failure.
      * <br><b>exception</b> - The exception message if the operation goes to failure.
@@ -154,9 +156,11 @@ public class ProcessDocumentAction {
     @Action(name = "Process Document",
             outputs = {
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.TXT_RESULT),
+                    @Output(OutputNames.XML_RESULT),
+                    @Output(OutputNames.PDF_URL),
                     @Output(OutputNames.TASK_ID),
                     @Output(OutputNames.CREDITS),
-                    @Output(OutputNames.RESULT_URL),
                     @Output(OutputNames.STATUS_CODE),
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
                     @Output(io.cloudslang.content.constants.OutputNames.EXCEPTION),

@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -43,19 +44,12 @@ public class ProcessDocumentServiceTest extends AbstractPostRequestServiceTest<P
     private static final boolean CORRECT_ORIENTATION = true;
     private static final boolean CORRECT_SKEW = true;
     private static final boolean READ_BARCODES = false;
-    private static final List<ExportFormat> EXPORT_FORMATS = Arrays.asList(ExportFormat.PDF_A, ExportFormat.XML);
+    private static final List<ExportFormat> EXPORT_FORMATS = Arrays.asList(ExportFormat.PDF_SEARCHABLE, ExportFormat.XML, ExportFormat.TXT);
     private static final boolean WRITE_FORMATTING = false;
     private static final boolean WRITE_RECOGNITION_VARIANTS = false;
     private static final WriteTags WRITE_TAGS = WriteTags.AUTO;
     private static final String DESCRIPTION = "dummy";
     private static final String PDF_PASSWORD = "dummy";
-    private static final short PROXY_PORT = 20;
-    private static final boolean TRUST_ALL_ROOTS = false;
-    private static final int CONNECT_TIMEOUT = 1;
-    private static final int SOCKET_TIMEOUT = 1;
-    private static final boolean KEEP_ALIVE = false;
-    private static final int CONNECTIONS_MAX_PER_ROUTE = 1;
-    private static final int CONNECTIONS_MAX_TOTAL = 1;
 
 
     @Override
@@ -75,7 +69,7 @@ public class ProcessDocumentServiceTest extends AbstractPostRequestServiceTest<P
     public void execute_validInput_correspondingUrlCalled() throws Exception {
         final String expectedUrl = "https://cloud-eu.ocrsdk.com/processImage?language=English&profile=textExtraction&textType=" +
                 "normal&imageSource=auto&correctOrientation=true&correctSkew=true&readBarcodes=false&" +
-                "exportFormat=pdfa%2Cxml&description=dummy&pdfPassword=dummy&xml%3AwriteFormatting=false&" +
+                "exportFormat=pdfSearchable%2Cxml%2Ctxt&description=dummy&pdfPassword=dummy&xml%3AwriteFormatting=false&" +
                 "xml%3AwriteRecognitionVariants=false&pdf%3AwriteTags=auto";
         mockRequest();
         when(this.httpClientMock.execute(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
@@ -111,7 +105,7 @@ public class ProcessDocumentServiceTest extends AbstractPostRequestServiceTest<P
         final String statusCode = "123";
 
         when(this.requestMock.getExportFormats())
-                .thenReturn(Arrays.asList(ExportFormat.DOCX, ExportFormat.TXT, ExportFormat.TXT_UNSTRUCTURED));
+                .thenReturn(Arrays.asList(ExportFormat.XML, ExportFormat.TXT, ExportFormat.PDF_SEARCHABLE));
 
         Map<String, String> rawResponse = new HashMap<>();
         rawResponse.put(MiscConstants.HTTP_STATUS_CODE_OUTPUT, statusCode);
@@ -152,7 +146,7 @@ public class ProcessDocumentServiceTest extends AbstractPostRequestServiceTest<P
         final String txtResult = "txtResult";
 
         when(this.requestMock.getExportFormats())
-                .thenReturn(Arrays.asList(ExportFormat.DOCX, ExportFormat.TXT, ExportFormat.TXT_UNSTRUCTURED));
+                .thenReturn(Arrays.asList(ExportFormat.XML, ExportFormat.TXT, ExportFormat.PDF_SEARCHABLE));
 
         Map<String, String> rawResponse = new HashMap<>();
         rawResponse.put(MiscConstants.HTTP_STATUS_CODE_OUTPUT, statusCode);
@@ -182,12 +176,11 @@ public class ProcessDocumentServiceTest extends AbstractPostRequestServiceTest<P
         assertEquals(taskId, results.get(OutputNames.TASK_ID));
         assertEquals(String.valueOf(credits), results.get(OutputNames.CREDITS));
         assertEquals(statusCode, results.get(OutputNames.STATUS_CODE));
-        assertTrue(results.get(OutputNames.RESULT_URL).contains(resultUrls.get(0)));
-        assertTrue(results.get(OutputNames.RESULT_URL).contains(resultUrls.get(1)));
-        assertTrue(results.get(OutputNames.RESULT_URL).contains(resultUrls.get(2)));
+        assertTrue(results.get(OutputNames.PDF_URL).contains(resultUrls.get(2)));
+        assertEquals(txtResult, results.get(OutputNames.TXT_RESULT));
+        assertEquals(txtResult, results.get(OutputNames.XML_RESULT));
         assertEquals(ReturnCodes.SUCCESS, results.get(io.cloudslang.content.constants.OutputNames.RETURN_CODE));
         assertEquals(StringUtils.EMPTY, results.get(io.cloudslang.content.constants.OutputNames.EXCEPTION));
-        assertEquals(txtResult, results.get(io.cloudslang.content.constants.OutputNames.RETURN_RESULT));
     }
 
 
@@ -209,5 +202,6 @@ public class ProcessDocumentServiceTest extends AbstractPostRequestServiceTest<P
         when(this.requestMock.getWriteTags()).thenReturn(WRITE_TAGS);
         when(this.requestMock.getDescription()).thenReturn(DESCRIPTION);
         when(this.requestMock.getPdfPassword()).thenReturn(PDF_PASSWORD);
+        when(this.requestMock.getSourceFile()).thenReturn(mock(File.class));
     }
 }

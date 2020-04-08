@@ -20,6 +20,7 @@ import io.cloudslang.content.abby.constants.MiscConstants;
 import io.cloudslang.content.abby.constants.OutputNames;
 import io.cloudslang.content.abby.entities.AbbyyRequest;
 import io.cloudslang.content.abby.entities.AbbyyResponse;
+import io.cloudslang.content.abby.entities.ExportFormat;
 import io.cloudslang.content.abby.exceptions.AbbyySdkException;
 import io.cloudslang.content.abby.exceptions.ClientSideException;
 import io.cloudslang.content.abby.exceptions.ServerSideException;
@@ -134,7 +135,7 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
                 String.valueOf(false),
                 null,
                 String.valueOf(true),
-                request.getSourceFile(),
+                request.getSourceFile().getAbsolutePath(),
                 null,
                 ConnectionConstants.Headers.CONTENT_TYPE,
                 null,
@@ -249,7 +250,6 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
 
 
     protected void handleTaskCompleted(R request, AbbyyResponse response, Map<String, String> results) throws Exception {
-        results.put(OutputNames.RESULT_URL, StringUtils.join(response.getResultUrls(), '\n'));
         results.put(io.cloudslang.content.constants.OutputNames.RETURN_RESULT, MiscConstants.DOCUMENT_PROCESSED_SUCCESSFULLY);
         results.put(io.cloudslang.content.constants.OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
     }

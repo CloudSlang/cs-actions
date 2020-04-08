@@ -17,20 +17,28 @@ package io.cloudslang.content.abby.services;
 import io.cloudslang.content.abby.constants.ConnectionConstants;
 import io.cloudslang.content.abby.constants.ExceptionMsgs;
 import io.cloudslang.content.abby.constants.MiscConstants;
+import io.cloudslang.content.abby.constants.OutputNames;
 import io.cloudslang.content.abby.entities.AbbyyResponse;
 import io.cloudslang.content.abby.entities.ExportFormat;
 import io.cloudslang.content.abby.entities.ProcessDocumentInput;
 import io.cloudslang.content.abby.exceptions.AbbyySdkException;
 import io.cloudslang.content.abby.utils.AbbyyResponseParser;
-import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.abby.validators.FineReaderXmlValidator;
+import io.cloudslang.content.abby.validators.ResultValidator;
 import io.cloudslang.content.httpclient.actions.HttpClientAction;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Map;
 
 public class ProcessDocumentService extends AbstractPostRequestService<ProcessDocumentInput> {
+
+    private ResultValidator resultValidator = new FineReaderXmlValidator();
+
 
     public ProcessDocumentService() throws ParserConfigurationException {
     }
@@ -58,15 +66,12 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
                 .addParameter(ConnectionConstants.QueryParams.DESCRIPTION, input.getDescription())
                 .addParameter(ConnectionConstants.QueryParams.PDF_PASSWORD, input.getPdfPassword());
 
-        if (input.getExportFormats().contains(ExportFormat.XML) ||
-                input.getExportFormats().contains(ExportFormat.XML_FOR_CORRECTED_IMAGE)) {
+        if (input.getExportFormats().contains(ExportFormat.XML)) {
             urlBuilder.addParameter(ConnectionConstants.QueryParams.WRITE_FORMATTING, String.valueOf(input.isWriteFormatting()))
                     .addParameter(ConnectionConstants.QueryParams.WRITE_RECOGNITION_VARIANTS, String.valueOf(input.isWriteRecognitionVariants()));
         }
-        if (input.getExportFormats().contains(ExportFormat.PDF_SEARCHABLE) ||
-                input.getExportFormats().contains(ExportFormat.PDF_TEXT_AND_IMAGES)) {
+        if (input.getExportFormats().contains(ExportFormat.PDF_SEARCHABLE)) {
             urlBuilder.addParameter(ConnectionConstants.QueryParams.WRITE_TAGS, input.getWriteTags().toString());
-
         }
 
         return urlBuilder.build().toString();
@@ -77,29 +82,44 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
     protected void handleTaskCompleted(ProcessDocumentInput request, AbbyyResponse response, Map<String, String> results) throws Exception {
         super.handleTaskCompleted(request, response, results);
 
-        for (int i = 0; i < request.getExportFormats().size(); i++) {
-            if (!request.getExportFormats().get(i).equals(ExportFormat.TXT) &&
-                    !request.getExportFormats().get(i).equals(ExportFormat.TXT_UNSTRUCTURED)) {
-                continue;
+        for (ExportFormat exportFormat : request.getExportFormats()) {
+            switch (exportFormat) {
+                case TXT:
+                    String txt = getProcessingResult(request, response, ExportFormat.TXT, null);
+                    results.put(OutputNames.TXT_RESULT, txt);
+                    if (request.getDestinationFile() != null) {
+                        saveClearTextResultOnDisk(request, txt, ExportFormat.TXT);
+                    }
+                    break;
+                case XML:
+                    String xml = getProcessingResult(request, response, ExportFormat.XML, null);
+                    AbbyySdkException validationEx = resultValidator.validate(xml);
+                    if (validationEx != null) {
+                        throw validationEx;
+                    }
+                    results.put(OutputNames.XML_RESULT, xml);
+                    if (request.getDestinationFile() != null) {
+                        saveClearTextResultOnDisk(request, xml, ExportFormat.XML);
+                    }
+                    break;
+                case PDF_SEARCHABLE:
+                    int indexOfPdfUrl = request.getExportFormats().indexOf(ExportFormat.PDF_SEARCHABLE);
+                    results.put(OutputNames.PDF_URL, response.getResultUrls().get(indexOfPdfUrl));
+                    if (request.getDestinationFile() != null) {
+                        String downloadPath = getDownloadPath(request, ExportFormat.PDF_SEARCHABLE);
+                        getProcessingResult(request, response, ExportFormat.PDF_SEARCHABLE, downloadPath);
+                    }
+                    break;
             }
-
-            Map<String, String> processingResult = getProcessingResult(request, response.getResultUrls().get(i));
-
-            this.lastStatusCode = processingResult.get(MiscConstants.HTTP_STATUS_CODE_OUTPUT);
-            if (!processingResult.get(MiscConstants.HTTP_STATUS_CODE_OUTPUT).equals(String.valueOf(200))) {
-                throw new AbbyySdkException(ExceptionMsgs.PROCESSING_RESULT_COULD_NOT_BE_RETRIEVED);
-            }
-
-            results.put(OutputNames.RETURN_RESULT, processingResult.get(MiscConstants.HTTP_RETURN_RESULT_OUTPUT));
-
-            break;
         }
     }
 
 
-    private Map<String, String> getProcessingResult(ProcessDocumentInput request, String resultUrl) {
-        return this.httpClientAction.execute(
-                resultUrl,
+    private String getProcessingResult(ProcessDocumentInput request, AbbyyResponse response, ExportFormat exportFormat,
+                                       String downloadPath) throws AbbyySdkException {
+        int indexOfResultUrl = request.getExportFormats().indexOf(exportFormat);
+        Map<String, String> processingResult = this.httpClientAction.execute(
+                response.getResultUrls().get(indexOfResultUrl),
                 null,
                 null,
                 "anonymous",
@@ -127,7 +147,7 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
                 String.valueOf(request.getConnectionsMaxTotal()),
                 null,
                 request.getResponseCharacterSet(),
-                null,
+                downloadPath,
                 StringUtils.EMPTY,
                 null,
                 String.valueOf(true),
@@ -147,5 +167,27 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
                 ConnectionConstants.HttpMethods.GET,
                 null,
                 null);
+
+        this.lastStatusCode = processingResult.get(MiscConstants.HTTP_STATUS_CODE_OUTPUT);
+        if (!processingResult.get(MiscConstants.HTTP_STATUS_CODE_OUTPUT).equals(String.valueOf(200))) {
+            throw new AbbyySdkException(String.format(ExceptionMsgs.PROCESSING_RESULT_COULD_NOT_BE_RETRIEVED, exportFormat));
+        }
+
+        return processingResult.get(MiscConstants.HTTP_RETURN_RESULT_OUTPUT);
+    }
+
+
+    private void saveClearTextResultOnDisk(ProcessDocumentInput request, String clearText, ExportFormat exportFormat) throws IOException {
+        String targetPath = getDownloadPath(request, exportFormat);
+        try (FileWriter writer = new FileWriter(targetPath)) {
+            writer.write(clearText);
+        }
+    }
+
+
+    private String getDownloadPath(ProcessDocumentInput request, ExportFormat exportFormat) {
+        return  request.getDestinationFile() + "/" +
+                FilenameUtils.removeExtension(request.getSourceFile().getName()) + "." +
+                exportFormat.getFileExtension();
     }
 }

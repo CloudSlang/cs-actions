@@ -29,9 +29,11 @@ public final class ResultUtils {
         Map<String, String> results = new HashMap<>();
 
         results.put(io.cloudslang.content.constants.OutputNames.RETURN_RESULT, StringUtils.EMPTY);
+        results.put(OutputNames.TXT_RESULT, StringUtils.EMPTY);
+        results.put(OutputNames.XML_RESULT, StringUtils.EMPTY);
+        results.put(OutputNames.PDF_URL, StringUtils.EMPTY);
         results.put(OutputNames.TASK_ID, StringUtils.EMPTY);
         results.put(OutputNames.CREDITS, StringUtils.EMPTY);
-        results.put(OutputNames.RESULT_URL, StringUtils.EMPTY);
         results.put(OutputNames.STATUS_CODE, StringUtils.EMPTY);
         results.put(io.cloudslang.content.constants.OutputNames.EXCEPTION, StringUtils.EMPTY);
         results.put(io.cloudslang.content.constants.OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
