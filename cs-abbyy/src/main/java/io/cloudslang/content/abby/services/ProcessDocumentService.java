@@ -33,19 +33,24 @@ import org.apache.http.client.utils.URIBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Map;
 
 public class ProcessDocumentService extends AbstractPostRequestService<ProcessDocumentInput> {
 
-    private ResultValidator resultValidator = new FineReaderXmlValidator();
+    private ResultValidator resultValidator;
 
 
     public ProcessDocumentService() throws ParserConfigurationException {
     }
 
-
-    public ProcessDocumentService(AbbyyResponseParser responseParser, HttpClientAction httpClientAction) throws ParserConfigurationException {
+    public ProcessDocumentService(AbbyyResponseParser responseParser, HttpClientAction httpClientAction, ResultValidator resultValidator) throws ParserConfigurationException {
         super(responseParser, httpClientAction);
+        this.resultValidator = (resultValidator != null) ? resultValidator : new FineReaderXmlValidator();
     }
 
 
@@ -85,29 +90,29 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
         for (ExportFormat exportFormat : request.getExportFormats()) {
             switch (exportFormat) {
                 case TXT:
-                    String txt = getProcessingResult(request, response, ExportFormat.TXT, null);
+                    String txt = getProcessingResult(request, response, exportFormat);
                     results.put(OutputNames.TXT_RESULT, txt);
                     if (request.getDestinationFile() != null) {
-                        saveClearTextResultOnDisk(request, txt, ExportFormat.TXT);
+                        saveClearTextResultOnDisk(request, txt, exportFormat);
                     }
                     break;
                 case XML:
-                    String xml = getProcessingResult(request, response, ExportFormat.XML, null);
+                    String xml = getProcessingResult(request, response, exportFormat);
                     AbbyySdkException validationEx = resultValidator.validate(xml);
                     if (validationEx != null) {
                         throw validationEx;
                     }
                     results.put(OutputNames.XML_RESULT, xml);
                     if (request.getDestinationFile() != null) {
-                        saveClearTextResultOnDisk(request, xml, ExportFormat.XML);
+                        saveClearTextResultOnDisk(request, xml, exportFormat);
                     }
                     break;
                 case PDF_SEARCHABLE:
-                    int indexOfPdfUrl = request.getExportFormats().indexOf(ExportFormat.PDF_SEARCHABLE);
-                    results.put(OutputNames.PDF_URL, response.getResultUrls().get(indexOfPdfUrl));
+                    int indexOfPdfUrl = request.getExportFormats().indexOf(exportFormat);
+                    String pdfUrl = response.getResultUrls().get(indexOfPdfUrl);
+                    results.put(OutputNames.PDF_URL, pdfUrl);
                     if (request.getDestinationFile() != null) {
-                        String downloadPath = getDownloadPath(request, ExportFormat.PDF_SEARCHABLE);
-                        getProcessingResult(request, response, ExportFormat.PDF_SEARCHABLE, downloadPath);
+                        downloadFromUrl(request, pdfUrl, exportFormat);
                     }
                     break;
             }
@@ -115,8 +120,7 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
     }
 
 
-    private String getProcessingResult(ProcessDocumentInput request, AbbyyResponse response, ExportFormat exportFormat,
-                                       String downloadPath) throws AbbyySdkException {
+    private String getProcessingResult(ProcessDocumentInput request, AbbyyResponse response, ExportFormat exportFormat) throws AbbyySdkException {
         int indexOfResultUrl = request.getExportFormats().indexOf(exportFormat);
         Map<String, String> processingResult = this.httpClientAction.execute(
                 response.getResultUrls().get(indexOfResultUrl),
@@ -147,7 +151,7 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
                 String.valueOf(request.getConnectionsMaxTotal()),
                 null,
                 request.getResponseCharacterSet(),
-                downloadPath,
+                null,
                 StringUtils.EMPTY,
                 null,
                 String.valueOf(true),
@@ -178,16 +182,24 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
 
 
     private void saveClearTextResultOnDisk(ProcessDocumentInput request, String clearText, ExportFormat exportFormat) throws IOException {
-        String targetPath = getDownloadPath(request, exportFormat);
+        String targetPath = getTargetPath(request, exportFormat);
         try (FileWriter writer = new FileWriter(targetPath)) {
             writer.write(clearText);
         }
     }
 
 
-    private String getDownloadPath(ProcessDocumentInput request, ExportFormat exportFormat) {
-        return  request.getDestinationFile() + "/" +
+    private String getTargetPath(ProcessDocumentInput request, ExportFormat exportFormat) {
+        return request.getDestinationFile().getAbsolutePath() + "/" +
                 FilenameUtils.removeExtension(request.getSourceFile().getName()) + "." +
                 exportFormat.getFileExtension();
+    }
+
+
+    private void downloadFromUrl(ProcessDocumentInput request, String url, ExportFormat exportFormat) throws IOException {
+        String targetPath = getTargetPath(request, exportFormat);
+        try (InputStream in = new URL(url).openStream()) {
+            Files.copy(in, Paths.get(targetPath), StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 }
