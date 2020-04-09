@@ -18,8 +18,6 @@
 
  public class TerraformOrganizationInputs {
 
-
-     //        private final String organizationName;
      private final String organizationDescription;
      private final String email;
      private final String sessionTimeout;
@@ -29,7 +27,7 @@
      private final String ownersTeamSamlRoleId;
      private final TerraformCommonInputs commonInputs;
 
-     @java.beans.ConstructorProperties({"organizationDescription", "adminEmail", "sessionTimeout", "sessionRemember", "collaboratorAuthPolicy", "costEstimationEnabled", "ownersTeamSamlRoleId",
+     @java.beans.ConstructorProperties({"organizationDescription", "email", "sessionTimeout", "sessionRemember", "collaboratorAuthPolicy", "costEstimationEnabled", "ownersTeamSamlRoleId",
              "commonInputs"})
      public TerraformOrganizationInputs(String organizationDescription, String email, String sessionTimeout, String sessionRemember, String collaboratorAuthPolicy, String costEstimationEnabled, String ownersTeamSamlRoleId,
                                         TerraformCommonInputs commonInputs) {

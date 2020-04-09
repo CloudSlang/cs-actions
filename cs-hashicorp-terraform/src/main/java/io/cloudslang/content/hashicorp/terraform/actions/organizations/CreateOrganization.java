@@ -47,6 +47,8 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInput
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateOrganizationInputs.EMAIL;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateOrganizationInputs.ORGANIZATION_DESCRIPTION;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateOrganizationInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateOrganizationOutputs.ORGANIZATION_ID;
@@ -96,9 +98,6 @@ public class CreateOrganization {
 
         organizationDescription = defaultIfEmpty(organizationDescription, EMPTY);
         requestBody = defaultIfEmpty(requestBody, EMPTY);
-        sessionTimeout = defaultIfEmpty(sessionTimeout,"20160");
-        sessionRemember = defaultIfEmpty(sessionRemember,"20160");
-        collaboratorAuthPolicy = defaultIfEmpty(collaboratorAuthPolicy,"password");
         costEstimationEnabled = defaultIfEmpty(costEstimationEnabled,BOOLEAN_FALSE);
         ownersTeamSamlRoleId = defaultIfEmpty(ownersTeamSamlRoleId,EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);

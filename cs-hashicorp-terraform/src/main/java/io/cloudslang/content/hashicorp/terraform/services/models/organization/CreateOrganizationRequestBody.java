@@ -54,15 +54,14 @@ public class CreateOrganizationRequestBody {
     }
 
     public class Attributes {
+        String description;
         String sessionTimeout;
         String sessionRemember;
-        String description;
+        String collaboratorAuthPolicy;
         @JsonProperty("cost-estimation")
         boolean costEstimationEnabled;
         @JsonProperty("owners-team-saml-role-id")
         String ownersTeamSamlRoleId;
-        @JsonProperty("collaborator-auth-policy")
-        String collaboratorAuthPolicy;
 
         private String name;
         private String email;
@@ -99,6 +98,14 @@ public class CreateOrganizationRequestBody {
             this.sessionRemember = sessionRemember;
         }
 
+        public String getCollaboratorAuthPolicy() {
+            return collaboratorAuthPolicy;
+        }
+
+        public void setCollaboratorAuthPolicy(String collaboratorAuthPolicy) {
+            this.collaboratorAuthPolicy = collaboratorAuthPolicy;
+        }
+
         public String getDescription() {
             return description;
         }
@@ -113,14 +120,6 @@ public class CreateOrganizationRequestBody {
 
         public void setCostEstimationEnabled(boolean costEstimationEnabled) {
             this.costEstimationEnabled = costEstimationEnabled;
-        }
-
-        public String getCollaboratorAuthPolicy() {
-            return collaboratorAuthPolicy;
-        }
-
-        public void setCollaboratorAuthPolicy(String collaboratorAuthPolicy) {
-            this.collaboratorAuthPolicy = collaboratorAuthPolicy;
         }
 
         public String getOwnersTeamSamlRoleId() {

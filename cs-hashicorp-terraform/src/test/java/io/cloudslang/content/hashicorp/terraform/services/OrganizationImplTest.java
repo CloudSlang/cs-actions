@@ -23,6 +23,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static io.cloudslang.content.hashicorp.terraform.services.OrganizationImpl.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
@@ -31,8 +32,8 @@ public class OrganizationImplTest {
 
     public static final String DELIMITER = ",";
     private static final String ORGANIZATION_NAME = "test";
-    private static final String EXPECTED_ORGANIZATION_REQUEST_BODY = "{\"data\":{\"attributes\":{\"sessionTimeout\":\"20160\",\"sessionRemember\":\"20160\"," +
-            "\"description\":\"test\",\"name\":\"test\",\"email\":\"test\",\"cost-estimation\":false,\"owners-team-saml-role-id\":\"\",\"collaborator-auth-policy\":\"password\"}," +
+    private static final String EXPECTED_ORGANIZATION_REQUEST_BODY = "{\"data\":{\"attributes\":{\"description\":\"test\",\"sessionTimeout\":null,\"sessionRemember\":null," +
+            "\"collaboratorAuthPolicy\":null,\"name\":\"test\",\"email\":\"test\",\"cost-estimation\":false,\"owners-team-saml-role-id\":\"\"}," +
             "\"type\":\"organizations\"}}";
     private static final String EXPECTED_GET_ORGANIZATION_PATH = "/api/v2/organizations/test";
     private static final String EXPECTED_ORGANIZATION_PATH = "/api/v2/organizations/";
@@ -42,10 +43,10 @@ public class OrganizationImplTest {
     private final TerraformOrganizationInputs invalidCreateOrganizationInputs = TerraformOrganizationInputs.builder()
             .organizationDescription("test")
             .email("test")
-            .sessionTimeout("20160")
-            .sessionRemember("20160")
+            .sessionTimeout(SESSION_TIMEOUT)
+            .sessionRemember(SESSION_REMEMBER)
+            .collaboratorAuthPolicy(COLLABORATOR_AUTH_POLICY)
             .costEstimationEnabled("false")
-            .collaboratorAuthPolicy("password")
             .ownersTeamSamlRoleId("")
             .commonInputs(TerraformCommonInputs.builder()
                     .organizationName(ORGANIZATION_NAME)

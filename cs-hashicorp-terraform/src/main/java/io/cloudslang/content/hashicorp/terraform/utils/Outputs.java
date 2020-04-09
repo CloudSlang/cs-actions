@@ -49,7 +49,7 @@ public class Outputs extends OutputNames {
     }
 
     public static class ListOrganizationsOutputs {
-        public static final String ORGANIZATION_LIST = "organizationList";
+        public static final String ORGANIZATION_NAME_LIST = "organizationNameList";
     }
 
 

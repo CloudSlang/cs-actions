@@ -58,6 +58,9 @@ public class Constants {
         public static final String DEFAULT_PAGE_SIZE = "100";
         public static final String PAGE_NUMBER = "page[number]=";
         public static final String PAGE_SIZE = "page[size]=";
+        public static final String SESSION_TIMEOUT = "20160";
+        public static final String SESSION_REMEMBER = "20160";
+        public static final String COLLABORATOR_AUTH_POLICY = "password";
     }
 
     public static class CreateWorkspaceConstants {

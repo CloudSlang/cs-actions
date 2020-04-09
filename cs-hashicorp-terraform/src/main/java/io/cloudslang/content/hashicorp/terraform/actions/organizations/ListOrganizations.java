@@ -50,7 +50,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInput
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.ListOrganizationsOutputs.ORGANIZATION_LIST;
+import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.ListOrganizationsOutputs.ORGANIZATION_NAME_LIST;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
@@ -61,7 +61,7 @@ public class ListOrganizations {
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = ORGANIZATION_LIST, description = ORGANIZATION_LIST_DESC),
+                    @Output(value = ORGANIZATION_NAME_LIST, description = ORGANIZATION_LIST_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
@@ -136,9 +136,9 @@ public class ListOrganizations {
                 final List<String> organizationList = JsonPath.read(returnMessage, ORGANIZATIONS_LIST_JSON_PATH);
                 if (!organizationList.isEmpty()) {
                     final String organizationListAsString = join(organizationList.toArray(), DELIMITER);
-                    results.put(ORGANIZATION_LIST, organizationListAsString);
+                    results.put(ORGANIZATION_NAME_LIST, organizationListAsString);
                 } else {
-                    results.put(ORGANIZATION_LIST, EMPTY);
+                    results.put(ORGANIZATION_NAME_LIST, EMPTY);
                 }
             }else{
                 return getFailureResults(pageNumber,statusCode,returnMessage);

@@ -76,8 +76,6 @@ public class UpdateOrganization {
                                        @Param(value = ORGANIZATION_DESCRIPTION, description = ORGANIZATION_DESCRIPTION_DESC) String organizationDescription,
                                        @Param(value = EMAIL, required = true, description = EMAIL_DESC) String email,
                                        @Param(value = SESSION_TIMEOUT, description = SESSION_TIMEOUT_DESC) String sessionTimeout,
-                                       @Param(value = SESSION_REMEMBER, description = SESSION_REMEMBER_DESC) String sessionRemember,
-                                       @Param(value = COLLABORATOR_AUTH_POLICY, description = COLLABORATOR_AUTH_POLICY_DESC) String collaboratorAuthPolicy,
                                        @Param(value = COST_ESTIMATION_ENABLED, description = COST_ESTIMATION_ENABLED_DESC) String costEstimationEnabled,
                                        @Param(value = OWNERS_TEAM_SAML_ID, description = OWNERS_TEAM_SAML_ID_DESC) String ownersTeamSamlRoleId,
                                        @Param(value = REQUEST_BODY, description = ORGANIZATION_REQUEST_BODY_DESC) String requestBody,
@@ -98,9 +96,6 @@ public class UpdateOrganization {
 
         organizationDescription = defaultIfEmpty(organizationDescription, EMPTY);
         requestBody = defaultIfEmpty(requestBody, EMPTY);
-        sessionTimeout = defaultIfEmpty(sessionTimeout, "20160");
-        sessionRemember = defaultIfEmpty(sessionRemember, "20160");
-        collaboratorAuthPolicy = defaultIfEmpty(collaboratorAuthPolicy, "password");
         costEstimationEnabled = defaultIfEmpty(costEstimationEnabled, BOOLEAN_FALSE);
         ownersTeamSamlRoleId = defaultIfEmpty(ownersTeamSamlRoleId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
@@ -134,9 +129,7 @@ public class UpdateOrganization {
                     .organizationDescription(organizationDescription)
                     .email(email)
                     .sessionTimeout(sessionTimeout)
-                    .sessionRemember(sessionRemember)
                     .costEstimationEnabled(costEstimationEnabled)
-                    .collaboratorAuthPolicy(collaboratorAuthPolicy)
                     .ownersTeamSamlRoleId(ownersTeamSamlRoleId)
                     .commonInputs(TerraformCommonInputs.builder()
                             .organizationName(organizationName)

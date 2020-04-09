@@ -134,7 +134,7 @@ package io.cloudslang.content.hashicorp.terraform.actions.organizations;
 
              final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
              if (statusCode >= 200 && statusCode < 300) {
-                 return getOperationResults(result, DELETE_ORGANIZATION_SUCCESS_DESC, DELETE_ORGANIZATION_SUCCESS_DESC, DELETE_ORGANIZATION_SUCCESS_DESC);
+                 return getOperationResults(result, organizationName, DELETE_ORGANIZATION_SUCCESS_DESC, DELETE_ORGANIZATION_SUCCESS_DESC);
              }else{
                  return  getFailureResults(organizationName,statusCode,returnMessage);
              }
