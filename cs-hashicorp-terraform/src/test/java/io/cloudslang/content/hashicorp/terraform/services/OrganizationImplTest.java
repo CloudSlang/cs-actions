@@ -68,6 +68,7 @@ public class OrganizationImplTest {
                     .build())
             .build();
 
+
     private final TerraformCommonInputs getOrganizationName = TerraformCommonInputs.builder()
             .organizationName("test")
             .build();
@@ -111,7 +112,6 @@ public class OrganizationImplTest {
     public void getUpdateOrganizationPath() {
         String path = getOrganizationDetailsPath(getOrganizationName.getOrganizationName());
         assertEquals(EXPECTED_UPDATE_ORGANIZATION_PATH, path);
-
     }
 }
 

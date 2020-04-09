@@ -165,6 +165,7 @@
             attributes.setSessionTimeout(createOrganizationInputs.getSessionTimeout());
             attributes.setSessionRemember(createOrganizationInputs.getSessionRemember());
             attributes.setDescription(createOrganizationInputs.getOrganizationDescription());
+            attributes.setCollaboratorAuthPolicy(createOrganizationInputs.getCollaboratorAuthPolicy());
             attributes.setCostEstimationEnabled(Boolean.parseBoolean(createOrganizationInputs.getCostEstimationEnabled()));
             attributes.setCollaboratorAuthPolicy(createOrganizationInputs.getCollaboratorAuthPolicy());
             attributes.setOwnersTeamSamlRoleId(createOrganizationInputs.getOwnersTeamSamlRoleId());
