@@ -32,8 +32,8 @@ public class OrganizationImplTest {
 
     public static final String DELIMITER = ",";
     private static final String ORGANIZATION_NAME = "test";
-    private static final String EXPECTED_ORGANIZATION_REQUEST_BODY = "{\"data\":{\"attributes\":{\"description\":\"test\",\"sessionTimeout\":null,\"sessionRemember\":null," +
-            "\"collaboratorAuthPolicy\":null,\"name\":\"test\",\"email\":\"test\",\"cost-estimation\":false,\"owners-team-saml-role-id\":\"\"}," +
+    private static final String EXPECTED_ORGANIZATION_REQUEST_BODY = "{\"data\":{\"attributes\":{\"description\":\"test\",\"sessionTimeout\":\"20160\",\"sessionRemember\":\"20160\"," +
+            "\"collaboratorAuthPolicy\":\"password\",\"name\":\"test\",\"email\":\"test\",\"cost-estimation\":false,\"owners-team-saml-role-id\":\"\"}," +
             "\"type\":\"organizations\"}}";
     private static final String EXPECTED_GET_ORGANIZATION_PATH = "/api/v2/organizations/test";
     private static final String EXPECTED_ORGANIZATION_PATH = "/api/v2/organizations/";
