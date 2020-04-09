@@ -162,7 +162,10 @@
             CreateOrganizationRequestBody.Attributes attributes = createBody.new Attributes();
             attributes.setName(createOrganizationInputs.getCommonInputs().getOrganizationName());
             attributes.setEmail(createOrganizationInputs.getEmail());
+            attributes.setSessionTimeout(createOrganizationInputs.getSessionTimeout());
+            attributes.setSessionRemember(createOrganizationInputs.getSessionRemember());
             attributes.setDescription(createOrganizationInputs.getOrganizationDescription());
+            attributes.setCollaboratorAuthPolicy(createOrganizationInputs.getCollaboratorAuthPolicy());
             attributes.setCostEstimationEnabled(Boolean.parseBoolean(createOrganizationInputs.getCostEstimationEnabled()));
             attributes.setOwnersTeamSamlRoleId(createOrganizationInputs.getOwnersTeamSamlRoleId());
 
