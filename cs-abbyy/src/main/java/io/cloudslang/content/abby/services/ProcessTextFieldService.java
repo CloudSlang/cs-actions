@@ -19,15 +19,11 @@ import io.cloudslang.content.abby.constants.ExceptionMsgs;
 import io.cloudslang.content.abby.constants.MiscConstants;
 import io.cloudslang.content.abby.constants.OutputNames;
 import io.cloudslang.content.abby.entities.AbbyyResponse;
-import io.cloudslang.content.abby.entities.ExportFormat;
-import io.cloudslang.content.abby.entities.ProcessDocumentInput;
 import io.cloudslang.content.abby.entities.ProcessTextFieldInput;
-import io.cloudslang.content.abby.entities.Region;
 import io.cloudslang.content.abby.exceptions.AbbyySdkException;
 import io.cloudslang.content.abby.utils.AbbyyResponseParser;
 import io.cloudslang.content.abby.utils.AbbyyResultValidator;
 import io.cloudslang.content.abby.utils.JavaxXmlValidatorAdapter;
-import io.cloudslang.content.abby.utils.ResultUtils;
 import io.cloudslang.content.httpclient.actions.HttpClientAction;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
@@ -36,14 +32,9 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Map;
 
-public class ProcessTextFieldService extends AbstractPostRequestService<ProcessTextFieldInput>{
+public class ProcessTextFieldService extends AbstractPostRequestService<ProcessTextFieldInput> {
 
     private AbbyyResultValidator resultValidator;
 
@@ -59,7 +50,7 @@ public class ProcessTextFieldService extends AbstractPostRequestService<ProcessT
 
 
     public ProcessTextFieldService(AbbyyResponseParser responseParser, HttpClientAction httpClientAction,
-                                  AbbyyResultValidator resultValidator) throws ParserConfigurationException, SAXException {
+                                   AbbyyResultValidator resultValidator) throws ParserConfigurationException, SAXException {
         super(responseParser, httpClientAction);
         this.resultValidator = (resultValidator != null) ?
                 resultValidator :
@@ -72,19 +63,49 @@ public class ProcessTextFieldService extends AbstractPostRequestService<ProcessT
         URIBuilder urlBuilder = new URIBuilder()
                 .setScheme(ConnectionConstants.PROTOCOL)
                 .setHost(String.format(ConnectionConstants.HOST_TEMPLATE, input.getLocationId().toString(),
-                        ConnectionConstants.Endpoints.PROCESS_TEXT_FIELD))
-                .addParameter(ConnectionConstants.QueryParams.REGION, input.getRegion().toString())
-                .addParameter(ConnectionConstants.QueryParams.LANGUAGE, StringUtils.join(input.getLanguages(), ','))
-                .addParameter(ConnectionConstants.QueryParams.LETTER_SET, input.getLetterSet())
-                .addParameter(ConnectionConstants.QueryParams.REG_EXP, input.getRegExp())
-                .addParameter(ConnectionConstants.QueryParams.TEXT_TYPE, input.getTextType().toString())
-                .addParameter(ConnectionConstants.QueryParams.ONE_TEXT_LINE, String.valueOf(input.isOneTextLine()))
-                .addParameter(ConnectionConstants.QueryParams.ONE_WORD_PER_TEXT_LINE, String.valueOf(input.isOneWordPerTextLine()))
-                .addParameter(ConnectionConstants.QueryParams.MARKING_TYPE, input.getMarkingType().toString())
-                .addParameter(ConnectionConstants.QueryParams.PLACEHOLDERS_COUNT, String.valueOf(input.getPlaceholdersCount()))
-                .addParameter(ConnectionConstants.QueryParams.WRITING_STYLE, input.getWritingStyle().toString())
-                .addParameter(ConnectionConstants.QueryParams.DESCRIPTION, input.getDescription())
-                .addParameter(ConnectionConstants.QueryParams.PDF_PASSWORD, input.getPdfPassword());
+                        ConnectionConstants.Endpoints.PROCESS_TEXT_FIELD));
+
+        if (input.getRegion() != null) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.REGION, input.getRegion().toString());
+        }
+
+        if (!input.getLanguages().isEmpty()) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.LANGUAGE, StringUtils.join(input.getLanguages(), ','));
+        }
+
+        if (StringUtils.isNotEmpty(input.getLetterSet())) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.LETTER_SET, input.getLetterSet());
+        }
+
+        if (StringUtils.isNotEmpty(input.getRegExp())) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.REG_EXP, input.getRegExp());
+        }
+
+        if (input.getTextType() != null) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.TEXT_TYPE, input.getTextType().toString());
+        }
+
+        urlBuilder.addParameter(ConnectionConstants.QueryParams.ONE_TEXT_LINE, String.valueOf(input.isOneTextLine()));
+
+        urlBuilder.addParameter(ConnectionConstants.QueryParams.ONE_WORD_PER_TEXT_LINE, String.valueOf(input.isOneWordPerTextLine()));
+
+        if(input.getMarkingType() != null) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.MARKING_TYPE, input.getMarkingType().toString());
+        }
+
+        urlBuilder.addParameter(ConnectionConstants.QueryParams.PLACEHOLDERS_COUNT, String.valueOf(input.getPlaceholdersCount()));
+
+        if(input.getWritingStyle() != null) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.WRITING_STYLE, input.getWritingStyle().toString());
+        }
+
+        if(StringUtils.isNotEmpty(input.getDescription())) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.DESCRIPTION, input.getDescription());
+        }
+
+        if(StringUtils.isNotEmpty(input.getPdfPassword())) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.PDF_PASSWORD, input.getPdfPassword());
+        }
 
         return urlBuilder.build().toString();
     }

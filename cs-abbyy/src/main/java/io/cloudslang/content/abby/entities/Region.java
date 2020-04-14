@@ -32,6 +32,7 @@ public class Region {
                 (bottom < 0 && bottom != -1)) {
             throw new IllegalArgumentException(ExceptionMsgs.INVALID_REGION);
         }
+
         this.left = left;
         this.top = top;
         this.right = right;
@@ -60,9 +61,13 @@ public class Region {
 
 
     public static Region fromString(String str) throws Exception {
+        if(str == null) {
+            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "str"));
+        }
+
         String[] coords = str.split("[,]");
         if(coords.length != 4) {
-            throw new Exception(ExceptionMsgs.INVALID_NR_OF_COORDS);
+            throw new IllegalArgumentException(ExceptionMsgs.INVALID_NR_OF_COORDS);
         }
 
         int left = Integer.parseInt(coords[0]);

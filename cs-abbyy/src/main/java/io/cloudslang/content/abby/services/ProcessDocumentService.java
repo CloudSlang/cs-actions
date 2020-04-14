@@ -23,8 +23,8 @@ import io.cloudslang.content.abby.entities.ExportFormat;
 import io.cloudslang.content.abby.entities.ProcessDocumentInput;
 import io.cloudslang.content.abby.exceptions.AbbyySdkException;
 import io.cloudslang.content.abby.utils.AbbyyResponseParser;
-import io.cloudslang.content.abby.utils.JavaxXmlValidatorAdapter;
 import io.cloudslang.content.abby.utils.AbbyyResultValidator;
+import io.cloudslang.content.abby.utils.JavaxXmlValidatorAdapter;
 import io.cloudslang.content.httpclient.actions.HttpClientAction;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -50,6 +50,7 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
         this.resultValidator = new JavaxXmlValidatorAdapter(MiscConstants.ABBYY_XML_RESULT_XSD_SCHEMA_PATH);
     }
 
+
     public ProcessDocumentService(AbbyyResponseParser responseParser, HttpClientAction httpClientAction,
                                   AbbyyResultValidator resultValidator) throws ParserConfigurationException, SAXException {
         super(responseParser, httpClientAction);
@@ -64,22 +65,47 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
         URIBuilder urlBuilder = new URIBuilder()
                 .setScheme(ConnectionConstants.PROTOCOL)
                 .setHost(String.format(ConnectionConstants.HOST_TEMPLATE, input.getLocationId().toString(),
-                        ConnectionConstants.Endpoints.PROCESS_IMAGE))
-                .addParameter(ConnectionConstants.QueryParams.LANGUAGE, StringUtils.join(input.getLanguages(), ','))
-                .addParameter(ConnectionConstants.QueryParams.PROFILE, input.getProfile().toString())
-                .addParameter(ConnectionConstants.QueryParams.TEXT_TYPE, StringUtils.join(input.getTextTypes(), ','))
-                .addParameter(ConnectionConstants.QueryParams.IMAGE_SOURCE, input.getImageSource().toString())
-                .addParameter(ConnectionConstants.QueryParams.CORRECT_ORIENTATION, String.valueOf(input.isCorrectOrientation()))
-                .addParameter(ConnectionConstants.QueryParams.CORRECT_SKEW, String.valueOf(input.isCorrectSkew()))
-                .addParameter(ConnectionConstants.QueryParams.READ_BARCODES, String.valueOf(input.isReadBarcodes()))
-                .addParameter(ConnectionConstants.QueryParams.EXPORT_FORMAT, StringUtils.join(input.getExportFormats(), ','))
-                .addParameter(ConnectionConstants.QueryParams.DESCRIPTION, input.getDescription())
-                .addParameter(ConnectionConstants.QueryParams.PDF_PASSWORD, input.getPdfPassword());
+                        ConnectionConstants.Endpoints.PROCESS_IMAGE));
+
+        if (!input.getLanguages().isEmpty()) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.LANGUAGE, StringUtils.join(input.getLanguages(), ','));
+        }
+
+        if (input.getProfile() != null) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.PROFILE, input.getProfile().toString());
+        }
+
+        if (!input.getTextTypes().isEmpty()) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.TEXT_TYPE, StringUtils.join(input.getTextTypes(), ','));
+        }
+
+        if (input.getImageSource() != null) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.IMAGE_SOURCE, input.getImageSource().toString());
+        }
+
+        urlBuilder.addParameter(ConnectionConstants.QueryParams.CORRECT_ORIENTATION, String.valueOf(input.isCorrectOrientation()));
+
+        urlBuilder.addParameter(ConnectionConstants.QueryParams.CORRECT_SKEW, String.valueOf(input.isCorrectSkew()));
+
+        urlBuilder.addParameter(ConnectionConstants.QueryParams.READ_BARCODES, String.valueOf(input.isReadBarcodes()));
+
+        if (!input.getExportFormats().isEmpty()) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.EXPORT_FORMAT, StringUtils.join(input.getExportFormats(), ','));
+        }
+
+        if (StringUtils.isNotEmpty(input.getDescription())) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.DESCRIPTION, input.getDescription());
+        }
+
+        if (StringUtils.isNotEmpty(input.getPdfPassword())) {
+            urlBuilder.addParameter(ConnectionConstants.QueryParams.PDF_PASSWORD, input.getPdfPassword());
+        }
 
         if (input.getExportFormats().contains(ExportFormat.XML)) {
             urlBuilder.addParameter(ConnectionConstants.QueryParams.WRITE_FORMATTING, String.valueOf(input.isWriteFormatting()))
                     .addParameter(ConnectionConstants.QueryParams.WRITE_RECOGNITION_VARIANTS, String.valueOf(input.isWriteRecognitionVariants()));
         }
+
         if (input.getExportFormats().contains(ExportFormat.PDF_SEARCHABLE)) {
             urlBuilder.addParameter(ConnectionConstants.QueryParams.WRITE_TAGS, input.getWriteTags().toString());
         }

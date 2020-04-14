@@ -475,9 +475,6 @@ public class ProcessTextFieldInput implements AbbyyRequest {
 
             if(StringUtils.isNotEmpty(this.destinationFile)) {
                 input.destinationFile = new File(this.destinationFile);
-                if (!input.destinationFile.isDirectory()) {
-                    throw new Exception(ExceptionMsgs.DESTINATION_FILE_IS_NOT_DIRECTORY);
-                }
             }
 
             input.sourceFile = new File(this.sourceFile);

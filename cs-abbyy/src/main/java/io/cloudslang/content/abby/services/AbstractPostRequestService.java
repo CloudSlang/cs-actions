@@ -20,7 +20,6 @@ import io.cloudslang.content.abby.constants.MiscConstants;
 import io.cloudslang.content.abby.constants.OutputNames;
 import io.cloudslang.content.abby.entities.AbbyyRequest;
 import io.cloudslang.content.abby.entities.AbbyyResponse;
-import io.cloudslang.content.abby.entities.ExportFormat;
 import io.cloudslang.content.abby.exceptions.AbbyySdkException;
 import io.cloudslang.content.abby.exceptions.ClientSideException;
 import io.cloudslang.content.abby.exceptions.ServerSideException;
