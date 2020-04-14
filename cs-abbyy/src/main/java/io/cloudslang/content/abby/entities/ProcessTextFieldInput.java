@@ -14,7 +14,12 @@
  */
 package io.cloudslang.content.abby.entities;
 
+import io.cloudslang.content.abby.constants.ExceptionMsgs;
+import io.cloudslang.content.abby.utils.BuilderUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 public class ProcessTextFieldInput implements AbbyyRequest {
@@ -431,8 +436,81 @@ public class ProcessTextFieldInput implements AbbyyRequest {
 
 
         public ProcessTextFieldInput build() throws Exception {
-            //TODO
-            return null;
+
+            ProcessTextFieldInput input = new ProcessTextFieldInput();
+
+            input.locationId = LocationId.fromString(this.locationId);
+
+            input.applicationId = this.applicationId;
+
+            input.password = this.password;
+
+            input.proxyHost = this.proxyHost;
+
+            input.proxyPort = Short.parseShort(this.proxyPort);
+
+            input.proxyUsername = this.proxyUsername;
+
+            input.proxyPassword = this.proxyPassword;
+
+            input.trustAllRoots = Boolean.parseBoolean(this.trustAllRoots);
+
+            input.x509HostnameVerifier = this.x509HostnameVerifier;
+
+            input.trustKeystore = this.trustKeystore;
+
+            input.trustPassword = this.trustPassword;
+
+            input.connectTimeout = Integer.parseInt(this.connectTimeout);
+
+            input.socketTimeout = Integer.parseInt(this.socketTimeout);
+
+            input.keepAlive = Boolean.parseBoolean(this.keepAlive);
+
+            input.connectionsMaxPerRoute = Integer.parseInt(this.connectionsMaxPerRoute);
+
+            input.connectionsMaxTotal = Integer.parseInt(this.connectionsMaxTotal);
+
+            input.responseCharacterSet = this.responseCharacterSet;
+
+            if(StringUtils.isNotEmpty(this.destinationFile)) {
+                input.destinationFile = new File(this.destinationFile);
+                if (!input.destinationFile.isDirectory()) {
+                    throw new Exception(ExceptionMsgs.DESTINATION_FILE_IS_NOT_DIRECTORY);
+                }
+            }
+
+            input.sourceFile = new File(this.sourceFile);
+            if(!input.sourceFile.isFile()) {
+                throw new Exception(ExceptionMsgs.SOURCE_FILE_IS_NOT_FILE);
+            }
+
+            input.region = Region.fromString(this.region);
+
+            String[] languages = this.language.split("[,]");
+            input.languages = Arrays.asList(languages);
+
+            input.letterSet = this.letterSet;
+
+            input.regExp = this.regExp;
+
+            input.textType = TextType.fromString(textType);
+
+            input.oneTextLine = Boolean.parseBoolean(this.oneTextLine);
+
+            input.oneWordPerTextLine = Boolean.parseBoolean(this.oneWordPerTextLine);
+
+            input.markingType = MarkingType.fromString(this.markingType);
+
+            input.placeholdersCount = Integer.parseInt(this.placeholdersCount);
+
+            input.writingStyle = WritingStyle.fromString(this.writingStyle);
+
+            input.description = BuilderUtils.buildDescription(this.description);
+
+            input.pdfPassword = StringUtils.defaultString(this.pdfPassword);
+
+            return input;
         }
     }
 }

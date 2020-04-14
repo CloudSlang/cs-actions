@@ -15,6 +15,7 @@
 package io.cloudslang.content.abby.entities;
 
 import io.cloudslang.content.abby.constants.ExceptionMsgs;
+import org.apache.commons.lang3.StringUtils;
 
 public class Region {
     private final int left;
@@ -55,5 +56,26 @@ public class Region {
 
     public int getBottom() {
         return bottom;
+    }
+
+
+    public static Region fromString(String str) throws Exception {
+        String[] coords = str.split("[,]");
+        if(coords.length != 4) {
+            throw new Exception(ExceptionMsgs.INVALID_NR_OF_COORDS);
+        }
+
+        int left = Integer.parseInt(coords[0]);
+        int top = Integer.parseInt(coords[1]);
+        int right = Integer.parseInt(coords[2]);
+        int bottom = Integer.parseInt(coords[3]);
+
+        return new Region(left, top, right, bottom);
+    }
+
+
+    @Override
+    public String toString() {
+        return left + "," + top + "," + right + "," + bottom;
     }
 }

@@ -15,6 +15,7 @@
 package io.cloudslang.content.abby.entities;
 
 import io.cloudslang.content.abby.constants.ExceptionMsgs;
+import io.cloudslang.content.abby.utils.BuilderUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -531,11 +532,7 @@ public class ProcessDocumentInput implements AbbyyRequest {
 
             input.readBarcodes = Boolean.parseBoolean(this.readBarcodes);
 
-            if (StringUtils.isNotEmpty(this.description)) {
-                input.description = (this.description.length() <= 255) ? this.description : this.description.substring(0, 255);
-            } else {
-                input.description = StringUtils.EMPTY;
-            }
+            input.description = BuilderUtils.buildDescription(this.description);
 
             input.pdfPassword = StringUtils.defaultString(this.pdfPassword);
 

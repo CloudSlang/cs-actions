@@ -17,7 +17,7 @@ package io.cloudslang.content.abby.constants;
 public final class ExceptionMsgs {
 
     public static final String INVALID_PROFILE = "Invalid profile '%s'.";
-    public static final String INVALID_TEXT_TYPE = "Invalid text type '%s'.";
+    public static final String INVALID_TEXT_TYPE = "Invalid or unsupported text type '%s'.";
     public static final String INVALID_IMAGE_SOURCE = "Invalid image source '%s'.";
     public static final String INVALID_EXPORT_FORMAT = "Invalid or unsupported export format '%s'.";
     public static final String INVALID_WRITE_TAGS = "Invalid write tags value '%s'.";
@@ -42,6 +42,7 @@ public final class ExceptionMsgs {
     public static final String UNEXPECTED_STATUS = "Unexpected status.";
     public static final String DESTINATION_FILE_IS_NOT_DIRECTORY = "Given destination file is not a directory.";
     public static final String SOURCE_FILE_IS_NOT_FILE = "Given source file is actually not a file.";
+    public static final String INVALID_NR_OF_COORDS = "Given region has an invalid number of coordinates.";
 
 
     private ExceptionMsgs() {

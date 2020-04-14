@@ -25,6 +25,7 @@ public final class ConnectionConstants {
 
     public static final class Endpoints {
         public static final String PROCESS_IMAGE = "processImage";
+        public static final String PROCESS_TEXT_FIELD = "processTextField";
         public static final String GET_TASK_STATUS = "getTaskStatus";
 
 

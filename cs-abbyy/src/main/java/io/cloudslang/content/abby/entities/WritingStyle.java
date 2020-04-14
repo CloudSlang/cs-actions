@@ -50,7 +50,7 @@ public enum WritingStyle {
 
     public static WritingStyle fromString(String str) throws Exception {
         for (WritingStyle ws : WritingStyle.values()) {
-            if (ws.name().equals(str)) {
+            if (ws.name().toLowerCase().equals(str)) {
                 return ws;
             }
         }
