@@ -240,7 +240,7 @@ public class ProcessDocumentInput implements AbbyyRequest {
         private String connectionsMaxPerRoute;
         private String connectionsMaxTotal;
         private String responseCharacterSet;
-        private String destinationFile;
+        private String destinationFolder;
         private String sourceFile;
         private String language;
         private String profile;
@@ -359,8 +359,8 @@ public class ProcessDocumentInput implements AbbyyRequest {
         }
 
 
-        public Builder destinationFile(String destinationFile) {
-            this.destinationFile = destinationFile;
+        public Builder destinationFolder(String destinationFile) {
+            this.destinationFolder = destinationFile;
             return this;
         }
 
@@ -486,8 +486,8 @@ public class ProcessDocumentInput implements AbbyyRequest {
 
             input.responseCharacterSet = this.responseCharacterSet;
 
-            if(StringUtils.isNotEmpty(this.destinationFile)) {
-                input.destinationFile = new File(this.destinationFile);
+            if(StringUtils.isNotEmpty(this.destinationFolder)) {
+                input.destinationFile = new File(this.destinationFolder);
                 if (!input.destinationFile.isDirectory()) {
                     throw new Exception(ExceptionMsgs.DESTINATION_FILE_IS_NOT_DIRECTORY);
                 }

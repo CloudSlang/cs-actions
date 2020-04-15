@@ -45,8 +45,8 @@ public class ProcessTextFieldServiceTest extends AbstractPostRequestServiceTest<
     private static final String PASSWORD = "dummy";
     private static final Region REGION = new Region(-1, -1, -1, -1);
     private static final List<String> LANGUAGES = Collections.singletonList("English");
-    private static final String LETTER_SET = StringUtils.EMPTY;
-    private static final String REG_EXP = StringUtils.EMPTY;
+    private static final String LETTER_SET = "dummy";
+    private static final String REG_EXP = "dummy";
     private static final TextType TEXT_TYPE = TextType.NORMAL;
     private static final boolean ONE_TEXT_LINE = false;
     private static final boolean ONE_WORD_PER_TEXT_LINE = false;
@@ -73,7 +73,7 @@ public class ProcessTextFieldServiceTest extends AbstractPostRequestServiceTest<
     @Override
     public void execute_validInput_correspondingUrlCalled() throws Exception {
         final String expectedUrl = "https://cloud-eu.ocrsdk.com/processTextField?region=-1%2C-1%2C-1%2C-1&language=English" +
-                "&letterSet=&regExp=&textType=normal&oneTextLine=false&oneWordPerTextLine=false&markingType=simpleText" +
+                "&letterSet=dummy&regExp=dummy&textType=normal&oneTextLine=false&oneWordPerTextLine=false&markingType=simpleText" +
                 "&placeholdersCount=1&writingStyle=default&description=dummy&pdfPassword=dummy";
         mockRequest();
         when(this.httpClientMock.execute(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),

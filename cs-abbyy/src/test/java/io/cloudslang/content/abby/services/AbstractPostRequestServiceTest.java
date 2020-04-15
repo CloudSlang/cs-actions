@@ -32,6 +32,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.xml.sax.SAXException;
 
@@ -48,6 +50,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
+@PrepareForTest({Thread.class})
 public abstract class AbstractPostRequestServiceTest<R extends AbbyyRequest> {
 
     @Rule
@@ -128,6 +131,8 @@ public abstract class AbstractPostRequestServiceTest<R extends AbbyyRequest> {
         when(responseMock.getCredits()).thenReturn(1);
         when(responseMock.getEstimatedProcessingTime()).thenReturn(5L);
         when(this.responseParserMock.parseResponse(anyMapOf(String.class, String.class))).thenReturn(responseMock);
+
+        PowerMockito.mockStatic(Thread.class);
 
         try {
             //Act

@@ -39,7 +39,7 @@ public final class InputNames {
     public static final String MARKING_TYPE = "markingType";
     public static final String PLACEHOLDERS_COUNT = "placeholdersCount";
     public static final String WRITING_STYLE = "writingStyle";
-
+    public static final String DESTINATION_FOLDER = "destinationFolder";
 
     private InputNames() {
 

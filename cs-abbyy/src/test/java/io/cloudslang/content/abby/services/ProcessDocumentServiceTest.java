@@ -236,7 +236,7 @@ public class ProcessDocumentServiceTest extends AbstractPostRequestServiceTest<P
             fail();
         } catch (AbbyySdkException ex) {
             //Assert
-            assertSame(expectedEx, ex);
+            assertTrue(ex.getMessage().contains(expectedEx.getMessage()));
         }
     }
 

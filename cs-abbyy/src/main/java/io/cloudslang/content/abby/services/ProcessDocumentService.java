@@ -32,13 +32,16 @@ import org.apache.http.client.utils.URIBuilder;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ProcessDocumentService extends AbstractPostRequestService<ProcessDocumentInput> {
@@ -118,35 +121,50 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
     protected void handleTaskCompleted(ProcessDocumentInput request, AbbyyResponse response, Map<String, String> results) throws Exception {
         super.handleTaskCompleted(request, response, results);
 
+        Map<ExportFormat, String> failure = new HashMap<>();
+
         for (ExportFormat exportFormat : request.getExportFormats()) {
-            switch (exportFormat) {
-                case TXT:
-                    String txt = getProcessingResult(request, response, exportFormat);
-                    results.put(OutputNames.TXT_RESULT, txt);
-                    if (request.getDestinationFile() != null) {
-                        saveClearTextResultOnDisk(request, txt, exportFormat);
-                    }
-                    break;
-                case XML:
-                    String xml = getProcessingResult(request, response, exportFormat);
-                    AbbyySdkException validationEx = resultValidator.validate(xml);
-                    if (validationEx != null) {
-                        throw validationEx;
-                    }
-                    results.put(OutputNames.XML_RESULT, xml);
-                    if (request.getDestinationFile() != null) {
-                        saveClearTextResultOnDisk(request, xml, exportFormat);
-                    }
-                    break;
-                case PDF_SEARCHABLE:
-                    int indexOfPdfUrl = request.getExportFormats().indexOf(exportFormat);
-                    String pdfUrl = response.getResultUrls().get(indexOfPdfUrl);
-                    results.put(OutputNames.PDF_URL, pdfUrl);
-                    if (request.getDestinationFile() != null) {
-                        downloadFromUrl(request, pdfUrl, exportFormat);
-                    }
-                    break;
+            try {
+                switch (exportFormat) {
+                    case TXT:
+                        String txt = getProcessingResult(request, response, exportFormat);
+                        results.put(OutputNames.TXT_RESULT, txt);
+                        if (request.getDestinationFile() != null) {
+                            saveClearTextResultOnDisk(request, txt, exportFormat);
+                        }
+                        break;
+                    case XML:
+                        String xml = getProcessingResult(request, response, exportFormat);
+                        AbbyySdkException validationEx = resultValidator.validate(xml);
+                        if (validationEx != null) {
+                            throw validationEx;
+                        }
+                        results.put(OutputNames.XML_RESULT, xml);
+                        if (request.getDestinationFile() != null) {
+                            saveClearTextResultOnDisk(request, xml, exportFormat);
+                        }
+                        break;
+                    case PDF_SEARCHABLE:
+                        int indexOfPdfUrl = request.getExportFormats().indexOf(exportFormat);
+                        String pdfUrl = response.getResultUrls().get(indexOfPdfUrl);
+                        results.put(OutputNames.PDF_URL, pdfUrl);
+                        if (request.getDestinationFile() != null) {
+                            downloadFromUrl(request, pdfUrl, exportFormat);
+                        }
+                        break;
+                }
+            } catch (Exception ex) {
+                failure.put(exportFormat, ex.toString());
             }
+        }
+
+        if (!failure.isEmpty()) {
+            StringBuilder errBuilder = new StringBuilder(MiscConstants.ERROR_RETRIEVING_EXPORT_FORMATS);
+            for (ExportFormat exportFormat : failure.keySet()) {
+                errBuilder.append('\n')
+                        .append("For '" + exportFormat.toString() + "': " + failure.get(exportFormat));
+            }
+            throw new AbbyySdkException(errBuilder.toString());
         }
     }
 
@@ -214,6 +232,9 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
 
     private void saveClearTextResultOnDisk(ProcessDocumentInput request, String clearText, ExportFormat exportFormat) throws IOException {
         String targetPath = getTargetPath(request, exportFormat);
+        if (new File(targetPath).exists()) {
+            throw new FileAlreadyExistsException(targetPath);
+        }
         try (FileWriter writer = new FileWriter(targetPath)) {
             writer.write(clearText);
         }
@@ -229,6 +250,9 @@ public class ProcessDocumentService extends AbstractPostRequestService<ProcessDo
 
     private void downloadFromUrl(ProcessDocumentInput request, String url, ExportFormat exportFormat) throws IOException {
         String targetPath = getTargetPath(request, exportFormat);
+        if (new File(targetPath).exists()) {
+            throw new FileAlreadyExistsException(targetPath);
+        }
         try (InputStream in = new URL(url).openStream()) {
             Files.copy(in, Paths.get(targetPath), StandardCopyOption.REPLACE_EXISTING);
         }

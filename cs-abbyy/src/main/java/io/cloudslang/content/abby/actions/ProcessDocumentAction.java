@@ -136,10 +136,11 @@ public class ProcessDocumentAction {
      *                                 If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty,
      *                                 the default value will be used. You should not use this for method=HEAD or OPTIONS.
      *                                 Default value: 'UTF-8'.
-     * @param destinationFile          The absolute path of a directory on disk where to save the entities returned by the response.
+     * @param destinationFolder        The absolute path of a directory on disk where to save the entities returned by the response.
      *                                 For each export format selected a file will be created in the specified directory with name of
      *                                 'sourceFile' and corresponding extension (e.g. for exportFormat=xml,txt and sourceFile=source.jpg
-     *                                 the files 'source.xml' and 'source.txt' will be created). Files already existing will be overwritten.
+     *                                 the files 'source.xml' and 'source.txt' will be created). If one of files already exists then an
+     *                                 exception will be thrown.
      * @param sourceFile               The absolute path of the image to be loaded and converted using the SDK.
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - Contains a human readable message mentioning the success or failure of the task.
@@ -203,7 +204,7 @@ public class ProcessDocumentAction {
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoute,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.DESTINATION_FILE) String destinationFile,
+            @Param(value = InputNames.DESTINATION_FOLDER) String destinationFolder,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOURCE_FILE, required = true) String sourceFile) {
         ProcessDocumentInput.Builder inputBuilder = new ProcessDocumentInput.Builder()
                 .locationId(locationId)
@@ -236,7 +237,7 @@ public class ProcessDocumentAction {
                 .connectionsMaxPerRoute(connectionsMaxPerRoute)
                 .connectionsMaxTotal(connectionsMaxTotal)
                 .responseCharacterSet(responseCharacterSet)
-                .destinationFile(destinationFile)
+                .destinationFolder(destinationFolder)
                 .sourceFile(sourceFile);
         try {
             return new ProcessDocumentService().execute(inputBuilder.build());
