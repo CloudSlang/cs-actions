@@ -32,6 +32,7 @@ import io.cloudslang.content.abbyy.validators.AbbyyRequestValidator;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientAction;
+import io.cloudslang.content.httpclient.entities.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
@@ -112,8 +113,8 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
     private AbbyyResponse postRequest(R request) throws Exception {
         Map<String, String> rawResponse = this.httpClientAction.execute(
                 buildUrl(request),
-                null,
-                null,
+                Constants.TLSv12,
+                MiscConstants.ALLOWED_CYPHERS,
                 ConnectionConstants.Headers.AUTH_TYPE,
                 String.valueOf(true),
                 request.getApplicationId(),
@@ -216,8 +217,8 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
 
         return this.httpClientAction.execute(
                 url,
-                null,
-                null,
+                Constants.TLSv12,
+                MiscConstants.ALLOWED_CYPHERS,
                 ConnectionConstants.Headers.AUTH_TYPE,
                 String.valueOf(true),
                 request.getApplicationId(),
