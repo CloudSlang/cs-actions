@@ -35,7 +35,7 @@ public class ProcessTextFieldAction {
 
 
     /**
-     * Converts a text field from a given image to text in XML output format using the ABBYY Cloud OCR SDK.
+     * Converts a text field from a given image to text in XML output format using the ABBYY Cloud OCR REST API v1.
      *
      * @param locationId             The ID of the processing location to be used. Please note that the connection of your
      *                               application to the processing location is specified manually during application creation,
@@ -50,8 +50,11 @@ public class ProcessTextFieldAction {
      *                               Default: '-1,-1,-1,-1'.
      * @param language               Specifies recognition language of the document. This parameter can contain several language
      *                               names separated with commas, for example "English,French,German".
-     *                               For all languages supported, see the official ABBYY CLoud OCR SDK documentation.
+     *                               For all languages supported, see the official ABBYY Cloud OCR SDK documentation.
+     *                               Currently, the only official language supported by this operation is 'English'.
      *                               Default: 'English'.
+     * @param destinationFile        The absolute path of a file on disk where to save the xml entity returned by the response.
+     * @param sourceFile             The absolute path of the image to be loaded and converted using the API.
      * @param letterSet              Specifies the letter set, which should be used during recognition. Contains a string with
      *                               the letter set characters. For example, "ABCDabcd'-.".
      *                               By default, the letter set of the language, specified in the language parameter, is used.
@@ -134,8 +137,6 @@ public class ProcessTextFieldAction {
      *                               If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty,
      *                               the default value will be used. You should not use this for method=HEAD or OPTIONS.
      *                               Default value: 'ISO-8859-1'.
-     * @param destinationFile        The absolute path of a file on disk where to save the xml entity returned by the response.
-     * @param sourceFile             The absolute path of the image to be loaded and converted using the SDK.
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - Contains a human readable message mentioning the success or failure of the task.
      * <br><b>xmlResult</b> - The result for 'xml' export format in clear text (empty if 'xml' was not provided in 'exportFormat' input).
@@ -171,6 +172,8 @@ public class ProcessTextFieldAction {
             @Param(value = InputNames.PASSWORD, required = true, encrypted = true) String password,
             @Param(value = InputNames.REGION) String region,
             @Param(value = InputNames.LANGUAGE) String language,
+            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOURCE_FILE, required = true) String sourceFile,
+            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.DESTINATION_FILE) String destinationFile,
             @Param(value = InputNames.LETTER_SET) String letterSet,
             @Param(value = InputNames.REG_EXP) String regExp,
             @Param(value = InputNames.TEXT_TYPE) String textType,
@@ -193,9 +196,7 @@ public class ProcessTextFieldAction {
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE) String keepAlive,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoute,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.DESTINATION_FILE) String destinationFile,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOURCE_FILE, required = true) String sourceFile) {
+            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet) {
         ProcessTextFieldInput.Builder inputBuilder = new ProcessTextFieldInput.Builder()
                 .locationId(locationId)
                 .applicationId(applicationId)

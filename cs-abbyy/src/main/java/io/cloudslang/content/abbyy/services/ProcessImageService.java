@@ -29,6 +29,7 @@ import io.cloudslang.content.abbyy.validators.AbbyyResultValidator;
 import io.cloudslang.content.abbyy.validators.JavaxXmlValidatorAdapter;
 import io.cloudslang.content.abbyy.validators.ProcessImageValidator;
 import io.cloudslang.content.httpclient.actions.HttpClientAction;
+import io.cloudslang.content.httpclient.entities.Constants;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
@@ -134,14 +135,14 @@ public class ProcessImageService extends AbstractPostRequestService<ProcessImage
             try {
                 switch (exportFormat) {
                     case TXT:
-                        String txt = getProcessingResult(request, response, exportFormat);
+                        String txt = getProcessingResult(request, response, exportFormat, null, true);
                         results.put(OutputNames.TXT_RESULT, txt);
                         if (request.getDestinationFile() != null) {
                             saveClearTextResultOnDisk(request, txt, exportFormat);
                         }
                         break;
                     case XML:
-                        String xml = getProcessingResult(request, response, exportFormat);
+                        String xml = getProcessingResult(request, response, exportFormat, null, true);
                         AbbyySdkException validationEx = resultValidator.validate(xml);
                         if (validationEx != null) {
                             throw validationEx;
@@ -156,7 +157,11 @@ public class ProcessImageService extends AbstractPostRequestService<ProcessImage
                         String pdfUrl = response.getResultUrls().get(indexOfPdfUrl);
                         results.put(OutputNames.PDF_URL, pdfUrl);
                         if (request.getDestinationFile() != null) {
-                            downloadFromUrl(request, pdfUrl, exportFormat);
+                            String targetPath = getTargetPath(request, exportFormat);
+                            if (new File(targetPath).exists()) {
+                                throw new FileAlreadyExistsException(targetPath);
+                            }
+                            getProcessingResult(request, response, exportFormat, getTargetPath(request, exportFormat), false);
                         }
                         break;
                 }
@@ -176,13 +181,14 @@ public class ProcessImageService extends AbstractPostRequestService<ProcessImage
     }
 
 
-    private String getProcessingResult(ProcessImageInput request, AbbyyResponse response, ExportFormat exportFormat) throws AbbyySdkException {
+    private String getProcessingResult(ProcessImageInput request, AbbyyResponse response, ExportFormat exportFormat,
+                                       String downloadPath, boolean useSpecificCharSet) throws AbbyySdkException {
         int indexOfResultUrl = request.getExportFormats().indexOf(exportFormat);
         Map<String, String> processingResult = this.httpClientAction.execute(
                 response.getResultUrls().get(indexOfResultUrl),
-                null,
-                null,
-                "anonymous",
+                Constants.TLSv12,
+                MiscConstants.ALLOWED_CYPHERS,
+                MiscConstants.ANONYMOUS_AUTH_TYPE,
                 String.valueOf(false),
                 null,
                 null,
@@ -206,9 +212,9 @@ public class ProcessImageService extends AbstractPostRequestService<ProcessImage
                 String.valueOf(request.getConnectionsMaxPerRoute()),
                 String.valueOf(request.getConnectionsMaxTotal()),
                 null,
-                request.getResponseCharacterSet(),
-                null,
-                StringUtils.EMPTY,
+                useSpecificCharSet ? request.getResponseCharacterSet() : null,
+                downloadPath,
+                String.valueOf(true),
                 null,
                 String.valueOf(true),
                 String.valueOf(false),
@@ -252,16 +258,5 @@ public class ProcessImageService extends AbstractPostRequestService<ProcessImage
         return request.getDestinationFile().getAbsolutePath() + "/" +
                 FilenameUtils.removeExtension(request.getSourceFile().getName()) + "." +
                 exportFormat.getFileExtension();
-    }
-
-
-    private void downloadFromUrl(ProcessImageInput request, String url, ExportFormat exportFormat) throws IOException {
-        String targetPath = getTargetPath(request, exportFormat);
-        if (new File(targetPath).exists()) {
-            throw new FileAlreadyExistsException(targetPath);
-        }
-        try (InputStream in = new URL(url).openStream()) {
-            Files.copy(in, Paths.get(targetPath), StandardCopyOption.REPLACE_EXISTING);
-        }
     }
 }

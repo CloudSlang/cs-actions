@@ -21,8 +21,11 @@ public final class MiscConstants {
     public static final String DOCUMENT_PROCESSED_SUCCESSFULLY = "The document was processed successfully.";
     public static final String ERROR_RETRIEVING_EXPORT_FORMATS = "An error occurred during retrieval of some export formats.";
     public static final String ABBYY_XML_RESULT_XSD_SCHEMA_PATH = "/xml_result.xsd";
-    public static final String TRUE = "true";
-
+    public static final String ALLOWED_CYPHERS = "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256," +
+            "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384," +
+            "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256," +
+            "TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256";
+    public static final String ANONYMOUS_AUTH_TYPE = "anonymous";
 
 
     private MiscConstants() {

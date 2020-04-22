@@ -32,6 +32,7 @@ import io.cloudslang.content.abbyy.validators.AbbyyRequestValidator;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientAction;
+import io.cloudslang.content.httpclient.entities.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
@@ -112,8 +113,8 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
     private AbbyyResponse postRequest(R request) throws Exception {
         Map<String, String> rawResponse = this.httpClientAction.execute(
                 buildUrl(request),
-                null,
-                null,
+                Constants.TLSv12,
+                MiscConstants.ALLOWED_CYPHERS,
                 ConnectionConstants.Headers.AUTH_TYPE,
                 String.valueOf(true),
                 request.getApplicationId(),
@@ -173,21 +174,18 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
 
 
     private AbbyyResponse waitTaskToFinish(R request, String taskId, long timeToWait) throws Exception {
-        final int numberOfAttempts = 5;
+        final int numberOfAttempts = 6;
         int crtAttemptNr = 0;
-        final long minTimeToWait = 3000, maxTimeToWait = 10000;
+        final long minTimeToWait = 1000;
         AbbyyResponse response;
 
         do {
             crtAttemptNr++;
-            if (crtAttemptNr == 2) {
-                if (timeToWait < minTimeToWait) {
-                    timeToWait = minTimeToWait;
-                } else if (timeToWait > maxTimeToWait) {
-                    timeToWait = maxTimeToWait;
-                }
+            if (crtAttemptNr == 1 || timeToWait < minTimeToWait) {
+                Thread.sleep(minTimeToWait);
+            } else {
+                Thread.sleep(timeToWait);
             }
-            Thread.sleep(timeToWait);
 
             Map<String, String> rawResponse = getTaskStatus(request, taskId);
             if (rawResponse.get(io.cloudslang.content.constants.OutputNames.RETURN_CODE) != null &&
@@ -216,8 +214,8 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
 
         return this.httpClientAction.execute(
                 url,
-                null,
-                null,
+                Constants.TLSv12,
+                MiscConstants.ALLOWED_CYPHERS,
                 ConnectionConstants.Headers.AUTH_TYPE,
                 String.valueOf(true),
                 request.getApplicationId(),

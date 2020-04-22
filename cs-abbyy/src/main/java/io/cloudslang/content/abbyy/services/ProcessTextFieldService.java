@@ -28,6 +28,7 @@ import io.cloudslang.content.abbyy.validators.AbbyyResultValidator;
 import io.cloudslang.content.abbyy.validators.JavaxXmlValidatorAdapter;
 import io.cloudslang.content.abbyy.validators.ProcessTextFieldValidator;
 import io.cloudslang.content.httpclient.actions.HttpClientAction;
+import io.cloudslang.content.httpclient.entities.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.xml.sax.SAXException;
@@ -126,9 +127,9 @@ public class ProcessTextFieldService extends AbstractPostRequestService<ProcessT
     private String getProcessingResult(ProcessTextFieldInput request, AbbyyResponse response) throws AbbyySdkException {
         Map<String, String> processingResult = this.httpClientAction.execute(
                 response.getResultUrls().get(0),
-                null,
-                null,
-                "anonymous",
+                Constants.TLSv12,
+                MiscConstants.ALLOWED_CYPHERS,
+                MiscConstants.ANONYMOUS_AUTH_TYPE,
                 String.valueOf(false),
                 null,
                 null,
