@@ -174,21 +174,18 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
 
 
     private AbbyyResponse waitTaskToFinish(R request, String taskId, long timeToWait) throws Exception {
-        final int numberOfAttempts = 5;
+        final int numberOfAttempts = 6;
         int crtAttemptNr = 0;
-        final long minTimeToWait = 3000, maxTimeToWait = 10000;
+        final long minTimeToWait = 1000;
         AbbyyResponse response;
 
         do {
             crtAttemptNr++;
-            if (crtAttemptNr == 2) {
-                if (timeToWait < minTimeToWait) {
-                    timeToWait = minTimeToWait;
-                } else if (timeToWait > maxTimeToWait) {
-                    timeToWait = maxTimeToWait;
-                }
+            if (crtAttemptNr == 1 || timeToWait < minTimeToWait) {
+                Thread.sleep(minTimeToWait);
+            } else {
+                Thread.sleep(timeToWait);
             }
-            Thread.sleep(timeToWait);
 
             Map<String, String> rawResponse = getTaskStatus(request, taskId);
             if (rawResponse.get(io.cloudslang.content.constants.OutputNames.RETURN_CODE) != null &&

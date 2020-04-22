@@ -35,7 +35,7 @@ public class ProcessTextFieldAction {
 
 
     /**
-     * Converts a text field from a given image to text in XML output format using the ABBYY Cloud OCR SDK.
+     * Converts a text field from a given image to text in XML output format using the ABBYY Cloud OCR REST API v1.
      *
      * @param locationId             The ID of the processing location to be used. Please note that the connection of your
      *                               application to the processing location is specified manually during application creation,
@@ -50,7 +50,8 @@ public class ProcessTextFieldAction {
      *                               Default: '-1,-1,-1,-1'.
      * @param language               Specifies recognition language of the document. This parameter can contain several language
      *                               names separated with commas, for example "English,French,German".
-     *                               For all languages supported, see the official ABBYY CLoud OCR SDK documentation.
+     *                               For all languages supported, see the official ABBYY Cloud OCR SDK documentation.
+     *                               Currently, the only official language supported by this operation is 'English'.
      *                               Default: 'English'.
      * @param letterSet              Specifies the letter set, which should be used during recognition. Contains a string with
      *                               the letter set characters. For example, "ABCDabcd'-.".
@@ -135,7 +136,7 @@ public class ProcessTextFieldAction {
      *                               the default value will be used. You should not use this for method=HEAD or OPTIONS.
      *                               Default value: 'ISO-8859-1'.
      * @param destinationFile        The absolute path of a file on disk where to save the xml entity returned by the response.
-     * @param sourceFile             The absolute path of the image to be loaded and converted using the SDK.
+     * @param sourceFile             The absolute path of the image to be loaded and converted using the API
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - Contains a human readable message mentioning the success or failure of the task.
      * <br><b>xmlResult</b> - The result for 'xml' export format in clear text (empty if 'xml' was not provided in 'exportFormat' input).

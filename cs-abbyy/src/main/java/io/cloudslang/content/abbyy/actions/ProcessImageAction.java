@@ -37,7 +37,7 @@ import java.util.concurrent.TimeoutException;
 public class ProcessImageAction {
 
     /**
-     * Converts a given image to text in the specified output format using the ABBYY Cloud OCR SDK.
+     * Converts a given image to text in the specified output format using the ABBYY Cloud OCR REST API v1.
      *
      * @param locationId               The ID of the processing location to be used. Please note that the connection of your
      *                                 application to the processing location is specified manually during application creation,
@@ -48,6 +48,7 @@ public class ProcessImageAction {
      * @param language                 Specifies recognition language of the document. This parameter can contain several language
      *                                 names separated with commas, for example "English,French,German".
      *                                 Valid: see the official ABBYY CLoud OCR SDK documentation.
+     *                                 Currently, the only official language supported by this operation is 'English'.
      *                                 Default: 'English'.
      * @param textType                 Specifies the type of the text on a page.
      *                                 This parameter may also contain several text types separated with commas, for example "normal,matrix".
@@ -127,7 +128,7 @@ public class ProcessImageAction {
      *                                 'sourceFile' and corresponding extension (e.g. for exportFormat='xml,txt' and sourceFile='source.jpg'
      *                                 the files 'source.xml' and 'source.txt' will be created). If one of files already exists then an
      *                                 exception will be thrown.
-     * @param sourceFile               The absolute path of the image to be loaded and converted using the SDK.
+     * @param sourceFile               The absolute path of the image to be loaded and converted using the API.
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - Contains a human readable message mentioning the success or failure of the task.
      * <br><b>txtResult</b> - The result for 'txt' export format in clear text (empty if 'txt' was not provided in 'exportFormat' input).
