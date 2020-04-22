@@ -50,6 +50,12 @@ public class ProcessImageAction {
      *                                 Valid: see the official ABBYY CLoud OCR SDK documentation.
      *                                 Currently, the only official language supported by this operation is 'English'.
      *                                 Default: 'English'.
+     * @param sourceFile               The absolute path of the image to be loaded and converted using the API.
+     * @param destinationFolder        The absolute path of a directory on disk where to save the entities returned by the response.
+     *                                 For each export format selected a file will be created in the specified directory with name of
+     *                                 'sourceFile' and corresponding extension (e.g. for exportFormat='xml,txt' and sourceFile='source.jpg'
+     *                                 the files 'source.xml' and 'source.txt' will be created). If one of files already exists then an
+     *                                 exception will be thrown.
      * @param textType                 Specifies the type of the text on a page.
      *                                 This parameter may also contain several text types separated with commas, for example "normal,matrix".
      *                                 Valid values: 'normal', 'typewriter', 'matrix', 'index', 'ocrA', 'ocrB', 'e13b', 'cmc7', 'gothic'.
@@ -123,12 +129,6 @@ public class ProcessImageAction {
      *                                 If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty,
      *                                 the default value will be used. You should not use this for method=HEAD or OPTIONS.
      *                                 Default value: 'UTF-8'.
-     * @param destinationFolder        The absolute path of a directory on disk where to save the entities returned by the response.
-     *                                 For each export format selected a file will be created in the specified directory with name of
-     *                                 'sourceFile' and corresponding extension (e.g. for exportFormat='xml,txt' and sourceFile='source.jpg'
-     *                                 the files 'source.xml' and 'source.txt' will be created). If one of files already exists then an
-     *                                 exception will be thrown.
-     * @param sourceFile               The absolute path of the image to be loaded and converted using the API.
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - Contains a human readable message mentioning the success or failure of the task.
      * <br><b>txtResult</b> - The result for 'txt' export format in clear text (empty if 'txt' was not provided in 'exportFormat' input).
@@ -167,6 +167,8 @@ public class ProcessImageAction {
             @Param(value = InputNames.APPLICATION_ID, required = true) String applicationId,
             @Param(value = InputNames.PASSWORD, required = true, encrypted = true) String password,
             @Param(value = InputNames.LANGUAGE) String language,
+            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOURCE_FILE, required = true) String sourceFile,
+            @Param(value = InputNames.DESTINATION_FOLDER) String destinationFolder,
             @Param(value = InputNames.TEXT_TYPE) String textType,
             @Param(value = InputNames.IMAGE_SOURCE) String imageSource,
             @Param(value = InputNames.CORRECT_ORIENTATION) String correctOrientation,
@@ -187,9 +189,7 @@ public class ProcessImageAction {
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE) String keepAlive,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoute,
             @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet,
-            @Param(value = InputNames.DESTINATION_FOLDER) String destinationFolder,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOURCE_FILE, required = true) String sourceFile) {
+            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet) {
         ProcessImageInput.Builder inputBuilder = new ProcessImageInput.Builder()
                 .locationId(locationId)
                 .applicationId(applicationId)
