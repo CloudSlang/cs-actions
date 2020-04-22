@@ -55,6 +55,14 @@ public class Inputs extends InputNames {
         public static final String VCS_BRANCH_NAME = "vcsBranchName";
     }
 
+    public static class CreateOrganizationInputs {
+        public static final String ORGANIZATION_DESCRIPTION = "organizationDescription";
+        public static final String EMAIL = "Email";
+        public static final String COST_ESTIMATION_ENABLED = "costEstimationEnabled";
+        public static final String OWNERS_TEAM_SAML_ID = "ownersTeamSamlRoleId";
+    }
+
+
     public static class CreateVariableInputs {
         public static final String VARIABLE_NAME = "variableName";
         public static final String VARIABLE_VALUE = "variableValue";
