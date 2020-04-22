@@ -312,6 +312,7 @@
     </profiles>
 
     <modules>
+        <module>cs-abbyy</module>
         <module>cs-alibaba</module>
         <module>cs-amazon</module>
         <module>cs-azure</module>
