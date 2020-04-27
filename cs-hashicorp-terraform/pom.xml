@@ -20,7 +20,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-hashicorp-terraform</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.5-SNAPSHOT</version>
 	
  <name>${project.groupId}:${project.artifactId}</name>
     <description>Terraform Integration</description>
