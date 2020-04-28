@@ -49,6 +49,9 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInput
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateOrganizationInputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateOrganizationInputs.SESSION_TIMEOUT;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateOrganizationInputs.SESSION_REMEMBER;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateOrganizationInputs.COLLABORATOR_AUTH_POLICY;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCreateOrganizationInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateOrganizationOutputs.ORGANIZATION_ID;
