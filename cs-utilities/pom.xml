@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-utilities</artifactId>
-    <version>0.1.13-SNAPSHOT</version>
+    <version>0.1.2828-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -57,10 +57,8 @@
 
     <developers>
         <developer>
-            <name>Sorin Moldovan</name>
-            <email>sorin@hpe.com</email>
-            <organization>Hewlett Packard Enterprise</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+            <name>Eric Andreica</name>
+            <email>eric.andreica@microfocus.com</email>
         </developer>
         <developer>
             <name>Iulia Moldovan</name>
@@ -90,7 +88,7 @@
         <cs-commons.version>0.0.5</cs-commons.version>
         <cs-ssh.version>0.0.42</cs-ssh.version>
         <junit.version>4.12</junit.version>
-        <pdfbox.version>2.0.15</pdfbox.version>
+        <pdfbox.version>2.0.19</pdfbox.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
