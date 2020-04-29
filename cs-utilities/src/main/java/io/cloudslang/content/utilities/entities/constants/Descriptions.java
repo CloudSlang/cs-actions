@@ -25,6 +25,8 @@ public class Descriptions {
     public static class OperationDescription {
         public static final String OPERATION_DESC = "This operation checks if a string is blank or empty and if it's true a default value will be assigned instead of the initial string.";
         public static final String FIND_TEXT_IN_PDF_OPERATION_DESC = "This operation checks if a text input is found in a PDF file.";
+        public static final String GET_TEXT_FROM_PDF_OPERATION_DESC = "This operation get text from PDF a file.";
+        public static final String MERGE_PDF_OPERATION_DESC = "This operation merge multiple PDF files to a single PDF file.";
     }
 
     public static class InputsDescription {
@@ -33,12 +35,16 @@ public class Descriptions {
         public static final String DEFAULT_VALUE_DESC = "The default value used to replace the initial string.";
         public static final String TRIM_DESC = "A variable used to check if the initial string is blank or empty.";
         public static final String PASSWORD_DESC = "Password used to decrypt the PDF file.";
+        public static final String PATH_DESC = "The path to the file.";
+        public static final String PATHS_TO_PDF_FILES_DESC = "The list of PDF files separated by comma containing the full path of each PDF file.";
     }
 
     public static class OutputsDescription {
         public static final String RETURN_CODE_DESC = "The returnCode of the operation: 0 for success, -1 for failure.";
         public static final String RETURN_RESULT_DESC = "This will contain the replaced string with the default value.";
         public static final String FIND_TEXT_IN_PDF_RETURN_RESULT_DESC = "The number of occurrences of the text in the PDF file.";
+        public static final String TEXT_FROM_PDF_RETURN_RESULT_DESC = "The text from the PDF file.";
+        public static final String MERGE_PDF_RETURN_RESULT_DESC = "The path to the created PDF file.";
         public static final String EXCEPTION_DESC = "In case of success response, this result is empty. In case of failure response, this result contains the java stack trace of the runtime exception.";
     }
 
