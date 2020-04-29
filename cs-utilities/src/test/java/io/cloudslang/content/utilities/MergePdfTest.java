@@ -35,49 +35,46 @@ import static junit.framework.Assert.assertNotNull;
 public class MergePdfTest {
     private final MergePdfFiles mergePdfFiles = new MergePdfFiles();
     private final GetTextFromPdf getTextFromPdf = new GetTextFromPdf();
+    private final String newline = System.lineSeparator();
+    private final URL initialPdf = MergePdfFiles.class.getClassLoader().getResource("pdf/sample-pdf-2.pdf");
+    private final URL resource2 = GetTextFromPdf.class.getClassLoader().getResource("pdf/merge.pdf");
 
     @Test
     public void samplePdfSuccessfulTestWithOneFile() throws URISyntaxException {
-        final URL resource = MergePdfFiles.class.getClassLoader().getResource("pdf/sample-pdf-2.pdf");
-        final URL resourceDestination = GetTextFromPdf.class.getClassLoader().getResource("pdf/merge.pdf");
-        assertNotNull(resource);
-        assertNotNull(resourceDestination);
-        final File file = new File(resource.toURI());
-        final File fileResource = new File(resourceDestination.toURI());
+        assertNotNull(initialPdf);
+        assertNotNull(resource2);
+        final File file = new File(initialPdf.toURI());
+        final File fileResource = new File(resource2.toURI());
         final Map<String, String> result = mergePdfFiles.execute(file.toString(), fileResource.toString());
         assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals(fileResource.toString(), result.get(RETURN_RESULT));
         final Map<String, String> text = getTextFromPdf.execute(fileResource.toString(), "");
-        assertEquals("This is some text written on top of CloudSlang logo. \r\n", text.get(RETURN_RESULT));
+        assertEquals("This is some text written on top of CloudSlang logo. " + newline, text.get(RETURN_RESULT));
 
     }
 
     @Test
     public void samplePdfSuccessfulTestWithMultipleFiles() throws URISyntaxException {
-        final URL resource = MergePdfFiles.class.getClassLoader().getResource("pdf/sample-pdf-2.pdf");
-        final URL resourceDestination = GetTextFromPdf.class.getClassLoader().getResource("pdf/merge.pdf");
-        assertNotNull(resource);
-        assertNotNull(resourceDestination);
-        final File file = new File(resource.toURI());
-        final File fileResource = new File(resourceDestination.toURI());
+        assertNotNull(initialPdf);
+        assertNotNull(resource2);
+        final File file = new File(initialPdf.toURI());
+        final File fileResource = new File(resource2.toURI());
         final Map<String, String> result = mergePdfFiles.execute(file.toString() + "," + file.toString() +
                 "," + file.toString(), fileResource.toString());
         assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals(fileResource.toString(), result.get(RETURN_RESULT));
         final Map<String, String> text = getTextFromPdf.execute(fileResource.toString(), "");
-        assertEquals("This is some text written on top of CloudSlang logo. \r\nThis is some text written on top " +
-                "of CloudSlang logo. \r\nThis is some text written on top of CloudSlang logo. \r\n", text.get(RETURN_RESULT));
+        assertEquals("This is some text written on top of CloudSlang logo. " + newline + "This is some text written on top " +
+                "of CloudSlang logo. " + newline + "This is some text written on top of CloudSlang logo. " + newline, text.get(RETURN_RESULT));
 
     }
 
     @Test
     public void samplePdfFailureTestWithInvalidFilesPath() throws URISyntaxException {
-        final URL resource = MergePdfFiles.class.getClassLoader().getResource("pdf/sample-pdf-2.pdf");
-        final URL resourceDestination = MergePdfFiles.class.getClassLoader().getResource("pdf/merge.pdf");
-        assertNotNull(resource);
-        assertNotNull(resourceDestination);
-        final File file = new File(resource.toURI());
-        final File fileResource = new File(resourceDestination.toURI());
+        assertNotNull(initialPdf);
+        assertNotNull(resource2);
+        final File file = new File(initialPdf.toURI());
+        final File fileResource = new File(resource2.toURI());
         final Map<String, String> result = mergePdfFiles.execute(file.toString() + ".wrong", fileResource.toString());
         assertEquals(FAILURE, result.get(RETURN_CODE));
 
@@ -85,32 +82,28 @@ public class MergePdfTest {
 
     @Test
     public void samplePdfSuccessTestWithCommaPathEnding() throws URISyntaxException {
-        final URL resource = MergePdfFiles.class.getClassLoader().getResource("pdf/sample-pdf-2.pdf");
-        final URL resourceDestination = MergePdfFiles.class.getClassLoader().getResource("pdf/merge.pdf");
-        assertNotNull(resource);
-        assertNotNull(resourceDestination);
-        final File file = new File(resource.toURI());
-        final File fileResource = new File(resourceDestination.toURI());
+        assertNotNull(initialPdf);
+        assertNotNull(resource2);
+        final File file = new File(initialPdf.toURI());
+        final File fileResource = new File(resource2.toURI());
         final Map<String, String> result = mergePdfFiles.execute(file.toString() + ",", fileResource.toString());
         assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals(fileResource.toString(), result.get(RETURN_RESULT));
         final Map<String, String> text = getTextFromPdf.execute(fileResource.toString(), "");
-        assertEquals("This is some text written on top of CloudSlang logo. \r\n", text.get(RETURN_RESULT));
+        assertEquals("This is some text written on top of CloudSlang logo. " + newline, text.get(RETURN_RESULT));
     }
 
     @Test
     public void samplePdfSuccessTestWithInvalidExtension() throws URISyntaxException {
-        final URL resource = MergePdfFiles.class.getClassLoader().getResource("pdf/sample-pdf-2.pdf");
-        final URL resourceDestination = MergePdfFiles.class.getClassLoader().getResource("pdf/merge.pdf");
-        assertNotNull(resource);
-        assertNotNull(resourceDestination);
-        final File file = new File(resource.toURI());
-        final File fileResource = new File(resourceDestination.toURI());
+        assertNotNull(initialPdf);
+        assertNotNull(resource2);
+        final File file = new File(initialPdf.toURI());
+        final File fileResource = new File(resource2.toURI());
         final Map<String, String> result = mergePdfFiles.execute(file.toString(), fileResource.toString() + ".wrong");
         assertEquals(SUCCESS, result.get(RETURN_CODE));
         assertEquals(fileResource.toString() + ".wrong", result.get(RETURN_RESULT));
         final Map<String, String> text = getTextFromPdf.execute(fileResource.toString() + ".wrong", "");
-        assertEquals("This is some text written on top of CloudSlang logo. \r\n", text.get(RETURN_RESULT));
+        assertEquals("This is some text written on top of CloudSlang logo. " + newline, text.get(RETURN_RESULT));
     }
 
 }
