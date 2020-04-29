@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -39,7 +39,7 @@ public class MergePdfTest {
     @Test
     public void samplePdfSuccessfulTestWithOneFile() throws URISyntaxException {
         final URL resource = MergePdfFiles.class.getClassLoader().getResource("pdf/sample-pdf-2.pdf");
-        final URL resourceDestination = MergePdfFiles.class.getClassLoader().getResource("pdf/merge.pdf");
+        final URL resourceDestination = GetTextFromPdf.class.getClassLoader().getResource("pdf/merge.pdf");
         assertNotNull(resource);
         assertNotNull(resourceDestination);
         final File file = new File(resource.toURI());
@@ -55,7 +55,7 @@ public class MergePdfTest {
     @Test
     public void samplePdfSuccessfulTestWithMultipleFiles() throws URISyntaxException {
         final URL resource = MergePdfFiles.class.getClassLoader().getResource("pdf/sample-pdf-2.pdf");
-        final URL resourceDestination = MergePdfFiles.class.getClassLoader().getResource("pdf/merge.pdf");
+        final URL resourceDestination = GetTextFromPdf.class.getClassLoader().getResource("pdf/merge.pdf");
         assertNotNull(resource);
         assertNotNull(resourceDestination);
         final File file = new File(resource.toURI());
