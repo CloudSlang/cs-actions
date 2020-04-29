@@ -33,8 +33,8 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 public class MergePdfTest {
-    MergePdfFiles mergePdfFiles = new MergePdfFiles();
-    GetTextFromPdf getTextFromPdf = new GetTextFromPdf();
+    private final MergePdfFiles mergePdfFiles = new MergePdfFiles();
+    private final GetTextFromPdf getTextFromPdf = new GetTextFromPdf();
 
     @Test
     public void samplePdfSuccessfulTestWithOneFile() throws URISyntaxException {

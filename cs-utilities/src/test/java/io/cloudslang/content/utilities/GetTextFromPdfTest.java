@@ -35,7 +35,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 public class GetTextFromPdfTest {
-    GetTextFromPdf getTextFromPdf = new GetTextFromPdf();
+    private final GetTextFromPdf getTextFromPdf = new GetTextFromPdf();
 
     @Test
     public void samplePdfSuccessfulTest() throws URISyntaxException {
