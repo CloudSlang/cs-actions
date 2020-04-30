@@ -219,6 +219,9 @@ public class Descriptions {
     }
 
     public static class UpdateVariables {
+        public static final String VARIABLE_REQUEST_BODY_DESC = "Request Body for the Update Variable.";
+        public static final String VARIABLES_JSON_DESC = "List of variables in json format." +
+                "Examples : [{\"data\": { \"id\":\"var-test1\", \"attributes\": { \"propertyName\":\"test1\", \"propertyValue\":\"1\", \"category\":\"terraform\" }}},{\"data\": { \"id\":\"var-test2te\", \"attributes\": { \"propertyName\":\"test2\", \"propertyValue\":\"2\", \"category\":\"env\" }}]";
         public static final String UPDATE_VARIABLES_DESC = "Updates  multiple sensitive and non-sensitive variables or both in a workspace.";
         public static final String UPDATE_VARIABLE_DESC = "Updates  multiple sensitive and non-sensitive variable or both in a workspace.";
     }
