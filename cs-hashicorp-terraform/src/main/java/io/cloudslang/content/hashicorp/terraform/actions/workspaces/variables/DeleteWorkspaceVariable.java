@@ -33,14 +33,14 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.updateVariable;
+import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.deleteWorkspaceVariable;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.UpdateVariableConstants.UPDATE_VARIABLE_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.DeleteVariableConstants.DELETE_VARIABLE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.VARIABLE_ID_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariables.VARIABLE_REQUEST_BODY_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariables.UPDATE_VARIABLE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.DeleteVariable.DELETE_VARIABLE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.DeleteVariable.DELETE_VAR_SUCCESS_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
@@ -56,9 +56,9 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class UpdateVariable {
-    @Action(name = UPDATE_VARIABLE_OPERATION_NAME,
-            description = UPDATE_VARIABLE_DESC,
+public class DeleteWorkspaceVariable {
+    @Action(name = DELETE_VARIABLE_OPERATION_NAME,
+            description = DELETE_VARIABLE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
@@ -71,7 +71,6 @@ public class UpdateVariable {
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
                                        @Param(value = VARIABLE_ID, required = true, description = VARIABLE_ID_DESC) String variableId,
-                                       @Param(value = REQUEST_BODY, required = true, description = VARIABLE_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -110,13 +109,13 @@ public class UpdateVariable {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
+
         try {
-            final Map<String, String> result = updateVariable(TerraformVariableInputs.builder()
-                    .workspaceId(workspaceId)
+            final Map<String, String> result = deleteWorkspaceVariable(TerraformVariableInputs.builder()
                     .variableId(variableId)
+                    .workspaceId(workspaceId)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
-                            .requestBody(requestBody)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
@@ -134,14 +133,19 @@ public class UpdateVariable {
                             .build())
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
-            Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+
+
+            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
             if (statusCode >= 200 && statusCode < 300) {
-                return  getOperationResults(result, returnMessage, returnMessage, returnMessage);
+                return getOperationResults(result, DELETE_VAR_SUCCESS_DESC, DELETE_VAR_SUCCESS_DESC, DELETE_VAR_SUCCESS_DESC);
             }else{
-                return getFailureResults(variableId,statusCode,returnMessage);
+                return  getFailureResults(variableId,statusCode,returnMessage);
             }
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
+
     }
+
 }
+

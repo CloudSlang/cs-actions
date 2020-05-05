@@ -20,17 +20,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UpdateWorkspaceVariableRequestBody {
     @JsonProperty("data")
-    UpdateVariableData data;
+    UpdateWorkspaceVariableData data;
 
-    public UpdateVariableData getData() {
+    public UpdateWorkspaceVariableData getData() {
         return data;
     }
 
-    public void setData(UpdateVariableData data) {
+    public void setData(UpdateWorkspaceVariableData data) {
         this.data = data;
     }
 
-    public class UpdateVariableData {
+    public class UpdateWorkspaceVariableData {
         Attributes attributes;
         String type;
         String id;

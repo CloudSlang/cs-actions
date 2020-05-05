@@ -35,7 +35,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.getVariablesOperationOutput;
-import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.updateVariables;
+import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.updateWorkspaceVariables;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.UpdateVariableConstants.UPDATE_VARIABLES_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
@@ -59,7 +59,7 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class UpdateVariables {
+public class UpdateWorkspaceVariables {
 
     @Action(name = UPDATE_VARIABLES_OPERATION_NAME,
             description = UPDATE_VARIABLES_DESC,
@@ -119,7 +119,7 @@ public class UpdateVariables {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
         try {
-            final Map<String, Map<String, String>> result = updateVariables(TerraformVariableInputs.builder()
+            final Map<String, Map<String, String>> result = updateWorkspaceVariables(TerraformVariableInputs.builder()
                     .workspaceId(workspaceId)
                     .variableJson(variablesJson)
                     .sensitiveVariableJson(sensitiveVariablesJson)

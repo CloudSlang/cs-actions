@@ -19,19 +19,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CreateWorkspaceVariableRequestBody {
     @JsonProperty("data")
-    CreateVariableData data;
+    CreateWorkspaceVariableData data;
 
 
-    public CreateVariableData getData() {
+    public CreateWorkspaceVariableData getData() {
         return data;
     }
 
-    public void setData(CreateVariableData data) {
+    public void setData(CreateWorkspaceVariableData data) {
         this.data = data;
     }
 
 
-    public class CreateVariableData {
+    public class CreateWorkspaceVariableData {
         Attributes attributes;
         String type;
 

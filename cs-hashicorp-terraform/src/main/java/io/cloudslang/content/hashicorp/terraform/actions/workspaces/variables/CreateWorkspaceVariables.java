@@ -34,7 +34,7 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.createVariables;
+import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.createWorkspaceVariables;
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.getVariablesOperationOutput;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.CREATE_VARIABLES_OPERATION_NAME;
@@ -57,7 +57,7 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class CreateVariables {
+public class CreateWorkspaceVariables {
 
     @Action(name = CREATE_VARIABLES_OPERATION_NAME,
             description = CREATE_VARIABLES_DESC,
@@ -119,7 +119,7 @@ public class CreateVariables {
 
 
         try {
-            final Map<String, Map<String, String>> result = createVariables(TerraformVariableInputs.builder()
+            final Map<String, Map<String, String>> result = createWorkspaceVariables(TerraformVariableInputs.builder()
                     .workspaceId(workspaceId)
                     .variableJson(variablesJson)
                     .sensitiveVariableJson(sensitiveVariablesJson)

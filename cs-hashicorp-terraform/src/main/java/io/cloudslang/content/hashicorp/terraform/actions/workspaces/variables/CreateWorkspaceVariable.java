@@ -34,7 +34,7 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.createVariable;
+import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.createWorkspaceVariable;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.CREATE_VARIABLE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_ID_JSON_PATH;
@@ -58,7 +58,7 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class CreateVariable {
+public class CreateWorkspaceVariable {
 
     @Action(name = CREATE_VARIABLE_OPERATION_NAME,
             description = CREATE_VARIABLE_DESC,
@@ -135,7 +135,7 @@ public class CreateVariable {
         try {
             final Map<String, String> result;
             if(!variableValue.isEmpty()){
-                 result = createVariable(TerraformVariableInputs.builder()
+                 result = createWorkspaceVariable(TerraformVariableInputs.builder()
                         .variableName(variableName)
                         .variableValue(variableValue)
                         .variableCategory(variableCategory)
@@ -163,7 +163,7 @@ public class CreateVariable {
                                 .build())
                         .build());
             }else if(!sensitiveVariableValue.isEmpty()) {
-                result = createVariable(TerraformVariableInputs.builder()
+                result = createWorkspaceVariable(TerraformVariableInputs.builder()
                         .variableName(variableName)
                         .variableValue(EMPTY)
                         .sensitiveVariableValue(sensitiveVariableValue)
@@ -192,7 +192,7 @@ public class CreateVariable {
                                 .build())
                         .build());
             }else{
-                result = createVariable(TerraformVariableInputs.builder()
+                result = createWorkspaceVariable(TerraformVariableInputs.builder()
                         .sensitiveVariableRequestBody(sensitiveVariableRequestBody)
                         .commonInputs(TerraformCommonInputs.builder()
                                 .authToken(authToken)

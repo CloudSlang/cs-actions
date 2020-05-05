@@ -20,8 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
-import io.cloudslang.content.hashicorp.terraform.services.models.variables.CreateVariableRequestBody;
-import io.cloudslang.content.hashicorp.terraform.services.models.variables.UpdateVariableRequestBody;
+import io.cloudslang.content.hashicorp.terraform.services.models.workspace.CreateWorkspaceVariableRequestBody;
+import io.cloudslang.content.hashicorp.terraform.services.models.workspace.UpdateWorkspaceVariableRequestBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.utils.StringUtilities;
@@ -48,10 +48,10 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class WorkspaceVariableImpl {
 
     @NotNull
-    public static Map<String, String> createVariable(@NotNull TerraformVariableInputs terraformVariableInputs) throws Exception {
+    public static Map<String, String> createWorkspaceVariable(@NotNull TerraformVariableInputs terraformVariableInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = terraformVariableInputs.getCommonInputs();
-        httpClientInputs.setUrl(createVariableUrl(terraformVariableInputs));
+        httpClientInputs.setUrl(createWorkspaceVariableUrl(terraformVariableInputs));
         setCommonHttpInputs(httpClientInputs, commonInputs);
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
@@ -59,10 +59,10 @@ public class WorkspaceVariableImpl {
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
         if (commonInputs.getRequestBody().isEmpty() & terraformVariableInputs.getSensitiveVariableRequestBody().isEmpty()) {
-            httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
+            httpClientInputs.setBody(createWorkspaceVariableRequestBody(terraformVariableInputs));
         } else if (!terraformVariableInputs.getSensitiveVariableRequestBody().isEmpty()) {
             httpClientInputs.setBody(terraformVariableInputs.getSensitiveVariableRequestBody());
-            httpClientInputs.setUrl(createVariableUrl(terraformVariableInputs));
+            httpClientInputs.setUrl(createWorkspaceVariableUrl(terraformVariableInputs));
         } else {
             httpClientInputs.setBody(commonInputs.getRequestBody());
         }
@@ -73,7 +73,7 @@ public class WorkspaceVariableImpl {
 
 
     @NotNull
-    public static Map<String, Map<String, String>> createVariables(@NotNull TerraformVariableInputs terraformVariableInputs) throws Exception {
+    public static Map<String, Map<String, String>> createWorkspaceVariables(@NotNull TerraformVariableInputs terraformVariableInputs) throws Exception {
         String variableName;
         String variableValue;
         String hcl;
@@ -82,7 +82,7 @@ public class WorkspaceVariableImpl {
         JSONParser parser = new JSONParser();
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = terraformVariableInputs.getCommonInputs();
-        httpClientInputs.setUrl(createVariableUrl(terraformVariableInputs));
+        httpClientInputs.setUrl(createWorkspaceVariableUrl(terraformVariableInputs));
         setCommonHttpInputs(httpClientInputs, commonInputs);
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
@@ -110,7 +110,7 @@ public class WorkspaceVariableImpl {
                         .hcl(hcl)
                         .workspaceId(terraformVariableInputs.getWorkspaceId())
                         .sensitive("false").build();
-                httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
+                httpClientInputs.setBody(createWorkspaceVariableRequestBody(terraformVariableInputs));
 
                 createVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
 
@@ -131,7 +131,7 @@ public class WorkspaceVariableImpl {
                         .hcl(hcl)
                         .workspaceId(terraformVariableInputs.getWorkspaceId())
                         .sensitive("true").build();
-                httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
+                httpClientInputs.setBody(createWorkspaceVariableRequestBody(terraformVariableInputs));
                 createVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
 
             }
@@ -155,7 +155,7 @@ public class WorkspaceVariableImpl {
                         .hcl(hcl)
                         .workspaceId(terraformVariableInputs.getWorkspaceId())
                         .sensitive("false").build();
-                httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
+                httpClientInputs.setBody(createWorkspaceVariableRequestBody(terraformVariableInputs));
                 createVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
 
             }
@@ -181,7 +181,7 @@ public class WorkspaceVariableImpl {
                         .hcl(hcl)
                         .workspaceId(terraformVariableInputs.getWorkspaceId())
                         .sensitive("true").build();
-                httpClientInputs.setBody(createVariableRequestBody(terraformVariableInputs));
+                httpClientInputs.setBody(createWorkspaceVariableRequestBody(terraformVariableInputs));
                 createVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
 
             }
@@ -193,7 +193,7 @@ public class WorkspaceVariableImpl {
     }
 
     @NotNull
-    public static Map<String, Map<String, String>> updateVariables(@NotNull TerraformVariableInputs terraformVariableInputs) throws Exception {
+    public static Map<String, Map<String, String>> updateWorkspaceVariables(@NotNull TerraformVariableInputs terraformVariableInputs) throws Exception {
         String variableName;
         String variableValue;
         String sensitiveVariableValue;
@@ -201,11 +201,11 @@ public class WorkspaceVariableImpl {
         String hcl = null;
         String sensitive = null;
         Map<String, Map<String, String>> updateVariableMap = new HashMap<>();
-        Map<String, String> listVariablesResult = listVariables(terraformVariableInputs);
+        Map<String, String> listVariablesResult = listWorkspaceVariables(terraformVariableInputs);
         JSONParser parser = new JSONParser();
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = terraformVariableInputs.getCommonInputs();
-        httpClientInputs.setUrl(createVariableUrl(terraformVariableInputs));
+        httpClientInputs.setUrl(createWorkspaceVariableUrl(terraformVariableInputs));
         setCommonHttpInputs(httpClientInputs, commonInputs);
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(PATCH);
@@ -241,8 +241,8 @@ public class WorkspaceVariableImpl {
                                 .variableId(variableId)
                                 .workspaceId(terraformVariableInputs.getWorkspaceId())
                                 .build();
-                        httpClientInputs.setBody(updateVariableRequestBody(terraformVariableInputs));
-                        httpClientInputs.setUrl(updateVariableUrl(terraformVariableInputs));
+                        httpClientInputs.setBody(updateWorkspaceVariableRequestBody(terraformVariableInputs));
+                        httpClientInputs.setUrl(updateWorkspaceVariableUrl(terraformVariableInputs));
                         updateVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
                     }
                 }
@@ -264,8 +264,8 @@ public class WorkspaceVariableImpl {
                                 .variableId(variableId)
                                 .workspaceId(terraformVariableInputs.getWorkspaceId())
                                 .build();
-                        httpClientInputs.setBody(updateVariableRequestBody(terraformVariableInputs));
-                        httpClientInputs.setUrl(updateVariableUrl(terraformVariableInputs));
+                        httpClientInputs.setBody(updateWorkspaceVariableRequestBody(terraformVariableInputs));
+                        httpClientInputs.setUrl(updateWorkspaceVariableUrl(terraformVariableInputs));
                         updateVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
                     }
                 }
@@ -298,8 +298,8 @@ public class WorkspaceVariableImpl {
                                 .variableId(variableId)
                                 .workspaceId(terraformVariableInputs.getWorkspaceId())
                                 .build();
-                        httpClientInputs.setBody(updateVariableRequestBody(terraformVariableInputs));
-                        httpClientInputs.setUrl(updateVariableUrl(terraformVariableInputs));
+                        httpClientInputs.setBody(updateWorkspaceVariableRequestBody(terraformVariableInputs));
+                        httpClientInputs.setUrl(updateWorkspaceVariableUrl(terraformVariableInputs));
                         updateVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
                     }
                 }
@@ -325,8 +325,8 @@ public class WorkspaceVariableImpl {
                                 .variableId(variableId)
                                 .workspaceId(terraformVariableInputs.getWorkspaceId())
                                 .build();
-                        httpClientInputs.setBody(updateVariableRequestBody(terraformVariableInputs));
-                        httpClientInputs.setUrl(updateVariableUrl(terraformVariableInputs));
+                        httpClientInputs.setBody(updateWorkspaceVariableRequestBody(terraformVariableInputs));
+                        httpClientInputs.setUrl(updateWorkspaceVariableUrl(terraformVariableInputs));
                         updateVariableMap.put(variableName, new HttpClientService().execute(httpClientInputs));
                     }
                 }
@@ -436,9 +436,9 @@ public class WorkspaceVariableImpl {
     }
 
     @NotNull
-    public static Map<String, String> listVariables(@NotNull final TerraformVariableInputs terraformVariableInputs) throws Exception {
+    public static Map<String, String> listWorkspaceVariables(@NotNull final TerraformVariableInputs terraformVariableInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(listVariablesUrl(terraformVariableInputs));
+        httpClientInputs.setUrl(listWorkspaceVariablesUrl(terraformVariableInputs));
         setCommonHttpInputs(httpClientInputs, terraformVariableInputs.getCommonInputs());
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
@@ -450,7 +450,7 @@ public class WorkspaceVariableImpl {
 
 
     @NotNull
-    public static String listVariablesUrl(@NotNull final TerraformVariableInputs terraformVariableInputs) throws Exception {
+    public static String listWorkspaceVariablesUrl(@NotNull final TerraformVariableInputs terraformVariableInputs) throws Exception {
 
         final URIBuilder uriBuilder = getUriBuilder();
         StringBuilder pathString = new StringBuilder()
@@ -465,14 +465,14 @@ public class WorkspaceVariableImpl {
     }
 
     @NotNull
-    private static String createVariableUrl(@NotNull final TerraformVariableInputs terraformVariableInputs) throws Exception {
+    private static String createWorkspaceVariableUrl(@NotNull final TerraformVariableInputs terraformVariableInputs) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
-        uriBuilder.setPath(getVariablePath(terraformVariableInputs));
+        uriBuilder.setPath(getWorkspaceVariablePath(terraformVariableInputs));
         return uriBuilder.build().toURL().toString();
     }
 
     @NotNull
-    public static String getVariablePath(@NotNull final TerraformVariableInputs terraformVariableInputs) {
+    public static String getWorkspaceVariablePath(@NotNull final TerraformVariableInputs terraformVariableInputs) {
         StringBuilder pathString = new StringBuilder()
                 .append(API)
                 .append(API_VERSION)
@@ -484,11 +484,11 @@ public class WorkspaceVariableImpl {
     }
 
 
-    public static Map<String, String> updateVariable(@NotNull final TerraformVariableInputs updateVariableInputs)
+    public static Map<String, String> updateWorkspaceVariable(@NotNull final TerraformVariableInputs updateVariableInputs)
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = updateVariableInputs.getCommonInputs();
-        httpClientInputs.setUrl(updateVariableUrl(updateVariableInputs));
+        httpClientInputs.setUrl(updateWorkspaceVariableUrl(updateVariableInputs));
         setCommonHttpInputs(httpClientInputs, commonInputs);
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(PATCH);
@@ -500,11 +500,11 @@ public class WorkspaceVariableImpl {
     }
 
     @NotNull
-    public static Map<String, String> deleteVariable(@NotNull final TerraformVariableInputs deleteVariableInputs)
+    public static Map<String, String> deleteWorkspaceVariable(@NotNull final TerraformVariableInputs deleteVariableInputs)
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final TerraformCommonInputs commonInputs = deleteVariableInputs.getCommonInputs();
-        httpClientInputs.setUrl(deleteVariableUrl(deleteVariableInputs));
+        httpClientInputs.setUrl(deleteWorkspaceVariableUrl(deleteVariableInputs));
         setCommonHttpInputs(httpClientInputs, commonInputs);
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(DELETE);
@@ -515,21 +515,21 @@ public class WorkspaceVariableImpl {
     }
 
     @NotNull
-    private static String updateVariableUrl(@NotNull final TerraformVariableInputs updateVariableInputs) throws Exception {
+    private static String updateWorkspaceVariableUrl(@NotNull final TerraformVariableInputs updateVariableInputs) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
-        uriBuilder.setPath(getVariablesPath(updateVariableInputs));
+        uriBuilder.setPath(getWorkspaceVariablesPath(updateVariableInputs));
         return uriBuilder.build().toURL().toString();
     }
 
     @NotNull
-    private static String deleteVariableUrl(@NotNull final TerraformVariableInputs deleteVariableInputs) throws Exception {
+    private static String deleteWorkspaceVariableUrl(@NotNull final TerraformVariableInputs deleteVariableInputs) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
-        uriBuilder.setPath(getVariablesPath(deleteVariableInputs));
+        uriBuilder.setPath(getWorkspaceVariablesPath(deleteVariableInputs));
         return uriBuilder.build().toURL().toString();
     }
 
     @NotNull
-    public static String getVariablesPath(@NotNull final TerraformVariableInputs updateVariableInputs) {
+    public static String getWorkspaceVariablesPath(@NotNull final TerraformVariableInputs updateVariableInputs) {
         StringBuilder pathString = new StringBuilder()
                 .append(API)
                 .append(API_VERSION)
@@ -543,14 +543,14 @@ public class WorkspaceVariableImpl {
     }
 
     @NotNull
-    public static String createVariableRequestBody(TerraformVariableInputs terraformVariableInputs) {
+    public static String createWorkspaceVariableRequestBody(TerraformVariableInputs terraformVariableInputs) {
         String requestBody = EMPTY;
         ObjectMapper createVariableMapper = new ObjectMapper();
-        CreateVariableRequestBody createVariableRequestBody = new CreateVariableRequestBody();
-        CreateVariableRequestBody.CreateVariableData createVariableData = createVariableRequestBody.new CreateVariableData();
-        createVariableData.setType(VARIABLE_TYPE);
+        CreateWorkspaceVariableRequestBody createWorkspaceVariableRequestBody = new CreateWorkspaceVariableRequestBody();
+        CreateWorkspaceVariableRequestBody.CreateWorkspaceVariableData createWorkspaceVariableData = createWorkspaceVariableRequestBody.new CreateWorkspaceVariableData();
+        createWorkspaceVariableData.setType(VARIABLE_TYPE);
 
-        CreateVariableRequestBody.Attributes attributes = createVariableRequestBody.new Attributes();
+        CreateWorkspaceVariableRequestBody.Attributes attributes = createWorkspaceVariableRequestBody.new Attributes();
         attributes.setKey(terraformVariableInputs.getVariableName());
         if (terraformVariableInputs.getVariableValue().isEmpty()) {
             attributes.setValue(terraformVariableInputs.getSensitiveVariableValue());
@@ -560,11 +560,11 @@ public class WorkspaceVariableImpl {
         attributes.setCategory(terraformVariableInputs.getVariableCategory());
         attributes.setHcl(terraformVariableInputs.getHcl());
         attributes.setSensitive(terraformVariableInputs.getSensitive());
-        createVariableData.setAttributes(attributes);
-        createVariableRequestBody.setData(createVariableData);
+        createWorkspaceVariableData.setAttributes(attributes);
+        createWorkspaceVariableRequestBody.setData(createWorkspaceVariableData);
 
         try {
-            requestBody = createVariableMapper.writeValueAsString(createVariableRequestBody);
+            requestBody = createVariableMapper.writeValueAsString(createWorkspaceVariableRequestBody);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -574,15 +574,15 @@ public class WorkspaceVariableImpl {
     }
 
     @NotNull
-    public static String updateVariableRequestBody(TerraformVariableInputs terraformVariableInputs) {
+    public static String updateWorkspaceVariableRequestBody(TerraformVariableInputs terraformVariableInputs) {
         String requestBody = EMPTY;
         ObjectMapper updateVariableMapper = new ObjectMapper();
-        UpdateVariableRequestBody updateVariableRequestBody = new UpdateVariableRequestBody();
-        UpdateVariableRequestBody.UpdateVariableData updateVariableData = updateVariableRequestBody.new UpdateVariableData();
-        updateVariableData.setType(VARIABLE_TYPE);
-        updateVariableData.setId(terraformVariableInputs.getVariableId());
+        UpdateWorkspaceVariableRequestBody updateWorkspaceVariableRequestBody = new UpdateWorkspaceVariableRequestBody();
+        UpdateWorkspaceVariableRequestBody.UpdateWorkspaceVariableData updateWorkspaceVariableData = updateWorkspaceVariableRequestBody.new UpdateWorkspaceVariableData();
+        updateWorkspaceVariableData.setType(VARIABLE_TYPE);
+        updateWorkspaceVariableData.setId(terraformVariableInputs.getVariableId());
 
-        UpdateVariableRequestBody.Attributes attributes = updateVariableRequestBody.new Attributes();
+        UpdateWorkspaceVariableRequestBody.Attributes attributes = updateWorkspaceVariableRequestBody.new Attributes();
 
         attributes.setKey(terraformVariableInputs.getVariableName());
         attributes.setHcl(terraformVariableInputs.getHcl());
@@ -593,11 +593,11 @@ public class WorkspaceVariableImpl {
         } else {
             attributes.setValue(terraformVariableInputs.getVariableValue());
         }
-        updateVariableData.setAttributes(attributes);
-        updateVariableRequestBody.setData(updateVariableData);
+        updateWorkspaceVariableData.setAttributes(attributes);
+        updateWorkspaceVariableRequestBody.setData(updateWorkspaceVariableData);
 
         try {
-            requestBody = updateVariableMapper.writeValueAsString(updateVariableRequestBody);
+            requestBody = updateVariableMapper.writeValueAsString(updateWorkspaceVariableRequestBody);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
