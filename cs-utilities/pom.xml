@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+    * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
     * All rights reserved. This program and the accompanying materials
     * are made available under the terms of the Apache License v2.0 which accompany this distribution.
     *
@@ -57,10 +57,8 @@
 
     <developers>
         <developer>
-            <name>Sorin Moldovan</name>
-            <email>sorin@hpe.com</email>
-            <organization>Hewlett Packard Enterprise</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+            <name>Eric Andreica</name>
+            <email>eric.andreica@microfocus.com</email>
         </developer>
         <developer>
             <name>Iulia Moldovan</name>
@@ -90,7 +88,7 @@
         <cs-commons.version>0.0.5</cs-commons.version>
         <cs-ssh.version>0.0.42</cs-ssh.version>
         <junit.version>4.12</junit.version>
-        <pdfbox.version>2.0.15</pdfbox.version>
+        <pdfbox.version>2.0.19</pdfbox.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>

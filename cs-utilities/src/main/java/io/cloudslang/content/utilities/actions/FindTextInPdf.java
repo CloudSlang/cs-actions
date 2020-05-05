@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -83,7 +83,7 @@ public class FindTextInPdf {
     public Map<String, String> execute(
             @Param(value = TEXT, required = true, description = INITIAL_VALUE_DESC) String text,
             @Param(value = IGNORE_CASE, description = IGNORE_CASE_DESC) String ignoreCase,
-            @Param(value = PATH_TO_FILE, required = true, description = DEFAULT_VALUE_DESC) String pathToFile,
+            @Param(value = PATH_TO_FILE, required = true, description = PATH_DESC) String pathToFile,
             @Param(value = PASSWORD, description = PASSWORD_DESC, encrypted = true) String password) {
 
         try {

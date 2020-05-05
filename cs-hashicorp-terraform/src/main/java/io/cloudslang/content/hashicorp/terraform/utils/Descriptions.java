@@ -130,6 +130,20 @@ public class Descriptions {
         public static final String WORKSPACE_ID_DESC = "The Id of the workspace";
     }
 
+    public static class CreateOrganization {
+        public static final String CREATE_ORGANIZATION_DESC = "Creates an organization which is " +
+                "managed by Terraform.";
+        public static final String ORGANIZATION_DESCRIPTION_DESC = "A description of the organization to be created.";
+        public static final String ORGANIZATION_REQUEST_BODY_DESC = "The request body of the organization.";
+        public static final String ORGANIZATION_ID_DESC = "The Id of the organization";
+        public static final String EMAIL_DESC = "The email ID of the Admin";
+        public static final String SESSION_TIMEOUT_DESC = "Session timeout after inactivity in minutes";
+        public static final String SESSION_REMEMBER_DESC = "Session expiration in minutes";
+        public static final String COLLABORATOR_AUTH_POLICY_DESC = "Authentication policy (password or two_factor_mandatory)";
+        public static final String COST_ESTIMATION_ENABLED_DESC = "Whether or not the cost estimation feature is enabled for all workspaces in the organization";
+        public static final String OWNERS_TEAM_SAML_ID_DESC = "Optional. SAML only The name of the owners team";
+    }
+
     public static class CreateRun {
         public static final String CREATE_RUN_DESC = "Creates a run in workspace.";
         public static final String CREATE_RUN_REQUEST_BODY_DESC = "The request body of the crate run.";
@@ -187,6 +201,11 @@ public class Descriptions {
         public static final String WORKSPACE_ID_DESC = "The Id of the workspace";
     }
 
+    public static class GetOrganizationDetails {
+        public static final String GET_ORGANIZATION_DETAILS_DESC = "Get details of the organization.";
+        public static final String ORGANIZATION_ID_DESC = "The Id of the organization";
+    }
+
     public static class GetRunDetails {
         public static final String GET_RUN_DETAILS_DESC = "Getting details about a run";
     }
@@ -210,12 +229,26 @@ public class Descriptions {
     public static class DeleteWorkspace {
         public static final String DELETE_WORKSPACE_DESC = "Deletes the workspace from an organization using workspace " +
                 "name and organization name";
-        public static final String DELETE_WORKSPACE_SUCCESS_DESC = "The workspace deleted successfully.";
+        public static final String DELETE_WORKSPACE_SUCCESS_DESC = "The workspace is deleted successfully.";
+    }
+
+    public static class DeleteOrganization{
+        public static final String DELETE_ORGANIZATION_DESC = "Deletes the organization";
+        public static final String DELETE_ORGANIZATION_SUCCESS_DESC = "The organization is deleted successfully.";
+    }
+
+    public static class UpdateOrganization{
+        public static final String UPDATE_ORGANIZATION_DESC = "Updates the organization";
     }
 
     public static class ListWorkspaces {
         public static final String LIST_WORKSPACES_OPERATION_DESC = "List of workspaces present in given Organization";
         public static final String WORKSPACE_LIST_DESC = "List of all workspaces under the organization.";
+    }
+
+    public static class ListOrganizations {
+        public static final String LIST_ORGANIZATIONS_OPERATION_DESC = "List of organizations present";
+        public static final String ORGANIZATION_LIST_DESC = "List of all organizations";
     }
 
     public static class UpdateVariables {

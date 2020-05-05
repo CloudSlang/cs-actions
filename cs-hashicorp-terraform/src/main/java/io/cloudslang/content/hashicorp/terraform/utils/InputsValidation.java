@@ -24,7 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.ORGANIZATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateOrganizationInputs.EMAIL;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.VARIABLE_CATEGORY;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.VARIABLE_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.VCS_REPO_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.WORKSPACE_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateVariableOutputs.VARIABLE_ID;
@@ -121,6 +124,19 @@ public final class InputsValidation {
     }
 
     @NotNull
+    public static List<String> verifyCreateOrganizationInputs(@Nullable final String organizationName, @Nullable final String email, @Nullable final String requestBody) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        if (requestBody.isEmpty()) {
+            addVerifyString(exceptionMessages, organizationName, ORGANIZATION_NAME);
+            validateInputPropertyName(exceptionMessages, organizationName, ORGANIZATION_NAME);
+            addVerifyString(exceptionMessages, email, EMAIL);
+        } else {
+            addVerifyRequestBody(exceptionMessages, requestBody);
+        }
+        return exceptionMessages;
+    }
+
+    @NotNull
     public static List<String> verifyUpdateVariableInputs(@Nullable final String variableId,
                                                           @Nullable final String requestBody) {
         final List<String> exceptionMessages = new ArrayList<>();
@@ -150,6 +166,14 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyString(exceptionMessages, workspaceName, WORKSPACE_NAME);
         validateInputPropertyName(exceptionMessages,workspaceName, WORKSPACE_NAME);
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyGetOrganizationDetailsInputs(@Nullable final String organizationName) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyString(exceptionMessages, organizationName, ORGANIZATION_NAME);
+        validateInputPropertyName(exceptionMessages,organizationName, ORGANIZATION_NAME);
         return exceptionMessages;
     }
 
