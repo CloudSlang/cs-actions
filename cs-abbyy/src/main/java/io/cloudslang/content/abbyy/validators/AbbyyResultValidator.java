@@ -16,9 +16,14 @@
 package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
+import io.cloudslang.content.abbyy.exceptions.ValidationException;
+import io.cloudslang.content.abbyy.http.AbbyyRequest;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 
 public interface AbbyyResultValidator {
-    AbbyySdkException validate(String result) throws IOException;
+    ValidationException validateBeforeDownload(AbbyyRequest abbyyInitialRequest, String url) throws IOException, AbbyySdkException;
+
+    ValidationException validateAfterDownload(String result) throws IOException, SAXException;
 }

@@ -12,13 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.abbyy.constants;
 
-package io.cloudslang.content.abbyy.utils;
+public final class Protocols {
 
-import io.cloudslang.content.abbyy.entities.AbbyyResponse;
+    public static final String HTTPS = "https";
+    public static final String HTTP = "http";
 
-import java.util.Map;
 
-public interface AbbyyResponseParser {
-    AbbyyResponse parseResponse(Map<String, String> response) throws Exception;
+    private Protocols() {
+    }
 }

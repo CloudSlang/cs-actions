@@ -15,15 +15,33 @@
 
 package io.cloudslang.content.abbyy.entities;
 
+import io.cloudslang.content.abbyy.constants.Protocols;
+
 public enum LocationId {
-    EU("cloud-eu"),
-    WEST_US("cloud-westus");
+    //real servers
+    EU("cloud-eu", Protocols.HTTPS),
+    WEST_US("cloud-westus", Protocols.HTTPS),
+    //for testing purposes
+    TA_XSD_FAIL("abbyy-ta.ros.swinfra.net:3000/xsd-fail", Protocols.HTTP),
+    TA_TXT_LARGE("abbyy-ta.ros.swinfra.net:3000/txt-large", Protocols.HTTP),
+    TA_XML_LARGE("abbyy-ta.ros.swinfra.net:3000/xml-large", Protocols.HTTP),
+    TA_PDF_LARGE("abbyy-ta.ros.swinfra.net:3000/pdf-large", Protocols.HTTP),
+    TA_PDF_INVALID("abbyy-ta.ros.swinfra.net:3000/pdf-invalid", Protocols.HTTP),
+    TA_TIMEOUT("abbyy-ta.ros.swinfra.net:3000/timeout", Protocols.HTTP),
+    TA_TASK_FAILED("abbyy-ta.ros.swinfra.net:3000/task-failed", Protocols.HTTP);
 
     private final String str;
+    private final String protocol;
 
 
-    LocationId(String str) {
+    LocationId(String str, String protocol) {
         this.str = str;
+        this.protocol = protocol;
+    }
+
+
+    public String getProtocol() {
+        return protocol;
     }
 
 
@@ -31,4 +49,6 @@ public enum LocationId {
     public String toString() {
         return this.str;
     }
+
+
 }

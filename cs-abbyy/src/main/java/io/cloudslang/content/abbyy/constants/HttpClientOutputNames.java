@@ -12,11 +12,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.abbyy.constants;
 
-package io.cloudslang.content.abbyy.exceptions;
+import io.cloudslang.content.constants.OutputNames;
 
-public class ValidationException extends AbbyySdkException {
-    public ValidationException(String msg) {
-        super(msg);
+public final class HttpClientOutputNames {
+
+    public static final String STATUS_CODE = "statusCode";
+    public static final String RETURN_RESULT = OutputNames.RETURN_RESULT;
+    public static final String EXCEPTION = OutputNames.EXCEPTION;
+    public static final String RESPONSE_HEADERS = "responseHeaders";
+    public static final String RETURN_CODE = OutputNames.RETURN_CODE;
+
+
+    private HttpClientOutputNames() {
+
     }
 }

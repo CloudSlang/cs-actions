@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.abbyy.validators;
 
-import io.cloudslang.content.abbyy.entities.AbbyyRequest;
+import io.cloudslang.content.abbyy.http.AbbyyRequest;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 
 public interface AbbyyRequestValidator<R extends AbbyyRequest> {

@@ -13,10 +13,11 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.abbyy.exceptions;
+package io.cloudslang.content.abbyy.http;
 
-public class ValidationException extends AbbyySdkException {
-    public ValidationException(String msg) {
-        super(msg);
-    }
+import io.cloudslang.content.abbyy.http.AbbyyResponse;
+import io.cloudslang.content.abbyy.http.HttpClientResponse;
+
+public interface AbbyyResponseParser {
+    AbbyyResponse parseResponse(HttpClientResponse response) throws Exception;
 }

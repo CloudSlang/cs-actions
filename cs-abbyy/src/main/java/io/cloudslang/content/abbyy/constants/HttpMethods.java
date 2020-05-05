@@ -12,11 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.abbyy.constants;
 
-package io.cloudslang.content.abbyy.exceptions;
+public final class HttpMethods {
 
-public class ValidationException extends AbbyySdkException {
-    public ValidationException(String msg) {
-        super(msg);
+    public static final String GET = "GET";
+    public static final String POST = "POST";
+    public static final String HEAD = "HEAD";
+
+
+    private HttpMethods() {
+
     }
 }

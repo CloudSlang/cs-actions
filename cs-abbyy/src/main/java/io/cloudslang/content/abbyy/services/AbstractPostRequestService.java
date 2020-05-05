@@ -15,50 +15,38 @@
 
 package io.cloudslang.content.abbyy.services;
 
-import io.cloudslang.content.abbyy.constants.ConnectionConstants;
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
 import io.cloudslang.content.abbyy.constants.MiscConstants;
 import io.cloudslang.content.abbyy.constants.OutputNames;
-import io.cloudslang.content.abbyy.entities.AbbyyRequest;
-import io.cloudslang.content.abbyy.entities.AbbyyResponse;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.ClientSideException;
 import io.cloudslang.content.abbyy.exceptions.ServerSideException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.abbyy.utils.AbbyyResponseParser;
+import io.cloudslang.content.abbyy.http.AbbyyAPI;
+import io.cloudslang.content.abbyy.http.AbbyyRequest;
+import io.cloudslang.content.abbyy.http.AbbyyResponse;
 import io.cloudslang.content.abbyy.utils.ResultUtils;
-import io.cloudslang.content.abbyy.utils.XmlResponseParser;
 import io.cloudslang.content.abbyy.validators.AbbyyRequestValidator;
-import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.httpclient.actions.HttpClientAction;
-import io.cloudslang.content.httpclient.entities.Constants;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
 
-    protected final HttpClientAction httpClientAction;
-    private final AbbyyResponseParser responseParser;
     private final AbbyyRequestValidator<R> requestValidator;
-    String lastStatusCode;
+    final AbbyyAPI abbyyApi;
+    boolean timedOut;
 
 
-    AbstractPostRequestService(AbbyyResponseParser responseParser, HttpClientAction httpClientAction,
-                               AbbyyRequestValidator<R> requestValidator) throws ParserConfigurationException {
-        this.responseParser = (responseParser != null) ? responseParser : new XmlResponseParser();
-
-        this.httpClientAction = (httpClientAction != null) ? httpClientAction : new HttpClientAction();
-
+    AbstractPostRequestService(AbbyyRequestValidator<R> requestValidator) throws ParserConfigurationException {
         if (requestValidator == null) {
             throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "requestValidator"));
         }
         this.requestValidator = requestValidator;
+        this.abbyyApi = new AbbyyAPI();
     }
 
 
@@ -75,7 +63,8 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
                 throw validationEx;
             }
 
-            AbbyyResponse response = postRequest(request);
+            AbbyyResponse response = this.abbyyApi.postRequest(request, buildUrl(request));
+
             if (response.getTaskStatus() == AbbyyResponse.TaskStatus.NOT_ENOUGH_CREDITS) {
                 throw new AbbyySdkException(String.format(ExceptionMsgs.NOT_ENOUGH_CREDITS, response.getCredits()));
             }
@@ -105,71 +94,9 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
         } catch (Exception ex) {
             throw new ClientSideException(ex, results);
         } finally {
-            results.put(OutputNames.STATUS_CODE, this.lastStatusCode);
+            results.put(OutputNames.STATUS_CODE, StringUtils.defaultString(this.abbyyApi.getLastStatusCode()));
+            results.put(OutputNames.TIMED_OUT, String.valueOf(this.timedOut));
         }
-    }
-
-
-    private AbbyyResponse postRequest(R request) throws Exception {
-        Map<String, String> rawResponse = this.httpClientAction.execute(
-                buildUrl(request),
-                Constants.TLSv12,
-                MiscConstants.ALLOWED_CYPHERS,
-                ConnectionConstants.Headers.AUTH_TYPE,
-                String.valueOf(true),
-                request.getApplicationId(),
-                request.getPassword(),
-                null,
-                null,
-                null,
-                request.getProxyHost(),
-                String.valueOf(request.getProxyPort()),
-                request.getProxyUsername(),
-                request.getProxyPassword(),
-                String.valueOf(request.isTrustAllRoots()),
-                request.getX509HostnameVerifier(),
-                request.getTrustKeystore(),
-                request.getTrustPassword(),
-                null,
-                null,
-                String.valueOf(request.getConnectTimeout()),
-                String.valueOf(request.getSocketTimeout()),
-                String.valueOf(false),
-                String.valueOf(request.isKeepAlive()),
-                String.valueOf(request.getConnectionsMaxPerRoute()),
-                String.valueOf(request.getConnectionsMaxTotal()),
-                null,
-                request.getResponseCharacterSet(),
-                null,
-                StringUtils.EMPTY,
-                null,
-                String.valueOf(true),
-                String.valueOf(false),
-                null,
-                String.valueOf(true),
-                request.getSourceFile().getAbsolutePath(),
-                null,
-                ConnectionConstants.Headers.CONTENT_TYPE,
-                null,
-                null,
-                null,
-                null,
-                null,
-                String.valueOf(true),
-                null,
-                ConnectionConstants.HttpMethods.POST,
-                null,
-                null);
-        this.lastStatusCode = rawResponse.get(MiscConstants.HTTP_STATUS_CODE_OUTPUT);
-        if (rawResponse.get(io.cloudslang.content.constants.OutputNames.RETURN_CODE) != null &&
-                rawResponse.get(io.cloudslang.content.constants.OutputNames.RETURN_CODE).equals(ResponseNames.FAILURE) ||
-                rawResponse.get(MiscConstants.HTTP_STATUS_CODE_OUTPUT) == null) {
-            throw new AbbyySdkException(rawResponse.get(io.cloudslang.content.constants.OutputNames.EXCEPTION));
-        }
-        if (this.lastStatusCode.equals("401")) {
-            throw new ClientSideException(ExceptionMsgs.INVALID_CREDENTIALS);
-        }
-        return this.responseParser.parseResponse(rawResponse);
     }
 
 
@@ -187,80 +114,16 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
                 Thread.sleep(timeToWait);
             }
 
-            Map<String, String> rawResponse = getTaskStatus(request, taskId);
-            if (rawResponse.get(io.cloudslang.content.constants.OutputNames.RETURN_CODE) != null &&
-                    rawResponse.get(io.cloudslang.content.constants.OutputNames.RETURN_CODE).equals(ResponseNames.FAILURE) ||
-                    rawResponse.get(MiscConstants.HTTP_STATUS_CODE_OUTPUT) == null) {
-                throw new AbbyySdkException(rawResponse.get(io.cloudslang.content.constants.OutputNames.EXCEPTION));
-            }
-            this.lastStatusCode = rawResponse.get(MiscConstants.HTTP_STATUS_CODE_OUTPUT);
-            response = this.responseParser.parseResponse(rawResponse);
+            response = this.abbyyApi.getTaskStatus(request, taskId);
+
         } while (!isTaskFinished(response.getTaskStatus()) && crtAttemptNr < numberOfAttempts);
 
         if (!isTaskFinished(response.getTaskStatus())) {
+            this.timedOut = true;
             throw new TimeoutException(ExceptionMsgs.OPERATION_TIMEOUT);
         }
 
         return response;
-    }
-
-
-    private Map<String, String> getTaskStatus(R request, String taskId) throws URISyntaxException {
-        String url = new URIBuilder()
-                .setScheme(ConnectionConstants.PROTOCOL)
-                .setHost(String.format(ConnectionConstants.HOST_TEMPLATE, request.getLocationId(), ConnectionConstants.Endpoints.GET_TASK_STATUS))
-                .addParameter(ConnectionConstants.QueryParams.TASK_ID, taskId)
-                .build().toString();
-
-        return this.httpClientAction.execute(
-                url,
-                Constants.TLSv12,
-                MiscConstants.ALLOWED_CYPHERS,
-                ConnectionConstants.Headers.AUTH_TYPE,
-                String.valueOf(true),
-                request.getApplicationId(),
-                request.getPassword(),
-                null,
-                null,
-                null,
-                request.getProxyHost(),
-                String.valueOf(request.getProxyPort()),
-                request.getProxyUsername(),
-                request.getProxyPassword(),
-                String.valueOf(request.isTrustAllRoots()),
-                request.getX509HostnameVerifier(),
-                request.getTrustKeystore(),
-                request.getTrustPassword(),
-                null,
-                null,
-                String.valueOf(request.getConnectTimeout()),
-                String.valueOf(request.getSocketTimeout()),
-                String.valueOf(false),
-                String.valueOf(request.isKeepAlive()),
-                String.valueOf(request.getConnectionsMaxPerRoute()),
-                String.valueOf(request.getConnectionsMaxTotal()),
-                null,
-                request.getResponseCharacterSet(),
-                null,
-                StringUtils.EMPTY,
-                null,
-                String.valueOf(true),
-                String.valueOf(false),
-                null,
-                String.valueOf(true),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                String.valueOf(true),
-                null,
-                ConnectionConstants.HttpMethods.GET,
-                null,
-                null);
     }
 
 

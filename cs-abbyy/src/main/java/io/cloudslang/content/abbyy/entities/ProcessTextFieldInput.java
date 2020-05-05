@@ -16,6 +16,7 @@
 package io.cloudslang.content.abbyy.entities;
 
 import io.cloudslang.content.abbyy.constants.InputNames;
+import io.cloudslang.content.abbyy.http.AbbyyRequest;
 import io.cloudslang.content.abbyy.utils.InputParser;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;

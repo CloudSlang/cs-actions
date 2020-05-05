@@ -14,15 +14,16 @@
  */
 package io.cloudslang.content.abbyy.constants;
 
-public final class MiscConstants {
+public final class SecurityConstants {
 
-    public static final String DOCUMENT_PROCESSED_SUCCESSFULLY = "The document was processed successfully.";
-    public static final String ERROR_RETRIEVING_EXPORT_FORMATS = "An error occurred during retrieval of some export formats.";
-    public static final String ANONYMOUS_AUTH_TYPE = "anonymous";
-    public static final long MAX_SIZE = 2097152;
-    public static final String HOST_TEMPLATE = "%s.ocrsdk.com/%s";
+    public static final String TLSv1_2 = io.cloudslang.content.httpclient.entities.Constants.TLSv12;
+    public static final String ALLOWED_CYPHERS = "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256," +
+            "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384," +
+            "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256," +
+            "TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256";
 
 
-    private MiscConstants() {
+    private SecurityConstants() {
+
     }
 }

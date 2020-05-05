@@ -12,11 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.abbyy.constants;
 
-package io.cloudslang.content.abbyy.exceptions;
+public final class Headers {
 
-public class ValidationException extends AbbyySdkException {
-    public ValidationException(String msg) {
-        super(msg);
+    public static final String AUTH_TYPE_BASIC = "basic";
+    public static final String CONTENT_TYPE_OCTET_STREAM = "application/octet-stream";
+    public static final String CONTENT_LENGTH = "Content-Length";
+    public static final String RANGE_TEMPLATE = "Range: bytes=%d-%d";
+
+    private Headers() {
+
     }
 }

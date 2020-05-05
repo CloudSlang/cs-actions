@@ -29,6 +29,8 @@ public final class ExceptionMsgs {
     public static final String TASK_PROCESSING_FAILED = "Task processing failed. Reason: %s";
     public static final String TASK_DELETED = "Task was deleted prematurely.";
     public static final String PROCESSING_RESULT_COULD_NOT_BE_RETRIEVED = "Processing result could not be retrieved for export format '%s'.";
+    public static final String CONTENT_LENGTH_COULD_NOT_BE_RETRIEVED = "The Content-Length header could not be retrieved for export format '%s'.";
+    public static final String MAX_SIZE_EXCEEDED = String.format("The maximum size of %sB was exceeded for export format '%s'.", MiscConstants.MAX_SIZE, "%s");
     public static final String NULL_ARGUMENT = "Value of argument '%s' was null.";
     public static final String INVALID_ESTIMATED_PROCESSING_TIME = "Invalid number of milliseconds for estimated processing time was received.";
     public static final String OPERATION_TIMEOUT = "Processing of the document was not finished in the expected time.";
@@ -40,7 +42,8 @@ public final class ExceptionMsgs {
     public static final String SOURCE_FILE_IS_NOT_FILE = "Given source file is actually not a file.";
     public static final String SOURCE_FILE_DOES_NOT_EXIST = "Given source file does not exist.";
     public static final String INVALID_NR_OF_COORDS = "Given region has an invalid number of coordinates.";
-
+    public static final String RESPONSE_VALIDATION_ERROR = "An error occurred during validation of server response.";
+    public static final String INVALID_TARGET_PDF = "The PDF result file seems to be invalid.";
 
     private ExceptionMsgs() {
 

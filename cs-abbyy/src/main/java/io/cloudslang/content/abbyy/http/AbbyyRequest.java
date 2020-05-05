@@ -12,7 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.abbyy.entities;
+package io.cloudslang.content.abbyy.http;
+
+import io.cloudslang.content.abbyy.entities.LocationId;
 
 import java.io.File;
 

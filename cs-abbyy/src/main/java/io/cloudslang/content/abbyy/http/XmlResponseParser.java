@@ -13,11 +13,9 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.abbyy.utils;
+package io.cloudslang.content.abbyy.http;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
-import io.cloudslang.content.abbyy.constants.MiscConstants;
-import io.cloudslang.content.abbyy.entities.AbbyyResponse;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.ClientSideException;
 import io.cloudslang.content.abbyy.exceptions.ServerSideException;
@@ -32,7 +30,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.StringReader;
-import java.util.Map;
 
 public class XmlResponseParser implements AbbyyResponseParser {
 
@@ -56,7 +53,8 @@ public class XmlResponseParser implements AbbyyResponseParser {
     }
 
 
-    private AbbyyResponse parseResponse(short statusCode, String responseBody) throws Exception {
+    private synchronized AbbyyResponse parseResponse(short statusCode, String responseBody) throws Exception {
+        responseBody = responseBody.trim().replaceFirst("^([\\W]+)<","<");
         Document xml = this.xmlDocBuilder.parse(new InputSource(new StringReader(responseBody)));
         xml.normalize();
         return (statusCode == 200 || statusCode == 550 || statusCode == 501) ?
@@ -66,19 +64,16 @@ public class XmlResponseParser implements AbbyyResponseParser {
 
 
     @Override
-    public AbbyyResponse parseResponse(Map<String, String> response) throws Exception {
+    public AbbyyResponse parseResponse(HttpClientResponse response) throws Exception {
         if (response == null) {
             throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "response"));
         }
 
-        if (StringUtils.isNotEmpty(response.get(MiscConstants.HTTP_EXCEPTION_OUTPUT))) {
-            throw new Exception(response.get(MiscConstants.HTTP_EXCEPTION_OUTPUT));
+        if (StringUtils.isNotEmpty(response.getException())) {
+            throw new Exception(response.getException());
         }
 
-        return parseResponse(
-                Short.parseShort(response.get(MiscConstants.HTTP_STATUS_CODE_OUTPUT)),
-                response.get(MiscConstants.HTTP_RETURN_RESULT_OUTPUT)
-        );
+        return parseResponse(response.getStatusCode(), response.getReturnResult());
     }
 
 

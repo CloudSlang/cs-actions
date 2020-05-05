@@ -225,10 +225,6 @@ public class ProcessImageAction {
                 .sourceFile(sourceFile);
         try {
             return new ProcessImageService().execute(inputBuilder.build());
-        } catch (TimeoutException ex) {
-            Map<String, String> results = ResultUtils.fromException(ex);
-            results.put(OutputNames.TIMED_OUT, String.valueOf(true));
-            return results;
         } catch (Exception ex) {
             return ResultUtils.fromException(ex);
         }
