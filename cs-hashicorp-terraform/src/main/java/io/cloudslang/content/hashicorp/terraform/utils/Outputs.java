@@ -40,6 +40,11 @@ public class Outputs extends OutputNames {
         public static final String VARIABLE_ID = "variableId";
     }
 
+    public static class CreateWorkspaceVariableOutputs {
+        public static final String WORKSPACE_VARIABLE_ID = "workspaceVariableId";
+    }
+
+
     public static class ListWorkspacesOutputs {
         public static final String WORKSPACE_LIST = "workspaceList";
     }

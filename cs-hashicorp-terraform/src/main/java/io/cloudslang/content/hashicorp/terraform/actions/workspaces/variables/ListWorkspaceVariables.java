@@ -21,7 +21,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceVariableInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -35,10 +35,10 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.listWorkspaceVariables;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListVariableConstants.LIST_VARIABLE_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListWorkspaceVariableConstants.LIST_WORKSPACE_VARIABLE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListVariables.LIST_VARIABLE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListWorkspaceVariables.LIST_WORKSPACE_VARIABLE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
@@ -55,8 +55,8 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class ListWorkspaceVariables {
 
-    @Action(name = LIST_VARIABLE_OPERATION_NAME,
-            description = LIST_VARIABLE_DESC,
+    @Action(name = LIST_WORKSPACE_VARIABLE_OPERATION_NAME,
+            description = LIST_WORKSPACE_VARIABLE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
@@ -106,7 +106,7 @@ public class ListWorkspaceVariables {
         }
 
         try {
-            final Map<String, String> result = listWorkspaceVariables(TerraformVariableInputs.builder()
+            final Map<String, String> result = listWorkspaceVariables(TerraformWorkspaceVariableInputs.builder()
                     .workspaceId(workspaceId)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
@@ -126,13 +126,13 @@ public class ListWorkspaceVariables {
                             .responseCharacterSet(responseCharacterSet)
                             .build())
                     .build());
-            final String listVariables = result.get(RETURN_RESULT);
+            final String listWorkspaceVariables = result.get(RETURN_RESULT);
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                return getOperationResults(result, listVariables, listVariables, listVariables);
+                return getOperationResults(result, listWorkspaceVariables, listWorkspaceVariables, listWorkspaceVariables);
             }else{
-                return  getFailureResults(RETURN_RESULT,statusCode,listVariables);
+                return  getFailureResults(RETURN_RESULT,statusCode,listWorkspaceVariables);
             }
 
         } catch (Exception exception) {

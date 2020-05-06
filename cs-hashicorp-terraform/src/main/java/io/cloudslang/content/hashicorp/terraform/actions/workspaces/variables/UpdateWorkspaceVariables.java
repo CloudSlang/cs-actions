@@ -21,7 +21,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceVariableInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.HashMap;
@@ -34,25 +34,24 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.getVariablesOperationOutput;
+import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.getWorkspaceVariablesOperationOutput;
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.updateWorkspaceVariables;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.UpdateVariableConstants.UPDATE_VARIABLES_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.UpdateWorkspaceVariableConstants.UPDATE_WORKSPACE_VARIABLES_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.SENSITIVE_VARIABLES_JSON_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspaceVariable.SENSITIVE_WORKSPACE_VARIABLES_JSON_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariables.UPDATE_VARIABLES_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariables.VARIABLES_JSON_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateWorkspaceVariables.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.SENSITIVE_VARIABLES_JSON;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.VARIABLES_JSON;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceVariableInputs.SENSITIVE_WORKSPACE_VARIABLES_JSON;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceVariableInputs.WORKSPACE_VARIABLES_JSON;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCreateVariablesInput;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCreateWorkspaceVariablesInput;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -61,8 +60,8 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class UpdateWorkspaceVariables {
 
-    @Action(name = UPDATE_VARIABLES_OPERATION_NAME,
-            description = UPDATE_VARIABLES_DESC,
+    @Action(name = UPDATE_WORKSPACE_VARIABLES_OPERATION_NAME,
+            description = UPDATE_WORKSPACE_VARIABLES_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
@@ -74,8 +73,8 @@ public class UpdateWorkspaceVariables {
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
-                                       @Param(value = VARIABLES_JSON, description = VARIABLES_JSON_DESC) String variablesJson,
-                                       @Param(value = SENSITIVE_VARIABLES_JSON, encrypted = true, description = SENSITIVE_VARIABLES_JSON_DESC) String sensitiveVariablesJson,
+                                       @Param(value = WORKSPACE_VARIABLES_JSON, description = WORKSPACE_VARIABLES_JSON_DESC) String workspaceVariablesJson,
+                                       @Param(value = SENSITIVE_WORKSPACE_VARIABLES_JSON, encrypted = true, description = SENSITIVE_WORKSPACE_VARIABLES_JSON_DESC) String sensitiveWorkspaceVariablesJson,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -92,8 +91,8 @@ public class UpdateWorkspaceVariables {
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
         workspaceId = defaultIfEmpty(workspaceId, BOOLEAN_TRUE);
-        variablesJson = defaultIfEmpty(variablesJson, EMPTY);
-        sensitiveVariablesJson = defaultIfEmpty(sensitiveVariablesJson, EMPTY);
+        workspaceVariablesJson = defaultIfEmpty(workspaceVariablesJson, EMPTY);
+        sensitiveWorkspaceVariablesJson = defaultIfEmpty(sensitiveWorkspaceVariablesJson, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -114,15 +113,15 @@ public class UpdateWorkspaceVariables {
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
-        final List<String> exceptionMessages = verifyCreateVariablesInput(variablesJson, sensitiveVariablesJson);
+        final List<String> exceptionMessages = verifyCreateWorkspaceVariablesInput(workspaceVariablesJson, sensitiveWorkspaceVariablesJson);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
         try {
-            final Map<String, Map<String, String>> result = updateWorkspaceVariables(TerraformVariableInputs.builder()
+            final Map<String, Map<String, String>> result = updateWorkspaceVariables(TerraformWorkspaceVariableInputs.builder()
                     .workspaceId(workspaceId)
-                    .variableJson(variablesJson)
-                    .sensitiveVariableJson(sensitiveVariablesJson)
+                    .workspaceVariableJson(workspaceVariablesJson)
+                    .sensitiveWorkspaceVariableJson(sensitiveWorkspaceVariablesJson)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
                             .proxyHost(proxyHost)
@@ -143,14 +142,14 @@ public class UpdateWorkspaceVariables {
                     .build());
 
             final Map<String, String> results = new HashMap<>();
-            final int statusCode = Integer.parseInt(getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).get(STATUS_CODE));
+            final int statusCode = Integer.parseInt(getWorkspaceVariablesOperationOutput(workspaceVariablesJson, sensitiveWorkspaceVariablesJson, result).get(STATUS_CODE));
             if (statusCode >= 200 && statusCode < 300) {
-                results.put(RETURN_RESULT, getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).toString());
-                results.put(RETURN_CODE, getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).get(RETURN_CODE));
-                results.put(STATUS_CODE, getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).get(STATUS_CODE));
+                results.put(RETURN_RESULT, getWorkspaceVariablesOperationOutput(workspaceVariablesJson, sensitiveWorkspaceVariablesJson, result).toString());
+                results.put(RETURN_CODE, getWorkspaceVariablesOperationOutput(workspaceVariablesJson, sensitiveWorkspaceVariablesJson, result).get(RETURN_CODE));
+                results.put(STATUS_CODE, getWorkspaceVariablesOperationOutput(workspaceVariablesJson, sensitiveWorkspaceVariablesJson, result).get(STATUS_CODE));
                 return  results;
             } else {
-                return getFailureResults(workspaceId, statusCode, getVariablesOperationOutput(variablesJson, sensitiveVariablesJson, result).toString());
+                return getFailureResults(workspaceId, statusCode, getWorkspaceVariablesOperationOutput(workspaceVariablesJson, sensitiveWorkspaceVariablesJson, result).toString());
             }
 
         } catch (Exception exception) {

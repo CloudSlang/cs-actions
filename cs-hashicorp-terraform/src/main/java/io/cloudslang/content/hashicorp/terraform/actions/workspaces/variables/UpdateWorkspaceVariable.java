@@ -21,7 +21,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceVariableInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -35,12 +35,12 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.updateWorkspaceVariable;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.UpdateVariableConstants.UPDATE_VARIABLE_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.UpdateWorkspaceVariableConstants.UPDATE_WORKSPACE_VARIABLE_OPERATION_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.VARIABLE_ID_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspaceVariable.WORKSPACE_VARIABLE_ID_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariables.VARIABLE_REQUEST_BODY_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateVariables.UPDATE_VARIABLE_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateWorkspaceVariables.WORKSPACE_VARIABLE_REQUEST_BODY_DESC;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.UpdateWorkspaceVariables.UPDATE_WORKSPACE_VARIABLE_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
@@ -49,7 +49,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInput
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateVariableOutputs.VARIABLE_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceVariableOutputs.WORKSPACE_VARIABLE_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -57,8 +57,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class UpdateWorkspaceVariable {
-    @Action(name = UPDATE_VARIABLE_OPERATION_NAME,
-            description = UPDATE_VARIABLE_DESC,
+    @Action(name = UPDATE_WORKSPACE_VARIABLE_OPERATION_NAME,
+            description = UPDATE_WORKSPACE_VARIABLE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
@@ -70,8 +70,8 @@ public class UpdateWorkspaceVariable {
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
-                                       @Param(value = VARIABLE_ID, required = true, description = VARIABLE_ID_DESC) String variableId,
-                                       @Param(value = REQUEST_BODY, required = true, description = VARIABLE_REQUEST_BODY_DESC) String requestBody,
+                                       @Param(value = WORKSPACE_VARIABLE_ID, required = true, description = WORKSPACE_VARIABLE_ID_DESC) String workspaceVariableId,
+                                       @Param(value = REQUEST_BODY, required = true, description = WORKSPACE_VARIABLE_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -111,9 +111,9 @@ public class UpdateWorkspaceVariable {
         }
 
         try {
-            final Map<String, String> result = updateWorkspaceVariable(TerraformVariableInputs.builder()
+            final Map<String, String> result = updateWorkspaceVariable(TerraformWorkspaceVariableInputs.builder()
                     .workspaceId(workspaceId)
-                    .variableId(variableId)
+                    .workspaceVariableId(workspaceVariableId)
                     .commonInputs(TerraformCommonInputs.builder()
                             .authToken(authToken)
                             .requestBody(requestBody)
@@ -138,7 +138,7 @@ public class UpdateWorkspaceVariable {
             if (statusCode >= 200 && statusCode < 300) {
                 return  getOperationResults(result, returnMessage, returnMessage, returnMessage);
             }else{
-                return getFailureResults(variableId,statusCode,returnMessage);
+                return getFailureResults(workspaceVariableId,statusCode,returnMessage);
             }
         } catch (Exception exception) {
             return getFailureResultsMap(exception);

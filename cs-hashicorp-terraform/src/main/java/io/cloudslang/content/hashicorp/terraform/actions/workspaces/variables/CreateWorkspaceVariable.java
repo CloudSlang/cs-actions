@@ -22,7 +22,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceVariableInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -36,10 +36,10 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.createWorkspaceVariable;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.CREATE_VARIABLE_OPERATION_NAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateVariableConstants.VARIABLE_ID_JSON_PATH;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceVariableConstants.CREATE_WORKSPACE_VARIABLE_OPERATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CreateWorkspaceVariableConstants.WORKSPACE_VARIABLE_ID_JSON_PATH;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateVariable.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspaceVariable.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.CreateWorkspace.WORKSPACE_ID_DESC;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
@@ -48,10 +48,10 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInput
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceVariableInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCreateVariableInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateVariableOutputs.VARIABLE_ID;
+import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCreateWorkspaceVariableInputs;
+import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceVariableOutputs.WORKSPACE_VARIABLE_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -60,27 +60,27 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateWorkspaceVariable {
 
-    @Action(name = CREATE_VARIABLE_OPERATION_NAME,
-            description = CREATE_VARIABLE_DESC,
+    @Action(name = CREATE_WORKSPACE_VARIABLE_OPERATION_NAME,
+            description = CREATE_WORKSPACE_VARIABLE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = VARIABLE_ID, description = VARIABLE_ID_DESC)
+                    @Output(value = WORKSPACE_VARIABLE_ID, description = WORKSPACE_VARIABLE_ID_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = VARIABLE_NAME, description = VARIABLE_NAME_DESC) String variableName,
-                                       @Param(value = VARIABLE_VALUE, description = VARIABLE_VALUE_DESC) String variableValue,
-                                       @Param(value = SENSITIVE_VARIABLE_VALUE, encrypted = true, description = SENSITIVE_VARIABLE_VALUE_DESC) String sensitiveVariableValue,
-                                       @Param(value = VARIABLE_CATEGORY, description = VARIABLE_CATEGORY_DESC) String variableCategory,
+                                       @Param(value = WORKSPACE_VARIABLE_NAME, description = WORKSPACE_VARIABLE_NAME_DESC) String workspaceVariableName,
+                                       @Param(value = WORKSPACE_VARIABLE_VALUE, description = WORKSPACE_VARIABLE_VALUE_DESC) String workspaceVariableValue,
+                                       @Param(value = SENSITIVE_WORKSPACE_VARIABLE_VALUE, encrypted = true, description = SENSITIVE_WORKSPACE_VARIABLE_VALUE_DESC) String sensitiveWorkspaceVariableValue,
+                                       @Param(value = WORKSPACE_VARIABLE_CATEGORY, description = WORKSPACE_VARIABLE_CATEGORY_DESC) String workspaceVariableCategory,
                                        @Param(value = HCL, description = HCL_DESC) String hcl,
                                        @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
-                                       @Param(value = REQUEST_BODY, description = VARIABLE_REQUEST_BODY_DESC) String requestBody,
-                                       @Param(value = SENSITIVE_REQUEST_BODY,encrypted = true, description = VARIABLE_SENSITIVE_REQUEST_BODY_DESC) String sensitiveVariableRequestBody,
+                                       @Param(value = REQUEST_BODY, description = WORKSPACE_VARIABLE_REQUEST_BODY_DESC) String requestBody,
+                                       @Param(value = SENSITIVE_REQUEST_BODY,encrypted = true, description = WORKSPACE_VARIABLE_SENSITIVE_REQUEST_BODY_DESC) String sensitiveWorkspaceVariableRequestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -96,14 +96,14 @@ public class CreateWorkspaceVariable {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
         authToken = defaultIfEmpty(authToken, EMPTY);
-        variableName = defaultIfEmpty(variableName, EMPTY);
-        variableValue = defaultIfEmpty(variableValue, EMPTY);
-        sensitiveVariableValue = defaultIfEmpty(sensitiveVariableValue, EMPTY);
-        variableCategory = defaultIfEmpty(variableCategory, EMPTY);
+        workspaceVariableName = defaultIfEmpty(workspaceVariableName, EMPTY);
+        workspaceVariableValue = defaultIfEmpty(workspaceVariableValue, EMPTY);
+        sensitiveWorkspaceVariableValue = defaultIfEmpty(sensitiveWorkspaceVariableValue, EMPTY);
+        workspaceVariableCategory = defaultIfEmpty(workspaceVariableCategory, EMPTY);
         hcl = defaultIfEmpty(hcl, BOOLEAN_FALSE);
         workspaceId = defaultIfEmpty(workspaceId, BOOLEAN_TRUE);
         requestBody = defaultIfEmpty(requestBody, EMPTY);
-        sensitiveVariableRequestBody = defaultIfEmpty(sensitiveVariableRequestBody, EMPTY);
+        sensitiveWorkspaceVariableRequestBody = defaultIfEmpty(sensitiveWorkspaceVariableRequestBody, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -124,25 +124,25 @@ public class CreateWorkspaceVariable {
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
-        if(!requestBody.isEmpty() & !sensitiveVariableRequestBody.isEmpty()){
-            return getFailureResultsMap("Please provide either requestBody or sensitiveVariableRequestBody");
+        if(!requestBody.isEmpty() & !sensitiveWorkspaceVariableRequestBody.isEmpty()){
+            return getFailureResultsMap("Please provide either requestBody or sensitiveWorkspaceVariableRequestBody");
         }
-        final List<String> exceptionMessages = verifyCreateVariableInputs(workspaceId, variableCategory, variableName, requestBody,sensitiveVariableRequestBody);
+        final List<String> exceptionMessages = verifyCreateWorkspaceVariableInputs(workspaceId, workspaceVariableCategory, workspaceVariableName, requestBody,sensitiveWorkspaceVariableRequestBody);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
         try {
             final Map<String, String> result;
-            if(!variableValue.isEmpty()){
-                 result = createWorkspaceVariable(TerraformVariableInputs.builder()
-                        .variableName(variableName)
-                        .variableValue(variableValue)
-                        .variableCategory(variableCategory)
+            if(!workspaceVariableValue.isEmpty()){
+                 result = createWorkspaceVariable(TerraformWorkspaceVariableInputs.builder()
+                        .workspaceVariableName(workspaceVariableName)
+                        .workspaceVariableValue(workspaceVariableValue)
+                        .workspaceVariableCategory(workspaceVariableCategory)
                          .sensitive("false")
                         .hcl(hcl)
                         .workspaceId(workspaceId)
-                        .sensitiveVariableRequestBody(sensitiveVariableRequestBody)
+                        .sensitiveWorkspaceVariableRequestBody(sensitiveWorkspaceVariableRequestBody)
                         .commonInputs(TerraformCommonInputs.builder()
                                 .authToken(authToken)
                                 .requestBody(requestBody)
@@ -162,16 +162,16 @@ public class CreateWorkspaceVariable {
                                 .responseCharacterSet(responseCharacterSet)
                                 .build())
                         .build());
-            }else if(!sensitiveVariableValue.isEmpty()) {
-                result = createWorkspaceVariable(TerraformVariableInputs.builder()
-                        .variableName(variableName)
-                        .variableValue(EMPTY)
-                        .sensitiveVariableValue(sensitiveVariableValue)
-                        .variableCategory(variableCategory)
+            }else if(!sensitiveWorkspaceVariableValue.isEmpty()) {
+                result = createWorkspaceVariable(TerraformWorkspaceVariableInputs.builder()
+                        .workspaceVariableName(workspaceVariableName)
+                        .workspaceVariableValue(EMPTY)
+                        .sensitiveWorkspaceVariableValue(sensitiveWorkspaceVariableValue)
+                        .workspaceVariableCategory(workspaceVariableCategory)
                         .sensitive("true")
                         .hcl(hcl)
                         .workspaceId(workspaceId)
-                        .sensitiveVariableRequestBody(sensitiveVariableRequestBody)
+                        .sensitiveWorkspaceVariableRequestBody(sensitiveWorkspaceVariableRequestBody)
                         .commonInputs(TerraformCommonInputs.builder()
                                 .authToken(authToken)
                                 .requestBody(requestBody)
@@ -192,8 +192,8 @@ public class CreateWorkspaceVariable {
                                 .build())
                         .build());
             }else{
-                result = createWorkspaceVariable(TerraformVariableInputs.builder()
-                        .sensitiveVariableRequestBody(sensitiveVariableRequestBody)
+                result = createWorkspaceVariable(TerraformWorkspaceVariableInputs.builder()
+                        .sensitiveWorkspaceVariableRequestBody(sensitiveWorkspaceVariableRequestBody)
                         .commonInputs(TerraformCommonInputs.builder()
                                 .authToken(authToken)
                                 .requestBody(requestBody)
@@ -223,11 +223,11 @@ public class CreateWorkspaceVariable {
                 final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
                 if (statusCode >= 200 && statusCode < 300) {
-                    final String variableId = JsonPath.read(returnMessage, VARIABLE_ID_JSON_PATH);
-                    if (!variableId.isEmpty()) {
-                        results.put(VARIABLE_ID, variableId);
+                    final String workspaceVariableId = JsonPath.read(returnMessage, WORKSPACE_VARIABLE_ID_JSON_PATH);
+                    if (!workspaceVariableId.isEmpty()) {
+                        results.put(WORKSPACE_VARIABLE_ID, workspaceVariableId);
                     } else {
-                        results.put(VARIABLE_ID, EMPTY);
+                        results.put(WORKSPACE_VARIABLE_ID, EMPTY);
                     }
                 }else{
                     return  getFailureResults(workspaceId,statusCode,returnMessage);

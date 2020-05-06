@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.hashicorp.terraform.services;
 
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,17 +36,17 @@ public class WorkspaceVariableImplTest {
     private static final String EXPECTED_DELETE_WORKSPACE_VAR_PATH = "/api/v2/workspaces/test1/vars";
     private static final String EXPECTED_UPDATE_WORKSPACE_VAR_PATH = "/api/v2/workspaces/test1/vars";
     private final String EXPECTED_UPDATE_WORKSPACE_VARIABLE_BODY = "{\"data\": { \"id\":\"var-test1\", \"attributes\": { \"key\":\"dummyname\", \"value\":\"mars\", \"category\":\"terraform\" },\"type\":\"vars\" }}";
-    private final TerraformVariableInputs getTerraformVariableInputs = TerraformVariableInputs.builder()
-            .variableName("test")
-            .variableValue("test")
-            .sensitiveVariableValue("test")
-            .variableCategory("")
+    private final TerraformWorkspaceVariableInputs getTerraformVariableInputs = TerraformWorkspaceVariableInputs.builder()
+            .workspaceVariableName("test")
+            .workspaceVariableValue("test")
+            .sensitiveWorkspaceVariableValue("test")
+            .workspaceVariableCategory("")
             .workspaceId("test1")
             .hcl("false")
             .sensitive("false")
-            .sensitiveVariableRequestBody("")
-            .variableJson("[]")
-            .sensitiveVariableJson("[]")
+            .sensitiveWorkspaceVariableRequestBody("")
+            .workspaceVariableJson("[]")
+            .sensitiveWorkspaceVariableJson("[]")
             .commonInputs(TerraformCommonInputs.builder()
                     .authToken("")
                     .proxyHost("")
@@ -66,27 +66,27 @@ public class WorkspaceVariableImplTest {
                     .build())
             .build();
 
-    private final TerraformVariableInputs terraformVariableInputs = TerraformVariableInputs.builder()
+    private final TerraformWorkspaceVariableInputs terraformVariableInputs = TerraformWorkspaceVariableInputs.builder()
             .workspaceId("ws-test123")
-            .variableCategory("test")
-            .variableValue("test")
-            .variableName("test")
-            .variableValue("test-123")
-            .sensitiveVariableValue("test-123")
-            .variableCategory("env")
+            .workspaceVariableCategory("test")
+            .workspaceVariableValue("test")
+            .workspaceVariableName("test")
+            .workspaceVariableValue("test-123")
+            .sensitiveWorkspaceVariableValue("test-123")
+            .workspaceVariableCategory("env")
             .hcl("false")
             .sensitive("false")
             .build();
 
 
-    private final TerraformVariableInputs terraformVariableDeleteInputs = TerraformVariableInputs.builder()
+    private final TerraformWorkspaceVariableInputs terraformVariableDeleteInputs = TerraformWorkspaceVariableInputs.builder()
             .workspaceId("test1")
-            .variableId("var-test")
+            .workspaceVariableId("var-test")
             .build();
 
-    private final TerraformVariableInputs terraformVariableDeleteInputs1 = TerraformVariableInputs.builder()
+    private final TerraformWorkspaceVariableInputs terraformVariableDeleteInputs1 = TerraformWorkspaceVariableInputs.builder()
             .workspaceId("test1")
-            .variableId("var-test1")
+            .workspaceVariableId("var-test1")
             .commonInputs(TerraformCommonInputs.builder()
                     .requestBody(EXPECTED_UPDATE_WORKSPACE_VARIABLE_BODY).build())
             .build();
