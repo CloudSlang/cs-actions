@@ -14,16 +14,15 @@
  */
 
 
-
 package io.cloudslang.content.couchbase.factory.cluster;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.REBALANCING_NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.ALL_TYPE_HEADER;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.APPLICATION_JSON;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.FORM_URL_ENCODED;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1;
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 /**
  * Created by TusaM
@@ -41,7 +40,7 @@ public class ClusterHeadersBuilder {
                 wrapper.getHttpClientInputs().setHeaders(ALL_TYPE_HEADER);
                 break;
             default:
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
+                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON.getMimeType());
                 wrapper.getHttpClientInputs().setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
         }
     }
