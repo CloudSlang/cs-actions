@@ -28,5 +28,6 @@ public class Inputs {
     public static final String TEXT = "text";
     public static final String IGNORE_CASE = "ignoreCase";
     public static final String PATH_TO_FILE = "pathToFile";
+    public static final String PATHS_TO_PDF_FILES = "pathsToPDFFiles";
     public static final String PASSWORD = "password";
 }
