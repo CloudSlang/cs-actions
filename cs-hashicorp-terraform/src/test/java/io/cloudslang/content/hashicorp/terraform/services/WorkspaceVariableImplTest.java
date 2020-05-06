@@ -36,7 +36,7 @@ public class WorkspaceVariableImplTest {
     private static final String EXPECTED_DELETE_WORKSPACE_VAR_PATH = "/api/v2/workspaces/test1/vars";
     private static final String EXPECTED_UPDATE_WORKSPACE_VAR_PATH = "/api/v2/workspaces/test1/vars";
     private final String EXPECTED_UPDATE_WORKSPACE_VARIABLE_BODY = "{\"data\": { \"id\":\"var-test1\", \"attributes\": { \"key\":\"dummyname\", \"value\":\"mars\", \"category\":\"terraform\" },\"type\":\"vars\" }}";
-    private final TerraformWorkspaceVariableInputs getTerraformVariableInputs = TerraformWorkspaceVariableInputs.builder()
+    private final TerraformWorkspaceVariableInputs getTerraformWorkspaceVariableInputs = TerraformWorkspaceVariableInputs.builder()
             .workspaceVariableName("test")
             .workspaceVariableValue("test")
             .sensitiveWorkspaceVariableValue("test")
@@ -66,7 +66,7 @@ public class WorkspaceVariableImplTest {
                     .build())
             .build();
 
-    private final TerraformWorkspaceVariableInputs terraformVariableInputs = TerraformWorkspaceVariableInputs.builder()
+    private final TerraformWorkspaceVariableInputs terraformWorkspaceVariableInputs = TerraformWorkspaceVariableInputs.builder()
             .workspaceId("ws-test123")
             .workspaceVariableCategory("test")
             .workspaceVariableValue("test")
@@ -79,12 +79,12 @@ public class WorkspaceVariableImplTest {
             .build();
 
 
-    private final TerraformWorkspaceVariableInputs terraformVariableDeleteInputs = TerraformWorkspaceVariableInputs.builder()
+    private final TerraformWorkspaceVariableInputs terraformWorkspaceVariableDeleteInputs = TerraformWorkspaceVariableInputs.builder()
             .workspaceId("test1")
             .workspaceVariableId("var-test")
             .build();
 
-    private final TerraformWorkspaceVariableInputs terraformVariableDeleteInputs1 = TerraformWorkspaceVariableInputs.builder()
+    private final TerraformWorkspaceVariableInputs terraformWorkspaceVariableDeleteInputs1 = TerraformWorkspaceVariableInputs.builder()
             .workspaceId("test1")
             .workspaceVariableId("var-test1")
             .commonInputs(TerraformCommonInputs.builder()
@@ -92,44 +92,44 @@ public class WorkspaceVariableImplTest {
             .build();
 
     @Test
-    public void getDeleteVariablePath() {
-        String path = getWorkspaceVariablePath(terraformVariableDeleteInputs);
+    public void getDeleteWorkspaceVariablePath() {
+        String path = getWorkspaceVariablePath(terraformWorkspaceVariableDeleteInputs);
         assertEquals(EXPECTED_DELETE_WORKSPACE_VAR_PATH, path);
 
     }
 
     @Test
-    public void getUpdateVariablePath() {
-        String path = getWorkspaceVariablePath(terraformVariableDeleteInputs1);
+    public void getUpdateWorkspaceVariablePath() {
+        String path = getWorkspaceVariablePath(terraformWorkspaceVariableDeleteInputs1);
         assertEquals(EXPECTED_UPDATE_WORKSPACE_VAR_PATH, path);
 
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void createVariable() throws Exception {
-        WorkspaceVariableImpl.createWorkspaceVariable(getTerraformVariableInputs);
+    public void createWorkspaceVariable() throws Exception {
+        WorkspaceVariableImpl.createWorkspaceVariable(getTerraformWorkspaceVariableInputs);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void listVariables()throws Exception{
-        WorkspaceVariableImpl.listWorkspaceVariables(getTerraformVariableInputs);
+    public void listWorkspaceVariables()throws Exception{
+        WorkspaceVariableImpl.listWorkspaceVariables(getTerraformWorkspaceVariableInputs);
     }
     @Test
-    public void createVariables() throws  Exception{
-        Map<String,Map<String,String>> createVariablesResult= WorkspaceVariableImpl.createWorkspaceVariables(getTerraformVariableInputs);
-        assertEquals(0,createVariablesResult.size());
+    public void createWorkspaceVariables() throws  Exception{
+        Map<String,Map<String,String>> createWorkspaceVariablesResult= WorkspaceVariableImpl.createWorkspaceVariables(getTerraformWorkspaceVariableInputs);
+        assertEquals(0,createWorkspaceVariablesResult.size());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void updateVariables() throws  Exception{
-        Map<String,Map<String,String>> updateVariablesResult= WorkspaceVariableImpl.updateWorkspaceVariables(getTerraformVariableInputs);
-        assertEquals(0,updateVariablesResult.size());
+    public void updateWorkspaceVariables() throws  Exception{
+        Map<String,Map<String,String>> updateWorkspaceVariablesResult= WorkspaceVariableImpl.updateWorkspaceVariables(getTerraformWorkspaceVariableInputs);
+        assertEquals(0,updateWorkspaceVariablesResult.size());
     }
 
     @Test
-    public void getCreateVariableBody() {
-        String createVariableBody = WorkspaceVariableImpl.createWorkspaceVariableRequestBody(terraformVariableInputs);
-        assertEquals(EXPECTED_CREATE_WORKSPACE_VARIABLE_BODY, createVariableBody);
+    public void getCreateWorkspaceVariableBody() {
+        String createWorkspaceVariableBody = WorkspaceVariableImpl.createWorkspaceVariableRequestBody(terraformWorkspaceVariableInputs);
+        assertEquals(EXPECTED_CREATE_WORKSPACE_VARIABLE_BODY, createWorkspaceVariableBody);
     }
 
 
