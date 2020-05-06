@@ -144,6 +144,22 @@ public class CouchbaseServiceTest {
     }
 
     @Test
+    public void testFlushBucket() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "POST");
+        CommonInputs commonInputs = getCommonInputs("FlushBucket", "buckets", "http://anywhere.couchbase.com:8091");
+        BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("toBeFlushedBucket").build();
+        toTest.execute(httpClientInputs, commonInputs, bucketInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://anywhere.couchbase.com:8091/pools/default/buckets/toBeFlushedBucket/controller/doFlush", httpClientInputs.getUrl());
+        assertEquals("application/json", httpClientInputs.getContentType());
+    }
+
+    @Test
     public void testDeleteBucket() throws MalformedURLException {
         httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
                 "", "", "", "", "", "",
