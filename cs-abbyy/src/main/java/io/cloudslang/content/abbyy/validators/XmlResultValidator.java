@@ -16,12 +16,12 @@
 package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
-import io.cloudslang.content.abbyy.constants.MiscConstants;
+import io.cloudslang.content.abbyy.constants.Limits;
 import io.cloudslang.content.abbyy.entities.ExportFormat;
-import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.abbyy.http.AbbyyAPI;
+import io.cloudslang.content.abbyy.http.AbbyyApi;
 import io.cloudslang.content.abbyy.http.AbbyyRequest;
+import org.jetbrains.annotations.NotNull;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -29,53 +29,35 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 
-public class XmlResultValidator implements AbbyyResultValidator {
+public class XmlResultValidator extends AbbyyResultValidator {
 
     private static final String DISALLOW_DOCTYPE = "http://apache.org/xml/features/disallow-doctype-decl";
     private static final String FORBID_EXTERNAL_ENTITY = "http://xml.org/sax/features/external-general-entities";
     private static final String FORBID_EXTERNAL_PARAMETERS = "http://xml.org/sax/features/external-parameter-entities";
 
     private final String xsdSchemaPath;
-    private final AbbyyAPI abbyyApi;
+    private final AbbyyApi abbyyApi;
 
 
-    public XmlResultValidator(AbbyyAPI abbyyApi, String xsdSchemaPath) {
-        if (xsdSchemaPath == null) {
-            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "xsdSchemaPath"));
-        }
-
+    public XmlResultValidator(@NotNull AbbyyApi abbyyApi, @NotNull String xsdSchemaPath) {
         this.abbyyApi = abbyyApi;
         this.xsdSchemaPath = xsdSchemaPath;
     }
 
 
     @Override
-    public ValidationException validateBeforeDownload(AbbyyRequest abbyyInitialRequest, String url) throws IOException, AbbyySdkException {
-        if (abbyyInitialRequest == null) {
-            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "abbyyInitialRequest"));
+    void validateBefore(@NotNull AbbyyRequest abbyyInitialRequest, @NotNull String url) throws Exception {
+        if (this.abbyyApi.getResultSize(abbyyInitialRequest, url, ExportFormat.XML) > Limits.MAX_SIZE_OF_RESULT) {
+            throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_RESULT_EXCEEDED, ExportFormat.XML));
         }
-        if (url == null) {
-            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "url"));
-        }
-
-        if (this.abbyyApi.getResultSize(abbyyInitialRequest, url, ExportFormat.XML) > MiscConstants.MAX_SIZE) {
-            return new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_EXCEEDED, ExportFormat.XML));
-        }
-
-        return null;
     }
 
 
     @Override
-    public ValidationException validateAfterDownload(String xml) throws IOException, SAXException {
-        if (xml == null) {
-            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "xml"));
-        }
-
+    void validateAfter(@NotNull String xml) throws Exception {
         Validator xmlValidator = newXmlValidator();
 
         xml = xml.trim().replaceFirst("^([\\W]+)<", "<");
@@ -83,9 +65,8 @@ public class XmlResultValidator implements AbbyyResultValidator {
         try {
             StringReader xmlReader = new StringReader(xml);
             xmlValidator.validate(new StreamSource(xmlReader));
-            return null;
         } catch (SAXException ex) {
-            return new ValidationException(ExceptionMsgs.RESPONSE_VALIDATION_ERROR + ex.getMessage());
+            throw new ValidationException(ExceptionMsgs.RESPONSE_VALIDATION_ERROR + ex.getMessage());
         }
     }
 

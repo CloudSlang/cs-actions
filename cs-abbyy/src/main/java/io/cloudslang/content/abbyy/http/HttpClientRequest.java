@@ -18,6 +18,7 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.abbyy.constants.SecurityConstants;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 class HttpClientRequest {
     private String url;
@@ -75,242 +76,242 @@ class HttpClientRequest {
     }
 
 
-    public String getUrl() {
+    public @Nullable String getUrl() {
         return url;
     }
 
 
-    public String getTlsVersion() {
+    public @Nullable String getTlsVersion() {
         return tlsVersion;
     }
 
 
-    public String getAllowedCyphers() {
+    public @Nullable String getAllowedCyphers() {
         return allowedCyphers;
     }
 
 
-    public String getAuthType() {
+    public @Nullable String getAuthType() {
         return authType;
     }
 
 
-    public String getPreemptiveAuth() {
+    public @Nullable String getPreemptiveAuth() {
         return preemptiveAuth;
     }
 
 
-    public String getUsername() {
+    public @Nullable String getUsername() {
         return username;
     }
 
 
-    public String getPassword() {
+    public @Nullable String getPassword() {
         return password;
     }
 
 
-    public String getKerberosConfigFile() {
+    public @Nullable String getKerberosConfigFile() {
         return kerberosConfigFile;
     }
 
 
-    public String getKerberosLoginConfFile() {
+    public @Nullable String getKerberosLoginConfFile() {
         return kerberosLoginConfFile;
     }
 
 
-    public String getKerberosSkipPortForLookup() {
+    public @Nullable String getKerberosSkipPortForLookup() {
         return kerberosSkipPortForLookup;
     }
 
 
-    public String getProxyHost() {
+    public @Nullable String getProxyHost() {
         return proxyHost;
     }
 
 
-    public String getProxyPort() {
+    public @Nullable String getProxyPort() {
         return proxyPort;
     }
 
 
-    public String getProxyUsername() {
+    public @Nullable String getProxyUsername() {
         return proxyUsername;
     }
 
 
-    public String getProxyPassword() {
+    public @Nullable String getProxyPassword() {
         return proxyPassword;
     }
 
 
-    public String getTrustAllRoots() {
+    public @Nullable String getTrustAllRoots() {
         return trustAllRoots;
     }
 
 
-    public String getX509HostnameVerifier() {
+    public @Nullable String getX509HostnameVerifier() {
         return x509HostnameVerifier;
     }
 
 
-    public String getTrustKeystore() {
+    public @Nullable String getTrustKeystore() {
         return trustKeystore;
     }
 
 
-    public String getTrustPassword() {
+    public @Nullable String getTrustPassword() {
         return trustPassword;
     }
 
 
-    public String getKeystore() {
+    public @Nullable String getKeystore() {
         return keystore;
     }
 
 
-    public String getKeystorePassword() {
+    public @Nullable String getKeystorePassword() {
         return keystorePassword;
     }
 
 
-    public String getConnectTimeout() {
+    public @Nullable String getConnectTimeout() {
         return connectTimeout;
     }
 
 
-    public String getSocketTimeout() {
+    public @Nullable String getSocketTimeout() {
         return socketTimeout;
     }
 
 
-    public String getUseCookies() {
+    public @Nullable String getUseCookies() {
         return useCookies;
     }
 
 
-    public String getKeepAlive() {
+    public @Nullable String getKeepAlive() {
         return keepAlive;
     }
 
 
-    public String getConnectionsMaxPerRoute() {
+    public @Nullable String getConnectionsMaxPerRoute() {
         return connectionsMaxPerRoute;
     }
 
 
-    public String getConnectionsMaxTotal() {
+    public @Nullable String getConnectionsMaxTotal() {
         return connectionsMaxTotal;
     }
 
 
-    public String getHeaders() {
+    public @Nullable String getHeaders() {
         return headers;
     }
 
 
-    public String getResponseCharacterSet() {
+    public @Nullable String getResponseCharacterSet() {
         return responseCharacterSet;
     }
 
 
-    public String getDestinationFile() {
+    public @Nullable String getDestinationFile() {
         return destinationFile;
     }
 
 
-    public String getFollowRedirects() {
+    public @Nullable String getFollowRedirects() {
         return followRedirects;
     }
 
 
-    public String getQueryParams() {
+    public @Nullable String getQueryParams() {
         return queryParams;
     }
 
 
-    public String getQueryParamsAreURLEncoded() {
+    public @Nullable String getQueryParamsAreURLEncoded() {
         return queryParamsAreURLEncoded;
     }
 
 
-    public String getQueryParamsAreFormEncoded() {
+    public @Nullable String getQueryParamsAreFormEncoded() {
         return queryParamsAreFormEncoded;
     }
 
 
-    public String getFormParams() {
+    public @Nullable String getFormParams() {
         return formParams;
     }
 
 
-    public String getFormParamsAreURLEncoded() {
+    public @Nullable String getFormParamsAreURLEncoded() {
         return formParamsAreURLEncoded;
     }
 
 
-    public String getSourceFile() {
+    public @Nullable String getSourceFile() {
         return sourceFile;
     }
 
 
-    public String getBody() {
+    public @Nullable String getBody() {
         return body;
     }
 
 
-    public String getContentType() {
+    public @Nullable String getContentType() {
         return contentType;
     }
 
 
-    public String getRequestCharacterSet() {
+    public @Nullable String getRequestCharacterSet() {
         return requestCharacterSet;
     }
 
 
-    public String getMultipartBodies() {
+    public @Nullable String getMultipartBodies() {
         return multipartBodies;
     }
 
 
-    public String getMultipartBodiesContentType() {
+    public @Nullable String getMultipartBodiesContentType() {
         return multipartBodiesContentType;
     }
 
 
-    public String getMultipartFiles() {
+    public @Nullable String getMultipartFiles() {
         return multipartFiles;
     }
 
 
-    public String getMultipartFilesContentType() {
+    public @Nullable String getMultipartFilesContentType() {
         return multipartFilesContentType;
     }
 
 
-    public String getMultipartValuesAreURLEncoded() {
+    public @Nullable String getMultipartValuesAreURLEncoded() {
         return multipartValuesAreURLEncoded;
     }
 
 
-    public String getChunkedRequestEntity() {
+    public @Nullable String getChunkedRequestEntity() {
         return chunkedRequestEntity;
     }
 
 
-    public String getMethod() {
+    public @Nullable String getMethod() {
         return method;
     }
 
 
-    public SerializableSessionObject getHttpClientCookieSession() {
+    public @Nullable SerializableSessionObject getHttpClientCookieSession() {
         return httpClientCookieSession;
     }
 
 
-    public GlobalSessionObject getHttpClientPoolingConnectionManager() {
+    public @Nullable GlobalSessionObject getHttpClientPoolingConnectionManager() {
         return httpClientPoolingConnectionManager;
     }
 

@@ -18,7 +18,6 @@ package io.cloudslang.content.abbyy.entities;
 import io.cloudslang.content.abbyy.constants.InputNames;
 import io.cloudslang.content.abbyy.http.AbbyyRequest;
 import io.cloudslang.content.abbyy.utils.InputParser;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -463,13 +462,13 @@ public class ProcessImageInput implements AbbyyRequest {
 
             input.proxyHost = this.proxyHost;
 
-            input.proxyPort = InputParser.parseProxyPort(this.proxyPort);
+            input.proxyPort = InputParser.parseShort(this.proxyPort, InputNames.PROXY_PORT);
 
             input.proxyUsername = this.proxyUsername;
 
             input.proxyPassword = this.proxyPassword;
 
-            input.trustAllRoots = InputParser.parseBoolean(this.trustAllRoots, HttpClientInputs.TRUST_ALL_ROOTS);
+            input.trustAllRoots = InputParser.parseBoolean(this.trustAllRoots, InputNames.TRUST_ALL_ROOTS);
 
             input.x509HostnameVerifier = this.x509HostnameVerifier;
 
@@ -477,30 +476,30 @@ public class ProcessImageInput implements AbbyyRequest {
 
             input.trustPassword = this.trustPassword;
 
-            input.connectTimeout = InputParser.parseNonNegativeInt(this.connectTimeout, HttpClientInputs.CONNECT_TIMEOUT);
+            input.connectTimeout = InputParser.parseInt(this.connectTimeout, InputNames.CONNECT_TIMEOUT);
 
-            input.socketTimeout = InputParser.parseNonNegativeInt(this.socketTimeout, HttpClientInputs.SOCKET_TIMEOUT);
+            input.socketTimeout = InputParser.parseInt(this.socketTimeout, InputNames.SOCKET_TIMEOUT);
 
-            input.keepAlive = InputParser.parseBoolean(this.keepAlive, HttpClientInputs.KEEP_ALIVE);
+            input.keepAlive = InputParser.parseBoolean(this.keepAlive, InputNames.KEEP_ALIVE);
 
-            input.connectionsMaxPerRoute = InputParser.parseNonNegativeInt(this.connectionsMaxPerRoute, HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE);
+            input.connectionsMaxPerRoute = InputParser.parseInt(this.connectionsMaxPerRoute, InputNames.CONNECTIONS_MAX_PER_ROUTE);
 
-            input.connectionsMaxTotal = InputParser.parseNonNegativeInt(this.connectionsMaxTotal, HttpClientInputs.CONNECTIONS_MAX_TOTAL);
+            input.connectionsMaxTotal = InputParser.parseInt(this.connectionsMaxTotal, InputNames.CONNECTIONS_MAX_TOTAL);
 
             input.responseCharacterSet = this.responseCharacterSet;
 
-            if(StringUtils.isNotEmpty(this.destinationFolder)) {
+            if (StringUtils.isNotEmpty(this.destinationFolder)) {
                 input.destinationFile = new File(this.destinationFolder);
             }
 
             input.sourceFile = new File(this.sourceFile);
 
-            String[] languages = this.language.split("[,]");
+            String[] languages = StringUtils.defaultString(this.language).split("[,]");
             input.languages = Arrays.asList(languages);
 
             input.profile = InputParser.parseEnum(this.profile, Profile.class, InputNames.PROFILE);
 
-            String[] textTypes = this.textType.split("[,]");
+            String[] textTypes = StringUtils.defaultString(this.textType).split("[,]");
             input.textTypes = new ArrayList<>();
             for (String textType : textTypes) {
                 input.textTypes.add(InputParser.parseEnum(textType, TextType.class, InputNames.TEXT_TYPE));
@@ -512,10 +511,14 @@ public class ProcessImageInput implements AbbyyRequest {
 
             input.correctSkew = InputParser.parseBoolean(this.correctSkew, InputNames.CORRECT_SKEW);
 
-            String[] exportFormats = this.exportFormat.split("[,]");
             input.exportFormats = new ArrayList<>();
-            for (String exportFormat : exportFormats) {
-                input.exportFormats.add(InputParser.parseEnum(exportFormat, ExportFormat.class, InputNames.EXPORT_FORMAT));
+            if (StringUtils.isEmpty(this.exportFormat)) {
+                input.exportFormats.add(ExportFormat.XML);
+            } else {
+                String[] exportFormats = this.exportFormat.split("[,]");
+                for (String exportFormat : exportFormats) {
+                    input.exportFormats.add(InputParser.parseEnum(exportFormat, ExportFormat.class, InputNames.EXPORT_FORMAT));
+                }
             }
 
             input.writeFormatting = InputParser.parseBoolean(this.writeFormatting, InputNames.WRITE_FORMATTING);
@@ -524,7 +527,7 @@ public class ProcessImageInput implements AbbyyRequest {
 
             input.writeTags = InputParser.parseEnum(this.writeTags, WriteTags.class, InputNames.WRITE_TAGS);
 
-            if(StringUtils.isNotEmpty(this.readBarcodes)) {
+            if (StringUtils.isNotEmpty(this.readBarcodes)) {
                 input.readBarcodes = InputParser.parseBoolean(this.readBarcodes, InputNames.READ_BARCODES);
             }
 

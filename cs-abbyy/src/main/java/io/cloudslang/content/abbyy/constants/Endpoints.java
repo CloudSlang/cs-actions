@@ -21,7 +21,7 @@ public final class Endpoints {
     public static final String GET_TASK_STATUS = "getTaskStatus";
 
 
-    private Endpoints(){
+    private Endpoints() {
 
     }
 }

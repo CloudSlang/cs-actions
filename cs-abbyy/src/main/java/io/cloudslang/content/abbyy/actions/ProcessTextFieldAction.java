@@ -149,21 +149,19 @@ public class ProcessTextFieldAction {
      */
     @Action(name = "Process Text Field",
             outputs = {
-                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.RETURN_RESULT),
                     @Output(OutputNames.XML_RESULT),
                     @Output(OutputNames.TASK_ID),
                     @Output(OutputNames.CREDITS),
                     @Output(OutputNames.STATUS_CODE),
-                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
-                    @Output(io.cloudslang.content.constants.OutputNames.EXCEPTION),
+                    @Output(OutputNames.RETURN_CODE),
+                    @Output(OutputNames.EXCEPTION),
                     @Output(OutputNames.TIMED_OUT),
             },
             responses = {
-                    @Response(text = ResponseNames.SUCCESS, field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
-                            value = ReturnCodes.SUCCESS,
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = ResponseNames.FAILURE, field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
-                            value = ReturnCodes.FAILURE,
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             })
     public Map<String, String> execute(
@@ -172,8 +170,8 @@ public class ProcessTextFieldAction {
             @Param(value = InputNames.PASSWORD, required = true, encrypted = true) String password,
             @Param(value = InputNames.REGION) String region,
             @Param(value = InputNames.LANGUAGE) String language,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOURCE_FILE, required = true) String sourceFile,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.DESTINATION_FILE) String destinationFile,
+            @Param(value = InputNames.SOURCE_FILE, required = true) String sourceFile,
+            @Param(value = InputNames.DESTINATION_FILE) String destinationFile,
             @Param(value = InputNames.LETTER_SET) String letterSet,
             @Param(value = InputNames.REG_EXP) String regExp,
             @Param(value = InputNames.TEXT_TYPE) String textType,
@@ -183,54 +181,55 @@ public class ProcessTextFieldAction {
             @Param(value = InputNames.PLACEHOLDERS_COUNT) String placeholdersCount,
             @Param(value = InputNames.DESCRIPTION) String description,
             @Param(value = InputNames.PDF_PASSWORD, encrypted = true) String pdfPassword,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST) String proxyHost,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT) String proxyPort,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_USERNAME) String proxyUsername,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PASSWORD, encrypted = true) String proxyPassword,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD, encrypted = true) String trustPassword,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECT_TIMEOUT) String connectTimeout,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOCKET_TIMEOUT) String socketTimeout,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE) String keepAlive,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoute,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet) {
-        ProcessTextFieldInput.Builder inputBuilder = new ProcessTextFieldInput.Builder()
-                .locationId(locationId)
-                .applicationId(applicationId)
-                .password(password)
-                .region(region)
-                .language(language)
-                .letterSet(letterSet)
-                .regExp(regExp)
-                .textType(textType)
-                .oneTextLine(oneTextLine)
-                .oneWordPerTextLine(oneWordPerTextLine)
-                .markingType(markingType)
-                .placeholdersCount(placeholdersCount)
-                .writingStyle(WritingStyle.DEFAULT.toString())
-                .description(description)
-                .pdfPassword(pdfPassword)
-                .proxyHost(proxyHost)
-                .proxyPort(proxyPort)
-                .proxyUsername(proxyUsername)
-                .proxyPassword(proxyPassword)
-                .trustAllRoots(trustAllRoots)
-                .x509HostnameVerifier(x509HostnameVerifier)
-                .trustKeystore(trustKeystore)
-                .trustPassword(trustPassword)
-                .connectTimeout(connectTimeout)
-                .socketTimeout(socketTimeout)
-                .keepAlive(keepAlive)
-                .connectionsMaxPerRoute(connectionsMaxPerRoute)
-                .connectionsMaxTotal(connectionsMaxTotal)
-                .responseCharacterSet(responseCharacterSet)
-                .destinationFile(destinationFile)
-                .sourceFile(sourceFile);
+            @Param(value = InputNames.PROXY_HOST) String proxyHost,
+            @Param(value = InputNames.PROXY_PORT) String proxyPort,
+            @Param(value = InputNames.PROXY_USERNAME) String proxyUsername,
+            @Param(value = InputNames.PROXY_PASSWORD, encrypted = true) String proxyPassword,
+            @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
+            @Param(value = InputNames.X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
+            @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
+            @Param(value = InputNames.CONNECT_TIMEOUT) String connectTimeout,
+            @Param(value = InputNames.SOCKET_TIMEOUT) String socketTimeout,
+            @Param(value = InputNames.KEEP_ALIVE) String keepAlive,
+            @Param(value = InputNames.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoute,
+            @Param(value = InputNames.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
+            @Param(value = InputNames.RESPONSE_CHARACTER_SET) String responseCharacterSet) {
         try {
-            return new ProcessTextFieldService().execute(inputBuilder.build());
+            ProcessTextFieldInput inputBuilder = new ProcessTextFieldInput.Builder()
+                    .locationId(locationId)
+                    .applicationId(applicationId)
+                    .password(password)
+                    .region(region)
+                    .language(language)
+                    .letterSet(letterSet)
+                    .regExp(regExp)
+                    .textType(textType)
+                    .oneTextLine(oneTextLine)
+                    .oneWordPerTextLine(oneWordPerTextLine)
+                    .markingType(markingType)
+                    .placeholdersCount(placeholdersCount)
+                    .writingStyle(WritingStyle.DEFAULT.toString())
+                    .description(description)
+                    .pdfPassword(pdfPassword)
+                    .proxyHost(proxyHost)
+                    .proxyPort(proxyPort)
+                    .proxyUsername(proxyUsername)
+                    .proxyPassword(proxyPassword)
+                    .trustAllRoots(trustAllRoots)
+                    .x509HostnameVerifier(x509HostnameVerifier)
+                    .trustKeystore(trustKeystore)
+                    .trustPassword(trustPassword)
+                    .connectTimeout(connectTimeout)
+                    .socketTimeout(socketTimeout)
+                    .keepAlive(keepAlive)
+                    .connectionsMaxPerRoute(connectionsMaxPerRoute)
+                    .connectionsMaxTotal(connectionsMaxTotal)
+                    .responseCharacterSet(responseCharacterSet)
+                    .destinationFile(destinationFile)
+                    .sourceFile(sourceFile)
+                    .build();
+            return new ProcessTextFieldService().execute(inputBuilder);
         } catch (Exception ex) {
             return ResultUtils.fromException(ex);
         }

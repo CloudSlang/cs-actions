@@ -14,15 +14,13 @@
  */
 package io.cloudslang.content.abbyy.constants;
 
-public final class MiscConstants {
+public final class Urls {
 
-    public static final String DOCUMENT_PROCESSED_SUCCESSFULLY = "The document was processed successfully.";
-    public static final String ERROR_RETRIEVING_EXPORT_FORMATS = "An error occurred during retrieval of some export formats.";
-    public static final String ANONYMOUS_AUTH_TYPE = "anonymous";
-    public static final long MAX_SIZE = 2097152;
     public static final String HOST_TEMPLATE = "%s.ocrsdk.com/%s";
+    public static final String TA_HOST_TEMPLATE = "abbyy-ta.ros.swinfra.net:3000/%s";
 
 
-    private MiscConstants() {
+    private Urls() {
+
     }
 }

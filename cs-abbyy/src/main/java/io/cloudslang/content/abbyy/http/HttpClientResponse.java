@@ -15,6 +15,8 @@
 package io.cloudslang.content.abbyy.http;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -33,27 +35,27 @@ class HttpClientResponse {
     }
 
 
-    public String getReturnResult() {
+    public @NotNull String getReturnResult() {
         return returnResult;
     }
 
 
-    public String getException() {
+    public @Nullable String getException() {
         return exception;
     }
 
 
-    public Properties getResponseHeaders() {
+    public @NotNull Properties getResponseHeaders() {
         return responseHeaders;
     }
 
 
-    public Short getStatusCode() {
+    public @Nullable Short getStatusCode() {
         return statusCode;
     }
 
 
-    public String getReturnCode() {
+    public @NotNull String getReturnCode() {
         return returnCode;
     }
 
@@ -89,6 +91,7 @@ class HttpClientResponse {
             return this;
         }
 
+
         public Builder returnCode(String returnCode) {
             this.returnCode = returnCode;
             return this;
@@ -103,8 +106,7 @@ class HttpClientResponse {
             response.exception = StringUtils.defaultString(this.exception);
 
             response.responseHeaders = new Properties();
-            String propString = StringUtils.defaultString(this.responseHeaders).replace(":", "=");
-            response.responseHeaders.load(new StringReader(propString));
+            response.responseHeaders.load(new StringReader(StringUtils.defaultString(this.responseHeaders)));
 
             response.statusCode = StringUtils.isEmpty(statusCode) ? null : Short.parseShort(statusCode);
 

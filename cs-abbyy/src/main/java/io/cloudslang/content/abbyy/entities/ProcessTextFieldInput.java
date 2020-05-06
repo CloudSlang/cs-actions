@@ -450,7 +450,7 @@ public class ProcessTextFieldInput implements AbbyyRequest {
 
             input.proxyHost = this.proxyHost;
 
-            input.proxyPort = InputParser.parseProxyPort(this.proxyPort);
+            input.proxyPort = InputParser.parseShort(this.proxyPort, InputNames.PROXY_PORT);
 
             input.proxyUsername = this.proxyUsername;
 
@@ -464,19 +464,19 @@ public class ProcessTextFieldInput implements AbbyyRequest {
 
             input.trustPassword = this.trustPassword;
 
-            input.connectTimeout = InputParser.parseNonNegativeInt(this.connectTimeout, HttpClientInputs.CONNECT_TIMEOUT);
+            input.connectTimeout = InputParser.parseInt(this.connectTimeout, HttpClientInputs.CONNECT_TIMEOUT);
 
-            input.socketTimeout = InputParser.parseNonNegativeInt(this.socketTimeout, HttpClientInputs.SOCKET_TIMEOUT);
+            input.socketTimeout = InputParser.parseInt(this.socketTimeout, HttpClientInputs.SOCKET_TIMEOUT);
 
             input.keepAlive = InputParser.parseBoolean(this.keepAlive, HttpClientInputs.KEEP_ALIVE);
 
-            input.connectionsMaxPerRoute = InputParser.parseNonNegativeInt(this.connectionsMaxPerRoute, HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE);
+            input.connectionsMaxPerRoute = InputParser.parseInt(this.connectionsMaxPerRoute, HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE);
 
-            input.connectionsMaxTotal = InputParser.parseNonNegativeInt(this.connectionsMaxTotal, HttpClientInputs.CONNECTIONS_MAX_TOTAL);
+            input.connectionsMaxTotal = InputParser.parseInt(this.connectionsMaxTotal, HttpClientInputs.CONNECTIONS_MAX_TOTAL);
 
             input.responseCharacterSet = this.responseCharacterSet;
 
-            if(StringUtils.isNotEmpty(this.destinationFile)) {
+            if (StringUtils.isNotEmpty(this.destinationFile)) {
                 input.destinationFile = new File(this.destinationFile);
             }
 
@@ -499,7 +499,7 @@ public class ProcessTextFieldInput implements AbbyyRequest {
 
             input.markingType = InputParser.parseEnum(this.markingType, MarkingType.class, InputNames.MARKING_TYPE);
 
-            input.placeholdersCount = InputParser.parseNonNegativeInt(this.placeholdersCount, InputNames.PLACEHOLDERS_COUNT);
+            input.placeholdersCount = InputParser.parseInt(this.placeholdersCount, InputNames.PLACEHOLDERS_COUNT);
 
             input.writingStyle = InputParser.parseEnum(this.writingStyle, WritingStyle.class, InputNames.WRITING_STYLE);
 

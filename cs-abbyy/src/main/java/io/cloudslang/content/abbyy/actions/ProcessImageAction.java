@@ -31,7 +31,6 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 
 public class ProcessImageAction {
@@ -39,96 +38,96 @@ public class ProcessImageAction {
     /**
      * Converts a given image to text in the specified output format using the ABBYY Cloud OCR REST API v1.
      *
-     * @param locationId               The ID of the processing location to be used. Please note that the connection of your
-     *                                 application to the processing location is specified manually during application creation,
-     *                                 i.e. the application is bound to work with only one of the available locations.
-     *                                 Valid values: 'cloud-eu', 'cloud-westus'.
-     * @param applicationId            The ID of the application to be used.
-     * @param password                 The password for the application.
-     * @param language                 Specifies recognition language of the document. This parameter can contain several language
-     *                                 names separated with commas, for example "English,French,German".
-     *                                 Valid: see the official ABBYY CLoud OCR SDK documentation.
-     *                                 Currently, the only official language supported by this operation is 'English'.
-     *                                 Default: 'English'.
-     * @param sourceFile               The absolute path of the image to be loaded and converted using the API.
-     * @param destinationFolder        The absolute path of a directory on disk where to save the entities returned by the response.
-     *                                 For each export format selected a file will be created in the specified directory with name of
-     *                                 'sourceFile' and corresponding extension (e.g. for exportFormat='xml,txt' and sourceFile='source.jpg'
-     *                                 the files 'source.xml' and 'source.txt' will be created). If one of files already exists then an
-     *                                 exception will be thrown.
-     * @param textType                 Specifies the type of the text on a page.
-     *                                 This parameter may also contain several text types separated with commas, for example "normal,matrix".
-     *                                 Valid values: 'normal', 'typewriter', 'matrix', 'index', 'ocrA', 'ocrB', 'e13b', 'cmc7', 'gothic'.
-     *                                 Default: 'normal'.
-     * @param imageSource              Specifies the source of the image. It can be either a scanned image, or a photograph created
-     *                                 with a digital camera. Special preprocessing operations can be performed with the image depending
-     *                                 on the selected source. For example, the system can automatically correct distorted text lines,
-     *                                 poor focus and lighting on photos.
-     *                                 Valid values: 'auto', 'photo', 'scanner'.
-     *                                 Default: 'auto'.
-     * @param correctOrientation       Specifies whether the orientation of the image should be automatically detected and corrected.
-     *                                 Valid values: 'true', 'false'.
-     *                                 Default: 'true'.
-     * @param correctSkew              Specifies whether the skew of the image should be automatically detected and corrected.
-     *                                 Valid values: 'true', 'false'.
-     *                                 Default: 'true'.
-     * @param exportFormat             Specifies the export format.
-     *                                 This parameter can contain up to three export formats, separated with commas (example: "pdfSearchable,txt,xml").
-     *                                 Valid values: 'txt', 'pdfSearchable', 'xml'.
-     *                                 Default: 'xml'.
-     * @param description              Contains the description of the processing task. Cannot contain more than 255 characters.
-     *                                 If the description contains more than 255 characters, then the text will be truncated.
-     * @param pdfPassword              Contains a password for accessing password-protected images in PDF format.
-     * @param proxyHost                The proxy server used to access the web site.
-     * @param proxyPort                The proxy server port. The value '-1' indicates that the proxy port is not set
-     *                                 and the scheme default port will be used, e.g. if the scheme is 'http://' and
-     *                                 the 'proxyPort' is set to '-1' then port '80' will be used.
-     *                                 Valid values: -1 and integer values greater than 0.
-     *                                 Default value: 8080.
-     * @param proxyUsername            The user name used when connecting to the proxy.
-     * @param proxyPassword            The proxy server password associated with the proxyUsername input value.
-     * @param trustAllRoots            Specifies whether to enable weak security over SSL/TSL. A certificate is trusted
-     *                                 even if no trusted certification authority issued it.
-     *                                 Valid values: 'true', 'false'.
-     *                                 Default value: 'false'.
-     * @param x509HostnameVerifier     Specifies the way the server hostname must match a domain name in the subject's Common Name (CN)
-     *                                 or subjectAltName field of the X.509 certificate. Set this to "allow_all" to skip any checking.
-     *                                 For the value "browser_compatible" the hostname verifier works the same way as Curl and Firefox.
-     *                                 The hostname must match either the first CN, or any of the subject-alts.
-     *                                 A wildcard can occur in the CN, and in any of the subject-alts. The only difference
-     *                                 between "browser_compatible" and "strict" is that a wildcard (such as "*.foo.com")
-     *                                 with "browser_compatible" matches all subdomains, including "a.b.foo.com".
-     *                                 Valid values: 'strict','browser_compatible','allow_all'.
-     *                                 Default value: 'strict'.
-     * @param trustKeystore            The pathname of the Java TrustStore file. This contains certificates from other parties
-     *                                 that you expect to communicate with, or from Certificate Authorities that you trust to
-     *                                 identify other parties.  If the protocol (specified by the 'url') is not 'https' or if
-     *                                 trustAllRoots is 'true' this input is ignored.
-     *                                 Default value: <OO_Home>/java/lib/security/cacerts. Format: Java KeyStore (JKS)
-     * @param trustPassword            The password associated with the TrustStore file.
-     *                                 If trustAllRoots is 'false' and trustKeystore is empty, trustPassword default will be supplied.
-     * @param connectTimeout           The time to wait for a connection to be established, in seconds.
-     *                                 A timeout value of '0' represents an infinite timeout.
-     *                                 Default value: '0'.
-     * @param socketTimeout            The timeout for waiting for data (a maximum period inactivity between two consecutive data packets),
-     *                                 in seconds. A socketTimeout value of '0' represents an infinite timeout.
-     *                                 Default value: '0'.
-     * @param keepAlive                Specifies whether to create a shared connection that will be used in subsequent calls.
-     *                                 If keepAlive is 'false', the already open connection will be used and after execution it will close it.
-     *                                 The operation will use a connection pool stored in a GlobalSessionObject that will be available throughout
-     *                                 the execution (the flow and subflows, between parallel split lanes).
-     *                                 Valid values: 'true', 'false'. Default value: 'true'.
-     * @param connectionsMaxPerRoute   The maximum limit of connections on a per route basis.
-     *                                 The default will create no more than 2 concurrent connections per given route.
-     *                                 Default value: '2'.
-     * @param connectionsMaxTotal      The maximum limit of connections in total.
-     *                                 The default will create no more than 2 concurrent connections in total.
-     *                                 Default value: '20'.
-     * @param responseCharacterSet     The character encoding to be used for the HTTP response.
-     *                                 If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.
-     *                                 If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty,
-     *                                 the default value will be used. You should not use this for method=HEAD or OPTIONS.
-     *                                 Default value: 'UTF-8'.
+     * @param locationId             The ID of the processing location to be used. Please note that the connection of your
+     *                               application to the processing location is specified manually during application creation,
+     *                               i.e. the application is bound to work with only one of the available locations.
+     *                               Valid values: 'cloud-eu', 'cloud-westus'.
+     * @param applicationId          The ID of the application to be used.
+     * @param password               The password for the application.
+     * @param language               Specifies recognition language of the document. This parameter can contain several language
+     *                               names separated with commas, for example "English,French,German".
+     *                               Valid: see the official ABBYY CLoud OCR SDK documentation.
+     *                               Currently, the only official language supported by this operation is 'English'.
+     *                               Default: 'English'.
+     * @param sourceFile             The absolute path of the image to be loaded and converted using the API.
+     * @param destinationFolder      The absolute path of a directory on disk where to save the entities returned by the response.
+     *                               For each export format selected a file will be created in the specified directory with name of
+     *                               'sourceFile' and corresponding extension (e.g. for exportFormat='xml,txt' and sourceFile='source.jpg'
+     *                               the files 'source.xml' and 'source.txt' will be created). If one of files already exists then an
+     *                               exception will be thrown.
+     * @param textType               Specifies the type of the text on a page.
+     *                               This parameter may also contain several text types separated with commas, for example "normal,matrix".
+     *                               Valid values: 'normal', 'typewriter', 'matrix', 'index', 'ocrA', 'ocrB', 'e13b', 'cmc7', 'gothic'.
+     *                               Default: 'normal'.
+     * @param imageSource            Specifies the source of the image. It can be either a scanned image, or a photograph created
+     *                               with a digital camera. Special preprocessing operations can be performed with the image depending
+     *                               on the selected source. For example, the system can automatically correct distorted text lines,
+     *                               poor focus and lighting on photos.
+     *                               Valid values: 'auto', 'photo', 'scanner'.
+     *                               Default: 'auto'.
+     * @param correctOrientation     Specifies whether the orientation of the image should be automatically detected and corrected.
+     *                               Valid values: 'true', 'false'.
+     *                               Default: 'true'.
+     * @param correctSkew            Specifies whether the skew of the image should be automatically detected and corrected.
+     *                               Valid values: 'true', 'false'.
+     *                               Default: 'true'.
+     * @param exportFormat           Specifies the export format.
+     *                               This parameter can contain up to three export formats, separated with commas (example: "pdfSearchable,txt,xml").
+     *                               Valid values: 'txt', 'pdfSearchable', 'xml'.
+     *                               Default: 'xml'.
+     * @param description            Contains the description of the processing task. Cannot contain more than 255 characters.
+     *                               If the description contains more than 255 characters, then the text will be truncated.
+     * @param pdfPassword            Contains a password for accessing password-protected images in PDF format.
+     * @param proxyHost              The proxy server used to access the web site.
+     * @param proxyPort              The proxy server port. The value '-1' indicates that the proxy port is not set
+     *                               and the scheme default port will be used, e.g. if the scheme is 'http://' and
+     *                               the 'proxyPort' is set to '-1' then port '80' will be used.
+     *                               Valid values: -1 and integer values greater than 0.
+     *                               Default value: 8080.
+     * @param proxyUsername          The user name used when connecting to the proxy.
+     * @param proxyPassword          The proxy server password associated with the proxyUsername input value.
+     * @param trustAllRoots          Specifies whether to enable weak security over SSL/TSL. A certificate is trusted
+     *                               even if no trusted certification authority issued it.
+     *                               Valid values: 'true', 'false'.
+     *                               Default value: 'false'.
+     * @param x509HostnameVerifier   Specifies the way the server hostname must match a domain name in the subject's Common Name (CN)
+     *                               or subjectAltName field of the X.509 certificate. Set this to "allow_all" to skip any checking.
+     *                               For the value "browser_compatible" the hostname verifier works the same way as Curl and Firefox.
+     *                               The hostname must match either the first CN, or any of the subject-alts.
+     *                               A wildcard can occur in the CN, and in any of the subject-alts. The only difference
+     *                               between "browser_compatible" and "strict" is that a wildcard (such as "*.foo.com")
+     *                               with "browser_compatible" matches all subdomains, including "a.b.foo.com".
+     *                               Valid values: 'strict','browser_compatible','allow_all'.
+     *                               Default value: 'strict'.
+     * @param trustKeystore          The pathname of the Java TrustStore file. This contains certificates from other parties
+     *                               that you expect to communicate with, or from Certificate Authorities that you trust to
+     *                               identify other parties.  If the protocol (specified by the 'url') is not 'https' or if
+     *                               trustAllRoots is 'true' this input is ignored.
+     *                               Default value: <OO_Home>/java/lib/security/cacerts. Format: Java KeyStore (JKS)
+     * @param trustPassword          The password associated with the TrustStore file.
+     *                               If trustAllRoots is 'false' and trustKeystore is empty, trustPassword default will be supplied.
+     * @param connectTimeout         The time to wait for a connection to be established, in seconds.
+     *                               A timeout value of '0' represents an infinite timeout.
+     *                               Default value: '0'.
+     * @param socketTimeout          The timeout for waiting for data (a maximum period inactivity between two consecutive data packets),
+     *                               in seconds. A socketTimeout value of '0' represents an infinite timeout.
+     *                               Default value: '0'.
+     * @param keepAlive              Specifies whether to create a shared connection that will be used in subsequent calls.
+     *                               If keepAlive is 'false', the already open connection will be used and after execution it will close it.
+     *                               The operation will use a connection pool stored in a GlobalSessionObject that will be available throughout
+     *                               the execution (the flow and subflows, between parallel split lanes).
+     *                               Valid values: 'true', 'false'. Default value: 'true'.
+     * @param connectionsMaxPerRoute The maximum limit of connections on a per route basis.
+     *                               The default will create no more than 2 concurrent connections per given route.
+     *                               Default value: '2'.
+     * @param connectionsMaxTotal    The maximum limit of connections in total.
+     *                               The default will create no more than 2 concurrent connections in total.
+     *                               Default value: '20'.
+     * @param responseCharacterSet   The character encoding to be used for the HTTP response.
+     *                               If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.
+     *                               If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty,
+     *                               the default value will be used. You should not use this for method=HEAD or OPTIONS.
+     *                               Default value: 'UTF-8'.
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - Contains a human readable message mentioning the success or failure of the task.
      * <br><b>txtResult</b> - The result for 'txt' export format in clear text (empty if 'txt' was not provided in 'exportFormat' input).
@@ -143,23 +142,21 @@ public class ProcessImageAction {
      */
     @Action(name = "Process Image",
             outputs = {
-                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.RETURN_RESULT),
                     @Output(OutputNames.TXT_RESULT),
                     @Output(OutputNames.XML_RESULT),
                     @Output(OutputNames.PDF_URL),
                     @Output(OutputNames.TASK_ID),
                     @Output(OutputNames.CREDITS),
                     @Output(OutputNames.STATUS_CODE),
-                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
-                    @Output(io.cloudslang.content.constants.OutputNames.EXCEPTION),
+                    @Output(OutputNames.RETURN_CODE),
+                    @Output(OutputNames.EXCEPTION),
                     @Output(OutputNames.TIMED_OUT),
             },
             responses = {
-                    @Response(text = ResponseNames.SUCCESS, field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
-                            value = ReturnCodes.SUCCESS,
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = ResponseNames.FAILURE, field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
-                            value = ReturnCodes.FAILURE,
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             })
     public Map<String, String> execute(
@@ -167,7 +164,7 @@ public class ProcessImageAction {
             @Param(value = InputNames.APPLICATION_ID, required = true) String applicationId,
             @Param(value = InputNames.PASSWORD, required = true, encrypted = true) String password,
             @Param(value = InputNames.LANGUAGE) String language,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOURCE_FILE, required = true) String sourceFile,
+            @Param(value = InputNames.SOURCE_FILE, required = true) String sourceFile,
             @Param(value = InputNames.DESTINATION_FOLDER) String destinationFolder,
             @Param(value = InputNames.TEXT_TYPE) String textType,
             @Param(value = InputNames.IMAGE_SOURCE) String imageSource,
@@ -176,55 +173,56 @@ public class ProcessImageAction {
             @Param(value = InputNames.EXPORT_FORMAT) String exportFormat,
             @Param(value = InputNames.DESCRIPTION) String description,
             @Param(value = InputNames.PDF_PASSWORD, encrypted = true) String pdfPassword,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST) String proxyHost,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT) String proxyPort,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_USERNAME) String proxyUsername,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PASSWORD, encrypted = true) String proxyPassword,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD, encrypted = true) String trustPassword,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECT_TIMEOUT) String connectTimeout,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.SOCKET_TIMEOUT) String socketTimeout,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE) String keepAlive,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoute,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
-            @Param(value = io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet) {
-        ProcessImageInput.Builder inputBuilder = new ProcessImageInput.Builder()
-                .locationId(locationId)
-                .applicationId(applicationId)
-                .password(password)
-                .language(language)
-                .profile(Profile.TEXT_EXTRACTION.toString())
-                .textType(textType)
-                .imageSource(imageSource)
-                .correctOrientation(correctOrientation)
-                .correctSkew(correctSkew)
-                .readBarcodes(null)
-                .exportFormat(exportFormat)
-                .writeFormatting(String.valueOf(false))
-                .writeRecognitionVariants(String.valueOf(false))
-                .writeTags(WriteTags.AUTO.toString())
-                .description(description)
-                .pdfPassword(pdfPassword)
-                .proxyHost(proxyHost)
-                .proxyPort(proxyPort)
-                .proxyUsername(proxyUsername)
-                .proxyPassword(proxyPassword)
-                .trustAllRoots(trustAllRoots)
-                .x509HostnameVerifier(x509HostnameVerifier)
-                .trustKeystore(trustKeystore)
-                .trustPassword(trustPassword)
-                .connectTimeout(connectTimeout)
-                .socketTimeout(socketTimeout)
-                .keepAlive(keepAlive)
-                .connectionsMaxPerRoute(connectionsMaxPerRoute)
-                .connectionsMaxTotal(connectionsMaxTotal)
-                .responseCharacterSet(responseCharacterSet)
-                .destinationFolder(destinationFolder)
-                .sourceFile(sourceFile);
+            @Param(value = InputNames.PROXY_HOST) String proxyHost,
+            @Param(value = InputNames.PROXY_PORT) String proxyPort,
+            @Param(value = InputNames.PROXY_USERNAME) String proxyUsername,
+            @Param(value = InputNames.PROXY_PASSWORD, encrypted = true) String proxyPassword,
+            @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
+            @Param(value = InputNames.X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
+            @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
+            @Param(value = InputNames.CONNECT_TIMEOUT) String connectTimeout,
+            @Param(value = InputNames.SOCKET_TIMEOUT) String socketTimeout,
+            @Param(value = InputNames.KEEP_ALIVE) String keepAlive,
+            @Param(value = InputNames.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoute,
+            @Param(value = InputNames.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
+            @Param(value = InputNames.RESPONSE_CHARACTER_SET) String responseCharacterSet) {
         try {
-            return new ProcessImageService().execute(inputBuilder.build());
+            ProcessImageInput inputBuilder = new ProcessImageInput.Builder()
+                    .locationId(locationId)
+                    .applicationId(applicationId)
+                    .password(password)
+                    .language(language)
+                    .profile(Profile.TEXT_EXTRACTION.toString())
+                    .textType(textType)
+                    .imageSource(imageSource)
+                    .correctOrientation(correctOrientation)
+                    .correctSkew(correctSkew)
+                    .readBarcodes(null)
+                    .exportFormat(exportFormat)
+                    .writeFormatting(String.valueOf(false))
+                    .writeRecognitionVariants(String.valueOf(false))
+                    .writeTags(WriteTags.AUTO.toString())
+                    .description(description)
+                    .pdfPassword(pdfPassword)
+                    .proxyHost(proxyHost)
+                    .proxyPort(proxyPort)
+                    .proxyUsername(proxyUsername)
+                    .proxyPassword(proxyPassword)
+                    .trustAllRoots(trustAllRoots)
+                    .x509HostnameVerifier(x509HostnameVerifier)
+                    .trustKeystore(trustKeystore)
+                    .trustPassword(trustPassword)
+                    .connectTimeout(connectTimeout)
+                    .socketTimeout(socketTimeout)
+                    .keepAlive(keepAlive)
+                    .connectionsMaxPerRoute(connectionsMaxPerRoute)
+                    .connectionsMaxTotal(connectionsMaxTotal)
+                    .responseCharacterSet(responseCharacterSet)
+                    .destinationFolder(destinationFolder)
+                    .sourceFile(sourceFile)
+                    .build();
+            return new ProcessImageService().execute(inputBuilder);
         } catch (Exception ex) {
             return ResultUtils.fromException(ex);
         }

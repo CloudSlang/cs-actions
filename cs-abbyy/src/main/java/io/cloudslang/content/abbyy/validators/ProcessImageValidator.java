@@ -17,30 +17,31 @@ package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
 import io.cloudslang.content.abbyy.constants.InputNames;
+import io.cloudslang.content.abbyy.constants.Limits;
+import io.cloudslang.content.abbyy.entities.ExportFormat;
 import io.cloudslang.content.abbyy.entities.ProcessImageInput;
+import io.cloudslang.content.abbyy.entities.TextType;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
-public class ProcessImageValidator implements AbbyyRequestValidator<ProcessImageInput> {
+import java.util.HashSet;
+import java.util.Set;
+
+public class ProcessImageValidator extends AbbyyRequestValidator<ProcessImageInput> {
+
 
     @Override
-    public ValidationException validate(ProcessImageInput request) {
-        if (request == null) {
-            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "request"));
-        }
-
-        try {
-            validateDestinationFile(request);
-            validateSourceFile(request);
-            validateExportFormats(request);
-            return null;
-        } catch (ValidationException ex) {
-            return ex;
-        }
+    public void validateFurther(@NotNull ProcessImageInput request) throws ValidationException {
+        validateExportFormats(request);
+        validateLanguages(request);
+        validateTextTypes(request);
+        validateDescription(request);
     }
 
 
-    private void validateDestinationFile(ProcessImageInput request) throws ValidationException {
+    @Override
+    void validateDestinationFile(@NotNull ProcessImageInput request) throws ValidationException {
         if (request.getDestinationFile() == null) {
             return;
         }
@@ -54,27 +55,58 @@ public class ProcessImageValidator implements AbbyyRequestValidator<ProcessImage
     }
 
 
-    private void validateSourceFile(ProcessImageInput request) throws ValidationException {
-        if (request.getSourceFile() == null) {
-            throw new ValidationException(String.format(ExceptionMsgs.INVALID_VALUE_FOR_INPUT, null, HttpClientInputs.SOURCE_FILE));
+    private void validateLanguages(@NotNull ProcessImageInput request) throws ValidationException {
+        if (request.getLanguages() == null) {
+            return;
         }
 
-        if (!request.getSourceFile().exists()) {
-            throw new ValidationException(ExceptionMsgs.SOURCE_FILE_DOES_NOT_EXIST);
-        }
-        if (!request.getSourceFile().isFile()) {
-            throw new ValidationException(ExceptionMsgs.SOURCE_FILE_IS_NOT_FILE);
+        for (String language : request.getLanguages()) {
+            if (StringUtils.isBlank(language)) {
+                String msg = String.format(ExceptionMsgs.INVALID_VALUE_DETECTED, language, InputNames.LANGUAGE);
+                throw new ValidationException(msg);
+            }
         }
     }
 
 
-    private void validateExportFormats(ProcessImageInput request) throws ValidationException {
-        if (request.getExportFormats() == null) {
+    private void validateTextTypes(@NotNull ProcessImageInput request) throws ValidationException {
+        if (request.getTextTypes() == null) {
             return;
         }
 
-        if (request.getExportFormats().size() > 3) {
+        for (TextType textType : request.getTextTypes()) {
+            if (textType == null) {
+                String msg = String.format(ExceptionMsgs.INVALID_VALUE_DETECTED, null, InputNames.LANGUAGE);
+                throw new ValidationException(msg);
+            }
+        }
+    }
+
+
+    private void validateExportFormats(@NotNull ProcessImageInput request) throws ValidationException {
+        if (request.getExportFormats() == null || request.getExportFormats().isEmpty()) {
+            throw new ValidationException(ExceptionMsgs.MISSING_EXPORT_FORMATS);
+        }
+
+        if (request.getExportFormats().size() > Limits.MAX_NR_OF_EXPORT_FORMATS) {
             throw new ValidationException(ExceptionMsgs.TOO_MANY_EXPORT_FORMATS);
+        }
+
+        Set<ExportFormat> distinctExportFormats = new HashSet<>(request.getExportFormats());
+        if (distinctExportFormats.size() < request.getExportFormats().size()) {
+            throw new ValidationException(ExceptionMsgs.DUPLICATED_EXPORT_FORMATS);
+        }
+    }
+
+
+    private void validateDescription(@NotNull ProcessImageInput request) throws ValidationException {
+        String a = request.getDescription();
+        if (StringUtils.isEmpty(request.getDescription())) {
+            return;
+        }
+
+        if (request.getDescription().length() > Limits.MAX_SIZE_OF_DESCR) {
+            throw new ValidationException(ExceptionMsgs.MAX_SIZE_OF_DESCR_EXCEEDED);
         }
     }
 }

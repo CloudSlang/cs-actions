@@ -15,49 +15,37 @@
 package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
-import io.cloudslang.content.abbyy.constants.MiscConstants;
+import io.cloudslang.content.abbyy.constants.Limits;
 import io.cloudslang.content.abbyy.entities.ExportFormat;
-import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.abbyy.http.AbbyyAPI;
+import io.cloudslang.content.abbyy.http.AbbyyApi;
 import io.cloudslang.content.abbyy.http.AbbyyRequest;
-import org.xml.sax.SAXException;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.util.Arrays;
+public class PdfResultValidator extends AbbyyResultValidator {
 
-public class PdfResultValidator implements AbbyyResultValidator {
+    private final AbbyyApi abbyyApi;
 
-    private final AbbyyAPI abbyyApi;
 
-    public PdfResultValidator(AbbyyAPI abbyyApi) {
+    public PdfResultValidator(@NotNull AbbyyApi abbyyApi) {
         this.abbyyApi = abbyyApi;
     }
 
-    @Override
-    public ValidationException validateBeforeDownload(AbbyyRequest abbyyInitialRequest, String url) throws IOException, AbbyySdkException {
-        if (abbyyInitialRequest == null) {
-            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "abbyyInitialRequest"));
-        }
-        if (url == null) {
-            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "url"));
-        }
 
-        if (this.abbyyApi.getResultSize(abbyyInitialRequest, url, ExportFormat.PDF_SEARCHABLE) > MiscConstants.MAX_SIZE) {
-            return new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_EXCEEDED, ExportFormat.PDF_SEARCHABLE));
+    @Override
+    void validateBefore(@NotNull AbbyyRequest abbyyInitialRequest, @NotNull String url) throws Exception {
+        if (this.abbyyApi.getResultSize(abbyyInitialRequest, url, ExportFormat.PDF_SEARCHABLE) > Limits.MAX_SIZE_OF_RESULT) {
+            throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_RESULT_EXCEEDED, ExportFormat.PDF_SEARCHABLE));
         }
 
         String first4Chars = this.abbyyApi.getResultChunk(abbyyInitialRequest, url, ExportFormat.PDF_SEARCHABLE, 0, 3);
         if (!first4Chars.equals("%PDF")) {
-            return new ValidationException(ExceptionMsgs.INVALID_TARGET_PDF);
+            throw new ValidationException(ExceptionMsgs.INVALID_TARGET_PDF);
         }
-
-        return null;
     }
 
 
     @Override
-    public ValidationException validateAfterDownload(String result) throws IOException, SAXException {
-        return null;
+    void validateAfter(@NotNull String result) throws Exception {
     }
 }

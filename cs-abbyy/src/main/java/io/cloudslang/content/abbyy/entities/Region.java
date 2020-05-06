@@ -19,7 +19,7 @@ import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
 
 public class Region {
 
-    public static final Region DEFAULT_VALUE = new Region(-1,-1,-1,-1);
+    public static final Region DEFAULT_VALUE = new Region(-1, -1, -1, -1);
 
     private final int left;
     private final int top;

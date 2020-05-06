@@ -15,43 +15,32 @@
 package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
-import io.cloudslang.content.abbyy.constants.MiscConstants;
+import io.cloudslang.content.abbyy.constants.Limits;
 import io.cloudslang.content.abbyy.entities.ExportFormat;
-import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.abbyy.http.AbbyyAPI;
+import io.cloudslang.content.abbyy.http.AbbyyApi;
 import io.cloudslang.content.abbyy.http.AbbyyRequest;
-import org.xml.sax.SAXException;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+public class TxtResultValidator extends AbbyyResultValidator {
 
-public class TxtResultValidator implements AbbyyResultValidator {
+    private final AbbyyApi abbyyApi;
 
-    private final AbbyyAPI abbyyApi;
 
-    public TxtResultValidator(AbbyyAPI abbyyApi) {
+    public TxtResultValidator(@NotNull AbbyyApi abbyyApi) {
         this.abbyyApi = abbyyApi;
     }
 
+
     @Override
-    public ValidationException validateBeforeDownload(AbbyyRequest abbyyInitialRequest, String url) throws IOException, AbbyySdkException {
-        if (abbyyInitialRequest == null) {
-            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "abbyyInitialRequest"));
+    void validateBefore(@NotNull AbbyyRequest abbyyInitialRequest, @NotNull String url) throws Exception {
+        if (this.abbyyApi.getResultSize(abbyyInitialRequest, url, ExportFormat.TXT) > Limits.MAX_SIZE_OF_RESULT) {
+            throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_RESULT_EXCEEDED, ExportFormat.TXT));
         }
-        if (url == null) {
-            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "url"));
-        }
-
-        if (this.abbyyApi.getResultSize(abbyyInitialRequest, url, ExportFormat.TXT) > MiscConstants.MAX_SIZE) {
-            return new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_EXCEEDED, ExportFormat.TXT));
-        }
-
-        return null;
     }
 
 
     @Override
-    public ValidationException validateAfterDownload(String result) throws IOException, SAXException {
-        return null;
+    void validateAfter(@NotNull String result) throws Exception {
     }
 }

@@ -16,52 +16,52 @@
 package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
+import io.cloudslang.content.abbyy.constants.InputNames;
+import io.cloudslang.content.abbyy.constants.Limits;
 import io.cloudslang.content.abbyy.entities.ProcessTextFieldInput;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
-public class ProcessTextFieldValidator implements AbbyyRequestValidator<ProcessTextFieldInput> {
+public class ProcessTextFieldValidator extends AbbyyRequestValidator<ProcessTextFieldInput> {
 
     @Override
-    public ValidationException validate(ProcessTextFieldInput request) {
-        if (request == null) {
-            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "request"));
-        }
-
-        try {
-            validateDestinationFile(request);
-            validateSourceFile(request);
-            return null;
-        } catch (ValidationException ex) {
-            return ex;
-        }
+    void validateFurther(@NotNull ProcessTextFieldInput request) throws ValidationException {
+        validateLanguages(request);
+        validatePlaceHoldersCount(request);
+        validateDescription(request);
     }
 
 
-    private void validateDestinationFile(ProcessTextFieldInput request) throws ValidationException {
-        if(request.getDestinationFile() == null) {
+    private void validateLanguages(@NotNull ProcessTextFieldInput request) throws ValidationException {
+        if (request.getLanguages() == null) {
             return;
         }
 
-        if(request.getDestinationFile().exists()) {
-            throw new ValidationException(ExceptionMsgs.DESTINATION_FILE_ALREADY_EXISTS);
-        }
-        if(!request.getDestinationFile().getParentFile().exists()) {
-            throw new ValidationException(ExceptionMsgs.DESTINATION_FOLDER_DOES_NOT_EXIST);
+        for (String language : request.getLanguages()) {
+            if (StringUtils.isBlank(language)) {
+                String msg = String.format(ExceptionMsgs.INVALID_VALUE_DETECTED, language, InputNames.LANGUAGE);
+                throw new ValidationException(msg);
+            }
         }
     }
 
 
-    private void validateSourceFile(ProcessTextFieldInput request) throws ValidationException {
-        if (request.getSourceFile() == null) {
-            throw new ValidationException(String.format(ExceptionMsgs.INVALID_VALUE_FOR_INPUT, null, HttpClientInputs.SOURCE_FILE));
+    private void validatePlaceHoldersCount(@NotNull ProcessTextFieldInput request) throws ValidationException {
+        if (request.getPlaceholdersCount() < 0) {
+            String msg = String.format(ExceptionMsgs.INVALID_VALUE_FOR_INPUT, request.getPlaceholdersCount(), InputNames.PLACEHOLDERS_COUNT);
+            throw new ValidationException(msg);
+        }
+    }
+
+
+    private void validateDescription(@NotNull ProcessTextFieldInput request) throws ValidationException {
+        if (StringUtils.isEmpty(request.getDescription())) {
+            return;
         }
 
-        if (!request.getSourceFile().exists()) {
-            throw new ValidationException(ExceptionMsgs.SOURCE_FILE_DOES_NOT_EXIST);
-        }
-        if (!request.getSourceFile().isFile()) {
-            throw new ValidationException(ExceptionMsgs.SOURCE_FILE_IS_NOT_FILE);
+        if (request.getDescription().length() > Limits.MAX_SIZE_OF_DESCR) {
+            throw new ValidationException(ExceptionMsgs.MAX_SIZE_OF_DESCR_EXCEEDED);
         }
     }
 }

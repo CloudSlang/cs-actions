@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.abbyy.constants;
 
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+
 public final class InputNames {
     public static final String LOCATION_ID = "locationId";
     public static final String APPLICATION_ID = "applicationId";
@@ -40,6 +42,23 @@ public final class InputNames {
     public static final String PLACEHOLDERS_COUNT = "placeholdersCount";
     public static final String WRITING_STYLE = "writingStyle";
     public static final String DESTINATION_FOLDER = "destinationFolder";
+    public static final String DESTINATION_FILE = HttpClientInputs.DESTINATION_FILE;
+    public static final String SOURCE_FILE = HttpClientInputs.SOURCE_FILE;
+    public static final String PROXY_HOST = HttpClientInputs.PROXY_HOST;
+    public static final String PROXY_PORT = HttpClientInputs.PROXY_PORT;
+    public static final String PROXY_USERNAME = HttpClientInputs.PROXY_USERNAME;
+    public static final String PROXY_PASSWORD = HttpClientInputs.PROXY_PASSWORD;
+    public static final String TRUST_ALL_ROOTS = HttpClientInputs.TRUST_ALL_ROOTS;
+    public static final String X509_HOSTNAME_VERIFIER = HttpClientInputs.X509_HOSTNAME_VERIFIER;
+    public static final String TRUST_KEYSTORE = HttpClientInputs.TRUST_KEYSTORE;
+    public static final String TRUST_PASSWORD = HttpClientInputs.TRUST_PASSWORD;
+    public static final String CONNECT_TIMEOUT = HttpClientInputs.CONNECT_TIMEOUT;
+    public static final String SOCKET_TIMEOUT = HttpClientInputs.SOCKET_TIMEOUT;
+    public static final String KEEP_ALIVE = HttpClientInputs.KEEP_ALIVE;
+    public static final String CONNECTIONS_MAX_PER_ROUTE = HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE;
+    public static final String CONNECTIONS_MAX_TOTAL = HttpClientInputs.CONNECTIONS_MAX_TOTAL;
+    public static final String RESPONSE_CHARACTER_SET = HttpClientInputs.RESPONSE_CHARACTER_SET;
+
 
     private InputNames() {
 

@@ -15,9 +15,12 @@
 
 package io.cloudslang.content.abbyy.http;
 
-import io.cloudslang.content.abbyy.http.AbbyyResponse;
-import io.cloudslang.content.abbyy.http.HttpClientResponse;
+import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
+import org.jetbrains.annotations.NotNull;
+import org.xml.sax.SAXException;
 
-public interface AbbyyResponseParser {
-    AbbyyResponse parseResponse(HttpClientResponse response) throws Exception;
+import java.io.IOException;
+
+interface AbbyyResponseParser {
+    AbbyyResponse parseResponse(@NotNull HttpClientResponse response) throws SAXException, IOException, AbbyySdkException;
 }

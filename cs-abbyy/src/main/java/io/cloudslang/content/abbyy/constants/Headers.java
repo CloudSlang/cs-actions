@@ -17,9 +17,11 @@ package io.cloudslang.content.abbyy.constants;
 public final class Headers {
 
     public static final String AUTH_TYPE_BASIC = "basic";
+    public static final String AUTH_TYPE_ANONYMOUS = "anonymous";
     public static final String CONTENT_TYPE_OCTET_STREAM = "application/octet-stream";
     public static final String CONTENT_LENGTH = "Content-Length";
     public static final String RANGE_TEMPLATE = "Range: bytes=%d-%d";
+
 
     private Headers() {
 

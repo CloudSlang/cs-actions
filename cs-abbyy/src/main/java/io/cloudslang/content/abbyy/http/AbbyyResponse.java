@@ -16,6 +16,8 @@ package io.cloudslang.content.abbyy.http;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +36,7 @@ public class AbbyyResponse {
     }
 
 
-    public String getTaskId() {
+    public @NotNull String getTaskId() {
         return taskId;
     }
 
@@ -44,17 +46,17 @@ public class AbbyyResponse {
     }
 
 
-    public TaskStatus getTaskStatus() {
+    public @NotNull TaskStatus getTaskStatus() {
         return taskStatus;
     }
 
 
-    public String getErrorMessage() {
+    public @Nullable String getErrorMessage() {
         return errorMessage;
     }
 
 
-    public List<String> getResultUrls() {
+    public @NotNull List<String> getResultUrls() {
         return resultUrls;
     }
 
@@ -82,31 +84,22 @@ public class AbbyyResponse {
         }
 
 
-        public static TaskStatus fromString(String str) throws Exception {
-            for (TaskStatus status : TaskStatus.values()) {
-                if (status.str.equals(str)) {
-                    return status;
-                }
-            }
-            throw new IllegalArgumentException(String.format(ExceptionMsgs.UNKNOWN_TASK_STATUS, str));
-        }
-
-
         @Override
         public String toString() {
             return this.str;
         }
     }
 
+
     public static class Builder {
         private String taskId;
-        private int credits;
-        private TaskStatus taskStatus;
+        private String credits;
+        private String taskStatus;
         private String errorMessage;
         private String resultUrl;
         private String resultUrl2;
         private String resultUrl3;
-        private long estimatedProcessingTime;
+        private String estimatedProcessingTime;
 
 
         public Builder taskId(String id) {
@@ -115,13 +108,13 @@ public class AbbyyResponse {
         }
 
 
-        public Builder credits(int credits) {
+        public Builder credits(String credits) {
             this.credits = credits;
             return this;
         }
 
 
-        public Builder taskStatus(TaskStatus status) {
+        public Builder taskStatus(String status) {
             this.taskStatus = status;
             return this;
         }
@@ -151,7 +144,7 @@ public class AbbyyResponse {
         }
 
 
-        public Builder estimatedProcessingTime(long millis) {
+        public Builder estimatedProcessingTime(String millis) {
             this.estimatedProcessingTime = millis;
             return this;
         }
@@ -162,14 +155,30 @@ public class AbbyyResponse {
 
             response.taskId = this.taskId;
 
-            response.credits = this.credits;
+            try {
+                response.credits = Integer.parseInt(this.credits);
+            } catch (Exception ex) {
+                throw new IllegalArgumentException(ExceptionMsgs.INVALID_CREDITS);
+            }
 
-            response.taskStatus = this.taskStatus;
+            boolean found = false;
+            for (TaskStatus status : TaskStatus.values()) {
+                if (status.str.equals(this.taskStatus)) {
+                    response.taskStatus = status;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new IllegalArgumentException(String.format(ExceptionMsgs.UNEXPECTED_TASK_STATUS, this.taskStatus));
+            }
 
             response.errorMessage = this.errorMessage;
 
             response.resultUrls = new ArrayList<>();
-            response.resultUrls.add(this.resultUrl);
+            if (StringUtils.isNotEmpty(this.resultUrl)) {
+                response.resultUrls.add(this.resultUrl);
+            }
             if (StringUtils.isNotEmpty(this.resultUrl2)) {
                 response.resultUrls.add(this.resultUrl2);
             }
@@ -178,7 +187,13 @@ public class AbbyyResponse {
             }
             response.resultUrls = Collections.unmodifiableList(response.resultUrls);
 
-            response.estimatedProcessingTime = this.estimatedProcessingTime;
+            if (StringUtils.isNotEmpty(this.estimatedProcessingTime)) {
+                try {
+                    response.estimatedProcessingTime = Long.parseLong(this.estimatedProcessingTime);
+                } catch (Exception ex) {
+                    throw new IllegalArgumentException(ExceptionMsgs.INVALID_ESTIMATED_PROCESSING_TIME);
+                }
+            }
 
             return response;
         }

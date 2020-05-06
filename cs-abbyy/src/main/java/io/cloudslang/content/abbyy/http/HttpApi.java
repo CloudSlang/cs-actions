@@ -15,13 +15,16 @@
 package io.cloudslang.content.abbyy.http;
 
 import io.cloudslang.content.abbyy.constants.HttpClientOutputNames;
+import io.cloudslang.content.abbyy.exceptions.HttpException;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientAction;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Map;
 
-class HttpSDK {
-    public static HttpClientResponse execute(HttpClientRequest request) throws IOException {
+class HttpApi {
+    public static HttpClientResponse execute(@NotNull HttpClientRequest request) throws IOException, HttpException {
         Map<String, String> rawResponse = new HttpClientAction().execute(
                 request.getUrl(),
                 request.getTlsVersion(),
@@ -72,6 +75,10 @@ class HttpSDK {
                 request.getHttpClientCookieSession(),
                 request.getHttpClientPoolingConnectionManager()
         );
+
+        if (ReturnCodes.FAILURE.equals(rawResponse.get(HttpClientOutputNames.RETURN_CODE))) {
+            throw new HttpException(rawResponse.get(HttpClientOutputNames.EXCEPTION));
+        }
 
         return new HttpClientResponse.Builder()
                 .returnResult(rawResponse.get(HttpClientOutputNames.RETURN_RESULT))

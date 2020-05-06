@@ -16,45 +16,34 @@
 package io.cloudslang.content.abbyy.services;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
-import io.cloudslang.content.abbyy.constants.MiscConstants;
 import io.cloudslang.content.abbyy.constants.OutputNames;
-import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
-import io.cloudslang.content.abbyy.exceptions.ClientSideException;
-import io.cloudslang.content.abbyy.exceptions.ServerSideException;
-import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.abbyy.http.AbbyyAPI;
+import io.cloudslang.content.abbyy.constants.SuccessMsgs;
+import io.cloudslang.content.abbyy.exceptions.*;
+import io.cloudslang.content.abbyy.http.AbbyyApi;
 import io.cloudslang.content.abbyy.http.AbbyyRequest;
 import io.cloudslang.content.abbyy.http.AbbyyResponse;
 import io.cloudslang.content.abbyy.utils.ResultUtils;
 import io.cloudslang.content.abbyy.validators.AbbyyRequestValidator;
 import io.cloudslang.content.constants.ReturnCodes;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
 
+    final AbbyyApi abbyyApi;
     private final AbbyyRequestValidator<R> requestValidator;
-    final AbbyyAPI abbyyApi;
     boolean timedOut;
 
 
-    AbstractPostRequestService(AbbyyRequestValidator<R> requestValidator) throws ParserConfigurationException {
-        if (requestValidator == null) {
-            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "requestValidator"));
-        }
+    AbstractPostRequestService(@NotNull AbbyyRequestValidator<R> requestValidator, @NotNull AbbyyApi abbyyApi) {
         this.requestValidator = requestValidator;
-        this.abbyyApi = new AbbyyAPI();
+        this.abbyyApi = abbyyApi;
     }
 
 
-    public Map<String, String> execute(R request) throws Exception {
-        if (request == null) {
-            throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_ARGUMENT, "request"));
-        }
-
+    public Map<String, String> execute(@NotNull R request) throws Exception {
         Map<String, String> results = ResultUtils.createNewEmptyMap();
 
         try {
@@ -72,6 +61,7 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
             results.put(OutputNames.CREDITS, String.valueOf(response.getCredits()));
 
             response = waitTaskToFinish(request, response.getTaskId(), response.getEstimatedProcessingTime());
+
             switch (response.getTaskStatus()) {
                 case COMPLETED:
                     handleTaskCompleted(request, response, results);
@@ -85,7 +75,9 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
                 default:
                     throw new ClientSideException(ExceptionMsgs.UNEXPECTED_STATUS);
             }
+
             return results;
+
         } catch (AbbyySdkException ex) {
             if (ex.getResultsMap() == null) {
                 ex.setResultsMap(results);
@@ -100,7 +92,7 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
     }
 
 
-    private AbbyyResponse waitTaskToFinish(R request, String taskId, long timeToWait) throws Exception {
+    private AbbyyResponse waitTaskToFinish(@NotNull R request, @NotNull String taskId, long timeToWait) throws Exception {
         final int numberOfAttempts = 6;
         int crtAttemptNr = 0;
         final long minTimeToWait = 1000;
@@ -127,18 +119,18 @@ public abstract class AbstractPostRequestService<R extends AbbyyRequest> {
     }
 
 
-    private boolean isTaskFinished(AbbyyResponse.TaskStatus status) {
+    private boolean isTaskFinished(@NotNull AbbyyResponse.TaskStatus status) {
         return status == AbbyyResponse.TaskStatus.COMPLETED ||
                 status == AbbyyResponse.TaskStatus.PROCESSING_FAILED ||
                 status == AbbyyResponse.TaskStatus.DELETED;
     }
 
 
-    protected void handleTaskCompleted(R request, AbbyyResponse response, Map<String, String> results) throws Exception {
-        results.put(io.cloudslang.content.constants.OutputNames.RETURN_RESULT, MiscConstants.DOCUMENT_PROCESSED_SUCCESSFULLY);
+    void handleTaskCompleted(@NotNull R request, @NotNull AbbyyResponse response, @NotNull Map<String, String> results) throws Exception {
+        results.put(io.cloudslang.content.constants.OutputNames.RETURN_RESULT, SuccessMsgs.DOCUMENT_PROCESSED_SUCCESSFULLY);
         results.put(io.cloudslang.content.constants.OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
     }
 
 
-    protected abstract String buildUrl(R request) throws Exception;
+    abstract String buildUrl(@NotNull R request) throws Exception;
 }
