@@ -79,6 +79,19 @@ public class Inputs extends InputNames {
         public static final String SENSITIVE_VARIABLES_JSON = "sensitiveVariablesJson";
     }
 
+    public static class CreateWorkspaceVariableInputs {
+        public static final String WORKSPACE_VARIABLE_NAME = "workspaceVariableName";
+        public static final String WORKSPACE_VARIABLE_VALUE = "workspaceVariableValue";
+        public static final String SENSITIVE_WORKSPACE_VARIABLE_NAME = "sensitiveWorkspaceVariableName";
+        public static final String SENSITIVE_WORKSPACE_VARIABLE_VALUE = "sensitiveWorkspaceVariableValue";
+        public static final String SENSITIVE_REQUEST_BODY = "sensitiveRequestBody";
+        public static final String WORKSPACE_VARIABLE_CATEGORY = "workspaceVariableCategory";
+        public static final String SENSITIVE = "sensitive";
+        public static final String HCL = "hcl";
+        public static final String WORKSPACE_VARIABLES_JSON = "workspaceVariablesJson";
+        public static final String SENSITIVE_WORKSPACE_VARIABLES_JSON = "sensitiveWorkspaceVariablesJson";
+    }
+
     public static class CreateRunInputs {
         public static final String RUN_MESSAGE = "runMessage";
         public static final String IS_DESTROY = "isDestroy";
