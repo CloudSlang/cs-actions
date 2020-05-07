@@ -113,11 +113,24 @@ public class Constants {
         public static final String VARIABLE_ID_JSON_PATH = "$.data.id";
     }
 
+    public static class CreateWorkspaceVariableConstants {
+        public static final String CREATE_WORKSPACE_VARIABLE_OPERATION_NAME = "Create Workspace Variable";
+        public static final String CREATE_WORKSPACE_VARIABLES_OPERATION_NAME = "Create Workspace Variables";
+        public static final String WORKSPACE_VARIABLE_PATH = "/vars";
+        public static final String WORKSPACE_VARIABLE_TYPE = "vars";
+        public static final String WORKSPACE_VARIABLE_ID_JSON_PATH = "$.data.id";
+    }
+
     public static class ListVariableConstants {
         public static final String LIST_VARIABLE_OPERATION_NAME = "List Variable";
         public static final String ORGANIZATION_NAME = "filter[organization][name]=";
         public static final String WORKSPACE_NAME = "filter[workspace][name]=";
     }
+
+    public static class ListWorkspaceVariableConstants {
+        public static final String LIST_WORKSPACE_VARIABLE_OPERATION_NAME = "List Workspace Variable";
+    }
+
 
     public static class UpdateVariableConstants {
         public static final String UPDATE_VARIABLE_OPERATION_NAME = "Update Variable";
@@ -125,9 +138,19 @@ public class Constants {
         public static final String VARIABLE_KEY_JSON_PATH = "attributes.key";
     }
 
+    public static class UpdateWorkspaceVariableConstants {
+        public static final String UPDATE_WORKSPACE_VARIABLE_OPERATION_NAME = "Update Workspace Variable";
+        public static final String UPDATE_WORKSPACE_VARIABLES_OPERATION_NAME = "Update Workspace Variables";
+    }
+
     public static class DeleteVariableConstants {
         public static final String DELETE_VARIABLE_OPERATION_NAME = "Delete Variable";
     }
+
+    public static class DeleteWorkspaceVariableConstants {
+        public static final String DELETE_WORKSPACE_VARIABLE_OPERATION_NAME = "Delete Workspace Variable";
+    }
+
 
     public static class GetWorkspaceDetailsConstants {
         public static final String GET_WORKSPACE_DETAILS_OPERATION_NAME = "Get Workspace Details";

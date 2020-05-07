@@ -191,8 +191,38 @@ public class Descriptions {
         public static final String CREATE_VARIABLE_RETURN_RESULT_DESC = "The response of the apply run.";
     }
 
+    public static class CreateWorkspaceVariable {
+        public static final String CREATE_WORKSPACE_VARIABLE_DESC = "Create either a sensitive or a non-sensitive variable in a given workspace.";
+        public static final String CREATE_WORKSPACE_VARIABLES_DESC = "Creates  multiple sensitive and non-sensitive variables or both in a workspace.";
+        public static final String WORKSPACE_VARIABLE_NAME_DESC = "The name of the workspace variable.";
+        public static final String WORKSPACE_VARIABLE_VALUE_DESC = "The value of the workspace variable.";
+        public static final String SENSITIVE_WORKSPACE_VARIABLE_NAME_DESC = "The name of the sensitive workspace variable.";
+        public static final String SENSITIVE_WORKSPACE_VARIABLE_VALUE_DESC = "The value of the sensitive workspace variable.";
+        public static final String WORKSPACE_VARIABLE_CATEGORY_DESC = "Whether this is a Terraform or environment workspace variable. Valid " +
+                "values are \"terraform\" or \"env\".";
+        public static final String HCL_DESC = "Whether to evaluate the value of the variable as a string of HCL code." +
+                " Has no effect for environment variables.";
+        public static final String SENSITIVE_DESC = "Whether the value is sensitive. If true then the variable is " +
+                "written once and not visible thereafter.";
+
+        public static final String WORKSPACE_VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Workspace Variable.";
+        public static final String WORKSPACE_VARIABLE_SENSITIVE_REQUEST_BODY_DESC = "Request Body for the Create Workspace Sensitive Variable.";
+        public static final String WORKSPACE_VARIABLES_JSON_DESC = "List of workspace variables in json format." +
+                "Examples : [{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"env\\\"}]\",\"[{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"terraform\\\"}]";
+        public static final String SENSITIVE_WORKSPACE_VARIABLES_JSON_DESC = "List of sensitive workspace variables in json format.";
+        public static final String WORKSPACE_VARIABLE_ID_DESC = "The Id of created workspace variable.";
+        public static final String CREATE_WORKSPACE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while " +
+                "creating the workspace variable.";
+        public static final String CREATE_WORKSPACE_VARIABLE_RETURN_RESULT_DESC = "The response of the apply run.";
+    }
+
+
     public static class ListVariables {
         public static final String LIST_VARIABLE_DESC = "List all the variables in a workspace.";
+    }
+
+    public static class ListWorkspaceVariables {
+        public static final String LIST_WORKSPACE_VARIABLE_DESC = "List all the variables in a workspace.";
     }
 
     public static class GetWorkspaceDetails {
@@ -256,9 +286,22 @@ public class Descriptions {
         public static final String UPDATE_VARIABLE_DESC = "Updates  multiple sensitive and non-sensitive variable or both in a workspace.";
     }
 
+    public static class UpdateWorkspaceVariables {
+        public static final String WORKSPACE_VARIABLE_REQUEST_BODY_DESC = "Request Body for the Update Workspace Variable.";
+        public static final String WORKSPACE_VARIABLES_JSON_DESC = "List of workspace variables in json format." +
+                "Examples : [{\"data\": { \"id\":\"var-test1\", \"attributes\": { \"propertyName\":\"test1\", \"propertyValue\":\"1\", \"category\":\"terraform\" }}},{\"data\": { \"id\":\"var-test2te\", \"attributes\": { \"propertyName\":\"test2\", \"propertyValue\":\"2\", \"category\":\"env\" }}]";
+        public static final String UPDATE_WORKSPACE_VARIABLES_DESC = "Updates  multiple sensitive and non-sensitive variables or both in a workspace.";
+        public static final String UPDATE_WORKSPACE_VARIABLE_DESC = "Updates  multiple sensitive and non-sensitive variable or both in a workspace.";
+    }
+
     public static class DeleteVariable {
         public static final String DELETE_VAR_SUCCESS_DESC = "The variable deleted successfully.";
         public static final String DELETE_VARIABLE_DESC = "Deletes a variable from workspace.";
+    }
+
+    public static class DeleteWorkspaceVariable {
+        public static final String DELETE_WORKSPACE_VAR_SUCCESS_DESC = "The workspace variable deleted successfully.";
+        public static final String DELETE_WORKSPACE_VARIABLE_DESC = "Deletes a variable from workspace.";
     }
 
 
