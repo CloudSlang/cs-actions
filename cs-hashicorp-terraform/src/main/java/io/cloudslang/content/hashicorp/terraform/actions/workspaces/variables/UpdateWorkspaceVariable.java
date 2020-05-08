@@ -69,7 +69,7 @@ public class UpdateWorkspaceVariable {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
+                                       @Param(value = WORKSPACE_ID, required = true, description = WORKSPACE_ID_DESC) String workspaceId,
                                        @Param(value = WORKSPACE_VARIABLE_ID, required = true, description = WORKSPACE_VARIABLE_ID_DESC) String workspaceVariableId,
                                        @Param(value = REQUEST_BODY, required = true, description = WORKSPACE_VARIABLE_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
