@@ -193,6 +193,7 @@ public class CreateWorkspaceVariable {
                         .build());
             }else{
                 result = createWorkspaceVariable(TerraformWorkspaceVariableInputs.builder()
+                        .workspaceId(workspaceId)
                         .sensitiveWorkspaceVariableRequestBody(sensitiveWorkspaceVariableRequestBody)
                         .commonInputs(TerraformCommonInputs.builder()
                                 .authToken(authToken)
