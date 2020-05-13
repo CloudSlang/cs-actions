@@ -17,8 +17,8 @@ package io.cloudslang.content.nutanix.utils;
 
 public class Descriptions {
     public static class Common {
-        public static final String PROXY_HOST_DESC = "Proxy server used to access the Terraform service.";
-        public static final String PROXY_PORT_DESC = "Proxy server port used to access the Terraform service." +
+        public static final String PROXY_HOST_DESC = "Proxy server used to access the nutanix service.";
+        public static final String PROXY_PORT_DESC = "Proxy server port used to access the nutanix service." +
                 "Default: '8080'";
         public static final String PROXY_USERNAME_DESC = "Proxy server user name.";
         public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxy_username " +
@@ -75,7 +75,7 @@ public class Descriptions {
                 "Default: '60000'";
         public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
                 "Default: 'false'";
-        public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for nutanix API request.";
         public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page.";
         public static final String PAGE_SIZE_DESC = "Optional. If omitted, the endpoint will return 20 items per page. " +
                 "The maximum page size is 150.";
