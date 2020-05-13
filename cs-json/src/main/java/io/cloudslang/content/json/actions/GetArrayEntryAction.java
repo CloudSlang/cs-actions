@@ -1,18 +1,4 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/*
  * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -37,31 +23,36 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.json.entities.RemoveArrayEntryInput;
-import io.cloudslang.content.json.services.RemoveArrayEntryService;
+import io.cloudslang.content.json.entities.GetArrayEntryInput;
+import io.cloudslang.content.json.services.GetArrayEntryService;
 import io.cloudslang.content.json.utils.Constants;
 import io.cloudslang.content.utils.OutputUtilities;
 
 import java.util.Map;
 
-public class RemoveArrayEntryAction {
+public class GetArrayEntryAction {
 
     /**
-     * Removes an element from a JOSN array.
-     * All elements from the right of the element which is removed will be shifted one position to the left.
+     * Gets the value of an elemnt in a JSON array. If the value of the element is a simple type, i.e. a string or a number,
+     * it will be returned as-is. If it is a complex JSON object, i.e. '{"one":1}' it will be returned in JSON format.
+     * <p>
+     * When specifying the index to an array element in javascript it is possible to use the standard notation, where the 1st
+     * element from the left is index 0, and the right-most element is (n-1), in an array with n elements. However,
+     * it is also possible to specify elements starting from the right side of the array using negative numbers, in which case
+     * the right-most element is referred to by index -1 and the left-most element is at position (-1 * n), again for an array with n elements.
      *
-     * @param array String representation of a JSON array. Arrays in JSON are comma separated lists of objects, enclosed in square brackets ( [ ] ).
-     *              A normal OO list is NOT a JSON array. Examples: [{"one":1, "two":2}, 3, "four"]
-     * @param index The index of the element to remove from the array. The array index starts from 0 (the first item in the array).
-     *              If the value is negative then it will remove the item starting from right to left (-1 is the index of the last item in the array).
-     *              Valid values: -n, -n+1, ..., -1, 0, 1, ..., n-1 (for an array with n elements)
+     * @param array String representation of a JSON array. Arrays in JSON are comma seperated lists of objects,
+     *              enclosed in square brackets ( [ ] ).
+     * @param index The index of the element to retrieve from the array.
+     *              See the notes above for more information on using negative numbers to specify array elements.
+     *              Valid values: Integer between (-1*n) and (n-1) for an array with n elements.
      * @return a map containing the output of the operations. Keys present in the map are:
-     * <br><b>returnResult</b> - This is the primary output and contains the new JSON array with the requested element removed.
+     * <br><b>returnResult</b> - The element of the array at specified index.
      * If the operation failed, this field will contain an error message.
      * <br><b>returnCode</b> - The returnCode of the operation: 0 for success, -1 for failure.
      * <br><b>exception</b> - The exception message if the operation goes to failure.
      */
-    @Action(name = "Remove Array Entry",
+    @Action(name = "Get Array Entry",
             outputs = {
                     @Output(OutputNames.RETURN_CODE),
                     @Output(OutputNames.RETURN_RESULT),
@@ -77,11 +68,11 @@ public class RemoveArrayEntryAction {
             @Param(value = Constants.InputNames.ARRAY, required = true) String array,
             @Param(value = Constants.InputNames.INDEX, required = true) String index) {
         try {
-            RemoveArrayEntryInput input = new RemoveArrayEntryInput.Builder()
+            GetArrayEntryInput input = new GetArrayEntryInput.Builder()
                     .array(array)
                     .index(index)
                     .build();
-            return new RemoveArrayEntryService().execute(input);
+            return new GetArrayEntryService().execute(input);
         } catch (Exception ex) {
             return OutputUtilities.getFailureResultsMap(ex);
         }
