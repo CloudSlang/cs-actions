@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.hashicorp.terraform.utils;
+package io.cloudslang.content.oracle.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
@@ -28,8 +28,6 @@ import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
@@ -63,13 +61,13 @@ public class HttpUtils {
         httpClientInputs.setProxyPassword(proxyPassword);
     }
 
-    @NotNull
-    public static URIBuilder getUriBuilder() {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setHost(TERRAFORM_HOST);
-        uriBuilder.setScheme(HTTPS);
-        return uriBuilder;
-    }
+//    @NotNull
+//    public static URIBuilder getUriBuilder() {
+//        final URIBuilder uriBuilder = new URIBuilder();
+//        uriBuilder.setHost(OCI_HOST);
+//        uriBuilder.setScheme(HTTPS);
+//        return uriBuilder;
+//    }
 
     @NotNull
     public static String getAuthHeaders(@NotNull final String authToken) {

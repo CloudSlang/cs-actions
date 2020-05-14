@@ -27,7 +27,7 @@ public class Inputs extends InputNames {
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String REQUEST_BODY = "requestBody";
-        public static final String TERRAFORM_VERSION = "terraformVersion";
+        public static final String OCI_VERSION = "ociVersion";
         public static final String PAGE_NUMBER = "pageNumber";
         public static final String PAGE_SIZE = "pageSize";
     }

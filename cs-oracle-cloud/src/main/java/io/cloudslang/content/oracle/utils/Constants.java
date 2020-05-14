@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.hashicorp.terraform.utils;
+package io.cloudslang.content.oracle.utils;
 
 public class Constants {
     public static class Common {
@@ -43,9 +43,7 @@ public class Constants {
         public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
         public static final String AUTHORIZATION = "Authorization:";
         public static final String BEARER = "Bearer ";
-        public static final String TERRAFORM_HOST = "app.terraform.io";
-        public static final String TERRAFORM_VERSION_CONSTANT = "0.12.1";
-        public static final String ORGANIZATION_PATH = "/organizations/";
+        public static final String OCI_HOST = "oraclecloud.com";
         public static final String PATH_SEPARATOR = "/";
         public static final String AND = "&";
         public static final String QUERY = "?";
