@@ -15,7 +15,7 @@
 
 
 
-package io.cloudslang.content.amazon.actions.signature;
+package io.cloudslang.content.oracle.entities.infra.signature;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;

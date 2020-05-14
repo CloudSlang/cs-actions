@@ -1,4 +1,4 @@
-package io.cloudslang.content.hashicorp.terraform.actions.utils;
+package io.cloudslang.content.oracle.actions.utils;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -6,18 +6,12 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.hashicorp.terraform.services.CounterImpl;
 
 
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.BOOLEAN_FALSE;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CounterConstants.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.FAILURE_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.SUCCESS_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Counter.*;
 import static org.apache.commons.lang3.StringUtils.*;
 
 

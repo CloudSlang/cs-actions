@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.hashicorp.terraform.actions.utils;
+package io.cloudslang.content.oracle.actions.utils;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -25,30 +25,12 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.hashicorp.terraform.entities.ListOAuthClientInputs;
-import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.hashicorp.terraform.services.ListOauthClientImpl.listOAuthClient;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.LIST_OAUTH_CLIENT_OPERATION_NAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Constants.ListOAuthClientConstants.OAUTH_TOKEN_LIST_JSON_PATH;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.Common.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.LIST_OAUTH_CLIENT_DESC;
-import static io.cloudslang.content.hashicorp.terraform.utils.Descriptions.ListOAuthClient.OAUTH_TOKEN_ID_DESCRIPTION;
-import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getFailureResults;
-import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.ListOAuthClientOutputs.OAUTH_TOKEN_ID;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
@@ -103,54 +85,8 @@ public class ListOAuthClient {
 
         final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        if (!exceptionMessage.isEmpty()) {
-            return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
-        }
 
 
-        try {
-            final Map<String, String> result = listOAuthClient(ListOAuthClientInputs.builder()
-                    .commonInputs(TerraformCommonInputs.builder()
-                            .organizationName(organizationName)
-                            .authToken(authToken)
-                            .proxyHost(proxyHost)
-                            .proxyPort(proxyPort)
-                            .proxyUsername(proxyUsername)
-                            .proxyPassword(proxyPassword)
-                            .trustAllRoots(trustAllRoots)
-                            .x509HostnameVerifier(x509HostnameVerifier)
-                            .trustKeystore(trustKeystore)
-                            .trustPassword(trustPassword)
-                            .connectTimeout(connectTimeout)
-                            .socketTimeout(socketTimeout)
-                            .keepAlive(keepAlive)
-                            .connectionsMaxPerRoot(connectionsMaxPerRoute)
-                            .connectionsMaxTotal(connectionsMaxTotal)
-                            .responseCharacterSet(responseCharacterSet)
-                            .build())
-                    .build());
-
-
-            final String returnMessage = result.get(RETURN_RESULT);
-            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
-
-            if (statusCode >= 200 && statusCode < 300) {
-                final List<String> outhTokenIdList = JsonPath.read(returnMessage, OAUTH_TOKEN_LIST_JSON_PATH);
-                if (!outhTokenIdList.isEmpty()) {
-                    final String mouthTokenIdListAsString = join(outhTokenIdList.toArray(), DELIMITER);
-                    results.put(OAUTH_TOKEN_ID, mouthTokenIdListAsString);
-                } else {
-                    results.put(OAUTH_TOKEN_ID, EMPTY);
-                }
-            }else{
-                return getFailureResults(organizationName,statusCode,returnMessage);
-            }
-
-            return results;
-        } catch (Exception exception) {
-            return getFailureResultsMap(exception);
-        }
 
     }
 

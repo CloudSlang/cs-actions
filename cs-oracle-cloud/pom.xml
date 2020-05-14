@@ -23,7 +23,7 @@
     <version>1.0.0-SNAPSHOT</version>
 	
  <name>${project.groupId}:${project.artifactId}</name>
-    <description>Terraform Integration</description>
+    <description>Oracle Cloud</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
 
     <licenses>
