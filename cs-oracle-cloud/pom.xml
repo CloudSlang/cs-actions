@@ -19,8 +19,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.cloudslang.content</groupId>
-    <artifactId>cs-hashicorp-terraform</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <artifactId>cs-oracle-cloud</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
 	
  <name>${project.groupId}:${project.artifactId}</name>
     <description>Terraform Integration</description>
@@ -42,21 +42,8 @@
 	
     <developers>
         <developer>
-            <name>Mantesh Patil</name>
-            <email>mantesh.patil@microfocus.com</email>
-            <organization>Micro Focus</organization>
-            <organizationUrl>https://www.microfocus.com/about/</organizationUrl>
-        </developer>
-        <developer>
-            <name>Soumya Ranjan Nayak</name>
-            <email>soumyaranjan.nayak@microfocus.com</email>
-            <organization>Micro Focus</organization>
-            <organizationUrl>https://www.microfocus.com/about/</organizationUrl>
-        </developer>
-
-        <developer>
-            <name>Rajesh Kalyankar</name>
-            <email>rajesh.kum.kalyankar@microfocus.com</email>
+            <name>Amey Dwivedi</name>
+            <email>amey.dwivedi@microfocus.com</email>
             <organization>Micro Focus</organization>
             <organizationUrl>https://www.microfocus.com/about/</organizationUrl>
         </developer>
