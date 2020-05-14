@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <additionalHeaders>
-    <cs-io.cloudslang.content.hashicorp.terraform.actions-java-header>
+    <cs-io.cloudslang.content.oracle.actions-java-header>
         <firstLine>/*</firstLine>
         <beforeEachLine> </beforeEachLine>
         <endLine> */</endLine>
