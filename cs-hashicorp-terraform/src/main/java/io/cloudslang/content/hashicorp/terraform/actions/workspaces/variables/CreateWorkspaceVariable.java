@@ -78,7 +78,7 @@ public class CreateWorkspaceVariable {
                                        @Param(value = SENSITIVE_WORKSPACE_VARIABLE_VALUE, encrypted = true, description = SENSITIVE_WORKSPACE_VARIABLE_VALUE_DESC) String sensitiveWorkspaceVariableValue,
                                        @Param(value = WORKSPACE_VARIABLE_CATEGORY, description = WORKSPACE_VARIABLE_CATEGORY_DESC) String workspaceVariableCategory,
                                        @Param(value = HCL, description = HCL_DESC) String hcl,
-                                       @Param(value = WORKSPACE_ID, description = WORKSPACE_ID_DESC) String workspaceId,
+                                       @Param(value = WORKSPACE_ID, required = true, description = WORKSPACE_ID_DESC) String workspaceId,
                                        @Param(value = REQUEST_BODY, description = WORKSPACE_VARIABLE_REQUEST_BODY_DESC) String requestBody,
                                        @Param(value = SENSITIVE_REQUEST_BODY,encrypted = true, description = WORKSPACE_VARIABLE_SENSITIVE_REQUEST_BODY_DESC) String sensitiveWorkspaceVariableRequestBody,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
@@ -193,6 +193,7 @@ public class CreateWorkspaceVariable {
                         .build());
             }else{
                 result = createWorkspaceVariable(TerraformWorkspaceVariableInputs.builder()
+                        .workspaceId(workspaceId)
                         .sensitiveWorkspaceVariableRequestBody(sensitiveWorkspaceVariableRequestBody)
                         .commonInputs(TerraformCommonInputs.builder()
                                 .authToken(authToken)
