@@ -28,6 +28,8 @@ import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.oracle.utils.Constants.Common.HTTPS;
+import static io.cloudslang.content.oracle.utils.Constants.Common.OCI_HOST;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
@@ -61,75 +63,76 @@ public class HttpUtils {
         httpClientInputs.setProxyPassword(proxyPassword);
     }
 
+    @NotNull
+    public static URIBuilder getUriBuilder() {
+        final URIBuilder uriBuilder = new URIBuilder();
+        uriBuilder.setHost(OCI_HOST);
+        uriBuilder.setScheme(HTTPS);
+        return uriBuilder;
+    }
+
+
 //    @NotNull
-//    public static URIBuilder getUriBuilder() {
-//        final URIBuilder uriBuilder = new URIBuilder();
-//        uriBuilder.setHost(OCI_HOST);
-//        uriBuilder.setScheme(HTTPS);
-//        return uriBuilder;
+//    public static String getAuthHeaders(@NotNull final String authToken) {
+//        final StringBuilder headerBuilder = new StringBuilder();
+//        headerBuilder.append(AUTHORIZATION).append(BEARER).append(authToken);
+//        return headerBuilder.toString();
 //    }
-
-    @NotNull
-    public static String getAuthHeaders(@NotNull final String authToken) {
-        final StringBuilder headerBuilder = new StringBuilder();
-        headerBuilder.append(AUTHORIZATION).append(BEARER).append(authToken);
-        return headerBuilder.toString();
-    }
-
-    @NotNull
-    public static Map<String, String> getOperationResults(@NotNull final Map<String, String> result,
-                                                          @NotNull final String successMessage,
-                                                          final String failureMessage,
-                                                          final String document) {
-        final Map<String, String> results;
-        final String statusCode = result.get(STATUS_CODE);
-        if (Integer.parseInt(statusCode) >= 200 && Integer.parseInt(statusCode) < 300) {
-            results = getSuccessResultsMap(successMessage);
-            if (!isEmpty(document))
-                results.put(DOCUMENT, document);
-        } else {
-            results = getFailureResultsMap(failureMessage);
-        }
-        results.put(STATUS_CODE, statusCode);
-        return results;
-    }
-
-    public static void setSecurityInputs(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs,
-                                         @org.jetbrains.annotations.NotNull final String trustAllRoots,
-                                         @org.jetbrains.annotations.NotNull final String x509HostnameVerifier,
-                                         @org.jetbrains.annotations.NotNull final String trustKeystore,
-                                         @org.jetbrains.annotations.NotNull final String trustPassword) {
-        httpClientInputs.setTrustAllRoots(trustAllRoots);
-        httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
-        httpClientInputs.setTrustKeystore(trustKeystore);
-        httpClientInputs.setTrustPassword(trustPassword);
-    }
-
-    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
-                                               @NotNull final String connectTimeout,
-                                               @NotNull final String socketTimeout,
-                                               @NotNull final String keepAlive,
-                                               @NotNull final String connectionsMaxPerRoot,
-                                               @NotNull final String connectionsMaxTotal) {
-        httpClientInputs.setConnectTimeout(connectTimeout);
-        httpClientInputs.setSocketTimeout(socketTimeout);
-        httpClientInputs.setKeepAlive(keepAlive);
-        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
-        httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
-    }
-
-    @NotNull
-    public static String getQueryParams(String pageNumber,
-                                        final String pageSize) {
-        final StringBuilder queryParams = new StringBuilder()
-                .append(QUERY)
-                .append(PAGE_NUMBER)
-                .append(pageNumber)
-                .append(AND)
-                .append(PAGE_SIZE)
-                .append(pageSize);
-        return queryParams.toString();
-    }
+//
+//    @NotNull
+//    public static Map<String, String> getOperationResults(@NotNull final Map<String, String> result,
+//                                                          @NotNull final String successMessage,
+//                                                          final String failureMessage,
+//                                                          final String document) {
+//        final Map<String, String> results;
+//        final String statusCode = result.get(STATUS_CODE);
+//        if (Integer.parseInt(statusCode) >= 200 && Integer.parseInt(statusCode) < 300) {
+//            results = getSuccessResultsMap(successMessage);
+//            if (!isEmpty(document))
+//                results.put(DOCUMENT, document);
+//        } else {
+//            results = getFailureResultsMap(failureMessage);
+//        }
+//        results.put(STATUS_CODE, statusCode);
+//        return results;
+//    }
+//
+//    public static void setSecurityInputs(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs,
+//                                         @org.jetbrains.annotations.NotNull final String trustAllRoots,
+//                                         @org.jetbrains.annotations.NotNull final String x509HostnameVerifier,
+//                                         @org.jetbrains.annotations.NotNull final String trustKeystore,
+//                                         @org.jetbrains.annotations.NotNull final String trustPassword) {
+//        httpClientInputs.setTrustAllRoots(trustAllRoots);
+//        httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
+//        httpClientInputs.setTrustKeystore(trustKeystore);
+//        httpClientInputs.setTrustPassword(trustPassword);
+//    }
+//
+//    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
+//                                               @NotNull final String connectTimeout,
+//                                               @NotNull final String socketTimeout,
+//                                               @NotNull final String keepAlive,
+//                                               @NotNull final String connectionsMaxPerRoot,
+//                                               @NotNull final String connectionsMaxTotal) {
+//        httpClientInputs.setConnectTimeout(connectTimeout);
+//        httpClientInputs.setSocketTimeout(socketTimeout);
+//        httpClientInputs.setKeepAlive(keepAlive);
+//        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
+//        httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
+//    }
+//
+//    @NotNull
+//    public static String getQueryParams(String pageNumber,
+//                                        final String pageSize) {
+//        final StringBuilder queryParams = new StringBuilder()
+//                .append(QUERY)
+//                .append(PAGE_NUMBER)
+//                .append(pageNumber)
+//                .append(AND)
+//                .append(PAGE_SIZE)
+//                .append(pageSize);
+//        return queryParams.toString();
+//    }
 
     @NotNull
     public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode, @NotNull String throwable) {

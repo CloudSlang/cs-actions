@@ -43,7 +43,8 @@ public class Constants {
         public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
         public static final String AUTHORIZATION = "Authorization:";
         public static final String BEARER = "Bearer ";
-        public static final String OCI_HOST = "oraclecloud.com";
+        public static final String OCI_HOST = "iaas.us-ashburn-1.oraclecloud.com";
+        public static final String LIST_INSTANCES = "/instances?compartmentId=";
         public static final String PATH_SEPARATOR = "/";
         public static final String AND = "&";
         public static final String QUERY = "?";
@@ -61,10 +62,11 @@ public class Constants {
         public static final String COLLABORATOR_AUTH_POLICY = "password";
     }
 
-  
 
-    public static class CreateInstanceConstants {
-        public static final String CREATE_INSTANCE_OPERATION_NAME = "Create Instance in OCI";
+
+    public static class ListInstancesConstants {
+        public static final String LIST_INSTANCES_OPERATION_NAME = "List Organizations";
+        public static final String INSTANCES_LIST_JSON_PATH = "$.data[*].attributes.name";
     }
 
     public static class CounterConstants{

@@ -17,6 +17,10 @@ package io.cloudslang.content.oracle.utils;
 
 public class Descriptions {
     public static class Common {
+        public static final String TENANCY_OCID_DESC =  "Tenancy OCID of the OCI account.";
+        public static final String USER_OCID_DESC = "User OCID of the OCI account.";
+        public static final String FINGER_PRINT_DESC = "Finger print of the public key generated for OCI account.";
+        public static final String PRIVATE_KEY_FILE_DESC = "Location of the private key pem file generated for OCI account.";
         public static final String PROXY_HOST_DESC = "Proxy server used to access the OCI.";
         public static final String PROXY_PORT_DESC = "Proxy server port used to access the OCI." +
                 "Default: '8080'";
@@ -91,18 +95,13 @@ public class Descriptions {
         public static final String LIST_OAUTH_CLIENT_DESC = "List An OAuth Client Id";
     }
 
+    public static class ListInstances {
+        public static final String LIST_INSTANCES_OPERATION_DESC = "List of organizations present";
+        public static final String INSTANCE_LIST_DESC = "List of all organizations";
+        public static final String COMPARTMENT_OCID_DESC = "OCID of the Compartment in which instance is to be created.";
+    }
     
 
-    public static class CreateInstance {
-        public static final String CREATE_RUN_DESC = "Creates a run in workspace.";
-        public static final String CREATE_RUN_REQUEST_BODY_DESC = "The request body of the crate run.";
-        public static final String RUN_MESSAGE_DESC = "Specifies the message to be associated with this run";
-        public static final String IS_DESTROY_DESC = "Specifies if this plan is a destroy plan, which will destroy " +
-                "all provisioned resources.";
-        public static final String RUN_ID_DESC = "Id of the run.";
-    }
-
-	
 
     public static class Counter{
         public static final String FAILURE_MESSAGE = "Something went wrong";

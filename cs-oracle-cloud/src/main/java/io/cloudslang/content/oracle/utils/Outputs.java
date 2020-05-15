@@ -27,9 +27,8 @@ public class Outputs extends OutputNames {
         public static final String OAUTH_TOKEN_ID = "oauthTokenId";
     }
 
-    public static class CreateInstanceOutputs {
-        public static final String INSTANCE_ID = "instanceId";
+    public static class ListInstancesOutputs {
+        public static final String INSTANCE_LIST = "instance_list";
     }
 
-}
 }

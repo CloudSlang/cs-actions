@@ -20,6 +20,10 @@ import io.cloudslang.content.constants.InputNames;
 public class Inputs extends InputNames {
 
     public static class CommonInputs {
+        public static final String TENANCY_OCID = "tenancyOcid";
+        public static final String USER_OCID = "userOcid";
+        public static final String FINGER_PRINT = "fingerPrint";
+        public static final String PRIVATE_KEY_FILE = "privateKeyFile";
         public static final String AUTH_TOKEN = "authToken";
         public static final String ORGANIZATION_NAME = "organizationName";
         public static final String PROXY_HOST = "proxyHost";
@@ -32,8 +36,8 @@ public class Inputs extends InputNames {
         public static final String PAGE_SIZE = "pageSize";
     }
 
-    public static class CreateInstanceInputs {
-        public static final String INSTANCE_ID = "instanceId";
+    public static class ListInstancesInputs {
+        public static final String COMPARTMENT_OCID = "compartmentOcid";
     }
 
 
