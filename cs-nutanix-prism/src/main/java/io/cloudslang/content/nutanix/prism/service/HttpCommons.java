@@ -14,13 +14,13 @@
  */
 
 
-package io.cloudslang.content.nutanix.service;
+package io.cloudslang.content.nutanix.prism.service;
 
-import io.cloudslang.content.nutanix.entities.NutanixCommonInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.jetbrains.annotations.NotNull;
 
-import static io.cloudslang.content.nutanix.utils.HttpUtils.*;
+import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.*;
 
 public class HttpCommons {
 
@@ -37,13 +37,17 @@ public class HttpCommons {
                 commonInputs.getTrustAllRoots(),
                 commonInputs.getX509HostnameVerifier(),
                 commonInputs.getTrustKeystore(),
-                commonInputs.getTrustPassword());
+                commonInputs.getTrustPassword(),
+                commonInputs.getKeystore(),
+                commonInputs.getKeystorePassword());
 
         setConnectionParameters(httpClientInputs,
                 commonInputs.getConnectTimeout(),
                 commonInputs.getSocketTimeout(),
                 commonInputs.getKeepAlive(),
                 commonInputs.getConnectionsMaxPerRoot(),
-                commonInputs.getConnectionsMaxTotal());
+                commonInputs.getConnectionsMaxTotal(),
+                commonInputs.getPreemptiveAuth());
+        setTLSParameters(httpClientInputs);
     }
 }

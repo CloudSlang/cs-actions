@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.nutanix.actions;
+package io.cloudslang.content.nutanix.prism.actions.virtualmachines;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -24,7 +24,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.nutanix.entities.NutanixCommonInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -33,21 +33,22 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.nutanix.service.VMImpl.listVMs;
-import static io.cloudslang.content.nutanix.utils.Constants.Common.*;
-import static io.cloudslang.content.nutanix.utils.Constants.ListVMsConstants.LIST_VMS_OPERATION_NAME;
-import static io.cloudslang.content.nutanix.utils.Descriptions.Common.*;
-import static io.cloudslang.content.nutanix.utils.Descriptions.ListVMs.LIST_VMS_OPERATION_DESC;
-import static io.cloudslang.content.nutanix.utils.HttpUtils.getFailureResults;
-import static io.cloudslang.content.nutanix.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.nutanix.utils.Inputs.CommonInputs.PASSWORD;
-import static io.cloudslang.content.nutanix.utils.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.nutanix.utils.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.nutanix.utils.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.nutanix.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.nutanix.utils.Inputs.CommonInputs.USERNAME;
-import static io.cloudslang.content.nutanix.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.nutanix.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.nutanix.prism.service.VMImpl.listVMs;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.ListVMsConstants.LIST_VMS_OPERATION_NAME;
+import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
+import static io.cloudslang.content.nutanix.prism.utils.Descriptions.ListVMs.LIST_VMS_OPERATION_DESC;
+import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
+import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.API_VERSION;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PASSWORD;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.USERNAME;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
 
@@ -68,7 +69,7 @@ public class ListVMs {
                                        @Param(value = PORT, required = true, description = PORT_DESC) String port,
                                        @Param(value = USERNAME, required = true, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
-                                       @Param(value = NUTANIX_API_VERSION, encrypted = true, required = true, description = NUTANIX_API_VERSION_DESC) String apiVersion,
+                                       @Param(value = API_VERSION, encrypted = true, required = true, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,

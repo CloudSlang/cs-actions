@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.nutanix.utils;
+package io.cloudslang.content.nutanix.prism.utils;
 
 public class Descriptions {
     public static class Common {
@@ -40,6 +40,13 @@ public class Descriptions {
                 "or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS)";
         public static final String TRUST_PASSWORD_DESC = "The password associated with the TrustStore file. If " +
                 "trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied.";
+        public static final String KEYSTORE_DESC ="The pathname of the Java KeyStore file. You only need this if the" +
+                "server requires client authentication. If the protocol (specified by the 'url') is not 'https' or if " +
+                "trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS)" +
+                "Default: <OO_Home>/java/lib/security/cacerts";
+        public static final String KEYSTORE_PASSWORD_DESC = "The password associated with the KeyStore file. If "+
+                "trustAllRoots is false and keystore is empty, keystorePassword default will be supplied." +
+                "Default: changeit";
         public static final String CONN_MAX_TOTAL_DESC = "The maximum limit of connections in total." +
                 "Default: '20'";
         public static final String CONN_MAX_ROUTE_DESC = "The maximum limit of connections on a per route basis." +
@@ -63,11 +70,12 @@ public class Descriptions {
                 "header is empty, the default value will be used. You should not use this for method=HEAD or OPTIONS." +
                 "Default: 'UTF-8'";
         public static final String HOSTNAME_DESC = "The hostname for nutanix.";
-        public static final String PROTOCOL_DESC = "The connection protocol of nutanix";
-        public static final String PORT_DESC = "The port to connect to nutanix";
+        public static final String PROTOCOL_DESC = "The connection protocol of nutanix. Default: https";
+        public static final String PORT_DESC = "The port to connect to nutanix. Default: 9440";
         public static final String USERNAME_DESC = "The username for nutanix.";
         public static final String PASSWORD_DESC = "The password for nutanix.";
-        public static final String NUTANIX_API_VERSION_DESC = "The api version for nutanix.";
+        public static final String API_VERSION_DESC = "The api version for nutanix. " +
+                "Default: v2.0";
 
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in milliseconds) to allow the client " +
@@ -76,9 +84,6 @@ public class Descriptions {
         public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
                 "Default: 'false'";
         public static final String STATUS_CODE_DESC = "The HTTP status code for nutanix API request.";
-        public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page.";
-        public static final String PAGE_SIZE_DESC = "Optional. If omitted, the endpoint will return 20 items per page. " +
-                "The maximum page size is 150.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
         public static final String FAILURE_DESC = "There was an error while executing the request.";
         public static final String SUCCESS_DESC = "The request was successfully executed.";
@@ -87,9 +92,20 @@ public class Descriptions {
 
 
     public static class ListVMs {
-        public static final String LIST_VMS_OPERATION_DESC = "Get a list of Virtual Machines.";
+        public static final String LIST_VMS_OPERATION_DESC = "Get a list of Virtual Machines. ";
 
     }
+
+    public static class GetVMDetails {
+        public static final String GET_VM_DETAILS_OPERATION_DESC = "Get details of a specific Virtual Machines. Virtual Machine disk information and network information are not included by default as fetching these are expensive operations. These can be included by setting the includeVMDiskConfig and includeVMNicConfig flags respectively.";
+        public static final String VM_UUID_DESC = "Id of the Virtual Machine.";
+        public static final String INCLUDE_VM_DISK_CONFIG_INFO_DESC = "Whether to include Virtual Machine disk information.";
+        public static final String INCLUDE_VM_NIC_CONFIG_INFO_DESC = "Whether to include network information.";
+        public static final String VM_NAME_DESC = "Name of the Virtual Machine.";
+    }
+
+
+
 
     public static class Counter{
         public static final String FAILURE_MESSAGE = "Something went wrong";

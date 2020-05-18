@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.nutanix.utils;
+package io.cloudslang.content.nutanix.prism.utils;
 
 import io.cloudslang.content.constants.InputNames;
 
@@ -25,15 +25,18 @@ public class Inputs extends InputNames {
         public static final String PORT = "port";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
-        public static final String NUTANIX_API_VERSION = "nutanixAPIVersion";
+        public static final String API_VERSION = "apiVersion";
         public static final String PROXY_HOST = "proxyHost";
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String REQUEST_BODY = "requestBody";
-        public static final String PAGE_NUMBER = "pageNumber";
-        public static final String PAGE_SIZE = "pageSize";
     }
 
+    public static class GetVMDetailsInputs {
+        public static final String VM_UUID = "vmUUID";
+        public static final String INCLUDE_VM_DISK_CONFIG_INFO = "includeVMDiskConfigInfo";
+        public static final String INCLUDE_VM_NIC_CONFIG_INFO = "includeVMNicConfigInfo";
+    }
 
 }

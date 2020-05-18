@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.nutanix.utils;
+package io.cloudslang.content.nutanix.prism.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
@@ -27,8 +27,8 @@ import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.nutanix.utils.Constants.Common.*;
-import static io.cloudslang.content.nutanix.utils.Outputs.CommonOutputs.DOCUMENT;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
+import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
@@ -73,7 +73,7 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static String getAuthHeaders(@NotNull final String username,@NotNull final String password) {
+    public static String getAuthHeaders(@NotNull final String username, @NotNull final String password) {
         final StringBuilder headerBuilder = new StringBuilder();
         headerBuilder.append(AUTHORIZATION).append(username).append(":").append(password);
         return headerBuilder.toString();
@@ -101,11 +101,15 @@ public class HttpUtils {
                                          @NotNull final String trustAllRoots,
                                          @NotNull final String x509HostnameVerifier,
                                          @NotNull final String trustKeystore,
-                                         @NotNull final String trustPassword) {
+                                         @NotNull final String trustPassword,
+                                         @NotNull final String keystore,
+                                         @NotNull final String keystorePassword) {
         httpClientInputs.setTrustAllRoots(trustAllRoots);
         httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
         httpClientInputs.setTrustKeystore(trustKeystore);
         httpClientInputs.setTrustPassword(trustPassword);
+        httpClientInputs.setKeystore(keystore);
+        httpClientInputs.setKeystorePassword(keystorePassword);
     }
 
     public static void setConnectionParameters(HttpClientInputs httpClientInputs,
@@ -113,24 +117,32 @@ public class HttpUtils {
                                                @NotNull final String socketTimeout,
                                                @NotNull final String keepAlive,
                                                @NotNull final String connectionsMaxPerRoot,
-                                               @NotNull final String connectionsMaxTotal) {
+                                               @NotNull final String connectionsMaxTotal,
+                                               @NotNull final String preemptiveAuth) {
         httpClientInputs.setConnectTimeout(connectTimeout);
         httpClientInputs.setSocketTimeout(socketTimeout);
         httpClientInputs.setKeepAlive(keepAlive);
         httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
         httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
+        httpClientInputs.setPreemptiveAuth(String.valueOf(true));
+    }
+
+    public static void setTLSParameters(HttpClientInputs httpClientInputs) {
+        httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12);
+        httpClientInputs.setAllowedCyphers(ALLOWED_CYPHERS);
+
     }
 
     @NotNull
-    public static String getQueryParams(String pageNumber,
-                                        final String pageSize) {
+    public static String getQueryParams(String includeVMDiskConfigInfo,
+                                        final String includeVMNicConfigInfo) {
         final StringBuilder queryParams = new StringBuilder()
-                .append(QUERY)
-                .append(PAGE_NUMBER)
-                .append(pageNumber)
-                .append(AND)
-                .append(PAGE_SIZE)
-                .append(pageSize);
+                .append(Constants.Common.QUERY)
+                .append(Constants.GetVMDetailsConstants.INCLUDE_VM_DISK_CONFIG_INFO)
+                .append(includeVMDiskConfigInfo)
+                .append(Constants.Common.AND)
+                .append(Constants.GetVMDetailsConstants.INCLUDE_VM_NIC_CONFIG_INFO)
+                .append(includeVMNicConfigInfo);
         return queryParams.toString();
     }
 
@@ -138,7 +150,7 @@ public class HttpUtils {
     public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode, @NotNull String throwable) {
         Map<String, String> results = new HashMap();
         results.put("returnCode", "-1");
-        results.put("statusCode",statusCode.toString());
+        results.put("statusCode", statusCode.toString());
         if (statusCode.equals(404)) {
             results.put("returnResult", inputName + " not found, or user unauthorized to perform action");
             results.put("exception ", "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");

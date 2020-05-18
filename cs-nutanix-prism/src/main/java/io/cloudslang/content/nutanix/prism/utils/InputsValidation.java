@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.nutanix.utils;
+package io.cloudslang.content.nutanix.prism.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.utils.NumberUtilities;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.nutanix.utils.Constants.Common.*;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;

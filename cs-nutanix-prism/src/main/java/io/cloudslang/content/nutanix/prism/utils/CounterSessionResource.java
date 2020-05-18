@@ -13,14 +13,28 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.nutanix.utils;
+package io.cloudslang.content.nutanix.prism.utils;
 
-import io.cloudslang.content.constants.OutputNames;
+import com.hp.oo.sdk.content.plugin.SessionResource;
 
-public class Outputs extends OutputNames {
-    public static class CommonOutputs {
-        public static final String DOCUMENT = "document";
+import java.util.Map;
 
+public class CounterSessionResource extends SessionResource<Map<String, Object>> {
+
+    private Map<String, Object> counterMap;
+
+    CounterSessionResource(final Map<String, Object> counterMap) {
+        this.counterMap = counterMap;
     }
 
+    @Override
+    public Map<String, Object> get() {
+        return counterMap;
+    }
+
+    @Override
+    public void release() {
+        counterMap = null;
+    }
 }
+

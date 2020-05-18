@@ -12,14 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.nutanix.utils;
+package io.cloudslang.content.nutanix.prism.utils;
 
 public class Constants {
     public static class Common {
-        public static final String API = "/api/nutanix";
-        public static final String API_VERSION = "/v2.0";
+        public static final String API = "/api/nutanix/";
+        public static final String DEFAULT_API_VERSION = "v2.0";
         public static final String NEW_LINE = "\n";
         public static final String DEFAULT_PROXY_PORT = "8080";
+        public static final String DEFAULT_NUTANIX_PORT = "9440";
         public static final String BOOLEAN_FALSE = "false";
         public static final String BOOLEAN_TRUE = "true";
         public static final String STRICT = "strict";
@@ -54,27 +55,40 @@ public class Constants {
         public static final String DEFAULT_PAGE_SIZE = "100";
         public static final String PAGE_NUMBER = "page[number]=";
         public static final String PAGE_SIZE = "page[size]=";
+        public static final String ABBYY_XML_RESULT_XSD_SCHEMA_PATH = "/xml_result.xsd";
+        public static final String ALLOWED_CYPHERS = "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256," +
+                "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384," +
+                "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256," +
+                "TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256";
     }
 
-    public static class CounterConstants{
-        public static final String RESULT_STRING="resultString";
-        public static final String INCREMENT_BY_DEFAULT_VALUE="1";
-        public static final String RESULT="result";
-        public static final String HASMORE="has more";
-        public static final String NOMORE="no more";
-        public static final String FAILURE="failure";
-        public static final String EXCEPTION="exception";
-        public static final String COUNTER_OPERATION_NAME="Counter";
-        public static final String TO="to";
-        public static final String FROM="from";
-        public static final String INCREMENT_BY="incrementBy";
-        public static final String SESSION_COUNTER="sessionCounter";
-        public static final String RESET="reset";
+    public static class CounterConstants {
+        public static final String RESULT_STRING = "resultString";
+        public static final String INCREMENT_BY_DEFAULT_VALUE = "1";
+        public static final String RESULT = "result";
+        public static final String HASMORE = "has more";
+        public static final String NOMORE = "no more";
+        public static final String FAILURE = "failure";
+        public static final String EXCEPTION = "exception";
+        public static final String COUNTER_OPERATION_NAME = "Counter";
+        public static final String TO = "to";
+        public static final String FROM = "from";
+        public static final String INCREMENT_BY = "incrementBy";
+        public static final String SESSION_COUNTER = "sessionCounter";
+        public static final String RESET = "reset";
 
 
     }
 
-    public static class ListVMsConstants{
+    public static class ListVMsConstants {
         public static final String LIST_VMS_OPERATION_NAME = "List VMs";
+    }
+
+    public static class GetVMDetailsConstants {
+        public static final String GET_VM_DETAILS_OPERATION_NAME = "Get VM Details";
+        public static final String INCLUDE_VM_DISK_CONFIG_INFO = "include_vm_disk_config=";
+        public static final String INCLUDE_VM_NIC_CONFIG_INFO = "include_vm_nic_config=";
+        public static final String VM_NAME_PATH = "name";
+        public static final String GET_VM_DETAILS_PATH = "/vms";
     }
 }

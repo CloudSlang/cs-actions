@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.nutanix.entities;
+package io.cloudslang.content.nutanix.prism.entities;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +26,7 @@ public class NutanixCommonInputs {
     private final String port;
     private final String username;
     private final String password;
-    private final String nutanixAPIVersion;
+    private final String apiVersion;
     private final String requestBody;
     private final String proxyHost;
     private final String proxyPort;
@@ -36,29 +36,29 @@ public class NutanixCommonInputs {
     private final String x509HostnameVerifier;
     private final String trustKeystore;
     private final String trustPassword;
+    private final String keystore;
+    private final String keystorePassword;
     private final String connectTimeout;
     private final String socketTimeout;
     private final String keepAlive;
     private final String responseCharacterSet;
     private final String connectionsMaxPerRoot;
     private final String connectionsMaxTotal;
-    private final String pageNumber;
-    private final String pageSize;
+    private final String preemptiveAuth;
 
 
-    @java.beans.ConstructorProperties({"protocol","hostname","port","username", "password","nutanixAPIVersion", "requestBody", "proxyHost", "proxyPort", "proxyUsername",
-            "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "connectTimeout",
-            "socketTimeout", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal",
-            "pageNumber", "pageSize"})
-    private NutanixCommonInputs(String protocol,String hostname,String port, String username, String password,String nutanixAPIVersion,String requestBody, String proxyHost, String proxyPort,
+    @java.beans.ConstructorProperties({"protocol", "hostname", "port", "username", "password", "apiVersion", "requestBody", "proxyHost", "proxyPort", "proxyUsername",
+            "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "keystore", "keystorePassword", "connectTimeout",
+            "socketTimeout", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal", "preemptiveAuth"})
+    private NutanixCommonInputs(String protocol, String hostname, String port, String username, String password, String apiVersion, String requestBody, String proxyHost, String proxyPort,
                                 String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier,
-                                String trustKeystore, String trustPassword, String connectTimeout, String socketTimeout, String keepAlive, String responseCharacterSet, String connectionsMaxPerRoot, String connectionsMaxTotal, String pageNumber, String pageSize) {
+                                String trustKeystore, String trustPassword, String keystore, String keystorePassword, String connectTimeout, String socketTimeout, String keepAlive, String responseCharacterSet, String connectionsMaxPerRoot, String connectionsMaxTotal, String preemptiveAuth) {
         this.protocol = protocol;
         this.hostname = hostname;
         this.port = port;
         this.username = username;
-        this.password=password;
-        this.nutanixAPIVersion = nutanixAPIVersion;
+        this.password = password;
+        this.apiVersion = apiVersion;
         this.requestBody = requestBody;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
@@ -68,14 +68,16 @@ public class NutanixCommonInputs {
         this.x509HostnameVerifier = x509HostnameVerifier;
         this.trustKeystore = trustKeystore;
         this.trustPassword = trustPassword;
+        this.keystore = keystore;
+        this.keystorePassword = keystorePassword;
         this.connectTimeout = connectTimeout;
         this.socketTimeout = socketTimeout;
         this.keepAlive = keepAlive;
         this.responseCharacterSet = responseCharacterSet;
         this.connectionsMaxPerRoot = connectionsMaxPerRoot;
         this.connectionsMaxTotal = connectionsMaxTotal;
-        this.pageNumber = pageNumber;
-        this.pageSize = pageSize;
+        this.preemptiveAuth = preemptiveAuth;
+
     }
 
     @NotNull
@@ -99,8 +101,8 @@ public class NutanixCommonInputs {
     }
 
     @NotNull
-    public String getNutanixAPIVersion() {
-        return nutanixAPIVersion;
+    public String getAPIVersion() {
+        return apiVersion;
     }
 
     @NotNull
@@ -122,6 +124,7 @@ public class NutanixCommonInputs {
     public String getPassword() {
         return this.password;
     }
+
     @NotNull
     public String getHostname() {
         return this.hostname;
@@ -168,6 +171,16 @@ public class NutanixCommonInputs {
     }
 
     @NotNull
+    public String getKeystore() {
+        return this.keystore;
+    }
+
+    @NotNull
+    public String getKeystorePassword() {
+        return this.keystorePassword;
+    }
+
+    @NotNull
     public String getConnectTimeout() {
         return this.connectTimeout;
     }
@@ -187,13 +200,11 @@ public class NutanixCommonInputs {
         return this.responseCharacterSet;
     }
 
-    public String getPageNumber() {
-        return this.pageNumber;
+    @NotNull
+    public String getPreemptiveAuth() {
+        return this.preemptiveAuth;
     }
 
-    public String getPageSize() {
-        return this.pageSize;
-    }
 
     public static class NutanixCommonInputsBuilder {
 
@@ -202,7 +213,7 @@ public class NutanixCommonInputs {
         private String port = EMPTY;
         private String username = EMPTY;
         private String password = EMPTY;
-        private String nutanixAPIVersion = EMPTY;
+        private String apiVersion = EMPTY;
         private String requestBody = EMPTY;
         private String proxyHost = EMPTY;
         private String proxyPort = EMPTY;
@@ -212,17 +223,19 @@ public class NutanixCommonInputs {
         private String x509HostnameVerifier = EMPTY;
         private String trustKeystore = EMPTY;
         private String trustPassword = EMPTY;
+        private String keystore = EMPTY;
+        private String keystorePassword = EMPTY;
         private String connectTimeout = EMPTY;
         private String socketTimeout = EMPTY;
         private String keepAlive = EMPTY;
         private String responseCharacterSet = EMPTY;
         private String connectionsMaxPerRoot = EMPTY;
         private String connectionsMaxTotal = EMPTY;
-        private String pageNumber = EMPTY;
-        private String pageSize = EMPTY;
+        private String preemptiveAuth = EMPTY;
 
         NutanixCommonInputsBuilder() {
         }
+
         @NotNull
         public NutanixCommonInputs.NutanixCommonInputsBuilder protocol(@NotNull final String protocol) {
             this.protocol = protocol;
@@ -240,19 +253,22 @@ public class NutanixCommonInputs {
             this.port = port;
             return this;
         }
+
         @NotNull
         public NutanixCommonInputs.NutanixCommonInputsBuilder username(@NotNull final String username) {
             this.username = username;
             return this;
         }
+
         @NotNull
         public NutanixCommonInputs.NutanixCommonInputsBuilder password(@NotNull final String password) {
             this.password = password;
             return this;
         }
+
         @NotNull
-        public NutanixCommonInputs.NutanixCommonInputsBuilder nutanixAPIVersion(@NotNull final String nutanixAPIVersion) {
-            this.nutanixAPIVersion = nutanixAPIVersion;
+        public NutanixCommonInputs.NutanixCommonInputsBuilder apiVersion(@NotNull final String apiVersion) {
+            this.apiVersion = apiVersion;
             return this;
         }
 
@@ -284,6 +300,18 @@ public class NutanixCommonInputs {
         @NotNull
         public NutanixCommonInputs.NutanixCommonInputsBuilder trustPassword(@NotNull final String trustPassword) {
             this.trustPassword = trustPassword;
+            return this;
+        }
+
+        @NotNull
+        public NutanixCommonInputs.NutanixCommonInputsBuilder keystore(@NotNull final String keystore) {
+            this.keystore = keystore;
+            return this;
+        }
+
+        @NotNull
+        public NutanixCommonInputs.NutanixCommonInputsBuilder keystorePassword(@NotNull final String keystorePassword) {
+            this.keystorePassword = keystorePassword;
             return this;
         }
 
@@ -349,21 +377,16 @@ public class NutanixCommonInputs {
         }
 
         @NotNull
-        public NutanixCommonInputs.NutanixCommonInputsBuilder pageNumber(@NotNull final String pageNumber) {
-            this.pageNumber = pageNumber;
+        public NutanixCommonInputs.NutanixCommonInputsBuilder preemptiveAuth(@NotNull final String preemptiveAuth) {
+            this.preemptiveAuth = preemptiveAuth;
             return this;
         }
 
-        @NotNull
-        public NutanixCommonInputs.NutanixCommonInputsBuilder pageSize(@NotNull final String pageSize) {
-            this.pageSize = pageSize;
-            return this;
-        }
 
         public NutanixCommonInputs build() {
-            return new NutanixCommonInputs(protocol,hostname,port, username,password,nutanixAPIVersion, requestBody, proxyHost, proxyPort, proxyUsername, proxyPassword,
-                    trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, connectTimeout,
-                    socketTimeout, keepAlive, responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal, pageNumber, pageSize);
+            return new NutanixCommonInputs(protocol, hostname, port, username, password, apiVersion, requestBody, proxyHost, proxyPort, proxyUsername, proxyPassword,
+                    trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, keystore, keystorePassword, connectTimeout,
+                    socketTimeout, keepAlive, responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal, preemptiveAuth);
         }
     }
 }
