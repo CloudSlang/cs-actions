@@ -51,11 +51,6 @@ public class Constants {
         public static final String STATUS_CODE = "statusCode";
         public static final String APPLICATION_API_JSON = "application/json";
         public static final String DELIMITER = ",";
-        public static final String DEFAULT_PAGE_NUMBER = "1";
-        public static final String DEFAULT_PAGE_SIZE = "100";
-        public static final String PAGE_NUMBER = "page[number]=";
-        public static final String PAGE_SIZE = "page[size]=";
-        public static final String ABBYY_XML_RESULT_XSD_SCHEMA_PATH = "/xml_result.xsd";
         public static final String ALLOWED_CYPHERS = "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256," +
                 "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384," +
                 "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256," +
