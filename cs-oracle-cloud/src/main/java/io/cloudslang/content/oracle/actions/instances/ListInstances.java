@@ -25,7 +25,6 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-//import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.oracle.entities.inputs.OCICommonInputs;
 import io.cloudslang.content.oracle.entities.inputs.OCIInstanceInputs;
 import io.cloudslang.content.utils.StringUtilities;
@@ -62,14 +61,15 @@ public class ListInstances {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = TENANCY_OCID, encrypted = true, required = true, description = TENANCY_OCID_DESC) String tenancyOcid,
+    public void execute(@Param(value = TENANCY_OCID, encrypted = true, required = true, description = TENANCY_OCID_DESC) String tenancyOcid,
                                        @Param(value = USER_OCID, required = true, description = USER_OCID_DESC) String userOcid,
                                        @Param(value = FINGER_PRINT, description = FINGER_PRINT_DESC) String fingerPrint,
                                        @Param(value = PRIVATE_KEY_FILE, description = PRIVATE_KEY_FILE_DESC) String privateKeyFile,
                                        @Param(value = COMPARTMENT_OCID, description = COMPARTMENT_OCID_DESC) String compartmentOcid){
 
-        try {
-            final Map<String, String> result = listInstances(OCIInstanceInputs.builder()
+       try {
+           // final Map<String, String> result =
+            listInstances(OCIInstanceInputs.builder()
                     .compartmentOcid(compartmentOcid)
                     .commonInputs(OCICommonInputs.builder()
                         .tenancyOcId(tenancyOcid)
@@ -78,12 +78,12 @@ public class ListInstances {
                         .privateKeyFilename(privateKeyFile)
                         .build())
                     .build());
-            final String returnMessage = result.get(RETURN_RESULT);
+            //final String returnMessage = result.get(RETURN_RESULT);
 
-            return result;
+            //return result;
         } catch (Exception exception) {
-            return getFailureResultsMap(exception);
-        }
+        //    return getFailureResultsMap(exception);
+          }
         }
     }
 

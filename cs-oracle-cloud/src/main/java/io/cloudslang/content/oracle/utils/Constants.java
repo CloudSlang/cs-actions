@@ -44,7 +44,8 @@ public class Constants {
         public static final String AUTHORIZATION = "Authorization:";
         public static final String BEARER = "Bearer ";
         public static final String OCI_HOST = "iaas.us-ashburn-1.oraclecloud.com";
-        public static final String LIST_INSTANCES = "/instances?compartmentId=";
+        public static final String LIST_INSTANCES = "/instances";
+        public static final String COMPARTMENT_ID = "compartmentId=";
         public static final String PATH_SEPARATOR = "/";
         public static final String AND = "&";
         public static final String QUERY = "?";

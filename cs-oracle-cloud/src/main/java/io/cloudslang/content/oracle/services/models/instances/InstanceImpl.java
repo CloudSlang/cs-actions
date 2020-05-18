@@ -33,21 +33,26 @@ import java.io.IOException;
 import java.security.PrivateKey;
 import java.util.Map;
 
-import static io.cloudslang.content.oracle.utils.Constants.Common.API_VERSION;
-import static io.cloudslang.content.oracle.utils.Constants.Common.LIST_INSTANCES;
+import static io.cloudslang.content.oracle.utils.Constants.Common.*;
+import static io.cloudslang.content.oracle.utils.HttpUtils.getQueryParams;
 import static io.cloudslang.content.oracle.utils.HttpUtils.getUriBuilder;
-//import io.cloudslang.content.oracle.entities.signature.Signature.RequestSigner;
 import static io.cloudslang.content.oracle.entities.signature.Signature.*;
 
 public class InstanceImpl {
 
     @NotNull
-    public static Map<String, String> listInstances(@NotNull final OCIInstanceInputs listInstancesInputs)
+    public static void listInstances(@NotNull final OCIInstanceInputs listInstancesInputs)
             throws Exception {
 
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(listInstancesUrl(listInstancesInputs.getCompartmentOcid()));
-        String uri = httpClientInputs.getUrl();
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        String uri = "https://iaas.us-ashburn-1.oraclecloud.com/20160918/instances?compartmentId=ocid1.tenancy.oc1..aaaaaaaaehpjcmxxi5cafq7j6vagweraa35jhssss6ngtzmzdgmjhfhj6u2q";
+       // System.out.println("URL: "+uri);
+      //  httpClientInputs.setQueryParams(getQueryParams(listInstancesInputs.getCompartmentOcid()));
+
         InstanceImpl listInstanceResp = new InstanceImpl();
         listInstanceResp.getAPIResponse(listInstancesInputs.getCommonInputs().getTenancyOcId(),listInstancesInputs.getCommonInputs().getuserOcid(),listInstancesInputs.getCommonInputs().getFingerPrint(),listInstancesInputs.getCommonInputs().getPrivateKeyFilename(),uri);
 
@@ -62,22 +67,22 @@ public class InstanceImpl {
 //                listInstancesInputs.getPageSize()));
 //        httpClientInputs.setResponseCharacterSet(listInstancesInputs.getResponseCharacterSet());
 //        httpClientInputs.setHeaders(getAuthHeaders(listInstancesInputs.getAuthToken()));
-       return new HttpClientService().execute(httpClientInputs);
+      // return new HttpClientService().execute(httpClientInputs);
+
     }
 
     @NotNull
     private static String listInstancesUrl(@NotNull final String compartmentOcid) throws Exception {
         final URIBuilder uriBuilder = getUriBuilder();
-        uriBuilder.setPath(listInstancesPath(compartmentOcid));
+        uriBuilder.setPath(listInstancesPath());
         return uriBuilder.build().toURL().toString();
     }
 
     @NotNull
-    public static String listInstancesPath(@NotNull final String compartmentOcid) {
+    public static String listInstancesPath() {
         StringBuilder pathString = new StringBuilder()
                 .append(API_VERSION)
-                .append(LIST_INSTANCES)
-                .append(compartmentOcid);
+                .append(LIST_INSTANCES);
         return pathString.toString();
     }
 
@@ -95,7 +100,7 @@ public class InstanceImpl {
                 + userOcid+"/"
                 + fingerPrint);
 
-        PrivateKey privateKey = loadKey(privateKeyFile);
+        PrivateKey privateKey = loadPrivateKey(privateKeyFile);
         RequestSigner signer = new RequestSigner(apiKey, privateKey);
 
         request = new HttpGet(uri);

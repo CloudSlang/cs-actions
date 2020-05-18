@@ -96,7 +96,7 @@ public class Signature{
     /**
      * Load a {@link PrivateKey} from a file.
      */
-    private static PrivateKey loadPrivateKey(String privateKeyFilename) {
+    public static PrivateKey loadPrivateKey(String privateKeyFilename) {
         try (InputStream privateKeyStream = Files.newInputStream(Paths.get(privateKeyFilename))){
             return PEM.readPrivateKey(privateKeyStream);
         } catch (InvalidKeySpecException e) {

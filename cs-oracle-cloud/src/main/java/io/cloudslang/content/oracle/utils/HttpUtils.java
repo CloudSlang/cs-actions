@@ -28,8 +28,7 @@ import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.oracle.utils.Constants.Common.HTTPS;
-import static io.cloudslang.content.oracle.utils.Constants.Common.OCI_HOST;
+import static io.cloudslang.content.oracle.utils.Constants.Common.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
@@ -121,18 +120,14 @@ public class HttpUtils {
 //        httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
 //    }
 //
-//    @NotNull
-//    public static String getQueryParams(String pageNumber,
-//                                        final String pageSize) {
-//        final StringBuilder queryParams = new StringBuilder()
-//                .append(QUERY)
-//                .append(PAGE_NUMBER)
-//                .append(pageNumber)
-//                .append(AND)
-//                .append(PAGE_SIZE)
-//                .append(pageSize);
-//        return queryParams.toString();
-//    }
+    @NotNull
+    public static String getQueryParams(@NotNull final String compartmentId) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(QUERY)
+                .append(COMPARTMENT_ID)
+                .append(compartmentId);
+        return queryParams.toString();
+    }
 
     @NotNull
     public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode, @NotNull String throwable) {
