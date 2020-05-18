@@ -14,14 +14,15 @@
  */
 
 
-
 package io.cloudslang.content.couchbase.factory.buckets;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.CREATE_OR_EDIT_BUCKET;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.DELETE_BUCKET;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.APPLICATION_JSON;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_ALL_BUCKETS;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET_STATISTICS;
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.ALL_TYPE_HEADER;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.FORM_URL_ENCODED;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1;
@@ -41,12 +42,14 @@ public class BucketHeadersBuilder {
                 wrapper.getHttpClientInputs().setHeaders(ALL_TYPE_HEADER);
                 wrapper.getHttpClientInputs().setContentType(FORM_URL_ENCODED);
                 break;
-            case DELETE_BUCKET:
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
+            case GET_ALL_BUCKETS:
+            case GET_BUCKET:
+            case GET_BUCKET_STATISTICS:
+                wrapper.getHttpClientInputs().setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
+                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON.getMimeType());
                 break;
             default:
-                wrapper.getHttpClientInputs().setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
+                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON.getMimeType());
         }
     }
 }
