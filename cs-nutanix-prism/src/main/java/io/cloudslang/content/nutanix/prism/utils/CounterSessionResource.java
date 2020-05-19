@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,28 +13,28 @@
  * limitations under the License.
  */
 
+package io.cloudslang.content.nutanix.prism.utils;
 
+import com.hp.oo.sdk.content.plugin.SessionResource;
 
-package io.cloudslang.content.couchbase.entities.couchbase;
+import java.util.Map;
 
-/**
- * Created by Mihai Tusa
- * 4/9/2017.
- */
-public enum CouchbaseApi {
-    CONTROLLER("/controller"),
-    NODE("/node"),
-    NODES("/nodes"),
-    POOLS("/pools"),
-    SETTINGS("/settings");
+public class CounterSessionResource extends SessionResource<Map<String, Object>> {
 
-    private final String value;
+    private Map<String, Object> counterMap;
 
-    CouchbaseApi(String value) {
-        this.value = value;
+    CounterSessionResource(final Map<String, Object> counterMap) {
+        this.counterMap = counterMap;
     }
 
-    public String getValue() {
-        return value;
+    @Override
+    public Map<String, Object> get() {
+        return counterMap;
+    }
+
+    @Override
+    public void release() {
+        counterMap = null;
     }
 }
+

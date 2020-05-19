@@ -14,7 +14,6 @@
  */
 
 
-
 package io.cloudslang.content.couchbase.utils;
 
 import io.cloudslang.content.couchbase.entities.couchbase.AuthType;
@@ -54,6 +53,7 @@ import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.compile;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.split;
@@ -85,28 +85,31 @@ public class InputsUtil {
         httpClientInputs.setKeepAlive(valueOf(getEnforcedBooleanCondition(keepAlive, TRUE)));
         httpClientInputs.setUseCookies(valueOf(getEnforcedBooleanCondition(useCookies, TRUE)));
 
-        if (isNotBlank(proxyHost) && isNotBlank(proxyPort)) {
+        if (areBothValuesPresent(proxyHost, proxyPort)) {
             httpClientInputs.setProxyHost(proxyHost);
             httpClientInputs.setProxyPort(proxyPort);
         }
 
-        if (isNotBlank(proxyUsername) && isNotBlank(proxyPassword)) {
+        if (isNotBlank(proxyUsername)) {
             httpClientInputs.setProxyUsername(proxyUsername);
+        }
+
+        if (areBothValuesPresent(proxyUsername, proxyPassword)) {
             httpClientInputs.setProxyPassword(proxyPassword);
         }
 
-        if (isNotBlank(trustKeystore) && isNotBlank(trustPassword)) {
+        if (areBothValuesPresent(trustKeystore, trustPassword)) {
             httpClientInputs.setTrustKeystore(trustKeystore);
             httpClientInputs.setTrustPassword(trustPassword);
         }
 
-        if (isNotBlank(keystore) && isNotBlank(keystorePassword)) {
+        if (areBothValuesPresent(keystore, keystorePassword)) {
             httpClientInputs.setKeystore(keystore);
             httpClientInputs.setKeystorePassword(keystorePassword);
         }
 
-        httpClientInputs.setConnectTimeout(getInputWithDefaultValue(connectTimeout, valueOf(INIT_INDEX)));
-        httpClientInputs.setSocketTimeout(getInputWithDefaultValue(socketTimeout, valueOf(INIT_INDEX)));
+        httpClientInputs.setConnectTimeout(defaultIfBlank(connectTimeout, valueOf(INIT_INDEX)));
+        httpClientInputs.setSocketTimeout(defaultIfBlank(socketTimeout, valueOf(INIT_INDEX)));
 
         if (isBlank(x509HostnameVerifier) || !asList(ALLOW_ALL, BROWSER_COMPATIBLE, STRICT).contains(x509HostnameVerifier)) {
             httpClientInputs.setX509HostnameVerifier(ALLOW_ALL);
@@ -122,7 +125,7 @@ public class InputsUtil {
     }
 
     public static String appendTo(String prefix, String suffix, String action) {
-        return (isBlank(suffix)) ? prefix : prefix + SLASH + suffix + getSuffixUriValue(action);
+        return isBlank(suffix) ? prefix : prefix + SLASH + suffix + getSuffixUriValue(action);
     }
 
     public static String getPayloadString(Map<String, String> payloadMap, String separator, String suffix, boolean deleteLastChar) {
@@ -167,7 +170,7 @@ public class InputsUtil {
      * @return A boolean according with above description.
      */
     public static boolean getEnforcedBooleanCondition(String input, boolean enforcedBoolean) {
-        return (enforcedBoolean) ? isValid(input) == parseBoolean(input) : parseBoolean(input);
+        return enforcedBoolean ? isValid(input) == parseBoolean(input) : parseBoolean(input);
     }
 
     public static int getValidIntValue(String input, Integer minAllowed, Integer maxAllowed, Integer defaultValue) {
@@ -222,10 +225,6 @@ public class InputsUtil {
         }
     }
 
-    public static String getInputWithDefaultValue(String input, String defaultValue) {
-        return isBlank(input) ? defaultValue : input;
-    }
-
     private static String[] getStringsArray(String input, String delimiter) {
         return isBlank(input) ? null : split(input, delimiter);
     }
@@ -270,5 +269,9 @@ public class InputsUtil {
 
     private static String getUrl(String input) throws MalformedURLException {
         return new URL(input).toString();
+    }
+
+    public static boolean areBothValuesPresent(String value1, String value2) {
+        return isNotBlank(value1) && isNotBlank(value2);
     }
 }

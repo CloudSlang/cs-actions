@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,28 +13,12 @@
  * limitations under the License.
  */
 
+package io.cloudslang.content.nutanix.prism.exceptions;
 
+public class CounterImplException extends Exception {
+    private static final long serialVersionUID = -2928111219772269559L;
 
-package io.cloudslang.content.couchbase.entities.couchbase;
-
-/**
- * Created by Mihai Tusa
- * 4/9/2017.
- */
-public enum CouchbaseApi {
-    CONTROLLER("/controller"),
-    NODE("/node"),
-    NODES("/nodes"),
-    POOLS("/pools"),
-    SETTINGS("/settings");
-
-    private final String value;
-
-    CouchbaseApi(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
+    public CounterImplException(String e) {
+        super(e);
     }
 }
