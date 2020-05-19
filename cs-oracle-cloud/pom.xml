@@ -78,6 +78,8 @@
         <junit.version>4.12</junit.version>
         <common-codec.version>1.10</common-codec.version>
         <cs-http-client.version>0.1.75</cs-http-client.version>
+        <httpcomponents.httpclient.version>4.5.5</httpcomponents.httpclient.version>
+        <httpcomponents.httpcore.version>4.4.9</httpcomponents.httpcore.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -184,12 +186,12 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
-            <version>4.4.1</version>
+            <version>${httpcomponents.httpcore.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5</version>
+            <version>${httpcomponents.httpclient.version}</version>
         </dependency>
         <dependency>
             <groupId>org.tomitribe</groupId>
