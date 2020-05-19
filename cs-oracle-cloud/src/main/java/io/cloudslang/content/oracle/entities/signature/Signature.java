@@ -67,8 +67,6 @@ public class Signature{
                 + fingerPrint);
         PrivateKey privateKey = loadPrivateKey(privateKeyFile);
         RequestSigner signer = new RequestSigner(apiKey, privateKey);
-
-        System.out.println(uri);
         request = new HttpGet(uri);
 
         signer.signRequest(request);
