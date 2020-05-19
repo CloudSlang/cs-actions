@@ -30,6 +30,8 @@ public final class Constants {
         public static final String OBJECT = "object";
         public static final String KEY = "key";
         public static final String ARRAY = "array";
+        public static final String ARRAY1 = "array1";
+        public static final String ARRAY2 = "array2";
         public static final String ACTION = "action";
         public static final String JSON_PATH = "jsonPath";
         public static final String NAME = "name";
@@ -53,5 +55,9 @@ public final class Constants {
         static final String JSON_EXCEPTION = "jsonObject is not a valid JSON Object";
         public static final String ADD_PROPERTY_EXCEPTION = "The value could not be added!";
 
+    }
+
+    public static final class MergeArrays {
+        public static final String EXCEPTION_WHILE_PARSING = "Exception occurred while parsing input '%s': %s";
     }
 }

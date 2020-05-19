@@ -32,6 +32,8 @@ import java.util.Map;
 
 public class GetArrayEntryAction {
 
+    private final GetArrayEntryService service = new GetArrayEntryService();
+
     /**
      * Gets the value of an elemnt in a JSON array. If the value of the element is a simple type, i.e. a string or a number,
      * it will be returned as-is. If it is a complex JSON object, i.e. '{"one":1}' it will be returned in JSON format.
@@ -72,7 +74,7 @@ public class GetArrayEntryAction {
                     .array(array)
                     .index(index)
                     .build();
-            return new GetArrayEntryService().execute(input);
+            return this.service.execute(input);
         } catch (Exception ex) {
             return OutputUtilities.getFailureResultsMap(ex);
         }

@@ -46,6 +46,8 @@ import java.util.Map;
 
 public class RemoveArrayEntryAction {
 
+    private final RemoveArrayEntryService service = new RemoveArrayEntryService();
+
     /**
      * Removes an element from a JOSN array.
      * All elements from the right of the element which is removed will be shifted one position to the left.
@@ -81,7 +83,7 @@ public class RemoveArrayEntryAction {
                     .array(array)
                     .index(index)
                     .build();
-            return new RemoveArrayEntryService().execute(input);
+            return this.service.execute(input);
         } catch (Exception ex) {
             return OutputUtilities.getFailureResultsMap(ex);
         }
