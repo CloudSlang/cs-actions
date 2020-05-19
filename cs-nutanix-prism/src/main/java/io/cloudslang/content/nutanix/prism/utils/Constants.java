@@ -85,5 +85,16 @@ public class Constants {
         public static final String INCLUDE_VM_NIC_CONFIG_INFO = "include_vm_nic_config=";
         public static final String VM_NAME_PATH = "name";
         public static final String GET_VM_DETAILS_PATH = "/vms";
+
     }
+
+    public static class GetListDetailsConstants {
+        public static final String FILTER = "filter=";
+        public static final String OFFSET = "offset=";
+        public static final String LENGTH = "length=";
+        public static final String SORT_ORDER = "sortorder=";
+        public static final String SORT_ATTRIBUTE = "sortattribute=";
+
+    }
+
 }
