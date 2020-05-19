@@ -33,8 +33,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Map;
 
 public class ProcessTextFieldService extends AbstractPostRequestService<ProcessTextFieldInput> {
@@ -113,7 +114,13 @@ public class ProcessTextFieldService extends AbstractPostRequestService<ProcessT
     protected void handleTaskCompleted(@NotNull ProcessTextFieldInput request, @NotNull AbbyyResponse response,
                                        @NotNull Map<String, String> results) throws Exception {
         super.handleTaskCompleted(request, response, results);
+
         String xml = getResult(request, response);
+
+        if (xml.startsWith(Misc.BOM_CHAR)) {
+            xml = xml.substring(1);
+        }
+
         results.put(OutputNames.XML_RESULT, xml);
         if (request.getDestinationFile() != null) {
             saveClearTextResultOnDisk(request, xml);
@@ -139,7 +146,8 @@ public class ProcessTextFieldService extends AbstractPostRequestService<ProcessT
 
 
     private void saveClearTextResultOnDisk(@NotNull ProcessTextFieldInput request, @NotNull String clearText) throws IOException {
-        try (FileWriter writer = new FileWriter(request.getDestinationFile())) {
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(request.getDestinationFile()),
+                request.getResponseCharacterSet())) {
             writer.write(clearText);
         }
     }

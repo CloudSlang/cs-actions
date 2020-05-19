@@ -19,8 +19,10 @@ import io.cloudslang.content.abbyy.entities.*;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.TimeoutException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
+import io.cloudslang.content.abbyy.http.AbbyyRequest;
 import io.cloudslang.content.abbyy.http.AbbyyResponse;
 import io.cloudslang.content.abbyy.validators.AbbyyResultValidator;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -188,6 +190,9 @@ public class ProcessTextFieldServiceTest extends AbstractPostRequestServiceTest<
 
         AbbyyResponse responseMock = mockAbbyyResponse();
         when(responseMock.getResultUrls()).thenReturn(Collections.singletonList("txt"));
+
+        when(this.abbyyApiMock.getResult(any(AbbyyRequest.class), anyString(), any(ExportFormat.class), anyString(), anyBoolean()))
+                .thenReturn(StringUtils.EMPTY);
 
         Map<String, String> resultsDummy = new HashMap<>();
 

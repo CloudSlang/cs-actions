@@ -32,9 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.HashMap;
 import java.util.Map;
@@ -131,6 +129,9 @@ public class ProcessImageService extends AbstractPostRequestService<ProcessImage
                 switch (exportFormat) {
                     case XML:
                         result = getClearTextResult(request, response, ExportFormat.XML, xmlResultValidator);
+                        if (result.startsWith(Misc.BOM_CHAR)) {
+                            result = result.substring(1);
+                        }
                         results.put(OutputNames.XML_RESULT, result);
                         break;
                     case TXT:
@@ -221,7 +222,7 @@ public class ProcessImageService extends AbstractPostRequestService<ProcessImage
         if (new File(targetPath).exists()) {
             throw new FileAlreadyExistsException(targetPath);
         }
-        try (FileWriter writer = new FileWriter(targetPath)) {
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(targetPath), request.getResponseCharacterSet())) {
             writer.write(clearText);
         }
     }
