@@ -17,8 +17,10 @@ package io.cloudslang.content.oracle.utils;
 
 public class Descriptions {
     public static class Common {
-        public static final String TENANCY_OCID_DESC =  "Oracle creates a tenancy for your company, which is a secure and isolated partition where you can create, organize, and administer your cloud resources. This is ID of the tenancy.";
-        public static final String USER_OCID_DESC = "ID of an individual employee or system that needs to manage or use your company’s Oracle Cloud Infrastructure resources.";
+        public static final String TENANCY_OCID_DESC =  "Oracle creates a tenancy for your company, which is a secure and " + 
+                "isolated partition where you can create, organize, and administer your cloud resources. This is ID of the tenancy.";
+        public static final String USER_OCID_DESC = "ID of an individual employee or system that needs to manage or use " + 
+            "your company’s Oracle Cloud Infrastructure resources.";
         public static final String FINGER_PRINT_DESC = "Finger print of the public key generated for OCI account.";
         public static final String PRIVATE_KEY_FILE_DESC = "Location of the private key pem file generated for OCI account.";
         public static final String PROXY_HOST_DESC = "Proxy server used to access the OCI.";
@@ -96,7 +98,8 @@ public class Descriptions {
     public static class ListInstances {
         public static final String LIST_INSTANCES_OPERATION_DESC = "List of instances present";
         public static final String INSTANCE_LIST_DESC = "List of all instances";
-        public static final String COMPARTMENT_OCID_DESC = "Compartments are a fundamental component of Oracle Cloud Infrastructure for organizing and isolating your cloud resources. This is ID of the compartment.";
+        public static final String COMPARTMENT_OCID_DESC = "Compartments are a fundamental component of " + 
+            "Oracle Cloud Infrastructure for organizing and isolating your cloud resources. This is ID of the compartment.";
     }
     
 
