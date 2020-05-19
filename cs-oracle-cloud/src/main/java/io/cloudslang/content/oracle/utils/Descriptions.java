@@ -17,8 +17,8 @@ package io.cloudslang.content.oracle.utils;
 
 public class Descriptions {
     public static class Common {
-        public static final String TENANCY_OCID_DESC =  "Tenancy OCID of the OCI account.";
-        public static final String USER_OCID_DESC = "User OCID of the OCI account.";
+        public static final String TENANCY_OCID_DESC =  "Oracle creates a tenancy for your company, which is a secure and isolated partition where you can create, organize, and administer your cloud resources. This is ID of the tenancy.";
+        public static final String USER_OCID_DESC = "ID of an individual employee or system that needs to manage or use your company’s Oracle Cloud Infrastructure resources.";
         public static final String FINGER_PRINT_DESC = "Finger print of the public key generated for OCI account.";
         public static final String PRIVATE_KEY_FILE_DESC = "Location of the private key pem file generated for OCI account.";
         public static final String PROXY_HOST_DESC = "Proxy server used to access the OCI.";
@@ -90,15 +90,13 @@ public class Descriptions {
 
     public static class ListOAuthClient {
         public static final String DOCUMENT_DESC = "The full API response in case of success.";
-        public static final String OAUTH_TOKEN_ID_DESCRIPTION = "The VCS Connection (OAuth Connection + Token) to use. " +
-                "This ID can be obtained from the oauth-tokens endpoint.";
-        public static final String LIST_OAUTH_CLIENT_DESC = "List An OAuth Client Id";
+
     }
 
     public static class ListInstances {
-        public static final String LIST_INSTANCES_OPERATION_DESC = "List of organizations present";
-        public static final String INSTANCE_LIST_DESC = "List of all organizations";
-        public static final String COMPARTMENT_OCID_DESC = "OCID of the Compartment in which instance is to be created.";
+        public static final String LIST_INSTANCES_OPERATION_DESC = "List of instances present";
+        public static final String INSTANCE_LIST_DESC = "List of all instances";
+        public static final String COMPARTMENT_OCID_DESC = "Compartments are a fundamental component of Oracle Cloud Infrastructure for organizing and isolating your cloud resources. This is ID of the compartment.";
     }
     
 

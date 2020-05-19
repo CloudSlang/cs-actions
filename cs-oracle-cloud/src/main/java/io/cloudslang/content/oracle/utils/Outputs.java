@@ -23,9 +23,6 @@ public class Outputs extends OutputNames {
 
     }
 
-    public static class ListOAuthClientOutputs {
-        public static final String OAUTH_TOKEN_ID = "oauthTokenId";
-    }
 
     public static class ListInstancesOutputs {
         public static final String INSTANCE_LIST = "instance_list";

@@ -74,13 +74,6 @@ public class Signature{
         Header[] auth = request.getHeaders("Authorization");
         Header[] date = request.getHeaders("date");
         Header[] host = request.getHeaders("host");
-        System.out.println("Authorization Header: " + auth[0].toString().substring(15, auth[0].toString().length()));
-        System.out.println("date Header: " + date[0].toString().substring(6, date[0].toString().length()));
-        System.out.println("host Header: " + host[0].toString().substring(6, host[0].toString().length()));
-        headers.put("Authorization",auth[0].toString().substring(15, auth[0].toString().length()));
-        headers.put("date",date[0].toString().substring(6, date[0].toString().length()));
-        headers.put("host",host[0].toString().substring(6, host[0].toString().length()));
-
         return headers;
 
     }

@@ -65,7 +65,7 @@ public class Constants {
 
 
     public static class ListInstancesConstants {
-        public static final String LIST_INSTANCES_OPERATION_NAME = "List Organizations";
+        public static final String LIST_INSTANCES_OPERATION_NAME = "List Instances";
         public static final String INSTANCES_LIST_JSON_PATH = "$.data[*].attributes.name";
     }
 

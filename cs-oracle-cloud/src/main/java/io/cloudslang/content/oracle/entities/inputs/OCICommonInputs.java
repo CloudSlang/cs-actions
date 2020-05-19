@@ -21,15 +21,15 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class OCICommonInputs {
 
-    private final String tenancyOcId;
+    private final String tenancyOcid;
     private final String userOcid;
     private final String fingerPrint;
     private final String privateKeyFilename;
 
 
-    @java.beans.ConstructorProperties({"tenancyOcId", "userOcid", "fingerPrint", "privateKeyFilename"})
-    private OCICommonInputs(String tenancyOcId, String userOcid, String fingerPrint, String privateKeyFilename) {
-        this.tenancyOcId = tenancyOcId;
+    @java.beans.ConstructorProperties({"tenancyOcid", "userOcid", "fingerPrint", "privateKeyFilename"})
+    private OCICommonInputs(String tenancyOcid, String userOcid, String fingerPrint, String privateKeyFilename) {
+        this.tenancyOcid = tenancyOcid;
         this.userOcid = userOcid;
         this.fingerPrint = fingerPrint;
         this.privateKeyFilename = privateKeyFilename;
@@ -42,7 +42,7 @@ public class OCICommonInputs {
 
     @NotNull
     public String getTenancyOcId() {
-        return tenancyOcId;
+        return tenancyOcid;
     }
 
     @NotNull
@@ -62,7 +62,7 @@ public class OCICommonInputs {
 
 
     public static class OCICommonInputsBuilder {
-        private String tenancyOcId = EMPTY;
+        private String tenancyOcid = EMPTY;
         private String userOcid = EMPTY;
         private String fingerPrint = EMPTY;
         private String privateKeyFilename = EMPTY;
@@ -72,7 +72,7 @@ public class OCICommonInputs {
 
         @NotNull
         public OCICommonInputs.OCICommonInputsBuilder tenancyOcId(@NotNull final String tenancyOcId) {
-            this.tenancyOcId = tenancyOcId;
+            this.tenancyOcid = tenancyOcId;
             return this;
         }
 
@@ -97,7 +97,7 @@ public class OCICommonInputs {
 
 
         public OCICommonInputs build() {
-            return new OCICommonInputs(tenancyOcId, userOcid, fingerPrint, privateKeyFilename);
+            return new OCICommonInputs(tenancyOcid, userOcid, fingerPrint, privateKeyFilename);
         }
     }
 }
