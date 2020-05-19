@@ -41,12 +41,12 @@ public class OCICommonInputs {
     }
 
     @NotNull
-    public String getTenancyOcId() {
+    public String getTenancyOcid() {
         return tenancyOcid;
     }
 
     @NotNull
-    public String getuserOcid() {
+    public String getUserOcid() {
         return userOcid;
     }
 

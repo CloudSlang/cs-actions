@@ -51,7 +51,7 @@ public class Constants {
         public static final String ID = "id";
         public static final String HTTPS = "https";
         public static final String STATUS_CODE = "statusCode";
-        public static final String APPLICATION_VND_API_JSON = "application/vnd.api+json";
+        public static final String APPLICATION_VND_API_JSON = "application/json";
         public static final String DELIMITER = ",";
         public static final String DEFAULT_PAGE_NUMBER = "1";
         public static final String DEFAULT_PAGE_SIZE = "100";
