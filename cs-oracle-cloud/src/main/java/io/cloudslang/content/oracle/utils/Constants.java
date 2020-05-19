@@ -16,7 +16,6 @@ package io.cloudslang.content.oracle.utils;
 
 public class Constants {
     public static class Common {
-        public static final String API = "/api";
         public static final String API_VERSION = "/v2";
         public static final String NEW_LINE = "\n";
         public static final String DEFAULT_PROXY_PORT = "8080";

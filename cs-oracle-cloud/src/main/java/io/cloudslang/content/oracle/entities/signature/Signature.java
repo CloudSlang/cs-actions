@@ -64,8 +64,6 @@ public class Signature{
         String apiKey = (tenancyOcid+"/"
                 + userOcid+"/"
                 + fingerPrint);
-        // Private key file path in unix
-        //String privateKeyFilename = "/home/oracle/oci_api_key.pem";
         PrivateKey privateKey = loadPrivateKey(privateKeyFile);
         RequestSigner signer = new RequestSigner(apiKey, privateKey);
 
@@ -107,9 +105,6 @@ public class Signature{
     }
 
 
-    /**
-     * A light wrapper around https://github.com/tomitribe/http-signatures-java
-     */
     public static class RequestSigner {
         private static final SimpleDateFormat DATE_FORMAT;
         private static final String SIGNATURE_ALGORITHM = "rsa-sha256";
@@ -166,24 +161,21 @@ public class Signature{
          */
         public void signRequest(HttpRequestBase request) {
             final String method = request.getMethod().toLowerCase();
-            // nothing to sign for options
             if (method.equals("options")) {
                 return;
             }
 
             final String path = extractPath(request.getURI());
 
-            // supply date if missing
+
             if (!request.containsHeader("date")) {
                 request.addHeader("date", DATE_FORMAT.format(new Date()));
             }
 
-            // supply host if mossing
             if (!request.containsHeader("host")) {
                 request.addHeader("host", request.getURI().getHost());
             }
 
-            // supply content-type, content-length, and x-content-sha256 if missing (PUT and POST only)
             if (method.equals("put") || method.equals("post")) {
                 if (!request.containsHeader("content-type")) {
                     request.addHeader("content-type", "application/json");
@@ -204,10 +196,6 @@ public class Signature{
             request.setHeader("Authorization", signature);
         }
 
-        /**
-         * Extract path and query string to build the (request-target) pseudo-header.
-         * For the URI "http://www.host.com/somePath?example=path" return "/somePath?example=path"
-         */
         private static String extractPath(URI uri) {
             String path = uri.getRawPath();
             String query = uri.getRawQuery();
@@ -285,11 +273,9 @@ public class Signature{
          */
         private byte[] getRequestBody(HttpEntityEnclosingRequestBase request) {
             HttpEntity entity = request.getEntity();
-            // null body is equivalent to an empty string
             if (entity == null) {
                 return "".getBytes(StandardCharsets.UTF_8);
             }
-            // May need to replace the request entity after consuming
             boolean consumed = !entity.isRepeatable();
             ByteArrayOutputStream content = new ByteArrayOutputStream();
             try {
@@ -297,7 +283,6 @@ public class Signature{
             } catch (IOException e) {
                 throw new RuntimeException("Failed to copy request body", e);
             }
-            // Replace the now-consumed body with a copy of the content stream
             byte[] body = content.toByteArray();
             if (consumed) {
                 request.setEntity(new ByteArrayEntity(body));
