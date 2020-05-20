@@ -111,7 +111,10 @@ public class Descriptions {
         public static final String LENGTH_DESC = "Number of VMs to retrieve.";
         public static final String SORT_ORDER_DESC = "Sort order.";
         public static final String SORT_ATTRIBUTE_DESC = "Sort attribute.";
+        public static final String VM_LIST_DESC = "List of VM's.";
+
     }
+
 
 
 

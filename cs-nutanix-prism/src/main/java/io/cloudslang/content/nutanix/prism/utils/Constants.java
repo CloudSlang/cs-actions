@@ -94,6 +94,7 @@ public class Constants {
         public static final String LENGTH = "length=";
         public static final String SORT_ORDER = "sortorder=";
         public static final String SORT_ATTRIBUTE = "sortattribute=";
+        public static final String LIST_VM_JSON_PATH = "$.entities[*].name";
 
     }
 

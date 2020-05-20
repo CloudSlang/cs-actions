@@ -21,12 +21,15 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixListVMdetailsInputs;
 
+import io.cloudslang.content.nutanix.prism.utils.Constants;
+import io.cloudslang.content.nutanix.prism.utils.Outputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -37,6 +40,7 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.nutanix.prism.service.VMImpl.listVMs;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
+import static io.cloudslang.content.nutanix.prism.utils.Outputs.ListVMOutputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.ListVMsConstants.LIST_VMS_OPERATION_NAME;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.GetVMDetails.*;
@@ -57,12 +61,14 @@ import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyC
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
 
+
 public class ListVMs {
     @Action(name = LIST_VMS_OPERATION_NAME,
             description = LIST_VMS_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = VM_LIST, description = VM_LIST_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
@@ -165,12 +171,23 @@ public class ListVMs {
                                     .responseCharacterSet(responseCharacterSet)
                                     .build()).build());
             final String returnMessage = result.get(RETURN_RESULT);
-            Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
             if (statusCode >= 200 && statusCode < 300) {
-                return getOperationResults(result, returnMessage, returnMessage, returnMessage);
+                final List<String> Listvm = JsonPath.read(returnMessage, Constants.GetListVMConstants.LIST_VM_JSON_PATH);
+                if (!Listvm.isEmpty()) {
+                    final String ListVMAsString = join(Listvm.toArray(), DELIMITER);
+                    results.put(VM_LIST, ListVMAsString);
+                   // System.out.println( results.put(VM_LIST, ListVMAsString));
+                }else{
+                    results.put(VM_LIST, EMPTY);
+                }
+
             } else {
                 return getFailureResults(hostname, statusCode, returnMessage);
             }
+            //return getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

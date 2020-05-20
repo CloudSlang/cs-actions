@@ -28,4 +28,8 @@ public class Outputs extends OutputNames {
 
     }
 
+    public static class ListVMOutputs {
+        public static final String VM_LIST = "vmList";
+    }
+
 }

@@ -37,7 +37,6 @@ public class VMImpl {
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(getListVMsURL(nutanixListVMdetailsInputs));
-        System.out.println(getListVMsURL(nutanixListVMdetailsInputs));
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setMethod(GET);
         httpClientInputs.setUsername(nutanixListVMdetailsInputs.getCommonInputs().getUsername());
