@@ -37,6 +37,7 @@ public class VMImpl {
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(getListVMsURL(nutanixListVMdetailsInputs));
+        System.out.println(getListVMsURL(nutanixListVMdetailsInputs));
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setMethod(GET);
         httpClientInputs.setUsername(nutanixListVMdetailsInputs.getCommonInputs().getUsername());
@@ -73,7 +74,6 @@ public class VMImpl {
         StringBuilder pathString = new StringBuilder()
                 .append(API)
                 .append(nutanixListVMdetailsInputs.getCommonInputs().getAPIVersion())
-                .append(PATH_SEPARATOR)
                 .append(GET_VM_DETAILS_PATH);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
