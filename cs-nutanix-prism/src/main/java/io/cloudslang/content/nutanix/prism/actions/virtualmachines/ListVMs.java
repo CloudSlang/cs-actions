@@ -40,6 +40,7 @@ import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.ListVMsConstants.LIST_VMS_OPERATION_NAME;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.GetVMDetails.*;
+import static io.cloudslang.content.nutanix.prism.utils.Descriptions.LISTVMInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.ListVMs.LIST_VMS_OPERATION_DESC;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getOperationResults;
@@ -73,7 +74,7 @@ public class ListVMs {
                                        @Param(value = PORT, description = PORT_DESC) String port,
                                        @Param(value = USERNAME, required = true, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
-                                       @Param(value = API_VERSION, encrypted = true, required = true, description = API_VERSION_DESC) String apiVersion,
+                                       @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = FILTER, description = FILTER_DESC) String filter,
                                        @Param(value = OFFSET, description = OFFSET_DESC) String offset,
                                        @Param(value = LENGTH, description = LENGTH_DESC) String length,

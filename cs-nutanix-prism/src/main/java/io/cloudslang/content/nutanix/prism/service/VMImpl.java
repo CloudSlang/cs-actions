@@ -28,7 +28,7 @@ import java.util.Map;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetVMDetailsConstants.GET_VM_DETAILS_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getQueryParams;
-import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.API_VERSION;
+
 
 public class VMImpl {
 
@@ -74,7 +74,7 @@ public class VMImpl {
                 .append(API)
                 .append(nutanixListVMdetailsInputs.getCommonInputs().getAPIVersion())
                 .append(PATH_SEPARATOR)
-                .append("vms");
+                .append(GET_VM_DETAILS_PATH);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
     }

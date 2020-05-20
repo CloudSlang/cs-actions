@@ -88,7 +88,7 @@ public class Constants {
 
     }
 
-    public static class GetListDetailsConstants {
+    public static class GetListVMConstants {
         public static final String FILTER = "filter=";
         public static final String OFFSET = "offset=";
         public static final String LENGTH = "length=";
