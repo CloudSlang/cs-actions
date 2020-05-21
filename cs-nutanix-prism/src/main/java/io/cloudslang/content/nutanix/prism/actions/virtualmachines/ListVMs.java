@@ -178,7 +178,6 @@ public class ListVMs {
                 if (!Listvm.isEmpty()) {
                     final String ListVMAsString = join(Listvm.toArray(), DELIMITER);
                     results.put(VM_LIST, ListVMAsString);
-                   // System.out.println( results.put(VM_LIST, ListVMAsString));
                 }else{
                     results.put(VM_LIST, EMPTY);
                 }
@@ -186,7 +185,6 @@ public class ListVMs {
             } else {
                 return getFailureResults(hostname, statusCode, returnMessage);
             }
-            //return getOperationResults(result, returnMessage, returnMessage, returnMessage);
             return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
