@@ -102,7 +102,21 @@ public class Descriptions {
         public static final String INCLUDE_VM_DISK_CONFIG_INFO_DESC = "Whether to include Virtual Machine disk information.";
         public static final String INCLUDE_VM_NIC_CONFIG_INFO_DESC = "Whether to include network information.";
         public static final String VM_NAME_DESC = "Name of the Virtual Machine.";
+
     }
+
+    public static class LISTVMInputs {
+        public static final String FILTER_DESC = "Filter criteria - semicolon for AND, comma for OR.";
+        public static final String OFFSET_DESC = "Offset.";
+        public static final String LENGTH_DESC = "Number of VMs to retrieve.";
+        public static final String SORT_ORDER_DESC = "Sort order.";
+        public static final String SORT_ATTRIBUTE_DESC = "Sort attribute.";
+        public static final String VM_LIST_DESC = "List of VM's.";
+
+    }
+
+
+
 
 
 

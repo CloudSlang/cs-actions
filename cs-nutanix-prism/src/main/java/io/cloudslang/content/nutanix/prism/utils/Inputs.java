@@ -37,6 +37,12 @@ public class Inputs extends InputNames {
         public static final String VM_UUID = "vmUUID";
         public static final String INCLUDE_VM_DISK_CONFIG_INFO = "includeVMDiskConfigInfo";
         public static final String INCLUDE_VM_NIC_CONFIG_INFO = "includeVMNicConfigInfo";
+        public static final String FILTER = "filter";
+        public static final String OFFSET = "offset";
+        public static final String LENGTH = "length";
+        public static final String SORT_ORDER = "sortorder";
+        public static final String SORT_ATTRIBUTE = "sortattribute";
+
     }
 
 }

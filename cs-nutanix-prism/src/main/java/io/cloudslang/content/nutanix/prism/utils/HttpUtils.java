@@ -147,6 +147,35 @@ public class HttpUtils {
     }
 
     @NotNull
+    public static String getQueryParams(String filter,String offset,String length,
+                                    String sortorder,String sortattribute, String includeVMDiskConfigInfo, final String includeVMNicConfigInfo) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(Constants.Common.QUERY)
+                .append(Constants.GetListVMConstants.FILTER)
+                .append(filter)
+                .append(Constants.Common.AND)
+                .append(Constants.GetListVMConstants.OFFSET)
+                .append(offset)
+                .append(Constants.Common.AND)
+                .append(Constants.GetListVMConstants.LENGTH)
+                .append(length)
+                .append(Constants.Common.AND)
+                .append(Constants.GetListVMConstants.SORT_ORDER)
+                .append(sortorder)
+                .append(Constants.Common.AND)
+                .append(Constants.GetListVMConstants.SORT_ATTRIBUTE)
+                .append(sortattribute)
+                .append(Constants.Common.AND)
+                .append(Constants.GetVMDetailsConstants.INCLUDE_VM_DISK_CONFIG_INFO)
+                .append(includeVMDiskConfigInfo)
+                .append(Constants.Common.AND)
+                .append(Constants.GetVMDetailsConstants.INCLUDE_VM_NIC_CONFIG_INFO)
+                .append(includeVMNicConfigInfo);
+        return queryParams.toString();
+
+    }
+
+    @NotNull
     public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode, @NotNull String throwable) {
         Map<String, String> results = new HashMap();
         results.put("returnCode", "-1");
