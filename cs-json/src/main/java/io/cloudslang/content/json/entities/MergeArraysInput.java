@@ -17,7 +17,9 @@ package io.cloudslang.content.json.entities;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import io.cloudslang.content.json.utils.Constants;
+import io.cloudslang.content.json.utils.ExceptionMsgs;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 public class MergeArraysInput {
     private JsonArray array1;
@@ -57,23 +59,27 @@ public class MergeArraysInput {
         }
 
 
-        public MergeArraysInput build() throws Exception{
+        public @NotNull MergeArraysInput build() throws Exception {
             MergeArraysInput input = new MergeArraysInput();
 
-            try {
-                input.array1 = this.jsonParser.parse(StringUtils.defaultString(this.array1)).getAsJsonArray();
-            } catch (Exception ex) {
-                String msg = String.format(Constants.MergeArrays.EXCEPTION_WHILE_PARSING,
-                        Constants.InputNames.ARRAY1, ex.getMessage());
-                throw new Exception(msg, ex);
+            if (StringUtils.isNotBlank(this.array1)) {
+                try {
+                    input.array1 = this.jsonParser.parse(StringUtils.defaultString(this.array1)).getAsJsonArray();
+                } catch (Exception ex) {
+                    String msg = String.format(ExceptionMsgs.EXCEPTION_WHILE_PARSING,
+                            Constants.InputNames.ARRAY1, ex.getMessage());
+                    throw new Exception(msg, ex);
+                }
             }
 
-            try {
-                input.array2 = this.jsonParser.parse(StringUtils.defaultString(this.array2)).getAsJsonArray();
-            } catch (Exception ex) {
-                String msg = String.format(Constants.MergeArrays.EXCEPTION_WHILE_PARSING,
-                        Constants.InputNames.ARRAY2, ex.getMessage());
-                throw new Exception(msg, ex);
+            if (StringUtils.isNotBlank(this.array2)) {
+                try {
+                    input.array2 = this.jsonParser.parse(StringUtils.defaultString(this.array2)).getAsJsonArray();
+                } catch (Exception ex) {
+                    String msg = String.format(ExceptionMsgs.EXCEPTION_WHILE_PARSING,
+                            Constants.InputNames.ARRAY2, ex.getMessage());
+                    throw new Exception(msg, ex);
+                }
             }
 
             return input;

@@ -29,15 +29,27 @@
 package io.cloudslang.content.json.services;
 
 import io.cloudslang.content.json.entities.RemoveArrayEntryInput;
+import io.cloudslang.content.json.validators.RemoveArrayEntryValidator;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 
 public class RemoveArrayEntryService {
 
-    public Map<String, String> execute(@NotNull RemoveArrayEntryInput input) {
-        input.getArray().remove(input.getIndex() >= 0 ? input.getIndex() : input.getArray().size() + input.getIndex());
+    private final RemoveArrayEntryValidator validator = new RemoveArrayEntryValidator();
+
+
+    public @NotNull Map<String, String> execute(@NotNull RemoveArrayEntryInput input) {
+        List<RuntimeException> validationErrs = this.validator.validate(input);
+        if (!validationErrs.isEmpty()) {
+            throw validationErrs.get(0);
+        }
+
+        int index = input.getIndex() >= 0 ? input.getIndex() : input.getArray().size() + input.getIndex();
+        input.getArray().remove(index);
+
         String returnResult = input.getArray().toString();
         return OutputUtilities.getSuccessResultsMap(returnResult);
     }

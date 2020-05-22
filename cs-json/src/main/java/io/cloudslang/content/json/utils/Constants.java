@@ -56,8 +56,4 @@ public final class Constants {
         public static final String ADD_PROPERTY_EXCEPTION = "The value could not be added!";
 
     }
-
-    public static final class MergeArrays {
-        public static final String EXCEPTION_WHILE_PARSING = "Exception occurred while parsing input '%s': %s";
-    }
 }

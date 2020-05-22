@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class GetArrayEntryInput {
     private JsonArray array;
-    private int index;
+    private Integer index;
 
 
     private GetArrayEntryInput() {
@@ -29,12 +29,12 @@ public class GetArrayEntryInput {
     }
 
 
-    public @NotNull JsonArray getArray() {
+    public JsonArray getArray() {
         return array;
     }
 
 
-    public int getIndex() {
+    public Integer getIndex() {
         return index;
     }
 
@@ -56,14 +56,16 @@ public class GetArrayEntryInput {
         }
 
 
-        public GetArrayEntryInput build() throws Exception {
+        public @NotNull GetArrayEntryInput build() throws Exception {
             GetArrayEntryInput input = new GetArrayEntryInput();
 
-            input.array = new JsonParser()
-                    .parse(StringUtils.defaultString(this.array))
-                    .getAsJsonArray();
+            if(StringUtils.isNotBlank(this.array)) {
+                input.array = new JsonParser().parse(StringUtils.defaultString(this.array)).getAsJsonArray();
+            }
 
-            input.index = Integer.parseInt(this.index);
+            if(StringUtils.isNotBlank(this.index)) {
+                input.index = Integer.parseInt(this.index);
+            }
 
             return input;
         }
