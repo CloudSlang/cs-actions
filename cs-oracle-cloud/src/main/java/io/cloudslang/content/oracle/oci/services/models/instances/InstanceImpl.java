@@ -13,12 +13,13 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.oracle.services.models.instances;
+package io.cloudslang.content.oracle.oci.services.models.instances;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.oracle.entities.inputs.OCIInstanceInputs;
-import io.cloudslang.content.oracle.services.SignerImpl;
+import io.cloudslang.content.oracle.oci.entities.inputs.OCIInstanceInputs;
+import io.cloudslang.content.oracle.oci.services.SignerImpl;
+import io.cloudslang.content.oracle.oci.utils.HttpUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,10 +27,8 @@ import java.net.URI;
 import java.security.PrivateKey;
 import java.util.Map;
 
-import static io.cloudslang.content.oracle.utils.Constants.Common.*;
-import static io.cloudslang.content.oracle.utils.HttpUtils.getAuthHeaders;
-import static io.cloudslang.content.oracle.utils.HttpUtils.getQueryParams;
-import static io.cloudslang.content.oracle.utils.HttpUtils.getUriBuilder;
+import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
+import static io.cloudslang.content.oracle.oci.utils.HttpUtils.getAuthHeaders;
 
 public class InstanceImpl {
 
@@ -44,19 +43,19 @@ public class InstanceImpl {
         PrivateKey privateKey = signerImpl.loadPrivateKey(listInstancesInputs.getCommonInputs().getPrivateKeyFilename());
         SignerImpl.RequestSigner signer = new SignerImpl.RequestSigner(apiKey, privateKey);
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(listInstancesUrl(listInstancesInputs.getCommonInputs().getRegion()) + getQueryParams(listInstancesInputs.getCompartmentOcid()));
+        httpClientInputs.setUrl(listInstancesUrl(listInstancesInputs.getCommonInputs().getRegion()) + HttpUtils.getQueryParams(listInstancesInputs.getCompartmentOcid()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
         URI uri = URI.create(httpClientInputs.getUrl());
         Map<String, String> headers = signer.signRequest(uri, GET, EMPTY);
-        httpClientInputs.setHeaders(getAuthHeaders(headers));
+        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         return new HttpClientService().execute(httpClientInputs);
 
     }
 
     @NotNull
     private static String listInstancesUrl(@NotNull final String region) throws Exception {
-        final URIBuilder uriBuilder = getUriBuilder(region);
+        final URIBuilder uriBuilder = HttpUtils.getUriBuilder(region);
         uriBuilder.setPath(listInstancesPath());
         return uriBuilder.build().toURL().toString();
     }

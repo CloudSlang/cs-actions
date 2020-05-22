@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.oracle.utils;
+package io.cloudslang.content.oracle.oci.utils;
 
 import io.cloudslang.content.utils.NumberUtilities;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.oracle.utils.Constants.Common.*;
+import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;

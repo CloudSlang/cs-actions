@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.oracle.utils;
+package io.cloudslang.content.oracle.oci.utils;
 
 public class Constants {
     public static class Common {

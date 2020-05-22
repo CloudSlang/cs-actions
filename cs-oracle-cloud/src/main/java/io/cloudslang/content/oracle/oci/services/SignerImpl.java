@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.oracle.services;
+package io.cloudslang.content.oracle.oci.services;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -34,8 +34,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.cloudslang.content.oracle.utils.Constants.Common.AUTHORIZATION;
-import static io.cloudslang.content.oracle.utils.Constants.Common.QUERY;
+import static io.cloudslang.content.oracle.oci.utils.Constants.Common.AUTHORIZATION;
+import static io.cloudslang.content.oracle.oci.utils.Constants.Common.QUERY;
 
 public class SignerImpl {
 

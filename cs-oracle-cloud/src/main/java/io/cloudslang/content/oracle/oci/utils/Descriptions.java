@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.oracle.utils;
+package io.cloudslang.content.oracle.oci.utils;
 
 public class Descriptions {
     public static class Common {

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.oracle.entities.inputs;
+package io.cloudslang.content.oracle.oci.entities.inputs;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.oracle.utils;
+package io.cloudslang.content.oracle.oci.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
@@ -27,8 +27,8 @@ import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.oracle.utils.Constants.Common.*;
-import static io.cloudslang.content.oracle.utils.Outputs.CommonOutputs.DOCUMENT;
+import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
