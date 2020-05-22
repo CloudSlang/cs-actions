@@ -102,7 +102,7 @@ public class OCICommonInputs {
     }
 
     @NotNull
-    public String region() { return region; }
+    public String getRegion() { return region; }
 
     @NotNull
     public String getProxyHost() {
