@@ -26,12 +26,12 @@ public class MergeArraysValidator {
     public @NotNull List<RuntimeException> validate(@NotNull MergeArraysInput input) {
         List<RuntimeException> errs = new ArrayList<>();
 
-        if(input.getArray1() == null) {
+        if (input.getArray1() == null) {
             String msg = String.format(ExceptionMsgs.NULL_INPUT, Constants.InputNames.ARRAY1);
             errs.add(new IllegalArgumentException(msg));
         }
 
-        if(input.getArray2() == null) {
+        if (input.getArray2() == null) {
             String msg = String.format(ExceptionMsgs.NULL_INPUT, Constants.InputNames.ARRAY2);
             errs.add(new IllegalArgumentException(msg));
         }

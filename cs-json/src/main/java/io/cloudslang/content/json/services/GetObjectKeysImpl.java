@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 /*
  * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
@@ -28,7 +29,9 @@
  */
 package io.cloudslang.content.json.services;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +45,7 @@ public class GetObjectKeysImpl {
         JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
         Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
         List<String> keyList = new ArrayList<>();
-        for (Map.Entry<String, JsonElement> entry: entries) {
+        for (Map.Entry<String, JsonElement> entry : entries) {
             keyList.add("\"" + entry.getKey() + "\"");
         }
 

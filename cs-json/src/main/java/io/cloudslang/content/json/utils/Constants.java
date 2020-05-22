@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -52,9 +52,9 @@ public final class Constants {
     public static final class AddPropertyToObject {
 
         public static final String NEW_LINE = "\n";
+        public static final String ADD_PROPERTY_EXCEPTION = "The value could not be added!";
         static final String EMPTY_JSON = "Empty JSON string";
         static final String JSON_EXCEPTION = "jsonObject is not a valid JSON Object";
-        public static final String ADD_PROPERTY_EXCEPTION = "The value could not be added!";
 
     }
 }

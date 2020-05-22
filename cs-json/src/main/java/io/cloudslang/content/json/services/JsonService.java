@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 
 package io.cloudslang.content.json.services;
@@ -43,6 +42,14 @@ import java.util.Set;
  */
 public class JsonService {
 
+    @NotNull
+    public static JsonNode evaluateJsonPathQuery(@Nullable final String jsonObject, @Nullable final String jsonPath) {
+        final JsonContext jsonContext = JsonUtils.getValidJsonContext(jsonObject);
+        final JsonPath path = JsonUtils.getValidJsonPath(jsonPath);
+        return jsonContext.read(path);
+    }
+
+
     public String removeEmptyElementsJson(String json) throws RemoveEmptyElementException {
         String normalizedJson = json.trim();
 
@@ -60,6 +67,7 @@ public class JsonService {
         removeEmptyElementsFromMap(jsonMap);
         return generateResultingJsonString(wrappingQuote, jsonMap);
     }
+
 
     private String generateResultingJsonString(char wrappingQuote, Map<String, Object> jsonMap) {
         JSONObject jsonObject = new JSONObject(jsonMap);
@@ -79,6 +87,7 @@ public class JsonService {
         JsonPath.parse(normalizedJson, configuration);       //throws an exception at runtime if the json is malformed
     }
 
+
     /**
      * Returns the quote character used for specifying json member names and String values of json members
      *
@@ -95,6 +104,7 @@ public class JsonService {
         }
         return quote;
     }
+
 
     private void removeEmptyElementsFromMap(Map<String, Object> json) {
         Set<Map.Entry<String, Object>> jsonElements = json.entrySet();
@@ -120,6 +130,7 @@ public class JsonService {
         }
     }
 
+
     private void removeEmptyElementFromJsonArray(JSONArray jsonArray) {
 
         Iterator jsonArrayIterator = jsonArray.iterator();
@@ -144,6 +155,7 @@ public class JsonService {
 
     }
 
+
     @NotNull
     private String replaceUnescapedOccurrencesOfCharacterInText(String text, char toReplace, char newChar) {
         char[] charArrayText = text.toCharArray();
@@ -156,16 +168,10 @@ public class JsonService {
         return String.valueOf(charArrayText);
     }
 
+
     @Contract(pure = true)
     private boolean shouldCharacterBeReplaced(char[] characters, char characterToReplace, int characterPosition) {
         return characters[characterPosition] == characterToReplace &&
                 (characterPosition == 0 || characters[characterPosition - 1] != '\\');
-    }
-
-    @NotNull
-    public static JsonNode evaluateJsonPathQuery(@Nullable final String jsonObject, @Nullable final String jsonPath) {
-        final JsonContext jsonContext = JsonUtils.getValidJsonContext(jsonObject);
-        final JsonPath path = JsonUtils.getValidJsonPath(jsonPath);
-        return jsonContext.read(path);
     }
 }
