@@ -29,6 +29,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.HttpUtils.getAuthHeaders;
+import static io.cloudslang.content.oracle.oci.utils.HttpUtils.getQueryParams;
 
 public class InstanceImpl {
 
