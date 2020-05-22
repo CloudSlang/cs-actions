@@ -24,7 +24,6 @@ public class Inputs extends InputNames {
         public static final String USER_OCID = "userOcid";
         public static final String FINGER_PRINT = "fingerPrint";
         public static final String PRIVATE_KEY_FILE = "privateKeyFile";
-        public static final String AUTH_TOKEN = "authToken";
         public static final String PROXY_HOST = "proxyHost";
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
