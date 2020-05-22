@@ -85,7 +85,9 @@ public class Descriptions {
 
     public static class ListInstances {
         public static final String LIST_INSTANCES_OPERATION_DESC = "List of instances present";
-        public static final String INSTANCE_LIST_DESC = "List of all instances";
+        public static final String INSTANCE_LIST_DESC = "Lists the instances in the specified compartment and "+
+                "the specified availability domain. You can filter the results by specifying an instance name "+
+                "(the list will include all the identically-named instances in the compartment).";
         public static final String COMPARTMENT_OCID_DESC = "Compartments are a fundamental component of Oracle Cloud Infrastructure for organizing and isolating your cloud resources. This is ID of the compartment.";
     }
 }
