@@ -38,6 +38,8 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.oracle.oci.utils.Constants.ListInstancesConstants.LIST_INSTANCES_OPERATION_NAME;
+import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.LIST_INSTANCES_OPERATION_DESC;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -45,8 +47,8 @@ import static org.apache.commons.lang3.StringUtils.join;
 
 public class ListInstances {
 
-    @Action(name =Constants.ListInstancesConstants.LIST_INSTANCES_OPERATION_NAME ,
-            description = Descriptions.ListInstances.LIST_INSTANCES_OPERATION_DESC,
+    @Action(name =LIST_INSTANCES_OPERATION_NAME ,
+            description = LIST_INSTANCES_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = Descriptions.Common.RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = Descriptions.Common.EXCEPTION_DESC),
