@@ -48,6 +48,7 @@ public class Constants {
         public static final String LIST_INSTANCES = "/instances";
         public static final String COMPARTMENT_ID = "compartmentId=";
         public static final String QUERY = "?";
+        public static final String FORWARD_SLASH = "/";
         public static final String HTTPS = "https";
         public static final String STATUS_CODE = "statusCode";
         public static final String DELIMITER = ",";

@@ -37,8 +37,8 @@ public class InstanceImpl {
     public static Map<String, String> listInstances(@NotNull final OCIInstanceInputs listInstancesInputs)
             throws Exception {
 
-        String apiKey = (listInstancesInputs.getCommonInputs().getTenancyOcid() + "/"
-                + listInstancesInputs.getCommonInputs().getUserOcid() + "/"
+        String apiKey = (listInstancesInputs.getCommonInputs().getTenancyOcid() + FORWARD_SLASH
+                + listInstancesInputs.getCommonInputs().getUserOcid() + FORWARD_SLASH
                 + listInstancesInputs.getCommonInputs().getFingerPrint());
         SignerImpl signerImpl = new SignerImpl();
         PrivateKey privateKey = signerImpl.loadPrivateKey(listInstancesInputs.getCommonInputs().getPrivateKeyFilename());
