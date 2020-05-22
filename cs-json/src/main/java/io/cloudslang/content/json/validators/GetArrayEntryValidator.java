@@ -27,12 +27,12 @@ public class GetArrayEntryValidator {
         List<RuntimeException> errs = new ArrayList<>();
 
         if (input.getArray() == null) {
-            String msg = String.format(ExceptionMsgs.NULL_INPUT, Constants.InputNames.ARRAY);
+            String msg = String.format(ExceptionMsgs.NULL_OR_EMPTY_INPUT, Constants.InputNames.ARRAY);
             errs.add(new IllegalArgumentException(msg));
         }
 
         if (input.getIndex() == null) {
-            String msg = String.format(ExceptionMsgs.NULL_INPUT, Constants.InputNames.INDEX);
+            String msg = String.format(ExceptionMsgs.NULL_OR_EMPTY_INPUT, Constants.InputNames.INDEX);
             errs.add(new IllegalArgumentException(msg));
         }
 

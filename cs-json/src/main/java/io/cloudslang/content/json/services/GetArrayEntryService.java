@@ -50,7 +50,7 @@ public class GetArrayEntryService {
             throw validationErrs.get(0);
         }
 
-        int index = JsonUtils.getPositiveIndex(input.getArray(), input.getIndex());
+        int index = input.getIndex() < 0 ? input.getArray().size() + input.getIndex() : input.getIndex();
         JsonElement arrayEntry = input.getArray().get(index);
 
         String returnResult = arrayEntry.toString();

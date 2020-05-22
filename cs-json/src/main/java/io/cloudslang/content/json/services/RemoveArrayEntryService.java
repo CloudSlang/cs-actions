@@ -49,7 +49,7 @@ public class RemoveArrayEntryService {
             throw validationErrs.get(0);
         }
 
-        int index = JsonUtils.getPositiveIndex(input.getArray(), input.getIndex());
+        int index = input.getIndex() < 0 ? input.getArray().size() + input.getIndex() : input.getIndex();
         input.getArray().remove(index);
 
         String returnResult = input.getArray().toString();

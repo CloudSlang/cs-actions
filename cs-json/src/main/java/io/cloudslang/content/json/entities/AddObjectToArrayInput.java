@@ -16,17 +16,18 @@
 package io.cloudslang.content.json.entities;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-public class AddToArrayInput {
+public class AddObjectToArrayInput {
     private JsonArray array;
-    private String element;
+    private JsonElement element;
     private Integer index;
 
 
-    private AddToArrayInput() {
+    private AddObjectToArrayInput() {
     }
 
 
@@ -35,7 +36,7 @@ public class AddToArrayInput {
     }
 
 
-    public String getElement() {
+    public JsonElement getElement() {
         return element;
     }
 
@@ -46,6 +47,8 @@ public class AddToArrayInput {
 
 
     public static class Builder {
+        private final JsonParser jsonParser = new JsonParser();
+
         private String array;
         private String element;
         private String index;
@@ -69,14 +72,16 @@ public class AddToArrayInput {
         }
 
 
-        public @NotNull AddToArrayInput build() throws Exception {
-            AddToArrayInput input = new AddToArrayInput();
+        public @NotNull AddObjectToArrayInput build() throws Exception {
+            AddObjectToArrayInput input = new AddObjectToArrayInput();
 
             if (StringUtils.isNotBlank(this.array)) {
-                input.array = new JsonParser().parse(this.array).getAsJsonArray();
+                input.array = this.jsonParser.parse(this.array).getAsJsonArray();
             }
 
-            input.element = StringUtils.defaultString(this.element);
+            if(StringUtils.isNotBlank(this.element)) {
+                input.element = this.jsonParser.parse(this.element);
+            }
 
             if (StringUtils.isNotBlank(this.index)) {
                 input.index = Integer.parseInt(this.index);

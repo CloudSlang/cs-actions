@@ -151,30 +151,4 @@ public class JsonUtils {
         iae.setStackTrace(throwable.getStackTrace());
         return iae;
     }
-
-
-    public static @NotNull JsonArray addToArray(@NotNull JsonArray array, JsonElement element, int index) {
-        JsonArray resultArray = new JsonArray();
-
-        for (int i = 0; i < index; i++) {
-            resultArray.add(array.get(i));
-        }
-        resultArray.add(element);
-        for (int i = index; i < array.size(); i++) {
-            resultArray.add(array.get(i));
-        }
-
-        return resultArray;
-    }
-
-
-    public static int getPositiveIndex(@NotNull JsonArray array, @Nullable Integer index) {
-        if (index == null) {
-            return array.size();
-        }
-        if (index < 0) {
-            return array.size() + index;
-        }
-        return index;
-    }
 }

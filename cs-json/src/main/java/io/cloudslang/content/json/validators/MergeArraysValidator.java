@@ -27,12 +27,12 @@ public class MergeArraysValidator {
         List<RuntimeException> errs = new ArrayList<>();
 
         if (input.getArray1() == null) {
-            String msg = String.format(ExceptionMsgs.NULL_INPUT, Constants.InputNames.ARRAY1);
+            String msg = String.format(ExceptionMsgs.NULL_OR_EMPTY_INPUT, Constants.InputNames.ARRAY1);
             errs.add(new IllegalArgumentException(msg));
         }
 
         if (input.getArray2() == null) {
-            String msg = String.format(ExceptionMsgs.NULL_INPUT, Constants.InputNames.ARRAY2);
+            String msg = String.format(ExceptionMsgs.NULL_OR_EMPTY_INPUT, Constants.InputNames.ARRAY2);
             errs.add(new IllegalArgumentException(msg));
         }
 

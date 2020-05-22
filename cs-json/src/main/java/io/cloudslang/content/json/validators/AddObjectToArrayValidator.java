@@ -14,7 +14,7 @@
  */
 package io.cloudslang.content.json.validators;
 
-import io.cloudslang.content.json.entities.AddToArrayInput;
+import io.cloudslang.content.json.entities.AddObjectToArrayInput;
 import io.cloudslang.content.json.utils.Constants;
 import io.cloudslang.content.json.utils.ExceptionMsgs;
 import org.jetbrains.annotations.NotNull;
@@ -22,26 +22,35 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddToArrayValidator {
-    public @NotNull List<RuntimeException> validate(@NotNull AddToArrayInput input) {
+public class AddObjectToArrayValidator {
+    public @NotNull List<RuntimeException> validate(@NotNull AddObjectToArrayInput input) {
         List<RuntimeException> errs = new ArrayList<>();
 
         addErrsForArray(errs, input);
+        addErrsForElement(errs, input);
         addErrsForIndex(errs, input);
 
         return errs;
     }
 
 
-    private void addErrsForArray(List<RuntimeException> errs, AddToArrayInput input) {
+    private void addErrsForArray(List<RuntimeException> errs, AddObjectToArrayInput input) {
         if (input.getArray() == null) {
-            String msg = String.format(ExceptionMsgs.NULL_INPUT, Constants.InputNames.ARRAY);
+            String msg = String.format(ExceptionMsgs.NULL_OR_EMPTY_INPUT, Constants.InputNames.ARRAY);
             errs.add(new IllegalArgumentException(msg));
         }
     }
 
 
-    private void addErrsForIndex(List<RuntimeException> errs, AddToArrayInput input) {
+    private void addErrsForElement(List<RuntimeException> errs, AddObjectToArrayInput input) {
+        if (input.getElement() == null) {
+            String msg = String.format(ExceptionMsgs.NULL_OR_EMPTY_INPUT, Constants.InputNames.ELEMENT);
+            errs.add(new IllegalArgumentException(msg));
+        }
+    }
+
+
+    private void addErrsForIndex(List<RuntimeException> errs, AddObjectToArrayInput input) {
         if (input.getArray() == null || input.getIndex() == null) {
             return;
         }

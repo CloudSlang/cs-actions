@@ -32,21 +32,23 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
-public class AddToArrayAction {
+public class AddObjectToArrayAction {
 
     private final AddObjectToArrayService service = new AddObjectToArrayService();
 
 
     /**
-     * Adds an element to a JavaScript array. The resulting array, with the element
-     * added, will be returned in the Result output. The given element will be added
-     * as a string, which is what most flow variables contain.
+     * Insert an object into a JSON array, optionally specifying the position at which to insert the new object.
+     * This Operation differs from the 'Add to Array' operation in that this one will try and validate the new element as
+     * a JSON object, whereas 'Add to Array' will just wrap the element in quotes and treat it as a string. This means
+     * that the element passed into this operation must be a valid JSON object, or the operation will fail.
      *
      * @param array   The JavaScript array that will be added to.
      *                The operation will return a failure if the array is not a JavaScript array.
-     * @param element The element to add into the array. The element will be interpreted as a string and added into the array.
-     *                That means that even if the value appears to be another valid JavaScript
-     *                object or array, it will be added as a simple string.
+     * @param element The element to insert into the array. As noted above, this must be a valid JSON object or
+     *                the operation will fail. It can be any valid JSON object; such as a number, string, an array,
+     *                or a name/value pair list. Numbers can be entered as-is, strings
+     *                must be wrapped in quotes, and objects must be formatted correctly.
      * @param index   The index (-n < i < n) in the array in which the value will be inserted.
      *                If an index is not specified, then the element will be appended to the end of the array.
      * @return a map containing the output of the operations. Keys present in the map are:
@@ -55,7 +57,7 @@ public class AddToArrayAction {
      * <br><b>returnCode</b> - The returnCode of the operation: 0 for success, -1 for failure.
      * <br><b>exception</b> - The exception message if the operation goes to failure.
      */
-    @Action(name = "Add to Array",
+    @Action(name = "Add Object to Array",
             outputs = {
                     @Output(OutputNames.RETURN_CODE),
                     @Output(OutputNames.RETURN_RESULT),
@@ -73,7 +75,7 @@ public class AddToArrayAction {
         try {
             AddObjectToArrayInput input = new AddObjectToArrayInput.Builder()
                     .array(array)
-                    .element("\"" + StringUtils.defaultString(element).replace("\"", "\\\"") + "\"")
+                    .element(element)
                     .index(index)
                     .build();
             return this.service.execute(input);
