@@ -25,15 +25,12 @@ public class Inputs extends InputNames {
         public static final String FINGER_PRINT = "fingerPrint";
         public static final String PRIVATE_KEY_FILE = "privateKeyFile";
         public static final String AUTH_TOKEN = "authToken";
-        public static final String ORGANIZATION_NAME = "organizationName";
         public static final String PROXY_HOST = "proxyHost";
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
-        public static final String REQUEST_BODY = "requestBody";
-        public static final String OCI_VERSION = "ociVersion";
-        public static final String PAGE_NUMBER = "pageNumber";
-        public static final String PAGE_SIZE = "pageSize";
+        public static final String API_VERSION = "apiVersion";
+        public static final String REGION = "region";
     }
 
     public static class ListInstancesInputs {

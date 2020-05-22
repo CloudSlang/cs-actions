@@ -17,7 +17,6 @@ package io.cloudslang.content.oracle.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +28,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.oracle.utils.Constants.Common.*;
+import static io.cloudslang.content.oracle.utils.Outputs.CommonOutputs.DOCUMENT;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class HttpUtils {
     @org.jetbrains.annotations.NotNull
@@ -60,13 +63,74 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static URIBuilder getUriBuilder() {
+    public static URIBuilder getUriBuilder(@NotNull final String region) {
         final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setHost(OCI_HOST);
+        uriBuilder.setHost(IAAS+"."+region+"."+OCI_HOST);
         uriBuilder.setScheme(HTTPS);
         return uriBuilder;
     }
 
+
+    @NotNull
+    public static String getAuthHeaders(@NotNull final String signature) {
+        final StringBuilder headerBuilder = new StringBuilder();
+        headerBuilder.append(AUTHORIZATION).append(signature);
+        return headerBuilder.toString();
+    }
+
+    @NotNull
+    public static String getAuthHeaders(@NotNull final Map<String,String> headers) {
+        final StringBuilder headerBuilder = new StringBuilder();
+        for ( Map.Entry<String, String> entry : headers.entrySet()) {
+            headerBuilder.append(entry.getKey()).append(entry.getValue()).append(NEW_LINE);
+        }
+
+        return headerBuilder.toString().trim();
+    }
+
+    @NotNull
+    public static Map<String, String> getOperationResults(@NotNull final Map<String, String> result,
+                                                          @NotNull final String successMessage,
+                                                          final String failureMessage,
+                                                          final String document) {
+        final Map<String, String> results;
+        final String statusCode = result.get(STATUS_CODE);
+        if (Integer.parseInt(statusCode) >= 200 && Integer.parseInt(statusCode) < 300) {
+            results = getSuccessResultsMap(successMessage);
+            if (!isEmpty(document))
+                results.put(DOCUMENT, document);
+        } else {
+            results = getFailureResultsMap(failureMessage);
+        }
+        results.put(STATUS_CODE, statusCode);
+        return results;
+    }
+
+    public static void setSecurityInputs(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs,
+                                         @org.jetbrains.annotations.NotNull final String trustAllRoots,
+                                         @org.jetbrains.annotations.NotNull final String x509HostnameVerifier,
+                                         @org.jetbrains.annotations.NotNull final String trustKeystore,
+                                         @org.jetbrains.annotations.NotNull final String trustPassword) {
+        httpClientInputs.setTrustAllRoots("true");
+        httpClientInputs.setX509HostnameVerifier("allow_all");
+        httpClientInputs.setTrustKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setTrustPassword(CHANGEIT);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+    }
+
+    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
+                                               @NotNull final String connectTimeout,
+                                               @NotNull final String socketTimeout,
+                                               @NotNull final String keepAlive,
+                                               @NotNull final String connectionsMaxPerRoot,
+                                               @NotNull final String connectionsMaxTotal) {
+        httpClientInputs.setConnectTimeout(connectTimeout);
+        httpClientInputs.setSocketTimeout(socketTimeout);
+        httpClientInputs.setKeepAlive(keepAlive);
+        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
+        httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
+    }
 
     @NotNull
     public static String getQueryParams(@NotNull final String compartmentId) {
