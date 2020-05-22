@@ -135,7 +135,6 @@ public class HttpUtils {
     @NotNull
     public static String getQueryParams(@NotNull final String compartmentId) {
         final StringBuilder queryParams = new StringBuilder()
-                .append(QUERY)
                 .append(COMPARTMENT_ID)
                 .append(compartmentId);
         return queryParams.toString();

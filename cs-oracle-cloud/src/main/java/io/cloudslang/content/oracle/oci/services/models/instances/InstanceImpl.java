@@ -32,7 +32,7 @@ import static io.cloudslang.content.oracle.oci.utils.HttpUtils.getAuthHeaders;
 
 public class InstanceImpl {
 
-    @NotNull
+@NotNull
     public static Map<String, String> listInstances(@NotNull final OCIInstanceInputs listInstancesInputs)
             throws Exception {
 
@@ -43,10 +43,11 @@ public class InstanceImpl {
         PrivateKey privateKey = signerImpl.loadPrivateKey(listInstancesInputs.getCommonInputs().getPrivateKeyFilename());
         SignerImpl.RequestSigner signer = new SignerImpl.RequestSigner(apiKey, privateKey);
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(listInstancesUrl(listInstancesInputs.getCommonInputs().getRegion()) + HttpUtils.getQueryParams(listInstancesInputs.getCompartmentOcid()));
+        httpClientInputs.setUrl(listInstancesUrl(listInstancesInputs.getCommonInputs().getRegion()));
+        httpClientInputs.setQueryParams(getQueryParams(listInstancesInputs.getCompartmentOcid()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
-        URI uri = URI.create(httpClientInputs.getUrl());
+        URI uri = URI.create(httpClientInputs.getUrl()+QUERY+httpClientInputs.getQueryParams());
         Map<String, String> headers = signer.signRequest(uri, GET, EMPTY);
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         return new HttpClientService().execute(httpClientInputs);
