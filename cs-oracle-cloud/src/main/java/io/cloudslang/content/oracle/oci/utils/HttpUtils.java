@@ -70,14 +70,6 @@ public class HttpUtils {
         return uriBuilder;
     }
 
-
-    @NotNull
-    public static String getAuthHeaders(@NotNull final String signature) {
-        final StringBuilder headerBuilder = new StringBuilder();
-        headerBuilder.append(AUTHORIZATION).append(signature);
-        return headerBuilder.toString();
-    }
-
     @NotNull
     public static String getAuthHeaders(@NotNull final Map<String,String> headers) {
         final StringBuilder headerBuilder = new StringBuilder();
@@ -86,6 +78,12 @@ public class HttpUtils {
         }
 
         return headerBuilder.toString().trim();
+    }
+
+    public static void setTLSParameters(HttpClientInputs httpClientInputs) {
+        httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12);
+        httpClientInputs.setAllowedCyphers(ALLOWED_CYPHERS);
+
     }
 
     @NotNull

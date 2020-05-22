@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.oracle.oci.utils;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+
 public class Constants {
     public static class Common {
         public static final String API_VERSION = "/20160918";
@@ -30,6 +32,9 @@ public class Constants {
         public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
         public static final String ANONYMOUS = "anonymous";
         public static final String GET = "get";
+        public static final String HEAD = "head";
+        public static final String DELETE = "delete";
+        public static final String POST = "post";
         public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
         public static final String CHANGEIT = "changeit";
         public static final String ZERO = "0";
@@ -38,7 +43,6 @@ public class Constants {
         public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
         public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
         public static final String AUTHORIZATION = "Authorization:";
-        public static final String BEARER = "Bearer ";
         public static final String IAAS = "iaas";
         public static final String OCI_HOST = "oraclecloud.com";
         public static final String LIST_INSTANCES = "/instances";
@@ -47,6 +51,19 @@ public class Constants {
         public static final String HTTPS = "https";
         public static final String STATUS_CODE = "statusCode";
         public static final String DELIMITER = ",";
+        public static final String DATE = "date";
+        public static final String REQUEST_TARGET = "(request-target)";
+        public static final String HOST = "host";
+        public static final String CONTENT_LENGTH = "content-length";
+        public static final String COLON = ":";
+        public static final String PUT = "put";
+        public static final String CONTENT_TYPE = "content-type";
+        public static final String X_CONTENT_SHA256 = "x-content-sha256";
+        public static final String APPLICATION_JSON = "application/json";
+        public static final String ALLOWED_CYPHERS = "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256," +
+                "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384," +
+                "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256," +
+                "TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256";
 
     }
 

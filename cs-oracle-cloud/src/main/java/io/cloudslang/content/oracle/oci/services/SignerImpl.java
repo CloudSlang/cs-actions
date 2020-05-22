@@ -34,8 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.cloudslang.content.oracle.oci.utils.Constants.Common.AUTHORIZATION;
-import static io.cloudslang.content.oracle.oci.utils.Constants.Common.QUERY;
+import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 
 public class SignerImpl {
 
@@ -57,11 +56,11 @@ public class SignerImpl {
             DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
             DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
             REQUIRED_HEADERS = ImmutableMap.<String, List<String>>builder()
-                    .put("get", ImmutableList.of("date", "(request-target)", "host"))
-                    .put("head", ImmutableList.of("date", "(request-target)", "host"))
-                    .put("delete", ImmutableList.of("date", "(request-target)", "host"))
-                    .put("put", ImmutableList.of("date", "(request-target)", "host", "content-length", "content-type", "x-content-sha256"))
-                    .put("post", ImmutableList.of("date", "(request-target)", "host", "content-length", "content-type", "x-content-sha256"))
+                    .put(GET, ImmutableList.of(DATE, REQUEST_TARGET, HOST))
+                    .put(HEAD, ImmutableList.of(DATE, REQUEST_TARGET, HOST))
+                    .put(DELETE, ImmutableList.of(DATE, REQUEST_TARGET, HOST))
+                    .put(PUT, ImmutableList.of(DATE, REQUEST_TARGET, HOST, CONTENT_LENGTH, CONTENT_TYPE, X_CONTENT_SHA256))
+                    .put(POST, ImmutableList.of(DATE, REQUEST_TARGET, HOST, CONTENT_LENGTH, CONTENT_TYPE, X_CONTENT_SHA256))
                     .build();
         }
         private final Map<String, Signer> signers;
@@ -86,23 +85,23 @@ public class SignerImpl {
             Map<String,String> myheaders = new HashMap<>();
 Map<String,String> headers = new HashMap<>();
 String date=DATE_FORMAT.format(new Date());
-            headers.put("date", date);
-            myheaders.put("date:", date);
-            headers.put("host", uri.getHost());
-            myheaders.put("host:", uri.getHost());
-          if (method.equals("put") || method.equals("post")) {
-                headers.put("content-type", "application/json");
-                myheaders.put("content-type:", "application/json");
+            headers.put(DATE, date);
+            myheaders.put(DATE+COLON, date);
+            headers.put(HOST, uri.getHost());
+            myheaders.put(HOST+COLON, uri.getHost());
+          if (method.equals(PUT) || method.equals(POST)) {
+                headers.put(CONTENT_TYPE, APPLICATION_JSON);
+                myheaders.put(CONTENT_TYPE+COLON, APPLICATION_JSON);
 
                 if (requestBody!=null && !requestBody.isEmpty()) {
                     byte[] body =requestBody.getBytes();
 
-                    headers.put("content-length", Integer.toString(body.length));
-                    myheaders.put("content-length:", Integer.toString(body.length));
+                    headers.put(CONTENT_LENGTH, Integer.toString(body.length));
+                    myheaders.put(CONTENT_LENGTH+COLON, Integer.toString(body.length));
 
 
-                    headers.put("x-content-sha256", calculateSHA256(body));
-                    myheaders.put("x-content-sha256:", calculateSHA256(body));
+                    headers.put(X_CONTENT_SHA256, calculateSHA256(body));
+                    myheaders.put(X_CONTENT_SHA256+COLON, calculateSHA256(body));
 
                 }
             }
@@ -119,7 +118,7 @@ String date=DATE_FORMAT.format(new Date());
         private String calculateSignature(String method, String path, Map<String, String> headers) {
             Signer signer = this.signers.get(method);
             if (signer == null) {
-                throw new RuntimeException("Don't know how to sign method " + method);
+                throw new RuntimeException("failed to sign with the give method" + method);
             }
             try {
                 return signer.sign(method, path, headers).toString();

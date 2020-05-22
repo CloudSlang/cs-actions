@@ -20,6 +20,8 @@ import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
 import org.jetbrains.annotations.NotNull;
 
+import static io.cloudslang.content.oracle.oci.utils.HttpUtils.setTLSParameters;
+
 public class HttpCommons {
 
     @NotNull
@@ -43,5 +45,6 @@ public class HttpCommons {
                 commonInputs.getKeepAlive(),
                 commonInputs.getConnectionsMaxPerRoot(),
                 commonInputs.getConnectionsMaxTotal());
+        setTLSParameters(httpClientInputs);
     }
 }

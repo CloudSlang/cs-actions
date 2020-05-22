@@ -18,6 +18,7 @@ package io.cloudslang.content.oracle.oci.services.models.instances;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCIInstanceInputs;
+import io.cloudslang.content.oracle.oci.services.HttpCommons;
 import io.cloudslang.content.oracle.oci.services.SignerImpl;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
 import org.apache.http.client.utils.URIBuilder;
@@ -28,7 +29,6 @@ import java.security.PrivateKey;
 import java.util.Map;
 
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
-import static io.cloudslang.content.oracle.oci.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.oracle.oci.utils.HttpUtils.getQueryParams;
 
 public class InstanceImpl {
@@ -51,12 +51,13 @@ public class InstanceImpl {
         URI uri = URI.create(httpClientInputs.getUrl()+QUERY+httpClientInputs.getQueryParams());
         Map<String, String> headers = signer.signRequest(uri, GET, EMPTY);
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        HttpCommons.setCommonHttpInputs(httpClientInputs, listInstancesInputs.getCommonInputs());
         return new HttpClientService().execute(httpClientInputs);
 
     }
 
     @NotNull
-    private static String listInstancesUrl(@NotNull final String region) throws Exception {
+    public static String listInstancesUrl(@NotNull final String region) throws Exception {
         final URIBuilder uriBuilder = HttpUtils.getUriBuilder(region);
         uriBuilder.setPath(listInstancesPath());
         return uriBuilder.build().toURL().toString();

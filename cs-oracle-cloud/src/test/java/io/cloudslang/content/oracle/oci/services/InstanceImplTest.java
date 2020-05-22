@@ -31,24 +31,29 @@
 package io.cloudslang.content.oracle.oci.services;
 
 
+import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
+import io.cloudslang.content.oracle.oci.entities.inputs.OCIInstanceInputs;
 import io.cloudslang.content.oracle.oci.services.models.instances.InstanceImpl;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static io.cloudslang.content.oracle.oci.services.models.instances.InstanceImpl.listInstancesPath;
+import static io.cloudslang.content.oracle.oci.services.models.instances.InstanceImpl.listInstancesUrl;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(InstanceImpl.class)
 public class InstanceImplTest {
 
-    private static final String EXPECTED_LIST_INSTANCES_PATH = "/20160918/instances";
+    private static final String EXPECTED_LIST_INSTANCES_PATH = "https://iaas.r1.oraclecloud.com/20160918/instances";
+    private final String REGION = "r1";
 
     @Test
-    public void getWorkspacePathTest() {
-        final String path = listInstancesPath();
+    public void getWorkspacePathTest() throws Exception {
+        final String path = listInstancesUrl(REGION);
         assertEquals(EXPECTED_LIST_INSTANCES_PATH, path);
     }
 }

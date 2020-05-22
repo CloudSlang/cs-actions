@@ -76,21 +76,7 @@ public class Descriptions {
                 "will be used. If responseCharacterSet is empty and the charset from the HTTP response Content-Type " +
                 "header is empty, the default value will be used. You should not use this for method=HEAD or OPTIONS." +
                 "Default: 'UTF-8'";
-        public static final String AUTH_TOKEN_DESC = "The authorization token for OCI.";
-        public static final String ORGANIZATION_NAME_DESC = "The name of the organization.";
-        public static final String OCI_VERSION_DESC = "The version of OCI to use for this workspace. " +
-                "Upon creating a workspace,the latest version is selected unless otherwise specified (e.g. \"0.11.1\")." +
-                "Default: '0.12.1'";
-        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
-        public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in milliseconds) to allow the client " +
-                "to complete the execution of an API call. A value of '0' disables this feature." +
-                "Default: '60000'";
-        public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
-                "Default: 'false'";
         public static final String STATUS_CODE_DESC = "The HTTP status code for OCI API request.";
-        public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page.";
-        public static final String PAGE_SIZE_DESC = "Optional. If omitted, the endpoint will return 20 items per page. " +
-                "The maximum page size is 150.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
         public static final String FAILURE_DESC = "There was an error while executing the request.";
         public static final String SUCCESS_DESC = "The request was successfully executed.";
@@ -98,8 +84,8 @@ public class Descriptions {
     }
 
     public static class ListInstances {
-        public static final String LIST_INSTANCES_OPERATION_DESC = "List of organizations present";
-        public static final String INSTANCE_LIST_DESC = "List of all organizations";
+        public static final String LIST_INSTANCES_OPERATION_DESC = "List of instances present";
+        public static final String INSTANCE_LIST_DESC = "List of all instances";
         public static final String COMPARTMENT_OCID_DESC = "Compartments are a fundamental component of Oracle Cloud Infrastructure for organizing and isolating your cloud resources. This is ID of the compartment.";
     }
 }
