@@ -60,7 +60,7 @@ public class GetArrayEntryInput {
             GetArrayEntryInput input = new GetArrayEntryInput();
 
             if(StringUtils.isNotBlank(this.array)) {
-                input.array = new JsonParser().parse(StringUtils.defaultString(this.array)).getAsJsonArray();
+                input.array = new JsonParser().parse(this.array).getAsJsonArray();
             }
 
             if(StringUtils.isNotBlank(this.index)) {

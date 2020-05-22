@@ -38,6 +38,7 @@ public final class Constants {
         public static final String VALUE = "value";
         public static final String VALIDATE_VALUE = "validateValue";
         public static final String INDEX = "index";
+        public static final String ELEMENT = "element";
     }
 
     static final class EditJsonOperations {

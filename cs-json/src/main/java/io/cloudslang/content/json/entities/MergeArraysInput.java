@@ -64,20 +64,18 @@ public class MergeArraysInput {
 
             if (StringUtils.isNotBlank(this.array1)) {
                 try {
-                    input.array1 = this.jsonParser.parse(StringUtils.defaultString(this.array1)).getAsJsonArray();
+                    input.array1 = this.jsonParser.parse(this.array1).getAsJsonArray();
                 } catch (Exception ex) {
-                    String msg = String.format(ExceptionMsgs.EXCEPTION_WHILE_PARSING,
-                            Constants.InputNames.ARRAY1, ex.getMessage());
+                    String msg = String.format(ExceptionMsgs.EXCEPTION_WHILE_PARSING, Constants.InputNames.ARRAY1, ex.getMessage());
                     throw new Exception(msg, ex);
                 }
             }
 
             if (StringUtils.isNotBlank(this.array2)) {
                 try {
-                    input.array2 = this.jsonParser.parse(StringUtils.defaultString(this.array2)).getAsJsonArray();
+                    input.array2 = this.jsonParser.parse(this.array2).getAsJsonArray();
                 } catch (Exception ex) {
-                    String msg = String.format(ExceptionMsgs.EXCEPTION_WHILE_PARSING,
-                            Constants.InputNames.ARRAY2, ex.getMessage());
+                    String msg = String.format(ExceptionMsgs.EXCEPTION_WHILE_PARSING, Constants.InputNames.ARRAY2, ex.getMessage());
                     throw new Exception(msg, ex);
                 }
             }
