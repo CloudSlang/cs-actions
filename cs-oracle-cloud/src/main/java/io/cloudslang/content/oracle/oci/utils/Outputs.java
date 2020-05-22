@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.oracle.utils;
+package io.cloudslang.content.oracle.oci.utils;
 
 import io.cloudslang.content.constants.OutputNames;
 
@@ -22,8 +22,6 @@ public class Outputs extends OutputNames {
         public static final String DOCUMENT = "document";
 
     }
-
-
     public static class ListInstancesOutputs {
         public static final String INSTANCE_LIST = "instance_list";
     }

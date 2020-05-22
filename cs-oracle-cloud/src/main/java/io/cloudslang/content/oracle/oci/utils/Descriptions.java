@@ -13,16 +13,17 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.oracle.utils;
+package io.cloudslang.content.oracle.oci.utils;
 
 public class Descriptions {
     public static class Common {
-        public static final String TENANCY_OCID_DESC =  "Oracle creates a tenancy for your company, which is a secure and " + 
-                "isolated partition where you can create, organize, and administer your cloud resources. This is ID of the tenancy.";
-        public static final String USER_OCID_DESC = "ID of an individual employee or system that needs to manage or use " + 
-            "your company’s Oracle Cloud Infrastructure resources.";
+        public static final String TENANCY_OCID_DESC =  "Oracle creates a tenancy for your company, which is a secure and isolated partition where you can create, organize, and administer your cloud resources. This is ID of the tenancy.";
+        public static final String USER_OCID_DESC = "ID of an individual employee or system that needs to manage or use your company’s Oracle Cloud Infrastructure resources.";
         public static final String FINGER_PRINT_DESC = "Finger print of the public key generated for OCI account.";
         public static final String PRIVATE_KEY_FILE_DESC = "Location of the private key pem file generated for OCI account.";
+        public static final String API_VERSION_DESC = "Version of the API of OCI."+
+                "Default: '20160918'";
+        public static final String REGION_DESC = "Region in OCI.";
         public static final String PROXY_HOST_DESC = "Proxy server used to access the OCI.";
         public static final String PROXY_PORT_DESC = "Proxy server port used to access the OCI." +
                 "Default: '8080'";
@@ -46,6 +47,13 @@ public class Descriptions {
                 "or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS)";
         public static final String TRUST_PASSWORD_DESC = "The password associated with the TrustStore file. If " +
                 "trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied.";
+        public static final String KEYSTORE_DESC ="The pathname of the Java KeyStore file. You only need this if the" +
+                "server requires client authentication. If the protocol (specified by the 'url') is not 'https' or if " +
+                "trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS)" +
+                "Default: <OO_Home>/java/lib/security/cacerts";
+        public static final String KEYSTORE_PASSWORD_DESC = "The password associated with the KeyStore file. If "+
+                "trustAllRoots is false and keystore is empty, keystorePassword default will be supplied." +
+                "Default: changeit";
         public static final String CONN_MAX_TOTAL_DESC = "The maximum limit of connections in total." +
                 "Default: '20'";
         public static final String CONN_MAX_ROUTE_DESC = "The maximum limit of connections on a per route basis." +
@@ -68,52 +76,18 @@ public class Descriptions {
                 "will be used. If responseCharacterSet is empty and the charset from the HTTP response Content-Type " +
                 "header is empty, the default value will be used. You should not use this for method=HEAD or OPTIONS." +
                 "Default: 'UTF-8'";
-        public static final String AUTH_TOKEN_DESC = "The authorization token for OCI.";
-        public static final String ORGANIZATION_NAME_DESC = "The name of the organization.";
-        public static final String OCI_VERSION_DESC = "The version of OCI to use for this workspace. " +
-                "Upon creating a workspace,the latest version is selected unless otherwise specified (e.g. \"0.11.1\")." +
-                "Default: '0.12.1'";
-        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
-        public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in milliseconds) to allow the client " +
-                "to complete the execution of an API call. A value of '0' disables this feature." +
-                "Default: '60000'";
-        public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
-                "Default: 'false'";
         public static final String STATUS_CODE_DESC = "The HTTP status code for OCI API request.";
-        public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page.";
-        public static final String PAGE_SIZE_DESC = "Optional. If omitted, the endpoint will return 20 items per page. " +
-                "The maximum page size is 150.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
         public static final String FAILURE_DESC = "There was an error while executing the request.";
         public static final String SUCCESS_DESC = "The request was successfully executed.";
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
     }
 
-
-    public static class ListOAuthClient {
-        public static final String DOCUMENT_DESC = "The full API response in case of success.";
-
-    }
-
     public static class ListInstances {
-        public static final String LIST_INSTANCES_OPERATION_DESC = "List of instances present";
+        public static final String LIST_INSTANCES_OPERATION_DESC = "Lists the instances in the specified compartment and "+
+                "the specified availability domain. You can filter the results by specifying an instance name "+
+                "(the list will include all the identically-named instances in the compartment).";
         public static final String INSTANCE_LIST_DESC = "List of all instances";
-        public static final String COMPARTMENT_OCID_DESC = "Compartments are a fundamental component of " + 
-            "Oracle Cloud Infrastructure for organizing and isolating your cloud resources. This is ID of the compartment.";
-    }
-    
-
-
-    public static class Counter{
-        public static final String FAILURE_MESSAGE = "Something went wrong";
-        public static final String COUNTER_DESC = "Counts from one number to another number.";
-        public static final String RESULT_STRING_DESC = "The primary result is resultString, Result can also be used. result (All lower case) should not be used as it is the response code.";
-        public static final String RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
-        public static final String FROM_DESC = "The number to start counting at.";
-        public static final String TO_DESC = "The number to count to.";
-        public static final String RESET_DESC = "If true, then the counter will restart counting from the beginning.";
-        public static final String INCREMENT_BY_DESC = "The number to increment by while counting. If unspecified this is 1. If you wanted to count 2,4,6,8 this would be 2.";
-
-
+        public static final String COMPARTMENT_OCID_DESC = "Compartments are a fundamental component of Oracle Cloud Infrastructure for organizing and isolating your cloud resources. This is ID of the compartment.";
     }
 }
