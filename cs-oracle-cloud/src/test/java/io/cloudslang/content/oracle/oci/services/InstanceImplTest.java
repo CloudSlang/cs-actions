@@ -28,18 +28,16 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.oracle.services;
+package io.cloudslang.content.oracle.oci.services;
 
 
-import io.cloudslang.content.oracle.services.models.instances.InstanceImpl;
+import io.cloudslang.content.oracle.oci.services.models.instances.InstanceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.Map;
-
-import static io.cloudslang.content.oracle.services.models.instances.InstanceImpl.listInstancesPath;
+import static io.cloudslang.content.oracle.oci.services.models.instances.InstanceImpl.listInstancesPath;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
