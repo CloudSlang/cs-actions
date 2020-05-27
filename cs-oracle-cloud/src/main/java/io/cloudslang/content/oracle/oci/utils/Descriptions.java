@@ -20,7 +20,7 @@ public class Descriptions {
         public static final String TENANCY_OCID_DESC =  "Oracle creates a tenancy for your company, which is a secure and isolated partition where you can create, organize, and administer your cloud resources. This is ID of the tenancy.";
         public static final String USER_OCID_DESC = "ID of an individual employee or system that needs to manage or use your company’s Oracle Cloud Infrastructure resources.";
         public static final String FINGER_PRINT_DESC = "Finger print of the public key generated for OCI account.";
-        public static final String PRIVATE_KEY_FILE_DESC = "Location of the private key pem file generated for OCI account.";
+        public static final String PRIVATE_KEY_DESC = "private key for OCI account.";
         public static final String API_VERSION_DESC = "Version of the API of OCI."+
                 "Default: '20160918'";
         public static final String REGION_DESC = "Region in OCI.";
