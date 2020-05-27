@@ -73,7 +73,7 @@ public class ListInstances {
     public Map<String, String> execute(@Param(value = TENANCY_OCID, required = true, description = TENANCY_OCID_DESC) String tenancyOcid,
                                        @Param(value = USER_OCID, required = true, description = USER_OCID_DESC) String userOcid,
                                        @Param(value = FINGER_PRINT, encrypted = true, required = true, description = FINGER_PRINT_DESC) String fingerPrint,
-                                       @Param(value = PRIVATE_KEY, required = true, description = PRIVATE_KEY_DESC) String privateKey,
+                                       @Param(value = PRIVATE_KEY, encrypted = true, required = true, description = PRIVATE_KEY_DESC) String privateKey,
                                        @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
