@@ -41,7 +41,7 @@ public class InstanceImpl {
                 + listInstancesInputs.getCommonInputs().getUserOcid() + FORWARD_SLASH
                 + listInstancesInputs.getCommonInputs().getFingerPrint());
         SignerImpl signerImpl = new SignerImpl();
-        PrivateKey privateKey = signerImpl.loadPrivateKey(listInstancesInputs.getCommonInputs().getPrivateKeyFilename());
+        PrivateKey privateKey = signerImpl.loadPrivateKey(listInstancesInputs.getCommonInputs().getPrivateKey());
         SignerImpl.RequestSigner signer = new SignerImpl.RequestSigner(apiKey, privateKey);
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(listInstancesUrl(listInstancesInputs.getCommonInputs().getRegion()));

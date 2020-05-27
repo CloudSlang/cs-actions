@@ -22,11 +22,10 @@ import org.tomitribe.auth.signatures.PEM;
 import org.tomitribe.auth.signatures.Signature;
 import org.tomitribe.auth.signatures.Signer;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
@@ -38,8 +37,8 @@ import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 
 public class SignerImpl {
 
-    public static PrivateKey loadPrivateKey(String privateKeyFilename) {
-        try (InputStream privateKeyStream = Files.newInputStream(Paths.get(privateKeyFilename))){
+    public static PrivateKey loadPrivateKey(String privateKey) {
+        try (InputStream privateKeyStream = new ByteArrayInputStream(privateKey.getBytes())) {
             return PEM.readPrivateKey(privateKeyStream);
         } catch (InvalidKeySpecException e) {
             throw new RuntimeException("Invalid format for private key");
@@ -52,6 +51,7 @@ public class SignerImpl {
         private static final SimpleDateFormat DATE_FORMAT;
         private static final String SIGNATURE_ALGORITHM = "rsa-sha256";
         private static final Map<String, List<String>> REQUIRED_HEADERS;
+
         static {
             DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
             DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -63,6 +63,7 @@ public class SignerImpl {
                     .put(POST, ImmutableList.of(DATE, REQUEST_TARGET, HOST, CONTENT_LENGTH, CONTENT_TYPE, X_CONTENT_SHA256))
                     .build();
         }
+
         private final Map<String, Signer> signers;
 
         public RequestSigner(String apiKey, Key privateKey) {
@@ -80,36 +81,36 @@ public class SignerImpl {
         }
 
 
-
-        public Map<String,String> signRequest(URI uri, String method, String requestBody) {
-            Map<String,String> myheaders = new HashMap<>();
-Map<String,String> headers = new HashMap<>();
-String date=DATE_FORMAT.format(new Date());
+        public Map<String, String> signRequest(URI uri, String method, String requestBody) {
+            Map<String, String> myheaders = new HashMap<>();
+            Map<String, String> headers = new HashMap<>();
+            String date = DATE_FORMAT.format(new Date());
             headers.put(DATE, date);
-            myheaders.put(DATE+COLON, date);
+            myheaders.put(DATE + COLON, date);
             headers.put(HOST, uri.getHost());
-            myheaders.put(HOST+COLON, uri.getHost());
-          if (method.equals(PUT) || method.equals(POST)) {
+            myheaders.put(HOST + COLON, uri.getHost());
+            if (method.equals(PUT) || method.equals(POST)) {
                 headers.put(CONTENT_TYPE, APPLICATION_JSON);
-                myheaders.put(CONTENT_TYPE+COLON, APPLICATION_JSON);
+                myheaders.put(CONTENT_TYPE + COLON, APPLICATION_JSON);
 
-                if (requestBody!=null && !requestBody.isEmpty()) {
-                    byte[] body =requestBody.getBytes();
+                if (requestBody != null && !requestBody.isEmpty()) {
+                    byte[] body = requestBody.getBytes();
 
                     headers.put(CONTENT_LENGTH, Integer.toString(body.length));
-                    myheaders.put(CONTENT_LENGTH+COLON, Integer.toString(body.length));
+                    myheaders.put(CONTENT_LENGTH + COLON, Integer.toString(body.length));
 
 
                     headers.put(X_CONTENT_SHA256, calculateSHA256(body));
-                    myheaders.put(X_CONTENT_SHA256+COLON, calculateSHA256(body));
+                    myheaders.put(X_CONTENT_SHA256 + COLON, calculateSHA256(body));
 
                 }
             }
 
-            final String signature = this.calculateSignature(method, uri.getPath()+QUERY+uri.getQuery(), headers);
-            myheaders.put(AUTHORIZATION,signature);
+            final String signature = this.calculateSignature(method, uri.getPath() + QUERY + uri.getQuery(), headers);
+            myheaders.put(AUTHORIZATION, signature);
             return myheaders;
         }
+
         private String calculateSHA256(byte[] body) {
             byte[] hash = Hashing.sha256().hashBytes(body).asBytes();
             return Base64.getEncoder().encodeToString(hash);
