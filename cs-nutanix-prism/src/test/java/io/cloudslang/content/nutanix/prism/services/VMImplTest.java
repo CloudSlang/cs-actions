@@ -39,7 +39,6 @@ public class VMImplTest {
             .includeVMNicConfigInfo("")
             .commonInputs(
                     NutanixCommonInputs.builder()
-                            .protocol("https")
                             .hostname("myhost")
                             .port("9080")
                             .username("username")
@@ -53,14 +52,11 @@ public class VMImplTest {
                             .x509HostnameVerifier("")
                             .trustKeystore("")
                             .trustPassword("")
-                            .keystore("")
-                            .keystorePassword("")
                             .connectTimeout("")
                             .socketTimeout("")
                             .keepAlive("")
                             .connectionsMaxPerRoot("")
                             .connectionsMaxTotal("")
-                            .responseCharacterSet("")
                             .build()).build();
 
     @Test

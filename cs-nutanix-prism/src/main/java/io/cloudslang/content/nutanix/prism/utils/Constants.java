@@ -21,6 +21,7 @@ public class Constants {
         public static final String NEW_LINE = "\n";
         public static final String DEFAULT_PROXY_PORT = "8080";
         public static final String DEFAULT_NUTANIX_PORT = "9440";
+        public static final String DEFAULT_HYPERVISOR_TYPE = "ACROPOLIS";
         public static final String BOOLEAN_FALSE = "false";
         public static final String BOOLEAN_TRUE = "true";
         public static final String STRICT = "strict";
@@ -39,7 +40,6 @@ public class Constants {
         public static final String CHANGEIT = "changeit";
         public static final String ZERO = "0";
         public static final String CONNECT_TIMEOUT_CONST = "10000";
-        public static final String UTF8 = "UTF-8";
         public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
         public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
         public static final String AUTHORIZATION = "Basic ";
@@ -48,6 +48,7 @@ public class Constants {
         public static final String QUERY = "?";
         public static final String ID = "id";
         public static final String HTTPS = "https";
+        public static final String AFFINITY = "AFFINITY";
         public static final String STATUS_CODE = "statusCode";
         public static final String APPLICATION_API_JSON = "application/json";
         public static final String DELIMITER = ",";
@@ -96,6 +97,11 @@ public class Constants {
         public static final String SORT_ATTRIBUTE = "sortattribute=";
         public static final String LIST_VM_JSON_PATH = "$.entities[*].name";
 
+    }
+
+    public static class CreateVMConstants {
+        public static final String CREATE_VM_OPERATION_NAME = "Create VM";
+        public static final String TASK_UUID_PATH = "task_uuid";
     }
 
 }

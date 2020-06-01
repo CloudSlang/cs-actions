@@ -32,4 +32,8 @@ public class Outputs extends OutputNames {
         public static final String VM_LIST = "vmList";
     }
 
+    public static class CreateVMOutputs {
+        public static final String TASK_UUID = "taskUUID";
+    }
+
 }

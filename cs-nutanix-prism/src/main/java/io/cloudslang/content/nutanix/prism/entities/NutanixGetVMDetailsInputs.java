@@ -28,7 +28,8 @@ public class NutanixGetVMDetailsInputs {
     private final NutanixCommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"vmUUID", "includeVMDiskConfigInfo", "includeVMNicConfigInfo", "commonInputs"})
-    public NutanixGetVMDetailsInputs(String vmUUID, String includeVMDiskConfigInfo, String includeVMNicConfigInfo, NutanixCommonInputs commonInputs) {
+    public NutanixGetVMDetailsInputs(String vmUUID, String includeVMDiskConfigInfo, String includeVMNicConfigInfo,
+                                     NutanixCommonInputs commonInputs) {
         this.vmUUID = vmUUID;
         this.includeVMDiskConfigInfo = includeVMDiskConfigInfo;
         this.includeVMNicConfigInfo = includeVMNicConfigInfo;
@@ -75,19 +76,22 @@ public class NutanixGetVMDetailsInputs {
         }
 
         @NotNull
-        public NutanixGetVMDetailsInputs.NutanixGetVMDetailsInputsBuilder includeVMDiskConfigInfo(@NotNull final String includeVMDiskConfigInfo) {
+        public NutanixGetVMDetailsInputs.NutanixGetVMDetailsInputsBuilder includeVMDiskConfigInfo
+                (@NotNull final String includeVMDiskConfigInfo) {
             this.includeVMDiskConfigInfo = includeVMDiskConfigInfo;
             return this;
         }
 
         @NotNull
-        public NutanixGetVMDetailsInputs.NutanixGetVMDetailsInputsBuilder includeVMNicConfigInfo(@NotNull final String includeVMNicConfigInfo) {
+        public NutanixGetVMDetailsInputs.NutanixGetVMDetailsInputsBuilder includeVMNicConfigInfo
+                (@NotNull final String includeVMNicConfigInfo) {
             this.includeVMNicConfigInfo = includeVMNicConfigInfo;
             return this;
         }
 
         @NotNull
-        public NutanixGetVMDetailsInputs.NutanixGetVMDetailsInputsBuilder commonInputs(@NotNull final NutanixCommonInputs commonInputs) {
+        public NutanixGetVMDetailsInputs.NutanixGetVMDetailsInputsBuilder commonInputs
+                (@NotNull final NutanixCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
