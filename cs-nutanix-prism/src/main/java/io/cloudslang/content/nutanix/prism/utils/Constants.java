@@ -72,12 +72,6 @@ public class Constants {
         public static final String INCREMENT_BY = "incrementBy";
         public static final String SESSION_COUNTER = "sessionCounter";
         public static final String RESET = "reset";
-
-
-    }
-
-    public static class ListVMsConstants {
-        public static final String LIST_VMS_OPERATION_NAME = "List VMs";
     }
 
     public static class GetVMDetailsConstants {
@@ -86,17 +80,16 @@ public class Constants {
         public static final String INCLUDE_VM_NIC_CONFIG_INFO = "include_vm_nic_config=";
         public static final String VM_NAME_PATH = "name";
         public static final String GET_VM_DETAILS_PATH = "/vms";
-
     }
 
-    public static class GetListVMConstants {
+    public static class ListVMsConstants {
+        public static final String LIST_VMS_OPERATION_NAME = "List VMs";
         public static final String FILTER = "filter=";
         public static final String OFFSET = "offset=";
         public static final String LENGTH = "length=";
         public static final String SORT_ORDER = "sortorder=";
         public static final String SORT_ATTRIBUTE = "sortattribute=";
         public static final String LIST_VM_JSON_PATH = "$.entities[*].name";
-
     }
 
     public static class CreateVMConstants {

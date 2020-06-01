@@ -26,7 +26,7 @@ import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
-import io.cloudslang.content.nutanix.prism.entities.NutanixListVMdetailsInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixListVMsInputs;
 import io.cloudslang.content.nutanix.prism.utils.Constants;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -50,8 +50,8 @@ import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROX
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.USERNAME;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.GetVMDetailsInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.ListVMOutputs.VM_LIST;
@@ -126,7 +126,7 @@ public class ListVMs {
         }
 
         try {
-            final Map<String, String> result = listVMs(NutanixListVMdetailsInputs.builder()
+            final Map<String, String> result = listVMs(NutanixListVMsInputs.builder()
                     .filter(filter)
                     .offset(offset)
                     .length(length)
@@ -159,7 +159,7 @@ public class ListVMs {
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
             if (statusCode >= 200 && statusCode < 300) {
-                final List<String> Listvm = JsonPath.read(returnMessage, Constants.GetListVMConstants.LIST_VM_JSON_PATH);
+                final List<String> Listvm = JsonPath.read(returnMessage, Constants.ListVMsConstants.LIST_VM_JSON_PATH);
                 if (!Listvm.isEmpty()) {
                     final String ListVMAsString = join(Listvm.toArray(), DELIMITER);
                     results.put(VM_LIST, ListVMAsString);

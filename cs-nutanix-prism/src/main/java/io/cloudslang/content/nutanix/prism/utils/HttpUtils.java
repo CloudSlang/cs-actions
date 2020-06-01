@@ -147,24 +147,24 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static String getQueryParams(String filter,String offset,String length,
-                                    String sortorder,String sortattribute, String includeVMDiskConfigInfo, final String includeVMNicConfigInfo) {
+    public static String getQueryParams(String filter, String offset, String length,
+                                        String sortOrder, String sortAttribute, String includeVMDiskConfigInfo, final String includeVMNicConfigInfo) {
         final StringBuilder queryParams = new StringBuilder()
                 .append(Constants.Common.QUERY)
-                .append(Constants.GetListVMConstants.FILTER)
+                .append(Constants.ListVMsConstants.FILTER)
                 .append(filter)
                 .append(Constants.Common.AND)
-                .append(Constants.GetListVMConstants.OFFSET)
+                .append(Constants.ListVMsConstants.OFFSET)
                 .append(offset)
                 .append(Constants.Common.AND)
-                .append(Constants.GetListVMConstants.LENGTH)
+                .append(Constants.ListVMsConstants.LENGTH)
                 .append(length)
                 .append(Constants.Common.AND)
-                .append(Constants.GetListVMConstants.SORT_ORDER)
-                .append(sortorder)
+                .append(Constants.ListVMsConstants.SORT_ORDER)
+                .append(sortOrder)
                 .append(Constants.Common.AND)
-                .append(Constants.GetListVMConstants.SORT_ATTRIBUTE)
-                .append(sortattribute)
+                .append(Constants.ListVMsConstants.SORT_ATTRIBUTE)
+                .append(sortAttribute)
                 .append(Constants.Common.AND)
                 .append(Constants.GetVMDetailsConstants.INCLUDE_VM_DISK_CONFIG_INFO)
                 .append(includeVMDiskConfigInfo)

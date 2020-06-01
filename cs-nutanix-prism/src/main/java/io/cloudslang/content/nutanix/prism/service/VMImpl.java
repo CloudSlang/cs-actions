@@ -22,7 +22,7 @@ import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCreateVMInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixGetVMDetailsInputs;
-import io.cloudslang.content.nutanix.prism.entities.NutanixListVMdetailsInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixListVMsInputs;
 import io.cloudslang.content.nutanix.prism.service.models.virtualmachines.CreateVMRequestBody;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -43,21 +43,21 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class VMImpl {
 
     @NotNull
-    public static Map<String, String> listVMs(@NotNull final NutanixListVMdetailsInputs nutanixListVMdetailsInputs)
+    public static Map<String, String> listVMs(@NotNull final NutanixListVMsInputs nutanixListVMsInputs)
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getListVMsURL(nutanixListVMdetailsInputs));
+        httpClientInputs.setUrl(listVMsURL(nutanixListVMsInputs));
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setMethod(GET);
-        httpClientInputs.setUsername(nutanixListVMdetailsInputs.getCommonInputs().getUsername());
-        httpClientInputs.setPassword(nutanixListVMdetailsInputs.getCommonInputs().getPassword());
+        httpClientInputs.setUsername(nutanixListVMsInputs.getCommonInputs().getUsername());
+        httpClientInputs.setPassword(nutanixListVMsInputs.getCommonInputs().getPassword());
         httpClientInputs.setContentType(APPLICATION_API_JSON);
-        httpClientInputs.setQueryParams(getQueryParams(nutanixListVMdetailsInputs.getFilter(),
-                nutanixListVMdetailsInputs.getOffset(), nutanixListVMdetailsInputs.getLength(),
-                nutanixListVMdetailsInputs.getSortOrder(), nutanixListVMdetailsInputs.getSortAttribute(),
-                nutanixListVMdetailsInputs.getIncludeVMDiskConfigInfo(),
-                nutanixListVMdetailsInputs.getIncludeVMNicConfigInfo()));
-        setCommonHttpInputs(httpClientInputs, nutanixListVMdetailsInputs.getCommonInputs());
+        httpClientInputs.setQueryParams(getQueryParams(nutanixListVMsInputs.getFilter(),
+                nutanixListVMsInputs.getOffset(), nutanixListVMsInputs.getLength(),
+                nutanixListVMsInputs.getSortOrder(), nutanixListVMsInputs.getSortAttribute(),
+                nutanixListVMsInputs.getIncludeVMDiskConfigInfo(),
+                nutanixListVMsInputs.getIncludeVMNicConfigInfo()));
+        setCommonHttpInputs(httpClientInputs, nutanixListVMsInputs.getCommonInputs());
 
         return new HttpClientService().execute(httpClientInputs);
     }
@@ -98,12 +98,12 @@ public class VMImpl {
     }
 
     @NotNull
-    public static String getListVMsURL(NutanixListVMdetailsInputs nutanixListVMdetailsInputs) throws Exception {
+    public static String listVMsURL(NutanixListVMsInputs nutanixListVMsInputs) throws Exception {
 
-        final URIBuilder uriBuilder = getUriBuilder(nutanixListVMdetailsInputs.getCommonInputs());
+        final URIBuilder uriBuilder = getUriBuilder(nutanixListVMsInputs.getCommonInputs());
         StringBuilder pathString = new StringBuilder()
                 .append(API)
-                .append(nutanixListVMdetailsInputs.getCommonInputs().getAPIVersion())
+                .append(nutanixListVMsInputs.getCommonInputs().getAPIVersion())
                 .append(GET_VM_DETAILS_PATH);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();

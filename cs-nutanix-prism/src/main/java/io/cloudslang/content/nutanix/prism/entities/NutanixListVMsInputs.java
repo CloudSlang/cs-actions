@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class NutanixListVMdetailsInputs {
+public class NutanixListVMsInputs {
 
     private final String filter;
     private final String offset;
@@ -65,9 +65,9 @@ public class NutanixListVMdetailsInputs {
 
     @java.beans.ConstructorProperties({"filter", "offset", "length", "sortOrder", "sortAttribute",
             "includeVMDiskConfigInfo", "includeVMNicConfigInfo", "commonInputs"})
-    public NutanixListVMdetailsInputs(String filter, String offset, String length, String sortOrder,
-                                      String sortAttribute, String includeVMDiskConfigInfo,
-                                      String includeVMNicConfigInfo, NutanixCommonInputs commonInputs) {
+    public NutanixListVMsInputs(String filter, String offset, String length, String sortOrder,
+                                String sortAttribute, String includeVMDiskConfigInfo,
+                                String includeVMNicConfigInfo, NutanixCommonInputs commonInputs) {
         this.filter = filter;
         this.offset = offset;
         this.length = length;
@@ -78,8 +78,8 @@ public class NutanixListVMdetailsInputs {
         this.commonInputs = commonInputs;
     }
 
-    public static NutanixListVMdetailsInputs.NutanixListVMdetailsInputsBuilder builder() {
-        return new NutanixListVMdetailsInputs.NutanixListVMdetailsInputsBuilder();
+    public static NutanixListVMsInputs.NutanixListVMdetailsInputsBuilder builder() {
+        return new NutanixListVMsInputs.NutanixListVMdetailsInputsBuilder();
     }
 
     public static class NutanixListVMdetailsInputsBuilder {
@@ -96,59 +96,59 @@ public class NutanixListVMdetailsInputs {
         }
 
         @NotNull
-        public NutanixListVMdetailsInputs.NutanixListVMdetailsInputsBuilder filter(@NotNull final String filter) {
+        public NutanixListVMsInputs.NutanixListVMdetailsInputsBuilder filter(@NotNull final String filter) {
             this.filter = filter;
             return this;
         }
 
         @NotNull
-        public NutanixListVMdetailsInputs.NutanixListVMdetailsInputsBuilder length(@NotNull final String length) {
+        public NutanixListVMsInputs.NutanixListVMdetailsInputsBuilder length(@NotNull final String length) {
             this.length = length;
             return this;
         }
 
         @NotNull
-        public NutanixListVMdetailsInputs.NutanixListVMdetailsInputsBuilder sortOrder(@NotNull final String sortOrder) {
+        public NutanixListVMsInputs.NutanixListVMdetailsInputsBuilder sortOrder(@NotNull final String sortOrder) {
             this.sortOrder = sortOrder;
             return this;
         }
 
         @NotNull
-        public NutanixListVMdetailsInputs.NutanixListVMdetailsInputsBuilder sortAttribute
+        public NutanixListVMsInputs.NutanixListVMdetailsInputsBuilder sortAttribute
                 (@NotNull final String sortAttribute) {
             this.sortAttribute = sortAttribute;
             return this;
         }
 
         @NotNull
-        public NutanixListVMdetailsInputs.NutanixListVMdetailsInputsBuilder offset(@NotNull final String offset) {
+        public NutanixListVMsInputs.NutanixListVMdetailsInputsBuilder offset(@NotNull final String offset) {
             this.offset = offset;
             return this;
         }
 
         @NotNull
-        public NutanixListVMdetailsInputs.NutanixListVMdetailsInputsBuilder includeVMDiskConfigInfo
+        public NutanixListVMsInputs.NutanixListVMdetailsInputsBuilder includeVMDiskConfigInfo
                 (@NotNull final String includeVMDiskConfigInfo) {
             this.includeVMDiskConfigInfo = includeVMDiskConfigInfo;
             return this;
         }
 
         @NotNull
-        public NutanixListVMdetailsInputs.NutanixListVMdetailsInputsBuilder includeVMNicConfigInfo
+        public NutanixListVMsInputs.NutanixListVMdetailsInputsBuilder includeVMNicConfigInfo
                 (@NotNull final String includeVMNicConfigInfo) {
             this.includeVMNicConfigInfo = includeVMNicConfigInfo;
             return this;
         }
 
         @NotNull
-        public NutanixListVMdetailsInputs.NutanixListVMdetailsInputsBuilder commonInputs
+        public NutanixListVMsInputs.NutanixListVMdetailsInputsBuilder commonInputs
                 (@NotNull final NutanixCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
-        public NutanixListVMdetailsInputs build() {
-            return new NutanixListVMdetailsInputs(filter,offset,length,sortOrder,sortAttribute,includeVMDiskConfigInfo,
+        public NutanixListVMsInputs build() {
+            return new NutanixListVMsInputs(filter, offset, length, sortOrder, sortAttribute, includeVMDiskConfigInfo,
                     includeVMNicConfigInfo, commonInputs);
         }
     }
