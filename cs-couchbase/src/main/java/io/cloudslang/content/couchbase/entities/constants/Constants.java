@@ -14,7 +14,6 @@
  */
 
 
-
 package io.cloudslang.content.couchbase.entities.constants;
 
 /**
@@ -36,7 +35,6 @@ public class Constants {
     public static class HttpClientInputsValues {
         public static final String ALL_TYPE_HEADER = "Accept:application/json, text/plain, */*";
         public static final String ALLOW_ALL = "allow_all";
-        public static final String APPLICATION_JSON = "application/json";
         public static final String BROWSER_COMPATIBLE = "browser_compatible";
         public static final String FORM_URL_ENCODED = "application/x-www-form-urlencoded; charset=UTF-8";
         public static final String STRICT = "strict";
@@ -46,12 +44,14 @@ public class Constants {
     public static class BucketActions {
         public static final String CREATE_OR_EDIT_BUCKET = "CreateOrEditBucket";
         public static final String DELETE_BUCKET = "DeleteBucket";
+        public static final String FLUSH_BUCKET = "FlushBucket";
         public static final String GET_ALL_BUCKETS = "GetAllBuckets";
         public static final String GET_BUCKET = "GetBucket";
         public static final String GET_BUCKET_STATISTICS = "GetBucketStatistics";
     }
 
     public static class ClusterActions {
+        public static final String GET_AUTO_FAILOVER_SETTINGS = "GetAutoFailOverSettings";
         public static final String GET_CLUSTER_DETAILS = "GetClusterDetails";
         public static final String GET_CLUSTER_INFO = "GetClusterInfo";
         public static final String GET_DESTINATION_CLUSTER_REFERENCE = "GetDestinationClusterReference";
