@@ -51,15 +51,19 @@ public class GetArrayEntryAction {
 
 
     /**
-     * Gets the value of an elemnt in a JSON array. If the value of the element is a simple type, i.e. a string or a number,
+     * Gets the value of an element in a JSON array. If the value of the element is a simple type, i.e. a string or a
+     * number,
      * it will be returned as-is. If it is a complex JSON object, i.e. '{"one":1}' it will be returned in JSON format.
      * <p>
-     * When specifying the index to an array element in javascript it is possible to use the standard notation, where the 1st
+     * When specifying the index to an array element in javascript it is possible to use the standard notation, where
+     * the 1st
      * element from the left is index 0, and the right-most element is (n-1), in an array with n elements. However,
-     * it is also possible to specify elements starting from the right side of the array using negative numbers, in which case
-     * the right-most element is referred to by index -1 and the left-most element is at position (-1 * n), again for an array with n elements.
+     * it is also possible to specify elements starting from the right side of the array using negative numbers, in
+     * which case
+     * the right-most element is referred to by index -1 and the left-most element is at position (-1 * n), again for
+     * an array with n elements.
      *
-     * @param array String representation of a JSON array. Arrays in JSON are comma seperated lists of objects,
+     * @param array String representation of a JSON array. Arrays in JSON are comma separated lists of objects,
      *              enclosed in square brackets ( [ ] ).
      * @param index The index of the element to retrieve from the array.
      *              See the notes above for more information on using negative numbers to specify array elements.

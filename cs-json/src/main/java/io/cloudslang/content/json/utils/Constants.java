@@ -30,6 +30,8 @@ public final class Constants {
         public static final String OBJECT = "object";
         public static final String KEY = "key";
         public static final String ARRAY = "array";
+        public static final String FROM_INDEX = "fromIndex";
+        public static final String TO_INDEX = "toIndex";
         public static final String ARRAY1 = "array1";
         public static final String ARRAY2 = "array2";
         public static final String ACTION = "action";
@@ -39,6 +41,9 @@ public final class Constants {
         public static final String VALIDATE_VALUE = "validateValue";
         public static final String INDEX = "index";
         public static final String ELEMENT = "element";
+        public static final String DOUBLE_QUOTES = "\"";
+        public static final String BRACKET = "{";
+        public static final String SQUARE_BRACKET = "[";
     }
 
     static final class EditJsonOperations {
@@ -53,8 +58,21 @@ public final class Constants {
 
         public static final String NEW_LINE = "\n";
         public static final String ADD_PROPERTY_EXCEPTION = "The value could not be added!";
+        public static final String VALUE_FOR_PROPERTY = "The value for the property ";
+        public static final String INVALID_JSON_OBJECT_PROVIDED = "Invalid jsonObject provided! ";
         static final String EMPTY_JSON = "Empty JSON string";
         static final String JSON_EXCEPTION = "jsonObject is not a valid JSON Object";
+
+    }
+
+    public static final class GetArraySublistAction {
+
+        public static final String NEGATIVE_FROM_INPUT_VALUE = "Negative fromIndex value.";
+        public static final String NEGATIVE_TO_INPUT_VALUE = "Negative toIndex value.";
+        public static final String TO_INDEX_HIGHER_THAN_FROM_INDEX = "toIndex value must be higher than the value of the fromIndex input.";
+        public static final String INVALID_FROM_INDEX_VALUE = "The value for fromIndex input exceeded the length of the array.";
+        public static final String INVALID_TO_INDEX_VALUE = "The value for toIndex input exceeded the length of the array.";
+
 
     }
 }

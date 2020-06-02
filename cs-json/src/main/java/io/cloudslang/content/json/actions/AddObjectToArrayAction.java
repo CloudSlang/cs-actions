@@ -39,8 +39,8 @@ public class AddObjectToArrayAction {
 
     /**
      * Insert an object into a JSON array, optionally specifying the position at which to insert the new object.
-     * This Operation differs from the 'Add to Array' operation in that this one will try and validate the new element as
-     * a JSON object, whereas 'Add to Array' will just wrap the element in quotes and treat it as a string. This means
+     * This Operation differs from the 'Add to Array' operation in that this one will try and validate the new element
+     * as a JSON object, whereas 'Add to Array' will just wrap the element in quotes and treat it as a string. This means
      * that the element passed into this operation must be a valid JSON object, or the operation will fail.
      *
      * @param array   The JavaScript array that will be added to.

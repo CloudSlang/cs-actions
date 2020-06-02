@@ -48,7 +48,8 @@ public class EditJson {
      * @param jsonPath   The JSON Path query used for editing the json object
      * @param action     The action used for editing the json. Valid values are: get, insert, add, update and delete.
      *                   The difference between insert and add action is that add is used for adding data into an array
-     *                   based on the jsonPath provided and insert action inserts an new property and a new value in the json
+     *                   based on the jsonPath provided and insert action inserts an new property and a new value in the
+     *                   json
      *                   based on the jsonPath provided.
      * @param name       The property name used for insert operation
      * @param value      The property value used for insert, add and update operations.

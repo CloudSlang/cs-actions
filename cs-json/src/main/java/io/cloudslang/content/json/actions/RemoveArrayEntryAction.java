@@ -51,7 +51,7 @@ public class RemoveArrayEntryAction {
 
 
     /**
-     * Removes an element from a JOSN array.
+     * Removes an element from a JSON array.
      * All elements from the right of the element which is removed will be shifted one position to the left.
      *
      * @param array String representation of a JSON array. Arrays in JSON are comma separated lists of objects, enclosed in square brackets ( [ ] ).
@@ -80,6 +80,7 @@ public class RemoveArrayEntryAction {
     public Map<String, String> execute(
             @Param(value = Constants.InputNames.ARRAY, required = true) String array,
             @Param(value = Constants.InputNames.INDEX, required = true) String index) {
+
         try {
             RemoveArrayEntryInput input = new RemoveArrayEntryInput.Builder()
                     .array(array)
