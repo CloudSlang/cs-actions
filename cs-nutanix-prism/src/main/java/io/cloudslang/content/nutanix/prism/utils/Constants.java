@@ -97,4 +97,15 @@ public class Constants {
         public static final String TASK_UUID_PATH = "task_uuid";
     }
 
+    public static class GetTaskDetailsConstants {
+        public static final String GET_TASK_DETAILS_OPERATION_NAME = "Get Task Details";
+        public static final String INCLUDE_SUBTASKS_INFO = "include_subtasks_info=";
+        public static final String GET_TASK_DETAILS_PATH = "/tasks";
+        public static final String VM_UUID_PATH = "$.entity_list[0].entity_id";
+        public static final String TASK_STATUS_PATH = "progress_status";
+        public static final String SUCCEEDED = "Succeeded";
+        public static final String FAILED = "Failed";
+        public static final String TASK_FAILURE_PATH = "$.meta_response.error_detail";
+    }
+
 }

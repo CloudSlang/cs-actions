@@ -75,4 +75,9 @@ public class Inputs extends InputNames {
         public static final String AGENT_VM = "agentVM";
     }
 
+    public static class GetTaskDetailsInputs {
+        public static final String TASK_UUID = "taskUUID";
+        public static final String INCLUDE_SUBTASKS_INFO = "includeSubtasksInfo";
+    }
+
 }

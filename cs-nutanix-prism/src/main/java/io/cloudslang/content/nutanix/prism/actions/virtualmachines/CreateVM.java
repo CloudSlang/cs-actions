@@ -20,6 +20,7 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.jayway.jsonpath.JsonPath;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCreateVMInputs;
 import io.cloudslang.content.utils.StringUtilities;
@@ -47,8 +48,8 @@ import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROX
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.USERNAME;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CreateVMInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.CreateVMOutputs.TASK_UUID;
@@ -66,9 +67,9 @@ public class CreateVM {
                     @Output(value = TASK_UUID, description = TASK_UUIDS_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = SUCCESS, matchType = COMPARE_EQUAL,
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL,
                             responseType = RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = FAILURE, matchType = COMPARE_EQUAL,
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL,
                             responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = HOSTNAME, required = true, description = HOSTNAME_DESC) String hostname,

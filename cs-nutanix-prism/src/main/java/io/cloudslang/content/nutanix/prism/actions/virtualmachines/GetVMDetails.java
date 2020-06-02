@@ -19,11 +19,7 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.jayway.jsonpath.JsonPath;
-import io.cloudslang.content.constants.OutputNames;
-import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixGetVMDetailsInputs;
@@ -32,8 +28,12 @@ import io.cloudslang.content.utils.StringUtilities;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
+import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.nutanix.prism.service.VMImpl.getVMDetails;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
@@ -48,8 +48,8 @@ import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROX
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.USERNAME;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.GetVMDetailsInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetVMDetailsOutputs.VM_NAME;
@@ -67,8 +67,10 @@ public class GetVMDetails {
                     @Output(value = VM_NAME, description = VM_NAME_DESC)
             },
             responses = {
-                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL,
+                            responseType = RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL,
+                            responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = HOSTNAME, required = true, description = HOSTNAME_DESC) String hostname,
                                        @Param(value = PORT, description = PORT_DESC) String port,

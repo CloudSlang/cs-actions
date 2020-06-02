@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCreateVMInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixGetVMDetailsInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixListVMsInputs;
@@ -36,6 +35,7 @@ import static io.cloudslang.content.nutanix.prism.service.HttpCommons.setCommonH
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetVMDetailsConstants.GET_VM_DETAILS_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getQueryParams;
+import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getUriBuilder;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
@@ -135,14 +135,6 @@ public class VMImpl {
         return uriBuilder.build().toURL().toString();
     }
 
-    @NotNull
-    public static URIBuilder getUriBuilder(NutanixCommonInputs nutanixCommonInputs) {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setHost(nutanixCommonInputs.getHostname());
-        uriBuilder.setPort(Integer.parseInt(nutanixCommonInputs.getPort()));
-        uriBuilder.setScheme(HTTPS);
-        return uriBuilder;
-    }
 
     @NotNull
     public static String createVMBody(NutanixCreateVMInputs nutanixCreateVMInputs, String delimiter)

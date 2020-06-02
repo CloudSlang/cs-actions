@@ -180,6 +180,18 @@ public class Descriptions {
                 "submission of the API request.";
 
     }
+
+    public static class GetTaskDetails {
+        public static final String GET_TASK_DETAILS_OPERATION_DESC = "Get details of the specified task.";
+        public static final String TASK_UUID_DESC = "The UUID of the Task that will be created in Nutanix after " +
+                "submission of the API request.";
+        public static final String INCLUDE_SUBTASKS_INFO_DESC = "Whether to include a detailed information of the " +
+                "immediate subtasks. " +
+                "Default: 'false'";
+        public static final String VM_UUID_DESC = "Id of the Virtual Machine.";
+        public static final String TASK_STATUS_DESC = "Status of the task.";
+
+    }
     public static class Counter{
         public static final String FAILURE_MESSAGE = "Something went wrong";
         public static final String COUNTER_DESC = "Counts from one number to another number.";
