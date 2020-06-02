@@ -17,8 +17,8 @@ package io.cloudslang.content.nutanix.prism.utils;
 
 public class Descriptions {
     public static class Common {
-        public static final String PROXY_HOST_DESC = "Proxy server used to access the nutanix service.";
-        public static final String PROXY_PORT_DESC = "Proxy server port used to access the nutanix service." +
+        public static final String PROXY_HOST_DESC = "Proxy server used to access the Nutanix service.";
+        public static final String PROXY_PORT_DESC = "Proxy server port used to access the Nutanix service." +
                 "Default: '8080'";
         public static final String PROXY_USERNAME_DESC = "Proxy server user name.";
         public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxy_username " +
@@ -62,12 +62,13 @@ public class Descriptions {
                 "will be used. If responseCharacterSet is empty and the charset from the HTTP response Content-Type " +
                 "header is empty, the default value will be used. You should not use this for method=HEAD or OPTIONS." +
                 "Default: 'UTF-8'";
-        public static final String HOSTNAME_DESC = "The hostname for nutanix.";
-        public static final String PORT_DESC = "The port to connect to nutanix. Default: 9440";
-        public static final String USERNAME_DESC = "The username for nutanix.";
-        public static final String PASSWORD_DESC = "The password for nutanix.";
-        public static final String API_VERSION_DESC = "The api version for nutanix. " +
-                "Default: v2.0";
+        public static final String HOSTNAME_DESC = "The hostname for Nutanix.";
+        public static final String PORT_DESC = "The port to connect to Nutanix. " +
+                "Default: '9440'";
+        public static final String USERNAME_DESC = "The username for Nutanix.";
+        public static final String PASSWORD_DESC = "The password for Nutanix.";
+        public static final String API_VERSION_DESC = "The api version for Nutanix. " +
+                "Default: 'v2.0'";
 
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in milliseconds) to allow the client " +
@@ -75,7 +76,7 @@ public class Descriptions {
                 "Default: '60000'";
         public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
                 "Default: 'false'";
-        public static final String STATUS_CODE_DESC = "The HTTP status code for nutanix API request.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for Nutanix API request.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the " +
                 "request.";
         public static final String FAILURE_DESC = "There was an error while executing the request.";
@@ -101,7 +102,10 @@ public class Descriptions {
     }
 
     public static class ListVMsInputs {
-        public static final String LIST_VMS_OPERATION_DESC = "Get a list of Virtual Machines. ";
+        public static final String LIST_VMS_OPERATION_DESC = "Get a list of Virtual Machines." +
+                "Virtual Machine disk information and network information are not included by default as fetching " +
+                "these are expensive operations. These can be included by setting the include_vmdisk_config and " +
+                "include_vmnic_config flags respectively.";
         public static final String FILTER_DESC = "Filter criteria - semicolon for AND, comma for OR.";
         public static final String OFFSET_DESC = "Offset.";
         public static final String LENGTH_DESC = "Number of VMs to retrieve.";
@@ -137,7 +141,7 @@ public class Descriptions {
         public static final String IS_THIN_PROVISIONED_DESC = "If the value is 'true' then Virtual Machine will be " +
                 "created with thin provision." +
                 "Default : 'true'";
-        public static final String IS_CDROM_DESC = "If the value is 'true' then Virtual Machine needs to create" +
+        public static final String IS_CDROM_DESC = "If the value is 'true' then Virtual Machine needs to create " +
                 "with CDROM otherwise Virtual Machine will be created with Empty Disk.";
         public static final String IS_EMPTY_DESC = "If the value is 'true' then Virtual Machine will created with Empty" +
                 "Disk." +
@@ -157,14 +161,14 @@ public class Descriptions {
                 "used to create a new disk.";
         public static final String EXTERNAL_DISK_SIZE_DESC = "The size of the external disk to be created." +
                 "Default : '0'";
-        public static final String STORAGE_CONTAINER_UUID_DESC = "The reference storage container UUID from which the" +
+        public static final String STORAGE_CONTAINER_UUID_DESC = "The reference storage container UUID from which the " +
                 "new storage container will be created.";
         public static final String VM_DISK_SIZE_DESC = "The size (in GiB) of the new storage container to be created." +
                 "Default : '0'";
         public static final String NETWORK_UUID_DESC = "The network UUID which will be attached to the Virtual Machine";
         public static final String REQUESTED_IP_ADDRESS_DESC = "The static IP address which will be assigned to " +
                 "the Virtual Machine.";
-        public static final String IS_CONNECTED_DESC = "If the value of this property is 'true' the network will be" +
+        public static final String IS_CONNECTED_DESC = "If the value of this property is 'true' the network will be " +
                 "connected while booting the Virtual Machine.";
         public static final String HOST_UUIDS_DESC = "The Host UUIDs for which Virtual Machine will be mapped.";
         public static final String AGENT_VM_DESC = "Indicates whether the VM is an agent VM. When their host enters " +
