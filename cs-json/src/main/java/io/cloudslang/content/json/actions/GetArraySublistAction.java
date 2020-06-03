@@ -58,7 +58,6 @@ public class GetArraySublistAction {
      *
      * fromIndex=0  and toIndex=1                  returns [{"one":1,"two":2}]
      * fromIndex=0  and toIndex=3                  returns [{"one":1,"two":2}, "3", "four"]
-     * fromIndex=1 and toIndex=1                   returns []
      *
      * @param array String representation of a JSON array. Arrays in JSON are comma seperated lists of objects,
      *              enclosed in square brackets ( [ ] ).
