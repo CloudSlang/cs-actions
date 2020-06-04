@@ -126,8 +126,16 @@ public class WSManUtils {
                 .append(POWERSHELL_SCRIPT_PREFIX)
                 .append(SPACE)
                 .append(NON_INTERACTIVE_PARAMETER)
-                .append(SPACE)
-                .append(ENCODED_COMMAND_PARAMETER)
+                .append(SPACE);
+
+        if(StringUtils.isNotBlank(wsManRequestInputs.getConfigurationName())) {
+            command.append(CONFIGURATION_NAME_PARAMETER)
+                    .append(SPACE)
+                    .append(wsManRequestInputs.getConfigurationName())
+                    .append(SPACE);
+        }
+
+        command.append(ENCODED_COMMAND_PARAMETER)
                 .append(SPACE);
 
         if (StringUtilities.isNotBlank(wsManRequestInputs.getModules())) {
