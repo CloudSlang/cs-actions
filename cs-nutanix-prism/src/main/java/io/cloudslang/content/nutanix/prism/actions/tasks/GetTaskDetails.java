@@ -1,19 +1,4 @@
-/*
- * (c) Copyright 2020 Micro Focus, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package io.cloudslang.content.nutanix.prism.actions.virtualmachines;
+package io.cloudslang.content.nutanix.prism.actions.tasks;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -22,8 +7,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
-import io.cloudslang.content.nutanix.prism.entities.NutanixListVMsInputs;
-import io.cloudslang.content.nutanix.prism.utils.Constants;
+import io.cloudslang.content.nutanix.prism.entities.NutanixGetTaskDetailsInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -36,15 +20,12 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.listVMs;
+import static io.cloudslang.content.nutanix.prism.service.TaskImpl.getTaskDetails;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
-import static io.cloudslang.content.nutanix.prism.utils.Constants.ListVMsConstants.LIST_VMS_OPERATION_NAME;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
-import static io.cloudslang.content.nutanix.prism.utils.Descriptions.GetVMDetails.INCLUDE_VM_DISK_CONFIG_INFO_DESC;
-import static io.cloudslang.content.nutanix.prism.utils.Descriptions.GetVMDetails.INCLUDE_VM_NIC_CONFIG_INFO_DESC;
-import static io.cloudslang.content.nutanix.prism.utils.Descriptions.ListVMsInputs.*;
-import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
-import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.nutanix.prism.utils.Descriptions.GetTaskDetails.*;
+import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.*;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PASSWORD;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -52,21 +33,24 @@ import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROX
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.USERNAME;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.nutanix.prism.utils.Inputs.GetVMDetailsInputs.*;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.GetTaskDetailsInputs.INCLUDE_SUBTASKS_INFO;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.GetTaskDetailsInputs.TASK_UUID;
 import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.nutanix.prism.utils.Outputs.ListVMOutputs.VM_LIST;
+import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.TASK_STATUS;
+import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.VM_UUID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-
-public class ListVMs {
-    @Action(name = LIST_VMS_OPERATION_NAME,
-            description = LIST_VMS_OPERATION_DESC,
+public class GetTaskDetails {
+    @Action(name = GET_TASK_DETAILS_OPERATION_NAME,
+            description = GET_TASK_DETAILS_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = VM_LIST, description = VM_LIST_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = VM_UUID, description = VM_UUID_DESC),
+                    @Output(value = TASK_STATUS, description = TASK_STATUS_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL,
@@ -77,14 +61,9 @@ public class ListVMs {
                                        @Param(value = PORT, description = PORT_DESC) String port,
                                        @Param(value = USERNAME, required = true, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
+                                       @Param(value = TASK_UUID, required = true, description = TASK_UUID_DESC) String taskUUID,
+                                       @Param(value = INCLUDE_SUBTASKS_INFO, description = INCLUDE_SUBTASKS_INFO_DESC) String includeSubtasksInfo,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
-                                       @Param(value = FILTER, description = FILTER_DESC) String filter,
-                                       @Param(value = OFFSET, description = OFFSET_DESC) String offset,
-                                       @Param(value = LENGTH, description = LENGTH_DESC) String length,
-                                       @Param(value = SORT_ORDER, description = SORT_ORDER_DESC) String sortOrder,
-                                       @Param(value = SORT_ATTRIBUTE, description = SORT_ATTRIBUTE_DESC) String sortAttribute,
-                                       @Param(value = INCLUDE_VM_DISK_CONFIG_INFO, description = INCLUDE_VM_DISK_CONFIG_INFO_DESC) String includeVMDiskConfigInfo,
-                                       @Param(value = INCLUDE_VM_NIC_CONFIG_INFO, description = INCLUDE_VM_NIC_CONFIG_INFO_DESC) String includeVMNicConfigInfo,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -105,13 +84,7 @@ public class ListVMs {
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
-        filter = defaultIfEmpty(filter, EMPTY);
-        offset = defaultIfEmpty(offset, ZERO);
-        length = defaultIfEmpty(length, ZERO);
-        sortOrder = defaultIfEmpty(sortOrder, EMPTY);
-        sortAttribute = defaultIfEmpty(sortAttribute, EMPTY);
-        includeVMDiskConfigInfo = defaultIfEmpty(includeVMDiskConfigInfo, BOOLEAN_FALSE);
-        includeVMNicConfigInfo = defaultIfEmpty(includeVMNicConfigInfo, BOOLEAN_FALSE);
+        includeSubtasksInfo = defaultIfEmpty(includeSubtasksInfo, BOOLEAN_FALSE);
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
@@ -127,14 +100,9 @@ public class ListVMs {
         }
 
         try {
-            final Map<String, String> result = listVMs(NutanixListVMsInputs.builder()
-                    .filter(filter)
-                    .offset(offset)
-                    .length(length)
-                    .sortOrder(sortOrder)
-                    .sortAttribute(sortAttribute)
-                    .includeVMDiskConfigInfo(includeVMDiskConfigInfo)
-                    .includeVMNicConfigInfo(includeVMNicConfigInfo)
+            final Map<String, String> result = getTaskDetails(NutanixGetTaskDetailsInputs.builder()
+                    .taskUUID(taskUUID)
+                    .includeSubtasksInfo(includeSubtasksInfo)
                     .commonInputs(
                             NutanixCommonInputs.builder()
                                     .hostname(hostname)
@@ -156,18 +124,25 @@ public class ListVMs {
                                     .connectionsMaxPerRoot(connectionsMaxPerRoute)
                                     .connectionsMaxTotal(connectionsMaxTotal)
                                     .build()).build());
+
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
-            if (statusCode >= 200 && statusCode < 300) {
-                final List<String> Listvm = JsonPath.read(returnMessage, Constants.ListVMsConstants.LIST_VM_JSON_PATH);
-                if (!Listvm.isEmpty()) {
-                    final String ListVMAsString = join(Listvm.toArray(), DELIMITER);
-                    results.put(VM_LIST, ListVMAsString);
-                } else {
-                    results.put(VM_LIST, EMPTY);
-                }
 
+            if (statusCode >= 200 && statusCode < 300) {
+                final String taskStatus = JsonPath.read(returnMessage, TASK_STATUS_PATH);
+                if (taskStatus.equals(SUCCEEDED)) {
+                    final String vmUUID = JsonPath.read(returnMessage, VM_UUID_PATH);
+                    if (!vmUUID.isEmpty()) {
+                        results.put(VM_UUID, vmUUID);
+                        results.put(TASK_STATUS, taskStatus);
+                    } else {
+                        results.put(VM_UUID, EMPTY);
+                        results.put(TASK_STATUS, EMPTY);
+                    }
+                } else {
+                    return getTaskFailureResults(statusCode, taskStatus, returnMessage, returnMessage);
+                }
             } else {
                 return getFailureResults(hostname, statusCode, returnMessage);
             }

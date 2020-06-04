@@ -21,7 +21,6 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class NutanixCommonInputs {
 
-    private final String protocol;
     private final String hostname;
     private final String port;
     private final String username;
@@ -47,13 +46,18 @@ public class NutanixCommonInputs {
     private final String preemptiveAuth;
 
 
-    @java.beans.ConstructorProperties({"protocol", "hostname", "port", "username", "password", "apiVersion", "requestBody", "proxyHost", "proxyPort", "proxyUsername",
-            "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "keystore", "keystorePassword", "connectTimeout",
-            "socketTimeout", "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal", "preemptiveAuth"})
-    private NutanixCommonInputs(String protocol, String hostname, String port, String username, String password, String apiVersion, String requestBody, String proxyHost, String proxyPort,
-                                String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier,
-                                String trustKeystore, String trustPassword, String keystore, String keystorePassword, String connectTimeout, String socketTimeout, String keepAlive, String responseCharacterSet, String connectionsMaxPerRoot, String connectionsMaxTotal, String preemptiveAuth) {
-        this.protocol = protocol;
+    @java.beans.ConstructorProperties({"hostname", "port", "username", "password", "apiVersion", "requestBody",
+            "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "trustAllRoots", "x509HostnameVerifier",
+            "trustKeystore", "trustPassword", "keystore", "keystorePassword", "connectTimeout", "socketTimeout",
+            "keepAlive", "responseCharacterSet", "connectionsMaxPerRoot", "connectionsMaxTotal", "preemptiveAuth"})
+    private NutanixCommonInputs(String hostname, String port, String username, String password, String apiVersion,
+                                String requestBody, String proxyHost, String proxyPort, String proxyUsername,
+                                String proxyPassword, String trustAllRoots, String x509HostnameVerifier,
+                                String trustKeystore, String trustPassword, String keystore, String keystorePassword,
+                                String connectTimeout, String socketTimeout, String keepAlive,
+                                String responseCharacterSet, String connectionsMaxPerRoot, String connectionsMaxTotal,
+                                String preemptiveAuth) {
+
         this.hostname = hostname;
         this.port = port;
         this.username = username;
@@ -103,11 +107,6 @@ public class NutanixCommonInputs {
     @NotNull
     public String getAPIVersion() {
         return apiVersion;
-    }
-
-    @NotNull
-    public String getProtocol() {
-        return this.protocol;
     }
 
     @NotNull
@@ -208,7 +207,6 @@ public class NutanixCommonInputs {
 
     public static class NutanixCommonInputsBuilder {
 
-        private String protocol = EMPTY;
         private String hostname = EMPTY;
         private String port = EMPTY;
         private String username = EMPTY;
@@ -234,12 +232,6 @@ public class NutanixCommonInputs {
         private String preemptiveAuth = EMPTY;
 
         NutanixCommonInputsBuilder() {
-        }
-
-        @NotNull
-        public NutanixCommonInputs.NutanixCommonInputsBuilder protocol(@NotNull final String protocol) {
-            this.protocol = protocol;
-            return this;
         }
 
         @NotNull
@@ -286,7 +278,8 @@ public class NutanixCommonInputs {
         }
 
         @NotNull
-        public NutanixCommonInputs.NutanixCommonInputsBuilder x509HostnameVerifier(@NotNull final String x509HostnameVerifier) {
+        public NutanixCommonInputs.NutanixCommonInputsBuilder x509HostnameVerifier
+                (@NotNull final String x509HostnameVerifier) {
             this.x509HostnameVerifier = x509HostnameVerifier;
             return this;
         }
@@ -357,21 +350,23 @@ public class NutanixCommonInputs {
             return this;
         }
 
-
         @NotNull
-        public NutanixCommonInputs.NutanixCommonInputsBuilder responseCharacterSet(@NotNull final String responseCharacterSet) {
+        public NutanixCommonInputs.NutanixCommonInputsBuilder responseCharacterSet
+                (@NotNull final String responseCharacterSet) {
             this.responseCharacterSet = responseCharacterSet;
             return this;
         }
 
         @NotNull
-        public NutanixCommonInputs.NutanixCommonInputsBuilder connectionsMaxPerRoot(@NotNull final String connectionsMaxPerRoot) {
+        public NutanixCommonInputs.NutanixCommonInputsBuilder connectionsMaxPerRoot
+                (@NotNull final String connectionsMaxPerRoot) {
             this.connectionsMaxPerRoot = connectionsMaxPerRoot;
             return this;
         }
 
         @NotNull
-        public NutanixCommonInputs.NutanixCommonInputsBuilder connectionsMaxTotal(@NotNull final String connectionsMaxTotal) {
+        public NutanixCommonInputs.NutanixCommonInputsBuilder connectionsMaxTotal
+                (@NotNull final String connectionsMaxTotal) {
             this.connectionsMaxTotal = connectionsMaxTotal;
             return this;
         }
@@ -384,9 +379,10 @@ public class NutanixCommonInputs {
 
 
         public NutanixCommonInputs build() {
-            return new NutanixCommonInputs(protocol, hostname, port, username, password, apiVersion, requestBody, proxyHost, proxyPort, proxyUsername, proxyPassword,
-                    trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, keystore, keystorePassword, connectTimeout,
-                    socketTimeout, keepAlive, responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal, preemptiveAuth);
+            return new NutanixCommonInputs(hostname, port, username, password, apiVersion, requestBody, proxyHost,
+                    proxyPort, proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore,
+                    trustPassword, keystore, keystorePassword, connectTimeout, socketTimeout, keepAlive,
+                    responseCharacterSet, connectionsMaxPerRoot, connectionsMaxTotal, preemptiveAuth);
         }
     }
 }

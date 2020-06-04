@@ -15,7 +15,9 @@
 
 package io.cloudslang.content.nutanix.prism.utils;
 
+import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.FAILED;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.TASK_FAILURE_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -147,24 +151,42 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static String getQueryParams(String filter,String offset,String length,
-                                    String sortorder,String sortattribute, String includeVMDiskConfigInfo, final String includeVMNicConfigInfo) {
+    public static String getTaskDetailsQueryParams(String includeSubtasksInfo) {
         final StringBuilder queryParams = new StringBuilder()
                 .append(Constants.Common.QUERY)
-                .append(Constants.GetListVMConstants.FILTER)
+                .append(Constants.GetTaskDetailsConstants.INCLUDE_SUBTASKS_INFO)
+                .append(includeSubtasksInfo);
+        return queryParams.toString();
+    }
+
+    @NotNull
+    public static URIBuilder getUriBuilder(NutanixCommonInputs nutanixCommonInputs) {
+        final URIBuilder uriBuilder = new URIBuilder();
+        uriBuilder.setHost(nutanixCommonInputs.getHostname());
+        uriBuilder.setPort(Integer.parseInt(nutanixCommonInputs.getPort()));
+        uriBuilder.setScheme(HTTPS);
+        return uriBuilder;
+    }
+
+    @NotNull
+    public static String getQueryParams(String filter, String offset, String length,
+                                        String sortOrder, String sortAttribute, String includeVMDiskConfigInfo, final String includeVMNicConfigInfo) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(Constants.Common.QUERY)
+                .append(Constants.ListVMsConstants.FILTER)
                 .append(filter)
                 .append(Constants.Common.AND)
-                .append(Constants.GetListVMConstants.OFFSET)
+                .append(Constants.ListVMsConstants.OFFSET)
                 .append(offset)
                 .append(Constants.Common.AND)
-                .append(Constants.GetListVMConstants.LENGTH)
+                .append(Constants.ListVMsConstants.LENGTH)
                 .append(length)
                 .append(Constants.Common.AND)
-                .append(Constants.GetListVMConstants.SORT_ORDER)
-                .append(sortorder)
+                .append(Constants.ListVMsConstants.SORT_ORDER)
+                .append(sortOrder)
                 .append(Constants.Common.AND)
-                .append(Constants.GetListVMConstants.SORT_ATTRIBUTE)
-                .append(sortattribute)
+                .append(Constants.ListVMsConstants.SORT_ATTRIBUTE)
+                .append(sortAttribute)
                 .append(Constants.Common.AND)
                 .append(Constants.GetVMDetailsConstants.INCLUDE_VM_DISK_CONFIG_INFO)
                 .append(includeVMDiskConfigInfo)
@@ -176,13 +198,32 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode, @NotNull String throwable) {
+    public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode,
+                                                        @NotNull String throwable) {
         Map<String, String> results = new HashMap();
         results.put("returnCode", "-1");
         results.put("statusCode", statusCode.toString());
         if (statusCode.equals(404)) {
             results.put("returnResult", inputName + " not found, or user unauthorized to perform action");
             results.put("exception ", "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
+        } else {
+            results.put("returnResult", throwable);
+            results.put("exception", throwable);
+        }
+        return results;
+    }
+
+    @NotNull
+    public static Map<String, String> getTaskFailureResults(@NotNull Integer statusCode,
+                                                            @NotNull String taskStatus, @NotNull String returnMessage,
+                                                            @NotNull String throwable) {
+        Map<String, String> results = new HashMap();
+        results.put("returnCode", "-1");
+        results.put("statusCode", statusCode.toString());
+        if (statusCode.equals(200) && taskStatus.equals(FAILED)) {
+            final String errorDetail = JsonPath.read(returnMessage, TASK_FAILURE_PATH);
+            results.put("returnResult ", " task failed due to " + errorDetail);
+            results.put("exception ", " status : " + statusCode + ", Title : task failed due to " + errorDetail);
         } else {
             results.put("returnResult", throwable);
             results.put("exception", throwable);
