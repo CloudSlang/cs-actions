@@ -28,12 +28,10 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCIInstanceInputs;
 import io.cloudslang.content.oracle.oci.services.InstanceImpl;
-import io.cloudslang.content.oracle.oci.utils.Constants;
 import io.cloudslang.content.oracle.oci.utils.Descriptions;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
 import io.cloudslang.content.oracle.oci.utils.InputsValidation;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;

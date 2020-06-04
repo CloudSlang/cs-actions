@@ -39,8 +39,7 @@ import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
-import static io.cloudslang.content.oracle.oci.utils.Constants.GetInstancesDetailsConstants.GET_INSTANCE_OPERATION_NAME;
-import static io.cloudslang.content.oracle.oci.utils.Constants.GetInstancesDetailsConstants.INSTANCE_STATE_JSON_PATH;
+import static io.cloudslang.content.oracle.oci.utils.Constants.GetInstancesDetailsConstants.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.GetInstanceDetails.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
@@ -59,8 +58,8 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class GetInstanceDetails {
 
-    @Action(name = GET_INSTANCE_OPERATION_NAME,
-            description = GET_INSTANCE_OPERATION_DESC,
+    @Action(name = GET_INSTANCE_DETAILS_OPERATION_NAME,
+            description = GET_INSTANCE_DETAILS_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
