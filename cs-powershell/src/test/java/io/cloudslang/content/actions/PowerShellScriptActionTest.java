@@ -109,7 +109,7 @@ public class PowerShellScriptActionTest {
 
         Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, PORT, HTTPS, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
                 PROXY_USER, PASS, Boolean.TRUE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
-                MAX_ENVELOPE_SIZE, SCRIPT, MODULES, WINRM_LOCALE_EN_US, OPERATION_TIMEOUT);
+                MAX_ENVELOPE_SIZE, SCRIPT, EMPTY_STRING, MODULES, WINRM_LOCALE_EN_US, OPERATION_TIMEOUT);
 
         verifyNew(WSManRemoteShellService.class).withNoArguments();
         verifyMockInteractions();
@@ -122,7 +122,7 @@ public class PowerShellScriptActionTest {
 
         Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
                 PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
-                EMPTY_STRING, SCRIPT, MODULES, EMPTY_STRING, EMPTY_STRING);
+                EMPTY_STRING, SCRIPT, EMPTY_STRING, MODULES, EMPTY_STRING, EMPTY_STRING);
 
         verifyNew(WSManRemoteShellService.class).withNoArguments();
         verifyMockInteractions();
@@ -136,7 +136,7 @@ public class PowerShellScriptActionTest {
 
         Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, BASIC_AUTH_TYPE, PASS, PROXY_HOST, PROXY_PORT,
                 PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
-                EMPTY_STRING, SCRIPT, MODULES, EMPTY_STRING, EMPTY_STRING);
+                EMPTY_STRING, SCRIPT, EMPTY_STRING, MODULES, EMPTY_STRING, EMPTY_STRING);
 
         assertTrue(result.get(EXCEPTION).contains(EXCEPTION_MESSAGE));
         assertEquals(RETURN_CODE_FAILURE, result.get(RETURN_CODE));
@@ -151,7 +151,7 @@ public class PowerShellScriptActionTest {
 
         Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
                 PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
-                EMPTY_STRING, SCRIPT, MODULES, EMPTY_STRING, EMPTY_STRING);
+                EMPTY_STRING, SCRIPT, EMPTY_STRING, MODULES, EMPTY_STRING, EMPTY_STRING);
 
         verifyNew(WSManRemoteShellService.class).withNoArguments();
         verify(serviceMock, times(1)).runCommand(any(WSManRequestInputs.class));
