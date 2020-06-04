@@ -46,6 +46,7 @@ public class WSManRequestInputs {
     private final String trustPassword;
     private final String script;
     private final String modules;
+    private final String configurationName;
     private final String winrmLocale;
     private final int operationTimeout;
 
@@ -71,6 +72,7 @@ public class WSManRequestInputs {
         this.trustKeystore = builder.trustKeystore;
         this.trustPassword = builder.trustPassword;
         this.script = builder.script;
+        this.configurationName = builder.configurationName;
         this.modules = builder.modules;
         this.winrmLocale = builder.winrmLocale;
         this.operationTimeout = builder.operationTimeout;
@@ -159,6 +161,11 @@ public class WSManRequestInputs {
     public String getScript() {
         return script;
     }
+
+    public String getConfigurationName() {
+        return configurationName;
+    }
+
     public String getModules() {
         return modules;
     }
@@ -193,6 +200,7 @@ public class WSManRequestInputs {
         private String trustKeystore;
         private String trustPassword;
         private String script;
+        private String configurationName;
         private String modules;
         private String winrmLocale;
         private int operationTimeout;
@@ -284,6 +292,11 @@ public class WSManRequestInputs {
 
         public WSManRequestInputsBuilder withScript(String script) {
             this.script = script;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withConfigurationName(String configurationName) {
+            this.configurationName = configurationName;
             return this;
         }
 
