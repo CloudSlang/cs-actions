@@ -24,7 +24,7 @@ public class OCICommonInputs {
     private final String tenancyOcid;
     private final String userOcid;
     private final String fingerPrint;
-    private final String privateKeyFilename;
+    private final String privateKey;
     private final String apiVersion;
     private final String region;
     private final String proxyHost;
@@ -45,12 +45,12 @@ public class OCICommonInputs {
     private final String responseCharacterSet;
 
 
-    @java.beans.ConstructorProperties({"tenancyOcid", "userOcid", "fingerPrint", "privateKeyFilename","apiVersion", "region", "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "keystore", "keystorePassword", "connectTimeout", "socketTimeout", "keepAlive", "connectionsMaxPerRoot", "connectionsMaxTotal", "responseCharacterSet"})
-    private OCICommonInputs(String tenancyOcid, String userOcid, String fingerPrint, String privateKeyFilename, String apiVersion, String region, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier, String trustKeystore, String trustPassword, String keystore, String keystorePassword, String connectTimeout, String socketTimeout, String keepAlive, String connectionsMaxPerRoot, String connectionsMaxTotal, String responseCharacterSet) {
+    @java.beans.ConstructorProperties({"tenancyOcid", "userOcid", "fingerPrint", "privateKey","apiVersion", "region", "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "keystore", "keystorePassword", "connectTimeout", "socketTimeout", "keepAlive", "connectionsMaxPerRoot", "connectionsMaxTotal", "responseCharacterSet"})
+    private OCICommonInputs(String tenancyOcid, String userOcid, String fingerPrint, String privateKey, String apiVersion, String region, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier, String trustKeystore, String trustPassword, String keystore, String keystorePassword, String connectTimeout, String socketTimeout, String keepAlive, String connectionsMaxPerRoot, String connectionsMaxTotal, String responseCharacterSet) {
         this.tenancyOcid = tenancyOcid;
         this.userOcid = userOcid;
         this.fingerPrint = fingerPrint;
-        this.privateKeyFilename = privateKeyFilename;
+        this.privateKey = privateKey;
         this.apiVersion = apiVersion;
         this.region = region;
         this.proxyHost = proxyHost;
@@ -92,8 +92,8 @@ public class OCICommonInputs {
     }
 
     @NotNull
-    public String getPrivateKeyFilename() {
-        return privateKeyFilename;
+    public String getPrivateKey() {
+        return privateKey;
     }
 
     @NotNull
@@ -187,7 +187,7 @@ public class OCICommonInputs {
         private String tenancyOcid = EMPTY;
         private String userOcid = EMPTY;
         private String fingerPrint = EMPTY;
-        private String privateKeyFilename = EMPTY;
+        private String privateKey = EMPTY;
         private String apiVersion = EMPTY;
         private String region = EMPTY;
         private String proxyHost = EMPTY;
@@ -229,8 +229,8 @@ public class OCICommonInputs {
         }
 
         @NotNull
-        public OCICommonInputs.OCICommonInputsBuilder privateKeyFilename(@NotNull final String privateKeyFilename) {
-            this.privateKeyFilename = privateKeyFilename;
+        public OCICommonInputs.OCICommonInputsBuilder privateKey(@NotNull final String privateKey) {
+            this.privateKey = privateKey;
             return this;
         }
         @NotNull
@@ -346,7 +346,7 @@ public class OCICommonInputs {
 
 
         public OCICommonInputs build() {
-            return new OCICommonInputs(tenancyOcid, userOcid, fingerPrint, privateKeyFilename, apiVersion, region, proxyHost, proxyPort, proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, keystore, keystorePassword, connectTimeout,
+            return new OCICommonInputs(tenancyOcid, userOcid, fingerPrint, privateKey, apiVersion, region, proxyHost, proxyPort, proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, keystore, keystorePassword, connectTimeout,
                     socketTimeout, keepAlive, connectionsMaxPerRoot, connectionsMaxTotal, responseCharacterSet);
         }
     }
