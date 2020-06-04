@@ -97,16 +97,21 @@ public class SignerImpl {
                     byte[] body = requestBody.getBytes();
 
                     headers.put(CONTENT_LENGTH, Integer.toString(body.length));
-                    myheaders.put(CONTENT_LENGTH + COLON, Integer.toString(body.length));
-
+//                    myheaders.put(CONTENT_LENGTH + COLON, Integer.toString(body.length));
 
                     headers.put(X_CONTENT_SHA256, calculateSHA256(body));
                     myheaders.put(X_CONTENT_SHA256 + COLON, calculateSHA256(body));
 
                 }
             }
+            String path;
+            if (uri.getQuery() != null && !uri.getQuery().isEmpty()) {
+                path = uri.getPath() + QUERY + uri.getQuery();
+            } else {
+                path = uri.getPath();
+            }
 
-            final String signature = this.calculateSignature(method, uri.getPath() + QUERY + uri.getQuery(), headers);
+            final String signature = this.calculateSignature(method, path, headers);
             myheaders.put(AUTHORIZATION, signature);
             return myheaders;
         }

@@ -27,9 +27,10 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
 import io.cloudslang.content.oracle.oci.services.InstanceImpl;
-import io.cloudslang.content.oracle.oci.utils.*;
+import io.cloudslang.content.oracle.oci.utils.Descriptions;
+import io.cloudslang.content.oracle.oci.utils.HttpUtils;
+import io.cloudslang.content.oracle.oci.utils.InputsValidation;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -38,31 +39,33 @@ import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
-import static io.cloudslang.content.oracle.oci.utils.Constants.ListInstancesConstants.LIST_INSTANCES_OPERATION_NAME;
+import static io.cloudslang.content.oracle.oci.utils.Constants.GetInstanceDefaultCredentialsConstants.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
+import static io.cloudslang.content.oracle.oci.utils.Descriptions.GetInstanceDefaultCredentials.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.INSTANCE_LIST_DESC;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.LIST_INSTANCES_OPERATION_DESC;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
+import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.INSTANCE_ID;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
-import static io.cloudslang.content.oracle.oci.utils.Outputs.ListInstancesOutputs.INSTANCE_LIST;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.GetInstanceDefaultCredentialsOutputs.INSTANCE_PASSWORD;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.GetInstanceDefaultCredentialsOutputs.INSTANCE_USERNAME;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class ListInstances {
+public class GetInstanceDefaultCredentials {
 
-    @Action(name = LIST_INSTANCES_OPERATION_NAME,
-            description = LIST_INSTANCES_OPERATION_DESC,
+    @Action(name = GET_INSTANCE_DEFAULT_CREDENTIALS_OPERATION_NAME,
+            description = GET_INSTANCE_DEFAULT_CREDENTIALS_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = INSTANCE_LIST, description = INSTANCE_LIST_DESC),
+                    @Output(value = INSTANCE_USERNAME, description = INSTANCE_USERNAME_DESC),
+                    @Output(value = INSTANCE_PASSWORD, description = INSTANCE_PASSWORD_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
@@ -76,6 +79,7 @@ public class ListInstances {
                                        @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
+                                       @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) String instanceId,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -117,7 +121,7 @@ public class ListInstances {
 
         try {
             final Map<String, String> result =
-                    InstanceImpl.listInstances(OCICommonInputs.builder()
+                    InstanceImpl.getInstanceDefaultCredentials(OCICommonInputs.builder()
                             .tenancyOcid(tenancyOcid)
                             .compartmentOcid(compartmentOcid)
                             .userOcid(userOcid)
@@ -125,6 +129,7 @@ public class ListInstances {
                             .privateKey(privateKey)
                             .apiVersion(apiVersion)
                             .region(region)
+                            .instanceId(instanceId)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
@@ -147,12 +152,14 @@ public class ListInstances {
             Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                final List<String> instance_list = JsonPath.read(returnMessage, Constants.ListInstancesConstants.INSTANCES_LIST_JSON_PATH);
-                if (!instance_list.isEmpty()) {
-                    final String instanceListAsString = StringUtils.join(instance_list.toArray(), Constants.Common.DELIMITER);
-                    results.put(INSTANCE_LIST, instanceListAsString);
+                final String username = JsonPath.read(returnMessage, INSTANCE_USERNAME_JSON_PATH);
+                final String password = JsonPath.read(returnMessage, INSTANCE_PASSWORD_JSON_PATH);
+                if (!username.isEmpty() && !password.isEmpty()) {
+                    results.put(INSTANCE_USERNAME, username);
+                    results.put(INSTANCE_PASSWORD, password);
                 } else {
-                    results.put(INSTANCE_LIST, EMPTY);
+                    results.put(INSTANCE_USERNAME, EMPTY);
+                    results.put(INSTANCE_PASSWORD, EMPTY);
                 }
 
             } else {
@@ -165,5 +172,3 @@ public class ListInstances {
 
     }
 }
-
-
