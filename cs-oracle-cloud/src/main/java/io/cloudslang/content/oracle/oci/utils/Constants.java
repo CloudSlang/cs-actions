@@ -45,8 +45,13 @@ public class Constants {
         public static final String AUTHORIZATION = "Authorization:";
         public static final String IAAS = "iaas";
         public static final String OCI_HOST = "oraclecloud.com";
-        public static final String LIST_INSTANCES = "/instances";
+        public static final String LIST_INSTANCES = "/instances/";
         public static final String COMPARTMENT_ID = "compartmentId=";
+        public static final String INSTANCE_ID = "instanceId=";
+        public static final String AVAILABILITY_DOMAIN = "availabilityDomain=";
+        public static final String PAGE = "page=";
+        public static final String LIMIT = "limit=";
+        public static final String VNIC_ID = "vnicId=";
         public static final String QUERY = "?";
         public static final String FORWARD_SLASH = "/";
         public static final String HTTPS = "https";
@@ -58,6 +63,7 @@ public class Constants {
         public static final String CONTENT_LENGTH = "content-length";
         public static final String COLON = ":";
         public static final String PUT = "put";
+        public static final String AND = "&";
         public static final String CONTENT_TYPE = "content-type";
         public static final String X_CONTENT_SHA256 = "x-content-sha256";
         public static final String APPLICATION_JSON = "application/json";
@@ -72,6 +78,70 @@ public class Constants {
     public static class ListInstancesConstants {
         public static final String LIST_INSTANCES_OPERATION_NAME = "List Instances";
         public static final String INSTANCES_LIST_JSON_PATH = "$.[*].displayName";
+    }
+
+    public static class GetInstancesDetailsConstants {
+        public static final String GET_INSTANCE_DETAILS_OPERATION_NAME = "Get Instance Details";
+        public static final String INSTANCE_STATE_JSON_PATH = "$.lifecycleState";
+    }
+
+    public static class ListVnicAttachmentsConstants {
+        public static final String LIST_VNIC_ATTACHMENTS_OPERATION_NAME = "List Vnics";
+        public static final String LIST_VNIC_JSON_PATH = "$.[*].vnicId";
+    }
+
+    public static class GetVnicDetailsConstants {
+        public static final String GET_VNIC_DETAILS_OPERATION_NAME = "Get Vnic Details";
+        public static final String PRIVATE_IP_JSON_PATH = "$.privateIp";
+        public static final String PUBLIC_IP_JSON_PATH = "$.publicIp";
+    }
+    public static class GetInstanceDefaultCredentialsConstants {
+
+        public static final String GET_INSTANCE_DEFAULT_CREDENTIALS_OPERATION_NAME = "Get Instance default Credentials";
+        public static final String GET_INSTANCE_DEFAULT_CREDENTIALS_OPERATION_PATH = "/defaultCredentials";
+        public static final String INSTANCE_USERNAME_JSON_PATH = "$.username";
+        public static final String INSTANCE_PASSWORD_JSON_PATH = "$.password";
+    }
+
+    public static class CreateInstancesConstants {
+        public static final String CREATE_INSTANCE_OPERATION_NAME = "Create Instance";
+        public static final String IS_MANAGEMENT_DISABLED = "isManagementDisabled";
+        public static final String IS_MONITORING_DISABLED = "isMonitoringDisabled";
+        public static final String AVAILABILITY_DOMAIN = "availabilityDomain";
+        public static final String ASSIGN_PUBLIC_IP = "assignPublicIP";
+        public static final String DEFINED_TAGS = "definedTags";
+        public static final String DISPLAYNAME = "displayName";
+        public static final String FREEFORM_TAGS = "freeformTags";
+        public static final String HOSTNAME_LABEL = "hostnameLabel";
+        public static final String NETWORK_SECURITY_GROUP_IDS = "networkSecurityGroupIds";
+        public static final String PRIVATE_IP = "privateIP";
+        public static final String SKIP_SOURCE_DEST_CHECK = "skipSourceDestCheck";
+        public static final String SUBNET_ID = "subnetId";
+        public static final String DEDICATED_VM_HOST_ID = "dedicatedVmHostId";
+        public static final String VNIC_DEFINED_TAGS = "vnicDefinedTags";
+        public static final String VNIC_FREEFORM_TAGS = "vnicFreeformTags";
+        ;
+        public static final String VNIC_DISPLAY_NAME = "vnicDisplayName";
+        public static final String EXTENDED_METADATA = "extendedMetadata";
+        public static final String FAULT_DOMAIN = "faultDomain";
+        public static final String IPXE_SCRIPT = "ipxeScript";
+        public static final String IS_PV_ENCRYPTION_IN_TRANSIT_ENABLED = "isPvEncryptionInTransitEnabled";
+        public static final String LAUNCH_MODE = "launchMode";
+        public static final String BOOT_VOLUME_TYPE = "bootVolumeType";
+        public static final String FIRMWARE = "firmware";
+        public static final String IS_CONSISTENT_VOLUME_NAMING_ENABLED = "isConsistentVolumeNamingEnabled";
+        public static final String NETWORKTYPE = "networkType";
+        public static final String REMOTE_DATA_VOLUME_TYPE = "remoteDataVolumeType";
+        public static final String SHAPE = "shape";
+        public static final String SSH_AUTHORIZED_KEYS = "sshAuthorizedKeys";
+        public static final String USERDATA = "userdata";
+        public static final String OCPUS = "ocpus";
+        public static final String SOURCE_TYPE = "sourceType";
+        public static final String BOOT_VOLUME_SIZE_IN_GBS = "bootVolumeSizeInGBs";
+        public static final String IMAGE_ID = "imageId";
+        public static final String KMS_KEY_ID = "kmsKeyId";
+        public static final String BOOT_VOLUME_ID = "bootVolumeId";
+        public static final String INSTANCE_ID_JSON_PATH = "$.id";
     }
 
 }
