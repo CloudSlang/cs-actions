@@ -12,6 +12,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/*
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.json.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -26,10 +41,9 @@ import io.cloudslang.content.json.services.GetObjectKeysImpl;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.json.utils.Constants.InputNames.*;
+import static io.cloudslang.content.json.utils.Constants.InputNames.OBJECT;
 import static io.cloudslang.content.json.utils.Descriptions.AddPropertyToObject.*;
 import static io.cloudslang.content.json.utils.Descriptions.GetObjectKeys.GET_OBJECT_KEYS;
 import static io.cloudslang.content.json.utils.Descriptions.GetObjectKeys.RETURN_RESULT_DESC;
@@ -47,10 +61,10 @@ public class GetObjectKeys {
      * The 'Add JSON Property to Object' operation should be used to add values of type other than string,
      * for example: another object, an array or a number.
      *
-     * @param object       String representation of a JSON object. Objects in JSON are a collection of name value pairs,
-     *                         separated by a colon and surrounded with curly brackets {}. The name must be a string value,
-     *                         and the value can be a single string or any valid JSON object or array.
-     *                         Examples: {"one":1, "two":2}, {"one":{"a":"a","B":"B"}, "two":"two", "three":[1,2,3.4]}
+     * @param object String representation of a JSON object. Objects in JSON are a collection of name value pairs,
+     *               separated by a colon and surrounded with curly brackets {}. The name must be a string value,
+     *               and the value can be a single string or any valid JSON object or array.
+     *               Examples: {"one":1, "two":2}, {"one":{"a":"a","B":"B"}, "two":"two", "three":[1,2,3.4]}
      * @return a map containing the output of the operation. Keys present in the map are:
      * returnResult - This will contain the keys of the JSON object, in arbitrary order.
      * exception - In case of success response, this result is empty. In case of failure response this result contains

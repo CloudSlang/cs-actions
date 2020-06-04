@@ -12,21 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.json.utils;
+
+public final class ExceptionMsgs {
+    public static final String EXCEPTION_WHILE_PARSING = "Exception occurred while parsing input '%s': %s";
+    public static final String NULL_OR_EMPTY_INPUT = "Value of input '%s' was null or empty.";
 
 
-package io.cloudslang.content.json.exceptions;
+    private ExceptionMsgs() {
 
-/**
- * Created by Folea Ilie Cristian on 2/4/2016.
- */
-public class RemoveEmptyElementException extends Exception {
-
-    public RemoveEmptyElementException(String message) {
-        super(message);
-    }
-
-
-    public RemoveEmptyElementException(Exception ex) {
-        super(ex);
     }
 }

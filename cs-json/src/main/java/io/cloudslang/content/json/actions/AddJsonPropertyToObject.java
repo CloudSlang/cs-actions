@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 
 package io.cloudslang.content.json.actions;
@@ -42,6 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.json.utils.JsonUtils.populateResult;
+import static io.cloudslang.content.json.utils.Constants.AddPropertyToObject.*;
 
 /**
  * Created by ioanvranauhp
@@ -55,8 +55,10 @@ public class AddJsonPropertyToObject {
      * This operation can be used to add a property with a simple string value.
      *
      * @param jsonObject       The string representation of a JSON object.
-     *                         Objects in JSON are a collection of name value pairs, separated by a colon and surrounded with curly brackets {}.
-     *                         The name must be a string value, and the value can be a single string or any valid JSON object or array.
+     *                         Objects in JSON are a collection of name value pairs, separated by a colon and
+     *                         surrounded with curly brackets {}.
+     *                         The name must be a string value, and the value can be a single string or any valid JSON
+     *                         object or array.
      *                         Examples: {"one":1, "two":2}, {"one":{"a":"a","B":"B"}, "two":"two", "three":[1,2,3.4]}
      * @param newPropertyName  The name of the new property that will be added to the JSON object.
      *                         Examples: property1, some_property, another property
@@ -94,7 +96,7 @@ public class AddJsonPropertyToObject {
         final boolean validateValueBoolean = JsonUtils.parseBooleanWithDefault(validateValue, true);
 
         if (StringUtilities.isBlank(newPropertyValue)) {
-            final String exceptionValue = "The value for the property " + newPropertyName + " it is not a valid JSON object!";
+            final String exceptionValue = VALUE_FOR_PROPERTY + newPropertyName + " it is not a valid JSON object!";
             return populateResult(returnResult, new Exception(exceptionValue));
         }
 
@@ -106,7 +108,7 @@ public class AddJsonPropertyToObject {
         try {
             jsonRoot = mapper.readTree(jsonObject);
         } catch (Exception exception) {
-            final String exceptionValue = "Invalid jsonObject provided! " + exception.getMessage();
+            final String exceptionValue = INVALID_JSON_OBJECT_PROVIDED + exception.getMessage();
             return populateResult(returnResult, exceptionValue, exception);
         }
 
@@ -118,7 +120,7 @@ public class AddJsonPropertyToObject {
             if (!validateValueBoolean) {
                 jsonNodeValueWrapper = mapper.valueToTree(newPropertyValue);
             } else {
-                final String exceptionValue = "The value for the property " + newPropertyName + " it is not a valid JSON object!";
+                final String exceptionValue = VALUE_FOR_PROPERTY + newPropertyName + " it is not a valid JSON object!";
                 return populateResult(returnResult, exceptionValue, exception);
             }
         }

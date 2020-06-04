@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 
 package io.cloudslang.content.json.actions;
@@ -36,8 +35,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.json.utils.JsonUtils.populateResult;
 import static io.cloudslang.content.constants.OtherValues.EMPTY_STRING;
+import static io.cloudslang.content.json.utils.JsonUtils.populateResult;
 
 /**
  * Created by ioanvranauhp
@@ -49,6 +48,7 @@ public class MergeArrays {
     public static final String INVALID_JSON_OBJECT_PROVIDED_EXCEPTION_MESSAGE = "Invalid jsonObject provided! ";
     public static final String ARRAY1_MESSAGE = " array1=";
     public static final String ARRAY2_MESSAGE = " array2=";
+
 
     /**
      * This operation merge the contents of two JSON arrays. This operation does not modify either of the input arrays.

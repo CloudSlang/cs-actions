@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 
 package io.cloudslang.content.json.actions;
@@ -45,6 +44,7 @@ import static io.cloudslang.content.json.utils.JsonUtils.populateResult;
 public class ArraySize {
 
     public static final String NOT_A_VALID_JSON_ARRAY_MESSAGE = "The input value is not a valid JavaScript array!";
+
 
     /**
      * This operation determines the number of elements in the given JSON array.  If an element

@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -48,9 +48,11 @@ public class AddPropertyToObject {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+
     public AddPropertyToObject() {
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
     }
+
 
     /**
      * Inserts a new name/value property into a JSON object, where the value is a string.

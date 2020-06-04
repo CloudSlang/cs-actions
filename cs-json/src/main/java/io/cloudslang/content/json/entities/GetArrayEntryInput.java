@@ -27,30 +27,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.json.services;
+package io.cloudslang.content.json.entities;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+public class GetArrayEntryInput {
+    private JsonArray array;
+    private Integer index;
 
-import static io.cloudslang.content.json.utils.Constants.InputNames.DOUBLE_QUOTES;
 
-public class GetObjectKeysImpl {
+    private GetArrayEntryInput() {
 
-    public static String getObjectKeys(String jsonString) {
+    }
 
-        JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
-        Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
-        List<String> keyList = new ArrayList<>();
-        for (Map.Entry<String, JsonElement> entry : entries) {
-            keyList.add(DOUBLE_QUOTES + entry.getKey() + DOUBLE_QUOTES);
+
+    public JsonArray getArray() {
+        return array;
+    }
+
+
+    public Integer getIndex() {
+        return index;
+    }
+
+
+    public static class Builder {
+        private String array;
+        private String index;
+
+
+        public Builder array(String array) {
+            this.array = array;
+            return this;
         }
 
-        return keyList.toString();
+
+        public Builder index(String index) {
+            this.index = index;
+            return this;
+        }
+
+
+        public @NotNull GetArrayEntryInput build() throws Exception {
+            GetArrayEntryInput input = new GetArrayEntryInput();
+
+            if (StringUtils.isNotBlank(this.array)) {
+                input.array = new JsonParser().parse(this.array).getAsJsonArray();
+            }
+
+            if (StringUtils.isNotBlank(this.index)) {
+                input.index = Integer.parseInt(this.index);
+            }
+
+            return input;
+        }
     }
 }

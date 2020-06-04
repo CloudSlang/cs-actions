@@ -29,28 +29,30 @@
  */
 package io.cloudslang.content.json.services;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import io.cloudslang.content.json.entities.RemoveArrayEntryInput;
+import io.cloudslang.content.json.utils.JsonUtils;
+import io.cloudslang.content.json.validators.RemoveArrayEntryValidator;
+import io.cloudslang.content.utils.OutputUtilities;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import static io.cloudslang.content.json.utils.Constants.InputNames.DOUBLE_QUOTES;
+public class RemoveArrayEntryService {
 
-public class GetObjectKeysImpl {
+    private final RemoveArrayEntryValidator validator = new RemoveArrayEntryValidator();
 
-    public static String getObjectKeys(String jsonString) {
 
-        JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
-        Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
-        List<String> keyList = new ArrayList<>();
-        for (Map.Entry<String, JsonElement> entry : entries) {
-            keyList.add(DOUBLE_QUOTES + entry.getKey() + DOUBLE_QUOTES);
+    public @NotNull Map<String, String> execute(@NotNull RemoveArrayEntryInput input) {
+        List<RuntimeException> validationErrs = this.validator.validate(input);
+        if (!validationErrs.isEmpty()) {
+            throw validationErrs.get(0);
         }
 
-        return keyList.toString();
+        int index = input.getIndex() < 0 ? input.getArray().size() + input.getIndex() : input.getIndex();
+        input.getArray().remove(index);
+
+        String returnResult = input.getArray().toString();
+        return OutputUtilities.getSuccessResultsMap(returnResult);
     }
 }

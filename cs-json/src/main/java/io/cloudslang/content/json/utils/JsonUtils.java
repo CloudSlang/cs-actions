@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -14,11 +14,12 @@
  */
 
 
-
 package io.cloudslang.content.json.utils;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.internal.JsonContext;
@@ -29,6 +30,7 @@ import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -53,6 +55,7 @@ public class JsonUtils {
         return returnResult;
     }
 
+
     public static Map<String, String> populateResult(Map<String, String> returnResult, Exception exception) {
         if (exception != null) {
             return populateResult(returnResult, exception.getMessage(), exception);
@@ -60,6 +63,7 @@ public class JsonUtils {
             return populateResult(returnResult, OtherValues.EMPTY_STRING, null);
         }
     }
+
 
     public static void validateEditJsonInputs(String jsonObject, String jsonPath, String action, String name, String value) throws Exception {
         if (StringUtilities.isBlank(jsonObject)) {
@@ -96,6 +100,7 @@ public class JsonUtils {
         checkForNullValue(actionString, value);
     }
 
+
     private static void checkForNullValue(String actionString, String value) throws Exception {
         final ActionsEnum actionEnum = ActionsEnum.valueOf(actionString);
         if (actionEnum.getNeedValue()) {
@@ -105,6 +110,7 @@ public class JsonUtils {
         }
     }
 
+
     public static JsonPath getValidJsonPath(final String jsonPath) {
         try {
             return JsonPath.compile(jsonPath);
@@ -112,6 +118,7 @@ public class JsonUtils {
             throw hammerIllegalArgumentExceptionWithMessage(INVALID_JSONPATH, iae);
         }
     }
+
 
     @NotNull
     public static JsonContext getValidJsonContext(final String jsonObject) {
@@ -128,6 +135,7 @@ public class JsonUtils {
         }
     }
 
+
     public static boolean parseBooleanWithDefault(String booleanValue, boolean defaultValue) {
         if (StringUtilities.isBlank(booleanValue)) {
             return defaultValue;
@@ -135,6 +143,7 @@ public class JsonUtils {
             return Boolean.valueOf(booleanValue);
         }
     }
+
 
     @NotNull
     public static IllegalArgumentException hammerIllegalArgumentExceptionWithMessage(@NotNull final String message, @NotNull final Throwable throwable) {

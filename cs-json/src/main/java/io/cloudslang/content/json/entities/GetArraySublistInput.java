@@ -27,30 +27,68 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.json.services;
+package io.cloudslang.content.json.entities;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+public class GetArraySublistInput {
+    private JsonArray array;
+    private String fromIndex;
+    private String toIndex;
 
-import static io.cloudslang.content.json.utils.Constants.InputNames.DOUBLE_QUOTES;
 
-public class GetObjectKeysImpl {
+    private GetArraySublistInput() {
 
-    public static String getObjectKeys(String jsonString) {
+    }
 
-        JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
-        Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
-        List<String> keyList = new ArrayList<>();
-        for (Map.Entry<String, JsonElement> entry : entries) {
-            keyList.add(DOUBLE_QUOTES + entry.getKey() + DOUBLE_QUOTES);
+
+    public JsonArray getArray() {
+        return array;
+    }
+
+    public String getfromIndex() {
+        return fromIndex;
+    }
+
+    public String gettoIndex() {
+        return toIndex;
+    }
+
+    public static class Builder {
+        private String array;
+        private String fromIndex;
+        private String toIndex;
+
+
+        public Builder array(String array) {
+            this.array = array;
+            return this;
         }
 
-        return keyList.toString();
+
+        public Builder fromIndex(String fromIndex) {
+            this.fromIndex = fromIndex;
+            return this;
+        }
+
+        public Builder toIndex(String toIndex) {
+            this.toIndex = toIndex;
+            return this;
+        }
+
+
+        public @NotNull GetArraySublistInput build() throws Exception {
+            GetArraySublistInput input = new GetArraySublistInput();
+
+            input.array = new JsonParser().parse(this.array).getAsJsonArray();
+
+            input.fromIndex = this.fromIndex;
+
+            input.toIndex = this.toIndex;
+
+            return input;
+        }
     }
 }
