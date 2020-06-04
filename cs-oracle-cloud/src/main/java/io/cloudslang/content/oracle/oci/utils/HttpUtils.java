@@ -139,6 +139,29 @@ public class HttpUtils {
     }
 
     @NotNull
+    public static String getQueryParams(@NotNull final String availabilityDomain, @NotNull final String compartmentId, @NotNull final String instanceId, @NotNull final String limit, @NotNull final String page, @NotNull final String vnicId) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(COMPARTMENT_ID)
+                .append(compartmentId)
+                .append(AND)
+                .append(INSTANCE_ID)
+                .append(instanceId);
+//                .append(AND)
+//                .append(AVAILABILITY_DOMAIN)
+//                .append(availabilityDomain)
+//                .append(AND)
+//                .append(PAGE)
+//                .append(page)
+//                .append(AND)
+//                .append(LIMIT)
+//                .append(limit)
+//                .append(AND)
+//                .append(VNIC_ID)
+//                .append(vnicId);
+        return queryParams.toString();
+    }
+
+    @NotNull
     public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode, @NotNull String throwable) {
         Map<String, String> results = new HashMap();
         results.put("returnCode", "-1");

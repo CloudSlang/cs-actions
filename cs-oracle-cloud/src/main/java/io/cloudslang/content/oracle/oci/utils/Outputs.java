@@ -22,8 +22,28 @@ public class Outputs extends OutputNames {
         public static final String DOCUMENT = "document";
 
     }
+
     public static class ListInstancesOutputs {
         public static final String INSTANCE_LIST = "instance_list";
+    }
+
+    public static class GetInstanceDetailsOutputs {
+        public static final String INSTANCE_STATE = "instance_state";
+    }
+
+    public static class ListVnicAttachmentsOutputs {
+        public static final String VNIC_LIST = "vnic_list";
+    }
+
+    public static class GetVnicDetailsOutputs {
+        public static final String PRIVATE_IP = "private_ip";
+        public static final String PUBLIC_IP = "public_ip";
+
+    }
+
+    public static class GetInstanceDefaultCredentialsOutputs {
+        public static final String INSTANCE_USERNAME = "instance_username";
+        public static final String INSTANCE_PASSWORD = "instance_password";
     }
 
 }
