@@ -24,7 +24,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.entities.WSManRequestInputs;
-import io.cloudslang.content.services.PowerShellScriptService;
+import io.cloudslang.content.services.PwshService;
 import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.utils.Constants;
 
@@ -32,9 +32,11 @@ import java.util.Map;
 
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.Constants.InputNames.*;
-import static io.cloudslang.content.utils.Constants.Others.*;
+import static io.cloudslang.content.utils.Constants.Others.CHANGEIT;
+import static io.cloudslang.content.utils.Constants.Others.DEFAULT_JAVA_KEYSTORE;
 import static io.cloudslang.content.utils.Constants.OutputNames.*;
-import static io.cloudslang.content.utils.Constants.ReturnCodes.*;
+import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAILURE;
+import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCCESS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.WSManUtils.verifyScriptExecutionStatus;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -42,10 +44,10 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 /**
  * Created by giloan on 3/26/2016.
  */
-public class PowerShellScriptAction {
+public class PwshAction {
 
     /**
-     * Executes a PowerShell script on a remote host.
+     * Executes a PowerShell Core script on a remote host that has PowerShell Core installed.
      *
      * @param host                 The hostname or ip address of the remote host.
      * @param port                 The port to use when connecting to the remote WinRM server.
@@ -103,7 +105,7 @@ public class PowerShellScriptAction {
      *                             Default value is '60'.
      * @return
      */
-    @Action(name = "PowerShell Script Action",
+    @Action(name = "Pwsh",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
@@ -112,8 +114,10 @@ public class PowerShellScriptAction {
                     @Output(EXCEPTION)
             },
             responses = {
-                    @Response(text = Constants.ResponseNames.SUCCESS, field = RETURN_CODE, value = RETURN_CODE_SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = Constants.ResponseNames.FAILURE, field = RETURN_CODE, value = RETURN_CODE_FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
+                    @Response(text = Constants.ResponseNames.SUCCESS, field = RETURN_CODE, value = RETURN_CODE_SUCCESS,
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                    @Response(text = Constants.ResponseNames.FAILURE, field = RETURN_CODE, value = RETURN_CODE_FAILURE,
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             }
     )
     public Map<String, String> execute(
@@ -144,7 +148,7 @@ public class PowerShellScriptAction {
             @Param(value = OPERATION_TIMEOUT) String operationTimeout
     ) {
         try {
-            WSManRemoteShellService wsManRemoteShellService = new PowerShellScriptService();
+            WSManRemoteShellService wsManRemoteShellService = new PwshService();
 
             WSManRequestInputs wsManRequestInputs = new WSManRequestInputs.WSManRequestInputsBuilder()
                     .withHost(host)

@@ -18,6 +18,7 @@
 package io.cloudslang.content.utils;
 
 import io.cloudslang.content.entities.EncoderDecoder;
+import io.cloudslang.content.entities.PSEdition;
 import io.cloudslang.content.entities.WSManRequestInputs;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringUtils;
@@ -121,9 +122,9 @@ public class WSManUtils {
         }
     }
 
-    public static String constructCommand(final WSManRequestInputs wsManRequestInputs) {
+    public static String constructCommand(final WSManRequestInputs wsManRequestInputs, final PSEdition psEdition) {
         final StringBuilder command = new StringBuilder()
-                .append(POWERSHELL_SCRIPT_PREFIX)
+                .append(psEdition.getCmd())
                 .append(SPACE)
                 .append(NON_INTERACTIVE_PARAMETER)
                 .append(SPACE);
