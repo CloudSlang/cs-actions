@@ -16,10 +16,12 @@
 
 package io.cloudslang.content.nutanix.prism.service;
 
-import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import org.jetbrains.annotations.NotNull;
 
+import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.CHANGEIT;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.DEFAULT_JAVA_KEYSTORE;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.*;
 
 public class HttpCommons {
@@ -38,8 +40,8 @@ public class HttpCommons {
                 commonInputs.getX509HostnameVerifier(),
                 commonInputs.getTrustKeystore(),
                 commonInputs.getTrustPassword(),
-                commonInputs.getKeystore(),
-                commonInputs.getKeystorePassword());
+                DEFAULT_JAVA_KEYSTORE,
+                CHANGEIT);
 
         setConnectionParameters(httpClientInputs,
                 commonInputs.getConnectTimeout(),
