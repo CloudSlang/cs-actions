@@ -18,6 +18,7 @@ package io.cloudslang.content.services;
 
 import io.cloudslang.content.entities.EncoderDecoder;
 import io.cloudslang.content.entities.OutputStream;
+import io.cloudslang.content.entities.PSEdition;
 import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
@@ -110,12 +111,16 @@ public class WSManRemoteShellService {
         httpClientInputs = setCommonHttpInputs(httpClientInputs, url, wsManRequestInputs);
         String shellId = createShell(csHttpClient, httpClientInputs, wsManRequestInputs);
         WSManUtils.validateUUID(shellId, SHELL_ID);
-        String commandStr = WSManUtils.constructCommand(wsManRequestInputs);
+        String commandStr = WSManUtils.constructCommand(wsManRequestInputs, getPSEdition());
         String commandId = executeCommand(csHttpClient, httpClientInputs, shellId, wsManRequestInputs, commandStr);
         WSManUtils.validateUUID(commandId, COMMAND_ID);
         Map<String, String> scriptResults = receiveCommandResult(csHttpClient, httpClientInputs, shellId, commandId, wsManRequestInputs);
         deleteShell(csHttpClient, httpClientInputs, shellId, wsManRequestInputs);
         return scriptResults;
+    }
+
+    protected PSEdition getPSEdition() {
+        return PSEdition.WINDOWS;
     }
 
     /**
