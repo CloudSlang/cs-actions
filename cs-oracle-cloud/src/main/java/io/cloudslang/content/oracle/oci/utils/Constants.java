@@ -104,7 +104,7 @@ public class Constants {
     }
 
     public static class CreateInstancesConstants {
-        public static final String CREATE_INSTANCES_OPERATION_NAME = "Create Instance";
+        public static final String CREATE_INSTANCE_OPERATION_NAME = "Create Instance";
         public static final String IS_MANAGEMENT_DISABLED = "isManagementDisabled";
         public static final String IS_MONITORING_DISABLED = "isMonitoringDisabled";
         public static final String AVAILABILITY_DOMAIN = "availabilityDomain";
@@ -141,6 +141,7 @@ public class Constants {
         public static final String IMAGE_ID = "imageId";
         public static final String KMS_KEY_ID = "kmsKeyId";
         public static final String BOOT_VOLUME_ID = "bootVolumeId";
+        public static final String INSTANCE_ID_JSON_PATH = "$.id";
     }
 
 }

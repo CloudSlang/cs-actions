@@ -22,6 +22,9 @@ public class Outputs extends OutputNames {
         public static final String DOCUMENT = "document";
 
     }
+    public static class CreateInstanceOutputs {
+        public static final String INSTANCE_ID = "instance_id";
+    }
 
     public static class ListInstancesOutputs {
         public static final String INSTANCE_LIST = "instance_list";

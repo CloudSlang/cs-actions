@@ -119,7 +119,7 @@ public class Descriptions {
     }
 
     public static class CreateInstance {
-        public static final String CREATE_INSTANCES_OPERATION_NAME_DESC = "Creates a new instance in the specified compartment and the specified availability domain.";
+        public static final String CREATE_INSTANCE_OPERATION_NAME_DESC = "Creates a new instance in the specified compartment and the specified availability domain.";
         public static final String IS_MANAGEMENT_DISABLED_DESC = "Whether the agent running on the instance can run all the available management plugins." +
                 "Default: 'false'";
         public static final String IS_MONITORING_DISABLED_DESC = "Whether the agent running on the instance can gather performance metrics and monitor the instance" +

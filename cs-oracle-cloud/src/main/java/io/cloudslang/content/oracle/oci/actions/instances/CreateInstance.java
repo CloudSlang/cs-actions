@@ -41,8 +41,8 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.AVAILABILITY_DOMAIN;
+import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.CreateInstancesConstants.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.CreateInstance.*;
@@ -54,7 +54,7 @@ import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_P
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
-import static io.cloudslang.content.oracle.oci.utils.Outputs.ListInstancesOutputs.INSTANCE_LIST;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.CreateInstanceOutputs.INSTANCE_ID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -62,11 +62,12 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class CreateInstance {
 
 
-    @Action(name = CREATE_INSTANCES_OPERATION_NAME,
-            description = CREATE_INSTANCES_OPERATION_NAME_DESC,
+    @Action(name = CREATE_INSTANCE_OPERATION_NAME,
+            description = CREATE_INSTANCE_OPERATION_NAME_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = INSTANCE_ID, description = INSTANCE_ID_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
@@ -223,12 +224,11 @@ public class CreateInstance {
             Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                final List<String> instance_list = JsonPath.read(returnMessage, Constants.ListInstancesConstants.INSTANCES_LIST_JSON_PATH);
-                if (!instance_list.isEmpty()) {
-                    final String instanceListAsString = StringUtils.join(instance_list.toArray(), Constants.Common.DELIMITER);
-                    results.put(INSTANCE_LIST, instanceListAsString);
+                final String instanceId = JsonPath.read(returnMessage, INSTANCE_ID_JSON_PATH);
+                if (!instanceId.isEmpty()) {
+                    results.put(INSTANCE_ID, instanceId);
                 } else {
-                    results.put(INSTANCE_LIST, EMPTY);
+                    results.put(INSTANCE_ID, EMPTY);
                 }
 
             } else {
