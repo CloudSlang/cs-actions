@@ -81,7 +81,7 @@ public class Constants {
     }
 
     public static class GetInstancesDetailsConstants {
-        public static final String GET_INSTANCE_OPERATION_NAME = "Get Instance Details";
+        public static final String GET_INSTANCE_DETAILS_OPERATION_NAME = "Get Instance Details";
         public static final String INSTANCE_STATE_JSON_PATH = "$.lifecycleState";
     }
 

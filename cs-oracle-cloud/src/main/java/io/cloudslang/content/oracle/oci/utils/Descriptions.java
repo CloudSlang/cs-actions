@@ -96,7 +96,7 @@ public class Descriptions {
     }
 
     public static class GetInstanceDetails {
-        public static final String GET_INSTANCE_OPERATION_DESC = "Gets information about the instance.";
+        public static final String GET_INSTANCE_DETAILS_OPERATION_DESC = "Gets information about the instance.";
         public static final String INSTANCE_STATE_DESC = "The current state of the instance.";
 
     }
