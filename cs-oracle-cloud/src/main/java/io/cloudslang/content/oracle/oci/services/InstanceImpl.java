@@ -89,9 +89,18 @@ public class InstanceImpl {
         createVnicDetails.setDisplayName(createInstancesInputs.getDisplayName());
         createVnicDetails.setHostnameLabel(createInstancesInputs.getHostnameLabel());
         createVnicDetails.setSubnetId(createInstancesInputs.getSubnetId());
+        if(createInstancesInputs.getSourceType().isEmpty()) {
+            if (!createInstancesInputs.getImageId().isEmpty()) {
+                sourceDetails.setSourceType("image");
+            }else {
+                sourceDetails.setSourceType("bootVolume");
+            }
+        }else {
+            sourceDetails.setSourceType(createInstancesInputs.getSourceType());
+        }
+
         if (!createInstancesInputs.getNetworkSecurityGroupIds().isEmpty())
             createVnicDetails.setNsgIds(createInstancesInputs.getNetworkSecurityGroupIds().split(","));
-        sourceDetails.setSourceType(createInstancesInputs.getSourceType());
         sourceDetails.setImageId(createInstancesInputs.getImageId());
         if (!createInstancesInputs.getBootVolumeSizeInGBs().isEmpty()) {
             sourceDetails.setBootVolumeSizeInGBs(Integer.parseInt(createInstancesInputs.getBootVolumeSizeInGBs()));
