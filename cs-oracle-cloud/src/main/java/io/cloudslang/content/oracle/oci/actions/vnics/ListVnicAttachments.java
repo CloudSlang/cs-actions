@@ -41,7 +41,7 @@ import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
-import static io.cloudslang.content.oracle.oci.utils.Constants.CreateInstancesConstants.AVAILABILITY_DOMAIN;
+import static io.cloudslang.content.oracle.oci.utils.Constants.CreateInstanceConstants.AVAILABILITY_DOMAIN;
 import static io.cloudslang.content.oracle.oci.utils.Constants.ListVnicAttachmentsConstants.LIST_VNIC_ATTACHMENTS_OPERATION_NAME;
 import static io.cloudslang.content.oracle.oci.utils.Constants.ListVnicAttachmentsConstants.LIST_VNIC_JSON_PATH;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
@@ -60,7 +60,6 @@ import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_U
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.VNIC_ID;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
-import static io.cloudslang.content.oracle.oci.utils.Outputs.ListInstancesOutputs.INSTANCE_LIST;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.ListVnicAttachmentsOutputs.VNIC_LIST;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;

@@ -39,7 +39,7 @@ import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
-import static io.cloudslang.content.oracle.oci.utils.Constants.GetInstancesDetailsConstants.*;
+import static io.cloudslang.content.oracle.oci.utils.Constants.GetInstanceDetailsConstants.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.GetInstanceDetails.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;

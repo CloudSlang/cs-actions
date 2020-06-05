@@ -17,6 +17,8 @@ package io.cloudslang.content.oracle.oci.entities.inputs;
 
 import org.jetbrains.annotations.NotNull;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 public class OCIInstanceInputs {
     private final String isManagementDisabled;
     private final String isMonitoringDisabled;
@@ -276,40 +278,40 @@ public class OCIInstanceInputs {
     }
 
     public static final class OCIInstanceInputsBuilder {
-        private String isManagementDisabled;
-        private String isMonitoringDisabled;
-        private String assignPublicIp;
-        private String definedTags;
-        private String displayName;
-        private String freeformTags;
-        private String hostnameLabel;
-        private String networkSecurityGroupIds;
-        private String privateIp;
-        private String skipSourceDestCheck;
-        private String subnetId;
-        private String dedicatedVmHostId;
-        private String vnicDefinedTags;
-        private String vnicFreeformTags;
-        private String vnicDisplayName;
-        private String extendedMetadata;
-        private String faultDomain;
-        private String ipxeScript;
-        private String isPvEncryptionInTransitEnabled;
-        private String launchMode;
-        private String bootVolumeType;
-        private String firmware;
-        private String isConsistentVolumeNamingEnabled;
-        private String networkType;
-        private String remoteDataVolumeType;
-        private String shape;
-        private String sshAuthorizedKeys;
-        private String userdata;
-        private String ocpus;
-        private String bootVolumeSizeInGBs;
-        private String imageId;
-        private String kmsKeyId;
-        private String sourceType;
-        private String bootVolumeId;
+        private String isManagementDisabled = EMPTY;
+        private String isMonitoringDisabled = EMPTY;
+        private String assignPublicIp = EMPTY;
+        private String definedTags = EMPTY;
+        private String displayName = EMPTY;
+        private String freeformTags = EMPTY;
+        private String hostnameLabel = EMPTY;
+        private String networkSecurityGroupIds = EMPTY;
+        private String privateIp = EMPTY;
+        private String skipSourceDestCheck = EMPTY;
+        private String subnetId = EMPTY;
+        private String dedicatedVmHostId = EMPTY;
+        private String vnicDefinedTags = EMPTY;
+        private String vnicFreeformTags = EMPTY;
+        private String vnicDisplayName = EMPTY;
+        private String extendedMetadata = EMPTY;
+        private String faultDomain = EMPTY;
+        private String ipxeScript = EMPTY;
+        private String isPvEncryptionInTransitEnabled = EMPTY;
+        private String launchMode = EMPTY;
+        private String bootVolumeType = EMPTY;
+        private String firmware = EMPTY;
+        private String isConsistentVolumeNamingEnabled = EMPTY;
+        private String networkType = EMPTY;
+        private String remoteDataVolumeType = EMPTY;
+        private String shape = EMPTY;
+        private String sshAuthorizedKeys = EMPTY;
+        private String userdata = EMPTY;
+        private String ocpus = EMPTY;
+        private String bootVolumeSizeInGBs = EMPTY;
+        private String imageId = EMPTY;
+        private String kmsKeyId = EMPTY;
+        private String sourceType = EMPTY;
+        private String bootVolumeId = EMPTY;
         private OCICommonInputs commonInputs;
 
         OCIInstanceInputsBuilder() {

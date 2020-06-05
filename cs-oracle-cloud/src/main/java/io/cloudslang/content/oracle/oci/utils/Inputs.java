@@ -31,6 +31,7 @@ public class Inputs extends InputNames {
         public static final String API_VERSION = "apiVersion";
         public static final String REGION = "region";
         public static final String INSTANCE_ID = "instanceId";
+        public static final String AVAILABILITY_DOMAIN = "availabilityDomain";
         public static final String VNIC_ID = "vnicId";
         public static final String PAGE = "page";
         public static final String LIMIT = "limit";
