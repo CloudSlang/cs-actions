@@ -86,7 +86,7 @@ public class ListVnicAttachments {
                                        @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
-                                       @Param(value = AVAILABILITY_DOMAIN, required = true, description = AVAILABILITY_DOMAIN_DESC) String availabilityDomain,
+                                       @Param(value = AVAILABILITY_DOMAIN, description = AVAILABILITY_DOMAIN_DESC) String availabilityDomain,
                                        @Param(value = INSTANCE_ID, description = INSTANCE_ID_DESC) String instanceId,
                                        @Param(value = VNIC_ID, description = VNIC_ID_DESC) String vnicId,
                                        @Param(value = LIMIT, description = LIMIT_DESC) String limit,
