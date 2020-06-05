@@ -131,6 +131,36 @@ public class CreateInstance {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
+        isManagementDisabled = defaultIfEmpty(isManagementDisabled, EMPTY);
+        isMonitoringDisabled = defaultIfEmpty(isMonitoringDisabled, EMPTY);
+        assignPublicIp = defaultIfEmpty(assignPublicIp, EMPTY);
+        definedTags = defaultIfEmpty(definedTags, EMPTY);
+        displayName = defaultIfEmpty(displayName, EMPTY);
+        freeformTags = defaultIfEmpty(freeformTags, EMPTY);
+        hostnameLabel = defaultIfEmpty(hostnameLabel, EMPTY);
+        networkSecurityGroupIds = defaultIfEmpty(networkSecurityGroupIds, EMPTY);
+        privateIp = defaultIfEmpty(privateIp, EMPTY);
+        skipSourceDestCheck = defaultIfEmpty(skipSourceDestCheck, EMPTY);
+        dedicatedVmHostId = defaultIfEmpty(dedicatedVmHostId, EMPTY);
+        vnicDefinedTags = defaultIfEmpty(vnicDefinedTags, EMPTY);
+        vnicFreeformTags = defaultIfEmpty(vnicFreeformTags, EMPTY);
+        vnicDisplayName = defaultIfEmpty(vnicDisplayName, EMPTY);
+        extendedMetadata = defaultIfEmpty(extendedMetadata, EMPTY);
+        faultDomain = defaultIfEmpty(faultDomain, EMPTY);
+        ipxeScript = defaultIfEmpty(ipxeScript, EMPTY);
+        isPvEncryptionInTransitEnabled = defaultIfEmpty(isPvEncryptionInTransitEnabled, EMPTY);
+        launchMode = defaultIfEmpty(launchMode, EMPTY);
+        bootVolumeType = defaultIfEmpty(bootVolumeType, EMPTY);
+        firmware = defaultIfEmpty(firmware, EMPTY);
+        isConsistentVolumeNamingEnabled = defaultIfEmpty(isConsistentVolumeNamingEnabled    , EMPTY);
+        networkType = defaultIfEmpty(networkType, EMPTY);
+        remoteDataVolumeType = defaultIfEmpty(remoteDataVolumeType, EMPTY);
+        ocpus = defaultIfEmpty(ocpus, EMPTY);
+        bootVolumeSizeInGBs = defaultIfEmpty(bootVolumeSizeInGBs, EMPTY);
+        imageId = defaultIfEmpty(imageId, EMPTY);
+        kmsKeyId = defaultIfEmpty(kmsKeyId, EMPTY);
+        sourceType = defaultIfEmpty(sourceType, EMPTY);
+        bootVolumeId = defaultIfEmpty(bootVolumeId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -148,6 +178,7 @@ public class CreateInstance {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
+
         final List<String> exceptionMessage = InputsValidation.verifyCommonInputs(proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessage.isEmpty()) {

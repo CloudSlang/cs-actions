@@ -86,7 +86,7 @@ public class InstanceImpl {
 
         createVnicDetails.setSkipSourceDestCheck(stringToBoolean(createInstancesInputs.getSkipSourceDestCheck()));
         createVnicDetails.setPrivateIp(createInstancesInputs.getPrivateIp());
-        createVnicDetails.setDisplayName(createInstancesInputs.getDisplayName());
+        createVnicDetails.setDisplayName(createInstancesInputs.getVnicDisplayName());
         createVnicDetails.setHostnameLabel(createInstancesInputs.getHostnameLabel());
         createVnicDetails.setSubnetId(createInstancesInputs.getSubnetId());
         if(createInstancesInputs.getSourceType().isEmpty()) {
@@ -105,7 +105,8 @@ public class InstanceImpl {
         if (!createInstancesInputs.getBootVolumeSizeInGBs().isEmpty()) {
             sourceDetails.setBootVolumeSizeInGBs(Integer.parseInt(createInstancesInputs.getBootVolumeSizeInGBs()));
         }
-
+        sourceDetails.setBootVolumeId(createInstancesInputs.getBootVolumeId());
+        sourceDetails.setKmsKeyId(createInstancesInputs.getKmsKeyId());
         createInstanceRequestBody.setSourceDetails(sourceDetails);
         createInstanceRequestBody.setAgentConfig(agentConfig);
         try {
