@@ -142,7 +142,7 @@ public class HttpUtils {
 
     @NotNull
     public static String getQueryParams(@NotNull final String availabilityDomain, @NotNull final String compartmentId, @NotNull final String instanceId, @NotNull final String limit, @NotNull final String page, @NotNull final String vnicId) {
-        String queryParams = "";
+        StringBuilder queryParams = new StringBuilder();
         Map<String, String> map = new HashMap<>();
         map.put(compartmentId, COMPARTMENT_ID_QUERY_PARAM);
         map.put(availabilityDomain, AVAILABILITY_DOMAIN_QUERY_PARAM);
@@ -152,7 +152,7 @@ public class HttpUtils {
         map.put(limit, LIMIT_QUERY_PARAM);
         for (Map.Entry<String, String> entry : map.entrySet()) {
             if (!entry.getKey().isEmpty()) {
-                queryParams = queryParams + (entry.getValue() + entry.getKey()) + AND;
+                queryParams = queryParams.append ((entry.getValue() + entry.getKey()) + AND);
             }
         }
 
@@ -161,7 +161,7 @@ public class HttpUtils {
 
     @NotNull
     public static String getQueryParams(@NotNull final String availabilityDomain, @NotNull final String compartmentId, @NotNull final String displayName, @NotNull final String limit, @NotNull final String page, @NotNull final String sortBy, @NotNull final String sortOrder, @NotNull final String instanceName) {
-        String queryParams = "";
+        StringBuilder queryParams = new StringBuilder();
         Map<String, String> map = new HashMap<>();
         map.put(compartmentId, COMPARTMENT_ID_QUERY_PARAM);
         map.put(availabilityDomain, AVAILABILITY_DOMAIN_QUERY_PARAM);
@@ -173,7 +173,7 @@ public class HttpUtils {
         map.put(sortOrder, SORT_ORDER_QUERY_PARAM);
         for (Map.Entry<String, String> entry : map.entrySet()) {
             if (!entry.getKey().isEmpty()) {
-                queryParams = queryParams + (entry.getValue() + entry.getKey()) + AND;
+                queryParams = queryParams.append ( (entry.getValue() + entry.getKey()) + AND);
             }
         }
 

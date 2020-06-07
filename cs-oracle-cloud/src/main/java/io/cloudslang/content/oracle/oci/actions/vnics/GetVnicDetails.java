@@ -160,10 +160,10 @@ public class GetVnicDetails {
                 results.put(PRIVATE_IP, JsonPath.read(returnMessage, PRIVATE_IP_JSON_PATH));
                 Configuration configuration = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);
                 String publicIP = (JsonPath.using(configuration).parse(returnMessage).read(PUBLIC_IP_JSON_PATH));
-                if (isEmpty(publicIP)) {
-                    results.put(PUBLIC_IP, EMPTY);
-                } else {
+                if (!isEmpty(publicIP)) {
                     results.put(PUBLIC_IP, publicIP);
+                } else {
+                    results.put(PUBLIC_IP, EMPTY);
                 }
                 results.put(VNIC_NAME, JsonPath.read(returnMessage, VNIC_NAME_JSON_PATH));
                 results.put(VNIC_HOSTNAME, JsonPath.read(returnMessage, VNIC_HOSTNAME_JSON_PATH));
