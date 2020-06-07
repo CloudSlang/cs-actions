@@ -22,8 +22,8 @@ public class VnicImpl {
         String apiKey = (ociCommonInputs.getTenancyOcid() + FORWARD_SLASH
                 + ociCommonInputs.getUserOcid() + FORWARD_SLASH
                 + ociCommonInputs.getFingerPrint());
-        PrivateKey privateKey = SignerImpl.loadPrivateKey(ociCommonInputs.getPrivateKey());
-        return new SignerImpl.RequestSigner(apiKey, privateKey);
+        PrivateKey privateKeyData = SignerImpl.loadPrivateKey(ociCommonInputs.getPrivateKeyData());
+        return new SignerImpl.RequestSigner(apiKey, privateKeyData);
     }
 
     @NotNull
