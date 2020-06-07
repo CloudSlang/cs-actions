@@ -75,7 +75,7 @@ public class GetInstanceDefaultCredentials {
     public Map<String, String> execute(@Param(value = TENANCY_OCID, required = true, description = TENANCY_OCID_DESC) String tenancyOcid,
                                        @Param(value = USER_OCID, required = true, description = USER_OCID_DESC) String userOcid,
                                        @Param(value = FINGER_PRINT, encrypted = true, required = true, description = FINGER_PRINT_DESC) String fingerPrint,
-                                       @Param(value = PRIVATE_KEY, encrypted = true, required = true, description = PRIVATE_KEY_DESC) String privateKey,
+                                       @Param(value = PRIVATE_KEY_DATA, encrypted = true, required = true, description = PRIVATE_KEY_DATA_DESC) String privateKeyData,
                                        @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
@@ -126,7 +126,7 @@ public class GetInstanceDefaultCredentials {
                             .compartmentOcid(compartmentOcid)
                             .userOcid(userOcid)
                             .fingerPrint(fingerPrint)
-                            .privateKey(privateKey)
+                            .privateKeyData(privateKeyData)
                             .apiVersion(apiVersion)
                             .region(region)
                             .instanceId(instanceId)
@@ -152,16 +152,8 @@ public class GetInstanceDefaultCredentials {
             Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                final String username = JsonPath.read(returnMessage, INSTANCE_USERNAME_JSON_PATH);
-                final String password = JsonPath.read(returnMessage, INSTANCE_PASSWORD_JSON_PATH);
-                if (!username.isEmpty() && !password.isEmpty()) {
-                    results.put(INSTANCE_USERNAME, username);
-                    results.put(INSTANCE_PASSWORD, password);
-                } else {
-                    results.put(INSTANCE_USERNAME, EMPTY);
-                    results.put(INSTANCE_PASSWORD, EMPTY);
-                }
-
+                results.put(INSTANCE_USERNAME, JsonPath.read(returnMessage, INSTANCE_USERNAME_JSON_PATH));
+                results.put(INSTANCE_PASSWORD, JsonPath.read(returnMessage, INSTANCE_PASSWORD_JSON_PATH));
             } else {
                 return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
             }

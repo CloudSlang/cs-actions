@@ -245,7 +245,7 @@ public class CreateInstanceRequestBody {
         boolean skipSourceDestCheck;
         String subnetId;
 
-        public boolean isAssignPublicIp() {
+        public boolean getAssignPublicIp() {
             return assignPublicIp;
         }
 
@@ -301,7 +301,7 @@ public class CreateInstanceRequestBody {
             this.privateIp = privateIp;
         }
 
-        public boolean isSkipSourceDestCheck() {
+        public boolean getSkipSourceDestCheck() {
             return skipSourceDestCheck;
         }
 

@@ -20,10 +20,10 @@ public class Descriptions {
         public static final String TENANCY_OCID_DESC = "Oracle creates a tenancy for your company, which is a secure and isolated partition where you can create, organize, and administer your cloud resources. This is ID of the tenancy.";
         public static final String USER_OCID_DESC = "ID of an individual employee or system that needs to manage or use your company’s Oracle Cloud Infrastructure resources.";
         public static final String FINGER_PRINT_DESC = "Finger print of the public key generated for OCI account.";
-        public static final String PRIVATE_KEY_DESC = "public key for OCI account.";
+        public static final String PRIVATE_KEY_DATA_DESC = "A string representing the private key for the OCI. This string is usually the content of a private key file.";
         public static final String API_VERSION_DESC = "Version of the API of OCI." +
                 "Default: '20160918'";
-        public static final String REGION_DESC = "Region in OCI.";
+        public static final String REGION_DESC = "The region's name.";
         public static final String PROXY_HOST_DESC = "Proxy server used to access the OCI.";
         public static final String PROXY_PORT_DESC = "Proxy server port used to access the OCI." +
                 "Default: '8080'";
@@ -82,6 +82,7 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The request was successfully executed.";
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
         public static final String INSTANCE_ID_DESC = "The OCID of the instance.";
+        public static final String INSTANCE_NAME_DESC = "The instance name.";
         public static final String VNIC_ID_DESC = "The OCID of the vnic.";
         public static final String PAGE_DESC = "For list pagination. The value of the opc-next-page response header from the previous \"List\" call.";
         public static final String LIMIT_DESC = "For list pagination. The maximum number of results per page, or items to return in a paginated \"List\" call. ";
@@ -91,8 +92,20 @@ public class Descriptions {
         public static final String LIST_INSTANCES_OPERATION_DESC = "Lists the instances in the specified compartment and " +
                 "the specified availability domain. You can filter the results by specifying an instance name " +
                 "(the list will include all the identically-named instances in the compartment).";
-        public static final String INSTANCE_LIST_DESC = "List of all instances";
+        public static final String INSTANCE_NAME_LIST_DESC = "List of all instance names.";
         public static final String COMPARTMENT_OCID_DESC = "Compartments are a fundamental component of Oracle Cloud Infrastructure for organizing and isolating your cloud resources. This is ID of the compartment.";
+        public static final String DISPLAY_NAME_DESC = "A filter to return only resources that match the given display name exactly.";
+        public static final String SORT_BY_DESC = "The field to sort by. You can provide one sort order (sortOrder). Default order for TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME sort order is case sensitive." +
+                                                  "Allowed values are:\n" +
+                                                  "TIMECREATED\n" +
+                                                  "DISPLAYNAME";
+        public static final String SORT_ORDER_DESC = "The sort order to use, either ascending (ASC) or descending (DESC). The DISPLAYNAME sort order is case sensitive."+ "\n" +
+                                                      "Allowed values are:\n"+
+                                                      "ASC\n"+
+                                                      "DESC";
+        public static final String LIFECYCLE_STATE_DESC = "A filter to only return resources that match the given lifecycle state. The state value is case-insensitive.";
+
+
     }
 
     public static class GetInstanceDetails {
@@ -110,6 +123,10 @@ public class Descriptions {
         public static final String GET_VNIC_DETAILS_OPERATION_DESC = "Gets the information for the specified virtual network interface card (VNIC).";
         public static final String PRIVATE_IP_DESC = "The private IP address of the primary privateIp object on the VNIC. The address is within the CIDR of the VNIC's subnet.";
         public static final String PUBLIC_IP_DESC = "The public IP address of the VNIC.";
+        public static final String VNIC_NAME_DESC = "Name of the VNIC.";
+        public static final String VNIC_HOSTNAME_DESC = "The hostname for the VNIC's primary private IP. Used for DNS.";
+        public static final String VNIC_STATE_DESC = "The current state of the VNIC.";
+        public static final String MAC_ADDRESS_DESC = "The MAC address of the VNIC.";
     }
 
     public static class GetInstanceDefaultCredentials {
@@ -129,7 +146,7 @@ public class Descriptions {
         public static final String DEFINED_TAGS_DESC = "Defined tags for this resource. Each key is predefined and scoped to a namespace." +
                 "Ex: {\"Operations\": {\"CostCenter\": \"42\"}}";
 
-        public static final String DISPLAYNAME_DESC = "A user-friendly name. Does not have to be unique, and it's changeable" +
+        public static final String DISPLAY_NAME_DESC = "A user-friendly name. Does not have to be unique, and it's changeable" +
                 "Ex: My bare metal instance";
         public static final String FREEFORM_TAGS_DESC = "Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace." +
                 "Ex: {\"Department\": \"Finance\"}";

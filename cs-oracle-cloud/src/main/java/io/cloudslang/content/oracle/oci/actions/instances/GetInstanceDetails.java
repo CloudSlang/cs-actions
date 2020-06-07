@@ -39,6 +39,8 @@ import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
+import static io.cloudslang.content.oracle.oci.utils.Constants.Common.EMPTY;
+import static io.cloudslang.content.oracle.oci.utils.Constants.CreateInstanceConstants.INSTANCE_NAME_JSON_PATH;
 import static io.cloudslang.content.oracle.oci.utils.Constants.GetInstanceDetailsConstants.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.GetInstanceDetails.*;
@@ -51,10 +53,10 @@ import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_P
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.CreateInstanceOutputs.INSTANCE_NAME;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.GetInstanceDetailsOutputs.INSTANCE_STATE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class GetInstanceDetails {
 
@@ -64,6 +66,7 @@ public class GetInstanceDetails {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = INSTANCE_STATE, description = INSTANCE_STATE_DESC),
+                    @Output(value = INSTANCE_NAME, description = INSTANCE_NAME_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
@@ -73,7 +76,7 @@ public class GetInstanceDetails {
     public Map<String, String> execute(@Param(value = TENANCY_OCID, required = true, description = TENANCY_OCID_DESC) String tenancyOcid,
                                        @Param(value = USER_OCID, required = true, description = USER_OCID_DESC) String userOcid,
                                        @Param(value = FINGER_PRINT, encrypted = true, required = true, description = FINGER_PRINT_DESC) String fingerPrint,
-                                       @Param(value = PRIVATE_KEY, encrypted = true, required = true, description = PRIVATE_KEY_DESC) String privateKey,
+                                       @Param(value = PRIVATE_KEY_DATA, encrypted = true, required = true, description = PRIVATE_KEY_DATA_DESC) String privateKeyData,
                                        @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
@@ -124,7 +127,7 @@ public class GetInstanceDetails {
                             .compartmentOcid(compartmentOcid)
                             .userOcid(userOcid)
                             .fingerPrint(fingerPrint)
-                            .privateKey(privateKey)
+                            .privateKeyData(privateKeyData)
                             .apiVersion(apiVersion)
                             .region(region)
                             .instanceId(instanceId)
@@ -151,10 +154,16 @@ public class GetInstanceDetails {
 
             if (statusCode >= 200 && statusCode < 300) {
                 final String instanceState = JsonPath.read(returnMessage, INSTANCE_STATE_JSON_PATH);
-                if (!instanceState.isEmpty()) {
+                final String instanceName = JsonPath.read(returnMessage, INSTANCE_NAME_JSON_PATH);
+                if (!isEmpty(instanceState)) {
                     results.put(INSTANCE_STATE, instanceState);
                 } else {
                     results.put(INSTANCE_STATE, EMPTY);
+                }
+                if (!isEmpty(instanceName)) {
+                    results.put(INSTANCE_NAME, instanceName);
+                } else {
+                    results.put(INSTANCE_NAME, EMPTY);
                 }
 
             } else {
