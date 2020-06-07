@@ -152,16 +152,8 @@ public class GetInstanceDefaultCredentials {
             Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                final String username = JsonPath.read(returnMessage, INSTANCE_USERNAME_JSON_PATH);
-                final String password = JsonPath.read(returnMessage, INSTANCE_PASSWORD_JSON_PATH);
-                if (!username.isEmpty() && !password.isEmpty()) {
-                    results.put(INSTANCE_USERNAME, username);
-                    results.put(INSTANCE_PASSWORD, password);
-                } else {
-                    results.put(INSTANCE_USERNAME, EMPTY);
-                    results.put(INSTANCE_PASSWORD, EMPTY);
-                }
-
+                results.put(INSTANCE_USERNAME, JsonPath.read(returnMessage, INSTANCE_USERNAME_JSON_PATH));
+                results.put(INSTANCE_PASSWORD, JsonPath.read(returnMessage, INSTANCE_PASSWORD_JSON_PATH));
             } else {
                 return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
             }

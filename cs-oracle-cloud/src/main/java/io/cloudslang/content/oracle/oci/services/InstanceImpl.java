@@ -21,6 +21,7 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCIInstanceInputs;
+import io.cloudslang.content.oracle.oci.entities.inputs.OCIListInstanceInputs;
 import io.cloudslang.content.oracle.oci.services.models.instances.CreateInstanceRequestBody;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
 import org.apache.http.client.utils.URIBuilder;
@@ -37,11 +38,12 @@ import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.GetInstanceDefaultCredentialsConstants.GET_INSTANCE_DEFAULT_CREDENTIALS_OPERATION_PATH;
 import static io.cloudslang.content.oracle.oci.utils.HttpUtils.getQueryParams;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class InstanceImpl {
 
 
-    public static String createInstanceRequestBody(@NotNull final OCIInstanceInputs createInstancesInputs) {
+    private static String createInstanceRequestBody(@NotNull final OCIInstanceInputs createInstancesInputs) {
         String requestBody = EMPTY;
         ObjectMapper createInstanceMapper = new ObjectMapper();
         CreateInstanceRequestBody createInstanceRequestBody = new CreateInstanceRequestBody();
@@ -80,7 +82,7 @@ public class InstanceImpl {
         agentConfig.setIsManagementDisabled(stringToBoolean(createInstancesInputs.getIsManagementDisabled()));
         agentConfig.setIsMonitoringDisabled(stringToBoolean(createInstancesInputs.getIsMonitoringDisabled()));
         CreateInstanceRequestBody.CreateVnicDetails createVnicDetails = createInstanceRequestBody.new CreateVnicDetails();
-        if(!createInstancesInputs.getAssignPublicIp().isEmpty()){
+        if (!createInstancesInputs.getAssignPublicIp().isEmpty()) {
             createVnicDetails.setAssignPublicIp(Boolean.parseBoolean(createInstancesInputs.getAssignPublicIp()));
         }
 
@@ -89,24 +91,29 @@ public class InstanceImpl {
         createVnicDetails.setDisplayName(createInstancesInputs.getVnicDisplayName());
         createVnicDetails.setHostnameLabel(createInstancesInputs.getHostnameLabel());
         createVnicDetails.setSubnetId(createInstancesInputs.getSubnetId());
-        if(createInstancesInputs.getSourceType().isEmpty()) {
+        if (createInstancesInputs.getSourceType().isEmpty()) {
             if (!createInstancesInputs.getImageId().isEmpty()) {
-                sourceDetails.setSourceType("image");
-            }else {
-                sourceDetails.setSourceType("bootVolume");
+                sourceDetails.setSourceType(IMAGE);
+            } else {
+                sourceDetails.setSourceType(BOOT_VOLUME);
             }
-        }else {
+        } else {
             sourceDetails.setSourceType(createInstancesInputs.getSourceType());
         }
 
         if (!createInstancesInputs.getNetworkSecurityGroupIds().isEmpty())
             createVnicDetails.setNsgIds(createInstancesInputs.getNetworkSecurityGroupIds().split(","));
-        sourceDetails.setImageId(createInstancesInputs.getImageId());
-        if (!createInstancesInputs.getBootVolumeSizeInGBs().isEmpty()) {
-            sourceDetails.setBootVolumeSizeInGBs(Integer.parseInt(createInstancesInputs.getBootVolumeSizeInGBs()));
+
+        if (!isEmpty(createInstancesInputs.getBootVolumeId())) {
+            sourceDetails.setBootVolumeId(createInstancesInputs.getBootVolumeId());
+        } else {
+            sourceDetails.setImageId(createInstancesInputs.getImageId());
+            sourceDetails.setKmsKeyId(createInstancesInputs.getKmsKeyId());
+            if (!createInstancesInputs.getBootVolumeSizeInGBs().isEmpty()) {
+                sourceDetails.setBootVolumeSizeInGBs(Integer.parseInt(createInstancesInputs.getBootVolumeSizeInGBs()));
+            }
         }
-        sourceDetails.setBootVolumeId(createInstancesInputs.getBootVolumeId());
-        sourceDetails.setKmsKeyId(createInstancesInputs.getKmsKeyId());
+
         createInstanceRequestBody.setSourceDetails(sourceDetails);
         createInstanceRequestBody.setAgentConfig(agentConfig);
         try {
@@ -125,22 +132,25 @@ public class InstanceImpl {
     }
 
     @NotNull
+    private static SignerImpl.RequestSigner getRequestSigner(OCICommonInputs ociCommonInputs) {
+        String apiKey = (ociCommonInputs.getTenancyOcid() + FORWARD_SLASH
+                + ociCommonInputs.getUserOcid() + FORWARD_SLASH
+                + ociCommonInputs.getFingerPrint());
+        PrivateKey privateKey = SignerImpl.loadPrivateKey(ociCommonInputs.getPrivateKey());
+        return new SignerImpl.RequestSigner(apiKey, privateKey);
+    }
+
+    @NotNull
     public static Map<String, String> createInstance(@NotNull final OCIInstanceInputs createInstancesInputs)
             throws Exception {
 
-        String apiKey = (createInstancesInputs.getCommonInputs().getTenancyOcid() + FORWARD_SLASH
-                + createInstancesInputs.getCommonInputs().getUserOcid() + FORWARD_SLASH
-                + createInstancesInputs.getCommonInputs().getFingerPrint());
-        SignerImpl signerImpl = new SignerImpl();
-        PrivateKey privateKey = signerImpl.loadPrivateKey(createInstancesInputs.getCommonInputs().getPrivateKey());
-        SignerImpl.RequestSigner signer = new SignerImpl.RequestSigner(apiKey, privateKey);
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(listInstancesUrl(createInstancesInputs.getCommonInputs().getRegion()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
         httpClientInputs.setBody(createInstanceRequestBody(createInstancesInputs));
         URI uri = URI.create(httpClientInputs.getUrl());
-        Map<String, String> headers = signer.signRequest(uri, POST, httpClientInputs.getBody());
+        Map<String, String> headers = getRequestSigner(createInstancesInputs.getCommonInputs()).signRequest(uri, POST, httpClientInputs.getBody());
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, createInstancesInputs.getCommonInputs());
         return new HttpClientService().execute(httpClientInputs);
@@ -149,24 +159,18 @@ public class InstanceImpl {
 
 
     @NotNull
-    public static Map<String, String> listInstances(@NotNull final OCICommonInputs ociCommonInputs)
+    public static Map<String, String> listInstances(@NotNull final OCIListInstanceInputs ociListInstanceInputs)
             throws Exception {
 
-        String apiKey = (ociCommonInputs.getTenancyOcid() + FORWARD_SLASH
-                + ociCommonInputs.getUserOcid() + FORWARD_SLASH
-                + ociCommonInputs.getFingerPrint());
-        SignerImpl signerImpl = new SignerImpl();
-        PrivateKey privateKey = signerImpl.loadPrivateKey(ociCommonInputs.getPrivateKey());
-        SignerImpl.RequestSigner signer = new SignerImpl.RequestSigner(apiKey, privateKey);
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(listInstancesUrl(ociCommonInputs.getRegion()));
-        httpClientInputs.setQueryParams(getQueryParams(ociCommonInputs.getCompartmentOcid()));
+        httpClientInputs.setUrl(listInstancesUrl(ociListInstanceInputs.getCommonInputs().getRegion()));
+        httpClientInputs.setQueryParams(getQueryParams(ociListInstanceInputs.getCommonInputs().getAvailabilityDomain(), ociListInstanceInputs.getCommonInputs().getCompartmentOcid(), ociListInstanceInputs.getDisplayName(), ociListInstanceInputs.getCommonInputs().getLimit(), ociListInstanceInputs.getCommonInputs().getPage(), ociListInstanceInputs.getSortBy(), ociListInstanceInputs.getSortOrder(), ociListInstanceInputs.getLifecycleState()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
         URI uri = URI.create(httpClientInputs.getUrl() + QUERY + httpClientInputs.getQueryParams());
-        Map<String, String> headers = signer.signRequest(uri, GET, EMPTY);
+        Map<String, String> headers = getRequestSigner(ociListInstanceInputs.getCommonInputs()).signRequest(uri, GET, EMPTY);
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
-        HttpCommons.setCommonHttpInputs(httpClientInputs, ociCommonInputs);
+        HttpCommons.setCommonHttpInputs(httpClientInputs, ociListInstanceInputs.getCommonInputs());
         return new HttpClientService().execute(httpClientInputs);
 
     }
@@ -175,48 +179,35 @@ public class InstanceImpl {
     public static Map<String, String> getInstanceDetails(@NotNull final OCICommonInputs ociCommonInputs)
             throws Exception {
 
-        String apiKey = (ociCommonInputs.getTenancyOcid() + FORWARD_SLASH
-                + ociCommonInputs.getUserOcid() + FORWARD_SLASH
-                + ociCommonInputs.getFingerPrint());
-        SignerImpl signerImpl = new SignerImpl();
-        PrivateKey privateKey = signerImpl.loadPrivateKey(ociCommonInputs.getPrivateKey());
-        SignerImpl.RequestSigner signer = new SignerImpl.RequestSigner(apiKey, privateKey);
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(getInstanceDetailsUrl(ociCommonInputs.getRegion(), ociCommonInputs.getInstanceId()));
+        return getStringStringMap(ociCommonInputs, httpClientInputs);
+
+    }
+
+    @NotNull
+    private static Map<String, String> getStringStringMap(@NotNull OCICommonInputs ociCommonInputs, HttpClientInputs httpClientInputs) {
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
         URI uri = URI.create(httpClientInputs.getUrl());
-        Map<String, String> headers = signer.signRequest(uri, GET, EMPTY);
+        Map<String, String> headers = getRequestSigner(ociCommonInputs).signRequest(uri, GET, EMPTY);
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociCommonInputs);
         return new HttpClientService().execute(httpClientInputs);
-
     }
 
     @NotNull
     public static Map<String, String> getInstanceDefaultCredentials(@NotNull final OCICommonInputs ociCommonInputs)
             throws Exception {
 
-        String apiKey = (ociCommonInputs.getTenancyOcid() + FORWARD_SLASH
-                + ociCommonInputs.getUserOcid() + FORWARD_SLASH
-                + ociCommonInputs.getFingerPrint());
-        SignerImpl signerImpl = new SignerImpl();
-        PrivateKey privateKey = signerImpl.loadPrivateKey(ociCommonInputs.getPrivateKey());
-        SignerImpl.RequestSigner signer = new SignerImpl.RequestSigner(apiKey, privateKey);
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(getInstanceDefaultCredentialsUrl(ociCommonInputs.getRegion(), ociCommonInputs.getInstanceId()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        URI uri = URI.create(httpClientInputs.getUrl());
-        Map<String, String> headers = signer.signRequest(uri, GET, EMPTY);
-        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
-        HttpCommons.setCommonHttpInputs(httpClientInputs, ociCommonInputs);
-        return new HttpClientService().execute(httpClientInputs);
+        return getStringStringMap(ociCommonInputs, httpClientInputs);
 
     }
 
     @NotNull
-    public static String listInstancesUrl(@NotNull final String region) throws Exception {
+    private static String listInstancesUrl(@NotNull final String region) throws Exception {
         final URIBuilder uriBuilder = HttpUtils.getUriBuilder(region);
         uriBuilder.setPath(listInstancesPath());
         return uriBuilder.build().toURL().toString();
@@ -231,7 +222,7 @@ public class InstanceImpl {
     }
 
     @NotNull
-    public static String getInstanceDetailsUrl(@NotNull final String region, @NotNull final String instanceId) throws Exception {
+    private static String getInstanceDetailsUrl(@NotNull final String region, @NotNull final String instanceId) throws Exception {
         final URIBuilder uriBuilder = HttpUtils.getUriBuilder(region);
         uriBuilder.setPath(getInstanceDetailsPath(instanceId));
         return uriBuilder.build().toURL().toString();
@@ -248,7 +239,7 @@ public class InstanceImpl {
 
 
     @NotNull
-    public static String getInstanceDefaultCredentialsUrl(@NotNull final String region, @NotNull final String instanceId) throws Exception {
+    private static String getInstanceDefaultCredentialsUrl(@NotNull final String region, @NotNull final String instanceId) throws Exception {
         final URIBuilder uriBuilder = HttpUtils.getUriBuilder(region);
         uriBuilder.setPath(getInstanceDefaultCredentialsPath(instanceId));
         return uriBuilder.build().toURL().toString();
@@ -264,13 +255,13 @@ public class InstanceImpl {
         return pathString.toString();
     }
 
-    public static JSONObject stringToJSON(JSONParser jsonParser, String property) throws ParseException {
+    private static JSONObject stringToJSON(JSONParser jsonParser, String property) throws ParseException {
         if (!property.isEmpty())
             return (JSONObject) jsonParser.parse(property);
         return null;
     }
 
-    public static boolean stringToBoolean(String property) {
+    private static boolean stringToBoolean(String property) {
         if (!property.isEmpty())
             return Boolean.parseBoolean(property);
         return false;

@@ -14,8 +14,6 @@
  */
 package io.cloudslang.content.oracle.oci.utils;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 public class Constants {
     public static class Common {
         public static final String API_VERSION = "/20160918";
@@ -30,6 +28,7 @@ public class Constants {
         public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid proxy details.";
         public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
         public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
+        public static final String EXCEPTION_INVALID_JSON = "The %s for %s input is not a valid json object.";
         public static final String ANONYMOUS = "anonymous";
         public static final String GET = "get";
         public static final String HEAD = "head";
@@ -46,12 +45,18 @@ public class Constants {
         public static final String IAAS = "iaas";
         public static final String OCI_HOST = "oraclecloud.com";
         public static final String LIST_INSTANCES = "/instances/";
-        public static final String COMPARTMENT_ID = "compartmentId=";
-        public static final String INSTANCE_ID = "instanceId=";
-        public static final String AVAILABILITY_DOMAIN = "availabilityDomain=";
-        public static final String PAGE = "page=";
-        public static final String LIMIT = "limit=";
-        public static final String VNIC_ID = "vnicId=";
+        public static final String LIST_VNIC_ATTACHMENTS = "/vnicAttachments/";
+        public static final String GET_VNIC = "/vnics/";
+        public static final String COMPARTMENT_ID_QUERY_PARAM = "compartmentId=";
+        public static final String INSTANCE_ID_QUERY_PARAM = "instanceId=";
+        public static final String AVAILABILITY_DOMAIN_QUERY_PARAM = "availabilityDomain=";
+        public static final String PAGE_QUERY_PARAM = "page=";
+        public static final String LIMIT_QUERY_PARAM = "limit=";
+        public static final String DISPLAYNAME_QUERY_PARAM = "displayName=";
+        public static final String SORT_BY_QUERY_PARAM = "sortBy=";
+        public static final String SORT_ORDER_QUERY_PARAM = "sortOrder=";
+        public static final String LIFECYCLE_STATE_QUERY_PARAM = "lifecycleState=";
+        public static final String VNIC_ID_QUERY_PARAM = "vnicId=";
         public static final String QUERY = "?";
         public static final String FORWARD_SLASH = "/";
         public static final String HTTPS = "https";
@@ -64,6 +69,8 @@ public class Constants {
         public static final String COLON = ":";
         public static final String PUT = "put";
         public static final String AND = "&";
+        public static final String IMAGE = "image";
+        public static final String BOOT_VOLUME = "bootVolume";
         public static final String CONTENT_TYPE = "content-type";
         public static final String X_CONTENT_SHA256 = "x-content-sha256";
         public static final String APPLICATION_JSON = "application/json";
@@ -78,6 +85,9 @@ public class Constants {
     public static class ListInstancesConstants {
         public static final String LIST_INSTANCES_OPERATION_NAME = "List Instances";
         public static final String INSTANCES_LIST_JSON_PATH = "$.[*].displayName";
+        public static final String SORT_BY = "sortBy";
+        public static final String SORT_ORDER = "sortOrder";
+        public static final String LIFECYCLE_STATE = "lifecycleState";
     }
 
     public static class GetInstanceDetailsConstants {
@@ -94,7 +104,12 @@ public class Constants {
         public static final String GET_VNIC_DETAILS_OPERATION_NAME = "Get Vnic Details";
         public static final String PRIVATE_IP_JSON_PATH = "$.privateIp";
         public static final String PUBLIC_IP_JSON_PATH = "$.publicIp";
+        public static final String VNIC_NAME_JSON_PATH = "$.displayName";
+        public static final String VNIC_HOSTNAME_JSON_PATH = "$.hostnameLabel";
+        public static final String VNIC_STATE_JSON_PATH = "$.lifecycleState";
+        public static final String MAC_ADDRESS_JSON_PATH = "$.macAddress";
     }
+
     public static class GetInstanceDefaultCredentialsConstants {
 
         public static final String GET_INSTANCE_DEFAULT_CREDENTIALS_OPERATION_NAME = "Get Instance default Credentials";
@@ -110,7 +125,7 @@ public class Constants {
         public static final String AVAILABILITY_DOMAIN = "availabilityDomain";
         public static final String ASSIGN_PUBLIC_IP = "assignPublicIP";
         public static final String DEFINED_TAGS = "definedTags";
-        public static final String DISPLAYNAME = "displayName";
+        public static final String DISPLAY_NAME = "displayName";
         public static final String FREEFORM_TAGS = "freeformTags";
         public static final String HOSTNAME_LABEL = "hostnameLabel";
         public static final String NETWORK_SECURITY_GROUP_IDS = "networkSecurityGroupIds";
@@ -142,22 +157,23 @@ public class Constants {
         public static final String KMS_KEY_ID = "kmsKeyId";
         public static final String BOOT_VOLUME_ID = "bootVolumeId";
         public static final String INSTANCE_ID_JSON_PATH = "$.id";
+        public static final String INSTANCE_NAME_JSON_PATH = "$.displayName";
     }
 
-    public static class CounterConstants{
-        public static final String RESULT_STRING="resultString";
-        public static final String INCREMENT_BY_DEFAULT_VALUE="1";
-        public static final String RESULT="result";
-        public static final String HASMORE="has more";
-        public static final String NOMORE="no more";
-        public static final String FAILURE="failure";
-        public static final String EXCEPTION="exception";
-        public static final String COUNTER_OPERATION_NAME="Counter";
-        public static final String TO="to";
-        public static final String FROM="from";
-        public static final String INCREMENT_BY="incrementBy";
-        public static final String SESSION_COUNTER="sessionCounter";
-        public static final String RESET="reset";
+    public static class CounterConstants {
+        public static final String RESULT_STRING = "resultString";
+        public static final String INCREMENT_BY_DEFAULT_VALUE = "1";
+        public static final String RESULT = "result";
+        public static final String HASMORE = "has more";
+        public static final String NOMORE = "no more";
+        public static final String FAILURE = "failure";
+        public static final String EXCEPTION = "exception";
+        public static final String COUNTER_OPERATION_NAME = "Counter";
+        public static final String TO = "to";
+        public static final String FROM = "from";
+        public static final String INCREMENT_BY = "incrementBy";
+        public static final String SESSION_COUNTER = "sessionCounter";
+        public static final String RESET = "reset";
 
     }
 

@@ -18,22 +18,26 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class VnicImpl {
 
     @NotNull
-    public static Map<String, String> listVnicAttachments(@NotNull final OCICommonInputs ociCommonInputs)
-            throws Exception {
-
+    private static SignerImpl.RequestSigner getRequestSigner(OCICommonInputs ociCommonInputs) {
         String apiKey = (ociCommonInputs.getTenancyOcid() + FORWARD_SLASH
                 + ociCommonInputs.getUserOcid() + FORWARD_SLASH
                 + ociCommonInputs.getFingerPrint());
-        SignerImpl signerImpl = new SignerImpl();
-        PrivateKey privateKey = signerImpl.loadPrivateKey(ociCommonInputs.getPrivateKey());
-        SignerImpl.RequestSigner signer = new SignerImpl.RequestSigner(apiKey, privateKey);
+        PrivateKey privateKey = SignerImpl.loadPrivateKey(ociCommonInputs.getPrivateKey());
+        return new SignerImpl.RequestSigner(apiKey, privateKey);
+    }
+
+    @NotNull
+    public static Map<String, String> listVnicAttachments(@NotNull final OCICommonInputs ociCommonInputs)
+            throws Exception {
+
+
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(listVnicAttachmentsUrl(ociCommonInputs.getRegion()));
-        httpClientInputs.setQueryParams(getQueryParams(ociCommonInputs.getAvailabilityDomain(),ociCommonInputs.getCompartmentOcid(),ociCommonInputs.getInstanceId(),ociCommonInputs.getPage(),ociCommonInputs.getLimit(),ociCommonInputs.getVnicId()));
+        httpClientInputs.setQueryParams(getQueryParams(ociCommonInputs.getAvailabilityDomain(), ociCommonInputs.getCompartmentOcid(), ociCommonInputs.getInstanceId(), ociCommonInputs.getPage(), ociCommonInputs.getLimit(), ociCommonInputs.getVnicId()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
         URI uri = URI.create(httpClientInputs.getUrl() + QUERY + httpClientInputs.getQueryParams());
-        Map<String, String> headers = signer.signRequest(uri, GET, EMPTY);
+        Map<String, String> headers = getRequestSigner(ociCommonInputs).signRequest(uri, GET, EMPTY);
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociCommonInputs);
         return new HttpClientService().execute(httpClientInputs);
@@ -44,18 +48,12 @@ public class VnicImpl {
     public static Map<String, String> getVnicDetails(@NotNull final OCICommonInputs ociCommonInputs)
             throws Exception {
 
-        String apiKey = (ociCommonInputs.getTenancyOcid() + FORWARD_SLASH
-                + ociCommonInputs.getUserOcid() + FORWARD_SLASH
-                + ociCommonInputs.getFingerPrint());
-        SignerImpl signerImpl = new SignerImpl();
-        PrivateKey privateKey = signerImpl.loadPrivateKey(ociCommonInputs.getPrivateKey());
-        SignerImpl.RequestSigner signer = new SignerImpl.RequestSigner(apiKey, privateKey);
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(getVnicDetailsUrl(ociCommonInputs.getRegion(), ociCommonInputs.getVnicId()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
         URI uri = URI.create(httpClientInputs.getUrl());
-        Map<String, String> headers = signer.signRequest(uri, GET, EMPTY);
+        Map<String, String> headers = getRequestSigner(ociCommonInputs).signRequest(uri, GET, EMPTY);
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociCommonInputs);
         return new HttpClientService().execute(httpClientInputs);
@@ -73,10 +71,11 @@ public class VnicImpl {
     public static String getVnicDetailsPath(@NotNull final String vnicId) {
         StringBuilder pathString = new StringBuilder()
                 .append(API_VERSION)
-                .append("/vnics/")
+                .append(GET_VNIC)
                 .append(vnicId);
         return pathString.toString();
     }
+
     @NotNull
     public static String listVnicAttachmentsUrl(@NotNull final String region) throws Exception {
         final URIBuilder uriBuilder = HttpUtils.getUriBuilder(region);
@@ -88,7 +87,7 @@ public class VnicImpl {
     public static String listVnicAttachmentsPath() {
         StringBuilder pathString = new StringBuilder()
                 .append(API_VERSION)
-                .append("/vnicAttachments/");
+                .append(LIST_VNIC_ATTACHMENTS);
         return pathString.toString();
     }
 }

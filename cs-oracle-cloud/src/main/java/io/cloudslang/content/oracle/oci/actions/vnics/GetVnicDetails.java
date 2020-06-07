@@ -21,7 +21,9 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
@@ -51,11 +53,10 @@ import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_U
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.VNIC_ID;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
-import static io.cloudslang.content.oracle.oci.utils.Outputs.GetVnicDetailsOutputs.PRIVATE_IP;
-import static io.cloudslang.content.oracle.oci.utils.Outputs.GetVnicDetailsOutputs.PUBLIC_IP;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.GetVnicDetailsOutputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class GetVnicDetails {
 
@@ -65,7 +66,12 @@ public class GetVnicDetails {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = PRIVATE_IP, description = PRIVATE_IP_DESC),
-                    @Output(value = PUBLIC_IP, description = PUBLIC_IP_DESC)
+                    @Output(value = PUBLIC_IP, description = PUBLIC_IP_DESC),
+                    @Output(value = VNIC_NAME, description = VNIC_NAME_DESC),
+                    @Output(value = VNIC_HOSTNAME, description = VNIC_HOSTNAME_DESC),
+                    @Output(value = VNIC_STATE, description = VNIC_STATE_DESC),
+                    @Output(value = MAC_ADDRESS, description = MAC_ADDRESS_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = Descriptions.Common.SUCCESS_DESC),
@@ -151,18 +157,18 @@ public class GetVnicDetails {
             Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                final String privateIP = JsonPath.read(returnMessage, PRIVATE_IP_JSON_PATH);
-                final String publicIp = JsonPath.read(returnMessage, PUBLIC_IP_JSON_PATH);
-                if (!privateIP.isEmpty()) {
-                    results.put(PRIVATE_IP, privateIP);
-                } else {
-                    results.put(PRIVATE_IP, EMPTY);
-                }
-                if (!publicIp.isEmpty()) {
-                    results.put(PUBLIC_IP, publicIp);
-                } else {
+                results.put(PRIVATE_IP, JsonPath.read(returnMessage, PRIVATE_IP_JSON_PATH));
+                Configuration configuration = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);
+                String publicIP = (JsonPath.using(configuration).parse(returnMessage).read(PUBLIC_IP_JSON_PATH));
+                if (isEmpty(publicIP)) {
                     results.put(PUBLIC_IP, EMPTY);
+                } else {
+                    results.put(PUBLIC_IP, publicIP);
                 }
+                results.put(VNIC_NAME, JsonPath.read(returnMessage, VNIC_NAME_JSON_PATH));
+                results.put(VNIC_HOSTNAME, JsonPath.read(returnMessage, VNIC_HOSTNAME_JSON_PATH));
+                results.put(VNIC_STATE, JsonPath.read(returnMessage, VNIC_STATE_JSON_PATH));
+                results.put(MAC_ADDRESS, JsonPath.read(returnMessage, MAC_ADDRESS_JSON_PATH));
             } else {
                 return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
             }

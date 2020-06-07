@@ -40,6 +40,7 @@ import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
+import static io.cloudslang.content.oracle.oci.utils.Constants.Common.EMPTY;
 import static io.cloudslang.content.oracle.oci.utils.Constants.CreateInstanceConstants.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.CreateInstance.*;
@@ -53,9 +54,9 @@ import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.CreateInstanceOutputs.INSTANCE_ID;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.AVAILABILITY_DOMAIN;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.CreateInstanceOutputs.INSTANCE_NAME;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class CreateInstance {
 
@@ -66,6 +67,7 @@ public class CreateInstance {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = INSTANCE_ID, description = INSTANCE_ID_DESC),
+                    @Output(value = INSTANCE_NAME, description = INSTANCE_NAME_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
@@ -88,7 +90,7 @@ public class CreateInstance {
                                        @Param(value = KMS_KEY_ID, description = KMS_KEY_ID_DESC) String kmsKeyId,
                                        @Param(value = BOOT_VOLUME_ID, description = BOOT_VOLUME_ID_DESC) String bootVolumeId,
                                        @Param(value = DEDICATED_VM_HOST_ID, description = DEDICATED_VM_HOST_ID_DESC) String dedicatedVmHostId,
-                                       @Param(value = DISPLAYNAME, description = DISPLAYNAME_DESC) String displayName,
+                                       @Param(value = DISPLAY_NAME, description = DISPLAY_NAME_DESC) String displayName,
                                        @Param(value = DEFINED_TAGS, description = DEFINED_TAGS_DESC) String definedTags,
                                        @Param(value = FREEFORM_TAGS, description = FREEFORM_TAGS_DESC) String freeformTags,
                                        @Param(value = SSH_AUTHORIZED_KEYS, encrypted = true, description = SSH_AUTHORIZED_KEYS_DESC) String sshAuthorizedKeys,
@@ -152,7 +154,7 @@ public class CreateInstance {
         launchMode = defaultIfEmpty(launchMode, EMPTY);
         bootVolumeType = defaultIfEmpty(bootVolumeType, EMPTY);
         firmware = defaultIfEmpty(firmware, EMPTY);
-        isConsistentVolumeNamingEnabled = defaultIfEmpty(isConsistentVolumeNamingEnabled    , EMPTY);
+        isConsistentVolumeNamingEnabled = defaultIfEmpty(isConsistentVolumeNamingEnabled, EMPTY);
         networkType = defaultIfEmpty(networkType, EMPTY);
         remoteDataVolumeType = defaultIfEmpty(remoteDataVolumeType, EMPTY);
         ocpus = defaultIfEmpty(ocpus, EMPTY);
@@ -253,12 +255,8 @@ public class CreateInstance {
             Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                final String instanceId = JsonPath.read(returnMessage, INSTANCE_ID_JSON_PATH);
-                if (!instanceId.isEmpty()) {
-                    results.put(INSTANCE_ID, instanceId);
-                } else {
-                    results.put(INSTANCE_ID, EMPTY);
-                }
+                results.put(INSTANCE_ID, JsonPath.read(returnMessage, INSTANCE_ID_JSON_PATH));
+                results.put(INSTANCE_NAME, JsonPath.read(returnMessage, INSTANCE_NAME_JSON_PATH));
 
             } else {
                 return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
