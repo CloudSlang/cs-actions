@@ -20,10 +20,10 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.httpclient.services.HttpClientService.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.ZERO;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getQueryParams;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.DOCUMENT;
-import static io.cloudslang.content.httpclient.services.HttpClientService.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -36,7 +36,7 @@ public class HttpUtilsTest {
     private static final String FAILURE_CODE = "401";
     public static final String INCLUDE_VM_DISK_CONFIG_INFO = "true";
     public static final String INCLUDE_VM_NIC_CONFIG_INFO = "false";
-    private static final String EXPECTED_QUERY_PARAMS = "?include_vm_disk_config=true&include_vm_nic_config=false";
+    private static final String EXPECTED_QUERY_PARAMS = "include_vm_disk_config=true&include_vm_nic_config=false";
 
     private Map<String, String> initializeSuccessResult() {
         final Map<String, String> result = new HashMap<>();
