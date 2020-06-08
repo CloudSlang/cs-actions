@@ -55,8 +55,7 @@ import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyC
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.TASK_STATUS;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.VM_UUID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class GetTaskDetails {
     @Action(name = GET_TASK_DETAILS_OPERATION_NAME,
@@ -148,8 +147,10 @@ public class GetTaskDetails {
             if (statusCode >= 200 && statusCode < 300) {
                 final String taskStatus = JsonPath.read(returnMessage, TASK_STATUS_PATH);
                 if (taskStatus.equals(SUCCEEDED)) {
-                    final String vmUUID = JsonPath.read(returnMessage, VM_UUID_PATH);
-                    results.put(VM_UUID, vmUUID);
+                    final List<String> vmUUID = JsonPath.read(returnMessage, VM_UUID_PATH);
+
+                    final String vmUUIDString = join(vmUUID.toArray(), DELIMITER);
+                    results.put(VM_UUID, vmUUIDString);
                     results.put(TASK_STATUS, taskStatus);
                 } else {
                     return getTaskFailureResults(statusCode, taskStatus, returnMessage, returnMessage);
