@@ -34,6 +34,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
+import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 
 public class SignerImpl {
 
@@ -93,7 +94,7 @@ public class SignerImpl {
                 headers.put(CONTENT_TYPE, APPLICATION_JSON);
                 myheaders.put(CONTENT_TYPE + COLON, APPLICATION_JSON);
 
-                if (requestBody != null && !requestBody.isEmpty()) {
+                if (!isEmpty(requestBody)) {
                     byte[] body = requestBody.getBytes();
 
                     headers.put(CONTENT_LENGTH, Integer.toString(body.length));
@@ -105,7 +106,7 @@ public class SignerImpl {
                 }
             }
             String path;
-            if (uri.getQuery() != null && !uri.getQuery().isEmpty()) {
+            if (!isEmpty(uri.getQuery())) {
                 path = uri.getPath() + QUERY + uri.getQuery();
             } else {
                 path = uri.getPath();

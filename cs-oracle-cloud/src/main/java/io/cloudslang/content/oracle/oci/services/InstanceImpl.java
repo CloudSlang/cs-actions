@@ -51,13 +51,13 @@ public class InstanceImpl {
         CreateInstanceRequestBody.AgentConfig agentConfig = createInstanceRequestBody.new AgentConfig();
 
         CreateInstanceRequestBody.ShapeConfig shapeConfig = createInstanceRequestBody.new ShapeConfig();
-        if (!createInstancesInputs.getOcpus().isEmpty())
+        if (!isEmpty(createInstancesInputs.getOcpus()))
             shapeConfig.setOcpus(Integer.parseInt(createInstancesInputs.getOcpus()));
 
-        if (!createInstancesInputs.getNetworkType().isEmpty()) {
+        if (!isEmpty(createInstancesInputs.getNetworkType())) {
             CreateInstanceRequestBody.LaunchOptions launchOptions = createInstanceRequestBody.new LaunchOptions();
             launchOptions.setBootVolumeType(createInstancesInputs.getBootVolumeType());
-            if (!createInstancesInputs.getIsConsistentVolumeNamingEnabled().isEmpty())
+            if (!isEmpty(createInstancesInputs.getIsConsistentVolumeNamingEnabled()))
                 launchOptions.setIsConsistentVolumeNamingEnabled(stringToBoolean(createInstancesInputs.getIsConsistentVolumeNamingEnabled()));
             launchOptions.setFirmware(createInstancesInputs.getFirmware());
             launchOptions.setNetworkType(createInstancesInputs.getNetworkType());
@@ -82,7 +82,7 @@ public class InstanceImpl {
         agentConfig.setIsManagementDisabled(stringToBoolean(createInstancesInputs.getIsManagementDisabled()));
         agentConfig.setIsMonitoringDisabled(stringToBoolean(createInstancesInputs.getIsMonitoringDisabled()));
         CreateInstanceRequestBody.CreateVnicDetails createVnicDetails = createInstanceRequestBody.new CreateVnicDetails();
-        if (!createInstancesInputs.getAssignPublicIp().isEmpty()) {
+        if (!isEmpty(createInstancesInputs.getAssignPublicIp())) {
             createVnicDetails.setAssignPublicIp(Boolean.parseBoolean(createInstancesInputs.getAssignPublicIp()));
         }
 
@@ -91,8 +91,8 @@ public class InstanceImpl {
         createVnicDetails.setDisplayName(createInstancesInputs.getVnicDisplayName());
         createVnicDetails.setHostnameLabel(createInstancesInputs.getHostnameLabel());
         createVnicDetails.setSubnetId(createInstancesInputs.getSubnetId());
-        if (createInstancesInputs.getSourceType().isEmpty()) {
-            if (!createInstancesInputs.getImageId().isEmpty()) {
+        if (isEmpty(createInstancesInputs.getSourceType())) {
+            if (!isEmpty(createInstancesInputs.getImageId())) {
                 sourceDetails.setSourceType(IMAGE);
             } else {
                 sourceDetails.setSourceType(BOOT_VOLUME);
@@ -101,7 +101,7 @@ public class InstanceImpl {
             sourceDetails.setSourceType(createInstancesInputs.getSourceType());
         }
 
-        if (!createInstancesInputs.getNetworkSecurityGroupIds().isEmpty())
+        if (!isEmpty(createInstancesInputs.getNetworkSecurityGroupIds()))
             createVnicDetails.setNsgIds(createInstancesInputs.getNetworkSecurityGroupIds().split(","));
 
         if (!isEmpty(createInstancesInputs.getBootVolumeId())) {
@@ -109,7 +109,7 @@ public class InstanceImpl {
         } else {
             sourceDetails.setImageId(createInstancesInputs.getImageId());
             sourceDetails.setKmsKeyId(createInstancesInputs.getKmsKeyId());
-            if (!createInstancesInputs.getBootVolumeSizeInGBs().isEmpty()) {
+            if (!isEmpty(createInstancesInputs.getBootVolumeSizeInGBs())) {
                 sourceDetails.setBootVolumeSizeInGBs(Integer.parseInt(createInstancesInputs.getBootVolumeSizeInGBs()));
             }
         }
@@ -256,13 +256,13 @@ public class InstanceImpl {
     }
 
     private static JSONObject stringToJSON(JSONParser jsonParser, String property) throws ParseException {
-        if (!property.isEmpty())
+        if (!isEmpty(property))
             return (JSONObject) jsonParser.parse(property);
-        return null;
+        return new JSONObject();
     }
 
     private static boolean stringToBoolean(String property) {
-        if (!property.isEmpty())
+        if (!isEmpty(property))
             return Boolean.parseBoolean(property);
         return false;
     }
