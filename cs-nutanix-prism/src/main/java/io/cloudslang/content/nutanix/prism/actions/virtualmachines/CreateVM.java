@@ -52,7 +52,7 @@ import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.USER
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CreateVMInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.nutanix.prism.utils.Outputs.CreateVMOutputs.TASK_UUID;
+import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.TASK_UUID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -64,7 +64,7 @@ public class CreateVM {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = TASK_UUID, description = TASK_UUIDS_DESC)
+                    @Output(value = TASK_UUID, description = TASK_UUID_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL,
@@ -81,7 +81,7 @@ public class CreateVM {
                                        @Param(value = VM_MEMORY_SIZE, required = true, description = VM_MEMORY_SIZE_DESC) String vmMemorySize,
                                        @Param(value = NUM_VCPUS, required = true, description = NUM_VCPUS_DESC) String numVCPUs,
                                        @Param(value = NUM_CORES_PER_VCPU, required = true, description = NUM_CORES_PER_VCPU_DESC) String numCoresPerVCPU,
-                                       @Param(value = TIME_ZONE, required = true, description = TIME_ZONE_DESC) String timeZone,
+                                       @Param(value = TIME_ZONE, description = TIME_ZONE_DESC) String timeZone,
                                        @Param(value = HYPERVISOR_TYPE, description = HYPERVISOR_TYPE_DESC) String hypervisorType,
                                        @Param(value = FLASH_MODE_ENABLED, description = FLASH_MODE_ENABLED_DESC) String flashModeEnabled,
                                        @Param(value = IS_SCSI_PASS_THROUGH, description = IS_SCSI_PASS_THROUGH_DESC) String isSCSIPassThrough,
@@ -120,6 +120,7 @@ public class CreateVM {
         port = defaultIfEmpty(port, DEFAULT_NUTANIX_PORT);
         vmDescription = defaultIfEmpty(vmDescription, EMPTY);
         hypervisorType = defaultIfEmpty(hypervisorType, DEFAULT_HYPERVISOR_TYPE);
+        timeZone = defaultIfEmpty(timeZone, DEFAULT_TIMEZONE);
         flashModeEnabled = defaultIfEmpty(flashModeEnabled, BOOLEAN_FALSE);
         isSCSIPassThrough = defaultIfEmpty(isSCSIPassThrough, BOOLEAN_FALSE);
         isThinProvisioned = defaultIfEmpty(isThinProvisioned, BOOLEAN_TRUE);
@@ -209,20 +210,16 @@ public class CreateVM {
                                     .build()).build());
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
                 final String taskUUID = JsonPath.read(returnMessage, TASK_UUID_PATH);
-                if (!taskUUID.isEmpty()) {
-                    results.put(TASK_UUID, taskUUID);
-                } else {
-                    results.put(TASK_UUID, EMPTY);
-                }
+                results.put(TASK_UUID, taskUUID);
             } else {
                 return getFailureResults(hostname, statusCode, returnMessage);
             }
             return results;
-
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
