@@ -141,7 +141,7 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static String getQueryParams(@NotNull final String availabilityDomain, @NotNull final String compartmentId, @NotNull final String instanceId, @NotNull final String limit, @NotNull final String page, @NotNull final String vnicId) {
+    public static String getQueryParams(@NotNull final String availabilityDomain, @NotNull final String compartmentId, @NotNull final String instanceId, @NotNull final String page, @NotNull final String limit, @NotNull final String vnicId) {
         StringBuilder queryParams = new StringBuilder();
         Map<String, String> map = new HashMap<>();
         map.put(compartmentId, COMPARTMENT_ID_QUERY_PARAM);
@@ -151,7 +151,7 @@ public class HttpUtils {
         map.put(page, PAGE_QUERY_PARAM);
         map.put(limit, LIMIT_QUERY_PARAM);
         for (Map.Entry<String, String> entry : map.entrySet()) {
-            if (!entry.getKey().isEmpty()) {
+            if (!isEmpty(entry.getKey())) {
                 queryParams = queryParams.append ((entry.getValue() + entry.getKey()) + AND);
             }
         }
@@ -172,7 +172,7 @@ public class HttpUtils {
         map.put(sortBy, SORT_BY_QUERY_PARAM);
         map.put(sortOrder, SORT_ORDER_QUERY_PARAM);
         for (Map.Entry<String, String> entry : map.entrySet()) {
-            if (!entry.getKey().isEmpty()) {
+            if (!isEmpty(entry.getKey())) {
                 queryParams = queryParams.append ( (entry.getValue() + entry.getKey()) + AND);
             }
         }
