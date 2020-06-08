@@ -266,6 +266,8 @@ public class CreateVMRequestBody {
         CloneDiskAddress disk_address;
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         int minimum_size;
+        @JsonInclude(JsonInclude.Include.NON_EMPTY)
+        String storage_container_uuid;
 
         public CloneDiskAddress getDisk_address() {
             return disk_address;
@@ -282,6 +284,14 @@ public class CreateVMRequestBody {
         @NotNull
         public void setMinimum_size(int minimum_size) {
             this.minimum_size = minimum_size;
+        }
+
+        public String getStorage_container_uuid() {
+            return storage_container_uuid;
+        }
+
+        public void setStorage_container_uuid(String storage_container_uuid) {
+            this.storage_container_uuid = storage_container_uuid;
         }
     }
     public class CloneDiskAddress {

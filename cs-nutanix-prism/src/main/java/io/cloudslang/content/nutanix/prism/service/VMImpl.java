@@ -174,6 +174,7 @@ public class VMImpl {
             CreateVMRequestBody.CloneDiskAddress cloneDiskAddress = createVMBody.new CloneDiskAddress();
             cloneDiskAddress.setVmdisk_uuid(nutanixCreateVMInputs.getSourceVMDiskUUID());
             vmDiskClone.setMinimum_size(Integer.parseInt(nutanixCreateVMInputs.getVmDiskMinimumSize()));
+            vmDiskClone.setStorage_container_uuid(nutanixCreateVMInputs.getStorageContainerUUID());
             vmDiskClone.setDisk_address(cloneDiskAddress);
             vmDisks.setVm_disk_clone(vmDiskClone);
         } else {
@@ -231,8 +232,6 @@ public class VMImpl {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
         return requestBody;
     }
-
 }
