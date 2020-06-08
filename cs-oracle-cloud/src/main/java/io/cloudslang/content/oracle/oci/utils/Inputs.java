@@ -23,19 +23,23 @@ public class Inputs extends InputNames {
         public static final String TENANCY_OCID = "tenancyOcid";
         public static final String USER_OCID = "userOcid";
         public static final String FINGER_PRINT = "fingerPrint";
-        public static final String PRIVATE_KEY = "privateKey";
+        public static final String PRIVATE_KEY_DATA = "privateKeyData";
         public static final String PROXY_HOST = "proxyHost";
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String API_VERSION = "apiVersion";
         public static final String REGION = "region";
+        public static final String INSTANCE_ID = "instanceId";
+        public static final String AVAILABILITY_DOMAIN = "availabilityDomain";
+        public static final String VNIC_ID = "vnicId";
+        public static final String PAGE = "page";
+        public static final String LIMIT = "limit";
     }
 
     public static class ListInstancesInputs {
         public static final String COMPARTMENT_OCID = "compartmentOcid";
     }
-
 
 
 }

@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 
 package io.cloudslang.content.json.actions;
@@ -45,6 +44,7 @@ import static io.cloudslang.content.json.utils.JsonUtils.populateResult;
 public class GetValueFromObject {
 
     private static final String ESCAPED_SLASH = "\\";
+
 
     /**
      * This operation accepts an object in the JavaScript Object Notation format (JSON) and returns a value for the specified key.
@@ -109,6 +109,7 @@ public class GetValueFromObject {
 
     }
 
+
     private JsonNode getObject(JsonNode jsonObject, String[] keys, int startIndex) throws Exception {
         if (startIndex >= keys.length) {
             return jsonObject;
@@ -133,6 +134,7 @@ public class GetValueFromObject {
             throw new Exception("The key does not exist in JavaScript object!");
         }
     }
+
 
     private JsonNode getValue(JsonNode jsonElement, String aKey) throws Exception {
 
