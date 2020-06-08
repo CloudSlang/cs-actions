@@ -15,6 +15,7 @@
 
 
 package io.cloudslang.content.oracle.oci.services;
+
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
@@ -37,7 +38,9 @@ public class HttpCommons {
                 commonInputs.getTrustAllRoots(),
                 commonInputs.getX509HostnameVerifier(),
                 commonInputs.getTrustKeystore(),
-                commonInputs.getTrustPassword());
+                commonInputs.getTrustPassword(),
+                commonInputs.getKeystore(),
+                commonInputs.getKeystorePassword());
 
         HttpUtils.setConnectionParameters(httpClientInputs,
                 commonInputs.getConnectTimeout(),
