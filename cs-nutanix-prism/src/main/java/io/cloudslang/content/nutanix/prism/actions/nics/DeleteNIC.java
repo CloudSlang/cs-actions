@@ -8,6 +8,7 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixDeleteNICInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixGetTaskDetailsInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -21,11 +22,13 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.nutanix.prism.service.NicImpl.deleteNic;
+import static io.cloudslang.content.nutanix.prism.service.TaskImpl.getTaskDetails;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.CreateVMConstants.TASK_UUID_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.DeleteNICConstants.DELETE_NIC_OPERATION_NAME;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.DeleteNIC.*;
+import static io.cloudslang.content.nutanix.prism.utils.Descriptions.DetachDisks.DETACH_DISKS_SUCCESS_DESC;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PASSWORD;
@@ -102,39 +105,49 @@ public class DeleteNIC {
         }
 
         try {
-            final Map<String, String> result = deleteNic(NutanixDeleteNICInputs.builder()
+            NutanixCommonInputs nutanixCommonInputs = NutanixCommonInputs.builder()
+                    .hostname(hostname)
+                    .port(port)
+                    .username(username)
+                    .password(password)
+                    .apiVersion(apiVersion)
+                    .proxyHost(proxyHost)
+                    .proxyPort(proxyPort)
+                    .proxyUsername(proxyUsername)
+                    .proxyPassword(proxyPassword)
+                    .trustAllRoots(trustAllRoots)
+                    .x509HostnameVerifier(x509HostnameVerifier)
+                    .trustKeystore(trustKeystore)
+                    .trustPassword(trustPassword)
+                    .connectTimeout(connectTimeout)
+                    .socketTimeout(socketTimeout)
+                    .keepAlive(keepAlive)
+                    .connectionsMaxPerRoot(connectionsMaxPerRoute)
+                    .connectionsMaxTotal(connectionsMaxTotal)
+                    .build();
+            Map<String, String> result = deleteNic(NutanixDeleteNICInputs.builder()
                     .vmUUID(vmUUID)
                     .nicMacAddress(nicMacAddress)
                     .vmLogicalTimestamp(vmLogicalTimestamp)
-                    .commonInputs(
-                            NutanixCommonInputs.builder()
-                                    .hostname(hostname)
-                                    .port(port)
-                                    .username(username)
-                                    .password(password)
-                                    .apiVersion(apiVersion)
-                                    .proxyHost(proxyHost)
-                                    .proxyPort(proxyPort)
-                                    .proxyUsername(proxyUsername)
-                                    .proxyPassword(proxyPassword)
-                                    .trustAllRoots(trustAllRoots)
-                                    .x509HostnameVerifier(x509HostnameVerifier)
-                                    .trustKeystore(trustKeystore)
-                                    .trustPassword(trustPassword)
-                                    .connectTimeout(connectTimeout)
-                                    .socketTimeout(socketTimeout)
-                                    .keepAlive(keepAlive)
-                                    .connectionsMaxPerRoot(connectionsMaxPerRoute)
-                                    .connectionsMaxTotal(connectionsMaxTotal)
-                                    .build()).build());
+                    .commonInputs(nutanixCommonInputs).build());
 
-            final String returnMessage = result.get(RETURN_RESULT);
-            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            String returnMessage = result.get(RETURN_RESULT);
+            Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                results.put(TASK_UUID, JsonPath.read(returnMessage, TASK_UUID_PATH));
-                results.put(RETURN_RESULT, DELETE_NIC_SUCCESS_DESC);
+                final String taskUUID = JsonPath.read(returnMessage, TASK_UUID_PATH);
+                result = getTaskDetails(NutanixGetTaskDetailsInputs.builder().taskUUID(taskUUID).commonInputs(nutanixCommonInputs).build());
+                returnMessage = result.get(RETURN_RESULT);
+                results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+                statusCode = Integer.parseInt(result.get(STATUS_CODE));
+                if (statusCode >= 200 && statusCode < 300) {
+                    results.put(RETURN_RESULT, DELETE_NIC_SUCCESS_DESC);
+                    results.put(TASK_UUID, taskUUID);
+                } else {
+                    return getFailureResults(hostname, statusCode, returnMessage);
+                }
+
             } else {
                 return getFailureResults(hostname, statusCode, returnMessage);
             }
