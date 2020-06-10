@@ -17,7 +17,7 @@ package io.cloudslang.content.services;
 
 import io.cloudslang.content.entities.PSEdition;
 
-public class PwshService extends WSManRemoteShellService {
+public class PwshScriptService extends WSManRemoteShellService {
     @Override
     protected PSEdition getPSEdition() {
         return PSEdition.CORE;

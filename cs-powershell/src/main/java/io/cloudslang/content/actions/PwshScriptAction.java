@@ -24,7 +24,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.entities.WSManRequestInputs;
-import io.cloudslang.content.services.PwshService;
+import io.cloudslang.content.services.PwshScriptService;
 import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.utils.Constants;
 
@@ -44,7 +44,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 /**
  * Created by giloan on 3/26/2016.
  */
-public class PwshAction {
+public class PwshScriptAction {
 
     /**
      * Executes a PowerShell Core script on a remote host that has PowerShell Core installed.
@@ -105,7 +105,7 @@ public class PwshAction {
      *                             Default value is '60'.
      * @return
      */
-    @Action(name = "Pwsh",
+    @Action(name = "Pwsh Script Action",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
@@ -148,7 +148,7 @@ public class PwshAction {
             @Param(value = OPERATION_TIMEOUT) String operationTimeout
     ) {
         try {
-            WSManRemoteShellService wsManRemoteShellService = new PwshService();
+            WSManRemoteShellService wsManRemoteShellService = new PwshScriptService();
 
             WSManRequestInputs wsManRequestInputs = new WSManRequestInputs.WSManRequestInputsBuilder()
                     .withHost(host)
