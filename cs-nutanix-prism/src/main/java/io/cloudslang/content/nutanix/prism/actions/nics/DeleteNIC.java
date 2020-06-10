@@ -25,9 +25,7 @@ import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.CreateVMConstants.TASK_UUID_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.DeleteNICConstants.DELETE_NIC_OPERATION_NAME;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
-import static io.cloudslang.content.nutanix.prism.utils.Descriptions.CreateVM.TASK_UUIDS_DESC;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.DeleteNIC.*;
-import static io.cloudslang.content.nutanix.prism.utils.Descriptions.GetVMDetails.VM_UUID_DESC;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PASSWORD;
@@ -41,7 +39,7 @@ import static io.cloudslang.content.nutanix.prism.utils.Inputs.DeleteNICInputs.N
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.DeleteNICInputs.VM_LOGICAL_TIMESTAMP;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.GetVMDetailsInputs.VM_UUID;
 import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.nutanix.prism.utils.Outputs.CreateVMOutputs.TASK_UUID;
+import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.TASK_UUID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -53,7 +51,7 @@ public class DeleteNIC {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = TASK_UUID, description = TASK_UUIDS_DESC)
+                    @Output(value = TASK_UUID, description = TASK_UUID_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL,
