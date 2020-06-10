@@ -25,7 +25,6 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.services.PwshScriptService;
-import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.utils.Constants;
 
 import java.util.Map;
@@ -126,7 +125,6 @@ public class PwshScriptAction {
             @Param(value = PROTOCOL) String protocol,
             @Param(value = USERNAME) String username,
             @Param(value = PASSWORD, encrypted = true) String password,
-            @Param(value = AUTH_TYPE) String authType,
             @Param(value = PROXY_HOST) String proxyHost,
             @Param(value = PROXY_PORT) String proxyPort,
             @Param(value = PROXY_USERNAME) String proxyUsername,
@@ -135,9 +133,6 @@ public class PwshScriptAction {
             @Param(value = X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
             @Param(value = TRUST_KEYSTORE) String trustKeystore,
             @Param(value = TRUST_PASSWORD, encrypted = true) String trustPassword,
-            @Param(value = KERBEROS_CONFIG_FILE) String kerberosConfFile,
-            @Param(value = KERBEROS_LOGIN_CONFIG_FILE) String kerberosLoginConfFile,
-            @Param(value = KERBEROS_SKIP_PORT_CHECK) String kerberosSkipPortForLookup,
             @Param(value = KEYSTORE) String keystore,
             @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
             @Param(value = MAX_ENVELOP_SIZE) String maxEnvelopeSize,
@@ -154,12 +149,9 @@ public class PwshScriptAction {
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withAuthType(authType)
+                    .withAuthType("Basic")
                     .withScript(script)
                     .withConfigurationName(configurationName)
-                    .withKerberosConfFile(kerberosConfFile)
-                    .withKerberosLoginConfFile(kerberosLoginConfFile)
-                    .withKerberosSkipPortForLookup(kerberosSkipPortForLookup)
                     .withProxyHost(proxyHost)
                     .withProxyPort(proxyPort)
                     .withProxyUsername(proxyUsername)
