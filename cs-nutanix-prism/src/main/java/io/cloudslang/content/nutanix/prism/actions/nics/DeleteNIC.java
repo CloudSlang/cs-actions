@@ -28,7 +28,6 @@ import static io.cloudslang.content.nutanix.prism.utils.Constants.CreateVMConsta
 import static io.cloudslang.content.nutanix.prism.utils.Constants.DeleteNICConstants.DELETE_NIC_OPERATION_NAME;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.DeleteNIC.*;
-import static io.cloudslang.content.nutanix.prism.utils.Descriptions.DetachDisks.DETACH_DISKS_SUCCESS_DESC;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PASSWORD;
