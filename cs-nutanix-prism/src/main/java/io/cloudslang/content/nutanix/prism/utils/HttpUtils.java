@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.DeleteNICConstants.VM_LOGICAL_TIMESTAMP_QUERY_PARAM;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.FAILED;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.TASK_FAILURE_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.DOCUMENT;
@@ -147,6 +148,15 @@ public class HttpUtils {
                 .append(Constants.Common.AND)
                 .append(Constants.GetVMDetailsConstants.INCLUDE_VM_NIC_CONFIG_INFO)
                 .append(includeVMNicConfigInfo);
+        return queryParams.toString();
+    }
+
+    @NotNull
+    public static String getQueryParams(String vmLogicalTimestamp) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(QUERY)
+                .append(VM_LOGICAL_TIMESTAMP_QUERY_PARAM)
+                .append(vmLogicalTimestamp);
         return queryParams.toString();
     }
 
