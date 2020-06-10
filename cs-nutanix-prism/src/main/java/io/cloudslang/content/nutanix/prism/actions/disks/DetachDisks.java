@@ -132,7 +132,7 @@ public class DetachDisks {
                     .commonInputs(nutanixCommonInputs).build());
 
             String returnMessage = result.get(RETURN_RESULT);
-            Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            Map<String, String> results;
             int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
