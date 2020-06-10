@@ -148,8 +148,6 @@ public class PwshScriptAction {
             @Param(value = OPERATION_TIMEOUT) String operationTimeout
     ) {
         try {
-            WSManRemoteShellService wsManRemoteShellService = new PwshScriptService();
-
             WSManRequestInputs wsManRequestInputs = new WSManRequestInputs.WSManRequestInputsBuilder()
                     .withHost(host)
                     .withPort(port)
@@ -178,7 +176,7 @@ public class PwshScriptAction {
                     .withOperationTimeout(operationTimeout)
                     .build();
 
-            Map<String, String> resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
+            Map<String, String> resultMap = new PwshScriptService().execute(wsManRequestInputs);
             verifyScriptExecutionStatus(resultMap);
             return resultMap;
         } catch (Exception e) {

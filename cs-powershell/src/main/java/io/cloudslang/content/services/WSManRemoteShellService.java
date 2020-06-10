@@ -88,6 +88,16 @@ public class WSManRemoteShellService {
 
     private long commandExecutionStartTime;
 
+    private final PSEdition psEdition;
+
+    public WSManRemoteShellService() {
+        this.psEdition = PSEdition.WINDOWS;
+    }
+
+    public WSManRemoteShellService(PSEdition psEdition) {
+        this.psEdition = psEdition;
+    }
+
     /**
      * Executes a command on a remote shell by communicating with the WinRM server from the remote host.
      * Method creates a shell, runs a command on the shell, waits for the command execution to finnish, retrieves the result then deletes the shell.
@@ -111,16 +121,12 @@ public class WSManRemoteShellService {
         httpClientInputs = setCommonHttpInputs(httpClientInputs, url, wsManRequestInputs);
         String shellId = createShell(csHttpClient, httpClientInputs, wsManRequestInputs);
         WSManUtils.validateUUID(shellId, SHELL_ID);
-        String commandStr = WSManUtils.constructCommand(wsManRequestInputs, getPSEdition());
+        String commandStr = WSManUtils.constructCommand(wsManRequestInputs, this.psEdition);
         String commandId = executeCommand(csHttpClient, httpClientInputs, shellId, wsManRequestInputs, commandStr);
         WSManUtils.validateUUID(commandId, COMMAND_ID);
         Map<String, String> scriptResults = receiveCommandResult(csHttpClient, httpClientInputs, shellId, commandId, wsManRequestInputs);
         deleteShell(csHttpClient, httpClientInputs, shellId, wsManRequestInputs);
         return scriptResults;
-    }
-
-    protected PSEdition getPSEdition() {
-        return PSEdition.WINDOWS;
     }
 
     /**

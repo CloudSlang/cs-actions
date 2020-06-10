@@ -16,10 +16,16 @@
 package io.cloudslang.content.services;
 
 import io.cloudslang.content.entities.PSEdition;
+import io.cloudslang.content.entities.WSManRequestInputs;
 
-public class PwshScriptService extends WSManRemoteShellService {
-    @Override
-    protected PSEdition getPSEdition() {
-        return PSEdition.CORE;
+import java.util.Map;
+
+public class PwshScriptService {
+
+    private final WSManRemoteShellService wsManService = new WSManRemoteShellService(PSEdition.CORE);
+
+
+    public Map<String, String> execute(WSManRequestInputs inputs) throws Exception {
+        return this.wsManService.runCommand(inputs);
     }
 }
