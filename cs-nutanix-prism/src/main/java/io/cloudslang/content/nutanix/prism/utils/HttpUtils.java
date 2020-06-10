@@ -142,7 +142,6 @@ public class HttpUtils {
     public static String getQueryParams(String includeVMDiskConfigInfo,
                                         final String includeVMNicConfigInfo) {
         final StringBuilder queryParams = new StringBuilder()
-                .append(Constants.Common.QUERY)
                 .append(Constants.GetVMDetailsConstants.INCLUDE_VM_DISK_CONFIG_INFO)
                 .append(includeVMDiskConfigInfo)
                 .append(Constants.Common.AND)
@@ -160,10 +159,11 @@ public class HttpUtils {
         return queryParams.toString();
     }
 
+  
     @NotNull
-    public static String getTaskDetailsQueryParams(String includeSubtasksInfo) {
+    public static String getTaskDetailsQueryParams(@NotNull String includeSubtasksInfo) {
+
         final StringBuilder queryParams = new StringBuilder()
-                .append(Constants.Common.QUERY)
                 .append(Constants.GetTaskDetailsConstants.INCLUDE_SUBTASKS_INFO)
                 .append(includeSubtasksInfo);
         return queryParams.toString();

@@ -65,15 +65,15 @@ public class HttpUtils {
     @NotNull
     public static URIBuilder getUriBuilder(@NotNull final String region) {
         final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setHost(IAAS+"."+region+"."+OCI_HOST);
+        uriBuilder.setHost(IAAS + "." + region + "." + OCI_HOST);
         uriBuilder.setScheme(HTTPS);
         return uriBuilder;
     }
 
     @NotNull
-    public static String getAuthHeaders(@NotNull final Map<String,String> headers) {
+    public static String getAuthHeaders(@NotNull final Map<String, String> headers) {
         final StringBuilder headerBuilder = new StringBuilder();
-        for ( Map.Entry<String, String> entry : headers.entrySet()) {
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
             headerBuilder.append(entry.getKey()).append(entry.getValue()).append(NEW_LINE);
         }
 
@@ -108,13 +108,15 @@ public class HttpUtils {
                                          @org.jetbrains.annotations.NotNull final String trustAllRoots,
                                          @org.jetbrains.annotations.NotNull final String x509HostnameVerifier,
                                          @org.jetbrains.annotations.NotNull final String trustKeystore,
-                                         @org.jetbrains.annotations.NotNull final String trustPassword) {
-        httpClientInputs.setTrustAllRoots("true");
-        httpClientInputs.setX509HostnameVerifier("allow_all");
-        httpClientInputs.setTrustKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setTrustPassword(CHANGEIT);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
+                                         @org.jetbrains.annotations.NotNull final String trustPassword,
+                                         @org.jetbrains.annotations.NotNull final String keystore,
+                                         @org.jetbrains.annotations.NotNull final String keystorePassword) {
+        httpClientInputs.setTrustAllRoots(trustAllRoots);
+        httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
+        httpClientInputs.setTrustKeystore(trustKeystore);
+        httpClientInputs.setTrustPassword(trustPassword);
+        httpClientInputs.setKeystore(keystore);
+        httpClientInputs.setKeystorePassword(keystorePassword);
     }
 
     public static void setConnectionParameters(HttpClientInputs httpClientInputs,
@@ -133,39 +135,56 @@ public class HttpUtils {
     @NotNull
     public static String getQueryParams(@NotNull final String compartmentId) {
         final StringBuilder queryParams = new StringBuilder()
-                .append(COMPARTMENT_ID)
+                .append(COMPARTMENT_ID_QUERY_PARAM)
                 .append(compartmentId);
         return queryParams.toString();
     }
 
     @NotNull
-    public static String getQueryParams(@NotNull final String availabilityDomain, @NotNull final String compartmentId, @NotNull final String instanceId, @NotNull final String limit, @NotNull final String page, @NotNull final String vnicId) {
-        final StringBuilder queryParams = new StringBuilder()
-                .append(COMPARTMENT_ID)
-                .append(compartmentId)
-                .append(AND)
-                .append(INSTANCE_ID)
-                .append(instanceId);
-//                .append(AND)
-//                .append(AVAILABILITY_DOMAIN)
-//                .append(availabilityDomain)
-//                .append(AND)
-//                .append(PAGE)
-//                .append(page)
-//                .append(AND)
-//                .append(LIMIT)
-//                .append(limit)
-//                .append(AND)
-//                .append(VNIC_ID)
-//                .append(vnicId);
-        return queryParams.toString();
+    public static String getQueryParams(@NotNull final String availabilityDomain, @NotNull final String compartmentId, @NotNull final String instanceId, @NotNull final String page, @NotNull final String limit, @NotNull final String vnicId) {
+        StringBuilder queryParams = new StringBuilder();
+        Map<String, String> map = new HashMap<>();
+        map.put(compartmentId, COMPARTMENT_ID_QUERY_PARAM);
+        map.put(availabilityDomain, AVAILABILITY_DOMAIN_QUERY_PARAM);
+        map.put(instanceId, INSTANCE_ID_QUERY_PARAM);
+        map.put(vnicId, VNIC_ID_QUERY_PARAM);
+        map.put(page, PAGE_QUERY_PARAM);
+        map.put(limit, LIMIT_QUERY_PARAM);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            if (!isEmpty(entry.getKey())) {
+                queryParams = queryParams.append ((entry.getValue() + entry.getKey()) + AND);
+            }
+        }
+
+        return queryParams.substring(0, queryParams.length() - 1);
+    }
+
+    @NotNull
+    public static String getQueryParams(@NotNull final String availabilityDomain, @NotNull final String compartmentId, @NotNull final String displayName, @NotNull final String limit, @NotNull final String page, @NotNull final String sortBy, @NotNull final String sortOrder, @NotNull final String instanceName) {
+        StringBuilder queryParams = new StringBuilder();
+        Map<String, String> map = new HashMap<>();
+        map.put(compartmentId, COMPARTMENT_ID_QUERY_PARAM);
+        map.put(availabilityDomain, AVAILABILITY_DOMAIN_QUERY_PARAM);
+        map.put(displayName, DISPLAYNAME_QUERY_PARAM);
+        map.put(instanceName, LIFECYCLE_STATE_QUERY_PARAM);
+        map.put(page, PAGE_QUERY_PARAM);
+        map.put(limit, LIMIT_QUERY_PARAM);
+        map.put(sortBy, SORT_BY_QUERY_PARAM);
+        map.put(sortOrder, SORT_ORDER_QUERY_PARAM);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            if (!isEmpty(entry.getKey())) {
+                queryParams = queryParams.append ( (entry.getValue() + entry.getKey()) + AND);
+            }
+        }
+
+        return queryParams.substring(0, queryParams.length() - 1);
     }
 
     @NotNull
     public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode, @NotNull String throwable) {
         Map<String, String> results = new HashMap();
         results.put("returnCode", "-1");
-        results.put("statusCode",statusCode.toString());
+        results.put("statusCode", statusCode.toString());
         if (statusCode.equals(404)) {
             results.put("returnResult", inputName + " not found, or user unauthorized to perform action");
             results.put("exception ", "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");

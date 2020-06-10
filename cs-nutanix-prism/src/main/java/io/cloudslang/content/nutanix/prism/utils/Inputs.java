@@ -30,7 +30,7 @@ public class Inputs extends InputNames {
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
-        public static final String REQUEST_BODY = "requestBody";
+        public static final String VM_UUID = "vmUUID";
     }
 
     public static class GetVMDetailsInputs {

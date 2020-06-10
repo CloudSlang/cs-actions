@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.nutanix.prism.utils;
 
 public class Constants {
@@ -22,6 +23,7 @@ public class Constants {
         public static final String DEFAULT_PROXY_PORT = "8080";
         public static final String DEFAULT_NUTANIX_PORT = "9440";
         public static final String DEFAULT_HYPERVISOR_TYPE = "ACROPOLIS";
+        public static final String DEFAULT_TIMEZONE = "UTC";
         public static final String BOOLEAN_FALSE = "false";
         public static final String BOOLEAN_TRUE = "true";
         public static final String STRICT = "strict";
@@ -79,6 +81,11 @@ public class Constants {
         public static final String INCLUDE_VM_DISK_CONFIG_INFO = "include_vm_disk_config=";
         public static final String INCLUDE_VM_NIC_CONFIG_INFO = "include_vm_nic_config=";
         public static final String VM_NAME_PATH = "name";
+        public static final String IP_ADDRESS_PATH = "$.vm_nics[*].ip_address";
+        public static final String POWER_STATE_PATH = "power_state";
+        public static final String VM_DISK_UUID_PATH = "$.vm_disk_info[*].disk_address.vmdisk_uuid";
+        public static final String STORAGE_CONTAINER_UUID_PATH = "$.vm_disk_info[*].storage_container_uuid";
+        public static final String VM_LOGICAL_TIMESTAMP_PATH = "$.vm_logical_timestamp";
         public static final String GET_VM_DETAILS_PATH = "/vms";
     }
     public static class DetachDisksConstants {
@@ -109,7 +116,7 @@ public class Constants {
         public static final String GET_TASK_DETAILS_OPERATION_NAME = "Get Task Details";
         public static final String INCLUDE_SUBTASKS_INFO = "include_subtasks_info=";
         public static final String GET_TASK_DETAILS_PATH = "/tasks";
-        public static final String VM_UUID_PATH = "$.entity_list[0].entity_id";
+        public static final String VM_UUID_PATH = "$.entity_list[*].entity_id";
         public static final String TASK_STATUS_PATH = "progress_status";
         public static final String SUCCEEDED = "Succeeded";
         public static final String FAILED = "Failed";

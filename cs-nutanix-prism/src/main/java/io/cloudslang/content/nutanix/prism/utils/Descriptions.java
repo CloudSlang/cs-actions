@@ -57,11 +57,6 @@ public class Descriptions {
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout." +
                 "Default: '10000'";
-        public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP " +
-                "response. If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header " +
-                "will be used. If responseCharacterSet is empty and the charset from the HTTP response Content-Type " +
-                "header is empty, the default value will be used. You should not use this for method=HEAD or OPTIONS." +
-                "Default: 'UTF-8'";
         public static final String HOSTNAME_DESC = "The hostname for Nutanix.";
         public static final String PORT_DESC = "The port to connect to Nutanix. " +
                 "Default: '9440'";
@@ -74,8 +69,6 @@ public class Descriptions {
         public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in milliseconds) to allow the client " +
                 "to complete the execution of an API call. A value of '0' disables this feature." +
                 "Default: '60000'";
-        public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
-                "Default: 'false'";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Nutanix API request.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the " +
                 "request.";
@@ -83,6 +76,9 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The request was successfully executed.";
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. " +
                 "In case of an error this output will contain the error message.";
+        public static final String TASK_UUID_DESC = "The UUID of the Task that will be created in Nutanix after " +
+                "submission of the API request.";
+        public static final String VM_UUID_DESC = "Id of the Virtual Machine.";
     }
 
 
@@ -91,14 +87,17 @@ public class Descriptions {
                 "Virtual Machine disk information and network information are not included by default as fetching " +
                 "these are expensive operations. These can be included by setting the includeVMDiskConfig and " +
                 "includeVMNicConfig flags respectively.";
-        public static final String VM_UUID_DESC = "Id of the Virtual Machine.";
         public static final String INCLUDE_VM_DISK_CONFIG_INFO_DESC = "Whether to include Virtual Machine disk " +
                 "information." +
-                "Default : 'true'.";
+                "Default : 'true'";
         public static final String INCLUDE_VM_NIC_CONFIG_INFO_DESC = "Whether to include network information." +
                 "Default : 'true'.";
         public static final String VM_NAME_DESC = "Name of the Virtual Machine.";
-
+        public static final String IP_ADDRESS_DESC = "IP Address of the Virtual Machine.";
+        public static final String POWER_STATE_DESC = "Current Power state of the Virtual Machine.";
+        public static final String VM_DISK_UUID_DESC = "UUID of the disk attached to the Virtual Machine.";
+        public static final String STORAGE_CONTAINER_UUID_DESC = "UUID of the storage container of the Virtual Machine.";
+        public static final String VM_LOGICAL_TIMESTAMP_DESC = "The logical timestamp of the Virtual Machine.";
     }
 
     public static class ListVMsInputs {
@@ -112,7 +111,6 @@ public class Descriptions {
         public static final String SORT_ORDER_DESC = "Sort order.";
         public static final String SORT_ATTRIBUTE_DESC = "Sort attribute.";
         public static final String VM_LIST_DESC = "List of VM's.";
-
     }
 
     public static class CreateVM {
@@ -176,19 +174,14 @@ public class Descriptions {
                 "restored, agent VMs are powered on before normal VMs are restored. In other words, agent VMs cannot " +
                 "be HA-protected or live migrated." +
                 "Default : 'false'";
-        public static final String TASK_UUIDS_DESC = "The UUID of the Task that will be created in Nutanix after " +
-                "submission of the API request.";
 
     }
 
     public static class GetTaskDetails {
         public static final String GET_TASK_DETAILS_OPERATION_DESC = "Get details of the specified task.";
-        public static final String TASK_UUID_DESC = "The UUID of the Task that will be created in Nutanix after " +
-                "submission of the API request.";
         public static final String INCLUDE_SUBTASKS_INFO_DESC = "Whether to include a detailed information of the " +
                 "immediate subtasks. " +
                 "Default: 'false'";
-        public static final String VM_UUID_DESC = "Id of the Virtual Machine.";
         public static final String TASK_STATUS_DESC = "Status of the task.";
 
     }

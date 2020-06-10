@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.nutanix.prism.utils;
+package io.cloudslang.content.oracle.oci.utils;
 
 import org.junit.Test;
 
@@ -21,11 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.httpclient.services.HttpClientService.*;
-import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.ZERO;
-import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getQueryParams;
-import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.DOCUMENT;
+import static io.cloudslang.content.oracle.oci.utils.Constants.Common.ZERO;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.CommonOutputs.DOCUMENT;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class HttpUtilsTest {
@@ -34,9 +32,6 @@ public class HttpUtilsTest {
     private static final String RETURNED_RESULT = "returned result";
     private static final String FAILURE_RETURN_CODE = "-1";
     private static final String FAILURE_CODE = "401";
-    public static final String INCLUDE_VM_DISK_CONFIG_INFO = "true";
-    public static final String INCLUDE_VM_NIC_CONFIG_INFO = "false";
-    private static final String EXPECTED_QUERY_PARAMS = "include_vm_disk_config=true&include_vm_nic_config=false";
 
     private Map<String, String> initializeSuccessResult() {
         final Map<String, String> result = new HashMap<>();
@@ -87,9 +82,4 @@ public class HttpUtilsTest {
     }
 
 
-    @Test
-    public void getQueryParamsTestTwoArgs() {
-        String queryParams = getQueryParams(INCLUDE_VM_DISK_CONFIG_INFO, INCLUDE_VM_NIC_CONFIG_INFO);
-        assertEquals(EXPECTED_QUERY_PARAMS, queryParams);
-    }
 }

@@ -1,3 +1,19 @@
+/*
+ * (c) Copyright 2020 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
 package io.cloudslang.content.nutanix.prism.actions.tasks;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -39,8 +55,7 @@ import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyC
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.TASK_STATUS;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.VM_UUID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class GetTaskDetails {
     @Action(name = GET_TASK_DETAILS_OPERATION_NAME,
@@ -132,14 +147,11 @@ public class GetTaskDetails {
             if (statusCode >= 200 && statusCode < 300) {
                 final String taskStatus = JsonPath.read(returnMessage, TASK_STATUS_PATH);
                 if (taskStatus.equals(SUCCEEDED)) {
-                    final String vmUUID = JsonPath.read(returnMessage, VM_UUID_PATH);
-                    if (!vmUUID.isEmpty()) {
-                        results.put(VM_UUID, vmUUID);
-                        results.put(TASK_STATUS, taskStatus);
-                    } else {
-                        results.put(VM_UUID, EMPTY);
-                        results.put(TASK_STATUS, EMPTY);
-                    }
+                    final List<String> vmUUID = JsonPath.read(returnMessage, VM_UUID_PATH);
+
+                    final String vmUUIDString = join(vmUUID.toArray(), DELIMITER);
+                    results.put(VM_UUID, vmUUIDString);
+                    results.put(TASK_STATUS, taskStatus);
                 } else {
                     return getTaskFailureResults(statusCode, taskStatus, returnMessage, returnMessage);
                 }
