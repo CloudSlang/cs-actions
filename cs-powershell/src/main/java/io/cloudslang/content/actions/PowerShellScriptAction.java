@@ -25,7 +25,6 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.services.PowerShellScriptService;
-import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.utils.Constants;
 
 import java.util.Map;
@@ -144,8 +143,6 @@ public class PowerShellScriptAction {
             @Param(value = OPERATION_TIMEOUT) String operationTimeout
     ) {
         try {
-            WSManRemoteShellService wsManRemoteShellService = new PowerShellScriptService();
-
             WSManRequestInputs wsManRequestInputs = new WSManRequestInputs.WSManRequestInputsBuilder()
                     .withHost(host)
                     .withPort(port)
@@ -153,6 +150,8 @@ public class PowerShellScriptAction {
                     .withUsername(username)
                     .withPassword(password)
                     .withAuthType(authType)
+                    .withScript(script)
+                    .withConfigurationName(configurationName)
                     .withKerberosConfFile(kerberosConfFile)
                     .withKerberosLoginConfFile(kerberosLoginConfFile)
                     .withKerberosSkipPortForLookup(kerberosSkipPortForLookup)
@@ -167,14 +166,12 @@ public class PowerShellScriptAction {
                     .withKeystorePassword(defaultIfEmpty(keystorePassword, CHANGEIT))
                     .withTrustKeystore(defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE))
                     .withTrustPassword(defaultIfEmpty(trustPassword, CHANGEIT))
-                    .withScript(script)
-                    .withConfigurationName(configurationName)
                     .withModules(modules)
                     .withWinrmLocale(winrmLocale)
                     .withOperationTimeout(operationTimeout)
                     .build();
 
-            Map<String, String> resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
+            Map<String, String> resultMap = new PowerShellScriptService().execute(wsManRequestInputs);
             verifyScriptExecutionStatus(resultMap);
             return resultMap;
         } catch (Exception e) {
