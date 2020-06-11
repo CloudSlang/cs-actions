@@ -189,7 +189,8 @@ public class Descriptions {
     public static class DetachDisks {
         public static final String DETACH_DISKS_OPERATION_DESC = "Detach disks from Virtual Machine.";
         public static final String VM_DISK_UUID_LIST_DESC = "VM disk UUID list. If multiple disks need to be removed, add comma separated UUIDs.";
-        public static final String DEVICE_BUS_LIST_DESC = "Device Bus List. List the device buses in the same order that the disk UUIDs are listed, separated by commas.";
+        public static final String DEVICE_BUS_LIST_DESC = "Device Bus List. List the device buses in the same order that the disk UUIDs are listed, separated by commas.\n"
+                +"Valid values: sata,scsi,ide,pci";
         public static final String DEVICE_INDEX_LIST_DESC = "Device indices list. List the device index in the same order that the disk UUIDs are listed, separated by commas.";
         public static final String DETACH_DISKS_SUCCESS_DESC = "Disks successfully detached from the VM.";
 
