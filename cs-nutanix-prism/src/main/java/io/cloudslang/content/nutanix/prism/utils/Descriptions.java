@@ -195,6 +195,8 @@ public class Descriptions {
         public static final String DETACH_DISKS_SUCCESS_DESC = "Disks successfully detached from the VM.";
 
     }
+
+
     public static class DeleteNIC {
         public static final String DELETE_NIC_OPERATION_DESC = "Delete a NIC from a Virtual Machine.";
         public static final String VM_LOGICAL_TIMESTAMP_DESC = "Virtual Machine Logical timestamp.";
@@ -202,6 +204,20 @@ public class Descriptions {
         public static final String DELETE_NIC_SUCCESS_DESC = "Nic successfully deleted from the VM.";
 
     }
+
+    public static class CreateNic {
+        public static final String NETWORK_UUID_DESC = "The network UUID which will be attached to the Virtual Machine";
+        public static final String REQUESTED_IP_ADDRESS_DESC = "The static IP address which will be assigned to " +
+                "the Virtual Machine.";
+        public static final String IS_CONNECTED_DESC = "If the value of this property is 'true' the network will be " +
+                "connected while booting the Virtual Machine.";
+        public static final String VLAN_ID = "The each vlan in a network has an associated vlan ID";
+        public static final String VM_LOGICAL_TIMESTAMP_DESC = "Virtual Machine Logical timestamp.";
+        public static final String ADD_NIC_SUCCESS_DESC = "Nic successfully Added to the VM.";
+
+
+    }
+
 
     public static class Counter{
         public static final String FAILURE_MESSAGE = "Something went wrong";

@@ -92,6 +92,7 @@ public class Constants {
         public static final String DETACH_DISKS_OPERATION_NAME = "Detach Disks";
         public static final String DETACH_DISKS_PATH = "/disks/detach";
     }
+
     public static class DeleteNICConstants {
         public static final String DELETE_NIC_OPERATION_NAME = "Delete NIC";
         public static final String DELETE_NIC_PATH = "/nics/";
@@ -121,6 +122,13 @@ public class Constants {
         public static final String SUCCEEDED = "Succeeded";
         public static final String FAILED = "Failed";
         public static final String TASK_FAILURE_PATH = "$.meta_response.error_detail";
+    }
+
+    public static class AddNICConstants {
+        public static final String ADD_NIC_OPERATION_NAME = "Add NIC";
+        public static final String ADD_NIC_PATH = "/nics";
+        public static final String TASK_UUID_PATH = "task_uuid";
+
     }
 
 }

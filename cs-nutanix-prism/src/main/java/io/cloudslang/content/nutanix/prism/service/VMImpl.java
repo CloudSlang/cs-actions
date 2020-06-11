@@ -19,10 +19,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.nutanix.prism.entities.NutanixAddNicInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCreateVMInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixGetVMDetailsInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixListVMsInputs;
+import io.cloudslang.content.nutanix.prism.service.models.virtualmachines.CreateNicRequestBody;
 import io.cloudslang.content.nutanix.prism.service.models.virtualmachines.CreateVMRequestBody;
+import io.cloudslang.content.nutanix.prism.utils.Constants;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -131,6 +134,73 @@ public class VMImpl {
                 .append(API)
                 .append(nutanixCreateVMInputs.getCommonInputs().getAPIVersion())
                 .append(GET_VM_DETAILS_PATH);
+        uriBuilder.setPath(pathString.toString());
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    public static Map<String, String> createNic(@NotNull final NutanixAddNicInputs nutanixAddNicInputs)
+            throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        httpClientInputs.setUrl(createNICURL(nutanixAddNicInputs));
+        System.out.println(createNICURL(nutanixAddNicInputs));
+        setCommonHttpInputs(httpClientInputs, nutanixAddNicInputs.getCommonInputs());
+        try {
+            httpClientInputs.setBody(createNicBody(nutanixAddNicInputs));
+            System.out.println(createNicBody(nutanixAddNicInputs));
+        } catch (JsonProcessingException e) {
+            return getFailureResultsMap(e);
+        }
+        httpClientInputs.setAuthType(BASIC);
+        httpClientInputs.setMethod(POST);
+        httpClientInputs.setUsername(nutanixAddNicInputs.getCommonInputs().getUsername());
+        httpClientInputs.setPassword(nutanixAddNicInputs.getCommonInputs().getPassword());
+        httpClientInputs.setContentType(APPLICATION_API_JSON);
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static String createNicBody(NutanixAddNicInputs nutanixAttachNicInputs)
+            throws JsonProcessingException {
+        String requestBody = EMPTY;
+        ObjectMapper AttachNicMapper = new ObjectMapper();
+        CreateNicRequestBody createNicBody = new CreateNicRequestBody();
+        ArrayList spec_list = new ArrayList();
+        String[] network_uuid = nutanixAttachNicInputs.getNetworkUUID().split(",");
+        String[] requested_ip_address = nutanixAttachNicInputs.getRequestedIPAddress().split(",");
+        String[] is_connected = nutanixAttachNicInputs.getIsConnected().split(",");
+        String[] vlan_id = nutanixAttachNicInputs.getVlanid().split(",");
+        for (int i = 0; i < requested_ip_address.length; i++) {
+            System.out.println(requested_ip_address.length);
+            CreateNicRequestBody.VMNics vmNics = createNicBody.new VMNics();
+            vmNics.setNetwork_uuid(network_uuid[i]);
+            vmNics.setRequested_ip_address(requested_ip_address[i]);
+            vmNics.setIs_connected(Boolean.parseBoolean(is_connected[i]));
+            vmNics.setVlan_id(vlan_id[i]);
+            spec_list.add(vmNics);
+        }
+        createNicBody.setSpec_list(spec_list);
+
+        try {
+            requestBody = AttachNicMapper.writeValueAsString(createNicBody);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return requestBody;
+    }
+
+    @NotNull
+    public static String createNICURL(NutanixAddNicInputs nutanixAttachNicInputs) throws Exception {
+
+        final URIBuilder uriBuilder = getUriBuilder(nutanixAttachNicInputs.getCommonInputs());
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(nutanixAttachNicInputs.getCommonInputs().getAPIVersion())
+                .append(GET_VM_DETAILS_PATH)
+                .append(PATH_SEPARATOR)
+                .append(nutanixAttachNicInputs.getVmUUID())
+                .append(Constants.AddNICConstants.ADD_NIC_PATH);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
     }
