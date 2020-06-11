@@ -143,11 +143,9 @@ public class VMImpl {
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(createNICURL(nutanixAddNicInputs));
-        System.out.println(createNICURL(nutanixAddNicInputs));
         setCommonHttpInputs(httpClientInputs, nutanixAddNicInputs.getCommonInputs());
         try {
             httpClientInputs.setBody(createNicBody(nutanixAddNicInputs));
-            System.out.println(createNicBody(nutanixAddNicInputs));
         } catch (JsonProcessingException e) {
             return getFailureResultsMap(e);
         }
@@ -171,7 +169,6 @@ public class VMImpl {
         String[] is_connected = nutanixAttachNicInputs.getIsConnected().split(",");
         String[] vlan_id = nutanixAttachNicInputs.getVlanid().split(",");
         for (int i = 0; i < requested_ip_address.length; i++) {
-            System.out.println(requested_ip_address.length);
             CreateNicRequestBody.VMNics vmNics = createNicBody.new VMNics();
             vmNics.setNetwork_uuid(network_uuid[i]);
             vmNics.setRequested_ip_address(requested_ip_address[i]);
