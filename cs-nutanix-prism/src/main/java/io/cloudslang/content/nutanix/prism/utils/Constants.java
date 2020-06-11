@@ -88,7 +88,15 @@ public class Constants {
         public static final String VM_LOGICAL_TIMESTAMP_PATH = "$.vm_logical_timestamp";
         public static final String GET_VM_DETAILS_PATH = "/vms";
     }
-
+    public static class DetachDisksConstants {
+        public static final String DETACH_DISKS_OPERATION_NAME = "Detach Disks";
+        public static final String DETACH_DISKS_PATH = "/disks/detach";
+    }
+    public static class DeleteNICConstants {
+        public static final String DELETE_NIC_OPERATION_NAME = "Delete NIC";
+        public static final String DELETE_NIC_PATH = "/nics/";
+        public static final String VM_LOGICAL_TIMESTAMP_QUERY_PARAM = "vm_logical_timestamp=";
+    }
     public static class ListVMsConstants {
         public static final String LIST_VMS_OPERATION_NAME = "List VMs";
         public static final String FILTER = "filter=";
