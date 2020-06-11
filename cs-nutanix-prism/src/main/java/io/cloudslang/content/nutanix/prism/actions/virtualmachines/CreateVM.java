@@ -87,7 +87,7 @@ public class CreateVM {
                                        @Param(value = IS_SCSI_PASS_THROUGH, description = IS_SCSI_PASS_THROUGH_DESC) String isSCSIPassThrough,
                                        @Param(value = IS_THIN_PROVISIONED, description = IS_THIN_PROVISIONED_DESC) String isThinProvisioned,
                                        @Param(value = IS_CDROM, required = true, description = IS_CDROM_DESC) String isCDROM,
-                                       @Param(value = IS_EMPTY, description = IS_EMPTY_DESC) String isEmpty,
+                                       @Param(value = IS_EMPTY_DISK, description = IS_EMPTY_DISK_DESC) String isEmptyDisk,
                                        @Param(value = DEVICE_BUS, required = true, description = DEVICE_BUS_DESC) String deviceBus,
                                        @Param(value = DISK_LABEL, description = DISK_LABEL_DESC) String diskLabel,
                                        @Param(value = DEVICE_INDEX, description = DEVICE_INDEX_DESC) String deviceIndex,
@@ -124,7 +124,7 @@ public class CreateVM {
         flashModeEnabled = defaultIfEmpty(flashModeEnabled, BOOLEAN_FALSE);
         isSCSIPassThrough = defaultIfEmpty(isSCSIPassThrough, BOOLEAN_FALSE);
         isThinProvisioned = defaultIfEmpty(isThinProvisioned, BOOLEAN_TRUE);
-        isEmpty = defaultIfEmpty(isEmpty, BOOLEAN_TRUE);
+        isEmptyDisk = defaultIfEmpty(isEmptyDisk, BOOLEAN_TRUE);
         diskLabel = defaultIfEmpty(diskLabel, EMPTY);
         deviceIndex = defaultIfEmpty(deviceIndex, ZERO);
         ndfsFilepath = defaultIfEmpty(ndfsFilepath, EMPTY);
@@ -171,7 +171,7 @@ public class CreateVM {
                     .isSCSIPassThrough(isSCSIPassThrough)
                     .isThinProvisioned(isThinProvisioned)
                     .isCDROM(isCDROM)
-                    .isEmpty(isEmpty)
+                    .isEmpty(isEmptyDisk)
                     .deviceBus(deviceBus)
                     .diskLabel(diskLabel)
                     .deviceIndex(deviceIndex)
@@ -217,7 +217,7 @@ public class CreateVM {
                 final String taskUUID = JsonPath.read(returnMessage, TASK_UUID_PATH);
                 results.put(TASK_UUID, taskUUID);
             } else {
-                return getFailureResults(hostname, statusCode, returnMessage);
+                return getFailureResults(hostname, statusCode, returnMessage, returnMessage, returnMessage);
             }
             return results;
         } catch (Exception exception) {

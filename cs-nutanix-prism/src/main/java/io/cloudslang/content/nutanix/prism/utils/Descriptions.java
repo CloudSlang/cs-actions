@@ -93,7 +93,8 @@ public class Descriptions {
         public static final String INCLUDE_VM_NIC_CONFIG_INFO_DESC = "Whether to include network information." +
                 "Default : 'true'.";
         public static final String VM_NAME_DESC = "Name of the Virtual Machine.";
-        public static final String IP_ADDRESS_DESC = "IP Address of the Virtual Machine.";
+        public static final String IP_ADDRESS_DESC = "IP Address/es of the Virtual Machine.";
+        public static final String MAC_ADDRESS_DESC = "MAC Address/es of the Virtual Machine.";
         public static final String POWER_STATE_DESC = "Current Power state of the Virtual Machine.";
         public static final String VM_DISK_UUID_DESC = "UUID of the disk attached to the Virtual Machine.";
         public static final String STORAGE_CONTAINER_UUID_DESC = "UUID of the storage container of the Virtual Machine.";
@@ -139,9 +140,9 @@ public class Descriptions {
         public static final String IS_THIN_PROVISIONED_DESC = "If the value is 'true' then Virtual Machine will be " +
                 "created with thin provision." +
                 "Default : 'true'";
-        public static final String IS_CDROM_DESC = "If the value is 'true' then Virtual Machine needs to create " +
+        public static final String IS_CDROM_DESC = "If the value is 'true' then Virtual Machine will be created " +
                 "with CDROM otherwise Virtual Machine will be created with Empty Disk.";
-        public static final String IS_EMPTY_DESC = "If the value is 'true' then Virtual Machine will created with Empty" +
+        public static final String IS_EMPTY_DISK_DESC = "If the value is 'true' then Virtual Machine will created with Empty" +
                 "Disk." +
                 "Default : 'true'";
         public static final String DEVICE_BUS_DESC = "The type of Device disk." +
@@ -175,6 +176,36 @@ public class Descriptions {
                 "be HA-protected or live migrated." +
                 "Default : 'false'";
 
+    }
+
+    public static class DeleteVM {
+        public static final String DELETE_VM_OPERATION_DESC = "Delete a Virtual Machine." +
+                "This is an idempotent operation. If the Virtual Machine is currently powered on, it will be forcefully" +
+                " powered off." +
+                "The logical timestamp can optionally be provided for consistency. If a logical timestamp is " +
+                "specified, then this operation will be rejected if the logical timestamp specified is not the value" +
+                " of the Virtual Machine logical timestamp. The logical timestamp can be obtained from the Virtual" +
+                " Machine object." +
+                "This is an asynchronous operation that results in the creation of a task object. The UUID of " +
+                "this task object is returned as the response of this operation. This task can be monitored by using the /tasks/poll API.";
+        public static final String DELETE_SNAPSHOTS_DESC = "Delete Virtual Machine snapshots";
+        public static final String LOGICAL_TIMESTAMP_DESC = "The Virtual logical timestamp";
+        public static final String DELETE_VM_SUCCESS_DESC = "Successfully Deleted the VM.";
+    }
+
+    public static class SetPowerState {
+        public static final String SET_POWER_STATE_OF_VM_OPERATION_DESC = "Set power state of a Virtual Machine." +
+                "If the Virtual Machine is being powered on and no host is specified, the scheduler will pick the one " +
+                "with the most available CPU and memory that can support the Virtual Machine. Note that no such host " +
+                "may not be available." +
+                "If the Virtual Machine is being power cycled, a different host can be specified to start it on." +
+                "The logical timestamp can optionally be provided for consistency. If a logical timestamp is " +
+                "specified, then this operation will be rejected if the logical timestamp specified is not the " +
+                "value of the Virtual Machine logical timestamp. The logical timestamp can be obtained from the " +
+                "Virtual Machine object.";
+        public static final String HOST_UUID_DESC = "The Host UUID for which Virtual Machine is mapped.";
+        public static final String POWER_STATE_DESC = "The power state of the Virtual Machine.";
+        public static final String VM_LOGICAL_TIMESTAMP_DESC = "The value of the Virtual Machine logical timestamp.";
     }
 
     public static class GetTaskDetails {
