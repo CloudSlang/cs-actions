@@ -169,7 +169,8 @@ public class Descriptions {
                 "the Virtual Machine.";
         public static final String IS_CONNECTED_DESC = "If the value of this property is 'true' the network will be " +
                 "connected while booting the Virtual Machine.";
-        public static final String HOST_UUIDS_DESC = "The Host UUIDs for which Virtual Machine will be mapped.";
+        public static final String HOST_UUIDS_DESC = "The UUID identifying the host on which the Virtual Machine is " +
+                "currently running. If Virtual Machine is powered off, then this field is empty.";
         public static final String AGENT_VM_DESC = "Indicates whether the VM is an agent VM. When their host enters " +
                 "maintenance mode, after normal VMs are evacuated, agent VMs are powered off. When the host is " +
                 "restored, agent VMs are powered on before normal VMs are restored. In other words, agent VMs cannot " +
@@ -193,8 +194,8 @@ public class Descriptions {
         public static final String DELETE_VM_SUCCESS_DESC = "Successfully Deleted the VM.";
     }
 
-    public static class SetPowerState {
-        public static final String SET_POWER_STATE_OF_VM_OPERATION_DESC = "Set power state of a Virtual Machine." +
+    public static class SetVMPowerState {
+        public static final String SET_VM_POWER_STATE_OPERATION_DESC = "Set power state of a Virtual Machine." +
                 "If the Virtual Machine is being powered on and no host is specified, the scheduler will pick the one " +
                 "with the most available CPU and memory that can support the Virtual Machine. Note that no such host " +
                 "may not be available." +
@@ -203,8 +204,11 @@ public class Descriptions {
                 "specified, then this operation will be rejected if the logical timestamp specified is not the " +
                 "value of the Virtual Machine logical timestamp. The logical timestamp can be obtained from the " +
                 "Virtual Machine object.";
-        public static final String HOST_UUID_DESC = "The Host UUID for which Virtual Machine is mapped.";
-        public static final String POWER_STATE_DESC = "The power state of the Virtual Machine.";
+        public static final String HOST_UUID_DESC = "The host UUID on which to power on the VM. This parameter is " +
+                "only honored for kPowerOn, or kPowerCycle when change host is also requested explicitly.";
+        public static final String POWER_STATE_DESC = "The desired power state of the Virtual Machine." +
+                " Allowed Values: 'ON', 'OFF', 'POWERCYCLE', 'RESET', 'PAUSE', 'SUSPEND', 'RESUME', 'SAVE', " +
+                "'ACPI_SHUTDOWN', 'ACPI_REBOOT'";
         public static final String VM_LOGICAL_TIMESTAMP_DESC = "The value of the Virtual Machine logical timestamp.";
     }
 

@@ -80,7 +80,7 @@ public class Inputs extends InputNames {
         public static final String LOGICAL_TIMESTAMP = "logicalTimestamp";
     }
 
-    public static class SetPowerStateInputs {
+    public static class SetVMPowerStateInputs {
         public static final String HOST_UUID = "hostUUID";
         public static final String POWER_STATE = "powerState";
         public static final String VM_LOGICAL_TIMESTAMP = "vmLogicalTimestamp";

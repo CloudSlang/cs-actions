@@ -119,8 +119,8 @@ public class Constants {
         public static final String LOGICAL_TIMESTAMP = "logical_timestamp=";
     }
 
-    public static class SetPowerStateConstants {
-        public static final String SET_POWER_STATE_OF_VM_OPERATION_NAME = "Set Power State of VM";
+    public static class SetVMPowerStateConstants {
+        public static final String SET_VM_POWER_STATE_OPERATION_NAME = "Set VM Power State";
         public static final String SET_POWER_STATE_PATH = "set_power_state";
     }
 

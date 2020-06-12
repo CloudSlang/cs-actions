@@ -23,7 +23,7 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixGetTaskDetailsInputs;
-import io.cloudslang.content.nutanix.prism.entities.NutanixSetPowerStateInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixSetVMPowerStateInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -37,14 +37,14 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.nutanix.prism.service.TaskImpl.getTaskDetails;
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.setPowerState;
+import static io.cloudslang.content.nutanix.prism.service.VMImpl.setVMPowerState;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.CreateVMConstants.TASK_UUID_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.SUCCEEDED;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.TASK_STATUS_PATH;
-import static io.cloudslang.content.nutanix.prism.utils.Constants.SetPowerStateConstants.SET_POWER_STATE_OF_VM_OPERATION_NAME;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.SetVMPowerStateConstants.SET_VM_POWER_STATE_OPERATION_NAME;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
-import static io.cloudslang.content.nutanix.prism.utils.Descriptions.SetPowerState.*;
+import static io.cloudslang.content.nutanix.prism.utils.Descriptions.SetVMPowerState.*;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PASSWORD;
@@ -54,7 +54,7 @@ import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROX
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.USERNAME;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.nutanix.prism.utils.Inputs.SetPowerStateInputs.*;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.SetVMPowerStateInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.TASK_UUID;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.TASK_STATUS;
@@ -62,9 +62,9 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class SetPowerStateOfVM {
-    @Action(name = SET_POWER_STATE_OF_VM_OPERATION_NAME,
-            description = SET_POWER_STATE_OF_VM_OPERATION_DESC,
+public class SetVMPowerState {
+    @Action(name = SET_VM_POWER_STATE_OPERATION_NAME,
+            description = SET_VM_POWER_STATE_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
@@ -142,7 +142,7 @@ public class SetPowerStateOfVM {
                     .connectionsMaxTotal(connectionsMaxTotal)
                     .build();
 
-            final Map<String, String> result = setPowerState(NutanixSetPowerStateInputs.builder()
+            final Map<String, String> result = setVMPowerState(NutanixSetVMPowerStateInputs.builder()
                     .vmUUID(vmUUID)
                     .transition(powerState)
                     .hostUUID(hostUUID)

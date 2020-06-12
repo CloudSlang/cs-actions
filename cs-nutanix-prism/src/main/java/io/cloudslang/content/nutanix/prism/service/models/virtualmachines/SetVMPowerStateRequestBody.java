@@ -17,7 +17,7 @@ package io.cloudslang.content.nutanix.prism.service.models.virtualmachines;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-public class SetPowerStateRequestBody {
+public class SetVMPowerStateRequestBody {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public class SetPowerStateData {
         @JsonInclude(JsonInclude.Include.NON_EMPTY)

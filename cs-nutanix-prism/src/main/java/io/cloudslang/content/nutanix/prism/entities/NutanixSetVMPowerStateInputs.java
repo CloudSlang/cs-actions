@@ -21,7 +21,7 @@ import java.beans.ConstructorProperties;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class NutanixSetPowerStateInputs {
+public class NutanixSetVMPowerStateInputs {
 
     private final String vmUUID;
     private final String hostUUID;
@@ -30,8 +30,8 @@ public class NutanixSetPowerStateInputs {
     private final NutanixCommonInputs commonInputs;
 
     @ConstructorProperties({"vmUUID", "hostUUID", "transition", "vmLogicalTimestamp", "commonInputs"})
-    public NutanixSetPowerStateInputs(String vmUUID, String hostUUID, String transition, String vmLogicalTimestamp,
-                                      NutanixCommonInputs commonInputs) {
+    public NutanixSetVMPowerStateInputs(String vmUUID, String hostUUID, String transition, String vmLogicalTimestamp,
+                                        NutanixCommonInputs commonInputs) {
         this.vmUUID = vmUUID;
         this.hostUUID = hostUUID;
         this.transition = transition;
@@ -110,8 +110,8 @@ public class NutanixSetPowerStateInputs {
             return this;
         }
 
-        public NutanixSetPowerStateInputs build() {
-            return new NutanixSetPowerStateInputs(vmUUID, hostUUID, transition, vmLogicalTimestamp, commonInputs);
+        public NutanixSetVMPowerStateInputs build() {
+            return new NutanixSetVMPowerStateInputs(vmUUID, hostUUID, transition, vmLogicalTimestamp, commonInputs);
         }
     }
 }

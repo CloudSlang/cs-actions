@@ -15,7 +15,6 @@
 
 package io.cloudslang.content.nutanix.prism.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cloudslang.content.nutanix.prism.entities.*;
 import io.cloudslang.content.nutanix.prism.service.VMImpl;
 import org.junit.Test;
@@ -31,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 @PrepareForTest(VMImpl.class)
 public class VMImplTest {
 
-    public static final String DELIMITER = ",";
+    private static final String DELIMITER = ",";
     private static final String EXPECTED_GET_VM_DETAILS_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/1234";
     private static final String EXPECTED_CREATE_VM_PATH = "https://myhost:9080/api/nutanix/v2.0/vms";
     private static final String EXPECTED_DELETE_VM_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/1234";
@@ -173,7 +172,7 @@ public class VMImplTest {
                             .responseCharacterSet("")
                             .build()).build();
 
-    private final NutanixSetPowerStateInputs nutanixSetPowerStateInputs = NutanixSetPowerStateInputs.builder()
+    private final NutanixSetVMPowerStateInputs nutanixSetVMPowerStateInputs = NutanixSetVMPowerStateInputs.builder()
             .vmUUID("1234")
             .transition("on")
             .hostUUID("")
@@ -221,7 +220,7 @@ public class VMImplTest {
     }
 
     @Test
-    public void getCreateVMRequestBody() throws JsonProcessingException {
+    public void getCreateVMRequestBody() {
         final String requestBody = createVMBody(nutanixCreateVMInputs, DELIMITER);
         assertEquals(EXPECTED_CREATE_VM_REQUEST_BODY, requestBody);
     }
@@ -234,13 +233,13 @@ public class VMImplTest {
 
     @Test
     public void setPowerStateOfVMPathTest() throws Exception {
-        final String path = setPowerStateURL(nutanixSetPowerStateInputs);
+        final String path = setVMPowerStateURL(nutanixSetVMPowerStateInputs);
         assertEquals(EXPECTED_SET_POWER_STATE_OF_VM_PATH, path);
     }
 
     @Test
-    public void getSetPowerStateOfVMRequestBody() throws JsonProcessingException {
-        final String requestBody = setPowerStateBody(nutanixSetPowerStateInputs);
+    public void getSetVMPowerStateRequestBody() {
+        final String requestBody = setVMPowerStateBody(nutanixSetVMPowerStateInputs);
         assertEquals(EXPECTED_SET_POWER_STATE_OF_VM_REQUEST_BODY, requestBody);
     }
 }

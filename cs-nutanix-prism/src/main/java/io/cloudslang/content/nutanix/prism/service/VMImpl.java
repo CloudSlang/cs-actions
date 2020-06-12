@@ -21,7 +21,7 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.nutanix.prism.entities.*;
 import io.cloudslang.content.nutanix.prism.service.models.virtualmachines.CreateVMRequestBody;
-import io.cloudslang.content.nutanix.prism.service.models.virtualmachines.SetPowerStateRequestBody;
+import io.cloudslang.content.nutanix.prism.service.models.virtualmachines.SetVMPowerStateRequestBody;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +33,7 @@ import java.util.Map;
 import static io.cloudslang.content.nutanix.prism.service.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetVMDetailsConstants.GET_VM_DETAILS_PATH;
-import static io.cloudslang.content.nutanix.prism.utils.Constants.SetPowerStateConstants.SET_POWER_STATE_PATH;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.SetVMPowerStateConstants.SET_POWER_STATE_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -95,20 +95,20 @@ public class VMImpl {
     }
 
     @NotNull
-    public static Map<String, String> setPowerState(@NotNull final NutanixSetPowerStateInputs nutanixSetPowerStateInputs)
+    public static Map<String, String> setVMPowerState(@NotNull final NutanixSetVMPowerStateInputs nutanixSetVMPowerStateInputs)
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(setPowerStateURL(nutanixSetPowerStateInputs));
-        setCommonHttpInputs(httpClientInputs, nutanixSetPowerStateInputs.getCommonInputs());
+        httpClientInputs.setUrl(setVMPowerStateURL(nutanixSetVMPowerStateInputs));
+        setCommonHttpInputs(httpClientInputs, nutanixSetVMPowerStateInputs.getCommonInputs());
         try {
-            httpClientInputs.setBody(setPowerStateBody(nutanixSetPowerStateInputs));
+            httpClientInputs.setBody(setVMPowerStateBody(nutanixSetVMPowerStateInputs));
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setMethod(POST);
-        httpClientInputs.setUsername(nutanixSetPowerStateInputs.getCommonInputs().getUsername());
-        httpClientInputs.setPassword(nutanixSetPowerStateInputs.getCommonInputs().getPassword());
+        httpClientInputs.setUsername(nutanixSetVMPowerStateInputs.getCommonInputs().getUsername());
+        httpClientInputs.setPassword(nutanixSetVMPowerStateInputs.getCommonInputs().getPassword());
         httpClientInputs.setContentType(APPLICATION_API_JSON);
         return new HttpClientService().execute(httpClientInputs);
     }
@@ -182,15 +182,15 @@ public class VMImpl {
     }
 
     @NotNull
-    public static String setPowerStateURL(NutanixSetPowerStateInputs nutanixSetPowerStateInputs) throws Exception {
+    public static String setVMPowerStateURL(NutanixSetVMPowerStateInputs nutanixSetVMPowerStateInputs) throws Exception {
 
-        final URIBuilder uriBuilder = getUriBuilder(nutanixSetPowerStateInputs.getCommonInputs());
+        final URIBuilder uriBuilder = getUriBuilder(nutanixSetVMPowerStateInputs.getCommonInputs());
         StringBuilder pathString = new StringBuilder()
                 .append(API)
-                .append(nutanixSetPowerStateInputs.getCommonInputs().getAPIVersion())
+                .append(nutanixSetVMPowerStateInputs.getCommonInputs().getAPIVersion())
                 .append(GET_VM_DETAILS_PATH)
                 .append(PATH_SEPARATOR)
-                .append(nutanixSetPowerStateInputs.getVMUUID())
+                .append(nutanixSetVMPowerStateInputs.getVMUUID())
                 .append(PATH_SEPARATOR)
                 .append(SET_POWER_STATE_PATH);
         uriBuilder.setPath(pathString.toString());
@@ -221,7 +221,7 @@ public class VMImpl {
         }
         CreateVMRequestBody.VMDisks vmDisks = createVMBody.new VMDisks();
         CreateVMRequestBody.DiskAddress diskAddress = createVMBody.new DiskAddress();
-        if (Boolean.parseBoolean(nutanixCreateVMInputs.getIsCDROM()) == true) {
+        if (Boolean.parseBoolean(nutanixCreateVMInputs.getIsCDROM())) {
             diskAddress.setDevice_bus(nutanixCreateVMInputs.getDeviceBus());
             diskAddress.setDisk_label(nutanixCreateVMInputs.getDiskLabel());
             diskAddress.setDevice_index(Integer.parseInt(nutanixCreateVMInputs.getDeviceIndex()));
@@ -296,16 +296,16 @@ public class VMImpl {
     }
 
     @NotNull
-    public static String setPowerStateBody(NutanixSetPowerStateInputs nutanixSetPowerStateInputs) {
+    public static String setVMPowerStateBody(NutanixSetVMPowerStateInputs nutanixSetVMPowerStateInputs) {
         String requestBody = EMPTY;
         ObjectMapper setPowerStateMapper = new ObjectMapper();
-        SetPowerStateRequestBody setPowerStateBody = new SetPowerStateRequestBody();
-        SetPowerStateRequestBody.SetPowerStateData setPowerStateData = setPowerStateBody.new SetPowerStateData();
-        setPowerStateData.setHost_uuid(nutanixSetPowerStateInputs.getHostUUID());
-        setPowerStateData.setUuid(nutanixSetPowerStateInputs.getVMUUID());
-        setPowerStateData.setTransition(nutanixSetPowerStateInputs.getTransition());
-        if (!nutanixSetPowerStateInputs.getVmLogicalTimestamp().isEmpty())
-            setPowerStateData.setVm_logical_timestamp(Integer.parseInt(nutanixSetPowerStateInputs.getVmLogicalTimestamp()));
+        SetVMPowerStateRequestBody setPowerStateBody = new SetVMPowerStateRequestBody();
+        SetVMPowerStateRequestBody.SetPowerStateData setPowerStateData = setPowerStateBody.new SetPowerStateData();
+        setPowerStateData.setHost_uuid(nutanixSetVMPowerStateInputs.getHostUUID());
+        setPowerStateData.setUuid(nutanixSetVMPowerStateInputs.getVMUUID());
+        setPowerStateData.setTransition(nutanixSetVMPowerStateInputs.getTransition());
+        if (!nutanixSetVMPowerStateInputs.getVmLogicalTimestamp().isEmpty())
+            setPowerStateData.setVm_logical_timestamp(Integer.parseInt(nutanixSetVMPowerStateInputs.getVmLogicalTimestamp()));
 
         try {
             requestBody = setPowerStateMapper.writeValueAsString(setPowerStateData);
