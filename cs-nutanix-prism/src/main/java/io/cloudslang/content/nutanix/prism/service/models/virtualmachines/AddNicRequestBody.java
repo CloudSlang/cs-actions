@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 
-public class CreateNicRequestBody {
+public class AddNicRequestBody {
 
     @JsonProperty("spec_list")
     ArrayList spec_list;

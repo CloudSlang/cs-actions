@@ -34,7 +34,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.createNic;
+import static io.cloudslang.content.nutanix.prism.service.VMImpl.AddNic;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.AddNICConstants.ADD_NIC_OPERATION_NAME;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.AddNICConstants.TASK_UUID_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
@@ -59,7 +59,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class AddNic {
     @Action(name = ADD_NIC_OPERATION_NAME,
-            description = ADD_NIC_SUCCESS_DESC,
+            description = ADD_NIC_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
@@ -79,7 +79,7 @@ public class AddNic {
                                        @Param(value = VM_UUID, required = true, description = VM_UUID_DESC) String vmUUID,
                                        @Param(value = NETWORK_UUID, required = true, description = NETWORK_UUID_DESC) String networkUUID,
                                        @Param(value = REQUESTED_IP_ADDRESS, description = REQUESTED_IP_ADDRESS_DESC) String requestedIPAddress,
-                                       @Param(value = VLAN_ID,description = VLAN_ID_DESC) String vlanId,
+                                       @Param(value = VLAN_ID, description = VLAN_ID_DESC) String vlanId,
                                        @Param(value = IS_CONNECTED, description = IS_CONNECTED_DESC) String isConnected,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
@@ -98,7 +98,7 @@ public class AddNic {
         port = defaultIfEmpty(port, DEFAULT_NUTANIX_PORT);
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
         requestedIPAddress = defaultIfEmpty(requestedIPAddress, EMPTY);
-        isConnected = defaultIfEmpty(isConnected, EMPTY);
+        isConnected = defaultIfEmpty(isConnected,BOOLEAN_TRUE);
         vlanId = defaultIfEmpty(vlanId, ZERO);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -120,7 +120,7 @@ public class AddNic {
         }
 
         try {
-            final Map<String, String> result = createNic(NutanixAddNicInputs.builder()
+            final Map<String, String> result = AddNic(NutanixAddNicInputs.builder()
                     .vmUUID(vmUUID)
                     .networkUUID(networkUUID)
                     .requestedIPAddress(requestedIPAddress)

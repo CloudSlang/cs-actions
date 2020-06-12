@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.createNICURL;
+import static io.cloudslang.content.nutanix.prism.service.VMImpl.AddNicURL;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
@@ -46,7 +46,7 @@ public class AddNicImpTest {
 
     @Test
     public void attachNicPathTest() throws Exception {
-        final String path = createNICURL(nutanixAddNicInputs);
+        final String path = AddNicURL(nutanixAddNicInputs);
         assertEquals(EXPECTED_ADD_NIC_PATH, path);
     }
 }

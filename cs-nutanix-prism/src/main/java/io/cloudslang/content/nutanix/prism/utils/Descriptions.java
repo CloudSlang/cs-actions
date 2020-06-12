@@ -212,7 +212,7 @@ public class Descriptions {
         public static final String IS_CONNECTED_DESC = "If the value of this property is 'true' the network will be " +
                 "connected while booting the Virtual Machine.";
         public static final String VLAN_ID_DESC = "The each vlan in a network has an associated vlan ID";
-        public static final String ADD_NIC_SUCCESS_DESC = "Nic successfully Added to the VM.";
+        public static final String ADD_NIC_OPERATION_DESC = "Nic successfully Added to the VM.";
 
 
     }

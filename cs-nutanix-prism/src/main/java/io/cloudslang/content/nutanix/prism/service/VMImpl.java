@@ -23,7 +23,7 @@ import io.cloudslang.content.nutanix.prism.entities.NutanixAddNicInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCreateVMInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixGetVMDetailsInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixListVMsInputs;
-import io.cloudslang.content.nutanix.prism.service.models.virtualmachines.CreateNicRequestBody;
+import io.cloudslang.content.nutanix.prism.service.models.virtualmachines.AddNicRequestBody;
 import io.cloudslang.content.nutanix.prism.service.models.virtualmachines.CreateVMRequestBody;
 import io.cloudslang.content.nutanix.prism.utils.Constants;
 import org.apache.http.client.utils.URIBuilder;
@@ -139,13 +139,13 @@ public class VMImpl {
     }
 
     @NotNull
-    public static Map<String, String> createNic(@NotNull final NutanixAddNicInputs nutanixAddNicInputs)
+    public static Map<String, String> AddNic(@NotNull final NutanixAddNicInputs nutanixAddNicInputs)
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(createNICURL(nutanixAddNicInputs));
+        httpClientInputs.setUrl(AddNicURL(nutanixAddNicInputs));
         setCommonHttpInputs(httpClientInputs, nutanixAddNicInputs.getCommonInputs());
         try {
-            httpClientInputs.setBody(createNicBody(nutanixAddNicInputs));
+            httpClientInputs.setBody(AddNicBody(nutanixAddNicInputs));
         } catch (JsonProcessingException e) {
             return getFailureResultsMap(e);
         }
@@ -158,28 +158,28 @@ public class VMImpl {
     }
 
     @NotNull
-    public static String createNicBody(NutanixAddNicInputs nutanixAttachNicInputs)
+    public static String AddNicBody(NutanixAddNicInputs nutanixAttachNicInputs)
             throws JsonProcessingException {
         String requestBody = EMPTY;
         ObjectMapper AttachNicMapper = new ObjectMapper();
-        CreateNicRequestBody createNicBody = new CreateNicRequestBody();
+        AddNicRequestBody AddNicBody = new AddNicRequestBody();
         ArrayList spec_list = new ArrayList();
         String[] network_uuid = nutanixAttachNicInputs.getNetworkUUID().split(",");
         String[] requested_ip_address = nutanixAttachNicInputs.getRequestedIPAddress().split(",");
         String[] is_connected = nutanixAttachNicInputs.getIsConnected().split(",");
         String[] vlan_Id = nutanixAttachNicInputs.getVlanid().split(",");
         for (int i = 0; i < requested_ip_address.length; i++) {
-            CreateNicRequestBody.VMNics vmNics = createNicBody.new VMNics();
+            AddNicRequestBody.VMNics vmNics = AddNicBody.new VMNics();
             vmNics.setNetwork_uuid(network_uuid[i]);
             vmNics.setRequested_ip_address(requested_ip_address[i]);
             vmNics.setIs_connected(Boolean.parseBoolean(is_connected[i]));
             vmNics.setVlan_id(vlan_Id[i]);
             spec_list.add(vmNics);
         }
-        createNicBody.setSpec_list(spec_list);
+        AddNicBody.setSpec_list(spec_list);
 
         try {
-            requestBody = AttachNicMapper.writeValueAsString(createNicBody);
+            requestBody = AttachNicMapper.writeValueAsString(AddNicBody);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -188,7 +188,7 @@ public class VMImpl {
     }
 
     @NotNull
-    public static String createNICURL(NutanixAddNicInputs nutanixAttachNicInputs) throws Exception {
+    public static String AddNicURL(NutanixAddNicInputs nutanixAttachNicInputs) throws Exception {
 
         final URIBuilder uriBuilder = getUriBuilder(nutanixAttachNicInputs.getCommonInputs());
         StringBuilder pathString = new StringBuilder()
