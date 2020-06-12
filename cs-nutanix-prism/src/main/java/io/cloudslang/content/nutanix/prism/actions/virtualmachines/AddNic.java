@@ -98,7 +98,7 @@ public class AddNic {
         port = defaultIfEmpty(port, DEFAULT_NUTANIX_PORT);
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
         requestedIPAddress = defaultIfEmpty(requestedIPAddress, EMPTY);
-        isConnected = defaultIfEmpty(isConnected,BOOLEAN_TRUE);
+        isConnected = defaultIfEmpty(isConnected, BOOLEAN_TRUE);
         vlanId = defaultIfEmpty(vlanId, ZERO);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
