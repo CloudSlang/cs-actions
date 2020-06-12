@@ -211,8 +211,7 @@ public class Descriptions {
                 "the Virtual Machine.";
         public static final String IS_CONNECTED_DESC = "If the value of this property is 'true' the network will be " +
                 "connected while booting the Virtual Machine.";
-        public static final String VLAN_ID = "The each vlan in a network has an associated vlan ID";
-        public static final String VM_LOGICAL_TIMESTAMP_DESC = "Virtual Machine Logical timestamp.";
+        public static final String VLAN_ID_DESC = "The each vlan in a network has an associated vlan ID";
         public static final String ADD_NIC_SUCCESS_DESC = "Nic successfully Added to the VM.";
 
 

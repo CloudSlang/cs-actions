@@ -90,11 +90,11 @@ public class Inputs extends InputNames {
         public static final String VM_LOGICAL_TIMESTAMP = "vmLogicalTimestamp";
         public static final String NIC_MAC_ADDRESS = "nicMacAddress";
     }
-    public static class CreateNicInput{
+    public static class AddNicInput{
         public static final String NETWORK_UUID = "networkUUID";
         public static final String REQUESTED_IP_ADDRESS = "requestedIPAddress";
         public static final String IS_CONNECTED = "isConnected";
-        public static final String VLAN_ID = "vlanID";
+        public static final String VLAN_ID = "vlanId";
 
 
     }

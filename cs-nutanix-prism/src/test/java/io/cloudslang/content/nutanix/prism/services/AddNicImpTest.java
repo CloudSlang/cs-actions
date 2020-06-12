@@ -20,7 +20,7 @@ public class AddNicImpTest {
             .vmUUID("0b5d5c1c-40c8-4591-9f02-72e2ce")
             .networkUUID("923f260b-21ca-4617-b327-b4a9526d0589")
             .requestedIPAddress("15.119.80.10")
-            .vlanid("0")
+            .vlanId("0")
             .isConnected("true")
             .commonInputs(
                     NutanixCommonInputs.builder()

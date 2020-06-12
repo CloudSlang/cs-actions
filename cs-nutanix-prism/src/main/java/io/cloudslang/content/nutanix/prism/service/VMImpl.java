@@ -167,13 +167,13 @@ public class VMImpl {
         String[] network_uuid = nutanixAttachNicInputs.getNetworkUUID().split(",");
         String[] requested_ip_address = nutanixAttachNicInputs.getRequestedIPAddress().split(",");
         String[] is_connected = nutanixAttachNicInputs.getIsConnected().split(",");
-        String[] vlan_id = nutanixAttachNicInputs.getVlanid().split(",");
+        String[] vlan_Id = nutanixAttachNicInputs.getVlanid().split(",");
         for (int i = 0; i < requested_ip_address.length; i++) {
             CreateNicRequestBody.VMNics vmNics = createNicBody.new VMNics();
             vmNics.setNetwork_uuid(network_uuid[i]);
             vmNics.setRequested_ip_address(requested_ip_address[i]);
             vmNics.setIs_connected(Boolean.parseBoolean(is_connected[i]));
-            vmNics.setVlan_id(vlan_id[i]);
+            vmNics.setVlan_id(vlan_Id[i]);
             spec_list.add(vmNics);
         }
         createNicBody.setSpec_list(spec_list);

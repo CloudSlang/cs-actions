@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2020 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.nutanix.prism.actions.virtualmachines;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -8,8 +22,6 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.nutanix.prism.entities.NutanixAddNicInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
-import io.cloudslang.content.nutanix.prism.utils.Descriptions;
-import io.cloudslang.content.nutanix.prism.utils.Inputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -27,9 +39,10 @@ import static io.cloudslang.content.nutanix.prism.utils.Constants.AddNICConstant
 import static io.cloudslang.content.nutanix.prism.utils.Constants.AddNICConstants.TASK_UUID_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
-import static io.cloudslang.content.nutanix.prism.utils.Descriptions.CreateNic.ADD_NIC_SUCCESS_DESC;
+import static io.cloudslang.content.nutanix.prism.utils.Descriptions.CreateNic.*;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.AddNicInput.*;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PASSWORD;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -64,10 +77,10 @@ public class AddNic {
                                        @Param(value = USERNAME, required = true, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
                                        @Param(value = VM_UUID, required = true, description = VM_UUID_DESC) String vmUUID,
-                                       @Param(value = Inputs.CreateNicInput.NETWORK_UUID, required = true, description = Descriptions.CreateNic.NETWORK_UUID_DESC) String networkUUID,
-                                       @Param(value = Inputs.CreateNicInput.REQUESTED_IP_ADDRESS, description = Descriptions.CreateNic.REQUESTED_IP_ADDRESS_DESC) String requestedIPAddress,
-                                       @Param(value = Inputs.CreateNicInput.VLAN_ID,description = Descriptions.CreateNic.VLAN_ID) String vlanid,
-                                       @Param(value = Inputs.CreateNicInput.IS_CONNECTED, description = Descriptions.CreateNic.IS_CONNECTED_DESC) String isConnected,
+                                       @Param(value = NETWORK_UUID, required = true, description = NETWORK_UUID_DESC) String networkUUID,
+                                       @Param(value = REQUESTED_IP_ADDRESS, description = REQUESTED_IP_ADDRESS_DESC) String requestedIPAddress,
+                                       @Param(value = VLAN_ID,description = VLAN_ID_DESC) String vlanId,
+                                       @Param(value = IS_CONNECTED, description = IS_CONNECTED_DESC) String isConnected,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -86,7 +99,7 @@ public class AddNic {
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
         requestedIPAddress = defaultIfEmpty(requestedIPAddress, EMPTY);
         isConnected = defaultIfEmpty(isConnected, EMPTY);
-        vlanid = defaultIfEmpty(vlanid, ZERO);
+        vlanId = defaultIfEmpty(vlanId, ZERO);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -111,7 +124,7 @@ public class AddNic {
                     .vmUUID(vmUUID)
                     .networkUUID(networkUUID)
                     .requestedIPAddress(requestedIPAddress)
-                    .vlanid(vlanid)
+                    .vlanId(vlanId)
                     .isConnected(isConnected)
                     .commonInputs(
                             NutanixCommonInputs.builder()
