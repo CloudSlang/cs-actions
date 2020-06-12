@@ -91,4 +91,14 @@ public class Inputs extends InputNames {
         public static final String INCLUDE_SUBTASKS_INFO = "includeSubtasksInfo";
     }
 
+    public static class DetachDisksInputs {
+        public static final String VM_DISK_UUID_LIST = "vmDiskUUIDList";
+        public static final String DEVICE_BUS_LIST = "deviceBusList";
+        public static final String DEVICE_INDEX_LIST = "deviceIndexList";
+
+    }
+    public static class DeleteNICInputs {
+        public static final String VM_LOGICAL_TIMESTAMP = "vmLogicalTimestamp";
+        public static final String NIC_MAC_ADDRESS = "nicMacAddress";
+    }
 }

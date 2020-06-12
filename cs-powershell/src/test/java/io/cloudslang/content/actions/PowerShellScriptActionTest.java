@@ -133,7 +133,7 @@ public class PowerShellScriptActionTest {
     @Test
     public void testExecuteThrowsException() throws Exception {
         whenNew(PowerShellScriptService.class).withNoArguments().thenReturn(serviceMock);
-        doThrow(new RuntimeException(EXCEPTION_MESSAGE)).when(serviceMock).runCommand(any(WSManRequestInputs.class));
+        doThrow(new RuntimeException(EXCEPTION_MESSAGE)).when(serviceMock).execute(any(WSManRequestInputs.class));
 
         Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, BASIC_AUTH_TYPE, PASS, PROXY_HOST, PROXY_PORT,
                 PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
@@ -146,7 +146,7 @@ public class PowerShellScriptActionTest {
     @Test
     public void testExecuteWithFailureScriptExitCode() throws Exception {
         whenNew(PowerShellScriptService.class).withNoArguments().thenReturn(serviceMock);
-        doReturn(resultMock).when(serviceMock).runCommand(any(WSManRequestInputs.class));
+        doReturn(resultMock).when(serviceMock).execute(any(WSManRequestInputs.class));
         doReturn(null).when(resultMock).put(RETURN_CODE, RETURN_CODE_SUCCESS);
         doReturn(RETURN_CODE_FAILURE).when(resultMock).get(SCRIPT_EXIT_CODE);
 
@@ -155,7 +155,7 @@ public class PowerShellScriptActionTest {
                 EMPTY_STRING, SCRIPT, EMPTY_STRING, MODULES, EMPTY_STRING, EMPTY_STRING);
 
         verifyNew(PowerShellScriptService.class).withNoArguments();
-        verify(serviceMock, times(1)).runCommand(any(WSManRequestInputs.class));
+        verify(serviceMock, times(1)).execute(any(WSManRequestInputs.class));
         verify(resultMock, times(1)).put(RETURN_CODE, RETURN_CODE_FAILURE);
         verify(resultMock, times(1)).get(SCRIPT_EXIT_CODE);
         assertEquals(resultMock, result);
@@ -163,13 +163,13 @@ public class PowerShellScriptActionTest {
 
     private void configureMocksForSuccessTests() throws Exception {
         whenNew(PowerShellScriptService.class).withNoArguments().thenReturn(serviceMock);
-        doReturn(resultMock).when(serviceMock).runCommand(any(WSManRequestInputs.class));
+        doReturn(resultMock).when(serviceMock).execute(any(WSManRequestInputs.class));
         doReturn(null).when(resultMock).put(RETURN_CODE, RETURN_CODE_SUCCESS);
         doReturn(RETURN_CODE_SUCCESS).when(resultMock).get(SCRIPT_EXIT_CODE);
     }
 
-    private void verifyMockInteractions() throws IOException, InterruptedException, ParserConfigurationException, TransformerException, XPathExpressionException, TimeoutException, URISyntaxException, SAXException {
-        verify(serviceMock, times(1)).runCommand(any(WSManRequestInputs.class));
+    private void verifyMockInteractions() throws Exception {
+        verify(serviceMock, times(1)).execute(any(WSManRequestInputs.class));
         verify(resultMock, times(1)).put(RETURN_CODE, RETURN_CODE_SUCCESS);
         verify(resultMock, times(1)).get(SCRIPT_EXIT_CODE);
     }
