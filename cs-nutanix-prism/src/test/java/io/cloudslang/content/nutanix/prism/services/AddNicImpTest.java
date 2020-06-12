@@ -3,16 +3,14 @@ package io.cloudslang.content.nutanix.prism.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cloudslang.content.nutanix.prism.entities.NutanixAddNicInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
-import io.cloudslang.content.nutanix.prism.entities.NutanixCreateVMInputs;
 import io.cloudslang.content.nutanix.prism.service.VMImpl;
-import io.cloudslang.content.nutanix.prism.service.models.virtualmachines.AddNicRequestBody;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.AddNicURL;
 import static io.cloudslang.content.nutanix.prism.service.VMImpl.AddNicBody;
+import static io.cloudslang.content.nutanix.prism.service.VMImpl.AddNicURL;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
@@ -50,12 +48,12 @@ public class AddNicImpTest {
                             .build()).build();
 
     private final NutanixAddNicInputs nutanixNicInputs = NutanixAddNicInputs.builder()
-                  .vmUUID("0b5d5c1c-40c8-4591-9f02-72e2ce")
-                  .networkUUID("")
-                  .requestedIPAddress("")
-                  .isConnected("")
-                  .vlanId("")
-                  .commonInputs(
+            .vmUUID("0b5d5c1c-40c8-4591-9f02-72e2ce")
+            .networkUUID("")
+            .requestedIPAddress("")
+            .isConnected("")
+            .vlanId("")
+            .commonInputs(
                     NutanixCommonInputs.builder()
                             .hostname("myhost")
                             .port("9080")
