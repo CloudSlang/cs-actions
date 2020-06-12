@@ -144,7 +144,7 @@ public class DeleteVM {
                     .connectionsMaxTotal(connectionsMaxTotal)
                     .build();
 
-            final Map<String, String> result = deleteVM(NutanixDeleteVMInputs.builder()
+            Map<String, String> result = deleteVM(NutanixDeleteVMInputs.builder()
                     .vmUUID(vmUUID)
                     .deleteSnapshots(deleteSnapshots)
                     .logicalTimestamp(logicalTimestamp)
@@ -159,10 +159,10 @@ public class DeleteVM {
             if (statusCode >= 200 && statusCode < 300) {
                 final String taskUUID = JsonPath.read(returnMessage, TASK_UUID_PATH);
                 results.put(TASK_UUID, taskUUID);
-                final Map<String, String> taskResult = getTaskDetails(NutanixGetTaskDetailsInputs.builder()
+                result = getTaskDetails(NutanixGetTaskDetailsInputs.builder()
                         .taskUUID(taskUUID)
                         .commonInputs(commonInputs).build());
-                returnMessage = taskResult.get(RETURN_RESULT);
+                returnMessage = result.get(RETURN_RESULT);
                 results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
                 statusCode = Integer.parseInt(result.get(STATUS_CODE));
                 String taskStatus = JsonPath.read(returnMessage, TASK_STATUS_PATH);

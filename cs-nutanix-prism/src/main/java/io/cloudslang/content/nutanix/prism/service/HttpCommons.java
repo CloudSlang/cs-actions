@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-
 package io.cloudslang.content.nutanix.prism.service;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
