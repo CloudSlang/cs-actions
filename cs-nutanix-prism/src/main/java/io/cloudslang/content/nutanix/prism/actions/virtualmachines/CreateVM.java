@@ -135,7 +135,7 @@ public class CreateVM {
         storageContainerUUID = defaultIfEmpty(storageContainerUUID, EMPTY);
         vmDiskSize = defaultIfEmpty(vmDiskSize, ZERO);
         requestedIPAddress = defaultIfEmpty(requestedIPAddress, EMPTY);
-        isConnected = defaultIfEmpty(isConnected, EMPTY);
+        isConnected = defaultIfEmpty(isConnected, BOOLEAN_TRUE);
         hostUUIDs = defaultIfEmpty(hostUUIDs, EMPTY);
         agentVM = defaultIfEmpty(agentVM, BOOLEAN_FALSE);
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
