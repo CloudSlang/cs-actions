@@ -123,12 +123,11 @@ public class DiskImpl {
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(AttachDisksURL(nutanixAttachDisksInputs));
-        System.out.println(AttachDisksURL(nutanixAttachDisksInputs));
+
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setMethod(POST);
 
         httpClientInputs.setBody(AttachDisksBody(nutanixAttachDisksInputs));
-        System.out.println(AttachDisksBody(nutanixAttachDisksInputs));
 
         httpClientInputs.setUsername(nutanixAttachDisksInputs.getCommonInputs().getUsername());
         httpClientInputs.setPassword(nutanixAttachDisksInputs.getCommonInputs().getPassword());
