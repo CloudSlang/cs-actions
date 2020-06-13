@@ -92,6 +92,12 @@ public class Constants {
         public static final String DETACH_DISKS_OPERATION_NAME = "Detach Disks";
         public static final String DETACH_DISKS_PATH = "/disks/detach";
     }
+
+    public static class AttachDisksConstants {
+        public static final String ATTACH_DISKS_OPERATION_NAME = "Attach Disks";
+        public static final String ATTACH_DISKS_PATH = "/disks/attach";
+        public static final String TASK_UUID_PATH = "task_uuid";
+    }
     public static class DeleteNICConstants {
         public static final String DELETE_NIC_OPERATION_NAME = "Delete NIC";
         public static final String DELETE_NIC_PATH = "/nics/";

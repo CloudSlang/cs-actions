@@ -86,6 +86,15 @@ public class Inputs extends InputNames {
         public static final String DEVICE_INDEX_LIST = "deviceIndexList";
 
     }
+
+    public static class AttachDisksInputs {
+        public static final String DEVICE_BUS = "deviceBus";
+        public static final String DEVICE_INDEX = "deviceIndex";
+        public static final String VM_DISK_SIZE = "deviceDisksize";
+        public static final String STORAGE_CONTAINER_UUID_DISK = "storagecontainerUUIDDisk";
+
+    }
+
     public static class DeleteNICInputs {
         public static final String VM_LOGICAL_TIMESTAMP = "vmLogicalTimestamp";
         public static final String NIC_MAC_ADDRESS = "nicMacAddress";
