@@ -154,7 +154,7 @@ public class AttachDisks {
                 final String taskUUID = JsonPath.read(returnMessage, TASK_UUID_PATH);
                 results.put(TASK_UUID, taskUUID);
             } else {
-                return getFailureResults(hostname, statusCode, returnMessage);
+                return getFailureResults(hostname, statusCode, returnMessage,returnMessage,returnMessage);
             }
             return results;
         } catch (Exception exception) {
