@@ -33,21 +33,35 @@ public class AddNicRequestBody {
             this.is_connected = is_connected;
         }
 
-        public String getVlan_id() { return vlan_id; }
+        public String getVlan_id() {
+            if (vlan_id == null) {
+                vlan_id = "0";
+            }
 
-        public void setVlan_id(String vlan_id) { this.vlan_id = vlan_id; }
+            return vlan_id;
+        }
+
+        public void setVlan_id(String vlan_id) {
+            this.vlan_id = vlan_id;
+        }
 
         public String getRequested_ip_address() {
             return requested_ip_address;
         }
 
-        public void setRequested_ip_address(String requested_ip_address) { this.requested_ip_address = requested_ip_address; }
+        public void setRequested_ip_address(String requested_ip_address) {
+            this.requested_ip_address = requested_ip_address;
+        }
 
-        public String getNetwork_uuid() { return network_uuid; }
+        public String getNetwork_uuid() {
+            return network_uuid;
+        }
 
-        public void setNetwork_uuid(String network_uuid) { this.network_uuid = network_uuid; }
+        public void setNetwork_uuid(String network_uuid) {
+            this.network_uuid = network_uuid;
+        }
 
     }
 
-    }
+}
 

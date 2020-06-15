@@ -168,13 +168,22 @@ public class VMImpl {
         String[] requested_ip_address = nutanixAttachNicInputs.getRequestedIPAddress().split(",");
         String[] is_connected = nutanixAttachNicInputs.getIsConnected().split(",");
         String[] vlan_Id = nutanixAttachNicInputs.getVlanid().split(",");
-        for (int i = 0; i < requested_ip_address.length; i++) {
-            AddNicRequestBody.VMNics vmNics = AddNicBody.new VMNics();
-            vmNics.setNetwork_uuid(network_uuid[i]);
-            vmNics.setRequested_ip_address(requested_ip_address[i]);
-            vmNics.setIs_connected(Boolean.parseBoolean(is_connected[i]));
-            vmNics.setVlan_id(vlan_Id[i]);
-            spec_list.add(vmNics);
+        if (requested_ip_address.length == is_connected.length && requested_ip_address.length == vlan_Id.length) {
+            for (int i = 0; i < requested_ip_address.length; i++) {
+                AddNicRequestBody.VMNics vmNics = AddNicBody.new VMNics();
+                vmNics.setNetwork_uuid(network_uuid[i]);
+                vmNics.setRequested_ip_address(requested_ip_address[i]);
+                vmNics.setIs_connected(Boolean.parseBoolean(is_connected[i]));
+                vmNics.setVlan_id(vlan_Id[i]);
+                spec_list.add(vmNics);
+            }
+        } else {
+            for (int i = 0; i < requested_ip_address.length; i++) {
+                AddNicRequestBody.VMNics vmNics = AddNicBody.new VMNics();
+                vmNics.setNetwork_uuid(network_uuid[i]);
+                vmNics.setRequested_ip_address(requested_ip_address[i]);
+                spec_list.add(vmNics);
+            }
         }
         AddNicBody.setSpec_list(spec_list);
 
