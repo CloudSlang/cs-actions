@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2020 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.nutanix.prism.entities;
 
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +28,7 @@ public class NutanixDetachDisksInputs {
 
     @java.beans.ConstructorProperties({"vmUUID", "vmDiskUUIDList", "deviceBusList", "deviceIndexList", "commonInputs"})
     public NutanixDetachDisksInputs(String vmUUID, String vmDiskUUIDList, String deviceBusList, String deviceIndexList,
-                                     NutanixCommonInputs commonInputs) {
+                                    NutanixCommonInputs commonInputs) {
         this.vmUUID = vmUUID;
         this.vmDiskUUIDList = vmDiskUUIDList;
         this.deviceBusList = deviceBusList;

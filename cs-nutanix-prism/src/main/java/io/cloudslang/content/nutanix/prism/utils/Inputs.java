@@ -57,7 +57,7 @@ public class Inputs extends InputNames {
         public static final String IS_SCSI_PASS_THROUGH = "isSCSIPassThrough";
         public static final String IS_THIN_PROVISIONED = "isThinProvisioned";
         public static final String IS_CDROM = "isCDROM";
-        public static final String IS_EMPTY = "isEmpty";
+        public static final String IS_EMPTY_DISK = "isEmptyDisk";
         public static final String DEVICE_BUS = "deviceBus";
         public static final String DISK_LABEL = "diskLabel";
         public static final String DEVICE_INDEX = "deviceIndex";
@@ -73,6 +73,17 @@ public class Inputs extends InputNames {
         public static final String IS_CONNECTED = "isConnected";
         public static final String HOST_UUIDS = "hostUUIDs";
         public static final String AGENT_VM = "agentVM";
+    }
+
+    public static class DeleteVMInputs {
+        public static final String DELETE_SNAPSHOTS = "deleteSnapshots";
+        public static final String LOGICAL_TIMESTAMP = "logicalTimestamp";
+    }
+
+    public static class SetVMPowerStateInputs {
+        public static final String HOST_UUID = "hostUUID";
+        public static final String POWER_STATE = "powerState";
+        public static final String VM_LOGICAL_TIMESTAMP = "vmLogicalTimestamp";
     }
 
     public static class GetTaskDetailsInputs {
