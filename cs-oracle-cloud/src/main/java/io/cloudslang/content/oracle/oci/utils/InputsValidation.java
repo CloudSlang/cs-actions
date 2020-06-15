@@ -15,10 +15,12 @@
 
 package io.cloudslang.content.oracle.oci.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.utils.NumberUtilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,6 +82,26 @@ public class InputsValidation {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!NumberUtilities.isValidInt(input)) {
             exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> isNumber(@NotNull List<String> exceptions, @Nullable final String input,
+                                         @NotNull final String inputName) {
+        if (!isEmpty(input) && !NumberUtilities.isValidInt(input)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
+        }
+        return exceptions;
+    }
+
+    public static List<String> verifyJSONObject(@NotNull List<String> exceptions, @Nullable final String input,
+                                                @NotNull final String inputName) {
+        try {
+            if (!isEmpty(input))
+                new ObjectMapper().readTree(input);
+        } catch (IOException e) {
+            exceptions.add(String.format(EXCEPTION_INVALID_JSON, input, inputName));
         }
         return exceptions;
     }

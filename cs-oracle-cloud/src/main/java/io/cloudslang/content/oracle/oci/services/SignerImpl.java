@@ -34,6 +34,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
+import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 
 public class SignerImpl {
 
@@ -93,20 +94,25 @@ public class SignerImpl {
                 headers.put(CONTENT_TYPE, APPLICATION_JSON);
                 myheaders.put(CONTENT_TYPE + COLON, APPLICATION_JSON);
 
-                if (requestBody != null && !requestBody.isEmpty()) {
+                if (!isEmpty(requestBody)) {
                     byte[] body = requestBody.getBytes();
 
                     headers.put(CONTENT_LENGTH, Integer.toString(body.length));
-                    myheaders.put(CONTENT_LENGTH + COLON, Integer.toString(body.length));
-
+//                    myheaders.put(CONTENT_LENGTH + COLON, Integer.toString(body.length));
 
                     headers.put(X_CONTENT_SHA256, calculateSHA256(body));
                     myheaders.put(X_CONTENT_SHA256 + COLON, calculateSHA256(body));
 
                 }
             }
+            String path;
+            if (!isEmpty(uri.getQuery())) {
+                path = uri.getPath() + QUERY + uri.getQuery();
+            } else {
+                path = uri.getPath();
+            }
 
-            final String signature = this.calculateSignature(method, uri.getPath() + QUERY + uri.getQuery(), headers);
+            final String signature = this.calculateSignature(method, path, headers);
             myheaders.put(AUTHORIZATION, signature);
             return myheaders;
         }

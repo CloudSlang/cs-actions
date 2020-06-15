@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.nutanix.prism.utils;
 
 public class Constants {
@@ -21,6 +22,8 @@ public class Constants {
         public static final String NEW_LINE = "\n";
         public static final String DEFAULT_PROXY_PORT = "8080";
         public static final String DEFAULT_NUTANIX_PORT = "9440";
+        public static final String DEFAULT_HYPERVISOR_TYPE = "ACROPOLIS";
+        public static final String DEFAULT_TIMEZONE = "UTC";
         public static final String BOOLEAN_FALSE = "false";
         public static final String BOOLEAN_TRUE = "true";
         public static final String STRICT = "strict";
@@ -39,7 +42,6 @@ public class Constants {
         public static final String CHANGEIT = "changeit";
         public static final String ZERO = "0";
         public static final String CONNECT_TIMEOUT_CONST = "10000";
-        public static final String UTF8 = "UTF-8";
         public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
         public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
         public static final String AUTHORIZATION = "Basic ";
@@ -48,6 +50,7 @@ public class Constants {
         public static final String QUERY = "?";
         public static final String ID = "id";
         public static final String HTTPS = "https";
+        public static final String AFFINITY = "AFFINITY";
         public static final String STATUS_CODE = "statusCode";
         public static final String APPLICATION_API_JSON = "application/json";
         public static final String DELIMITER = ",";
@@ -71,12 +74,6 @@ public class Constants {
         public static final String INCREMENT_BY = "incrementBy";
         public static final String SESSION_COUNTER = "sessionCounter";
         public static final String RESET = "reset";
-
-
-    }
-
-    public static class ListVMsConstants {
-        public static final String LIST_VMS_OPERATION_NAME = "List VMs";
     }
 
     public static class GetVMDetailsConstants {
@@ -84,18 +81,58 @@ public class Constants {
         public static final String INCLUDE_VM_DISK_CONFIG_INFO = "include_vm_disk_config=";
         public static final String INCLUDE_VM_NIC_CONFIG_INFO = "include_vm_nic_config=";
         public static final String VM_NAME_PATH = "name";
+        public static final String IP_ADDRESS_PATH = "$.vm_nics[*].ip_address";
+        public static final String MAC_ADDRESS_PATH = "$.vm_nics[*].mac_address";
+        public static final String POWER_STATE_PATH = "power_state";
+        public static final String VM_DISK_UUID_PATH = "$.vm_disk_info[*].disk_address.vmdisk_uuid";
+        public static final String STORAGE_CONTAINER_UUID_PATH = "$.vm_disk_info[*].storage_container_uuid";
+        public static final String VM_LOGICAL_TIMESTAMP_PATH = "$.vm_logical_timestamp";
         public static final String GET_VM_DETAILS_PATH = "/vms";
-
     }
-
-    public static class GetListVMConstants {
+    public static class DetachDisksConstants {
+        public static final String DETACH_DISKS_OPERATION_NAME = "Detach Disks";
+        public static final String DETACH_DISKS_PATH = "/disks/detach";
+    }
+    public static class DeleteNICConstants {
+        public static final String DELETE_NIC_OPERATION_NAME = "Delete NIC";
+        public static final String DELETE_NIC_PATH = "/nics/";
+        public static final String VM_LOGICAL_TIMESTAMP_QUERY_PARAM = "vm_logical_timestamp=";
+    }
+    public static class ListVMsConstants {
+        public static final String LIST_VMS_OPERATION_NAME = "List VMs";
         public static final String FILTER = "filter=";
         public static final String OFFSET = "offset=";
         public static final String LENGTH = "length=";
         public static final String SORT_ORDER = "sortorder=";
         public static final String SORT_ATTRIBUTE = "sortattribute=";
         public static final String LIST_VM_JSON_PATH = "$.entities[*].name";
+    }
 
+    public static class CreateVMConstants {
+        public static final String CREATE_VM_OPERATION_NAME = "Create VM";
+        public static final String TASK_UUID_PATH = "task_uuid";
+    }
+
+    public static class DeleteVMConstants {
+        public static final String DELETE_VM_OPERATION_NAME = "Delete VM";
+        public static final String DELETE_SNAPSHOTS = "delete_snapshots=";
+        public static final String LOGICAL_TIMESTAMP = "logical_timestamp=";
+    }
+
+    public static class SetVMPowerStateConstants {
+        public static final String SET_VM_POWER_STATE_OPERATION_NAME = "Set VM Power State";
+        public static final String SET_POWER_STATE_PATH = "set_power_state";
+    }
+
+    public static class GetTaskDetailsConstants {
+        public static final String GET_TASK_DETAILS_OPERATION_NAME = "Get Task Details";
+        public static final String INCLUDE_SUBTASKS_INFO = "include_subtasks_info=";
+        public static final String GET_TASK_DETAILS_PATH = "/tasks";
+        public static final String VM_UUID_PATH = "$.entity_list[*].entity_id";
+        public static final String TASK_STATUS_PATH = "progress_status";
+        public static final String SUCCEEDED = "Succeeded";
+        public static final String FAILED = "Failed";
+        public static final String TASK_FAILURE_PATH = "$.meta_response.error_detail";
     }
 
 }
