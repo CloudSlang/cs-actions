@@ -82,6 +82,7 @@ public class Constants {
         public static final String INCLUDE_VM_NIC_CONFIG_INFO = "include_vm_nic_config=";
         public static final String VM_NAME_PATH = "name";
         public static final String IP_ADDRESS_PATH = "$.vm_nics[*].ip_address";
+        public static final String MAC_ADDRESS_PATH = "$.vm_nics[*].mac_address";
         public static final String POWER_STATE_PATH = "power_state";
         public static final String VM_DISK_UUID_PATH = "$.vm_disk_info[*].disk_address.vmdisk_uuid";
         public static final String STORAGE_CONTAINER_UUID_PATH = "$.vm_disk_info[*].storage_container_uuid";
@@ -110,6 +111,17 @@ public class Constants {
     public static class CreateVMConstants {
         public static final String CREATE_VM_OPERATION_NAME = "Create VM";
         public static final String TASK_UUID_PATH = "task_uuid";
+    }
+
+    public static class DeleteVMConstants {
+        public static final String DELETE_VM_OPERATION_NAME = "Delete VM";
+        public static final String DELETE_SNAPSHOTS = "delete_snapshots=";
+        public static final String LOGICAL_TIMESTAMP = "logical_timestamp=";
+    }
+
+    public static class SetVMPowerStateConstants {
+        public static final String SET_VM_POWER_STATE_OPERATION_NAME = "Set VM Power State";
+        public static final String SET_POWER_STATE_PATH = "set_power_state";
     }
 
     public static class GetTaskDetailsConstants {

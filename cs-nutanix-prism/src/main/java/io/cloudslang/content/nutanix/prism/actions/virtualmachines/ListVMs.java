@@ -169,7 +169,7 @@ public class ListVMs {
                 }
 
             } else {
-                return getFailureResults(hostname, statusCode, returnMessage);
+                return getFailureResults(hostname, statusCode, returnMessage, returnMessage, returnMessage);
             }
             return results;
         } catch (Exception exception) {

@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2020 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.nutanix.prism.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,38 +38,37 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class DiskImpl {
 
     @NotNull
-    public static String detachDisksBody(NutanixDetachDisksInputs nutanixDetachDisksInputs) throws NutanixDetachDiskException
-           {
+    public static String detachDisksBody(NutanixDetachDisksInputs nutanixDetachDisksInputs) throws NutanixDetachDiskException {
         String requestBody = EMPTY;
-               ObjectMapper detachDisksMapper = new ObjectMapper();
-               DetachDisksRequestBody detachDisksRequestBody = new DetachDisksRequestBody();
-               detachDisksRequestBody.setVmUUID(nutanixDetachDisksInputs.getVMUUID());
-               ArrayList vmDiskList = new ArrayList();
-               String[] deviceBusArray = nutanixDetachDisksInputs.getDeviceBusList().split(",");
-               String[] deviceIndexArray = nutanixDetachDisksInputs.getDeviceIndexList().split(",");
-               String[] vmDiskUUIDArray = nutanixDetachDisksInputs.getVmDiskUUIDList().split(",");
-               if((vmDiskUUIDArray.length == deviceBusArray.length) && (vmDiskUUIDArray.length == deviceIndexArray.length)) {
-                   for (int i = 0; i < vmDiskUUIDArray.length; i++) {
-                       DetachDisksRequestBody.VMDisks vmDisks = detachDisksRequestBody.new VMDisks();
-                       DetachDisksRequestBody.DiskAddress diskAddress = detachDisksRequestBody.new DiskAddress();
-                       diskAddress.setDeviceBus(deviceBusArray[i]);
-                       diskAddress.setDeviceIndex(deviceIndexArray[i]);
-                       diskAddress.setVmDiskUUID(vmDiskUUIDArray[i]);
-                       vmDisks.setDiskAddress(diskAddress);
+        ObjectMapper detachDisksMapper = new ObjectMapper();
+        DetachDisksRequestBody detachDisksRequestBody = new DetachDisksRequestBody();
+        detachDisksRequestBody.setVmUUID(nutanixDetachDisksInputs.getVMUUID());
+        ArrayList vmDiskList = new ArrayList();
+        String[] deviceBusArray = nutanixDetachDisksInputs.getDeviceBusList().split(",");
+        String[] deviceIndexArray = nutanixDetachDisksInputs.getDeviceIndexList().split(",");
+        String[] vmDiskUUIDArray = nutanixDetachDisksInputs.getVmDiskUUIDList().split(",");
+        if((vmDiskUUIDArray.length == deviceBusArray.length) && (vmDiskUUIDArray.length == deviceIndexArray.length)) {
+            for (int i = 0; i < vmDiskUUIDArray.length; i++) {
+                DetachDisksRequestBody.VMDisks vmDisks = detachDisksRequestBody.new VMDisks();
+                DetachDisksRequestBody.DiskAddress diskAddress = detachDisksRequestBody.new DiskAddress();
+                diskAddress.setDeviceBus(deviceBusArray[i]);
+                diskAddress.setDeviceIndex(deviceIndexArray[i]);
+                diskAddress.setVmDiskUUID(vmDiskUUIDArray[i]);
+                vmDisks.setDiskAddress(diskAddress);
 
-                       vmDiskList.add(vmDisks);
-                   }
+                vmDiskList.add(vmDisks);
+            }
 
-                   detachDisksRequestBody.setVmDisks(vmDiskList);
-                   try {
-                       requestBody = detachDisksMapper.writeValueAsString(detachDisksRequestBody);
-                   } catch (JsonProcessingException e) {
-                       e.printStackTrace();
-                   }
-               }else{
-                   throw new NutanixDetachDiskException("Size of vmDiskUUIDList, deviceBusList and deviceIndexList should be same");
-               }
-               return requestBody;
+            detachDisksRequestBody.setVmDisks(vmDiskList);
+            try {
+                requestBody = detachDisksMapper.writeValueAsString(detachDisksRequestBody);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }else{
+            throw new NutanixDetachDiskException("Size of vmDiskUUIDList, deviceBusList and deviceIndexList should be same");
+        }
+        return requestBody;
 
     }
 

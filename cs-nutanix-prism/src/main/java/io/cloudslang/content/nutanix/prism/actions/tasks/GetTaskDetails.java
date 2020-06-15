@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-
 package io.cloudslang.content.nutanix.prism.actions.tasks;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -41,7 +40,8 @@ import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.GetTaskDetails.*;
-import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.*;
+import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
+import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PASSWORD;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -144,19 +144,18 @@ public class GetTaskDetails {
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
+            String taskStatus = null;
             if (statusCode >= 200 && statusCode < 300) {
-                final String taskStatus = JsonPath.read(returnMessage, TASK_STATUS_PATH);
+                taskStatus = JsonPath.read(returnMessage, TASK_STATUS_PATH);
                 if (taskStatus.equals(SUCCEEDED)) {
                     final List<String> vmUUID = JsonPath.read(returnMessage, VM_UUID_PATH);
 
                     final String vmUUIDString = join(vmUUID.toArray(), DELIMITER);
                     results.put(VM_UUID, vmUUIDString);
                     results.put(TASK_STATUS, taskStatus);
-                } else {
-                    return getTaskFailureResults(statusCode, taskStatus, returnMessage, returnMessage);
                 }
             } else {
-                return getFailureResults(hostname, statusCode, returnMessage);
+                return getFailureResults(hostname, statusCode, taskStatus, returnMessage, returnMessage);
             }
             return results;
         } catch (Exception exception) {
