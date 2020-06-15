@@ -1,3 +1,18 @@
+/*
+ * (c) Copyright 2020 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.cloudslang.content.nutanix.prism.actions.disks;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -26,6 +41,8 @@ import static io.cloudslang.content.nutanix.prism.service.TaskImpl.getTaskDetail
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.CreateVMConstants.TASK_UUID_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.DetachDisksConstants.DETACH_DISKS_OPERATION_NAME;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.SUCCEEDED;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.TASK_STATUS_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.DetachDisks.*;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
@@ -138,18 +155,21 @@ public class DetachDisks {
             if (statusCode >= 200 && statusCode < 300) {
 
                 final String taskUUID = JsonPath.read(returnMessage, TASK_UUID_PATH);
-                result = getTaskDetails(NutanixGetTaskDetailsInputs.builder().taskUUID(taskUUID).commonInputs(nutanixCommonInputs).build());
+                result = getTaskDetails(NutanixGetTaskDetailsInputs.builder()
+                        .taskUUID(taskUUID)
+                        .commonInputs(nutanixCommonInputs).build());
                 returnMessage = result.get(RETURN_RESULT);
                 results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
                 statusCode = Integer.parseInt(result.get(STATUS_CODE));
-                if (statusCode >= 200 && statusCode < 300) {
+                String taskStatus = JsonPath.read(returnMessage, TASK_STATUS_PATH);
+                if (statusCode >= 200 && statusCode < 300 && taskStatus.equals(SUCCEEDED)) {
                     results.put(RETURN_RESULT, DETACH_DISKS_SUCCESS_DESC);
                     results.put(TASK_UUID, taskUUID);
                 } else {
-                    return getFailureResults(hostname, statusCode, returnMessage);
+                    return getFailureResults(hostname, statusCode, returnMessage, returnMessage, returnMessage);
                 }
             } else {
-                return getFailureResults(hostname, statusCode, returnMessage);
+                return getFailureResults(hostname, statusCode, returnMessage, returnMessage, returnMessage);
             }
             return results;
         } catch (Exception exception) {

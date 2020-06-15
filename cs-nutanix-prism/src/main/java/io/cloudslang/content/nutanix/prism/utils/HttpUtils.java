@@ -135,7 +135,15 @@ public class HttpUtils {
     public static void setTLSParameters(HttpClientInputs httpClientInputs) {
         httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12);
         httpClientInputs.setAllowedCyphers(ALLOWED_CYPHERS);
+    }
 
+    @NotNull
+    public static URIBuilder getUriBuilder(NutanixCommonInputs nutanixCommonInputs) {
+        final URIBuilder uriBuilder = new URIBuilder();
+        uriBuilder.setHost(nutanixCommonInputs.getHostname());
+        uriBuilder.setPort(Integer.parseInt(nutanixCommonInputs.getPort()));
+        uriBuilder.setScheme(HTTPS);
+        return uriBuilder;
     }
 
     @NotNull
@@ -144,7 +152,7 @@ public class HttpUtils {
         final StringBuilder queryParams = new StringBuilder()
                 .append(Constants.GetVMDetailsConstants.INCLUDE_VM_DISK_CONFIG_INFO)
                 .append(includeVMDiskConfigInfo)
-                .append(Constants.Common.AND)
+                .append(AND)
                 .append(Constants.GetVMDetailsConstants.INCLUDE_VM_NIC_CONFIG_INFO)
                 .append(includeVMNicConfigInfo);
         return queryParams.toString();
@@ -170,12 +178,15 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static URIBuilder getUriBuilder(NutanixCommonInputs nutanixCommonInputs) {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setHost(nutanixCommonInputs.getHostname());
-        uriBuilder.setPort(Integer.parseInt(nutanixCommonInputs.getPort()));
-        uriBuilder.setScheme(HTTPS);
-        return uriBuilder;
+    public static String getDeleteVMQueryParams(@NotNull String deleteSnapshots,
+                                                @NotNull String logicalTimestamp) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(Constants.DeleteVMConstants.DELETE_SNAPSHOTS)
+                .append(deleteSnapshots)
+                .append(Constants.Common.AND)
+                .append(Constants.DeleteVMConstants.LOGICAL_TIMESTAMP)
+                .append(logicalTimestamp);
+        return queryParams.toString();
     }
 
     @NotNull
@@ -212,36 +223,26 @@ public class HttpUtils {
 
     @NotNull
     public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode,
+                                                        @NotNull String taskStatus, @NotNull String returnMessage,
                                                         @NotNull String throwable) {
         Map<String, String> results = new HashMap();
         results.put("returnCode", "-1");
         results.put("statusCode", statusCode.toString());
-        if (statusCode.equals(404)) {
+        if (statusCode.equals(401)) {
             results.put("returnResult", inputName + " not found, or user unauthorized to perform action");
             results.put("exception ", "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
-        } else {
-            results.put("returnResult", throwable);
-            results.put("exception", throwable);
-        }
-        return results;
-    }
-
-    @NotNull
-    public static Map<String, String> getTaskFailureResults(@NotNull Integer statusCode,
-                                                            @NotNull String taskStatus, @NotNull String returnMessage,
-                                                            @NotNull String throwable) {
-        Map<String, String> results = new HashMap();
-        results.put("returnCode", "-1");
-        results.put("statusCode", statusCode.toString());
-        if (statusCode.equals(200) && taskStatus.equals(FAILED)) {
+        } else if (statusCode.equals(201) && taskStatus.equals(FAILED)) {
             final String errorDetail = JsonPath.read(returnMessage, TASK_FAILURE_PATH);
-            results.put("returnResult ", " task failed due to " + errorDetail);
-            results.put("exception ", " status : " + statusCode + ", Title : task failed due to " + errorDetail);
+            results.put("returnResult", errorDetail);
+            results.put("exception", " status : " + statusCode + ", Title :  " + errorDetail);
+        } else if (statusCode.equals(500)) {
+            final String errorDetail = JsonPath.read(returnMessage, "message");
+            results.put("returnResult ", "  error Message : " + errorDetail);
+            results.put("exception ", " statusCode : " + statusCode + ", Title : message " + errorDetail);
         } else {
             results.put("returnResult", throwable);
             results.put("exception", throwable);
         }
         return results;
     }
-
 }
