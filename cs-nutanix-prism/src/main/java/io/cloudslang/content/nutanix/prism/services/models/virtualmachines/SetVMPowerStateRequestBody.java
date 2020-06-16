@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.nutanix.prism.service.models.virtualmachines;
+package io.cloudslang.content.nutanix.prism.services.models.virtualmachines;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

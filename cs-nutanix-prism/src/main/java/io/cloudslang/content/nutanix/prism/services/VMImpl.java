@@ -13,15 +13,15 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.nutanix.prism.service;
+package io.cloudslang.content.nutanix.prism.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.nutanix.prism.entities.*;
-import io.cloudslang.content.nutanix.prism.service.models.virtualmachines.CreateVMRequestBody;
-import io.cloudslang.content.nutanix.prism.service.models.virtualmachines.SetVMPowerStateRequestBody;
+import io.cloudslang.content.nutanix.prism.services.models.virtualmachines.CreateVMRequestBody;
+import io.cloudslang.content.nutanix.prism.services.models.virtualmachines.SetVMPowerStateRequestBody;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.nutanix.prism.service.HttpCommons.setCommonHttpInputs;
+import static io.cloudslang.content.nutanix.prism.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetVMDetailsConstants.GET_VM_DETAILS_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.SetVMPowerStateConstants.SET_POWER_STATE_PATH;
