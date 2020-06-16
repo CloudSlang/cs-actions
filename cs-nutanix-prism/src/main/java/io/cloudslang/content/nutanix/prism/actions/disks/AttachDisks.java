@@ -76,7 +76,7 @@ public class AttachDisks {
                                        @Param(value = USERNAME, required = true, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
                                        @Param(value = VM_UUID, required = true, description = VM_UUID_DESC) String vmUUID,
-                                       @Param(value = DEVICE_BUS_LIST, required = true, description = DEVICE_BUS_LIST__DESC) String deviceBusList,
+                                       @Param(value = DEVICE_BUS_LIST, required = true, description = DEVICE_BUS_LIST_DESC) String deviceBusList,
                                        @Param(value = DEVICE_INDEX_LIST, description = DEVICE_INDEX_LIST_DESC) String deviceIndexList,
                                        @Param(value = VM_DISK_SIZE_LIST, required = true, description = VM_DISK_SIZE_LIST_DESC) String vmDisksizeList,
                                        @Param(value = STORAGE_CONTAINER_UUID_DISK_LIST, required = true, description = STORAGE_CONTAINER_UUID_DISK_LIST_DESC) String storagecontainerUUIDDiskList,
