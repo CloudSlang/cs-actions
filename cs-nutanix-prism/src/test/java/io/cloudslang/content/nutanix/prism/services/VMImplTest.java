@@ -15,18 +15,13 @@
 
 package io.cloudslang.content.nutanix.prism.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
-import io.cloudslang.content.nutanix.prism.entities.NutanixCreateVMInputs;
-import io.cloudslang.content.nutanix.prism.entities.NutanixGetVMDetailsInputs;
-import io.cloudslang.content.nutanix.prism.entities.NutanixListVMsInputs;
-import io.cloudslang.content.nutanix.prism.service.VMImpl;
+import io.cloudslang.content.nutanix.prism.entities.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.*;
+import static io.cloudslang.content.nutanix.prism.services.VMImpl.*;
 import static org.junit.Assert.assertEquals;
 
 
@@ -34,9 +29,10 @@ import static org.junit.Assert.assertEquals;
 @PrepareForTest(VMImpl.class)
 public class VMImplTest {
 
-    public static final String DELIMITER = ",";
+    private static final String DELIMITER = ",";
     private static final String EXPECTED_GET_VM_DETAILS_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/1234";
     private static final String EXPECTED_CREATE_VM_PATH = "https://myhost:9080/api/nutanix/v2.0/vms";
+    private static final String EXPECTED_DELETE_VM_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/1234";
     private static final String EXPECTED_CREATE_VM_REQUEST_BODY = "{\"name\":\"OO_test\",\"description\":\"OO_test\"," +
             "\"memory_mb\":10240,\"num_vcpus\":2,\"num_cores_per_vcpu\":2,\"timezone\":\"Asia/Calcutta\"," +
             "\"vm_disks\":[{\"disk_address\":{\"device_bus\":\"sata\"},\"vm_disk_clone\":{\"disk_address\":" +
@@ -44,6 +40,9 @@ public class VMImplTest {
             "false,\"is_thin_provisioned\":false}],\"vm_nics\":[{\"is_connected\":false,\"network_uuid\":\"3478\"}]," +
             "\"vm_features\":{\"agent_VM\":false},\"affinity\":{}}";
     private static final String EXPECTED_LIST_VM_PATH = "https://myhost:9080/api/nutanix/v2.0/vms";
+    private static final String EXPECTED_SET_POWER_STATE_OF_VM_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/1234/" +
+            "set_power_state";
+    private static final String EXPECTED_SET_POWER_STATE_OF_VM_REQUEST_BODY = "{\"transition\":\"on\",\"uuid\":\"1234\"}";
 
     private final NutanixGetVMDetailsInputs nutanixGetVMDetailsInputs = NutanixGetVMDetailsInputs.builder()
             .vmUUID("1234")
@@ -113,6 +112,31 @@ public class VMImplTest {
                             .connectionsMaxTotal("")
                             .build()).build();
 
+    private final NutanixDeleteVMInputs nutanixDeleteVMInputs = NutanixDeleteVMInputs.builder()
+            .vmUUID("1234")
+            .deleteSnapshots("")
+            .logicalTimestamp("")
+            .commonInputs(
+                    NutanixCommonInputs.builder()
+                            .hostname("myhost")
+                            .port("9080")
+                            .username("username")
+                            .password("password")
+                            .apiVersion("v2.0")
+                            .proxyHost("")
+                            .proxyPort("")
+                            .proxyUsername("")
+                            .proxyPassword("")
+                            .trustAllRoots("")
+                            .x509HostnameVerifier("")
+                            .trustKeystore("")
+                            .trustPassword("")
+                            .connectTimeout("")
+                            .socketTimeout("")
+                            .keepAlive("")
+                            .connectionsMaxPerRoot("")
+                            .connectionsMaxTotal("")
+                            .build()).build();
 
     private final NutanixListVMsInputs nutanixListVMsInputs = NutanixListVMsInputs.builder()
             .filter("")
@@ -147,6 +171,35 @@ public class VMImplTest {
                             .responseCharacterSet("")
                             .build()).build();
 
+    private final NutanixSetVMPowerStateInputs nutanixSetVMPowerStateInputs = NutanixSetVMPowerStateInputs.builder()
+            .vmUUID("1234")
+            .transition("on")
+            .hostUUID("")
+            .vmLogicalTimestamp("")
+            .commonInputs(NutanixCommonInputs.builder()
+                    .hostname("myhost")
+                    .port("9080")
+                    .username("username")
+                    .password("password")
+                    .apiVersion("v2.0")
+                    .proxyHost("")
+                    .proxyPort("")
+                    .proxyUsername("")
+                    .proxyPassword("")
+                    .trustAllRoots("")
+                    .x509HostnameVerifier("")
+                    .trustKeystore("")
+                    .trustPassword("")
+                    .keystore("")
+                    .keystorePassword("")
+                    .connectTimeout("")
+                    .socketTimeout("")
+                    .keepAlive("")
+                    .connectionsMaxPerRoot("")
+                    .connectionsMaxTotal("")
+                    .responseCharacterSet("")
+                    .build()).build();
+
     @Test
     public void getVMDetailsPathTest() throws Exception {
         final String path = getVMDetailsURL(nutanixGetVMDetailsInputs);
@@ -166,8 +219,26 @@ public class VMImplTest {
     }
 
     @Test
-    public void getCreateVMRequestBody() throws JsonProcessingException {
+    public void getCreateVMRequestBody() {
         final String requestBody = createVMBody(nutanixCreateVMInputs, DELIMITER);
         assertEquals(EXPECTED_CREATE_VM_REQUEST_BODY, requestBody);
+    }
+
+    @Test
+    public void deleteVMPathTest() throws Exception {
+        final String path = deleteVMURL(nutanixDeleteVMInputs);
+        assertEquals(EXPECTED_DELETE_VM_PATH, path);
+    }
+
+    @Test
+    public void setPowerStateOfVMPathTest() throws Exception {
+        final String path = setVMPowerStateURL(nutanixSetVMPowerStateInputs);
+        assertEquals(EXPECTED_SET_POWER_STATE_OF_VM_PATH, path);
+    }
+
+    @Test
+    public void getSetVMPowerStateRequestBody() {
+        final String requestBody = setVMPowerStateBody(nutanixSetVMPowerStateInputs);
+        assertEquals(EXPECTED_SET_POWER_STATE_OF_VM_REQUEST_BODY, requestBody);
     }
 }

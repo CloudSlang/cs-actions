@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.nutanix.prism.service;
+package io.cloudslang.content.nutanix.prism.services;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-import static io.cloudslang.content.nutanix.prism.service.HttpCommons.setCommonHttpInputs;
+import static io.cloudslang.content.nutanix.prism.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.GET_TASK_DETAILS_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getTaskDetailsQueryParams;

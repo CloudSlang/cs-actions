@@ -35,7 +35,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.createVM;
+import static io.cloudslang.content.nutanix.prism.services.VMImpl.createVM;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.CreateVMConstants.CREATE_VM_OPERATION_NAME;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.CreateVMConstants.TASK_UUID_PATH;
@@ -87,7 +87,7 @@ public class CreateVM {
                                        @Param(value = IS_SCSI_PASS_THROUGH, description = IS_SCSI_PASS_THROUGH_DESC) String isSCSIPassThrough,
                                        @Param(value = IS_THIN_PROVISIONED, description = IS_THIN_PROVISIONED_DESC) String isThinProvisioned,
                                        @Param(value = IS_CDROM, required = true, description = IS_CDROM_DESC) String isCDROM,
-                                       @Param(value = IS_EMPTY, description = IS_EMPTY_DESC) String isEmpty,
+                                       @Param(value = IS_EMPTY_DISK, description = IS_EMPTY_DISK_DESC) String isEmptyDisk,
                                        @Param(value = DEVICE_BUS, required = true, description = DEVICE_BUS_DESC) String deviceBus,
                                        @Param(value = DISK_LABEL, description = DISK_LABEL_DESC) String diskLabel,
                                        @Param(value = DEVICE_INDEX, description = DEVICE_INDEX_DESC) String deviceIndex,
@@ -124,7 +124,7 @@ public class CreateVM {
         flashModeEnabled = defaultIfEmpty(flashModeEnabled, BOOLEAN_FALSE);
         isSCSIPassThrough = defaultIfEmpty(isSCSIPassThrough, BOOLEAN_FALSE);
         isThinProvisioned = defaultIfEmpty(isThinProvisioned, BOOLEAN_TRUE);
-        isEmpty = defaultIfEmpty(isEmpty, BOOLEAN_TRUE);
+        isEmptyDisk = defaultIfEmpty(isEmptyDisk, BOOLEAN_TRUE);
         diskLabel = defaultIfEmpty(diskLabel, EMPTY);
         deviceIndex = defaultIfEmpty(deviceIndex, ZERO);
         ndfsFilepath = defaultIfEmpty(ndfsFilepath, EMPTY);
@@ -135,7 +135,7 @@ public class CreateVM {
         storageContainerUUID = defaultIfEmpty(storageContainerUUID, EMPTY);
         vmDiskSize = defaultIfEmpty(vmDiskSize, ZERO);
         requestedIPAddress = defaultIfEmpty(requestedIPAddress, EMPTY);
-        isConnected = defaultIfEmpty(isConnected, EMPTY);
+        isConnected = defaultIfEmpty(isConnected, BOOLEAN_TRUE);
         hostUUIDs = defaultIfEmpty(hostUUIDs, EMPTY);
         agentVM = defaultIfEmpty(agentVM, BOOLEAN_FALSE);
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
@@ -171,7 +171,7 @@ public class CreateVM {
                     .isSCSIPassThrough(isSCSIPassThrough)
                     .isThinProvisioned(isThinProvisioned)
                     .isCDROM(isCDROM)
-                    .isEmpty(isEmpty)
+                    .isEmpty(isEmptyDisk)
                     .deviceBus(deviceBus)
                     .diskLabel(diskLabel)
                     .deviceIndex(deviceIndex)
@@ -187,8 +187,7 @@ public class CreateVM {
                     .isConnected(isConnected)
                     .hostUUIDs(hostUUIDs)
                     .agentVM(agentVM)
-                    .commonInputs(
-                            NutanixCommonInputs.builder()
+                    .commonInputs(NutanixCommonInputs.builder()
                                     .hostname(hostname)
                                     .port(port)
                                     .username(username)
@@ -210,14 +209,12 @@ public class CreateVM {
                                     .build()).build());
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
-
             if (statusCode >= 200 && statusCode < 300) {
                 final String taskUUID = JsonPath.read(returnMessage, TASK_UUID_PATH);
                 results.put(TASK_UUID, taskUUID);
             } else {
-                return getFailureResults(hostname, statusCode, returnMessage);
+                return getFailureResults(hostname, statusCode, returnMessage, returnMessage);
             }
             return results;
         } catch (Exception exception) {

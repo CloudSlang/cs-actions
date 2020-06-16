@@ -12,19 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package io.cloudslang.content.nutanix.prism.actions.virtualmachines;
+package io.cloudslang.content.nutanix.prism.actions.disks;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
 import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.nutanix.prism.entities.NutanixAttachDisksInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
-import io.cloudslang.content.nutanix.prism.entities.NutanixGetVMDetailsInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -37,13 +34,15 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.nutanix.prism.services.VMImpl.getVMDetails;
+import static io.cloudslang.content.nutanix.prism.services.DiskImpl.AttachDisk;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.AttachDisksConstants.ATTACH_DISKS_OPERATION_NAME;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.AttachDisksConstants.TASK_UUID_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
-import static io.cloudslang.content.nutanix.prism.utils.Constants.GetVMDetailsConstants.*;
+import static io.cloudslang.content.nutanix.prism.utils.Descriptions.AttachDisks.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
-import static io.cloudslang.content.nutanix.prism.utils.Descriptions.GetVMDetails.*;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.AttachDisksInputs.*;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PASSWORD;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -51,27 +50,20 @@ import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROX
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.USERNAME;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.nutanix.prism.utils.Inputs.GetVMDetailsInputs.INCLUDE_VM_DISK_CONFIG_INFO;
-import static io.cloudslang.content.nutanix.prism.utils.Inputs.GetVMDetailsInputs.INCLUDE_VM_NIC_CONFIG_INFO;
 import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetVMDetailsOutputs.*;
+import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.TASK_UUID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetVMDetails {
-    @Action(name = GET_VM_DETAILS_OPERATION_NAME,
-            description = GET_VM_DETAILS_OPERATION_DESC,
+public class AttachDisks {
+    @Action(name = ATTACH_DISKS_OPERATION_NAME,
+            description = ATTACH_DISKS_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = VM_NAME, description = VM_NAME_DESC),
-                    @Output(value = IP_ADDRESS, description = IP_ADDRESS_DESC),
-                    @Output(value = MAC_ADDRESS, description = MAC_ADDRESS_DESC),
-                    @Output(value = POWER_STATE, description = POWER_STATE_DESC),
-                    @Output(value = VM_DISK_UUID, description = VM_DISK_UUID_DESC),
-                    @Output(value = STORAGE_CONTAINER_UUID, description = STORAGE_CONTAINER_UUID_DESC),
-                    @Output(value = VM_LOGICAL_TIMESTAMP, description = VM_LOGICAL_TIMESTAMP_DESC)
+                    @Output(value = TASK_UUID, description = TASK_UUID_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL,
@@ -84,8 +76,10 @@ public class GetVMDetails {
                                        @Param(value = USERNAME, required = true, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
                                        @Param(value = VM_UUID, required = true, description = VM_UUID_DESC) String vmUUID,
-                                       @Param(value = INCLUDE_VM_DISK_CONFIG_INFO, description = INCLUDE_VM_DISK_CONFIG_INFO_DESC) String includeVMDiskConfigInfo,
-                                       @Param(value = INCLUDE_VM_NIC_CONFIG_INFO, description = INCLUDE_VM_NIC_CONFIG_INFO_DESC) String includeVMNicConfigInfo,
+                                       @Param(value = DEVICE_BUS, required = true, description = DEVICE_BUS_DESC) String deviceBus,
+                                       @Param(value = DEVICE_INDEX, description = DEVICE_INDEX_DESC) String deviceIndex,
+                                       @Param(value = VM_DISK_SIZE, required = true, description = VM_DISK_SIZE_DESC) String vmDisksize,
+                                       @Param(value = STORAGE_CONTAINER_UUID_DISK, required = true, description = STORAGE_CONTAINER_UUID_DISK_DESC) String storagecontainerUUIDDisk,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -102,13 +96,12 @@ public class GetVMDetails {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
         port = defaultIfEmpty(port, DEFAULT_NUTANIX_PORT);
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
+        deviceIndex = defaultIfEmpty(deviceIndex, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
-        includeVMDiskConfigInfo = defaultIfEmpty(includeVMDiskConfigInfo, BOOLEAN_TRUE);
-        includeVMNicConfigInfo = defaultIfEmpty(includeVMNicConfigInfo, BOOLEAN_TRUE);
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
@@ -124,10 +117,12 @@ public class GetVMDetails {
         }
 
         try {
-            final Map<String, String> result = getVMDetails(NutanixGetVMDetailsInputs.builder()
+            final Map<String, String> result = AttachDisk(NutanixAttachDisksInputs.builder()
                     .vmUUID(vmUUID)
-                    .includeVMDiskConfigInfo(includeVMDiskConfigInfo)
-                    .includeVMNicConfigInfo(includeVMNicConfigInfo)
+                    .deviceBus(deviceBus)
+                    .deviceIndex(deviceIndex)
+                    .vmDisksize(vmDisksize)
+                    .storagecontainerUUIDDisk(storagecontainerUUIDDisk)
                     .commonInputs(
                             NutanixCommonInputs.builder()
                                     .hostname(hostname)
@@ -151,37 +146,13 @@ public class GetVMDetails {
                                     .build()).build());
 
             final String returnMessage = result.get(RETURN_RESULT);
+
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                final String vmName = JsonPath.read(returnMessage, VM_NAME_PATH);
-                Configuration configuration = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);
-                final List<String> ipAddressList = (JsonPath.using(configuration).parse(returnMessage).read(IP_ADDRESS_PATH));
-                if (!ipAddressList.isEmpty()) {
-                    final String ipAddressString = join(ipAddressList.toArray(), DELIMITER);
-                    results.put(IP_ADDRESS, ipAddressString);
-                } else {
-                    results.put(IP_ADDRESS, EMPTY);
-                }
-                final List<String> MACAddressList = (JsonPath.using(configuration).parse(returnMessage).read(MAC_ADDRESS_PATH));
-                final String powerState = JsonPath.read(returnMessage, POWER_STATE_PATH);
-                final List<String> vmDiskUUID = JsonPath.read(returnMessage, VM_DISK_UUID_PATH);
-                final List<String> storageContainerUUID = JsonPath.read(returnMessage, STORAGE_CONTAINER_UUID_PATH);
-                final String vmLogicalTimestamp = JsonPath.read(returnMessage, VM_LOGICAL_TIMESTAMP_PATH).toString();
-
-                final String MACAddressString = join(MACAddressList.toArray(), DELIMITER);
-                results.put(MAC_ADDRESS, MACAddressString);
-
-                results.put(VM_NAME, vmName);
-                results.put(POWER_STATE, powerState);
-
-                final String vmDiskUUIDString = join(vmDiskUUID.toArray(), DELIMITER);
-                results.put(VM_DISK_UUID, vmDiskUUIDString);
-
-                final String storageContainerUUIDString = join(storageContainerUUID.toArray(), DELIMITER);
-                results.put(STORAGE_CONTAINER_UUID, storageContainerUUIDString);
-                results.put(VM_LOGICAL_TIMESTAMP, vmLogicalTimestamp);
+                final String taskUUID = JsonPath.read(returnMessage, TASK_UUID_PATH);
+                results.put(TASK_UUID, taskUUID);
             } else {
                 return getFailureResults(hostname, statusCode, returnMessage, returnMessage);
             }

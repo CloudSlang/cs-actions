@@ -24,8 +24,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.entities.WSManRequestInputs;
-import io.cloudslang.content.services.PwshService;
-import io.cloudslang.content.services.WSManRemoteShellService;
+import io.cloudslang.content.services.PwshScriptService;
 import io.cloudslang.content.utils.Constants;
 
 import java.util.Map;
@@ -44,7 +43,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 /**
  * Created by giloan on 3/26/2016.
  */
-public class PwshAction {
+public class PwshScriptAction {
 
     /**
      * Executes a PowerShell Core script on a remote host that has PowerShell Core installed.
@@ -105,7 +104,7 @@ public class PwshAction {
      *                             Default value is '60'.
      * @return
      */
-    @Action(name = "Pwsh",
+    @Action(name = "Pwsh Script Action",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
@@ -126,7 +125,6 @@ public class PwshAction {
             @Param(value = PROTOCOL) String protocol,
             @Param(value = USERNAME) String username,
             @Param(value = PASSWORD, encrypted = true) String password,
-            @Param(value = AUTH_TYPE) String authType,
             @Param(value = PROXY_HOST) String proxyHost,
             @Param(value = PROXY_PORT) String proxyPort,
             @Param(value = PROXY_USERNAME) String proxyUsername,
@@ -135,9 +133,6 @@ public class PwshAction {
             @Param(value = X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
             @Param(value = TRUST_KEYSTORE) String trustKeystore,
             @Param(value = TRUST_PASSWORD, encrypted = true) String trustPassword,
-            @Param(value = KERBEROS_CONFIG_FILE) String kerberosConfFile,
-            @Param(value = KERBEROS_LOGIN_CONFIG_FILE) String kerberosLoginConfFile,
-            @Param(value = KERBEROS_SKIP_PORT_CHECK) String kerberosSkipPortForLookup,
             @Param(value = KEYSTORE) String keystore,
             @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
             @Param(value = MAX_ENVELOP_SIZE) String maxEnvelopeSize,
@@ -148,18 +143,15 @@ public class PwshAction {
             @Param(value = OPERATION_TIMEOUT) String operationTimeout
     ) {
         try {
-            WSManRemoteShellService wsManRemoteShellService = new PwshService();
-
             WSManRequestInputs wsManRequestInputs = new WSManRequestInputs.WSManRequestInputsBuilder()
                     .withHost(host)
                     .withPort(port)
                     .withProtocol(protocol)
                     .withUsername(username)
                     .withPassword(password)
-                    .withAuthType(authType)
-                    .withKerberosConfFile(kerberosConfFile)
-                    .withKerberosLoginConfFile(kerberosLoginConfFile)
-                    .withKerberosSkipPortForLookup(kerberosSkipPortForLookup)
+                    .withAuthType("Basic")
+                    .withScript(script)
+                    .withConfigurationName(configurationName)
                     .withProxyHost(proxyHost)
                     .withProxyPort(proxyPort)
                     .withProxyUsername(proxyUsername)
@@ -171,14 +163,12 @@ public class PwshAction {
                     .withKeystorePassword(defaultIfEmpty(keystorePassword, CHANGEIT))
                     .withTrustKeystore(defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE))
                     .withTrustPassword(defaultIfEmpty(trustPassword, CHANGEIT))
-                    .withScript(script)
-                    .withConfigurationName(configurationName)
                     .withModules(modules)
                     .withWinrmLocale(winrmLocale)
                     .withOperationTimeout(operationTimeout)
                     .build();
 
-            Map<String, String> resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
+            Map<String, String> resultMap = new PwshScriptService().execute(wsManRequestInputs);
             verifyScriptExecutionStatus(resultMap);
             return resultMap;
         } catch (Exception e) {

@@ -16,23 +16,25 @@
 package io.cloudslang.content.nutanix.prism.services;
 
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
-import io.cloudslang.content.nutanix.prism.entities.NutanixGetTaskDetailsInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixDetachDisksInputs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static io.cloudslang.content.nutanix.prism.services.TaskImpl.getTaskDetailsURL;
+import static io.cloudslang.content.nutanix.prism.services.DiskImpl.detachDisksURL;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(TaskImplTest.class)
-public class TaskImplTest {
-    private static final String EXPECTED_GET_TASK_DETAILS_PATH = "https://myhost:9080/api/nutanix/v2.0/tasks/1234";
+@PrepareForTest(VMImpl.class)
+public class DiskImplTest {
+    private static final String EXPECTED_DETACH_DISKS_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/myvm/disks/detach";
 
-    private final NutanixGetTaskDetailsInputs nutanixGetTaskDetailsInputs = NutanixGetTaskDetailsInputs.builder()
-            .taskUUID("1234")
-            .includeSubtasksInfo("")
+    private final NutanixDetachDisksInputs nutanixDetachDisksInputs = NutanixDetachDisksInputs.builder()
+            .vmUUID("myvm")
+            .vmDiskUUIDList("diskid")
+            .deviceIndexList("0")
+            .deviceBusList("deviceBus")
             .commonInputs(NutanixCommonInputs.builder()
                     .hostname("myhost")
                     .port("9080")
@@ -55,8 +57,8 @@ public class TaskImplTest {
                     .build()).build();
 
     @Test
-    public void getTaskDetailsPathTest() throws Exception {
-        final String path = getTaskDetailsURL(nutanixGetTaskDetailsInputs);
-        assertEquals(EXPECTED_GET_TASK_DETAILS_PATH, path);
+    public void detachDisksPathTest() throws Exception {
+        final String path = detachDisksURL(nutanixDetachDisksInputs);
+        assertEquals(EXPECTED_DETACH_DISKS_PATH, path);
     }
 }

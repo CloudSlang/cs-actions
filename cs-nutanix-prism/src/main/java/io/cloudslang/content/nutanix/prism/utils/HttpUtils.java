@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.DeleteNICConstants.VM_LOGICAL_TIMESTAMP_QUERY_PARAM;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.FAILED;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.TASK_FAILURE_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.DOCUMENT;
@@ -134,27 +135,6 @@ public class HttpUtils {
     public static void setTLSParameters(HttpClientInputs httpClientInputs) {
         httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12);
         httpClientInputs.setAllowedCyphers(ALLOWED_CYPHERS);
-
-    }
-
-    @NotNull
-    public static String getQueryParams(String includeVMDiskConfigInfo,
-                                        final String includeVMNicConfigInfo) {
-        final StringBuilder queryParams = new StringBuilder()
-                .append(Constants.GetVMDetailsConstants.INCLUDE_VM_DISK_CONFIG_INFO)
-                .append(includeVMDiskConfigInfo)
-                .append(Constants.Common.AND)
-                .append(Constants.GetVMDetailsConstants.INCLUDE_VM_NIC_CONFIG_INFO)
-                .append(includeVMNicConfigInfo);
-        return queryParams.toString();
-    }
-
-    @NotNull
-    public static String getTaskDetailsQueryParams(@NotNull String includeSubtasksInfo) {
-        final StringBuilder queryParams = new StringBuilder()
-                .append(Constants.GetTaskDetailsConstants.INCLUDE_SUBTASKS_INFO)
-                .append(includeSubtasksInfo);
-        return queryParams.toString();
     }
 
     @NotNull
@@ -164,6 +144,49 @@ public class HttpUtils {
         uriBuilder.setPort(Integer.parseInt(nutanixCommonInputs.getPort()));
         uriBuilder.setScheme(HTTPS);
         return uriBuilder;
+    }
+
+    @NotNull
+    public static String getQueryParams(String includeVMDiskConfigInfo,
+                                        final String includeVMNicConfigInfo) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(Constants.GetVMDetailsConstants.INCLUDE_VM_DISK_CONFIG_INFO)
+                .append(includeVMDiskConfigInfo)
+                .append(AND)
+                .append(Constants.GetVMDetailsConstants.INCLUDE_VM_NIC_CONFIG_INFO)
+                .append(includeVMNicConfigInfo);
+        return queryParams.toString();
+    }
+
+    @NotNull
+    public static String getQueryParams(String vmLogicalTimestamp) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(QUERY)
+                .append(VM_LOGICAL_TIMESTAMP_QUERY_PARAM)
+                .append(vmLogicalTimestamp);
+        return queryParams.toString();
+    }
+
+  
+    @NotNull
+    public static String getTaskDetailsQueryParams(@NotNull String includeSubtasksInfo) {
+
+        final StringBuilder queryParams = new StringBuilder()
+                .append(Constants.GetTaskDetailsConstants.INCLUDE_SUBTASKS_INFO)
+                .append(includeSubtasksInfo);
+        return queryParams.toString();
+    }
+
+    @NotNull
+    public static String getDeleteVMQueryParams(@NotNull String deleteSnapshots,
+                                                @NotNull String logicalTimestamp) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(Constants.DeleteVMConstants.DELETE_SNAPSHOTS)
+                .append(deleteSnapshots)
+                .append(Constants.Common.AND)
+                .append(Constants.DeleteVMConstants.LOGICAL_TIMESTAMP)
+                .append(logicalTimestamp);
+        return queryParams.toString();
     }
 
     @NotNull
@@ -191,19 +214,31 @@ public class HttpUtils {
                 .append(Constants.Common.AND)
                 .append(Constants.GetVMDetailsConstants.INCLUDE_VM_NIC_CONFIG_INFO)
                 .append(includeVMNicConfigInfo);
+                if (length.equals(ZERO)) {
+                    queryParams.delete(17, 26);
+                }
         return queryParams.toString();
 
     }
 
     @NotNull
-    public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode,
-                                                        @NotNull String throwable) {
+    public static Map<String, String> getTaskFailureResults(@NotNull String inputName, @NotNull Integer statusCode,
+                                                            @NotNull String taskStatus, @NotNull String returnMessage,
+                                                            @NotNull String throwable) {
         Map<String, String> results = new HashMap();
         results.put("returnCode", "-1");
         results.put("statusCode", statusCode.toString());
-        if (statusCode.equals(404)) {
+        if (statusCode.equals(401)) {
             results.put("returnResult", inputName + " not found, or user unauthorized to perform action");
             results.put("exception ", "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
+        } else if (statusCode.equals(201) && taskStatus.equals(FAILED)) {
+            final String errorDetail = JsonPath.read(returnMessage, TASK_FAILURE_PATH);
+            results.put("returnResult", errorDetail);
+            results.put("exception", " status : " + statusCode + ", Title :  " + errorDetail);
+        } else if (statusCode.equals(500)) {
+            final String errorDetail = JsonPath.read(returnMessage, "message");
+            results.put("returnResult ", "  error Message : " + errorDetail);
+            results.put("exception ", " statusCode : " + statusCode + ", Title : message " + errorDetail);
         } else {
             results.put("returnResult", throwable);
             results.put("exception", throwable);
@@ -212,21 +247,23 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static Map<String, String> getTaskFailureResults(@NotNull Integer statusCode,
-                                                            @NotNull String taskStatus, @NotNull String returnMessage,
-                                                            @NotNull String throwable) {
+    public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode,
+                                                        @NotNull String returnMessage,
+                                                        @NotNull String throwable) {
         Map<String, String> results = new HashMap();
         results.put("returnCode", "-1");
         results.put("statusCode", statusCode.toString());
-        if (statusCode.equals(200) && taskStatus.equals(FAILED)) {
-            final String errorDetail = JsonPath.read(returnMessage, TASK_FAILURE_PATH);
-            results.put("returnResult ", " task failed due to " + errorDetail);
-            results.put("exception ", " status : " + statusCode + ", Title : task failed due to " + errorDetail);
+        if (statusCode.equals(401)) {
+            results.put("returnResult", inputName + " not found, or user unauthorized to perform action");
+            results.put("exception ", "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
+        } else if (statusCode.equals(500)) {
+            final String errorDetail = JsonPath.read(returnMessage, "message");
+            results.put("returnResult ", "  error Message : " + errorDetail);
+            results.put("exception ", " statusCode : " + statusCode + ", Title : message " + errorDetail);
         } else {
             results.put("returnResult", throwable);
             results.put("exception", throwable);
         }
         return results;
     }
-
 }
