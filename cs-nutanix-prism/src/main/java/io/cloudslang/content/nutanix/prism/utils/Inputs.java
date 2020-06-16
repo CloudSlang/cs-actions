@@ -99,10 +99,10 @@ public class Inputs extends InputNames {
     }
 
     public static class AttachDisksInputs {
-        public static final String DEVICE_BUS_LIST = "deviceBus";
-        public static final String DEVICE_INDEX_LIST = "deviceIndex";
-        public static final String VM_DISK_SIZE_LIST = "deviceDisksize";
-        public static final String STORAGE_CONTAINER_UUID_DISK_LIST = "storagecontainerUUIDDisk";
+        public static final String DEVICE_BUS_LIST = "deviceBusList";
+        public static final String DEVICE_INDEX_LIST = "deviceIndexList";
+        public static final String VM_DISK_SIZE_LIST = "deviceDisksizeList";
+        public static final String STORAGE_CONTAINER_UUID_DISK_LIST = "storagecontainerUUIDDiskList";
 
     }
 
