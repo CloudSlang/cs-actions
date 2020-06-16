@@ -28,7 +28,7 @@ import static io.cloudslang.content.nutanix.prism.services.NicImpl.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(VMImpl.class)
+@PrepareForTest(NicImpl.class)
 public class NICImplTest {
 
     private static final String EXPECTED_DELETE_NIC_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/myvm/nics/4e:5b:7f:aa:bb";
