@@ -230,6 +230,15 @@ public class Descriptions {
         public static final String DETACH_DISKS_SUCCESS_DESC = "Disks successfully detached from the VM.";
 
     }
+
+    public static class AttachDisks {
+        public static final String ATTACH_DISKS_OPERATION_DESC = "Attach disks to Virtual Machine.";
+        public static final String DEVICE_BUS_DESC = "Device Bus List. List the device buses in the same order that the disk UUIDs are listed, separated by commas.\n"
+                + "Valid values: sata,scsi,ide,pci";
+        public static final String DEVICE_INDEX_DESC = "Device indices list. List the device index in the same order that the disk UUIDs are listed, separated by commas.";
+        public static final String VM_DISK_SIZE_DESC = "Size of the each disk to be attached to the VM.";
+        public static final String STORAGE_CONTAINER_UUID_DISK_DESC = "Storage container UUID for each disk to be to attached the VM. ";
+    }
     public static class DeleteNIC {
         public static final String DELETE_NIC_OPERATION_DESC = "Delete a NIC from a Virtual Machine.";
         public static final String VM_LOGICAL_TIMESTAMP_DESC = "Virtual Machine Logical timestamp.";
