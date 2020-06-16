@@ -36,26 +36,40 @@ public class NutanixAttachDisksInputs {
         this.storagecontainerUUIDDisk = storagecontainerUUIDDisk;
         this.commonInputs = commonInputs;
     }
+
     public static NutanixAttachDisksInputs.NutanixAttachDisksInputsBuilder builder() {
         return new NutanixAttachDisksInputs.NutanixAttachDisksInputsBuilder();
     }
-    @NotNull
-    public String getVmUUID() { return vmUUID; }
 
     @NotNull
-    public String getDeviceBus() { return deviceBus; }
+    public String getVmUUID() {
+        return vmUUID;
+    }
 
     @NotNull
-    public String getDeviceIndex() { return deviceIndex; }
+    public String getDeviceBus() {
+        return deviceBus;
+    }
 
     @NotNull
-    public String getVmDisksize() { return vmDisksize; }
+    public String getDeviceIndex() {
+        return deviceIndex;
+    }
 
     @NotNull
-    public String getStoragecontainerUUIDDisk() { return storagecontainerUUIDDisk; }
+    public String getVmDisksize() {
+        return vmDisksize;
+    }
 
     @NotNull
-    public NutanixCommonInputs getCommonInputs() { return commonInputs; }
+    public String getStoragecontainerUUIDDisk() {
+        return storagecontainerUUIDDisk;
+    }
+
+    @NotNull
+    public NutanixCommonInputs getCommonInputs() {
+        return commonInputs;
+    }
 
     public static class NutanixAttachDisksInputsBuilder {
         private String vmUUID = EMPTY;
@@ -106,7 +120,7 @@ public class NutanixAttachDisksInputs {
         }
 
         public NutanixAttachDisksInputs build() {
-            return new NutanixAttachDisksInputs(vmUUID, deviceBus, deviceIndex, vmDisksize,storagecontainerUUIDDisk,commonInputs);
+            return new NutanixAttachDisksInputs(vmUUID, deviceBus, deviceIndex, vmDisksize, storagecontainerUUIDDisk, commonInputs);
         }
 
     }

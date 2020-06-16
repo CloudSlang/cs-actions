@@ -23,7 +23,6 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixDeleteVMInputs;
-import io.cloudslang.content.nutanix.prism.entities.NutanixGetTaskDetailsInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -36,13 +35,10 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.nutanix.prism.service.TaskImpl.getTaskDetails;
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.deleteVM;
+import static io.cloudslang.content.nutanix.prism.services.VMImpl.deleteVM;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.CreateVMConstants.TASK_UUID_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.DeleteVMConstants.DELETE_VM_OPERATION_NAME;
-import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.SUCCEEDED;
-import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.TASK_STATUS_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.DeleteVM.*;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
@@ -58,7 +54,6 @@ import static io.cloudslang.content.nutanix.prism.utils.Inputs.DeleteVMInputs.DE
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.DeleteVMInputs.LOGICAL_TIMESTAMP;
 import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.TASK_UUID;
-import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.TASK_STATUS;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.VM_UUID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -123,61 +118,41 @@ public class DeleteVM {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
         try {
-            NutanixCommonInputs commonInputs = NutanixCommonInputs.builder()
-                    .hostname(hostname)
-                    .port(port)
-                    .username(username)
-                    .password(password)
-                    .apiVersion(apiVersion)
-                    .proxyHost(proxyHost)
-                    .proxyPort(proxyPort)
-                    .proxyUsername(proxyUsername)
-                    .proxyPassword(proxyPassword)
-                    .trustAllRoots(trustAllRoots)
-                    .x509HostnameVerifier(x509HostnameVerifier)
-                    .trustKeystore(trustKeystore)
-                    .trustPassword(trustPassword)
-                    .connectTimeout(connectTimeout)
-                    .socketTimeout(socketTimeout)
-                    .keepAlive(keepAlive)
-                    .connectionsMaxPerRoot(connectionsMaxPerRoute)
-                    .connectionsMaxTotal(connectionsMaxTotal)
-                    .build();
-
             Map<String, String> result = deleteVM(NutanixDeleteVMInputs.builder()
                     .vmUUID(vmUUID)
                     .deleteSnapshots(deleteSnapshots)
                     .logicalTimestamp(logicalTimestamp)
-                    .commonInputs(commonInputs).build());
-            Map<String, String> results;
-            int statusCode;
-            String returnMessage;
-            returnMessage = result.get(RETURN_RESULT);
-            results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            statusCode = Integer.parseInt(result.get(STATUS_CODE));
+                    .commonInputs(NutanixCommonInputs.builder()
+                            .hostname(hostname)
+                            .port(port)
+                            .username(username)
+                            .password(password)
+                            .apiVersion(apiVersion)
+                            .proxyHost(proxyHost)
+                            .proxyPort(proxyPort)
+                            .proxyUsername(proxyUsername)
+                            .proxyPassword(proxyPassword)
+                            .trustAllRoots(trustAllRoots)
+                            .x509HostnameVerifier(x509HostnameVerifier)
+                            .trustKeystore(trustKeystore)
+                            .trustPassword(trustPassword)
+                            .connectTimeout(connectTimeout)
+                            .socketTimeout(socketTimeout)
+                            .keepAlive(keepAlive)
+                            .connectionsMaxPerRoot(connectionsMaxPerRoute)
+                            .connectionsMaxTotal(connectionsMaxTotal)
+                            .build()).build());
 
+            final String returnMessage = result.get(RETURN_RESULT);
+            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
             if (statusCode >= 200 && statusCode < 300) {
                 final String taskUUID = JsonPath.read(returnMessage, TASK_UUID_PATH);
                 results.put(TASK_UUID, taskUUID);
-                result = getTaskDetails(NutanixGetTaskDetailsInputs.builder()
-                        .taskUUID(taskUUID)
-                        .commonInputs(commonInputs).build());
-                returnMessage = result.get(RETURN_RESULT);
-                results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-                statusCode = Integer.parseInt(result.get(STATUS_CODE));
-                String taskStatus = JsonPath.read(returnMessage, TASK_STATUS_PATH);
-                if (statusCode >= 200 && statusCode < 300 && taskStatus.equals(SUCCEEDED)) {
-                    results.put(TASK_STATUS, taskStatus);
-                    results.put(RETURN_RESULT, DELETE_VM_SUCCESS_DESC);
-                } else {
-                    return getFailureResults(hostname, statusCode, taskStatus, returnMessage, returnMessage);
-                }
             } else {
-
-                return getFailureResults(hostname, statusCode, returnMessage, returnMessage, returnMessage);
+                return getFailureResults(hostname, statusCode, returnMessage, returnMessage);
             }
             return results;
-
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

@@ -16,13 +16,12 @@
 package io.cloudslang.content.nutanix.prism.services;
 
 import io.cloudslang.content.nutanix.prism.entities.*;
-import io.cloudslang.content.nutanix.prism.service.VMImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.*;
+import static io.cloudslang.content.nutanix.prism.services.VMImpl.*;
 import static org.junit.Assert.assertEquals;
 
 

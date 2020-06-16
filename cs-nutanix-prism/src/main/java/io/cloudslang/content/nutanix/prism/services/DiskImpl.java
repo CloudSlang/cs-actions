@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.nutanix.prism.service;
+package io.cloudslang.content.nutanix.prism.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,15 +22,15 @@ import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.nutanix.prism.entities.NutanixAttachDisksInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixDetachDisksInputs;
 import io.cloudslang.content.nutanix.prism.exceptions.NutanixDetachDiskException;
-import io.cloudslang.content.nutanix.prism.service.models.disks.AttachDisksRequestBody;
-import io.cloudslang.content.nutanix.prism.service.models.disks.DetachDisksRequestBody;
+import io.cloudslang.content.nutanix.prism.services.models.disks.AttachDisksRequestBody;
+import io.cloudslang.content.nutanix.prism.services.models.disks.DetachDisksRequestBody;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-import static io.cloudslang.content.nutanix.prism.service.HttpCommons.setCommonHttpInputs;
+import static io.cloudslang.content.nutanix.prism.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.AttachDisksConstants.ATTACH_DISKS_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.DetachDisksConstants.DETACH_DISKS_PATH;
@@ -51,7 +51,7 @@ public class DiskImpl {
         String[] deviceIndexArray = nutanixDetachDisksInputs.getDeviceIndexList().split(",");
         String[] vmDiskUUIDArray = nutanixDetachDisksInputs.getVmDiskUUIDList().split(",");
 
-        if((vmDiskUUIDArray.length == deviceBusArray.length) && (vmDiskUUIDArray.length == deviceIndexArray.length)) {
+        if ((vmDiskUUIDArray.length == deviceBusArray.length) && (vmDiskUUIDArray.length == deviceIndexArray.length)) {
             for (int i = 0; i < vmDiskUUIDArray.length; i++) {
                 DetachDisksRequestBody.VMDisks vmDisks = detachDisksRequestBody.new VMDisks();
                 DetachDisksRequestBody.DiskAddress diskAddress = detachDisksRequestBody.new DiskAddress();
