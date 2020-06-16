@@ -99,6 +99,7 @@ public class Constants {
         public static final String ATTACH_DISKS_PATH = "/disks/attach";
         public static final String TASK_UUID_PATH = "task_uuid";
     }
+
     public static class DeleteNICConstants {
         public static final String DELETE_NIC_OPERATION_NAME = "Delete NIC";
         public static final String DELETE_NIC_PATH = "/nics/";
@@ -140,6 +141,13 @@ public class Constants {
         public static final String FAILED = "Failed";
         public static final String TASK_FAILURE_PATH = "$.meta_response.error_detail";
         public static final String TASK_UUID_PATH = "uuid";
+    }
+
+    public static class AddNICConstants {
+        public static final String ADD_NIC_OPERATION_NAME = "Add NIC";
+        public static final String ADD_NIC_PATH = "/nics";
+        public static final String TASK_UUID_PATH = "task_uuid";
+
     }
 
 }
