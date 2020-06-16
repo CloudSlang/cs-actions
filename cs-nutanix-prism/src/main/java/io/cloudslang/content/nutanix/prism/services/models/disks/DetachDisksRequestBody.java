@@ -1,9 +1,8 @@
-package io.cloudslang.content.nutanix.prism.service.models.disks;
+package io.cloudslang.content.nutanix.prism.services.models.disks;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DetachDisksRequestBody {
     @JsonProperty("uuid")

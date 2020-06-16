@@ -140,6 +140,7 @@ public class Constants {
         public static final String SUCCEEDED = "Succeeded";
         public static final String FAILED = "Failed";
         public static final String TASK_FAILURE_PATH = "$.meta_response.error_detail";
+        public static final String TASK_UUID_PATH = "uuid";
     }
 
     public static class AddNICConstants {
