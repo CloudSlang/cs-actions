@@ -19,20 +19,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cloudslang.content.nutanix.prism.entities.NutanixAddNicInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixDeleteNICInputs;
-import io.cloudslang.content.nutanix.prism.service.VMImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static io.cloudslang.content.nutanix.prism.service.NicImpl.deleteNicURL;
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.AddNicBody;
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.AddNicURL;
+import static io.cloudslang.content.nutanix.prism.services.NicImpl.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(VMImpl.class)
-public class NICImpl {
+@PrepareForTest(NicImpl.class)
+public class NICImplTest {
 
     private static final String EXPECTED_DELETE_NIC_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/myvm/nics/4e:5b:7f:aa:bb";
     private static final String EXPECTED_ADD_NIC_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/0b5d5c1c-40c8-4591-9f02-72e2ce/nics";

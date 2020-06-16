@@ -37,7 +37,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.getVMDetails;
+import static io.cloudslang.content.nutanix.prism.services.VMImpl.getVMDetails;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetVMDetailsConstants.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
@@ -183,7 +183,7 @@ public class GetVMDetails {
                 results.put(STORAGE_CONTAINER_UUID, storageContainerUUIDString);
                 results.put(VM_LOGICAL_TIMESTAMP, vmLogicalTimestamp);
             } else {
-                return getFailureResults(hostname, statusCode, returnMessage, returnMessage, returnMessage);
+                return getFailureResults(hostname, statusCode, returnMessage, returnMessage);
             }
             return results;
         } catch (Exception exception) {

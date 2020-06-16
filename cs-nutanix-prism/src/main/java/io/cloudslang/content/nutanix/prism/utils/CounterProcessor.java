@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-
 package io.cloudslang.content.nutanix.prism.utils;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;

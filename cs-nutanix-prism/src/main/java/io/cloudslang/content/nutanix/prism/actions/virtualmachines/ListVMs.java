@@ -36,7 +36,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.listVMs;
+import static io.cloudslang.content.nutanix.prism.services.VMImpl.listVMs;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.ListVMsConstants.LIST_VMS_OPERATION_NAME;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
@@ -135,8 +135,7 @@ public class ListVMs {
                     .sortAttribute(sortAttribute)
                     .includeVMDiskConfigInfo(includeVMDiskConfigInfo)
                     .includeVMNicConfigInfo(includeVMNicConfigInfo)
-                    .commonInputs(
-                            NutanixCommonInputs.builder()
+                    .commonInputs(NutanixCommonInputs.builder()
                                     .hostname(hostname)
                                     .port(port)
                                     .username(username)
@@ -167,9 +166,8 @@ public class ListVMs {
                 } else {
                     results.put(VM_LIST, EMPTY);
                 }
-
             } else {
-                return getFailureResults(hostname, statusCode, returnMessage, returnMessage, returnMessage);
+                return getFailureResults(hostname, statusCode, returnMessage, returnMessage);
             }
             return results;
         } catch (Exception exception) {

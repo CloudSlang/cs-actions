@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static io.cloudslang.content.nutanix.prism.service.TaskImpl.getTaskDetailsURL;
+import static io.cloudslang.content.nutanix.prism.services.TaskImpl.getTaskDetailsURL;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)

@@ -35,7 +35,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.createVM;
+import static io.cloudslang.content.nutanix.prism.services.VMImpl.createVM;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.CreateVMConstants.CREATE_VM_OPERATION_NAME;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.CreateVMConstants.TASK_UUID_PATH;
@@ -187,8 +187,7 @@ public class CreateVM {
                     .isConnected(isConnected)
                     .hostUUIDs(hostUUIDs)
                     .agentVM(agentVM)
-                    .commonInputs(
-                            NutanixCommonInputs.builder()
+                    .commonInputs(NutanixCommonInputs.builder()
                                     .hostname(hostname)
                                     .port(port)
                                     .username(username)
@@ -210,14 +209,12 @@ public class CreateVM {
                                     .build()).build());
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
-
             if (statusCode >= 200 && statusCode < 300) {
                 final String taskUUID = JsonPath.read(returnMessage, TASK_UUID_PATH);
                 results.put(TASK_UUID, taskUUID);
             } else {
-                return getFailureResults(hostname, statusCode, returnMessage, returnMessage, returnMessage);
+                return getFailureResults(hostname, statusCode, returnMessage, returnMessage);
             }
             return results;
         } catch (Exception exception) {
