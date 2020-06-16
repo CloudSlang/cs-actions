@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.nutanix.prism.actions.virtualmachines;
+package io.cloudslang.content.nutanix.prism.actions.nics;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -34,7 +34,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.AddNic;
+import static io.cloudslang.content.nutanix.prism.services.NicImpl.AddNic;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.AddNICConstants.ADD_NIC_OPERATION_NAME;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.AddNICConstants.TASK_UUID_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
@@ -157,7 +157,7 @@ public class AddNic {
                 final String taskUUID = JsonPath.read(returnMessage, TASK_UUID_PATH);
                 results.put(TASK_UUID, taskUUID);
             } else {
-                return getFailureResults(hostname, statusCode,returnMessage,returnMessage, returnMessage);
+                return getFailureResults(hostname, statusCode, returnMessage, returnMessage);
             }
             return results;
         } catch (Exception exception) {

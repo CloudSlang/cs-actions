@@ -1,4 +1,4 @@
-package io.cloudslang.content.nutanix.prism.service.models.virtualmachines;
+package io.cloudslang.content.nutanix.prism.services.models.nics;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
