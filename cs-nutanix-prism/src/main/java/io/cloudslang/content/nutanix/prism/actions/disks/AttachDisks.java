@@ -76,10 +76,10 @@ public class AttachDisks {
                                        @Param(value = USERNAME, required = true, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
                                        @Param(value = VM_UUID, required = true, description = VM_UUID_DESC) String vmUUID,
-                                       @Param(value = DEVICE_BUS, required = true, description = DEVICE_BUS_DESC) String deviceBus,
-                                       @Param(value = DEVICE_INDEX, description = DEVICE_INDEX_DESC) String deviceIndex,
-                                       @Param(value = VM_DISK_SIZE, required = true, description = VM_DISK_SIZE_DESC) String vmDisksize,
-                                       @Param(value = STORAGE_CONTAINER_UUID_DISK, required = true, description = STORAGE_CONTAINER_UUID_DISK_DESC) String storagecontainerUUIDDisk,
+                                       @Param(value = DEVICE_BUS_LIST, required = true, description = DEVICE_BUS_LIST_DESC) String deviceBusList,
+                                       @Param(value = DEVICE_INDEX_LIST, description = DEVICE_INDEX_LIST_DESC) String deviceIndexList,
+                                       @Param(value = VM_DISK_SIZE_LIST, required = true, description = VM_DISK_SIZE_LIST_DESC) String vmDisksizeList,
+                                       @Param(value = STORAGE_CONTAINER_UUID_DISK_LIST, required = true, description = STORAGE_CONTAINER_UUID_DISK_LIST_DESC) String storagecontainerUUIDDiskList,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -96,7 +96,7 @@ public class AttachDisks {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
         port = defaultIfEmpty(port, DEFAULT_NUTANIX_PORT);
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
-        deviceIndex = defaultIfEmpty(deviceIndex, EMPTY);
+        deviceIndexList = defaultIfEmpty(deviceIndexList, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -119,10 +119,10 @@ public class AttachDisks {
         try {
             final Map<String, String> result = AttachDisk(NutanixAttachDisksInputs.builder()
                     .vmUUID(vmUUID)
-                    .deviceBus(deviceBus)
-                    .deviceIndex(deviceIndex)
-                    .vmDisksize(vmDisksize)
-                    .storagecontainerUUIDDisk(storagecontainerUUIDDisk)
+                    .deviceBusList(deviceBusList)
+                    .deviceIndexList(deviceIndexList)
+                    .vmDisksizeList(vmDisksizeList)
+                    .storagecontainerUUIDDiskList(storagecontainerUUIDDiskList)
                     .commonInputs(
                             NutanixCommonInputs.builder()
                                     .hostname(hostname)

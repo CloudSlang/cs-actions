@@ -81,19 +81,21 @@ public class AttachDisksRequestBody {
     }
 
     public class VMDiskCreate {
+
         @JsonProperty("size")
-        String size;
+        long size;
 
         @JsonProperty("storage_container_uuid")
         String storage_container_uuid;
 
-        public String getSize() {
+        public long getSize() {
             return size;
         }
 
-        public void setSize(String size) {
+        public void setSize(long size) {
             this.size = size;
         }
+
 
         public String getStorage_container_uuid() {
             return storage_container_uuid;

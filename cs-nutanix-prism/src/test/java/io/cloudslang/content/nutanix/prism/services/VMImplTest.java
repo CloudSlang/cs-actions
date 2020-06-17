@@ -30,17 +30,17 @@ import static org.junit.Assert.assertEquals;
 public class VMImplTest {
 
     private static final String DELIMITER = ",";
-    private static final String EXPECTED_GET_VM_DETAILS_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/1234";
-    private static final String EXPECTED_CREATE_VM_PATH = "https://myhost:9080/api/nutanix/v2.0/vms";
-    private static final String EXPECTED_DELETE_VM_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/1234";
+    private static final String EXPECTED_GET_VM_DETAILS_PATH = "https://myhost:9440/api/nutanix/v2.0/vms/1234";
+    private static final String EXPECTED_CREATE_VM_PATH = "https://myhost:9440/api/nutanix/v2.0/vms";
+    private static final String EXPECTED_DELETE_VM_PATH = "https://myhost:9440/api/nutanix/v2.0/vms/1234";
     private static final String EXPECTED_CREATE_VM_REQUEST_BODY = "{\"name\":\"OO_test\",\"description\":\"OO_test\"," +
             "\"memory_mb\":10240,\"num_vcpus\":2,\"num_cores_per_vcpu\":2,\"timezone\":\"Asia/Calcutta\"," +
             "\"vm_disks\":[{\"disk_address\":{\"device_bus\":\"sata\"},\"vm_disk_clone\":{\"disk_address\":" +
             "{\"vmdisk_uuid\":\"1234\"}},\"flash_mode_enabled\":false,\"is_cdrom\":true,\"is_scsi_pass_through\":" +
             "false,\"is_thin_provisioned\":false}],\"vm_nics\":[{\"is_connected\":false,\"network_uuid\":\"3478\"}]," +
             "\"vm_features\":{\"agent_VM\":false},\"affinity\":{}}";
-    private static final String EXPECTED_LIST_VM_PATH = "https://myhost:9080/api/nutanix/v2.0/vms";
-    private static final String EXPECTED_SET_POWER_STATE_OF_VM_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/1234/" +
+    private static final String EXPECTED_LIST_VM_PATH = "https://myhost:9440/api/nutanix/v2.0/vms";
+    private static final String EXPECTED_SET_POWER_STATE_OF_VM_PATH = "https://myhost:9440/api/nutanix/v2.0/vms/1234/" +
             "set_power_state";
     private static final String EXPECTED_SET_POWER_STATE_OF_VM_REQUEST_BODY = "{\"transition\":\"on\",\"uuid\":\"1234\"}";
 
@@ -51,7 +51,7 @@ public class VMImplTest {
             .commonInputs(
                     NutanixCommonInputs.builder()
                             .hostname("myhost")
-                            .port("9080")
+                            .port("9440")
                             .username("username")
                             .password("password")
                             .apiVersion("v2.0")
@@ -93,7 +93,7 @@ public class VMImplTest {
             .commonInputs(
                     NutanixCommonInputs.builder()
                             .hostname("myhost")
-                            .port("9080")
+                            .port("9440")
                             .username("username")
                             .password("password")
                             .apiVersion("v2.0")
@@ -119,7 +119,7 @@ public class VMImplTest {
             .commonInputs(
                     NutanixCommonInputs.builder()
                             .hostname("myhost")
-                            .port("9080")
+                            .port("9440")
                             .username("username")
                             .password("password")
                             .apiVersion("v2.0")
@@ -149,7 +149,7 @@ public class VMImplTest {
             .commonInputs(
                     NutanixCommonInputs.builder()
                             .hostname("myhost")
-                            .port("9080")
+                            .port("9440")
                             .username("username")
                             .password("password")
                             .apiVersion("v2.0")
@@ -178,7 +178,7 @@ public class VMImplTest {
             .vmLogicalTimestamp("")
             .commonInputs(NutanixCommonInputs.builder()
                     .hostname("myhost")
-                    .port("9080")
+                    .port("9440")
                     .username("username")
                     .password("password")
                     .apiVersion("v2.0")

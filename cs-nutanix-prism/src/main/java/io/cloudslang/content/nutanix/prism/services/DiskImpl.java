@@ -94,7 +94,7 @@ public class DiskImpl {
                 AttachDisksRequestBody.VMDiskCreate vmDiskCreate = attachDisksRequestBody.new VMDiskCreate();
                 diskAddress.setDeviceBus(deviceBusArray[i]);
                 diskAddress.setDeviceIndex(deviceIndexArray[i]);
-                vmDiskCreate.setSize(vmDisksizeArray[i]);
+                vmDiskCreate.setSize(Long.parseLong(vmDisksizeArray[i])* 1024 * 1024 * 1024);
                 vmDiskCreate.setStorage_container_uuid(vmStoragecontainerUUIDDiskArray[i]);
 
                 vmDisks.setDiskAddress(diskAddress);
