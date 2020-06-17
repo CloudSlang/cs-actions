@@ -30,8 +30,8 @@ import static org.junit.Assert.assertEquals;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(VMImpl.class)
 public class DiskImplTest {
-    private static final String EXPECTED_DETACH_DISKS_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/myvm/disks/detach";
-    private static final String EXPECTED_ATTACH_DISKS_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/myvm/disks/attach";
+    private static final String EXPECTED_DETACH_DISKS_PATH = "https://myhost:9440/api/nutanix/v2.0/vms/myvm/disks/detach";
+    private static final String EXPECTED_ATTACH_DISKS_PATH = "https://myhost:9440/api/nutanix/v2.0/vms/myvm/disks/attach";
 
     private final NutanixDetachDisksInputs nutanixDetachDisksInputs = NutanixDetachDisksInputs.builder()
             .vmUUID("myvm")
@@ -40,7 +40,7 @@ public class DiskImplTest {
             .deviceBusList("deviceBus")
             .commonInputs(NutanixCommonInputs.builder()
                     .hostname("myhost")
-                    .port("9080")
+                    .port("9440")
                     .username("username")
                     .password("password")
                     .apiVersion("v2.0")
@@ -68,7 +68,7 @@ public class DiskImplTest {
             .commonInputs(
                     NutanixCommonInputs.builder()
                             .hostname("myhost")
-                            .port("9080")
+                            .port("9440")
                             .username("username")
                             .password("password")
                             .apiVersion("v2.0")
