@@ -29,11 +29,13 @@ import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.DeleteNICConstants.VM_LOGICAL_TIMESTAMP_QUERY_PARAM;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.FAILED;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.TASK_FAILURE_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.DOCUMENT;
+import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.TASK_STATUS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
@@ -226,22 +228,23 @@ public class HttpUtils {
                                                             @NotNull String taskStatus, @NotNull String returnMessage,
                                                             @NotNull String throwable) {
         Map<String, String> results = new HashMap();
-        results.put("returnCode", "-1");
-        results.put("statusCode", statusCode.toString());
+        results.put(RETURN_CODE, "-1");
+        results.put(STATUS_CODE, statusCode.toString());
         if (statusCode.equals(401)) {
-            results.put("returnResult", inputName + " not found, or user unauthorized to perform action");
-            results.put("exception ", "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
-        } else if (statusCode.equals(201) && taskStatus.equals(FAILED)) {
+            results.put(RETURN_RESULT, inputName + " not found, or user unauthorized to perform action");
+            results.put(EXCEPTION, "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
+        } else if (statusCode.equals(200) || statusCode.equals(201) && taskStatus.equals(FAILED)) {
             final String errorDetail = JsonPath.read(returnMessage, TASK_FAILURE_PATH);
-            results.put("returnResult", errorDetail);
-            results.put("exception", " status : " + statusCode + ", Title :  " + errorDetail);
+            results.put(RETURN_RESULT, errorDetail);
+            results.put(TASK_STATUS, taskStatus);
+            results.put(EXCEPTION, " status : " + statusCode + ", Title :  " + errorDetail);
         } else if (statusCode.equals(500)) {
-            final String errorDetail = JsonPath.read(returnMessage, "message");
-            results.put("returnResult ", "  error Message : " + errorDetail);
-            results.put("exception ", " statusCode : " + statusCode + ", Title : message " + errorDetail);
+            final String errorDetail = JsonPath.read(returnMessage, ERROR_MESSAGE_PATH);
+            results.put(RETURN_RESULT, "  error Message : " + errorDetail);
+            results.put(EXCEPTION, " statusCode : " + statusCode + ", Title : message " + errorDetail);
         } else {
-            results.put("returnResult", throwable);
-            results.put("exception", throwable);
+            results.put(RETURN_RESULT, throwable);
+            results.put(EXCEPTION, throwable);
         }
         return results;
     }
@@ -251,18 +254,18 @@ public class HttpUtils {
                                                         @NotNull String returnMessage,
                                                         @NotNull String throwable) {
         Map<String, String> results = new HashMap();
-        results.put("returnCode", "-1");
-        results.put("statusCode", statusCode.toString());
+        results.put(RETURN_CODE, "-1");
+        results.put(STATUS_CODE, statusCode.toString());
         if (statusCode.equals(401)) {
-            results.put("returnResult", inputName + " not found, or user unauthorized to perform action");
-            results.put("exception ", "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
+            results.put(RETURN_RESULT, inputName + " not found, or user unauthorized to perform action");
+            results.put(EXCEPTION, "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
         } else if (statusCode.equals(500)) {
-            final String errorDetail = JsonPath.read(returnMessage, "message");
-            results.put("returnResult ", "  error Message : " + errorDetail);
-            results.put("exception ", " statusCode : " + statusCode + ", Title : message " + errorDetail);
+            final String errorDetail = JsonPath.read(returnMessage, ERROR_MESSAGE_PATH);
+            results.put(RETURN_RESULT, "  error Message : " + errorDetail);
+            results.put(EXCEPTION, " statusCode : " + statusCode + ", Title : message " + errorDetail);
         } else {
-            results.put("returnResult", throwable);
-            results.put("exception", throwable);
+            results.put(RETURN_RESULT, throwable);
+            results.put(EXCEPTION, throwable);
         }
         return results;
     }
