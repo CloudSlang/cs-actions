@@ -169,7 +169,7 @@ public class HttpUtils {
         return queryParams.toString();
     }
 
-  
+
     @NotNull
     public static String getTaskDetailsQueryParams(@NotNull String includeSubtasksInfo) {
 
@@ -216,12 +216,13 @@ public class HttpUtils {
                 .append(Constants.Common.AND)
                 .append(Constants.GetVMDetailsConstants.INCLUDE_VM_NIC_CONFIG_INFO)
                 .append(includeVMNicConfigInfo);
-                if (length.equals(ZERO)) {
-                    queryParams.delete(17, 26);
-                }
+        if (length.equals(ZERO)) {
+            queryParams.delete(17, 26);
+        }
         return queryParams.toString();
 
     }
+
 
     @NotNull
     public static Map<String, String> getTaskFailureResults(@NotNull String inputName, @NotNull Integer statusCode,

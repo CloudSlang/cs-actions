@@ -31,8 +31,8 @@ import static org.junit.Assert.assertEquals;
 @PrepareForTest(NicImpl.class)
 public class NICImplTest {
 
-    private static final String EXPECTED_DELETE_NIC_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/myvm/nics/4e:5b:7f:aa:bb";
-    private static final String EXPECTED_ADD_NIC_PATH = "https://myhost:9080/api/nutanix/v2.0/vms/0b5d5c1c-40c8-4591-9f02-72e2ce/nics";
+    private static final String EXPECTED_DELETE_NIC_PATH = "https://myhost:9440/api/nutanix/v2.0/vms/myvm/nics/4e:5b:7f:aa:bb";
+    private static final String EXPECTED_ADD_NIC_PATH = "https://myhost:9440/api/nutanix/v2.0/vms/0b5d5c1c-40c8-4591-9f02-72e2ce/nics";
     private static final String EXPECTED_ADD_NIC_REQUEST_BODY = "{\"spec_list\":[{\"is_connected\":false,\"vlan_id\":\"\",\"network_uuid\":\"\"}]}";
 
     private final NutanixDeleteNICInputs nutanixDeleteNICInputs = NutanixDeleteNICInputs.builder()
@@ -40,7 +40,7 @@ public class NICImplTest {
             .nicMacAddress("4e:5b:7f:aa:bb")
             .commonInputs(NutanixCommonInputs.builder()
                     .hostname("myhost")
-                    .port("9080")
+                    .port("9440")
                     .username("username")
                     .password("password")
                     .apiVersion("v2.0")
@@ -68,7 +68,7 @@ public class NICImplTest {
             .commonInputs(
                     NutanixCommonInputs.builder()
                             .hostname("myhost")
-                            .port("9080")
+                            .port("9440")
                             .username("username")
                             .password("password")
                             .apiVersion("v2.0")
@@ -96,7 +96,7 @@ public class NICImplTest {
             .commonInputs(
                     NutanixCommonInputs.builder()
                             .hostname("myhost")
-                            .port("9080")
+                            .port("9440")
                             .username("username")
                             .password("password")
                             .apiVersion("v2.0")
