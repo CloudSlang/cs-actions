@@ -97,6 +97,7 @@
         <custom.nexus>overwritten_by_ci</custom.nexus>
     </properties>
 
+
     <dependencies>
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
