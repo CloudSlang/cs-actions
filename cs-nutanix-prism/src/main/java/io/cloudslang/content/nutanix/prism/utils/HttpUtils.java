@@ -35,6 +35,7 @@ import static io.cloudslang.content.nutanix.prism.utils.Constants.DeleteNICConst
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.FAILED;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.TASK_FAILURE_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.DOCUMENT;
+import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.TASK_STATUS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
@@ -233,12 +234,13 @@ public class HttpUtils {
         if (statusCode.equals(401)) {
             results.put(RETURN_RESULT, inputName + " not found, or user unauthorized to perform action");
             results.put(EXCEPTION, "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
-        } else if (statusCode.equals(201) && taskStatus.equals(FAILED)) {
+        } else if (statusCode.equals(200) || statusCode.equals(201) && taskStatus.equals(FAILED)) {
             final String errorDetail = JsonPath.read(returnMessage, TASK_FAILURE_PATH);
             results.put(RETURN_RESULT, errorDetail);
+            results.put(TASK_STATUS, taskStatus);
             results.put(EXCEPTION, " status : " + statusCode + ", Title :  " + errorDetail);
         } else if (statusCode.equals(500)) {
-            final String errorDetail = JsonPath.read(returnMessage, "message");
+            final String errorDetail = JsonPath.read(returnMessage, ERROR_MESSAGE_PATH);
             results.put(RETURN_RESULT, "  error Message : " + errorDetail);
             results.put(EXCEPTION, " statusCode : " + statusCode + ", Title : message " + errorDetail);
         } else {
@@ -259,7 +261,7 @@ public class HttpUtils {
             results.put(RETURN_RESULT, inputName + " not found, or user unauthorized to perform action");
             results.put(EXCEPTION, "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
         } else if (statusCode.equals(500)) {
-            final String errorDetail = JsonPath.read(returnMessage, "message");
+            final String errorDetail = JsonPath.read(returnMessage, ERROR_MESSAGE_PATH);
             results.put(RETURN_RESULT, "  error Message : " + errorDetail);
             results.put(EXCEPTION, " statusCode : " + statusCode + ", Title : message " + errorDetail);
         } else {
