@@ -77,6 +77,7 @@ public class GetInstanceDetails {
                                        @Param(value = USER_OCID, required = true, description = USER_OCID_DESC) String userOcid,
                                        @Param(value = FINGER_PRINT, encrypted = true, required = true, description = FINGER_PRINT_DESC) String fingerPrint,
                                        @Param(value = PRIVATE_KEY_DATA, encrypted = true, required = true, description = PRIVATE_KEY_DATA_DESC) String privateKeyData,
+                                       @Param(value = PRIVATE_KEY_FILE, encrypted = true, description = PRIVATE_KEY_FILE_DESC) String privateKeyFile,
                                        @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
@@ -115,7 +116,7 @@ public class GetInstanceDetails {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
         final List<String> exceptionMessage = InputsValidation.verifyCommonInputs(proxyPort, trustAllRoots,
-                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal,privateKeyData,privateKeyFile);
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
@@ -128,6 +129,7 @@ public class GetInstanceDetails {
                             .userOcid(userOcid)
                             .fingerPrint(fingerPrint)
                             .privateKeyData(privateKeyData)
+                            .privateKeyFile(privateKeyFile)
                             .apiVersion(apiVersion)
                             .region(region)
                             .instanceId(instanceId)
