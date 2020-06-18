@@ -78,7 +78,7 @@ public class ListInstances {
                                        @Param(value = USER_OCID, required = true, description = USER_OCID_DESC) String userOcid,
                                        @Param(value = FINGER_PRINT, encrypted = true, required = true, description = FINGER_PRINT_DESC) String fingerPrint,
                                        @Param(value = PRIVATE_KEY_DATA, encrypted = true, description = PRIVATE_KEY_DATA_DESC) String privateKeyData,
-                                       @Param(value = PRIVATE_KEY_FILE, encrypted = true, description = PRIVATE_KEY_FILE_DESC) String privateKeyFile,
+                                       @Param(value = PRIVATE_KEY_FILE, description = PRIVATE_KEY_FILE_DESC) String privateKeyFile,
                                        @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
@@ -122,7 +122,7 @@ public class ListInstances {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
-        final List<String> exceptionMessage = InputsValidation.verifyCommonInputs(privateKeyData,privateKeyFile,proxyPort, trustAllRoots,
+        final List<String> exceptionMessage = InputsValidation.verifyCommonInputs(privateKeyData, privateKeyFile, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));

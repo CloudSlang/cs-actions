@@ -51,7 +51,7 @@ public class InputsValidation {
         addVerifyBoolean(exceptionMessages, keepAlive, KEEP_ALIVE);
         addVerifyNumber(exceptionMessages, connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE);
         addVerifyNumber(exceptionMessages, connectionsMaxTotal, CONNECTIONS_MAX_TOTAL);
-        verifyPrivateKey(exceptionMessages, privateKeyData,privateKeyFile);
+        verifyPrivateKey(exceptionMessages, privateKeyData, privateKeyFile);
 
         return exceptionMessages;
     }
