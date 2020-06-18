@@ -83,7 +83,7 @@ public class ListVnicAttachments {
                                        @Param(value = USER_OCID, required = true, description = USER_OCID_DESC) String userOcid,
                                        @Param(value = FINGER_PRINT, encrypted = true, required = true, description = FINGER_PRINT_DESC) String fingerPrint,
                                        @Param(value = PRIVATE_KEY_DATA, encrypted = true, required = true, description = PRIVATE_KEY_DATA_DESC) String privateKeyData,
-                                       @Param(value = PRIVATE_KEY_FILE, encrypted = true, description = PRIVATE_KEY_FILE_DESC) String privateKeyFile,
+                                       @Param(value = PRIVATE_KEY_FILE, description = PRIVATE_KEY_FILE_DESC) String privateKeyFile,
                                        @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
