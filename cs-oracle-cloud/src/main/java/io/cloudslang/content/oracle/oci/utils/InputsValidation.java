@@ -33,7 +33,9 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class InputsValidation {
 
     @NotNull
-    public static List<String> verifyCommonInputs(@Nullable final String proxyPort,
+    public static List<String> verifyCommonInputs(@Nullable final String privateKeyData,
+                                                  @Nullable final String privateKeyFile,
+                                                  @Nullable final String proxyPort,
                                                   @Nullable final String trust_all_roots,
                                                   @Nullable final String connectTimeout,
                                                   @Nullable final String socketTimeout,
@@ -49,8 +51,17 @@ public class InputsValidation {
         addVerifyBoolean(exceptionMessages, keepAlive, KEEP_ALIVE);
         addVerifyNumber(exceptionMessages, connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE);
         addVerifyNumber(exceptionMessages, connectionsMaxTotal, CONNECTIONS_MAX_TOTAL);
+        verifyPrivateKey(exceptionMessages, privateKeyData, privateKeyFile);
 
         return exceptionMessages;
+    }
+
+    @NotNull
+    private static List<String> verifyPrivateKey(@NotNull List<String> exceptions, @Nullable final String privateKeyData, @NotNull final String privateKeyFile) {
+        if (isEmpty(privateKeyData) && isEmpty(privateKeyFile)) {
+            exceptions.add(EXCEPTION_NULL_EMPTY_PRIVATE_KEY);
+        }
+        return exceptions;
     }
 
     @NotNull
