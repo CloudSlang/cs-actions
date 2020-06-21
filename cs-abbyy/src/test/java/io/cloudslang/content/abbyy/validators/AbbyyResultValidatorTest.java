@@ -15,7 +15,7 @@
 package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.abbyy.http.AbbyyRequest;
+import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public abstract class AbbyyResultValidatorTest {
     @Test
     public void validateBeforeDownload_noValidationError_nullReturned() throws Exception {
         //Arrange
-        final AbbyyRequest abbyyInitialRequest = mock(AbbyyRequest.class);
+        final AbbyyInput abbyyInitialRequest = mock(AbbyyInput.class);
         final String url = "url";
 
         final AbbyyResultValidator sut = mock(AbbyyResultValidator.class);

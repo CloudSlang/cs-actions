@@ -15,39 +15,41 @@
 
 package io.cloudslang.content.abbyy.services;
 
-import io.cloudslang.content.abbyy.constants.*;
-import io.cloudslang.content.abbyy.entities.ExportFormat;
-import io.cloudslang.content.abbyy.entities.ProcessImageInput;
+import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
+import io.cloudslang.content.abbyy.constants.MiscConstants;
+import io.cloudslang.content.abbyy.constants.OutputNames;
+import io.cloudslang.content.abbyy.constants.XmlSchemas;
+import io.cloudslang.content.abbyy.entities.inputs.ProcessImageInput;
+import io.cloudslang.content.abbyy.entities.others.ExportFormat;
+import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
-import io.cloudslang.content.abbyy.exceptions.HttpException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
-import io.cloudslang.content.abbyy.http.AbbyyApiImpl;
-import io.cloudslang.content.abbyy.http.AbbyyResponse;
 import io.cloudslang.content.abbyy.validators.*;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProcessImageService extends AbstractPostRequestService<ProcessImageInput> {
+public class ProcessImageService extends AbbyyService<ProcessImageInput> {
 
     private final AbbyyResultValidator xmlResultValidator, txtResultValidator, pdfResultValidator;
 
 
     public ProcessImageService() throws ParserConfigurationException {
-        this(new ProcessImageValidator(), null, null, null, new AbbyyApiImpl());
+        this(new ProcessImageInputValidator(), null, null, null, new AbbyyApi());
     }
 
 
-    ProcessImageService(@NotNull AbbyyRequestValidator<ProcessImageInput> requestValidator,
+    ProcessImageService(@NotNull AbbyyInputValidator<ProcessImageInput> requestValidator,
                         @Nullable AbbyyResultValidator xmlResultValidator,
                         @Nullable AbbyyResultValidator txtResultValidator,
                         @Nullable AbbyyResultValidator pdfResultValidator,
@@ -56,63 +58,6 @@ public class ProcessImageService extends AbstractPostRequestService<ProcessImage
         this.xmlResultValidator = xmlResultValidator != null ? xmlResultValidator : new XmlResultValidator(abbyyApi, XmlSchemas.PROCESS_IMAGE);
         this.txtResultValidator = txtResultValidator != null ? txtResultValidator : new TxtResultValidator(abbyyApi);
         this.pdfResultValidator = pdfResultValidator != null ? pdfResultValidator : new PdfResultValidator(abbyyApi);
-    }
-
-
-    @Override
-    String buildUrl(@NotNull ProcessImageInput input) throws Exception {
-        URIBuilder urlBuilder = new URIBuilder()
-                .setScheme(input.getLocationId().getProtocol())
-                .setHost(String.format(Urls.HOST_TEMPLATE, input.getLocationId().toString(),
-                        Endpoints.PROCESS_IMAGE));
-
-        if (input.getLanguages() != null && !input.getLanguages().isEmpty()) {
-            urlBuilder.addParameter(QueryParams.LANGUAGE, StringUtils.join(input.getLanguages(), ','));
-        }
-
-        if (input.getProfile() != null) {
-            urlBuilder.addParameter(QueryParams.PROFILE, input.getProfile().toString());
-        }
-
-        if (input.getTextTypes() != null && !input.getTextTypes().isEmpty()) {
-            urlBuilder.addParameter(QueryParams.TEXT_TYPE, StringUtils.join(input.getTextTypes(), ','));
-        }
-
-        if (input.getImageSource() != null) {
-            urlBuilder.addParameter(QueryParams.IMAGE_SOURCE, input.getImageSource().toString());
-        }
-
-        urlBuilder.addParameter(QueryParams.CORRECT_ORIENTATION, String.valueOf(input.isCorrectOrientation()));
-
-        urlBuilder.addParameter(QueryParams.CORRECT_SKEW, String.valueOf(input.isCorrectSkew()));
-
-        if (input.isReadBarcodes() != null) {
-            urlBuilder.addParameter(QueryParams.READ_BARCODES, String.valueOf(input.isReadBarcodes()));
-        }
-
-        if (input.getExportFormats() != null && !input.getExportFormats().isEmpty()) {
-            urlBuilder.addParameter(QueryParams.EXPORT_FORMAT, StringUtils.join(input.getExportFormats(), ','));
-        }
-
-        if (StringUtils.isNotEmpty(input.getDescription())) {
-            urlBuilder.addParameter(QueryParams.DESCRIPTION, input.getDescription());
-        }
-
-        if (StringUtils.isNotEmpty(input.getPdfPassword())) {
-            urlBuilder.addParameter(QueryParams.PDF_PASSWORD, input.getPdfPassword());
-        }
-
-        if (input.getExportFormats() != null && input.getExportFormats().contains(ExportFormat.XML)) {
-            urlBuilder.addParameter(QueryParams.WRITE_FORMATTING, String.valueOf(input.isWriteFormatting()))
-                    .addParameter(QueryParams.WRITE_RECOGNITION_VARIANTS, String.valueOf(input.isWriteRecognitionVariants()));
-        }
-
-        if (input.getExportFormats() != null && input.getExportFormats().contains(ExportFormat.PDF_SEARCHABLE)
-                && input.getWriteTags() != null) {
-            urlBuilder.addParameter(QueryParams.WRITE_TAGS, input.getWriteTags().toString());
-        }
-
-        return urlBuilder.build().toString();
     }
 
 
@@ -129,7 +74,7 @@ public class ProcessImageService extends AbstractPostRequestService<ProcessImage
                 switch (exportFormat) {
                     case XML:
                         result = getClearTextResult(request, response, ExportFormat.XML, xmlResultValidator);
-                        if (result.startsWith(Misc.BOM_CHAR)) {
+                        if (result.startsWith(MiscConstants.BOM_CHAR)) {
                             result = result.substring(1);
                         }
                         results.put(OutputNames.XML_RESULT, result);
@@ -228,8 +173,7 @@ public class ProcessImageService extends AbstractPostRequestService<ProcessImage
     }
 
 
-    private String downloadOnDisk(ProcessImageInput abbyyInitialRequest, String downloadUrl, ExportFormat exportFormat)
-            throws IOException, AbbyySdkException, HttpException {
+    private String downloadOnDisk(ProcessImageInput abbyyInitialRequest, String downloadUrl, ExportFormat exportFormat) throws Exception {
         String targetPath = getTargetPath(abbyyInitialRequest, exportFormat);
         if (new File(targetPath).exists()) {
             throw new FileAlreadyExistsException(targetPath);

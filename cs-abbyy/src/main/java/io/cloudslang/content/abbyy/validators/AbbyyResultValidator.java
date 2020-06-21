@@ -15,12 +15,12 @@
 
 package io.cloudslang.content.abbyy.validators;
 
+import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.abbyy.http.AbbyyRequest;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AbbyyResultValidator {
-    public ValidationException validateBeforeDownload(@NotNull AbbyyRequest abbyyInitialRequest, @NotNull String url) throws Exception {
+    public ValidationException validateBeforeDownload(@NotNull AbbyyInput abbyyInitialRequest, @NotNull String url) throws Exception {
         try {
             validateBefore(abbyyInitialRequest, url);
             return null;
@@ -40,7 +40,7 @@ public abstract class AbbyyResultValidator {
     }
 
 
-    abstract void validateBefore(@NotNull AbbyyRequest abbyyInitialRequest, @NotNull String url) throws Exception;
+    abstract void validateBefore(@NotNull AbbyyInput abbyyInitialRequest, @NotNull String url) throws Exception;
 
     abstract void validateAfter(@NotNull String result) throws Exception;
 }

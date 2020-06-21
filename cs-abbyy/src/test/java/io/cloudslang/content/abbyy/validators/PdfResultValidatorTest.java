@@ -15,10 +15,10 @@
 package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.constants.Limits;
-import io.cloudslang.content.abbyy.entities.ExportFormat;
+import io.cloudslang.content.abbyy.entities.others.ExportFormat;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
+import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
-import io.cloudslang.content.abbyy.http.AbbyyRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -41,7 +41,7 @@ public class PdfResultValidatorTest extends AbbyyResultValidatorTest {
     @Test
     public void validateBeforeDownload_resultSizeIsTooBig_ValidationException() throws Exception {
         //Arrange
-        final AbbyyRequest abbyyInitialRequest = mock(AbbyyRequest.class);
+        final AbbyyInput abbyyInitialRequest = mock(AbbyyInput.class);
         final String url = "url";
 
         when(this.abbyyApiMock.getResultSize(eq(abbyyInitialRequest), eq(url), any(ExportFormat.class))).thenReturn(Limits.MAX_SIZE_OF_RESULT + 1);
@@ -57,7 +57,7 @@ public class PdfResultValidatorTest extends AbbyyResultValidatorTest {
     @Test
     public void validateBeforeDownload_resultIsNotPdf_ValidationException() throws Exception {
         //Arrange
-        final AbbyyRequest abbyyInitialRequest = mock(AbbyyRequest.class);
+        final AbbyyInput abbyyInitialRequest = mock(AbbyyInput.class);
         final String url = "url";
 
         when(this.abbyyApiMock.getResultSize(eq(abbyyInitialRequest), eq(url), any(ExportFormat.class)))
@@ -76,7 +76,7 @@ public class PdfResultValidatorTest extends AbbyyResultValidatorTest {
     @Test
     public void validateBeforeDownload_resultValid_NullReturned() throws Exception {
         //Arrange
-        final AbbyyRequest abbyyInitialRequest = mock(AbbyyRequest.class);
+        final AbbyyInput abbyyInitialRequest = mock(AbbyyInput.class);
         final String url = "url";
 
         when(this.abbyyApiMock.getResultSize(eq(abbyyInitialRequest), eq(url), any(ExportFormat.class)))

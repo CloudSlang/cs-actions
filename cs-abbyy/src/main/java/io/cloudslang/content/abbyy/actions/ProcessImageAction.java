@@ -22,9 +22,9 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.abbyy.constants.InputNames;
 import io.cloudslang.content.abbyy.constants.OutputNames;
-import io.cloudslang.content.abbyy.entities.ProcessImageInput;
-import io.cloudslang.content.abbyy.entities.Profile;
-import io.cloudslang.content.abbyy.entities.WriteTags;
+import io.cloudslang.content.abbyy.entities.inputs.ProcessImageInput;
+import io.cloudslang.content.abbyy.entities.others.Profile;
+import io.cloudslang.content.abbyy.entities.others.WriteTags;
 import io.cloudslang.content.abbyy.services.ProcessImageService;
 import io.cloudslang.content.abbyy.utils.ResultUtils;
 import io.cloudslang.content.constants.ResponseNames;
@@ -188,10 +188,7 @@ public class ProcessImageAction {
             @Param(value = InputNames.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
             @Param(value = InputNames.RESPONSE_CHARACTER_SET) String responseCharacterSet) {
         try {
-            ProcessImageInput inputBuilder = new ProcessImageInput.Builder()
-                    .locationId(locationId)
-                    .applicationId(applicationId)
-                    .password(password)
+            ProcessImageInput input = (ProcessImageInput) new ProcessImageInput.Builder()
                     .language(language)
                     .profile(Profile.TEXT_EXTRACTION.toString())
                     .textType(textType)
@@ -205,6 +202,11 @@ public class ProcessImageAction {
                     .writeTags(WriteTags.AUTO.toString())
                     .description(description)
                     .pdfPassword(pdfPassword)
+                    .locationId(locationId)
+                    .applicationId(applicationId)
+                    .password(password)
+                    .sourceFile(sourceFile)
+                    .destinationFile(destinationFolder)
                     .proxyHost(proxyHost)
                     .proxyPort(proxyPort)
                     .proxyUsername(proxyUsername)
@@ -219,10 +221,8 @@ public class ProcessImageAction {
                     .connectionsMaxPerRoute(connectionsMaxPerRoute)
                     .connectionsMaxTotal(connectionsMaxTotal)
                     .responseCharacterSet(responseCharacterSet)
-                    .destinationFolder(destinationFolder)
-                    .sourceFile(sourceFile)
                     .build();
-            return new ProcessImageService().execute(inputBuilder);
+            return new ProcessImageService().execute(input);
         } catch (Exception ex) {
             return ResultUtils.fromException(ex);
         }

@@ -1,5 +1,4 @@
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified"
-           targetNamespace="@link">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="@link" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="document">
         <xs:complexType>
             <xs:sequence>
@@ -22,35 +21,33 @@
                                             <xs:complexType>
                                                 <xs:simpleContent>
                                                     <xs:extension base="xs:string">
-                                                        <xs:attribute type="xs:short" name="left" use="optional"/>
-                                                        <xs:attribute type="xs:short" name="top" use="optional"/>
-                                                        <xs:attribute type="xs:short" name="right" use="optional"/>
-                                                        <xs:attribute type="xs:short" name="bottom" use="optional"/>
-                                                        <xs:attribute type="xs:byte" name="confidence" use="optional"/>
-                                                        <xs:attribute type="xs:string" name="suspicious"
-                                                                      use="optional"/>
+                                                        <xs:attribute type="xs:unsignedLong" name="left" use="required"/>
+                                                        <xs:attribute type="xs:unsignedLong" name="top" use="required"/>
+                                                        <xs:attribute type="xs:unsignedLong" name="right" use="required"/>
+                                                        <xs:attribute type="xs:unsignedLong" name="bottom" use="required"/>
+                                                        <xs:attribute type="xs:byte" name="confidence" use="required"/>
+                                                        <xs:attribute type="xs:boolean" name="suspicious" use="optional"/>
                                                     </xs:extension>
                                                 </xs:simpleContent>
                                             </xs:complexType>
                                         </xs:element>
                                     </xs:sequence>
-                                    <xs:attribute type="xs:byte" name="left" use="optional"/>
-                                    <xs:attribute type="xs:short" name="top" use="optional"/>
-                                    <xs:attribute type="xs:short" name="right" use="optional"/>
-                                    <xs:attribute type="xs:short" name="bottom" use="optional"/>
+                                    <xs:attribute type="xs:unsignedLong" name="left" use="required"/>
+                                    <xs:attribute type="xs:unsignedLong" name="top" use="required"/>
+                                    <xs:attribute type="xs:unsignedLong" name="right" use="required"/>
+                                    <xs:attribute type="xs:unsignedLong" name="bottom" use="required"/>
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
-                        <xs:attribute type="xs:byte" name="left"/>
-                        <xs:attribute type="xs:byte" name="top"/>
-                        <xs:attribute type="xs:short" name="right"/>
-                        <xs:attribute type="xs:short" name="bottom"/>
+                        <xs:attribute type="xs:unsignedLong" name="left" use="required"/>
+                        <xs:attribute type="xs:unsignedLong" name="top" use="required"/>
+                        <xs:attribute type="xs:unsignedLong" name="right" use="required"/>
+                        <xs:attribute type="xs:unsignedLong" name="bottom" use="required"/>
                         <xs:attribute type="xs:string" name="type"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
-            <xs:attribute type="xs:string" name="schemaLocation"/>
-            <xs:attribute type="xs:float" name="version"/>
+            <xs:attribute type="xs:string" name="version"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>

@@ -17,7 +17,7 @@ package io.cloudslang.content.abbyy.utils;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
 import io.cloudslang.content.abbyy.constants.InputNames;
-import io.cloudslang.content.abbyy.entities.Region;
+import io.cloudslang.content.abbyy.entities.others.Region;
 import io.cloudslang.content.constants.BooleanValues;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -88,7 +88,7 @@ public final class InputParser {
     public static <T extends Enum<T>> T parseEnum(String value, Class<T> clazz, String inputName) {
         for (T enumm : EnumSet.allOf(clazz)) {
             if (enumm.toString().equals(value)) {
-                return (T) enumm;
+                return enumm;
             }
         }
         throw new IllegalArgumentException(String.format(ExceptionMsgs.INVALID_VALUE_FOR_INPUT, value, inputName));

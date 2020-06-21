@@ -17,10 +17,10 @@ package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
 import io.cloudslang.content.abbyy.constants.Limits;
-import io.cloudslang.content.abbyy.entities.ExportFormat;
+import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
+import io.cloudslang.content.abbyy.entities.others.ExportFormat;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
-import io.cloudslang.content.abbyy.http.AbbyyRequest;
 import org.jetbrains.annotations.NotNull;
 import org.xml.sax.SAXException;
 
@@ -49,7 +49,7 @@ public class XmlResultValidator extends AbbyyResultValidator {
 
 
     @Override
-    void validateBefore(@NotNull AbbyyRequest abbyyInitialRequest, @NotNull String url) throws Exception {
+    void validateBefore(@NotNull AbbyyInput abbyyInitialRequest, @NotNull String url) throws Exception {
         if (this.abbyyApi.getResultSize(abbyyInitialRequest, url, ExportFormat.XML) > Limits.MAX_SIZE_OF_RESULT) {
             throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_RESULT_EXCEEDED, ExportFormat.XML));
         }

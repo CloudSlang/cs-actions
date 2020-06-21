@@ -22,8 +22,8 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.abbyy.constants.InputNames;
 import io.cloudslang.content.abbyy.constants.OutputNames;
-import io.cloudslang.content.abbyy.entities.ProcessTextFieldInput;
-import io.cloudslang.content.abbyy.entities.WritingStyle;
+import io.cloudslang.content.abbyy.entities.inputs.ProcessTextFieldInput;
+import io.cloudslang.content.abbyy.entities.others.WritingStyle;
 import io.cloudslang.content.abbyy.services.ProcessTextFieldService;
 import io.cloudslang.content.abbyy.utils.ResultUtils;
 import io.cloudslang.content.constants.ResponseNames;
@@ -196,10 +196,7 @@ public class ProcessTextFieldAction {
             @Param(value = InputNames.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
             @Param(value = InputNames.RESPONSE_CHARACTER_SET) String responseCharacterSet) {
         try {
-            ProcessTextFieldInput inputBuilder = new ProcessTextFieldInput.Builder()
-                    .locationId(locationId)
-                    .applicationId(applicationId)
-                    .password(password)
+            ProcessTextFieldInput input = (ProcessTextFieldInput) new ProcessTextFieldInput.Builder()
                     .region(region)
                     .language(language)
                     .letterSet(letterSet)
@@ -212,6 +209,9 @@ public class ProcessTextFieldAction {
                     .writingStyle(WritingStyle.DEFAULT.toString())
                     .description(description)
                     .pdfPassword(pdfPassword)
+                    .locationId(locationId)
+                    .applicationId(applicationId)
+                    .password(password)
                     .proxyHost(proxyHost)
                     .proxyPort(proxyPort)
                     .proxyUsername(proxyUsername)
@@ -229,7 +229,7 @@ public class ProcessTextFieldAction {
                     .destinationFile(destinationFile)
                     .sourceFile(sourceFile)
                     .build();
-            return new ProcessTextFieldService().execute(inputBuilder);
+            return new ProcessTextFieldService().execute(input);
         } catch (Exception ex) {
             return ResultUtils.fromException(ex);
         }

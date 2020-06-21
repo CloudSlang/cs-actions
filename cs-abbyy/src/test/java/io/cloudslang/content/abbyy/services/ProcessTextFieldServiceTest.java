@@ -15,12 +15,13 @@
 package io.cloudslang.content.abbyy.services;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
-import io.cloudslang.content.abbyy.entities.*;
+import io.cloudslang.content.abbyy.entities.inputs.ProcessTextFieldInput;
+import io.cloudslang.content.abbyy.entities.others.*;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.TimeoutException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.abbyy.http.AbbyyRequest;
-import io.cloudslang.content.abbyy.http.AbbyyResponse;
+import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
+import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.validators.AbbyyResultValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -38,72 +39,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @PrepareForTest({ProcessTextFieldService.class})
-public class ProcessTextFieldServiceTest extends AbstractPostRequestServiceTest<ProcessTextFieldInput> {
+public class ProcessTextFieldServiceTest extends AbbyyServiceTest<ProcessTextFieldInput> {
 
     @Mock
     private AbbyyResultValidator xmlResultValidatorMock;
-
-
-    @Test
-    public void buildUrl_allFieldsSet_correspondingUrlReturned() throws Exception {
-        //Arrange
-        final String expectedUrl = "https://cloud-eu.ocrsdk.com/processTextField?language=English&letterSet=dummy" +
-                "&regExp=dummy&textType=normal&oneTextLine=true&oneWordPerTextLine=true" +
-                "&markingType=simpleText&placeholdersCount=1&writingStyle=default&description=dummy&pdfPassword=dummy";
-
-        ProcessTextFieldInput requestMock = mockAbbyyRequest();
-
-        when(requestMock.getLocationId()).thenReturn(LocationId.EU);
-        when(requestMock.getLanguages()).thenReturn(Collections.singletonList("English"));
-        when(requestMock.getLetterSet()).thenReturn("dummy");
-        when(requestMock.getRegExp()).thenReturn("dummy");
-        when(requestMock.getTextType()).thenReturn(TextType.NORMAL);
-        when(requestMock.isOneTextLine()).thenReturn(true);
-        when(requestMock.isOneWordPerTextLine()).thenReturn(true);
-        when(requestMock.getMarkingType()).thenReturn(MarkingType.SIMPLE_TEXT);
-        when(requestMock.getPlaceholdersCount()).thenReturn(1);
-        when(requestMock.getDescription()).thenReturn("dummy");
-        when(requestMock.getPdfPassword()).thenReturn("dummy");
-
-        when(requestMock.getWritingStyle()).thenReturn(WritingStyle.DEFAULT);
-
-        //Act
-        String url = this.sut.buildUrl(requestMock);
-
-        //Assert
-        assertEquals(expectedUrl, url);
-    }
-
-
-    @Test
-    public void buildUrl_someFieldsSet_correspondingUrlReturned() throws Exception {
-        //Arrange
-        final String expectedUrl = "https://cloud-eu.ocrsdk.com/processTextField?language=English&letterSet=dummy" +
-                "&regExp=dummy&textType=normal&oneTextLine=true&oneWordPerTextLine=true" +
-                "&markingType=simpleText&placeholdersCount=1";
-
-        ProcessTextFieldInput requestMock = mockAbbyyRequest();
-
-        when(requestMock.getLocationId()).thenReturn(LocationId.EU);
-        when(requestMock.getLanguages()).thenReturn(Collections.singletonList("English"));
-        when(requestMock.getLetterSet()).thenReturn("dummy");
-        when(requestMock.getRegExp()).thenReturn("dummy");
-        when(requestMock.getTextType()).thenReturn(TextType.NORMAL);
-        when(requestMock.isOneTextLine()).thenReturn(true);
-        when(requestMock.isOneWordPerTextLine()).thenReturn(true);
-        when(requestMock.getMarkingType()).thenReturn(MarkingType.SIMPLE_TEXT);
-        when(requestMock.getPlaceholdersCount()).thenReturn(1);
-        when(requestMock.getDescription()).thenReturn(null);
-        when(requestMock.getPdfPassword()).thenReturn(null);
-
-        when(requestMock.getWritingStyle()).thenReturn(null);
-
-        //Act
-        String url = this.sut.buildUrl(requestMock);
-
-        //Assert
-        assertEquals(expectedUrl, url);
-    }
 
 
     @Test
@@ -191,7 +130,7 @@ public class ProcessTextFieldServiceTest extends AbstractPostRequestServiceTest<
         AbbyyResponse responseMock = mockAbbyyResponse();
         when(responseMock.getResultUrls()).thenReturn(Collections.singletonList("txt"));
 
-        when(this.abbyyApiMock.getResult(any(AbbyyRequest.class), anyString(), any(ExportFormat.class), anyString(), anyBoolean()))
+        when(this.abbyyApiMock.getResult(any(AbbyyInput.class), anyString(), any(ExportFormat.class), anyString(), anyBoolean()))
                 .thenReturn(StringUtils.EMPTY);
 
         Map<String, String> resultsDummy = new HashMap<>();
@@ -202,7 +141,7 @@ public class ProcessTextFieldServiceTest extends AbstractPostRequestServiceTest<
 
 
     @Override
-    AbstractPostRequestService<ProcessTextFieldInput> newSutInstance() {
+    AbbyyService<ProcessTextFieldInput> newSutInstance() {
         return new ProcessTextFieldService(this.requestValidatorMock, this.xmlResultValidatorMock, this.abbyyApiMock);
     }
 

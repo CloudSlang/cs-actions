@@ -15,20 +15,20 @@
 
 package io.cloudslang.content.abbyy.services;
 
-import io.cloudslang.content.abbyy.constants.*;
-import io.cloudslang.content.abbyy.entities.ExportFormat;
-import io.cloudslang.content.abbyy.entities.ProcessTextFieldInput;
+import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
+import io.cloudslang.content.abbyy.constants.MiscConstants;
+import io.cloudslang.content.abbyy.constants.OutputNames;
+import io.cloudslang.content.abbyy.constants.XmlSchemas;
+import io.cloudslang.content.abbyy.entities.inputs.ProcessTextFieldInput;
+import io.cloudslang.content.abbyy.entities.others.ExportFormat;
+import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
-import io.cloudslang.content.abbyy.http.AbbyyApiImpl;
-import io.cloudslang.content.abbyy.http.AbbyyResponse;
-import io.cloudslang.content.abbyy.validators.AbbyyRequestValidator;
+import io.cloudslang.content.abbyy.validators.AbbyyInputValidator;
 import io.cloudslang.content.abbyy.validators.AbbyyResultValidator;
-import io.cloudslang.content.abbyy.validators.ProcessTextFieldValidator;
+import io.cloudslang.content.abbyy.validators.ProcessTextFieldInputValidator;
 import io.cloudslang.content.abbyy.validators.XmlResultValidator;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,75 +38,22 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Map;
 
-public class ProcessTextFieldService extends AbstractPostRequestService<ProcessTextFieldInput> {
+public class ProcessTextFieldService extends AbbyyService<ProcessTextFieldInput> {
 
     private final AbbyyResultValidator xmlResultValidator;
 
 
     public ProcessTextFieldService() throws ParserConfigurationException {
-        this(new ProcessTextFieldValidator(), null, new AbbyyApiImpl());
+        this(new ProcessTextFieldInputValidator(), null, new AbbyyApi());
     }
 
 
-    ProcessTextFieldService(@NotNull AbbyyRequestValidator<ProcessTextFieldInput> requestValidator,
+    ProcessTextFieldService(@NotNull AbbyyInputValidator<ProcessTextFieldInput> requestValidator,
                             @Nullable AbbyyResultValidator xmlResultValidator,
                             @NotNull AbbyyApi abbyyApi) {
         super(requestValidator, abbyyApi);
         this.xmlResultValidator = xmlResultValidator != null ? xmlResultValidator :
                 new XmlResultValidator(this.abbyyApi, XmlSchemas.PROCESS_TEXT_FIELD);
-    }
-
-
-    @Override
-    protected String buildUrl(@NotNull ProcessTextFieldInput input) throws Exception {
-        URIBuilder urlBuilder = new URIBuilder()
-                .setScheme(input.getLocationId().getProtocol())
-                .setHost(String.format(Urls.HOST_TEMPLATE, input.getLocationId().toString(),
-                        Endpoints.PROCESS_TEXT_FIELD));
-
-        if (input.getRegion() != null) {
-            urlBuilder.addParameter(QueryParams.REGION, input.getRegion().toString());
-        }
-
-        if (input.getLanguages() != null && !input.getLanguages().isEmpty()) {
-            urlBuilder.addParameter(QueryParams.LANGUAGE, StringUtils.join(input.getLanguages(), ','));
-        }
-
-        if (StringUtils.isNotEmpty(input.getLetterSet())) {
-            urlBuilder.addParameter(QueryParams.LETTER_SET, input.getLetterSet());
-        }
-
-        if (StringUtils.isNotEmpty(input.getRegExp())) {
-            urlBuilder.addParameter(QueryParams.REG_EXP, input.getRegExp());
-        }
-
-        if (input.getTextType() != null) {
-            urlBuilder.addParameter(QueryParams.TEXT_TYPE, input.getTextType().toString());
-        }
-
-        urlBuilder.addParameter(QueryParams.ONE_TEXT_LINE, String.valueOf(input.isOneTextLine()));
-
-        urlBuilder.addParameter(QueryParams.ONE_WORD_PER_TEXT_LINE, String.valueOf(input.isOneWordPerTextLine()));
-
-        if (input.getMarkingType() != null) {
-            urlBuilder.addParameter(QueryParams.MARKING_TYPE, input.getMarkingType().toString());
-        }
-
-        urlBuilder.addParameter(QueryParams.PLACEHOLDERS_COUNT, String.valueOf(input.getPlaceholdersCount()));
-
-        if (input.getWritingStyle() != null) {
-            urlBuilder.addParameter(QueryParams.WRITING_STYLE, input.getWritingStyle().toString());
-        }
-
-        if (StringUtils.isNotEmpty(input.getDescription())) {
-            urlBuilder.addParameter(QueryParams.DESCRIPTION, input.getDescription());
-        }
-
-        if (StringUtils.isNotEmpty(input.getPdfPassword())) {
-            urlBuilder.addParameter(QueryParams.PDF_PASSWORD, input.getPdfPassword());
-        }
-
-        return urlBuilder.build().toString();
     }
 
 
@@ -117,7 +64,7 @@ public class ProcessTextFieldService extends AbstractPostRequestService<ProcessT
 
         String xml = getResult(request, response);
 
-        if (xml.startsWith(Misc.BOM_CHAR)) {
+        if (xml.startsWith(MiscConstants.BOM_CHAR)) {
             xml = xml.substring(1);
         }
 
@@ -141,7 +88,16 @@ public class ProcessTextFieldService extends AbstractPostRequestService<ProcessT
             throw validationEx;
         }
 
-        return this.abbyyApi.getResult(abbyyInitialRequest, resultUrl, ExportFormat.XML, null, true);
+        String result = this.abbyyApi.getResult(abbyyInitialRequest, resultUrl, ExportFormat.XML, null, true);
+
+        result = result.replace("xmlns:xsi=\"@link\"", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
+
+        validationEx = this.xmlResultValidator.validateAfterDownload(result);
+        if (validationEx != null) {
+            throw validationEx;
+        }
+
+        return result;
     }
 
 

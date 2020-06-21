@@ -15,8 +15,8 @@
 
 package io.cloudslang.content.abbyy.utils;
 
-import io.cloudslang.content.abbyy.entities.LocationId;
-import io.cloudslang.content.abbyy.entities.Region;
+import io.cloudslang.content.abbyy.entities.others.LocationId;
+import io.cloudslang.content.abbyy.entities.others.Region;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Rule;
 import org.junit.Test;

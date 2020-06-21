@@ -15,11 +15,12 @@
 package io.cloudslang.content.abbyy.services;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
-import io.cloudslang.content.abbyy.entities.*;
+import io.cloudslang.content.abbyy.entities.inputs.ProcessImageInput;
+import io.cloudslang.content.abbyy.entities.others.*;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.TimeoutException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.abbyy.http.AbbyyResponse;
+import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.validators.AbbyyResultValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -34,13 +35,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @PrepareForTest({ProcessImageService.class})
-public class ProcessImageServiceTest extends AbstractPostRequestServiceTest<ProcessImageInput> {
+public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput> {
 
 
     @Mock
@@ -49,72 +51,6 @@ public class ProcessImageServiceTest extends AbstractPostRequestServiceTest<Proc
     private AbbyyResultValidator txtResultValidatorMock;
     @Mock
     private AbbyyResultValidator pdfResultValidatorMock;
-
-
-    @Test
-    public void buildUrl_allFieldsSet_correspondingUrlReturned() throws Exception {
-        //Arrange
-        final String expectedUrl = "https://cloud-eu.ocrsdk.com/processImage?language=English&profile=textExtraction&textType=" +
-                "normal&imageSource=auto&correctOrientation=true&correctSkew=true&readBarcodes=false&" +
-                "exportFormat=pdfSearchable%2Cxml%2Ctxt&description=dummy&pdfPassword=dummy&xml%3AwriteFormatting=true&" +
-                "xml%3AwriteRecognitionVariants=true&pdf%3AwriteTags=auto";
-
-        ProcessImageInput requestMock = mockAbbyyRequest();
-
-        when(requestMock.getLocationId()).thenReturn(LocationId.EU);
-        when(requestMock.getLanguages()).thenReturn(Collections.singletonList("English"));
-        when(requestMock.getTextTypes()).thenReturn(Collections.singletonList(TextType.NORMAL));
-        when(requestMock.getImageSource()).thenReturn(ImageSource.AUTO);
-        when(requestMock.isCorrectOrientation()).thenReturn(true);
-        when(requestMock.isCorrectSkew()).thenReturn(true);
-        when(requestMock.getExportFormats())
-                .thenReturn(Arrays.asList(ExportFormat.PDF_SEARCHABLE, ExportFormat.XML, ExportFormat.TXT));
-        when(requestMock.getDescription()).thenReturn("dummy");
-        when(requestMock.getPdfPassword()).thenReturn("dummy");
-
-        when(requestMock.getProfile()).thenReturn(Profile.TEXT_EXTRACTION);
-        when(requestMock.getWriteTags()).thenReturn(WriteTags.AUTO);
-        when(requestMock.isWriteFormatting()).thenReturn(true);
-        when(requestMock.isWriteRecognitionVariants()).thenReturn(true);
-
-        //Act
-        String url = this.sut.buildUrl(requestMock);
-
-        //Assert
-        assertEquals(expectedUrl, url);
-    }
-
-
-    @Test
-    public void buildUrl_someFieldsSet_correspondingUrlReturned() throws Exception {
-        //Arrange
-        final String expectedUrl = "https://cloud-eu.ocrsdk.com/processImage?textType=" +
-                "normal&imageSource=auto&correctOrientation=false&correctSkew=true&readBarcodes=false&" +
-                "exportFormat=txt&description=dummy";
-
-        ProcessImageInput requestMock = mockAbbyyRequest();
-
-        when(requestMock.getLocationId()).thenReturn(LocationId.EU);
-        when(requestMock.getLanguages()).thenReturn(null);
-        when(requestMock.getTextTypes()).thenReturn(Collections.singletonList(TextType.NORMAL));
-        when(requestMock.getImageSource()).thenReturn(ImageSource.AUTO);
-        when(requestMock.isCorrectOrientation()).thenReturn(false);
-        when(requestMock.isCorrectSkew()).thenReturn(true);
-        when(requestMock.getExportFormats()).thenReturn(Collections.singletonList(ExportFormat.TXT));
-        when(requestMock.getDescription()).thenReturn("dummy");
-        when(requestMock.getPdfPassword()).thenReturn(StringUtils.EMPTY);
-
-        when(requestMock.getProfile()).thenReturn(null);
-        when(requestMock.getWriteTags()).thenReturn(WriteTags.AUTO);
-        when(requestMock.isWriteFormatting()).thenReturn(true);
-        when(requestMock.isWriteRecognitionVariants()).thenReturn(true);
-
-        //Act
-        String url = this.sut.buildUrl(requestMock);
-
-        //Assert
-        assertEquals(expectedUrl, url);
-    }
 
 
     @Test
@@ -287,7 +223,7 @@ public class ProcessImageServiceTest extends AbstractPostRequestServiceTest<Proc
 
 
     @Override
-    AbstractPostRequestService<ProcessImageInput> newSutInstance() {
+    AbbyyService<ProcessImageInput> newSutInstance() {
         return new ProcessImageService(requestValidatorMock, xmlResultValidatorMock, txtResultValidatorMock,
                 pdfResultValidatorMock, abbyyApiMock);
     }

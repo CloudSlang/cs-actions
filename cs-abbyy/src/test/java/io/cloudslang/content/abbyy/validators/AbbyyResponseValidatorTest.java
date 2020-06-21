@@ -15,7 +15,7 @@
 package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.abbyy.http.AbbyyResponse;
+import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
