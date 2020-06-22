@@ -55,6 +55,7 @@ public class ProcessImageAction {
      *                               'sourceFile' and corresponding extension (e.g. for exportFormat='xml,txt' and sourceFile='source.jpg'
      *                               the files 'source.xml' and 'source.txt' will be created). If one of files already exists then an
      *                               exception will be thrown.
+     *                               Note: This capability is provided “as is”, please see product documentation for further information.
      * @param textType               Specifies the type of the text on a page.
      *                               This parameter may also contain several text types separated with commas, for example "normal,matrix".
      *                               Valid values: 'normal', 'typewriter', 'matrix', 'index', 'ocrA', 'ocrB', 'e13b', 'cmc7', 'gothic'.
