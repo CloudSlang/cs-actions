@@ -32,7 +32,7 @@ import javax.xml.validation.Validator;
 import java.io.InputStream;
 import java.io.StringReader;
 
-public class XmlResultValidator extends AbbyyResultValidator {
+public class XmlResultValidator implements AbbyyResultValidator {
 
     private static final String DISALLOW_DOCTYPE = "http://apache.org/xml/features/disallow-doctype-decl";
     private static final String FORBID_EXTERNAL_ENTITY = "http://xml.org/sax/features/external-general-entities";
@@ -49,16 +49,48 @@ public class XmlResultValidator extends AbbyyResultValidator {
 
 
     @Override
-    void validateBefore(@NotNull AbbyyInput abbyyInitialRequest, @NotNull String url) throws Exception {
-        if (this.abbyyApi.getResultSize(abbyyInitialRequest, url, ExportFormat.XML) > Limits.MAX_SIZE_OF_RESULT) {
-            throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_RESULT_EXCEEDED, ExportFormat.XML));
+    public ValidationException validateBeforeDownload(@NotNull AbbyyInput abbyyInput, @NotNull String downloadUrl) throws Exception {
+        try {
+            validateSize(abbyyInput, downloadUrl);
+            return null;
+        } catch (ValidationException ex) {
+            return ex;
         }
     }
 
 
     @Override
-    void validateAfter(@NotNull String xml) throws Exception {
-        Validator xmlValidator = newXmlValidator();
+    public ValidationException validateAfterDownload(@NotNull String result) throws Exception {
+        try {
+            validateSize(result);
+            validateAgainstXsdSchema(result);
+            return null;
+        } catch (ValidationException ex) {
+            return ex;
+        }
+    }
+
+
+    private void validateSize(@NotNull AbbyyInput abbyyInitialRequest, @NotNull String url) throws Exception {
+        long xmlSize = this.abbyyApi.getResultSize(abbyyInitialRequest, url, ExportFormat.XML);
+        if (!abbyyInitialRequest.getDisableSizeLimit() && xmlSize > Limits.MAX_SIZE_OF_XML_FILE) {
+            throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_XML_RESULT_EXCEEDED, ExportFormat.XML));
+        }
+    }
+
+
+    private void validateSize(String result) throws Exception {
+        if (result.getBytes().length > Limits.MAX_SIZE_OF_XML_FILE) {
+            throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_XML_RESULT_EXCEEDED, ExportFormat.XML));
+        }
+    }
+
+
+    void validateAgainstXsdSchema(@NotNull String xml) throws Exception {
+        SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        InputStream xsdStream = getClass().getResourceAsStream(xsdSchemaPath);
+        Schema schema = factory.newSchema(new StreamSource(xsdStream));
+        Validator xmlValidator = schema.newValidator();
 
         xml = xml.trim().replaceFirst("^([\\W]+)<", "<");
 
@@ -68,13 +100,5 @@ public class XmlResultValidator extends AbbyyResultValidator {
         } catch (SAXException ex) {
             throw new ValidationException(ExceptionMsgs.RESPONSE_VALIDATION_ERROR + ex.getMessage());
         }
-    }
-
-
-    private Validator newXmlValidator() throws SAXException {
-        SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        InputStream xsdStream = getClass().getResourceAsStream(xsdSchemaPath);
-        Schema schema = factory.newSchema(new StreamSource(xsdStream));
-        return schema.newValidator();
     }
 }

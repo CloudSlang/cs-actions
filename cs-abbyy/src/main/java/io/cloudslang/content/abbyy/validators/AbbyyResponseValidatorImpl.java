@@ -20,15 +20,19 @@ import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-public class AbbyyResponseValidatorImpl extends AbbyyResponseValidator {
+public class AbbyyResponseValidatorImpl implements AbbyyResponseValidator {
 
-    @Override
-    protected void validateFurther(@NotNull AbbyyResponse response) throws ValidationException {
-        validateTaskId(response);
-        validateCredits(response);
-        validateTaskStatus(response);
-        validateResultUrls(response);
-        validateEstimatedProcessingTime(response);
+    public ValidationException validate(@NotNull AbbyyResponse response) {
+        try {
+            validateTaskId(response);
+            validateCredits(response);
+            validateTaskStatus(response);
+            validateResultUrls(response);
+            validateEstimatedProcessingTime(response);
+            return null;
+        } catch (ValidationException ex) {
+            return ex;
+        }
     }
 
 

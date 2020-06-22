@@ -136,7 +136,9 @@ public class ProcessTextFieldAction {
      *                               If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used.
      *                               If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty,
      *                               the default value will be used. You should not use this for method=HEAD or OPTIONS.
-     *                               Default value: 'ISO-8859-1'.
+     *                               Default value: 'UTF-8'.
+     * @param disableSizeLimit       Disables size limit for downloaded content.
+     *                               Default value: 'false'.
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - Contains a human readable message mentioning the success or failure of the task.
      * <br><b>xmlResult</b> - The result for 'xml' export format in clear text (empty if 'xml' was not provided in 'exportFormat' input).
@@ -194,7 +196,8 @@ public class ProcessTextFieldAction {
             @Param(value = InputNames.KEEP_ALIVE) String keepAlive,
             @Param(value = InputNames.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoute,
             @Param(value = InputNames.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
-            @Param(value = InputNames.RESPONSE_CHARACTER_SET) String responseCharacterSet) {
+            @Param(value = InputNames.RESPONSE_CHARACTER_SET) String responseCharacterSet,
+            @Param(value = InputNames.DISABLE_SIZE_LIMIT) String disableSizeLimit) {
         try {
             ProcessTextFieldInput input = (ProcessTextFieldInput) new ProcessTextFieldInput.Builder()
                     .region(region)
@@ -228,6 +231,7 @@ public class ProcessTextFieldAction {
                     .responseCharacterSet(responseCharacterSet)
                     .destinationFile(destinationFile)
                     .sourceFile(sourceFile)
+                    .disableSizeLimit(disableSizeLimit)
                     .build();
             return new ProcessTextFieldService().execute(input);
         } catch (Exception ex) {

@@ -14,14 +14,14 @@
  */
 package io.cloudslang.content.abbyy.constants;
 
-public final class XmlSchemas {
+public final class XsdSchemas {
+
+    private static final String XSD_SCHEMAS_DIR = "/xsd-schemas";
+    public static final String PROCESS_IMAGE = XSD_SCHEMAS_DIR + "/processImage.xsd";
+    public static final String PROCESS_TEXT_FIELD = XSD_SCHEMAS_DIR + "/processTextField.xsd";
 
 
-    public static final String PROCESS_IMAGE = "/processImage.xsd";
-    public static final String PROCESS_TEXT_FIELD = "/processTextField.xsd";
-
-
-    private XmlSchemas() {
+    private XsdSchemas() {
 
     }
 }

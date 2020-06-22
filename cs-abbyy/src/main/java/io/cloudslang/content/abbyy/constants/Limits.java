@@ -16,7 +16,9 @@ package io.cloudslang.content.abbyy.constants;
 
 public final class Limits {
 
-    public static final long MAX_SIZE_OF_RESULT = 2097152;
+    public static final long MAX_SIZE_OF_TXT_FILE = 50 * (int) Math.pow(2, 20);
+    public static final long MAX_SIZE_OF_XML_FILE = 100 * (int) Math.pow(2, 20);
+    public static final long MAX_SIZE_OF_PDF_FILE = 500 * (int) Math.pow(2, 20);
     public static final int MAX_SIZE_OF_DESCR = 255;
     public static final int MAX_NR_OF_EXPORT_FORMATS = 3;
 

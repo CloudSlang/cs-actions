@@ -14,8 +14,8 @@
  */
 package io.cloudslang.content.abbyy.validators;
 
-import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
+import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,9 +24,7 @@ import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 public abstract class AbbyyResultValidatorTest {
@@ -39,39 +37,6 @@ public abstract class AbbyyResultValidatorTest {
     @Before
     public void setUp() {
         this.sut = newSutInstance();
-    }
-
-
-    @Test
-    public void validateBeforeDownload_noValidationError_nullReturned() throws Exception {
-        //Arrange
-        final AbbyyInput abbyyInitialRequest = mock(AbbyyInput.class);
-        final String url = "url";
-
-        final AbbyyResultValidator sut = mock(AbbyyResultValidator.class);
-        when(sut.validateBeforeDownload(eq(abbyyInitialRequest), eq(url))).thenCallRealMethod();
-
-        //Act
-        ValidationException ex = sut.validateBeforeDownload(abbyyInitialRequest, url);
-
-        //Assert
-        assertNull(ex);
-    }
-
-
-    @Test
-    public void validateAfterDownload_noValidationError_nullReturned() throws Exception {
-        //Arrange
-        final String result = "result";
-
-        final AbbyyResultValidator sut = mock(AbbyyResultValidator.class);
-        when(sut.validateAfterDownload(eq(result))).thenCallRealMethod();
-
-        //Act
-        ValidationException ex = sut.validateAfterDownload(result);
-
-        //Assert
-        assertNull(ex);
     }
 
 

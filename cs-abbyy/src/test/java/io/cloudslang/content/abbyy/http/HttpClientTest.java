@@ -215,7 +215,7 @@ public class HttpClientTest {
         when(httpRequestMock.getProxyPort()).thenReturn(proxyPort);
         when(httpRequestMock.getProxyUsername()).thenReturn(proxyUsername);
         when(httpRequestMock.getProxyPassword()).thenReturn(proxyPassword);
-        when(httpRequestMock.isTrustAllRoots()).thenReturn(trustAllRoots);
+        when(httpRequestMock.getTrustAllRoots()).thenReturn(trustAllRoots);
         when(httpRequestMock.getX509HostnameVerifier()).thenReturn(x509HostnameVerifier);
         when(httpRequestMock.getTrustKeystore()).thenReturn(trustKeystore);
         when(httpRequestMock.getTrustPassword()).thenReturn(trustPassword);
@@ -224,7 +224,7 @@ public class HttpClientTest {
         when(httpRequestMock.getConnectTimeout()).thenReturn(connectTimeout);
         when(httpRequestMock.getSocketTimeout()).thenReturn(socketTimeout);
         when(httpRequestMock.isUseCookies()).thenReturn(useCookies);
-        when(httpRequestMock.isKeepAlive()).thenReturn(keepAlive);
+        when(httpRequestMock.getKeepAlive()).thenReturn(keepAlive);
         when(httpRequestMock.getConnectionsMaxPerRoute()).thenReturn(connectionsMaxPerRoute);
         when(httpRequestMock.getConnectionsMaxTotal()).thenReturn(connectionsMaxTotal);
         when(httpRequestMock.getHeaders()).thenReturn(headers);

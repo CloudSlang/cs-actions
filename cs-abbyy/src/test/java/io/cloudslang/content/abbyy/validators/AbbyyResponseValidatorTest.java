@@ -14,8 +14,8 @@
  */
 package io.cloudslang.content.abbyy.validators;
 
-import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
+import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,8 +23,9 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,19 +40,6 @@ public abstract class AbbyyResponseValidatorTest {
     @Before
     public void setUp() {
         this.sut = newSutInstance();
-    }
-
-
-    @Test
-    public void validate_noValidationError_NullReturned() {
-        //Arrange
-        final AbbyyResponse response = mock(AbbyyResponse.class);
-        final AbbyyResponseValidator sut = mock(AbbyyResponseValidator.class);
-        when(sut.validate(eq(response))).thenCallRealMethod();
-        //Act
-        ValidationException ex = sut.validate(response);
-        //Assert
-        assertNull(ex);
     }
 
 

@@ -48,6 +48,7 @@ public abstract class AbbyyInput implements HttpRequest {
     private final String responseCharacterSet;
     private final File destinationFile;
     private final File sourceFile;
+    private final Boolean disableSizeLimit;
 
 
     AbbyyInput(Builder builder) {
@@ -70,6 +71,7 @@ public abstract class AbbyyInput implements HttpRequest {
         this.responseCharacterSet = builder.responseCharacterSet;
         this.destinationFile = builder.destinationFile;
         this.sourceFile = builder.sourceFile;
+        this.disableSizeLimit = builder.disableSizeLimit;
     }
 
 
@@ -114,7 +116,7 @@ public abstract class AbbyyInput implements HttpRequest {
 
 
     @Override
-    public Boolean isTrustAllRoots() {
+    public Boolean getTrustAllRoots() {
         return this.trustAllRoots;
     }
 
@@ -150,7 +152,7 @@ public abstract class AbbyyInput implements HttpRequest {
 
 
     @Override
-    public Boolean isKeepAlive() {
+    public Boolean getKeepAlive() {
         return this.keepAlive;
     }
 
@@ -182,6 +184,11 @@ public abstract class AbbyyInput implements HttpRequest {
     @Override
     public File getSourceFile() {
         return this.sourceFile;
+    }
+
+
+    public Boolean getDisableSizeLimit() {
+        return disableSizeLimit;
     }
 
 
@@ -388,6 +395,7 @@ public abstract class AbbyyInput implements HttpRequest {
         private String responseCharacterSet;
         private File destinationFile;
         private File sourceFile;
+        private Boolean disableSizeLimit;
 
 
         public Builder locationId(String locationId) {
@@ -516,6 +524,14 @@ public abstract class AbbyyInput implements HttpRequest {
 
         public Builder sourceFile(String sourceFile) {
             this.sourceFile = new File(sourceFile);
+            return this;
+        }
+
+
+        public Builder disableSizeLimit(String disableSizeLimit) {
+            this.disableSizeLimit = InputParser.parseBoolean(
+                    StringUtils.defaultString(disableSizeLimit, DefaultInputValues.DISABLE_SIZE_LIMIT),
+                    InputNames.DISABLE_SIZE_LIMIT);
             return this;
         }
 

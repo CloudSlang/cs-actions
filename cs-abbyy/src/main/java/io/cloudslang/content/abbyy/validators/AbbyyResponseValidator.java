@@ -18,16 +18,6 @@ import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbbyyResponseValidator {
-    public ValidationException validate(@NotNull AbbyyResponse response) {
-        try {
-            validateFurther(response);
-            return null;
-        } catch (ValidationException ex) {
-            return ex;
-        }
-    }
-
-
-    abstract void validateFurther(@NotNull AbbyyResponse response) throws ValidationException;
+public interface AbbyyResponseValidator {
+    ValidationException validate(@NotNull AbbyyResponse response);
 }

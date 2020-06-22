@@ -148,7 +148,7 @@ public class HttpClientRequest implements HttpRequest {
     }
 
 
-    public @Nullable Boolean isTrustAllRoots() {
+    public @Nullable Boolean getTrustAllRoots() {
         return Boolean.parseBoolean(trustAllRoots);
     }
 
@@ -193,7 +193,7 @@ public class HttpClientRequest implements HttpRequest {
     }
 
 
-    public @Nullable Boolean isKeepAlive() {
+    public @Nullable Boolean getKeepAlive() {
         return Boolean.parseBoolean(keepAlive);
     }
 

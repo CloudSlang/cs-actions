@@ -129,6 +129,8 @@ public class ProcessImageAction {
      *                               If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty,
      *                               the default value will be used. You should not use this for method=HEAD or OPTIONS.
      *                               Default value: 'UTF-8'.
+     * @param disableSizeLimit       Disables size limit for downloaded content.
+     *                               Default value: 'false'.
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - Contains a human readable message mentioning the success or failure of the task.
      * <br><b>txtResult</b> - The result for 'txt' export format in clear text (empty if 'txt' was not provided in 'exportFormat' input).
@@ -187,7 +189,8 @@ public class ProcessImageAction {
             @Param(value = InputNames.KEEP_ALIVE) String keepAlive,
             @Param(value = InputNames.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoute,
             @Param(value = InputNames.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
-            @Param(value = InputNames.RESPONSE_CHARACTER_SET) String responseCharacterSet) {
+            @Param(value = InputNames.RESPONSE_CHARACTER_SET) String responseCharacterSet,
+            @Param(value = InputNames.DISABLE_SIZE_LIMIT) String disableSizeLimit) {
         try {
             ProcessImageInput input = (ProcessImageInput) new ProcessImageInput.Builder()
                     .language(language)
@@ -222,6 +225,7 @@ public class ProcessImageAction {
                     .connectionsMaxPerRoute(connectionsMaxPerRoute)
                     .connectionsMaxTotal(connectionsMaxTotal)
                     .responseCharacterSet(responseCharacterSet)
+                    .disableSizeLimit(disableSizeLimit)
                     .build();
             return new ProcessImageService().execute(input);
         } catch (Exception ex) {

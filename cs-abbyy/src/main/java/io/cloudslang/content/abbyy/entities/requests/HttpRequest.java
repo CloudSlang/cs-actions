@@ -63,7 +63,7 @@ public interface HttpRequest {
     String getProxyPassword();
 
 
-    Boolean isTrustAllRoots();
+    Boolean getTrustAllRoots();
 
 
     String getX509HostnameVerifier();
@@ -90,7 +90,7 @@ public interface HttpRequest {
     Boolean isUseCookies();
 
 
-    Boolean isKeepAlive();
+    Boolean getKeepAlive();
 
 
     Integer getConnectionsMaxPerRoute();

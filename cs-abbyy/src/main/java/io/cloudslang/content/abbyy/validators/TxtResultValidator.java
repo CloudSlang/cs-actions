@@ -22,7 +22,7 @@ import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
 import org.jetbrains.annotations.NotNull;
 
-public class TxtResultValidator extends AbbyyResultValidator {
+public class TxtResultValidator implements AbbyyResultValidator {
 
     private final AbbyyApi abbyyApi;
 
@@ -32,15 +32,37 @@ public class TxtResultValidator extends AbbyyResultValidator {
     }
 
 
-    @Override
-    void validateBefore(@NotNull AbbyyInput abbyyInitialRequest, @NotNull String url) throws Exception {
-        if (this.abbyyApi.getResultSize(abbyyInitialRequest, url, ExportFormat.TXT) > Limits.MAX_SIZE_OF_RESULT) {
-            throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_RESULT_EXCEEDED, ExportFormat.TXT));
+    public ValidationException validateBeforeDownload(@NotNull AbbyyInput abbyyInput, @NotNull String downloadUrl) throws Exception {
+        try {
+            validateSize(abbyyInput, downloadUrl);
+            return null;
+        } catch (ValidationException ex) {
+            return ex;
         }
     }
 
 
-    @Override
-    void validateAfter(@NotNull String result) throws Exception {
+    public ValidationException validateAfterDownload(@NotNull String result) throws Exception {
+        try {
+            validateSize(result);
+            return null;
+        } catch (ValidationException ex) {
+            return ex;
+        }
+    }
+
+
+    private void validateSize(AbbyyInput abbyyInput, String downloadUrl) throws Exception {
+        long txtSize = this.abbyyApi.getResultSize(abbyyInput, downloadUrl, ExportFormat.TXT);
+        if (!abbyyInput.getDisableSizeLimit() && txtSize > Limits.MAX_SIZE_OF_TXT_FILE) {
+            throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_TXT_RESULT_EXCEEDED, ExportFormat.TXT));
+        }
+    }
+
+
+    private void validateSize(String result) throws Exception {
+        if (result.getBytes().length > Limits.MAX_SIZE_OF_TXT_FILE) {
+            throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_TXT_RESULT_EXCEEDED, ExportFormat.TXT));
+        }
     }
 }

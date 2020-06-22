@@ -15,23 +15,32 @@
 package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.constants.Limits;
+import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.entities.others.ExportFormat;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
+@PrepareForTest({String.class, TxtResultValidator.class})
 public class TxtResultValidatorTest extends AbbyyResultValidatorTest {
 
     @Mock
@@ -41,13 +50,13 @@ public class TxtResultValidatorTest extends AbbyyResultValidatorTest {
     @Test
     public void validateBeforeDownload_resultSizeIsTooBig_ValidationException() throws Exception {
         //Arrange
-        final AbbyyInput abbyyInitialRequest = mock(AbbyyInput.class);
+        final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         final String url = "url";
 
-        when(this.abbyyApiMock.getResultSize(eq(abbyyInitialRequest), eq(url), any(ExportFormat.class))).thenReturn(Limits.MAX_SIZE_OF_RESULT + 1);
+        when(this.abbyyApiMock.getResultSize(eq(abbyyInput), eq(url), any(ExportFormat.class))).thenReturn(Limits.MAX_SIZE_OF_TXT_FILE + 1);
 
         //Act
-        ValidationException ex = this.sut.validateBeforeDownload(abbyyInitialRequest, url);
+        ValidationException ex = this.sut.validateBeforeDownload(abbyyInput, url);
 
         //Assert
         assertNotNull(ex);
@@ -57,14 +66,42 @@ public class TxtResultValidatorTest extends AbbyyResultValidatorTest {
     @Test
     public void validateBeforeDownload_resultValid_nullReturned() throws Exception {
         //Arrange
-        final AbbyyInput abbyyInitialRequest = mock(AbbyyInput.class);
+        final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         final String url = "url";
 
-        when(this.abbyyApiMock.getResultSize(eq(abbyyInitialRequest), eq(url), any(ExportFormat.class)))
-                .thenReturn(Limits.MAX_SIZE_OF_RESULT - 1);
+        when(this.abbyyApiMock.getResultSize(eq(abbyyInput), eq(url), any(ExportFormat.class)))
+                .thenReturn(Limits.MAX_SIZE_OF_TXT_FILE - 1);
 
         //Act
-        ValidationException ex = this.sut.validateBeforeDownload(abbyyInitialRequest, url);
+        ValidationException ex = this.sut.validateBeforeDownload(abbyyInput, url);
+
+        //Assert
+        assertNull(ex);
+    }
+
+
+    @Test
+    public void validateAfterDownload_resultSizeIsTooBig_ValidationException() throws Exception {
+        //Arrange
+        String resultMock = PowerMockito.mock(String.class);
+        when(resultMock.getBytes()).thenReturn(new byte[(int)Limits.MAX_SIZE_OF_TXT_FILE + 1]);
+
+        //Act
+        ValidationException ex = this.sut.validateAfterDownload(resultMock);
+
+        //Assert
+        assertNotNull(ex);
+    }
+
+
+    @Test
+    public void validateAfterDownload_resultIsValid_nullReturned() throws Exception {
+        //Arrange
+        String resultMock = PowerMockito.mock(String.class);
+        when(resultMock.getBytes()).thenReturn(new byte[(int)Limits.MAX_SIZE_OF_TXT_FILE - 1]);
+
+        //Act
+        ValidationException ex = sut.validateAfterDownload(resultMock);
 
         //Assert
         assertNull(ex);

@@ -15,10 +15,10 @@
 package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.constants.Limits;
-import io.cloudslang.content.abbyy.constants.XmlSchemas;
+import io.cloudslang.content.abbyy.constants.XsdSchemas;
+import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.entities.others.ExportFormat;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,18 +46,45 @@ public class XmlResultValidatorTest extends AbbyyResultValidatorTest {
     @Mock
     private AbbyyApi abbyyApiMock;
 
-
     @Test
     public void validateBeforeDownload_resultSizeIsTooBig_ValidationException() throws Exception {
         //Arrange
-        final AbbyyInput abbyyInitialRequest = mock(AbbyyInput.class);
+        final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         final String url = "url";
 
-        when(this.abbyyApiMock.getResultSize(eq(abbyyInitialRequest), eq(url), any(ExportFormat.class)))
-                .thenReturn(Limits.MAX_SIZE_OF_RESULT + 1);
+        when(this.abbyyApiMock.getResultSize(eq(abbyyInput), eq(url), any(ExportFormat.class)))
+                .thenReturn(Limits.MAX_SIZE_OF_XML_FILE + 1);
 
         //Act
-        ValidationException ex = this.sut.validateBeforeDownload(abbyyInitialRequest, url);
+        ValidationException ex = this.sut.validateBeforeDownload(abbyyInput, url);
+
+        //Assert
+        assertNotNull(ex);
+    }
+
+
+    @Test
+    public void validateBeforeDownload_noValidationError_nullReturned() throws Exception {
+        //Arrange
+        final AbbyyInput abbyyInput = mock(AbbyyInput.class);
+        final String url = "url";
+
+        //Act
+        ValidationException ex = sut.validateBeforeDownload(abbyyInput, url);
+
+        //Assert
+        assertNull(ex);
+    }
+
+
+    @Test
+    public void validateAfterDownload_resultSizeIsTooBig_ValidationException() throws Exception {
+        //Arrange
+        String resultMock = PowerMockito.mock(String.class);
+        when(resultMock.getBytes()).thenReturn(new byte[(int)Limits.MAX_SIZE_OF_XML_FILE + 1]);
+
+        //Act
+        ValidationException ex = this.sut.validateAfterDownload(resultMock);
 
         //Assert
         assertNotNull(ex);
@@ -120,6 +147,6 @@ public class XmlResultValidatorTest extends AbbyyResultValidatorTest {
 
     @Override
     AbbyyResultValidator newSutInstance() {
-        return new XmlResultValidator(abbyyApiMock, XmlSchemas.PROCESS_IMAGE);
+        return new XmlResultValidator(abbyyApiMock, XsdSchemas.PROCESS_IMAGE);
     }
 }

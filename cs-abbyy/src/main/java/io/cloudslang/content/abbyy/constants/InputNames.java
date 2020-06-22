@@ -58,6 +58,7 @@ public final class InputNames {
     public static final String CONNECTIONS_MAX_PER_ROUTE = HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE;
     public static final String CONNECTIONS_MAX_TOTAL = HttpClientInputs.CONNECTIONS_MAX_TOTAL;
     public static final String RESPONSE_CHARACTER_SET = HttpClientInputs.RESPONSE_CHARACTER_SET;
+    public static final String DISABLE_SIZE_LIMIT = "disableSizeLimit";
 
 
     private InputNames() {

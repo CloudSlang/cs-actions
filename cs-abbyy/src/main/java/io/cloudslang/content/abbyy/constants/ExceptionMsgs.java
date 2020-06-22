@@ -30,7 +30,9 @@ public final class ExceptionMsgs {
     public static final String TASK_DELETED = "Task was deleted prematurely.";
     public static final String PROCESSING_RESULT_COULD_NOT_BE_RETRIEVED = "Processing result could not be retrieved for export format '%s'.";
     public static final String CONTENT_LENGTH_COULD_NOT_BE_RETRIEVED = "The Content-Length header could not be retrieved for export format '%s'.";
-    public static final String MAX_SIZE_OF_RESULT_EXCEEDED = String.format("The maximum size of %dB was exceeded for export format '%s'.", Limits.MAX_SIZE_OF_RESULT, "%s");
+    public static final String MAX_SIZE_OF_TXT_RESULT_EXCEEDED = String.format("The maximum size of %dB was exceeded for export format '%s'.", Limits.MAX_SIZE_OF_TXT_FILE, "%s");
+    public static final String MAX_SIZE_OF_XML_RESULT_EXCEEDED = String.format("The maximum size of %dB was exceeded for export format '%s'.", Limits.MAX_SIZE_OF_XML_FILE, "%s");
+    public static final String MAX_SIZE_OF_PDF_RESULT_EXCEEDED = String.format("The maximum size of %dB was exceeded for export format '%s'.", Limits.MAX_SIZE_OF_PDF_FILE, "%s");
     public static final String MAX_SIZE_OF_DESCR_EXCEEDED = String.format("The maximum size of %d characters was exceeded for description.", Limits.MAX_SIZE_OF_DESCR);
     public static final String INVALID_ESTIMATED_PROCESSING_TIME = "Invalid number of milliseconds for estimated processing time was received.";
     public static final String OPERATION_TIMEOUT = "Processing of the document was not finished in the expected time.";

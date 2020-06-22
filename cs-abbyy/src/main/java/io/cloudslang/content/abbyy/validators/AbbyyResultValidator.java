@@ -19,28 +19,8 @@ import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbbyyResultValidator {
-    public ValidationException validateBeforeDownload(@NotNull AbbyyInput abbyyInitialRequest, @NotNull String url) throws Exception {
-        try {
-            validateBefore(abbyyInitialRequest, url);
-            return null;
-        } catch (ValidationException ex) {
-            return ex;
-        }
-    }
+public interface AbbyyResultValidator {
+    ValidationException validateBeforeDownload(@NotNull AbbyyInput abbyyInput, @NotNull String downloadUrl) throws Exception;
 
-
-    public ValidationException validateAfterDownload(@NotNull String result) throws Exception {
-        try {
-            validateAfter(result);
-            return null;
-        } catch (ValidationException ex) {
-            return ex;
-        }
-    }
-
-
-    abstract void validateBefore(@NotNull AbbyyInput abbyyInitialRequest, @NotNull String url) throws Exception;
-
-    abstract void validateAfter(@NotNull String result) throws Exception;
+    ValidationException validateAfterDownload(@NotNull String result) throws Exception;
 }

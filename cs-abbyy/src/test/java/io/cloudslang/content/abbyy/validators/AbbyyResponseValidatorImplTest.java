@@ -14,8 +14,8 @@
  */
 package io.cloudslang.content.abbyy.validators;
 
-import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
+import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -116,7 +116,7 @@ public class AbbyyResponseValidatorImplTest extends AbbyyResponseValidatorTest {
     }
 
 
-    private AbbyyResponse mockAbbyyResponse() {
+    AbbyyResponse mockAbbyyResponse() {
         final AbbyyResponse response = mock(AbbyyResponse.class);
 
         when(response.getTaskId()).thenReturn("taskId");

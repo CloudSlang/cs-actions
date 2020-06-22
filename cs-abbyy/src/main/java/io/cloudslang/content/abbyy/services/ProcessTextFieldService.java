@@ -18,7 +18,7 @@ package io.cloudslang.content.abbyy.services;
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
 import io.cloudslang.content.abbyy.constants.MiscConstants;
 import io.cloudslang.content.abbyy.constants.OutputNames;
-import io.cloudslang.content.abbyy.constants.XmlSchemas;
+import io.cloudslang.content.abbyy.constants.XsdSchemas;
 import io.cloudslang.content.abbyy.entities.inputs.ProcessTextFieldInput;
 import io.cloudslang.content.abbyy.entities.others.ExportFormat;
 import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
@@ -53,7 +53,7 @@ public class ProcessTextFieldService extends AbbyyService<ProcessTextFieldInput>
                             @NotNull AbbyyApi abbyyApi) {
         super(requestValidator, abbyyApi);
         this.xmlResultValidator = xmlResultValidator != null ? xmlResultValidator :
-                new XmlResultValidator(this.abbyyApi, XmlSchemas.PROCESS_TEXT_FIELD);
+                new XmlResultValidator(this.abbyyApi, XsdSchemas.PROCESS_TEXT_FIELD);
     }
 
 

@@ -40,6 +40,7 @@ public final class DefaultInputValues {
     public static final String CONNECTIONS_MAX_PER_ROUTE = String.valueOf(2);
     public static final String CONNECTIONS_MAX_TOTAL = String.valueOf(20);
     public static final String RESPONSE_CHARACTER_SET = "UTF-8";
+    public static final String DISABLE_SIZE_LIMIT = String.valueOf(false);
 
 
     private DefaultInputValues(){

@@ -18,7 +18,7 @@ package io.cloudslang.content.abbyy.services;
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
 import io.cloudslang.content.abbyy.constants.MiscConstants;
 import io.cloudslang.content.abbyy.constants.OutputNames;
-import io.cloudslang.content.abbyy.constants.XmlSchemas;
+import io.cloudslang.content.abbyy.constants.XsdSchemas;
 import io.cloudslang.content.abbyy.entities.inputs.ProcessImageInput;
 import io.cloudslang.content.abbyy.entities.others.ExportFormat;
 import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
@@ -36,6 +36,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +57,7 @@ public class ProcessImageService extends AbbyyService<ProcessImageInput> {
                         @Nullable AbbyyResultValidator pdfResultValidator,
                         @NotNull AbbyyApi abbyyApi) {
         super(requestValidator, abbyyApi);
-        this.xmlResultValidator = xmlResultValidator != null ? xmlResultValidator : new XmlResultValidator(abbyyApi, XmlSchemas.PROCESS_IMAGE);
+        this.xmlResultValidator = xmlResultValidator != null ? xmlResultValidator : new XmlResultValidator(abbyyApi, XsdSchemas.PROCESS_IMAGE);
         this.txtResultValidator = txtResultValidator != null ? txtResultValidator : new TxtResultValidator(abbyyApi);
         this.pdfResultValidator = pdfResultValidator != null ? pdfResultValidator : new PdfResultValidator(abbyyApi);
     }
@@ -153,6 +155,7 @@ public class ProcessImageService extends AbbyyService<ProcessImageInput> {
             String targetPath = downloadOnDisk(abbyyInitialRequest, resultUrl, exportFormat);
             validationEx = resultValidator.validateAfterDownload(targetPath);
             if (validationEx != null) {
+                Files.delete(Paths.get(targetPath));
                 throw validationEx;
             }
         }
