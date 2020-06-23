@@ -114,7 +114,9 @@ public class OCICommonInputs {
     }
 
     @NotNull
-    public String getPrivateKeyFile() { return privateKeyFile; }
+    public String getPrivateKeyFile() {
+        return privateKeyFile;
+    }
 
     @NotNull
     public String getAPIVersion() {
