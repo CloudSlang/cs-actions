@@ -30,7 +30,7 @@ public class CounterImpl {
         returnResult.put("result", "failed");
 
         try {
-            counter.init(to,from,by,reset, globalSessionObject);
+            counter.init(to, from, by, reset, globalSessionObject);
             if (counter.hasNext()) {
                 returnResult.put("index", Integer.toString(counter.getIndex()));
                 returnResult.put("resultString", counter.getNext(globalSessionObject));
@@ -51,11 +51,6 @@ public class CounterImpl {
         }
         return returnResult;
     }
-
-
-
-
-
 
 
 }

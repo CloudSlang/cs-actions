@@ -97,13 +97,13 @@ public class Descriptions {
         public static final String COMPARTMENT_OCID_DESC = "Compartments are a fundamental component of Oracle Cloud Infrastructure for organizing and isolating your cloud resources. This is ID of the compartment.";
         public static final String DISPLAY_NAME_DESC = "A filter to return only resources that match the given display name exactly.";
         public static final String SORT_BY_DESC = "The field to sort by. You can provide one sort order (sortOrder). Default order for TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME sort order is case sensitive." +
-                                                  "Allowed values are:\n" +
-                                                  "TIMECREATED\n" +
-                                                  "DISPLAYNAME";
-        public static final String SORT_ORDER_DESC = "The sort order to use, either ascending (ASC) or descending (DESC). The DISPLAYNAME sort order is case sensitive."+ "\n" +
-                                                      "Allowed values are:\n"+
-                                                      "ASC\n"+
-                                                      "DESC";
+                "Allowed values are:\n" +
+                "TIMECREATED\n" +
+                "DISPLAYNAME";
+        public static final String SORT_ORDER_DESC = "The sort order to use, either ascending (ASC) or descending (DESC). The DISPLAYNAME sort order is case sensitive." + "\n" +
+                "Allowed values are:\n" +
+                "ASC\n" +
+                "DESC";
         public static final String LIFECYCLE_STATE_DESC = "A filter to only return resources that match the given lifecycle state. The state value is case-insensitive.";
 
 
@@ -112,7 +112,29 @@ public class Descriptions {
     public static class GetInstanceDetails {
         public static final String GET_INSTANCE_DETAILS_OPERATION_DESC = "Gets information about the instance.";
         public static final String INSTANCE_STATE_DESC = "The current state of the instance.";
+    }
 
+    public static class TerminateInstance {
+        public static final String TERMINATE_INSTANCE_OPERATION_DESC = "Terminates the specified instance. Any attached VNICs and volumes are automatically detached when the instance terminates.\n" +
+                "To preserve the boot volume associated with the instance, specify true for PreserveBootVolumeQueryParam.To delete the boot volume when the instance is deleted, specify false or do not specify a value for PreserveBootVolume.";
+        public static final String PRESERVE_BOOT_VOLUME_DESC = "Specifies whether to delete or preserve the boot volume when terminating an instance." +
+                "Default: 'false'";
+        public static final String TERMINATE_INSTANCE_SUCCESS_MESSAGE_DESC = "Instance terminated successfully.";
+    }
+
+    public static class InstanceAction {
+        public static final String INSTANCE_ACTION_OPERATION_DESC = "Performs one of the following power actions on the specified instance: START - Powers on the instance.\n" +
+                "\n" +
+                "STOP - Powers off the instance.\n" +
+                "\n" +
+                "RESET - Powers off the instance and then powers it back on.";
+        public static final String ACTION_NAME_DESC = "The action to perform on the instance.\n" +
+                "\n" +
+                "Allowed values are:\n" +
+                "\n" +
+                "STOP\n" +
+                "START\n" +
+                "RESET";
     }
 
     public static class ListVnicAttachments {
@@ -134,6 +156,10 @@ public class Descriptions {
         public static final String GET_INSTANCE_DEFAULT_CREDENTIALS_OPERATION_DESC = "Gets the generated credentials for the instance. Only works for instances that require a password to log in, such as Windows.";
         public static final String INSTANCE_USERNAME_DESC = "Username of the instance.";
         public static final String INSTANCE_PASSWORD_DESC = "Password of the instance.";
+    }
+
+    public static class UpdateInstance {
+        public static final String UPDATE_INSTANCE_OPERATION_NAME_DESC = "Updates certain fields on the specified instance. Fields that are not provided in the request will not be updated.";
     }
 
     public static class CreateInstance {
@@ -220,7 +246,7 @@ public class Descriptions {
     }
 
 
-    public static class Counter{
+    public static class Counter {
         public static final String FAILURE_MESSAGE = "Something went wrong";
         public static final String COUNTER_DESC = "Counts from one number to another number.";
         public static final String RESULT_STRING_DESC = "The primary result is resultString, Result can also be used. result (All lower case) should not be used as it is the response code.";

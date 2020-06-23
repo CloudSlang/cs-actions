@@ -96,6 +96,18 @@ public class Constants {
         public static final String INSTANCE_STATE_JSON_PATH = "$.lifecycleState";
     }
 
+    public static class TerminateInstanceConstants {
+        public static final String TERMINATE_INSTANCE_OPERATION_NAME = "Terminate Instance";
+        public static final String PRESERVE_BOOT_VOLUME = "preserveBootVolume";
+        public static final String PRESERVE_BOOT_VOLUME_QUERY_PARAM = "preserveBootVolume=";
+    }
+
+    public static class InstanceActionConstants {
+        public static final String INSTANCE_ACTION_OPERATION_NAME = "Instance Action";
+        public static final String ACTION_NAME = "actionName";
+        public static final String ACTION_NAME_QUERY_PARAM = "action=";
+    }
+
     public static class ListVnicAttachmentsConstants {
         public static final String LIST_VNIC_ATTACHMENTS_OPERATION_NAME = "List Vnics";
         public static final String LIST_VNIC_JSON_PATH = "$.[*].vnicId";
@@ -117,6 +129,10 @@ public class Constants {
         public static final String GET_INSTANCE_DEFAULT_CREDENTIALS_OPERATION_PATH = "/defaultCredentials";
         public static final String INSTANCE_USERNAME_JSON_PATH = "$.username";
         public static final String INSTANCE_PASSWORD_JSON_PATH = "$.password";
+    }
+
+    public static class UpdateInstanceConstants {
+        public static final String UPDATE_INSTANCE_OPERATION_NAME = "Update Instance";
     }
 
     public static class CreateInstanceConstants {

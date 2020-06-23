@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class OCIInstanceInputs {
+public class OCICreateInstanceInputs {
     private final String isManagementDisabled;
     private final String isMonitoringDisabled;
     private final String assignPublicIp;
@@ -58,7 +58,7 @@ public class OCIInstanceInputs {
 
 
     @java.beans.ConstructorProperties({"isManagementDisabled", "isMonitoringDisabled", "assignPublicIp", "definedTags", "displayName", "freeformTags", "hostnameLabel", "networkSecurityGroupIds", "privateIp", "skipSourceDestCheck", "subnetId", "dedicatedVmHostId", "vnicDefinedTags", "vnicFreeformTags", "vnicDisplayName", "extendedMetadata", "faultDomain", "ipxeScript", "isPvEncryptionInTransitEnabled", "launchMode", "bootVolumeType", "firmware", "isConsistentVolumeNamingEnabled", "networkType", "remoteDataVolumeType", "shape", "sshAuthorizedKeys", "userdata", "ocpus", "bootVolumeSizeInGBs", "imageId", "kmsKeyId", "sourceType", "bootVolumeId", "commonInputs"})
-    public OCIInstanceInputs(String isManagementDisabled, String isMonitoringDisabled, String assignPublicIp, String definedTags, String displayName, String freeformTags, String hostnameLabel, String networkSecurityGroupIds, String privateIp, String skipSourceDestCheck, String subnetId, String dedicatedVmHostId, String vnicDefinedTags, String vnicFreeformTags, String vnicDisplayName, String extendedMetadata, String faultDomain, String ipxeScript, String isPvEncryptionInTransitEnabled, String launchMode, String bootVolumeType, String firmware, String isConsistentVolumeNamingEnabled, String networkType, String remoteDataVolumeType, String shape, String sshAuthorizedKeys, String userdata, String ocpus, String bootVolumeSizeInGBs, String imageId, String kmsKeyId, String sourceType, String bootVolumeId, OCICommonInputs commonInputs) {
+    public OCICreateInstanceInputs(String isManagementDisabled, String isMonitoringDisabled, String assignPublicIp, String definedTags, String displayName, String freeformTags, String hostnameLabel, String networkSecurityGroupIds, String privateIp, String skipSourceDestCheck, String subnetId, String dedicatedVmHostId, String vnicDefinedTags, String vnicFreeformTags, String vnicDisplayName, String extendedMetadata, String faultDomain, String ipxeScript, String isPvEncryptionInTransitEnabled, String launchMode, String bootVolumeType, String firmware, String isConsistentVolumeNamingEnabled, String networkType, String remoteDataVolumeType, String shape, String sshAuthorizedKeys, String userdata, String ocpus, String bootVolumeSizeInGBs, String imageId, String kmsKeyId, String sourceType, String bootVolumeId, OCICommonInputs commonInputs) {
         this.isManagementDisabled = isManagementDisabled;
         this.isMonitoringDisabled = isMonitoringDisabled;
         this.assignPublicIp = assignPublicIp;
@@ -97,8 +97,8 @@ public class OCIInstanceInputs {
     }
 
     @NotNull
-    public static OCIInstanceInputsBuilder builder() {
-        return new OCIInstanceInputsBuilder();
+    public static OCICreateInstanceInputsBuilder builder() {
+        return new OCICreateInstanceInputsBuilder();
     }
 
     @NotNull
@@ -277,7 +277,7 @@ public class OCIInstanceInputs {
         return commonInputs;
     }
 
-    public static final class OCIInstanceInputsBuilder {
+    public static final class OCICreateInstanceInputsBuilder {
         private String isManagementDisabled = EMPTY;
         private String isMonitoringDisabled = EMPTY;
         private String assignPublicIp = EMPTY;
@@ -314,223 +314,223 @@ public class OCIInstanceInputs {
         private String bootVolumeId = EMPTY;
         private OCICommonInputs commonInputs;
 
-        OCIInstanceInputsBuilder() {
+        OCICreateInstanceInputsBuilder() {
         }
 
 
         @NotNull
-        public OCIInstanceInputsBuilder isManagementDisabled(@NotNull final String isManagementDisabled) {
+        public OCICreateInstanceInputsBuilder isManagementDisabled(@NotNull final String isManagementDisabled) {
             this.isManagementDisabled = isManagementDisabled;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder isMonitoringDisabled(@NotNull final String isMonitoringDisabled) {
+        public OCICreateInstanceInputsBuilder isMonitoringDisabled(@NotNull final String isMonitoringDisabled) {
             this.isMonitoringDisabled = isMonitoringDisabled;
             return this;
         }
 
 
         @NotNull
-        public OCIInstanceInputsBuilder assignPublicIp(@NotNull final String assignPublicIp) {
+        public OCICreateInstanceInputsBuilder assignPublicIp(@NotNull final String assignPublicIp) {
             this.assignPublicIp = assignPublicIp;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder definedTags(@NotNull final String definedTags) {
+        public OCICreateInstanceInputsBuilder definedTags(@NotNull final String definedTags) {
             this.definedTags = definedTags;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder displayName(@NotNull final String displayName) {
+        public OCICreateInstanceInputsBuilder displayName(@NotNull final String displayName) {
             this.displayName = displayName;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder freeformTags(@NotNull final String freeformTags) {
+        public OCICreateInstanceInputsBuilder freeformTags(@NotNull final String freeformTags) {
             this.freeformTags = freeformTags;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder hostnameLabel(@NotNull final String hostnameLabel) {
+        public OCICreateInstanceInputsBuilder hostnameLabel(@NotNull final String hostnameLabel) {
             this.hostnameLabel = hostnameLabel;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder networkSecurityGroupIds(@NotNull final String networkSecurityGroupIds) {
+        public OCICreateInstanceInputsBuilder networkSecurityGroupIds(@NotNull final String networkSecurityGroupIds) {
             this.networkSecurityGroupIds = networkSecurityGroupIds;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder privateIp(@NotNull final String privateIp) {
+        public OCICreateInstanceInputsBuilder privateIp(@NotNull final String privateIp) {
             this.privateIp = privateIp;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder skipSourceDestCheck(@NotNull final String skipSourceDestCheck) {
+        public OCICreateInstanceInputsBuilder skipSourceDestCheck(@NotNull final String skipSourceDestCheck) {
             this.skipSourceDestCheck = skipSourceDestCheck;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder subnetId(@NotNull final String subnetId) {
+        public OCICreateInstanceInputsBuilder subnetId(@NotNull final String subnetId) {
             this.subnetId = subnetId;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder dedicatedVmHostId(@NotNull final String dedicatedVmHostId) {
+        public OCICreateInstanceInputsBuilder dedicatedVmHostId(@NotNull final String dedicatedVmHostId) {
             this.dedicatedVmHostId = dedicatedVmHostId;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder vnicDefinedTags(@NotNull final String vnicDefinedTags) {
+        public OCICreateInstanceInputsBuilder vnicDefinedTags(@NotNull final String vnicDefinedTags) {
             this.vnicDefinedTags = vnicDefinedTags;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder vnicFreeformTags(@NotNull final String vnicFreeformTags) {
+        public OCICreateInstanceInputsBuilder vnicFreeformTags(@NotNull final String vnicFreeformTags) {
             this.vnicFreeformTags = vnicFreeformTags;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder vnicDisplayName(@NotNull final String vnicDisplayName) {
+        public OCICreateInstanceInputsBuilder vnicDisplayName(@NotNull final String vnicDisplayName) {
             this.vnicDisplayName = vnicDisplayName;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder extendedMetadata(@NotNull final String extendedMetadata) {
+        public OCICreateInstanceInputsBuilder extendedMetadata(@NotNull final String extendedMetadata) {
             this.extendedMetadata = extendedMetadata;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder faultDomain(@NotNull final String faultDomain) {
+        public OCICreateInstanceInputsBuilder faultDomain(@NotNull final String faultDomain) {
             this.faultDomain = faultDomain;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder ipxeScript(@NotNull final String ipxeScript) {
+        public OCICreateInstanceInputsBuilder ipxeScript(@NotNull final String ipxeScript) {
             this.ipxeScript = ipxeScript;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder isPvEncryptionInTransitEnabled(@NotNull final String isPvEncryptionInTransitEnabled) {
+        public OCICreateInstanceInputsBuilder isPvEncryptionInTransitEnabled(@NotNull final String isPvEncryptionInTransitEnabled) {
             this.isPvEncryptionInTransitEnabled = isPvEncryptionInTransitEnabled;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder launchMode(@NotNull final String launchMode) {
+        public OCICreateInstanceInputsBuilder launchMode(@NotNull final String launchMode) {
             this.launchMode = launchMode;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder bootVolumeType(@NotNull final String bootVolumeType) {
+        public OCICreateInstanceInputsBuilder bootVolumeType(@NotNull final String bootVolumeType) {
             this.bootVolumeType = bootVolumeType;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder firmware(@NotNull final String firmware) {
+        public OCICreateInstanceInputsBuilder firmware(@NotNull final String firmware) {
             this.firmware = firmware;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder isConsistentVolumeNamingEnabled(@NotNull final String isConsistentVolumeNamingEnabled) {
+        public OCICreateInstanceInputsBuilder isConsistentVolumeNamingEnabled(@NotNull final String isConsistentVolumeNamingEnabled) {
             this.isConsistentVolumeNamingEnabled = isConsistentVolumeNamingEnabled;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder networkType(@NotNull final String networkType) {
+        public OCICreateInstanceInputsBuilder networkType(@NotNull final String networkType) {
             this.networkType = networkType;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder remoteDataVolumeType(@NotNull final String remoteDataVolumeType) {
+        public OCICreateInstanceInputsBuilder remoteDataVolumeType(@NotNull final String remoteDataVolumeType) {
             this.remoteDataVolumeType = remoteDataVolumeType;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder shape(@NotNull final String shape) {
+        public OCICreateInstanceInputsBuilder shape(@NotNull final String shape) {
             this.shape = shape;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder sshAuthorizedKeys(@NotNull final String sshAuthorizedKeys) {
+        public OCICreateInstanceInputsBuilder sshAuthorizedKeys(@NotNull final String sshAuthorizedKeys) {
             this.sshAuthorizedKeys = sshAuthorizedKeys;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder userdata(@NotNull final String userdata) {
+        public OCICreateInstanceInputsBuilder userdata(@NotNull final String userdata) {
             this.userdata = userdata;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder ocpus(@NotNull final String ocpus) {
+        public OCICreateInstanceInputsBuilder ocpus(@NotNull final String ocpus) {
             this.ocpus = ocpus;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder bootVolumeSizeInGBs(@NotNull final String bootVolumeSizeInGBs) {
+        public OCICreateInstanceInputsBuilder bootVolumeSizeInGBs(@NotNull final String bootVolumeSizeInGBs) {
             this.bootVolumeSizeInGBs = bootVolumeSizeInGBs;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder imageId(@NotNull final String imageId) {
+        public OCICreateInstanceInputsBuilder imageId(@NotNull final String imageId) {
             this.imageId = imageId;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder kmsKeyId(@NotNull final String kmsKeyId) {
+        public OCICreateInstanceInputsBuilder kmsKeyId(@NotNull final String kmsKeyId) {
             this.kmsKeyId = kmsKeyId;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder sourceType(@NotNull final String sourceType) {
+        public OCICreateInstanceInputsBuilder sourceType(@NotNull final String sourceType) {
             this.sourceType = sourceType;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder bootVolumeId(@NotNull final String bootVolumeId) {
+        public OCICreateInstanceInputsBuilder bootVolumeId(@NotNull final String bootVolumeId) {
             this.bootVolumeId = bootVolumeId;
             return this;
         }
 
         @NotNull
-        public OCIInstanceInputsBuilder commonInputs(@NotNull final OCICommonInputs commonInputs) {
+        public OCICreateInstanceInputsBuilder commonInputs(@NotNull final OCICommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
-        public OCIInstanceInputs build() {
-            return new OCIInstanceInputs(isManagementDisabled, isMonitoringDisabled, assignPublicIp, definedTags, displayName, freeformTags, hostnameLabel, networkSecurityGroupIds, privateIp, skipSourceDestCheck, subnetId, dedicatedVmHostId, vnicDefinedTags, vnicFreeformTags, vnicDisplayName, extendedMetadata, faultDomain, ipxeScript, isPvEncryptionInTransitEnabled, launchMode, bootVolumeType, firmware, isConsistentVolumeNamingEnabled, networkType, remoteDataVolumeType, shape, sshAuthorizedKeys, userdata, ocpus, bootVolumeSizeInGBs, imageId, kmsKeyId, sourceType, bootVolumeId, commonInputs);
+        public OCICreateInstanceInputs build() {
+            return new OCICreateInstanceInputs(isManagementDisabled, isMonitoringDisabled, assignPublicIp, definedTags, displayName, freeformTags, hostnameLabel, networkSecurityGroupIds, privateIp, skipSourceDestCheck, subnetId, dedicatedVmHostId, vnicDefinedTags, vnicFreeformTags, vnicDisplayName, extendedMetadata, faultDomain, ipxeScript, isPvEncryptionInTransitEnabled, launchMode, bootVolumeType, firmware, isConsistentVolumeNamingEnabled, networkType, remoteDataVolumeType, shape, sshAuthorizedKeys, userdata, ocpus, bootVolumeSizeInGBs, imageId, kmsKeyId, sourceType, bootVolumeId, commonInputs);
 
         }
     }

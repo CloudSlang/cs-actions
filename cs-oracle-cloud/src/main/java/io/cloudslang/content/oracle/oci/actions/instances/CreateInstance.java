@@ -26,7 +26,7 @@ import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
-import io.cloudslang.content.oracle.oci.entities.inputs.OCIInstanceInputs;
+import io.cloudslang.content.oracle.oci.entities.inputs.OCICreateInstanceInputs;
 import io.cloudslang.content.oracle.oci.services.InstanceImpl;
 import io.cloudslang.content.oracle.oci.utils.Descriptions;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
@@ -40,12 +40,12 @@ import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
-import static io.cloudslang.content.oracle.oci.utils.Constants.Common.EMPTY;
 import static io.cloudslang.content.oracle.oci.utils.Constants.CreateInstanceConstants.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.CreateInstance.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
+import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.AVAILABILITY_DOMAIN;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PORT;
@@ -53,10 +53,9 @@ import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_U
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.CreateInstanceOutputs.INSTANCE_ID;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.AVAILABILITY_DOMAIN;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.CreateInstanceOutputs.INSTANCE_NAME;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateInstance {
 
@@ -182,15 +181,15 @@ public class CreateInstance {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessage = InputsValidation.verifyCommonInputs(proxyPort, trustAllRoots,
-                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal, privateKeyData, privateKeyFile);
+        final List<String> exceptionMessage = InputsValidation.verifyCommonInputs(privateKeyData, privateKeyFile, proxyPort, trustAllRoots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
         try {
             final Map<String, String> result =
-                    InstanceImpl.createInstance(OCIInstanceInputs.builder()
+                    InstanceImpl.createInstance(OCICreateInstanceInputs.builder()
                             .isManagementDisabled(isManagementDisabled)
                             .isMonitoringDisabled(isMonitoringDisabled)
                             .assignPublicIp(assignPublicIp)

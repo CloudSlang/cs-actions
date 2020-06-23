@@ -1,19 +1,4 @@
-/*
- * (c) Copyright 2020 Micro Focus, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package io.cloudslang.content.oracle.oci.actions.vnics;
+package io.cloudslang.content.oracle.oci.actions.instances;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -21,14 +6,13 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
-import io.cloudslang.content.oracle.oci.services.VnicImpl;
+import io.cloudslang.content.oracle.oci.entities.inputs.OCIInstanceActionInputs;
+import io.cloudslang.content.oracle.oci.services.InstanceImpl;
 import io.cloudslang.content.oracle.oci.utils.Descriptions;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
 import io.cloudslang.content.oracle.oci.utils.InputsValidation;
@@ -41,9 +25,12 @@ import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
-import static io.cloudslang.content.oracle.oci.utils.Constants.GetVnicDetailsConstants.*;
+import static io.cloudslang.content.oracle.oci.utils.Constants.GetInstanceDetailsConstants.INSTANCE_STATE_JSON_PATH;
+import static io.cloudslang.content.oracle.oci.utils.Constants.InstanceActionConstants.ACTION_NAME;
+import static io.cloudslang.content.oracle.oci.utils.Constants.InstanceActionConstants.INSTANCE_ACTION_OPERATION_NAME;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.GetVnicDetails.*;
+import static io.cloudslang.content.oracle.oci.utils.Descriptions.InstanceAction.ACTION_NAME_DESC;
+import static io.cloudslang.content.oracle.oci.utils.Descriptions.InstanceAction.INSTANCE_ACTION_OPERATION_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_HOST;
@@ -52,24 +39,17 @@ import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_P
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
-import static io.cloudslang.content.oracle.oci.utils.Outputs.GetVnicDetailsOutputs.*;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.GetInstanceDetailsOutputs.INSTANCE_STATE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-public class GetVnicDetails {
-
-    @Action(name = GET_VNIC_DETAILS_OPERATION_NAME,
-            description = GET_VNIC_DETAILS_OPERATION_DESC,
+public class InstanceAction {
+    @Action(name = INSTANCE_ACTION_OPERATION_NAME,
+            description = INSTANCE_ACTION_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = PRIVATE_IP, description = PRIVATE_IP_DESC),
-                    @Output(value = PUBLIC_IP, description = PUBLIC_IP_DESC),
-                    @Output(value = VNIC_NAME, description = VNIC_NAME_DESC),
-                    @Output(value = VNIC_HOSTNAME, description = VNIC_HOSTNAME_DESC),
-                    @Output(value = VNIC_STATE, description = VNIC_STATE_DESC),
-                    @Output(value = MAC_ADDRESS, description = MAC_ADDRESS_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
@@ -84,7 +64,8 @@ public class GetVnicDetails {
                                        @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
-                                       @Param(value = VNIC_ID, required = true, description = VNIC_ID_DESC) String vnicId,
+                                       @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) String instanceId,
+                                       @Param(value = ACTION_NAME, required = true, description = ACTION_NAME_DESC) String actionName,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -126,50 +107,47 @@ public class GetVnicDetails {
 
         try {
             final Map<String, String> result =
-                    VnicImpl.getVnicDetails(OCICommonInputs.builder()
-                            .tenancyOcid(tenancyOcid)
-                            .compartmentOcid(compartmentOcid)
-                            .userOcid(userOcid)
-                            .fingerPrint(fingerPrint)
-                            .privateKeyData(privateKeyData)
-                            .privateKeyFile(privateKeyFile)
-                            .apiVersion(apiVersion)
-                            .region(region)
-                            .vnicId(vnicId)
-                            .proxyHost(proxyHost)
-                            .proxyPort(proxyPort)
-                            .proxyUsername(proxyUsername)
-                            .proxyPassword(proxyPassword)
-                            .trustAllRoots(trustAllRoots)
-                            .x509HostnameVerifier(x509HostnameVerifier)
-                            .trustKeystore(trustKeystore)
-                            .trustPassword(trustPassword)
-                            .keystore(keystore)
-                            .keystorePassword(keystorePassword)
-                            .connectTimeout(connectTimeout)
-                            .socketTimeout(socketTimeout)
-                            .keepAlive(keepAlive)
-                            .connectionsMaxPerRoot(connectionsMaxPerRoute)
-                            .connectionsMaxTotal(connectionsMaxTotal)
-                            .responseCharacterSet(responseCharacterSet)
-                            .build());
+                    InstanceImpl.instanceAction(OCIInstanceActionInputs.builder()
+                            .actionName(actionName)
+                            .commonInputs(OCICommonInputs.builder()
+                                    .tenancyOcid(tenancyOcid)
+                                    .compartmentOcid(compartmentOcid)
+                                    .userOcid(userOcid)
+                                    .fingerPrint(fingerPrint)
+                                    .privateKeyData(privateKeyData)
+                                    .privateKeyFile(privateKeyFile)
+                                    .apiVersion(apiVersion)
+                                    .region(region)
+                                    .instanceId(instanceId)
+                                    .proxyHost(proxyHost)
+                                    .proxyPort(proxyPort)
+                                    .proxyUsername(proxyUsername)
+                                    .proxyPassword(proxyPassword)
+                                    .trustAllRoots(trustAllRoots)
+                                    .x509HostnameVerifier(x509HostnameVerifier)
+                                    .trustKeystore(trustKeystore)
+                                    .trustPassword(trustPassword)
+                                    .keystore(keystore)
+                                    .keystorePassword(keystorePassword)
+                                    .connectTimeout(connectTimeout)
+                                    .socketTimeout(socketTimeout)
+                                    .keepAlive(keepAlive)
+                                    .connectionsMaxPerRoot(connectionsMaxPerRoute)
+                                    .connectionsMaxTotal(connectionsMaxTotal)
+                                    .responseCharacterSet(responseCharacterSet)
+                                    .build()).build());
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = HttpUtils.getOperationResults(result, returnMessage, returnMessage, returnMessage);
             Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                results.put(PRIVATE_IP, JsonPath.read(returnMessage, PRIVATE_IP_JSON_PATH));
-                Configuration configuration = Configuration.defaultConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);
-                String publicIP = (JsonPath.using(configuration).parse(returnMessage).read(PUBLIC_IP_JSON_PATH));
-                if (!isEmpty(publicIP)) {
-                    results.put(PUBLIC_IP, publicIP);
+                final String instanceState = JsonPath.read(returnMessage, INSTANCE_STATE_JSON_PATH);
+                if (!isEmpty(instanceState)) {
+                    results.put(INSTANCE_STATE, instanceState);
                 } else {
-                    results.put(PUBLIC_IP, EMPTY);
+                    results.put(INSTANCE_STATE, EMPTY);
                 }
-                results.put(VNIC_NAME, JsonPath.read(returnMessage, VNIC_NAME_JSON_PATH));
-                results.put(VNIC_HOSTNAME, JsonPath.read(returnMessage, VNIC_HOSTNAME_JSON_PATH));
-                results.put(VNIC_STATE, JsonPath.read(returnMessage, VNIC_STATE_JSON_PATH));
-                results.put(MAC_ADDRESS, JsonPath.read(returnMessage, MAC_ADDRESS_JSON_PATH));
+
             } else {
                 return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
             }
