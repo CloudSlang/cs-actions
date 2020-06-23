@@ -50,14 +50,10 @@ import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListVnicAttachments.LIST_VNIC_ATTACHMENTS_OPERATION_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListVnicAttachments.VNIC_LIST_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.INSTANCE_ID;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.LIMIT;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PAGE;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.VNIC_ID;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.ListVnicAttachmentsOutputs.VNIC_LIST;
@@ -125,8 +121,8 @@ public class ListVnicAttachments {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
-        final List<String> exceptionMessage = InputsValidation.verifyCommonInputs(proxyPort, trustAllRoots,
-                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal, privateKeyData, privateKeyFile);
+        final List<String> exceptionMessage = InputsValidation.verifyCommonInputs(privateKeyData, privateKeyFile, proxyPort, trustAllRoots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }

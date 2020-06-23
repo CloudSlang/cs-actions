@@ -43,9 +43,9 @@ public class SignerImpl {
     public static PrivateKey loadPrivateKey(String privateKeyData, String privateKeyFile) {
         try {
             InputStream privateKeyStream;
-            if(!(privateKeyData).isEmpty()) {
+            if (!(privateKeyData).isEmpty()) {
                 privateKeyStream = new ByteArrayInputStream(privateKeyData.getBytes());
-            }else{
+            } else {
                 privateKeyStream = Files.newInputStream(Paths.get(privateKeyFile));
             }
             return PEM.readPrivateKey(privateKeyStream);
@@ -101,16 +101,16 @@ public class SignerImpl {
             if (method.equals(PUT) || method.equals(POST)) {
                 headers.put(CONTENT_TYPE, APPLICATION_JSON);
                 myheaders.put(CONTENT_TYPE + COLON, APPLICATION_JSON);
+                byte[] body = requestBody.getBytes();
 
-                if (!isEmpty(requestBody)) {
-                    byte[] body = requestBody.getBytes();
-
-                    headers.put(CONTENT_LENGTH, Integer.toString(body.length));
+                headers.put(CONTENT_LENGTH, Integer.toString(body.length));
 //                    myheaders.put(CONTENT_LENGTH + COLON, Integer.toString(body.length));
 
-                    headers.put(X_CONTENT_SHA256, calculateSHA256(body));
-                    myheaders.put(X_CONTENT_SHA256 + COLON, calculateSHA256(body));
+                headers.put(X_CONTENT_SHA256, calculateSHA256(body));
+                myheaders.put(X_CONTENT_SHA256 + COLON, calculateSHA256(body));
 
+                if (isEmpty(requestBody)) {
+                    myheaders.put(CONTENT_LENGTH + COLON, Integer.toString(body.length));
                 }
             }
             String path;
