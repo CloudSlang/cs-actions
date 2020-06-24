@@ -1,19 +1,4 @@
-/*
- * (c) Copyright 2020 Micro Focus, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package io.cloudslang.content.nutanix.prism.actions.tasks;
+package io.cloudslang.content.nutanix.prism.actions.virtualmachines;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -22,7 +7,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
-import io.cloudslang.content.nutanix.prism.entities.NutanixGetTaskDetailsInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixUpdateVMInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -35,12 +20,14 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.nutanix.prism.services.TaskImpl.getTaskDetails;
+import static io.cloudslang.content.nutanix.prism.services.VMImpl.updateVM;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
-import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.*;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.UpdateVMConstants.TASK_UUID_PATH;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.UpdateVMConstants.UPDATE_VM_OPERATION_NAME;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
-import static io.cloudslang.content.nutanix.prism.utils.Descriptions.GetTaskDetails.*;
-import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.*;
+import static io.cloudslang.content.nutanix.prism.utils.Descriptions.UpdateVM.*;
+import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
+import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PASSWORD;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -48,35 +35,42 @@ import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROX
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.USERNAME;
 import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.nutanix.prism.utils.Inputs.GetTaskDetailsInputs.INCLUDE_SUBTASKS_INFO;
-import static io.cloudslang.content.nutanix.prism.utils.Inputs.GetTaskDetailsInputs.TASK_UUID;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CreateVMInputs.*;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.GetVMDetailsInputs.VM_UUID;
 import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.TASK_STATUS;
-import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.VM_UUID;
+import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.TASK_UUID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetTaskDetails {
-    @Action(name = GET_TASK_DETAILS_OPERATION_NAME,
-            description = GET_TASK_DETAILS_OPERATION_DESC,
+public class UpdateVM {
+    @Action(name = UPDATE_VM_OPERATION_NAME,
+            description = UPDATE_VM_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = VM_UUID, description = VM_UUID_DESC),
-                    @Output(value = TASK_STATUS, description = TASK_STATUS_DESC)
+                    @Output(value = TASK_UUID, description = TASK_UUID_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL,
                             responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL,
-                            responseType = ERROR, description = FAILURE_DESC)})
+                            responseType = ERROR, description = FAILURE_DESC)
+            })
     public Map<String, String> execute(@Param(value = HOSTNAME, required = true, description = HOSTNAME_DESC) String hostname,
                                        @Param(value = PORT, description = PORT_DESC) String port,
                                        @Param(value = USERNAME, required = true, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
-                                       @Param(value = TASK_UUID, required = true, description = TASK_UUID_DESC) String taskUUID,
-                                       @Param(value = INCLUDE_SUBTASKS_INFO, description = INCLUDE_SUBTASKS_INFO_DESC) String includeSubtasksInfo,
+                                       @Param(value = VM_UUID, required = true, description = VM_UUID_DESC) String vmUUID,
+                                       @Param(value = VM_NAME, description = VM_NAME_DESC) String vmName,
+                                       @Param(value = VM_DESCRIPTION, description = VM_DESCRIPTION_DESC) String vmDescription,
+                                       @Param(value = VM_MEMORY_SIZE, description = VM_MEMORY_SIZE_DESC) String vmMemorySize,
+                                       @Param(value = NUM_VCPUS, description = NUM_VCPUS_DESC) String numVCPUs,
+                                       @Param(value = NUM_CORES_PER_VCPU, description = NUM_CORES_PER_VCPU_DESC) String numCoresPerVCPU,
+                                       @Param(value = TIME_ZONE, description = TIME_ZONE_DESC) String timeZone,
+                                       @Param(value = HOST_UUIDS, description = HOST_UUIDS_DESC) String hostUUIDs,
+                                       @Param(value = AGENT_VM, description = AGENT_VM_DESC) String agentVM,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -98,7 +92,6 @@ public class GetTaskDetails {
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
-        includeSubtasksInfo = defaultIfEmpty(includeSubtasksInfo, BOOLEAN_FALSE);
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
@@ -107,50 +100,59 @@ public class GetTaskDetails {
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
+
         final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
-
         try {
-            final Map<String, String> result = getTaskDetails(NutanixGetTaskDetailsInputs.builder()
-                    .taskUUID(taskUUID)
-                    .includeSubtasksInfo(includeSubtasksInfo)
-                    .commonInputs(NutanixCommonInputs.builder()
-                            .hostname(hostname)
-                            .port(port)
-                            .username(username)
-                            .password(password)
-                            .apiVersion(apiVersion)
-                            .proxyHost(proxyHost)
-                            .proxyPort(proxyPort)
-                            .proxyUsername(proxyUsername)
-                            .proxyPassword(proxyPassword)
-                            .trustAllRoots(trustAllRoots)
-                            .x509HostnameVerifier(x509HostnameVerifier)
-                            .trustKeystore(trustKeystore)
-                            .trustPassword(trustPassword)
-                            .connectTimeout(connectTimeout)
-                            .socketTimeout(socketTimeout)
-                            .keepAlive(keepAlive)
-                            .connectionsMaxPerRoot(connectionsMaxPerRoute)
-                            .connectionsMaxTotal(connectionsMaxTotal)
-                            .build()).build());
-
+            final Map<String, String> result = updateVM(NutanixUpdateVMInputs.builder()
+                    .vmName(vmName)
+                    .vmUUID(vmUUID)
+                    .description(vmDescription)
+                    .vmMemorySize(vmMemorySize)
+                    .numVCPUs(numVCPUs)
+                    .numCoresPerVCPU(numCoresPerVCPU)
+                    .timeZone(timeZone)
+                    .hostUUIDs(hostUUIDs)
+                    .agentVM(agentVM)
+                    .commonInputs(
+                            NutanixCommonInputs.builder()
+                                    .hostname(hostname)
+                                    .port(port)
+                                    .username(username)
+                                    .password(password)
+                                    .apiVersion(apiVersion)
+                                    .proxyHost(proxyHost)
+                                    .proxyPort(proxyPort)
+                                    .proxyUsername(proxyUsername)
+                                    .proxyPassword(proxyPassword)
+                                    .trustAllRoots(trustAllRoots)
+                                    .x509HostnameVerifier(x509HostnameVerifier)
+                                    .trustKeystore(trustKeystore)
+                                    .trustPassword(trustPassword)
+                                    .connectTimeout(connectTimeout)
+                                    .socketTimeout(socketTimeout)
+                                    .keepAlive(keepAlive)
+                                    .connectionsMaxPerRoot(connectionsMaxPerRoute)
+                                    .connectionsMaxTotal(connectionsMaxTotal)
+                                    .build()).build());
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
-            String taskStatus = JsonPath.read(returnMessage, TASK_STATUS_PATH);
             if (statusCode >= 200 && statusCode < 300) {
-                results.put(TASK_STATUS, taskStatus);
+                final String taskUUID = JsonPath.read(returnMessage, TASK_UUID_PATH);
+                results.put(TASK_UUID, taskUUID);
             } else {
-                return getTaskFailureResults(hostname, statusCode, taskStatus, returnMessage, returnMessage);
+                return getFailureResults(hostname, statusCode, returnMessage, returnMessage);
             }
             return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
+
     }
 }

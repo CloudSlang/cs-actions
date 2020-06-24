@@ -22,6 +22,7 @@ import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.nutanix.prism.entities.*;
 import io.cloudslang.content.nutanix.prism.services.models.virtualmachines.CreateVMRequestBody;
 import io.cloudslang.content.nutanix.prism.services.models.virtualmachines.SetVMPowerStateRequestBody;
+import io.cloudslang.content.nutanix.prism.services.models.virtualmachines.UpdateVMRequestBody;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,11 +33,13 @@ import java.util.Map;
 
 import static io.cloudslang.content.nutanix.prism.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.PUT;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetVMDetailsConstants.GET_VM_DETAILS_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.SetVMPowerStateConstants.SET_POWER_STATE_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 
 public class VMImpl {
@@ -72,6 +75,25 @@ public class VMImpl {
         httpClientInputs.setMethod(POST);
         httpClientInputs.setUsername(nutanixCreateVMInputs.getCommonInputs().getUsername());
         httpClientInputs.setPassword(nutanixCreateVMInputs.getCommonInputs().getPassword());
+        httpClientInputs.setContentType(APPLICATION_API_JSON);
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static Map<String, String> updateVM(@NotNull final NutanixUpdateVMInputs nutanixUpdateVMInputs)
+            throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        httpClientInputs.setUrl(updateVMURL(nutanixUpdateVMInputs));
+        setCommonHttpInputs(httpClientInputs, nutanixUpdateVMInputs.getCommonInputs());
+        try {
+            httpClientInputs.setBody(updateVMBody(nutanixUpdateVMInputs, DELIMITER));
+        } catch (JsonProcessingException e) {
+            return getFailureResultsMap(e);
+        }
+        httpClientInputs.setAuthType(BASIC);
+        httpClientInputs.setMethod(PUT);
+        httpClientInputs.setUsername(nutanixUpdateVMInputs.getCommonInputs().getUsername());
+        httpClientInputs.setPassword(nutanixUpdateVMInputs.getCommonInputs().getPassword());
         httpClientInputs.setContentType(APPLICATION_API_JSON);
         return new HttpClientService().execute(httpClientInputs);
     }
@@ -163,6 +185,20 @@ public class VMImpl {
                 .append(API)
                 .append(nutanixCreateVMInputs.getCommonInputs().getAPIVersion())
                 .append(GET_VM_DETAILS_PATH);
+        uriBuilder.setPath(pathString.toString());
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    public static String updateVMURL(NutanixUpdateVMInputs nutanixUpdateVMInputs) throws Exception {
+
+        final URIBuilder uriBuilder = getUriBuilder(nutanixUpdateVMInputs.getCommonInputs());
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(nutanixUpdateVMInputs.getCommonInputs().getAPIVersion())
+                .append(GET_VM_DETAILS_PATH)
+                .append(PATH_SEPARATOR)
+                .append(nutanixUpdateVMInputs.getVmUUID());
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
     }
@@ -312,6 +348,49 @@ public class VMImpl {
             e.printStackTrace();
         }
 
+        return requestBody;
+    }
+
+    @NotNull
+    public static String updateVMBody(NutanixUpdateVMInputs nutanixUpdateVMInputs, String delimiter)
+            throws JsonProcessingException {
+        String requestBody = EMPTY;
+        final List<String> hostUUIDsList = new ArrayList<>();
+        ObjectMapper createVMMapper = new ObjectMapper();
+        UpdateVMRequestBody updateVMBody = new UpdateVMRequestBody();
+        UpdateVMRequestBody.UpdateVMData updateVMData = updateVMBody.new UpdateVMData();
+        updateVMData.setName(nutanixUpdateVMInputs.getVmName());
+        updateVMData.setDescription(nutanixUpdateVMInputs.getDescription());
+        if (!isEmpty(nutanixUpdateVMInputs.getVmMemorySize())) {
+            updateVMData.setMemory_mb(Integer.parseInt(nutanixUpdateVMInputs.getVmMemorySize()) * 1024);
+        }
+        if (!isEmpty(nutanixUpdateVMInputs.getNumVCPUs())) {
+            updateVMData.setNum_vcpus(Integer.parseInt(nutanixUpdateVMInputs.getNumVCPUs()));
+        }
+        if (!isEmpty(nutanixUpdateVMInputs.getNumCoresPerVCPU())) {
+            updateVMData.setNum_cores_per_vcpu(Integer.parseInt(nutanixUpdateVMInputs.getNumCoresPerVCPU()));
+        }
+        updateVMData.setTimezone(nutanixUpdateVMInputs.getTimeZone());
+        UpdateVMRequestBody.Affinity affinity = updateVMBody.new Affinity();
+        if (!nutanixUpdateVMInputs.getHostUUIDs().isEmpty()) {
+            String[] hostUUIDs = nutanixUpdateVMInputs.getHostUUIDs().split(delimiter);
+            Collections.addAll(hostUUIDsList, hostUUIDs);
+            affinity.setHost_uuids(hostUUIDsList);
+            affinity.setPolicy(AFFINITY);
+            updateVMData.setAffinity(affinity);
+        }
+        if (!isEmpty(nutanixUpdateVMInputs.getAgentVM())) {
+            UpdateVMRequestBody.VMFeatures vmFeatures = updateVMBody.new VMFeatures();
+            vmFeatures.setAGENT_VM(Boolean.parseBoolean(nutanixUpdateVMInputs.getAgentVM()));
+            updateVMData.setVmFeatures(vmFeatures);
+        }
+
+
+        try {
+            requestBody = createVMMapper.writeValueAsString(updateVMData);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         return requestBody;
     }
 }
