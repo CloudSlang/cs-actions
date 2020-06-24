@@ -179,6 +179,29 @@ public class Descriptions {
 
     }
 
+    public static class UpdateVM {
+        public static final String UPDATE_VM_OPERATION_DESC = "Update a Virtual Machine with specified configuration." +
+                "This is an asynchronous operation that results in the creation of a task object. " +
+                "The UUID of this task object is returned as the response of this operation. " +
+                "This task can be monitored by using the /tasks/poll API.";
+        public static final String VM_NAME_DESC = "Name of the Virtual Machine that will be updated.";
+        public static final String VM_DESCRIPTION_DESC = "The description of the Virtual Machine that will be updated.";
+        public static final String VM_MEMORY_SIZE_DESC = "The memory amount (in GiB) attached to the virtual machine " +
+                "that will will be updated.";
+        public static final String NUM_VCPUS_DESC = "The number that indicates how many processors will have the " +
+                "virtual machine that will be updated.";
+        public static final String NUM_CORES_PER_VCPU_DESC = "This is the number of cores per vCPU.";
+        public static final String TIME_ZONE_DESC = "The timezone in which the Virtual Machine will be updated." +
+                "Example : 'Asia/Calcutta'";
+        public static final String HOST_UUIDS_DESC = "The Host UUIDs for which Virtual Machine will be mapped.";
+        public static final String AGENT_VM_DESC = "Indicates whether the VM is an agent VM. When their host enters " +
+                "maintenance mode, after normal VMs are evacuated, agent VMs are powered off. When the host is " +
+                "restored, agent VMs are powered on before normal VMs are restored. In other words, agent VMs cannot " +
+                "be HA-protected or live migrated." +
+                "Default : 'false'";
+
+    }
+
     public static class DeleteVM {
         public static final String DELETE_VM_OPERATION_DESC = "Delete a Virtual Machine." +
                 "This is an idempotent operation. If the Virtual Machine is currently powered on, it will be forcefully" +
@@ -225,7 +248,7 @@ public class Descriptions {
         public static final String DETACH_DISKS_OPERATION_DESC = "Detach disks from Virtual Machine.";
         public static final String VM_DISK_UUID_LIST_DESC = "VM disk UUID list. If multiple disks need to be removed, add comma separated UUIDs.";
         public static final String DEVICE_BUS_LIST_DESC = "Device Bus List. List the device buses in the same order that the disk UUIDs are listed, separated by commas.\n"
-                +"Valid values: sata,scsi,ide,pci";
+                + "Valid values: sata,scsi,ide,pci";
         public static final String DEVICE_INDEX_LIST_DESC = "Device indices list. List the device index in the same order that the disk UUIDs are listed, separated by commas.";
         public static final String DETACH_DISKS_SUCCESS_DESC = "Disks successfully detached from the VM.";
 
@@ -261,7 +284,7 @@ public class Descriptions {
     }
 
 
-    public static class Counter{
+    public static class Counter {
         public static final String FAILURE_MESSAGE = "Something went wrong";
         public static final String COUNTER_DESC = "Counts from one number to another number.";
         public static final String RESULT_STRING_DESC = "The primary result is resultString, Result can also be used. " +
