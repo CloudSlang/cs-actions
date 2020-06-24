@@ -34,6 +34,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,14 +75,14 @@ public class HttpClientTest {
     private static final Integer connectionsMaxTotal = 2;
     private static final String headers = "headers";
     private static final String responseCharacterSet = "responseCharacterSet";
-    private static final File destinationFile = new File("destinationFile");
+    private static final Path destinationFile = Paths.get("destinationFile");
     private static final Boolean followedRedirects = true;
     private static final String queryParams = "queryParams";
     private static final Boolean queryParamsAreURLEncoded = false;
     private static final Boolean queryParamsAreFormEncoded = false;
     private static final String formParams = "formParams";
     private static final Boolean formParamsAreURLEncoded = false;
-    private static final File sourceFile = new File("sourceFile");
+    private static final Path sourceFile = Paths.get("sourceFile");
     private static final String body = "body";
     private static final String contentType = "contentType";
     private static final String requestCharacterSet = "requestCharacterSet";
@@ -146,9 +148,9 @@ public class HttpClientTest {
                 eq(proxyHost), eq(proxyPort.toString()), eq(proxyUsername), eq(proxyPassword), eq(trustAllRoots.toString()), eq(x509HostnameVerifier),
                 eq(trustKeystore), eq(trustPassword), eq(keystore), eq(keystorePassword), eq(connectTimeout.toString()), eq(socketTimeout.toString()),
                 eq(useCookies.toString()), eq(keepAlive.toString()), eq(connectionsMaxPerRoute.toString()), eq(connectionsMaxTotal.toString()), eq(headers),
-                eq(responseCharacterSet), eq(destinationFile.getAbsolutePath()), eq(followedRedirects.toString()), eq(queryParams),
+                eq(responseCharacterSet), eq(destinationFile.toAbsolutePath().toString()), eq(followedRedirects.toString()), eq(queryParams),
                 eq(queryParamsAreURLEncoded.toString()), eq(queryParamsAreFormEncoded.toString()), eq(formParams), eq(formParamsAreURLEncoded.toString()),
-                eq(sourceFile.getAbsolutePath()), eq(body), eq(contentType), eq(requestCharacterSet), eq(multipartBodies),
+                eq(sourceFile.toAbsolutePath().toString()), eq(body), eq(contentType), eq(requestCharacterSet), eq(multipartBodies),
                 eq(multipartBodiesContentType), eq(multipartFiles), eq(multipartFilesContentType),
                 eq(multipartValuesAreURLEncoded.toString()), eq(chunkedRequestEntity.toString()), eq(method), eq(httpClientCookieSession),
                 eq(httpClientPoolingConnectionManager)
@@ -215,7 +217,7 @@ public class HttpClientTest {
         when(httpRequestMock.getProxyPort()).thenReturn(proxyPort);
         when(httpRequestMock.getProxyUsername()).thenReturn(proxyUsername);
         when(httpRequestMock.getProxyPassword()).thenReturn(proxyPassword);
-        when(httpRequestMock.getTrustAllRoots()).thenReturn(trustAllRoots);
+        when(httpRequestMock.isTrustAllRoots()).thenReturn(trustAllRoots);
         when(httpRequestMock.getX509HostnameVerifier()).thenReturn(x509HostnameVerifier);
         when(httpRequestMock.getTrustKeystore()).thenReturn(trustKeystore);
         when(httpRequestMock.getTrustPassword()).thenReturn(trustPassword);
@@ -224,7 +226,7 @@ public class HttpClientTest {
         when(httpRequestMock.getConnectTimeout()).thenReturn(connectTimeout);
         when(httpRequestMock.getSocketTimeout()).thenReturn(socketTimeout);
         when(httpRequestMock.isUseCookies()).thenReturn(useCookies);
-        when(httpRequestMock.getKeepAlive()).thenReturn(keepAlive);
+        when(httpRequestMock.isKeepAlive()).thenReturn(keepAlive);
         when(httpRequestMock.getConnectionsMaxPerRoute()).thenReturn(connectionsMaxPerRoute);
         when(httpRequestMock.getConnectionsMaxTotal()).thenReturn(connectionsMaxTotal);
         when(httpRequestMock.getHeaders()).thenReturn(headers);

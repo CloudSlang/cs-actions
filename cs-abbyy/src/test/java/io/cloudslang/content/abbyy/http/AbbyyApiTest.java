@@ -36,6 +36,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
@@ -66,7 +67,7 @@ public class AbbyyApiTest {
         final String statusCode = "401";
 
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
-        when(abbyyInput.getSourceFile()).thenReturn(mock(File.class));
+        when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
         PowerMockito.spy(builderSpy);
@@ -94,7 +95,7 @@ public class AbbyyApiTest {
         final String url = "url";
 
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
-        when(abbyyInput.getSourceFile()).thenReturn(mock(File.class));
+        when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
         PowerMockito.spy(builderSpy);
@@ -123,7 +124,7 @@ public class AbbyyApiTest {
 
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         when(abbyyInput.getLocationId()).thenReturn(LocationId.EU);
-        when(abbyyInput.getSourceFile()).thenReturn(mock(File.class));
+        when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
         PowerMockito.spy(builderSpy);
@@ -154,7 +155,7 @@ public class AbbyyApiTest {
 
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         when(abbyyInput.getLocationId()).thenReturn(LocationId.EU);
-        when(abbyyInput.getSourceFile()).thenReturn(mock(File.class));
+        when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
         PowerMockito.spy(builderSpy);
@@ -187,7 +188,7 @@ public class AbbyyApiTest {
 
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         when(abbyyInput.getLocationId()).thenReturn(LocationId.EU);
-        when(abbyyInput.getSourceFile()).thenReturn(mock(File.class));
+        when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
         PowerMockito.spy(builderSpy);
@@ -219,7 +220,7 @@ public class AbbyyApiTest {
 
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         when(abbyyInput.getLocationId()).thenReturn(LocationId.EU);
-        when(abbyyInput.getSourceFile()).thenReturn(mock(File.class));
+        when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
         PowerMockito.spy(builderSpy);
@@ -253,7 +254,7 @@ public class AbbyyApiTest {
 
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         when(abbyyInput.getLocationId()).thenReturn(LocationId.EU);
-        when(abbyyInput.getSourceFile()).thenReturn(mock(File.class));
+        when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
         PowerMockito.spy(builderSpy);
@@ -291,7 +292,7 @@ public class AbbyyApiTest {
 
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         when(abbyyInput.getLocationId()).thenReturn(LocationId.EU);
-        when(abbyyInput.getSourceFile()).thenReturn(mock(File.class));
+        when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
         PowerMockito.spy(builderSpy);
@@ -372,7 +373,7 @@ public class AbbyyApiTest {
 
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         when(abbyyInput.getLocationId()).thenReturn(LocationId.EU);
-        when(abbyyInput.getSourceFile()).thenReturn(mock(File.class));
+        when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
         PowerMockito.spy(builderSpy);
@@ -409,7 +410,7 @@ public class AbbyyApiTest {
 
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         when(abbyyInput.getLocationId()).thenReturn(LocationId.EU);
-        when(abbyyInput.getSourceFile()).thenReturn(mock(File.class));
+        when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
         PowerMockito.spy(builderSpy);

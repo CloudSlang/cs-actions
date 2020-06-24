@@ -20,13 +20,13 @@ import io.cloudslang.content.abbyy.constants.*;
 import io.cloudslang.content.abbyy.entities.others.LocationId;
 import io.cloudslang.content.abbyy.entities.requests.HttpRequest;
 import io.cloudslang.content.abbyy.utils.InputParser;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public abstract class AbbyyInput implements HttpRequest {
     private final LocationId locationId;
@@ -36,19 +36,19 @@ public abstract class AbbyyInput implements HttpRequest {
     private final Short proxyPort;
     private final String proxyUsername;
     private final String proxyPassword;
-    private final Boolean trustAllRoots;
+    private final boolean trustAllRoots;
     private final String x509HostnameVerifier;
     private final String trustKeystore;
     private final String trustPassword;
-    private final Integer connectTimeout;
-    private final Integer socketTimeout;
-    private final Boolean keepAlive;
-    private final Integer connectionsMaxPerRoute;
-    private final Integer connectionsMaxTotal;
+    private final int connectTimeout;
+    private final int socketTimeout;
+    private final boolean keepAlive;
+    private final int connectionsMaxPerRoute;
+    private final int connectionsMaxTotal;
     private final String responseCharacterSet;
-    private final File destinationFile;
-    private final File sourceFile;
-    private final Boolean disableSizeLimit;
+    private final Path destinationFile;
+    private final Path sourceFile;
+    private final boolean disableSizeLimit;
 
 
     AbbyyInput(Builder builder) {
@@ -98,7 +98,7 @@ public abstract class AbbyyInput implements HttpRequest {
 
 
     @Override
-    public Short getProxyPort() {
+    public short getProxyPort() {
         return this.proxyPort;
     }
 
@@ -116,7 +116,7 @@ public abstract class AbbyyInput implements HttpRequest {
 
 
     @Override
-    public Boolean getTrustAllRoots() {
+    public boolean isTrustAllRoots() {
         return this.trustAllRoots;
     }
 
@@ -140,31 +140,31 @@ public abstract class AbbyyInput implements HttpRequest {
 
 
     @Override
-    public Integer getConnectTimeout() {
+    public int getConnectTimeout() {
         return this.connectTimeout;
     }
 
 
     @Override
-    public Integer getSocketTimeout() {
+    public int getSocketTimeout() {
         return this.socketTimeout;
     }
 
 
     @Override
-    public Boolean getKeepAlive() {
+    public boolean isKeepAlive() {
         return this.keepAlive;
     }
 
 
     @Override
-    public Integer getConnectionsMaxPerRoute() {
+    public int getConnectionsMaxPerRoute() {
         return this.connectionsMaxPerRoute;
     }
 
 
     @Override
-    public Integer getConnectionsMaxTotal() {
+    public int getConnectionsMaxTotal() {
         return this.connectionsMaxTotal;
     }
 
@@ -176,18 +176,18 @@ public abstract class AbbyyInput implements HttpRequest {
 
 
     @Override
-    public @Nullable File getDestinationFile() {
+    public Path getDestinationFile() {
         return this.destinationFile;
     }
 
 
     @Override
-    public File getSourceFile() {
+    public Path getSourceFile() {
         return this.sourceFile;
     }
 
 
-    public Boolean getDisableSizeLimit() {
+    public boolean isDisableSizeLimit() {
         return disableSizeLimit;
     }
 
@@ -226,7 +226,7 @@ public abstract class AbbyyInput implements HttpRequest {
 
 
     @Override
-    public Boolean isPreemptiveAuth() {
+    public boolean isPreemptiveAuth() {
         return true;
     }
 
@@ -268,7 +268,7 @@ public abstract class AbbyyInput implements HttpRequest {
 
 
     @Override
-    public Boolean isUseCookies() {
+    public boolean isUseCookies() {
         return false;
     }
 
@@ -280,7 +280,7 @@ public abstract class AbbyyInput implements HttpRequest {
 
 
     @Override
-    public Boolean isFollowRedirects() {
+    public boolean isFollowRedirects() {
         return true;
     }
 
@@ -292,13 +292,13 @@ public abstract class AbbyyInput implements HttpRequest {
 
 
     @Override
-    public Boolean isQueryParamsAreURLEncoded() {
+    public boolean isQueryParamsAreURLEncoded() {
         return false;
     }
 
 
     @Override
-    public Boolean isQueryParamsAreFormEncoded() {
+    public boolean isQueryParamsAreFormEncoded() {
         return false;
     }
 
@@ -310,7 +310,7 @@ public abstract class AbbyyInput implements HttpRequest {
 
 
     @Override
-    public Boolean isFormParamsAreURLEncoded() {
+    public boolean isFormParamsAreURLEncoded() {
         return false;
     }
 
@@ -352,13 +352,13 @@ public abstract class AbbyyInput implements HttpRequest {
 
 
     @Override
-    public Boolean isMultipartValuesAreURLEncoded() {
+    public boolean isMultipartValuesAreURLEncoded() {
         return false;
     }
 
 
     @Override
-    public Boolean isChunkedRequestEntity() {
+    public boolean isChunkedRequestEntity() {
         return false;
     }
 
@@ -383,19 +383,19 @@ public abstract class AbbyyInput implements HttpRequest {
         private Short proxyPort;
         private String proxyUsername;
         private String proxyPassword;
-        private Boolean trustAllRoots;
+        private boolean trustAllRoots;
         private String x509HostnameVerifier;
         private String trustKeystore;
         private String trustPassword;
-        private Integer connectTimeout;
-        private Integer socketTimeout;
-        private Boolean keepAlive;
-        private Integer connectionsMaxPerRoute;
-        private Integer connectionsMaxTotal;
+        private int connectTimeout;
+        private int socketTimeout;
+        private boolean keepAlive;
+        private int connectionsMaxPerRoute;
+        private int connectionsMaxTotal;
         private String responseCharacterSet;
-        private File destinationFile;
-        private File sourceFile;
-        private Boolean disableSizeLimit;
+        private Path destinationFile;
+        private Path sourceFile;
+        private boolean disableSizeLimit;
 
 
         public Builder locationId(String locationId) {
@@ -445,7 +445,7 @@ public abstract class AbbyyInput implements HttpRequest {
         public Builder trustAllRoots(String trustAllRoots) {
             this.trustAllRoots = InputParser.parseBoolean(
                     StringUtils.defaultString(trustAllRoots, DefaultInputValues.TRUST_ALL_ROOTS),
-                    HttpClientInputs.TRUST_ALL_ROOTS);
+                    InputNames.TRUST_ALL_ROOTS);
             return this;
         }
 
@@ -471,7 +471,7 @@ public abstract class AbbyyInput implements HttpRequest {
         public Builder connectTimeout(String connectTimeout) {
             this.connectTimeout = InputParser.parseInt(
                     StringUtils.defaultString(connectTimeout, DefaultInputValues.CONNECT_TIMEOUT),
-                    HttpClientInputs.CONNECT_TIMEOUT);
+                    InputNames.CONNECT_TIMEOUT);
             return this;
         }
 
@@ -479,7 +479,7 @@ public abstract class AbbyyInput implements HttpRequest {
         public Builder socketTimeout(String socketTimeout) {
             this.socketTimeout = InputParser.parseInt(
                     StringUtils.defaultString(socketTimeout, DefaultInputValues.SOCKET_TIMEOUT),
-                    HttpClientInputs.SOCKET_TIMEOUT);
+                    InputNames.SOCKET_TIMEOUT);
             return this;
         }
 
@@ -487,7 +487,7 @@ public abstract class AbbyyInput implements HttpRequest {
         public Builder keepAlive(String keepAlive) {
             this.keepAlive = InputParser.parseBoolean(
                     StringUtils.defaultString(keepAlive, DefaultInputValues.KEEP_ALIVE),
-                    HttpClientInputs.KEEP_ALIVE);
+                    InputNames.KEEP_ALIVE);
             return this;
         }
 
@@ -495,7 +495,7 @@ public abstract class AbbyyInput implements HttpRequest {
         public Builder connectionsMaxPerRoute(String connectionsMaxPerRoute) {
             this.connectionsMaxPerRoute = InputParser.parseInt(
                     StringUtils.defaultString(connectionsMaxPerRoute, DefaultInputValues.CONNECTIONS_MAX_PER_ROUTE),
-                    HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE);
+                    InputNames.CONNECTIONS_MAX_PER_ROUTE);
             return this;
         }
 
@@ -503,7 +503,7 @@ public abstract class AbbyyInput implements HttpRequest {
         public Builder connectionsMaxTotal(String connectionsMaxTotal) {
             this.connectionsMaxTotal = InputParser.parseInt(
                     StringUtils.defaultString(connectionsMaxTotal, DefaultInputValues.CONNECTIONS_MAX_TOTAL),
-                    HttpClientInputs.CONNECTIONS_MAX_TOTAL);
+                    InputNames.CONNECTIONS_MAX_TOTAL);
             return this;
         }
 
@@ -516,14 +516,14 @@ public abstract class AbbyyInput implements HttpRequest {
 
         public Builder destinationFile(String destinationFile) {
             if (StringUtils.isNotEmpty(destinationFile)) {
-                this.destinationFile = new File(destinationFile);
+                this.destinationFile = Paths.get(destinationFile);
             }
             return this;
         }
 
 
         public Builder sourceFile(String sourceFile) {
-            this.sourceFile = new File(sourceFile);
+            this.sourceFile = Paths.get(sourceFile);
             return this;
         }
 

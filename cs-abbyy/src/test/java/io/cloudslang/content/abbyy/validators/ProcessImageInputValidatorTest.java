@@ -26,6 +26,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,7 +39,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@PrepareForTest({String.class})
+@PrepareForTest({String.class, ProcessImageInputValidator.class})
 public class ProcessImageInputValidatorTest extends AbbyyInputValidatorTest<ProcessImageInput> {
 
     @Test
@@ -56,8 +59,8 @@ public class ProcessImageInputValidatorTest extends AbbyyInputValidatorTest<Proc
         //Arrange
         ProcessImageInput abbyyRequestMock = mockAbbyyRequest();
 
-        File destinationFileMock = mock(File.class);
-        PowerMockito.when(destinationFileMock.exists()).thenReturn(false);
+        Path destinationFileMock = mock(Path.class);
+        PowerMockito.when(Files.exists(destinationFileMock)).thenReturn(false);
         PowerMockito.when(abbyyRequestMock.getDestinationFile()).thenReturn(destinationFileMock);
 
         //Act
@@ -73,9 +76,9 @@ public class ProcessImageInputValidatorTest extends AbbyyInputValidatorTest<Proc
         //Arrange
         ProcessImageInput abbyyRequestMock = mockAbbyyRequest();
 
-        File destinationFolderMock = mock(File.class);
-        when(destinationFolderMock.exists()).thenReturn(true);
-        when(destinationFolderMock.isDirectory()).thenReturn(false);
+        Path destinationFolderMock = mock(Path.class);
+        PowerMockito.when(Files.exists(destinationFolderMock)).thenReturn(true);
+        PowerMockito.when(Files.isDirectory(destinationFolderMock)).thenReturn(false);
         when(abbyyRequestMock.getDestinationFile()).thenReturn(destinationFolderMock);
 
         //Act
@@ -223,9 +226,9 @@ public class ProcessImageInputValidatorTest extends AbbyyInputValidatorTest<Proc
         when(requestMock.getPassword()).thenReturn("dummy");
         when(requestMock.getProxyPort()).thenReturn((short) 20);
         when(requestMock.getDestinationFile()).thenReturn(null);
-        File sourceFileMock = mock(File.class);
-        when(sourceFileMock.exists()).thenReturn(true);
-        when(sourceFileMock.isFile()).thenReturn(true);
+        Path sourceFileMock = Paths.get(StringUtils.EMPTY);
+        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
+        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(true);
         when(requestMock.getSourceFile()).thenReturn(sourceFileMock);
         when(requestMock.getConnectTimeout()).thenReturn(0);
         when(requestMock.getSocketTimeout()).thenReturn(0);

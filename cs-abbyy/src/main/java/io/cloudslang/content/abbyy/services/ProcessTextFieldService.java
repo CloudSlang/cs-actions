@@ -64,10 +64,6 @@ public class ProcessTextFieldService extends AbbyyService<ProcessTextFieldInput>
 
         String xml = getResult(request, response);
 
-        if (xml.startsWith(MiscConstants.BOM_CHAR)) {
-            xml = xml.substring(1);
-        }
-
         results.put(OutputNames.XML_RESULT, xml);
         if (request.getDestinationFile() != null) {
             saveClearTextResultOnDisk(request, xml);
@@ -75,7 +71,7 @@ public class ProcessTextFieldService extends AbbyyService<ProcessTextFieldInput>
     }
 
 
-    private String getResult(@NotNull ProcessTextFieldInput abbyyInitialRequest, @NotNull AbbyyResponse abbyyPreviousResponse) throws Exception {
+    private String getResult(@NotNull ProcessTextFieldInput abbyyInput, @NotNull AbbyyResponse abbyyPreviousResponse) throws Exception {
         ValidationException validationEx;
 
         if (abbyyPreviousResponse.getResultUrls().isEmpty()) {
@@ -83,16 +79,16 @@ public class ProcessTextFieldService extends AbbyyService<ProcessTextFieldInput>
         }
         String resultUrl = abbyyPreviousResponse.getResultUrls().get(0);
 
-        validationEx = this.xmlResultValidator.validateBeforeDownload(abbyyInitialRequest, resultUrl);
+        validationEx = this.xmlResultValidator.validateBeforeDownload(abbyyInput, resultUrl);
         if (validationEx != null) {
             throw validationEx;
         }
 
-        String result = this.abbyyApi.getResult(abbyyInitialRequest, resultUrl, ExportFormat.XML, null, true);
+        String result = this.abbyyApi.getResult(abbyyInput, resultUrl, ExportFormat.XML, null, true);
 
         result = result.replace("xmlns:xsi=\"@link\"", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
 
-        validationEx = this.xmlResultValidator.validateAfterDownload(result);
+        validationEx = this.xmlResultValidator.validateAfterDownload(abbyyInput, result);
         if (validationEx != null) {
             throw validationEx;
         }
@@ -102,7 +98,7 @@ public class ProcessTextFieldService extends AbbyyService<ProcessTextFieldInput>
 
 
     private void saveClearTextResultOnDisk(@NotNull ProcessTextFieldInput request, @NotNull String clearText) throws IOException {
-        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(request.getDestinationFile()),
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(request.getDestinationFile().toFile()),
                 request.getResponseCharacterSet())) {
             writer.write(clearText);
         }

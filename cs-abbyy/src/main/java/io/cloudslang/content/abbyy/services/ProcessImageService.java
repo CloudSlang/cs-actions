@@ -25,6 +25,7 @@ import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
+import io.cloudslang.content.abbyy.utils.CharsetUtils;
 import io.cloudslang.content.abbyy.validators.*;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
@@ -76,9 +77,6 @@ public class ProcessImageService extends AbbyyService<ProcessImageInput> {
                 switch (exportFormat) {
                     case XML:
                         result = getClearTextResult(request, response, ExportFormat.XML, xmlResultValidator);
-                        if (result.startsWith(MiscConstants.BOM_CHAR)) {
-                            result = result.substring(1);
-                        }
                         results.put(OutputNames.XML_RESULT, result);
                         break;
                     case TXT:
@@ -106,54 +104,54 @@ public class ProcessImageService extends AbbyyService<ProcessImageInput> {
     }
 
 
-    private String getClearTextResult(@NotNull ProcessImageInput abbyyInitialRequest, @NotNull AbbyyResponse abbyyPreviousResponse,
+    private String getClearTextResult(@NotNull ProcessImageInput abbyyInput, @NotNull AbbyyResponse abbyyPreviousResponse,
                                       @NotNull ExportFormat exportFormat, @NotNull AbbyyResultValidator resultValidator) throws Exception {
         ValidationException validationEx;
 
-        if (abbyyInitialRequest.getExportFormats().size() != abbyyPreviousResponse.getResultUrls().size()) {
+        if (abbyyInput.getExportFormats().size() != abbyyPreviousResponse.getResultUrls().size()) {
             throw new AbbyySdkException(ExceptionMsgs.EXPORT_FORMAT_AND_RESULT_URLS_DO_NOT_MATCH);
         }
-        int indexOfResultUrl = abbyyInitialRequest.getExportFormats().indexOf(exportFormat);
+        int indexOfResultUrl = abbyyInput.getExportFormats().indexOf(exportFormat);
         String resultUrl = abbyyPreviousResponse.getResultUrls().get(indexOfResultUrl);
 
-        validationEx = resultValidator.validateBeforeDownload(abbyyInitialRequest, resultUrl);
+        validationEx = resultValidator.validateBeforeDownload(abbyyInput, resultUrl);
         if (validationEx != null) {
             throw validationEx;
         }
 
-        String result = this.abbyyApi.getResult(abbyyInitialRequest, resultUrl, exportFormat, null, true);
+        String result = this.abbyyApi.getResult(abbyyInput, resultUrl, exportFormat, null, true);
 
-        validationEx = resultValidator.validateAfterDownload(result);
+        validationEx = resultValidator.validateAfterDownload(abbyyInput, result);
         if (validationEx != null) {
             throw validationEx;
         }
 
-        if (abbyyInitialRequest.getDestinationFile() != null) {
-            saveClearTextOnDisk(abbyyInitialRequest, result, exportFormat);
+        if (abbyyInput.getDestinationFile() != null) {
+            saveClearTextOnDisk(abbyyInput, result, exportFormat);
         }
 
         return result;
     }
 
 
-    private String getBinaryResult(@NotNull ProcessImageInput abbyyInitialRequest, @NotNull AbbyyResponse abbyyPreviousResponse,
+    private String getBinaryResult(@NotNull ProcessImageInput abbyyInput, @NotNull AbbyyResponse abbyyPreviousResponse,
                                    @NotNull ExportFormat exportFormat, @NotNull AbbyyResultValidator resultValidator) throws Exception {
         ValidationException validationEx;
 
-        if (abbyyInitialRequest.getExportFormats().size() != abbyyPreviousResponse.getResultUrls().size()) {
+        if (abbyyInput.getExportFormats().size() != abbyyPreviousResponse.getResultUrls().size()) {
             throw new AbbyySdkException(ExceptionMsgs.EXPORT_FORMAT_AND_RESULT_URLS_DO_NOT_MATCH);
         }
-        int indexOfResultUrl = abbyyInitialRequest.getExportFormats().indexOf(exportFormat);
+        int indexOfResultUrl = abbyyInput.getExportFormats().indexOf(exportFormat);
         String resultUrl = abbyyPreviousResponse.getResultUrls().get(indexOfResultUrl);
 
-        validationEx = resultValidator.validateBeforeDownload(abbyyInitialRequest, resultUrl);
+        validationEx = resultValidator.validateBeforeDownload(abbyyInput, resultUrl);
         if (validationEx != null) {
             throw validationEx;
         }
 
-        if (abbyyInitialRequest.getDestinationFile() != null) {
-            String targetPath = downloadOnDisk(abbyyInitialRequest, resultUrl, exportFormat);
-            validationEx = resultValidator.validateAfterDownload(targetPath);
+        if (abbyyInput.getDestinationFile() != null) {
+            String targetPath = downloadOnDisk(abbyyInput, resultUrl, exportFormat);
+            validationEx = resultValidator.validateAfterDownload(abbyyInput, targetPath);
             if (validationEx != null) {
                 Files.delete(Paths.get(targetPath));
                 throw validationEx;
@@ -187,8 +185,8 @@ public class ProcessImageService extends AbbyyService<ProcessImageInput> {
 
 
     private String getTargetPath(@NotNull ProcessImageInput request, @NotNull ExportFormat exportFormat) {
-        return request.getDestinationFile().getAbsolutePath() + "/" +
-                FilenameUtils.removeExtension(request.getSourceFile().getName()) + "." +
+        return request.getDestinationFile().toAbsolutePath().toString() + "/" +
+                FilenameUtils.removeExtension(request.getSourceFile().getFileName().toString()) + "." +
                 exportFormat.getFileExtension();
     }
 }

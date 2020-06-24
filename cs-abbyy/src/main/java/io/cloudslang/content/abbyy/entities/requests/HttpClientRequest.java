@@ -16,313 +16,363 @@ package io.cloudslang.content.abbyy.entities.requests;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
-import io.cloudslang.content.abbyy.constants.SecurityConstants;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.Path;
 
 public class HttpClientRequest implements HttpRequest {
-    private String url;
-    private String tlsVersion;
-    private String allowedCyphers;
-    private String authType;
-    private String preemptiveAuth;
-    private String username;
-    private String password;
-    private String kerberosConfigFile;
-    private String kerberosLoginConfFile;
-    private String kerberosSkipPortForLookup;
-    private String proxyHost;
-    private String proxyPort;
-    private String proxyUsername;
-    private String proxyPassword;
-    private String trustAllRoots;
-    private String x509HostnameVerifier;
-    private String trustKeystore;
-    private String trustPassword;
-    private String keystore;
-    private String keystorePassword;
-    private String connectTimeout;
-    private String socketTimeout;
-    private String useCookies;
-    private String keepAlive;
-    private String connectionsMaxPerRoute;
-    private String connectionsMaxTotal;
-    private String headers;
-    private String responseCharacterSet;
-    private String destinationFile;
-    private String followRedirects;
-    private String queryParams;
-    private String queryParamsAreURLEncoded;
-    private String queryParamsAreFormEncoded;
-    private String formParams;
-    private String formParamsAreURLEncoded;
-    private String sourceFile;
-    private String body;
-    private String contentType;
-    private String requestCharacterSet;
-    private String multipartBodies;
-    private String multipartBodiesContentType;
-    private String multipartFiles;
-    private String multipartFilesContentType;
-    private String multipartValuesAreURLEncoded;
-    private String chunkedRequestEntity;
-    private String method;
-    private SerializableSessionObject httpClientCookieSession;
-    private GlobalSessionObject httpClientPoolingConnectionManager;
+    private final String url;
+    private final String tlsVersion;
+    private final String allowedCyphers;
+    private final String authType;
+    private final boolean preemptiveAuth;
+    private final String username;
+    private final String password;
+    private final String kerberosConfigFile;
+    private final String kerberosLoginConfFile;
+    private final String kerberosSkipPortForLookup;
+    private final String proxyHost;
+    private final short proxyPort;
+    private final String proxyUsername;
+    private final String proxyPassword;
+    private final boolean trustAllRoots;
+    private final String x509HostnameVerifier;
+    private final String trustKeystore;
+    private final String trustPassword;
+    private final String keystore;
+    private final String keystorePassword;
+    private final int connectTimeout;
+    private final int socketTimeout;
+    private final boolean useCookies;
+    private final boolean keepAlive;
+    private final int connectionsMaxPerRoute;
+    private final int connectionsMaxTotal;
+    private final String headers;
+    private final String responseCharacterSet;
+    private final Path destinationFile;
+    private final boolean followRedirects;
+    private final String queryParams;
+    private final boolean queryParamsAreURLEncoded;
+    private final boolean queryParamsAreFormEncoded;
+    private final String formParams;
+    private final boolean formParamsAreURLEncoded;
+    private final Path sourceFile;
+    private final String body;
+    private final String contentType;
+    private final String requestCharacterSet;
+    private final String multipartBodies;
+    private final String multipartBodiesContentType;
+    private final String multipartFiles;
+    private final String multipartFilesContentType;
+    private final boolean multipartValuesAreURLEncoded;
+    private final boolean chunkedRequestEntity;
+    private final String method;
+    private final SerializableSessionObject httpClientCookieSession;
+    private final GlobalSessionObject httpClientPoolingConnectionManager;
 
 
-    private HttpClientRequest() {
-
+    private HttpClientRequest(Builder builder) {
+        this.url = builder.url;
+        this.tlsVersion = builder.tlsVersion;
+        this.allowedCyphers = builder.allowedCyphers;
+        this.authType = builder.authType;
+        this.preemptiveAuth = builder.preemptiveAuth;
+        this.username = builder.username;
+        this.password = builder.password;
+        this.kerberosConfigFile = builder.kerberosConfigFile;
+        this.kerberosLoginConfFile = builder.kerberosLoginConfFile;
+        this.kerberosSkipPortForLookup = builder.kerberosSkipPortForLookup;
+        this.proxyHost = builder.proxyHost;
+        this.proxyPort = builder.proxyPort;
+        this.proxyUsername = builder.proxyUsername;
+        this.proxyPassword = builder.proxyPassword;
+        this.trustAllRoots = builder.trustAllRoots;
+        this.x509HostnameVerifier = builder.x509HostnameVerifier;
+        this.trustKeystore = builder.trustKeystore;
+        this.trustPassword = builder.trustPassword;
+        this.keystore = builder.keystore;
+        this.keystorePassword = builder.keystorePassword;
+        this.connectTimeout = builder.connectTimeout;
+        this.socketTimeout = builder.socketTimeout;
+        this.useCookies = builder.useCookies;
+        this.keepAlive = builder.keepAlive;
+        this.connectionsMaxPerRoute = builder.connectionsMaxPerRoute;
+        this.connectionsMaxTotal = builder.connectionsMaxTotal;
+        this.headers = builder.headers;
+        this.responseCharacterSet = builder.responseCharacterSet;
+        this.destinationFile = builder.destinationFile;
+        this.followRedirects = builder.followRedirects;
+        this.queryParams = builder.queryParams;
+        this.queryParamsAreURLEncoded = builder.queryParamsAreURLEncoded;
+        this.queryParamsAreFormEncoded = builder.queryParamsAreFormEncoded;
+        this.formParams = builder.formParams;
+        this.formParamsAreURLEncoded = builder.formParamsAreURLEncoded;
+        this.sourceFile = builder.sourceFile;
+        this.body = builder.body;
+        this.contentType = builder.contentType;
+        this.requestCharacterSet = builder.requestCharacterSet;
+        this.multipartBodies = builder.multipartBodies;
+        this.multipartBodiesContentType = builder.multipartBodiesContentType;
+        this.multipartFiles = builder.multipartFiles;
+        this.multipartFilesContentType = builder.multipartFilesContentType;
+        this.multipartValuesAreURLEncoded = builder.multipartValuesAreURLEncoded;
+        this.chunkedRequestEntity = builder.chunkedRequestEntity;
+        this.method = builder.method;
+        this.httpClientCookieSession = builder.httpClientCookieSession;
+        this.httpClientPoolingConnectionManager = builder.httpClientPoolingConnectionManager;
     }
 
 
-    public @Nullable String getUrl() {
+    public String getUrl() {
         return url;
     }
 
 
-    public @Nullable String getTlsVersion() {
+    public String getTlsVersion() {
         return tlsVersion;
     }
 
 
-    public @Nullable String getAllowedCyphers() {
+    public String getAllowedCyphers() {
         return allowedCyphers;
     }
 
 
-    public @Nullable String getAuthType() {
+    public String getAuthType() {
         return authType;
     }
 
 
-    public @Nullable Boolean isPreemptiveAuth() {
-        return Boolean.parseBoolean(preemptiveAuth);
+    public boolean isPreemptiveAuth() {
+        return preemptiveAuth;
     }
 
 
-    public @Nullable String getUsername() {
+    public String getUsername() {
         return username;
     }
 
 
-    public @Nullable String getPassword() {
+    public String getPassword() {
         return password;
     }
 
 
-    public @Nullable String getKerberosConfigFile() {
+    public String getKerberosConfigFile() {
         return kerberosConfigFile;
     }
 
 
-    public @Nullable String getKerberosLoginConfFile() {
+    public String getKerberosLoginConfFile() {
         return kerberosLoginConfFile;
     }
 
 
-    public @Nullable String getKerberosSkipPortForLookup() {
+    public String getKerberosSkipPortForLookup() {
         return kerberosSkipPortForLookup;
     }
 
 
-    public @Nullable String getProxyHost() {
+    public String getProxyHost() {
         return proxyHost;
     }
 
 
-    public @Nullable Short getProxyPort() {
-        return Short.parseShort(proxyPort);
+    public short getProxyPort() {
+        return proxyPort;
     }
 
 
-    public @Nullable String getProxyUsername() {
+    public String getProxyUsername() {
         return proxyUsername;
     }
 
 
-    public @Nullable String getProxyPassword() {
+    public String getProxyPassword() {
         return proxyPassword;
     }
 
 
-    public @Nullable Boolean getTrustAllRoots() {
-        return Boolean.parseBoolean(trustAllRoots);
+    public boolean isTrustAllRoots() {
+        return trustAllRoots;
     }
 
 
-    public @Nullable String getX509HostnameVerifier() {
+    public String getX509HostnameVerifier() {
         return x509HostnameVerifier;
     }
 
 
-    public @Nullable String getTrustKeystore() {
+    public String getTrustKeystore() {
         return trustKeystore;
     }
 
 
-    public @Nullable String getTrustPassword() {
+    public String getTrustPassword() {
         return trustPassword;
     }
 
 
-    public @Nullable String getKeystore() {
+    public String getKeystore() {
         return keystore;
     }
 
 
-    public @Nullable String getKeystorePassword() {
+    public String getKeystorePassword() {
         return keystorePassword;
     }
 
 
-    public @Nullable Integer getConnectTimeout() {
-        return Integer.parseInt(connectTimeout);
+    public int getConnectTimeout() {
+        return connectTimeout;
     }
 
 
-    public @Nullable Integer getSocketTimeout() {
-        return Integer.parseInt(socketTimeout);
+    public int getSocketTimeout() {
+        return socketTimeout;
     }
 
 
-    public @Nullable Boolean isUseCookies() {
-        return Boolean.parseBoolean(useCookies);
+    public boolean isUseCookies() {
+        return useCookies;
     }
 
 
-    public @Nullable Boolean getKeepAlive() {
-        return Boolean.parseBoolean(keepAlive);
+    public boolean isKeepAlive() {
+        return keepAlive;
     }
 
 
-    public @Nullable Integer getConnectionsMaxPerRoute() {
-        return Integer.parseInt(connectionsMaxPerRoute);
+    public int getConnectionsMaxPerRoute() {
+        return connectionsMaxPerRoute;
     }
 
 
-    public @Nullable Integer getConnectionsMaxTotal() {
-        return Integer.parseInt(connectionsMaxTotal);
+    public int getConnectionsMaxTotal() {
+        return connectionsMaxTotal;
     }
 
 
-    public @Nullable String getHeaders() {
+    public String getHeaders() {
         return headers;
     }
 
 
-    public @Nullable String getResponseCharacterSet() {
+    public String getResponseCharacterSet() {
         return responseCharacterSet;
     }
 
 
-    public @Nullable File getDestinationFile() {
-        return StringUtils.isNotBlank(destinationFile) ? new File(destinationFile) : null;
+    public Path getDestinationFile() {
+        return destinationFile;
     }
 
 
-    public @Nullable Boolean isFollowRedirects() {
-        return Boolean.parseBoolean(followRedirects);
+    public boolean isFollowRedirects() {
+        return followRedirects;
     }
 
 
-    public @Nullable String getQueryParams() {
+    public String getQueryParams() {
         return queryParams;
     }
 
 
-    public @Nullable Boolean isQueryParamsAreURLEncoded() {
-        return Boolean.parseBoolean(queryParamsAreURLEncoded);
+    public boolean isQueryParamsAreURLEncoded() {
+        return queryParamsAreURLEncoded;
     }
 
 
-    public @Nullable Boolean isQueryParamsAreFormEncoded() {
-        return Boolean.parseBoolean(queryParamsAreFormEncoded);
+    public boolean isQueryParamsAreFormEncoded() {
+        return queryParamsAreFormEncoded;
     }
 
 
-    public @Nullable String getFormParams() {
+    public String getFormParams() {
         return formParams;
     }
 
 
-    public @Nullable Boolean isFormParamsAreURLEncoded() {
-        return Boolean.parseBoolean(formParamsAreURLEncoded);
+    public boolean isFormParamsAreURLEncoded() {
+        return formParamsAreURLEncoded;
     }
 
 
-    public @Nullable File getSourceFile() {
-        return StringUtils.isNotBlank(sourceFile) ? new File(sourceFile) : null;
+    public Path getSourceFile() {
+        return sourceFile;
     }
 
 
-    public @Nullable String getBody() {
+    public String getBody() {
         return body;
     }
 
 
-    public @Nullable String getContentType() {
+    public String getContentType() {
         return contentType;
     }
 
 
-    public @Nullable String getRequestCharacterSet() {
+    public String getRequestCharacterSet() {
         return requestCharacterSet;
     }
 
 
-    public @Nullable String getMultipartBodies() {
+    public String getMultipartBodies() {
         return multipartBodies;
     }
 
 
-    public @Nullable String getMultipartBodiesContentType() {
+    public String getMultipartBodiesContentType() {
         return multipartBodiesContentType;
     }
 
 
-    public @Nullable String getMultipartFiles() {
+    public String getMultipartFiles() {
         return multipartFiles;
     }
 
 
-    public @Nullable String getMultipartFilesContentType() {
+    public String getMultipartFilesContentType() {
         return multipartFilesContentType;
     }
 
 
-    public @Nullable Boolean isMultipartValuesAreURLEncoded() {
-        return Boolean.parseBoolean(multipartValuesAreURLEncoded);
+    public boolean isMultipartValuesAreURLEncoded() {
+        return multipartValuesAreURLEncoded;
     }
 
 
-    public @Nullable Boolean isChunkedRequestEntity() {
-        return Boolean.parseBoolean(chunkedRequestEntity);
+    public boolean isChunkedRequestEntity() {
+        return chunkedRequestEntity;
     }
 
 
-    public @Nullable String getMethod() {
+    public String getMethod() {
         return method;
     }
 
 
-    public @Nullable SerializableSessionObject getHttpClientCookieSession() {
+    public SerializableSessionObject getHttpClientCookieSession() {
         return httpClientCookieSession;
     }
 
 
-    public @Nullable GlobalSessionObject getHttpClientPoolingConnectionManager() {
+    public GlobalSessionObject getHttpClientPoolingConnectionManager() {
         return httpClientPoolingConnectionManager;
     }
 
 
     public static class Builder {
         private String url;
+        private String tlsVersion;
+        private String allowedCyphers;
         private String authType;
+        private boolean preemptiveAuth;
         private String username;
         private String password;
+        private String kerberosConfigFile;
+        private String kerberosLoginConfFile;
+        private String kerberosSkipPortForLookup;
         private String proxyHost;
         private short proxyPort;
         private String proxyUsername;
@@ -331,17 +381,36 @@ public class HttpClientRequest implements HttpRequest {
         private String x509HostnameVerifier;
         private String trustKeystore;
         private String trustPassword;
+        private String keystore;
+        private String keystorePassword;
         private int connectTimeout;
         private int socketTimeout;
+        private boolean useCookies;
         private boolean keepAlive;
         private int connectionsMaxPerRoute;
         private int connectionsMaxTotal;
-        private String responseCharacterSet;
-        private String destinationFile;
-        private String sourceFile;
-        private String contentType;
-        private String method;
         private String headers;
+        private String responseCharacterSet;
+        private Path destinationFile;
+        private boolean followRedirects;
+        private String queryParams;
+        private boolean queryParamsAreURLEncoded;
+        private boolean queryParamsAreFormEncoded;
+        private String formParams;
+        private boolean formParamsAreURLEncoded;
+        private Path sourceFile;
+        private String body;
+        private String contentType;
+        private String requestCharacterSet;
+        private String multipartBodies;
+        private String multipartBodiesContentType;
+        private String multipartFiles;
+        private String multipartFilesContentType;
+        private boolean multipartValuesAreURLEncoded;
+        private boolean chunkedRequestEntity;
+        private String method;
+        private SerializableSessionObject httpClientCookieSession;
+        private GlobalSessionObject httpClientPoolingConnectionManager;
 
 
         public Builder url(String url) {
@@ -350,8 +419,26 @@ public class HttpClientRequest implements HttpRequest {
         }
 
 
+        public Builder tlsVersion(String tlsVersion) {
+            this.tlsVersion = tlsVersion;
+            return this;
+        }
+
+
+        public Builder allowedCyphers(String allowedCyphers) {
+            this.allowedCyphers = allowedCyphers;
+            return this;
+        }
+
+
         public Builder authType(String authType) {
             this.authType = authType;
+            return this;
+        }
+
+
+        public Builder preemptiveAuth(boolean preemptiveAuth) {
+            this.preemptiveAuth = preemptiveAuth;
             return this;
         }
 
@@ -364,6 +451,24 @@ public class HttpClientRequest implements HttpRequest {
 
         public Builder password(String password) {
             this.password = password;
+            return this;
+        }
+
+
+        public Builder kerberosConfigFile(String kerberosConfigFile) {
+            this.kerberosConfigFile = kerberosConfigFile;
+            return this;
+        }
+
+
+        public Builder kerberosLoginConfFile(String kerberosLoginConfFile) {
+            this.kerberosLoginConfFile = kerberosLoginConfFile;
+            return this;
+        }
+
+
+        public Builder kerberosSkipPortForLookup(String kerberosSkipPortForLookup) {
+            this.kerberosSkipPortForLookup = kerberosSkipPortForLookup;
             return this;
         }
 
@@ -416,6 +521,18 @@ public class HttpClientRequest implements HttpRequest {
         }
 
 
+        public Builder keystore(String keystore) {
+            this.keystore = keystore;
+            return this;
+        }
+
+
+        public Builder keystorePassword(String keystorePassword) {
+            this.keystorePassword = keystorePassword;
+            return this;
+        }
+
+
         public Builder connectTimeout(int connectTimeout) {
             this.connectTimeout = connectTimeout;
             return this;
@@ -424,6 +541,12 @@ public class HttpClientRequest implements HttpRequest {
 
         public Builder socketTimeout(int socketTimeout) {
             this.socketTimeout = socketTimeout;
+            return this;
+        }
+
+
+        public Builder useCookies(boolean useCookies) {
+            this.useCookies = useCookies;
             return this;
         }
 
@@ -446,20 +569,68 @@ public class HttpClientRequest implements HttpRequest {
         }
 
 
+        public Builder headers(String headers) {
+            this.headers = headers;
+            return this;
+        }
+
+
         public Builder responseCharacterSet(String responseCharacterSet) {
             this.responseCharacterSet = responseCharacterSet;
             return this;
         }
 
 
-        public Builder destinationFile(String destinationFile) {
+        public Builder destinationFile(Path destinationFile) {
             this.destinationFile = destinationFile;
             return this;
         }
 
 
-        public Builder sourceFile(String sourceFile) {
+        public Builder followRedirects(boolean followRedirects) {
+            this.followRedirects = followRedirects;
+            return this;
+        }
+
+
+        public Builder queryParams(String queryParams) {
+            this.queryParams = queryParams;
+            return this;
+        }
+
+
+        public Builder queryParamsAreURLEncoded(boolean queryParamsAreURLEncoded) {
+            this.queryParamsAreURLEncoded = queryParamsAreURLEncoded;
+            return this;
+        }
+
+
+        public Builder queryParamsAreFormEncoded(boolean queryParamsAreFormEncoded) {
+            this.queryParamsAreFormEncoded = queryParamsAreFormEncoded;
+            return this;
+        }
+
+
+        public Builder formParams(String formParams) {
+            this.formParams = formParams;
+            return this;
+        }
+
+
+        public Builder formParamsAreURLEncoded(boolean formParamsAreURLEncoded) {
+            this.formParamsAreURLEncoded = formParamsAreURLEncoded;
+            return this;
+        }
+
+
+        public Builder sourceFile(Path sourceFile) {
             this.sourceFile = sourceFile;
+            return this;
+        }
+
+
+        public Builder body(String body) {
+            this.body = body;
             return this;
         }
 
@@ -470,71 +641,68 @@ public class HttpClientRequest implements HttpRequest {
         }
 
 
+        public Builder requestCharacterSet(String requestCharacterSet) {
+            this.requestCharacterSet = requestCharacterSet;
+            return this;
+        }
+
+
+        public Builder multipartBodies(String multipartBodies) {
+            this.multipartBodies = multipartBodies;
+            return this;
+        }
+
+
+        public Builder multipartBodiesContentType(String multipartBodiesContentType) {
+            this.multipartBodiesContentType = multipartBodiesContentType;
+            return this;
+        }
+
+
+        public Builder multipartFiles(String multipartFiles) {
+            this.multipartFiles = multipartFiles;
+            return this;
+        }
+
+
+        public Builder multipartFilesContentType(String multipartFilesContentType) {
+            this.multipartFilesContentType = multipartFilesContentType;
+            return this;
+        }
+
+
+        public Builder multipartValuesAreURLEncoded(boolean multipartValuesAreURLEncoded) {
+            this.multipartValuesAreURLEncoded = multipartValuesAreURLEncoded;
+            return this;
+        }
+
+
+        public Builder chunkedRequestEntity(boolean chunkedRequestEntity) {
+            this.chunkedRequestEntity = chunkedRequestEntity;
+            return this;
+        }
+
+
         public Builder method(String method) {
             this.method = method;
             return this;
         }
 
 
-        public Builder headers(String headers) {
-            this.headers = headers;
+        public Builder httpClientCookieSession(SerializableSessionObject httpClientCookieSession) {
+            this.httpClientCookieSession = httpClientCookieSession;
+            return this;
+        }
+
+
+        public Builder httpClientPoolingConnectionManager(GlobalSessionObject httpClientPoolingConnectionManager) {
+            this.httpClientPoolingConnectionManager = httpClientPoolingConnectionManager;
             return this;
         }
 
 
         public HttpClientRequest build() {
-            HttpClientRequest request = new HttpClientRequest();
-
-            request.url = StringUtils.defaultString(this.url);
-            request.tlsVersion = SecurityConstants.TLSv1_2;
-            request.allowedCyphers = SecurityConstants.ALLOWED_CYPHERS;
-            request.authType = StringUtils.defaultString(this.authType);
-            request.preemptiveAuth = String.valueOf(false);
-            request.username = StringUtils.defaultString(this.username);
-            request.password = StringUtils.defaultString(this.password);
-            request.kerberosConfigFile = StringUtils.EMPTY;
-            request.kerberosLoginConfFile = StringUtils.EMPTY;
-            request.kerberosSkipPortForLookup = StringUtils.EMPTY;
-            request.proxyHost = StringUtils.defaultString(this.proxyHost);
-            request.proxyPort = String.valueOf(this.proxyPort);
-            request.proxyUsername = StringUtils.defaultString(this.proxyUsername);
-            request.proxyPassword = StringUtils.defaultString(this.proxyPassword);
-            request.trustAllRoots = String.valueOf(this.trustAllRoots);
-            request.x509HostnameVerifier = StringUtils.defaultString(this.x509HostnameVerifier);
-            request.trustKeystore = StringUtils.defaultString(this.trustKeystore);
-            request.trustPassword = StringUtils.defaultString(this.trustPassword);
-            request.keystore = StringUtils.EMPTY;
-            request.keystorePassword = StringUtils.EMPTY;
-            request.connectTimeout = String.valueOf(this.connectTimeout);
-            request.socketTimeout = String.valueOf(this.socketTimeout);
-            request.useCookies = String.valueOf(false);
-            request.keepAlive = String.valueOf(this.keepAlive);
-            request.connectionsMaxPerRoute = String.valueOf(this.connectionsMaxPerRoute);
-            request.connectionsMaxTotal = String.valueOf(this.connectionsMaxTotal);
-            request.headers = StringUtils.defaultString(headers);
-            request.responseCharacterSet = StringUtils.defaultString(this.responseCharacterSet);
-            request.destinationFile = StringUtils.defaultString(this.destinationFile);
-            request.followRedirects = String.valueOf(false);
-            request.queryParams = StringUtils.EMPTY;
-            request.queryParamsAreURLEncoded = String.valueOf(false);
-            request.queryParamsAreFormEncoded = String.valueOf(false);
-            request.formParams = StringUtils.EMPTY;
-            request.formParamsAreURLEncoded = String.valueOf(false);
-            request.sourceFile = StringUtils.defaultString(this.sourceFile);
-            request.body = StringUtils.EMPTY;
-            request.contentType = StringUtils.defaultString(this.contentType);
-            request.requestCharacterSet = StringUtils.EMPTY;
-            request.multipartBodies = StringUtils.EMPTY;
-            request.multipartBodiesContentType = StringUtils.EMPTY;
-            request.multipartFiles = StringUtils.EMPTY;
-            request.multipartFilesContentType = StringUtils.EMPTY;
-            request.multipartValuesAreURLEncoded = String.valueOf(false);
-            request.chunkedRequestEntity = StringUtils.EMPTY;
-            request.method = StringUtils.defaultString(this.method);
-            request.httpClientCookieSession = null;
-            request.httpClientPoolingConnectionManager = null;
-
-            return request;
+            return new HttpClientRequest(this);
         }
     }
 }

@@ -44,7 +44,7 @@ public final class ExceptionMsgs {
     public static final String DESTINATION_FOLDER_IS_NOT_FOLDER = "Given destination folder is not a directory.";
     public static final String DESTINATION_FOLDER_DOES_NOT_EXIST = "Given destination folder does not exist.";
     public static final String DESTINATION_FILE_ALREADY_EXISTS = "Given destination file already exists.";
-    public static final String SOURCE_FILE_IS_NOT_FILE = "Given source file is actually not a file.";
+    public static final String SOURCE_FILE_IS_NOT_REGULAR_FILE = "Given source file is not a regular file.";
     public static final String SOURCE_FILE_DOES_NOT_EXIST = "Given source file does not exist.";
     public static final String INVALID_NR_OF_COORDS = "Given region has an invalid number of coordinates.";
     public static final String RESPONSE_VALIDATION_ERROR = "An error occurred during validation of server response.";

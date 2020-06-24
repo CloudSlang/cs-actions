@@ -20,8 +20,13 @@ import io.cloudslang.content.abbyy.entities.inputs.ProcessTextFieldInput;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -30,6 +35,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@PrepareForTest({ProcessTextFieldInputValidator.class})
 public class ProcessTextFieldInputValidatorTest extends AbbyyInputValidatorTest<ProcessTextFieldInput> {
 
     @Test
@@ -111,9 +117,9 @@ public class ProcessTextFieldInputValidatorTest extends AbbyyInputValidatorTest<
         when(requestMock.getPassword()).thenReturn("dummy");
         when(requestMock.getProxyPort()).thenReturn((short) 20);
         when(requestMock.getDestinationFile()).thenReturn(null);
-        File sourceFileMock = mock(File.class);
-        when(sourceFileMock.exists()).thenReturn(true);
-        when(sourceFileMock.isFile()).thenReturn(true);
+        Path sourceFileMock = Paths.get(StringUtils.EMPTY);
+        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
+        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(true);
         when(requestMock.getSourceFile()).thenReturn(sourceFileMock);
         when(requestMock.getConnectTimeout()).thenReturn(0);
         when(requestMock.getSocketTimeout()).thenReturn(0);

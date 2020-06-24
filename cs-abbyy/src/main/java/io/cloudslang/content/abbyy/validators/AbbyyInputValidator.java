@@ -22,6 +22,8 @@ import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.file.Files;
+
 public abstract class AbbyyInputValidator<R extends AbbyyInput> {
     public ValidationException validate(@NotNull R request) {
         try {
@@ -116,10 +118,10 @@ public abstract class AbbyyInputValidator<R extends AbbyyInput> {
             return;
         }
 
-        if (request.getDestinationFile().exists()) {
+        if (Files.exists(request.getDestinationFile())) {
             throw new ValidationException(ExceptionMsgs.DESTINATION_FILE_ALREADY_EXISTS);
         }
-        if (!request.getDestinationFile().getParentFile().exists()) {
+        if (!Files.exists(request.getDestinationFile().getParent())) {
             throw new ValidationException(ExceptionMsgs.DESTINATION_FOLDER_DOES_NOT_EXIST);
         }
     }
@@ -130,11 +132,11 @@ public abstract class AbbyyInputValidator<R extends AbbyyInput> {
             throw new ValidationException(String.format(ExceptionMsgs.INVALID_VALUE_FOR_INPUT, null, InputNames.SOURCE_FILE));
         }
 
-        if (!request.getSourceFile().exists()) {
+        if (!Files.exists(request.getSourceFile())) {
             throw new ValidationException(ExceptionMsgs.SOURCE_FILE_DOES_NOT_EXIST);
         }
-        if (!request.getSourceFile().isFile()) {
-            throw new ValidationException(ExceptionMsgs.SOURCE_FILE_IS_NOT_FILE);
+        if (!Files.isRegularFile(request.getSourceFile())) {
+            throw new ValidationException(ExceptionMsgs.SOURCE_FILE_IS_NOT_REGULAR_FILE);
         }
     }
 

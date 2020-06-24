@@ -12,15 +12,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.abbyy.utils;
 
-package io.cloudslang.content.abbyy.validators;
+import io.cloudslang.content.abbyy.constants.MiscConstants;
+import org.apache.commons.lang3.StringUtils;
 
-import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
-import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import org.jetbrains.annotations.NotNull;
+public final class CharsetUtils {
+    private CharsetUtils() {
 
-public interface AbbyyResultValidator {
-    ValidationException validateBeforeDownload(@NotNull AbbyyInput abbyyInput, @NotNull String downloadUrl) throws Exception;
+    }
 
-    ValidationException validateAfterDownload(@NotNull AbbyyInput abbyyInput, @NotNull String result) throws Exception;
+    public static String discardBOMChar(String str) {
+        if (str.startsWith(MiscConstants.BOM_CHAR)) {
+             return str.substring(1);
+        }
+        if(str.startsWith(StringUtils.repeat("\uFFFD", 3))) {
+            return str.substring(3);
+        }
+        return str;
+    }
 }

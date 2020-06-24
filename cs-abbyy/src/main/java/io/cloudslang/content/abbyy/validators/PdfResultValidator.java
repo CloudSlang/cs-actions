@@ -38,7 +38,7 @@ public class PdfResultValidator implements AbbyyResultValidator {
 
     public ValidationException validateBeforeDownload(@NotNull AbbyyInput abbyyInput, @NotNull String downloadUrl) throws Exception {
         try {
-            validateSize(abbyyInput, downloadUrl);
+            validateSizeBeforeDownload(abbyyInput, downloadUrl);
             validateFileType(abbyyInput, downloadUrl);
             return null;
         } catch (ValidationException ex) {
@@ -47,9 +47,9 @@ public class PdfResultValidator implements AbbyyResultValidator {
     }
 
 
-    public ValidationException validateAfterDownload(@NotNull String targetPath) throws Exception {
+    public ValidationException validateAfterDownload(@NotNull AbbyyInput abbyyInput, @NotNull String targetPath) throws Exception {
         try {
-            validateSize(targetPath);
+            validateSizeAfterDownload(abbyyInput, targetPath);
             return null;
         } catch (ValidationException ex) {
             return ex;
@@ -57,22 +57,30 @@ public class PdfResultValidator implements AbbyyResultValidator {
     }
 
 
-    private void validateSize(AbbyyInput abbyyInput, String downloadUrl) throws Exception {
+    private void validateSizeBeforeDownload(AbbyyInput abbyyInput, String downloadUrl) throws Exception {
+        if(abbyyInput.isDisableSizeLimit()) {
+            return;
+        }
+
         long pdfSize = this.abbyyApi.getResultSize(abbyyInput, downloadUrl, ExportFormat.PDF_SEARCHABLE);
-        if (!abbyyInput.getDisableSizeLimit() && pdfSize > Limits.MAX_SIZE_OF_PDF_FILE) {
+        if (pdfSize > Limits.MAX_SIZE_OF_PDF_FILE) {
             throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_PDF_RESULT_EXCEEDED, ExportFormat.PDF_SEARCHABLE));
         }
     }
 
 
-    private void validateSize(@NotNull String targetPath) throws Exception {
+    private void validateSizeAfterDownload(AbbyyInput abbyyInput, String targetPath) throws Exception {
+        if(abbyyInput.isDisableSizeLimit()) {
+            return;
+        }
+
         if (Files.size(Paths.get(targetPath)) > Limits.MAX_SIZE_OF_PDF_FILE) {
             throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_PDF_RESULT_EXCEEDED, ExportFormat.PDF_SEARCHABLE));
         }
     }
 
 
-    private void validateFileType(@NotNull AbbyyInput abbyyInitialRequest, @NotNull String url) throws Exception {
+    private void validateFileType(AbbyyInput abbyyInitialRequest, String url) throws Exception {
         String first4Chars = this.abbyyApi.getResultChunk(abbyyInitialRequest, url, ExportFormat.PDF_SEARCHABLE, 0, 3);
         if (!StringUtils.equals(first4Chars, "%PDF")) {
             throw new ValidationException(ExceptionMsgs.INVALID_TARGET_PDF);

@@ -17,8 +17,8 @@ package io.cloudslang.content.abbyy.entities.requests;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 
-import java.io.File;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 
 public interface HttpRequest {
     String getUrl() throws URISyntaxException;
@@ -33,7 +33,7 @@ public interface HttpRequest {
     String getAuthType();
 
 
-    Boolean isPreemptiveAuth();
+    boolean isPreemptiveAuth();
 
 
     String getUsername();
@@ -54,7 +54,7 @@ public interface HttpRequest {
     String getProxyHost();
 
 
-    Short getProxyPort();
+    short getProxyPort();
 
 
     String getProxyUsername();
@@ -63,7 +63,7 @@ public interface HttpRequest {
     String getProxyPassword();
 
 
-    Boolean getTrustAllRoots();
+    boolean isTrustAllRoots();
 
 
     String getX509HostnameVerifier();
@@ -81,22 +81,22 @@ public interface HttpRequest {
     String getKeystorePassword();
 
 
-    Integer getConnectTimeout();
+    int getConnectTimeout();
 
 
-    Integer getSocketTimeout();
+    int getSocketTimeout();
 
 
-    Boolean isUseCookies();
+    boolean isUseCookies();
 
 
-    Boolean getKeepAlive();
+    boolean isKeepAlive();
 
 
-    Integer getConnectionsMaxPerRoute();
+    int getConnectionsMaxPerRoute();
 
 
-    Integer getConnectionsMaxTotal();
+    int getConnectionsMaxTotal();
 
 
     String getHeaders();
@@ -105,28 +105,28 @@ public interface HttpRequest {
     String getResponseCharacterSet();
 
 
-    File getDestinationFile();
+    Path getDestinationFile();
 
 
-    Boolean isFollowRedirects();
+    boolean isFollowRedirects();
 
 
     String getQueryParams();
 
 
-    Boolean isQueryParamsAreURLEncoded();
+    boolean isQueryParamsAreURLEncoded();
 
 
-    Boolean isQueryParamsAreFormEncoded();
+    boolean isQueryParamsAreFormEncoded();
 
 
     String getFormParams();
 
 
-    Boolean isFormParamsAreURLEncoded();
+    boolean isFormParamsAreURLEncoded();
 
 
-    File getSourceFile();
+    Path getSourceFile();
 
 
     String getBody();
@@ -150,10 +150,10 @@ public interface HttpRequest {
     String getMultipartFilesContentType();
 
 
-    Boolean isMultipartValuesAreURLEncoded();
+    boolean isMultipartValuesAreURLEncoded();
 
 
-    Boolean isChunkedRequestEntity();
+    boolean isChunkedRequestEntity();
 
 
     String getMethod();

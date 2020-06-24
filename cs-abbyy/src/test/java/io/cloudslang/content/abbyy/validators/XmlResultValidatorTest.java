@@ -80,11 +80,13 @@ public class XmlResultValidatorTest extends AbbyyResultValidatorTest {
     @Test
     public void validateAfterDownload_resultSizeIsTooBig_ValidationException() throws Exception {
         //Arrange
+        final AbbyyInput abbyyInput = mock(AbbyyInput.class);
+
         String resultMock = PowerMockito.mock(String.class);
         when(resultMock.getBytes()).thenReturn(new byte[(int)Limits.MAX_SIZE_OF_XML_FILE + 1]);
 
         //Act
-        ValidationException ex = this.sut.validateAfterDownload(resultMock);
+        ValidationException ex = this.sut.validateAfterDownload(abbyyInput, resultMock);
 
         //Assert
         assertNotNull(ex);
@@ -94,6 +96,7 @@ public class XmlResultValidatorTest extends AbbyyResultValidatorTest {
     @Test
     public void validateAfterDownload_resultXmlIsInvalid_ValidationException() throws Exception {
         //Arrange
+        final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         final String xml = "";
 
         SchemaFactory schemaFactoryMock = mock(SchemaFactory.class);
@@ -112,7 +115,7 @@ public class XmlResultValidatorTest extends AbbyyResultValidatorTest {
         doThrow(SAXException.class).when(validatorMock).validate(any(Source.class));
 
         //Act
-        ValidationException ex = this.sut.validateAfterDownload(xml);
+        ValidationException ex = this.sut.validateAfterDownload(abbyyInput, xml);
 
         //Assert
         assertNotNull(ex);
@@ -122,6 +125,7 @@ public class XmlResultValidatorTest extends AbbyyResultValidatorTest {
     @Test
     public void validateAfterDownload_resultXmlIsValid_nullReturned() throws Exception {
         //Arrange
+        final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         final String xml = "";
 
         SchemaFactory schemaFactoryMock = mock(SchemaFactory.class);
@@ -138,7 +142,7 @@ public class XmlResultValidatorTest extends AbbyyResultValidatorTest {
         when(schemaMock.newValidator()).thenReturn(validatorMock);
 
         //Act
-        ValidationException ex = this.sut.validateAfterDownload(xml);
+        ValidationException ex = this.sut.validateAfterDownload(abbyyInput, xml);
 
         //Assert
         assertNull(ex);

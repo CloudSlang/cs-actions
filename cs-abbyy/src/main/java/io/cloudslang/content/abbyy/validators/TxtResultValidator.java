@@ -34,7 +34,7 @@ public class TxtResultValidator implements AbbyyResultValidator {
 
     public ValidationException validateBeforeDownload(@NotNull AbbyyInput abbyyInput, @NotNull String downloadUrl) throws Exception {
         try {
-            validateSize(abbyyInput, downloadUrl);
+            validateSizeBeforeDownload(abbyyInput, downloadUrl);
             return null;
         } catch (ValidationException ex) {
             return ex;
@@ -42,9 +42,9 @@ public class TxtResultValidator implements AbbyyResultValidator {
     }
 
 
-    public ValidationException validateAfterDownload(@NotNull String result) throws Exception {
+    public ValidationException validateAfterDownload(@NotNull AbbyyInput abbyyInput, @NotNull String result) throws Exception {
         try {
-            validateSize(result);
+            validateSizeAfterDownload(abbyyInput, result);
             return null;
         } catch (ValidationException ex) {
             return ex;
@@ -52,15 +52,23 @@ public class TxtResultValidator implements AbbyyResultValidator {
     }
 
 
-    private void validateSize(AbbyyInput abbyyInput, String downloadUrl) throws Exception {
+    private void validateSizeBeforeDownload(AbbyyInput abbyyInput, String downloadUrl) throws Exception {
+        if (abbyyInput.isDisableSizeLimit()) {
+            return;
+        }
+
         long txtSize = this.abbyyApi.getResultSize(abbyyInput, downloadUrl, ExportFormat.TXT);
-        if (!abbyyInput.getDisableSizeLimit() && txtSize > Limits.MAX_SIZE_OF_TXT_FILE) {
+        if (txtSize > Limits.MAX_SIZE_OF_TXT_FILE) {
             throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_TXT_RESULT_EXCEEDED, ExportFormat.TXT));
         }
     }
 
 
-    private void validateSize(String result) throws Exception {
+    private void validateSizeAfterDownload(AbbyyInput abbyyInput, String result) throws Exception {
+        if (abbyyInput.isDisableSizeLimit()) {
+            return;
+        }
+
         if (result.getBytes().length > Limits.MAX_SIZE_OF_TXT_FILE) {
             throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_TXT_RESULT_EXCEEDED, ExportFormat.TXT));
         }

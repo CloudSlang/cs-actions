@@ -101,6 +101,7 @@ public class PdfResultValidatorTest extends AbbyyResultValidatorTest {
     @Test
     public void validateAfterDownload_resultSizeIsTooBig_ValidationException() throws Exception {
         //Arrange
+        final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         final String targetPath = "dummy";
 
         PowerMockito.mockStatic(Paths.class);
@@ -109,7 +110,7 @@ public class PdfResultValidatorTest extends AbbyyResultValidatorTest {
         PowerMockito.when(Files.size(any(Path.class))).thenReturn(Limits.MAX_SIZE_OF_PDF_FILE + 1);
 
         //Act
-        ValidationException ex = this.sut.validateAfterDownload(targetPath);
+        ValidationException ex = this.sut.validateAfterDownload(abbyyInput, targetPath);
 
         //Assert
         assertNotNull(ex);
@@ -119,6 +120,7 @@ public class PdfResultValidatorTest extends AbbyyResultValidatorTest {
     @Test
     public void validateAfterDownload_resultIsValid_nullReturned() throws Exception {
         //Arrange
+        final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         final String result = "result";
 
         PowerMockito.mockStatic(Paths.class);
@@ -127,7 +129,7 @@ public class PdfResultValidatorTest extends AbbyyResultValidatorTest {
         PowerMockito.when(Files.size(any(Path.class))).thenReturn(Limits.MAX_SIZE_OF_PDF_FILE - 1);
 
         //Act
-        ValidationException ex = sut.validateAfterDownload(result);
+        ValidationException ex = sut.validateAfterDownload(abbyyInput, result);
 
         //Assert
         assertNull(ex);

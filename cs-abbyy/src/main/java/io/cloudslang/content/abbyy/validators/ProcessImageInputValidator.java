@@ -25,6 +25,7 @@ import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,10 +47,10 @@ public class ProcessImageInputValidator extends AbbyyInputValidator<ProcessImage
             return;
         }
 
-        if (!request.getDestinationFile().exists()) {
+        if (!Files.exists(request.getDestinationFile())) {
             throw new ValidationException(ExceptionMsgs.DESTINATION_FOLDER_DOES_NOT_EXIST);
         }
-        if (!request.getDestinationFile().isDirectory()) {
+        if (!Files.isDirectory(request.getDestinationFile())) {
             throw new ValidationException(ExceptionMsgs.DESTINATION_FOLDER_IS_NOT_FOLDER);
         }
     }

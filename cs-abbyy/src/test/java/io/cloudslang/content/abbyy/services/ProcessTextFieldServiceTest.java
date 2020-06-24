@@ -26,9 +26,12 @@ import io.cloudslang.content.abbyy.validators.AbbyyResultValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -154,9 +157,9 @@ public class ProcessTextFieldServiceTest extends AbbyyServiceTest<ProcessTextFie
         when(requestMock.getApplicationId()).thenReturn("dummy");
         when(requestMock.getPassword()).thenReturn("dummy");
         when(requestMock.getLanguages()).thenReturn(Collections.singletonList("English"));
-        File sourceFileMock = mock(File.class);
-        when(sourceFileMock.exists()).thenReturn(true);
-        when(sourceFileMock.isFile()).thenReturn(true);
+        Path sourceFileMock = mock(Path.class);
+        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
+        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(true);
         when(requestMock.getSourceFile()).thenReturn(sourceFileMock);
         when(requestMock.getDestinationFile()).thenReturn(null);
         when(requestMock.getLetterSet()).thenReturn("dummy");

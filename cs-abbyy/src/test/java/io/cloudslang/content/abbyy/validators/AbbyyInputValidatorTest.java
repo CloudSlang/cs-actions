@@ -21,9 +21,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -43,6 +47,7 @@ public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
     @Before
     public void setUp() {
         this.sut = newSutInstance();
+        PowerMockito.mockStatic(Files.class);
     }
 
 
@@ -171,8 +176,8 @@ public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
         //Arrange
         R abbyyRequestMock = mockAbbyyRequest();
 
-        File destinationFileMock = mock(File.class);
-        when(destinationFileMock.exists()).thenReturn(true);
+        Path destinationFileMock = mock(Path.class);
+        PowerMockito.when(Files.exists(destinationFileMock)).thenReturn(true);
         when(abbyyRequestMock.getDestinationFile()).thenReturn(destinationFileMock);
 
         //Act
@@ -188,12 +193,12 @@ public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
         //Arrange
         R abbyyRequestMock = mockAbbyyRequest();
 
-        File destinationFolderMock = mock(File.class);
-        when(destinationFolderMock.exists()).thenReturn(false);
+        Path destinationFolderMock = mock(Path.class);
+        PowerMockito.when(Files.exists(destinationFolderMock)).thenReturn(false);
 
-        File destinationFileMock = mock(File.class);
-        when(destinationFileMock.exists()).thenReturn(true);
-        when(destinationFileMock.getParentFile()).thenReturn(destinationFolderMock);
+        Path destinationFileMock = mock(Path.class);
+        PowerMockito.when(Files.exists(destinationFileMock)).thenReturn(true);
+        when(destinationFileMock.getParent()).thenReturn(destinationFolderMock);
 
         when(abbyyRequestMock.getDestinationFile()).thenReturn(destinationFileMock);
 
@@ -224,8 +229,8 @@ public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
         //Arrange
         R abbyyRequestMock = mockAbbyyRequest();
 
-        File sourceFileMock = mock(File.class);
-        when(sourceFileMock.exists()).thenReturn(false);
+        Path sourceFileMock = mock(Path.class);
+        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(false);
         when(abbyyRequestMock.getSourceFile()).thenReturn(sourceFileMock);
 
         //Act
@@ -241,9 +246,9 @@ public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
         //Arrange
         R abbyyRequestMock = mockAbbyyRequest();
 
-        File sourceFileMock = mock(File.class);
-        when(sourceFileMock.exists()).thenReturn(true);
-        when(sourceFileMock.isFile()).thenReturn(false);
+        Path sourceFileMock = mock(Path.class);
+        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
+        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(false);
         when(abbyyRequestMock.getSourceFile()).thenReturn(sourceFileMock);
 
         //Act

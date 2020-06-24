@@ -83,11 +83,13 @@ public class TxtResultValidatorTest extends AbbyyResultValidatorTest {
     @Test
     public void validateAfterDownload_resultSizeIsTooBig_ValidationException() throws Exception {
         //Arrange
+        final AbbyyInput abbyyInput = mock(AbbyyInput.class);
+
         String resultMock = PowerMockito.mock(String.class);
         when(resultMock.getBytes()).thenReturn(new byte[(int)Limits.MAX_SIZE_OF_TXT_FILE + 1]);
 
         //Act
-        ValidationException ex = this.sut.validateAfterDownload(resultMock);
+        ValidationException ex = this.sut.validateAfterDownload(abbyyInput, resultMock);
 
         //Assert
         assertNotNull(ex);
@@ -97,11 +99,13 @@ public class TxtResultValidatorTest extends AbbyyResultValidatorTest {
     @Test
     public void validateAfterDownload_resultIsValid_nullReturned() throws Exception {
         //Arrange
+        final AbbyyInput abbyyInput = mock(AbbyyInput.class);
+
         String resultMock = PowerMockito.mock(String.class);
         when(resultMock.getBytes()).thenReturn(new byte[(int)Limits.MAX_SIZE_OF_TXT_FILE - 1]);
 
         //Act
-        ValidationException ex = sut.validateAfterDownload(resultMock);
+        ValidationException ex = sut.validateAfterDownload(abbyyInput, resultMock);
 
         //Assert
         assertNull(ex);

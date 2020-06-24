@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.abbyy.entities.responses;
 
+import io.cloudslang.content.abbyy.utils.CharsetUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -101,7 +102,7 @@ public class HttpClientResponse {
         public HttpClientResponse build() throws IOException {
             HttpClientResponse response = new HttpClientResponse();
 
-            response.returnResult = StringUtils.defaultString(this.returnResult);
+            response.returnResult = CharsetUtils.discardBOMChar(StringUtils.defaultString(this.returnResult));
 
             response.exception = StringUtils.defaultString(this.exception);
 

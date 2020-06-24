@@ -15,6 +15,7 @@
 package io.cloudslang.content.abbyy.services;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
+import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.entities.inputs.ProcessImageInput;
 import io.cloudslang.content.abbyy.entities.others.*;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
@@ -30,6 +31,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -125,8 +129,8 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
         ProcessImageInput requestMock = mockAbbyyRequest();
         when(requestMock.getExportFormats())
                 .thenReturn(Arrays.asList(ExportFormat.TXT, ExportFormat.XML, ExportFormat.PDF_SEARCHABLE));
-        File destinationFileMock = mock(File.class);
-        when(destinationFileMock.getAbsolutePath()).thenReturn(StringUtils.EMPTY);
+        Path destinationFileMock = mock(Path.class);
+        when(destinationFileMock.toAbsolutePath()).thenReturn(Paths.get(StringUtils.EMPTY));
         when(requestMock.getDestinationFile()).thenReturn(destinationFileMock);
 
         AbbyyResponse responseMock = mockAbbyyResponse();
@@ -134,14 +138,13 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
 
         Map<String, String> resultsDummy = new HashMap<>();
 
-        PowerMockito.whenNew(File.class).withAnyArguments().thenReturn(mock(File.class));
         PowerMockito.whenNew(FileWriter.class).withAnyArguments().thenReturn(mock(FileWriter.class));
 
-        when(this.txtResultValidatorMock.validateAfterDownload(anyString()))
+        when(this.txtResultValidatorMock.validateAfterDownload(any(AbbyyInput.class), anyString()))
                 .thenReturn(new ValidationException(errMsg));
-        when(this.xmlResultValidatorMock.validateAfterDownload(anyString()))
+        when(this.xmlResultValidatorMock.validateAfterDownload(any(AbbyyInput.class), anyString()))
                 .thenReturn(new ValidationException(errMsg));
-        when(this.pdfResultValidatorMock.validateAfterDownload(anyString()))
+        when(this.pdfResultValidatorMock.validateAfterDownload(any(AbbyyInput.class), anyString()))
                 .thenReturn(new ValidationException(errMsg));
 
 
@@ -169,8 +172,8 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
         ProcessImageInput requestMock = mockAbbyyRequest();
         when(requestMock.getExportFormats())
                 .thenReturn(Arrays.asList(ExportFormat.TXT, ExportFormat.XML, ExportFormat.PDF_SEARCHABLE));
-        File destinationFileMock = mock(File.class);
-        when(destinationFileMock.getAbsolutePath()).thenReturn(StringUtils.EMPTY);
+        Path destinationFileMock = mock(Path.class);
+        when(destinationFileMock.toAbsolutePath()).thenReturn(Paths.get(StringUtils.EMPTY));
         when(requestMock.getDestinationFile()).thenReturn(destinationFileMock);
 
         AbbyyResponse responseMock = mockAbbyyResponse();
@@ -178,7 +181,6 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
 
         Map<String, String> resultsDummy = new HashMap<>();
 
-        PowerMockito.whenNew(File.class).withAnyArguments().thenReturn(mock(File.class));
         PowerMockito.whenNew(FileWriter.class).withAnyArguments().thenReturn(mock(FileWriter.class));
 
         when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), any(ExportFormat.class), anyString(), anyBoolean()))
@@ -237,9 +239,9 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
         when(requestMock.getApplicationId()).thenReturn("dummy");
         when(requestMock.getPassword()).thenReturn("dummy");
         when(requestMock.getLanguages()).thenReturn(Collections.singletonList("English"));
-        File sourceFileMock = mock(File.class);
-        when(sourceFileMock.exists()).thenReturn(true);
-        when(sourceFileMock.isFile()).thenReturn(true);
+        Path sourceFileMock = Paths.get(StringUtils.EMPTY);
+        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
+        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(true);
         when(requestMock.getSourceFile()).thenReturn(sourceFileMock);
         when(requestMock.getDestinationFile()).thenReturn(null);
         when(requestMock.getProfile()).thenReturn(Profile.TEXT_EXTRACTION);

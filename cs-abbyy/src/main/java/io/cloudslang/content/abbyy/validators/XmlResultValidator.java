@@ -51,7 +51,7 @@ public class XmlResultValidator implements AbbyyResultValidator {
     @Override
     public ValidationException validateBeforeDownload(@NotNull AbbyyInput abbyyInput, @NotNull String downloadUrl) throws Exception {
         try {
-            validateSize(abbyyInput, downloadUrl);
+            validateSizeBeforeDownload(abbyyInput, downloadUrl);
             return null;
         } catch (ValidationException ex) {
             return ex;
@@ -60,9 +60,9 @@ public class XmlResultValidator implements AbbyyResultValidator {
 
 
     @Override
-    public ValidationException validateAfterDownload(@NotNull String result) throws Exception {
+    public ValidationException validateAfterDownload(@NotNull AbbyyInput abbyyInput, @NotNull String result) throws Exception {
         try {
-            validateSize(result);
+            validateSizeAfterDownload(abbyyInput, result);
             validateAgainstXsdSchema(result);
             return null;
         } catch (ValidationException ex) {
@@ -71,22 +71,30 @@ public class XmlResultValidator implements AbbyyResultValidator {
     }
 
 
-    private void validateSize(@NotNull AbbyyInput abbyyInitialRequest, @NotNull String url) throws Exception {
-        long xmlSize = this.abbyyApi.getResultSize(abbyyInitialRequest, url, ExportFormat.XML);
-        if (!abbyyInitialRequest.getDisableSizeLimit() && xmlSize > Limits.MAX_SIZE_OF_XML_FILE) {
+    private void validateSizeBeforeDownload(@NotNull AbbyyInput abbyyInput, @NotNull String url) throws Exception {
+        if (abbyyInput.isDisableSizeLimit()) {
+            return;
+        }
+
+        long xmlSize = this.abbyyApi.getResultSize(abbyyInput, url, ExportFormat.XML);
+        if (xmlSize > Limits.MAX_SIZE_OF_XML_FILE) {
             throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_XML_RESULT_EXCEEDED, ExportFormat.XML));
         }
     }
 
 
-    private void validateSize(String result) throws Exception {
+    private void validateSizeAfterDownload(AbbyyInput abbyyInput, String result) throws Exception {
+        if (abbyyInput.isDisableSizeLimit()) {
+            return;
+        }
+
         if (result.getBytes().length > Limits.MAX_SIZE_OF_XML_FILE) {
             throw new ValidationException(String.format(ExceptionMsgs.MAX_SIZE_OF_XML_RESULT_EXCEEDED, ExportFormat.XML));
         }
     }
 
 
-    void validateAgainstXsdSchema(@NotNull String xml) throws Exception {
+    private void validateAgainstXsdSchema(@NotNull String xml) throws Exception {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         InputStream xsdStream = getClass().getResourceAsStream(xsdSchemaPath);
         Schema schema = factory.newSchema(new StreamSource(xsdStream));

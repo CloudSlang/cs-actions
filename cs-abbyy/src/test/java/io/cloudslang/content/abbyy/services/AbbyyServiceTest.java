@@ -32,6 +32,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.nio.file.Files;
 import java.util.Collections;
 
 import static org.junit.Assert.*;
@@ -57,6 +58,7 @@ public abstract class AbbyyServiceTest<R extends AbbyyInput> {
     public void setUp() {
         this.sut = newSutInstance();
         PowerMockito.mockStatic(Thread.class);
+        PowerMockito.mockStatic(Files.class);
     }
 
 
