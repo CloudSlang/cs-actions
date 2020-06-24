@@ -21,6 +21,9 @@ import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.entities.others.ExportFormat;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
+import io.cloudslang.content.abbyy.utils.CharsetUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.xml.sax.SAXException;
 
@@ -63,7 +66,7 @@ public class XmlResultValidator implements AbbyyResultValidator {
     public ValidationException validateAfterDownload(@NotNull AbbyyInput abbyyInput, @NotNull String result) throws Exception {
         try {
             validateSizeAfterDownload(abbyyInput, result);
-            validateAgainstXsdSchema(result);
+            validateAgainstXsdSchema(abbyyInput, result);
             return null;
         } catch (ValidationException ex) {
             return ex;
@@ -94,13 +97,16 @@ public class XmlResultValidator implements AbbyyResultValidator {
     }
 
 
-    private void validateAgainstXsdSchema(@NotNull String xml) throws Exception {
+    private void validateAgainstXsdSchema(AbbyyInput abbyyInput, String xml) throws Exception {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         InputStream xsdStream = getClass().getResourceAsStream(xsdSchemaPath);
         Schema schema = factory.newSchema(new StreamSource(xsdStream));
         Validator xmlValidator = schema.newValidator();
 
-        xml = xml.trim().replaceFirst("^([\\W]+)<", "<");
+        xml = CharsetUtils.toUTF8(xml, abbyyInput.getResponseCharacterSet())
+                .trim().replaceFirst("^([\\W]+)<", "<")
+                .replaceFirst("(\\uFFFD)+$", ">")
+                .replace("xmlns:xsi=\"@link\"", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
 
         try {
             StringReader xmlReader = new StringReader(xml);

@@ -102,7 +102,7 @@ public class HttpClientResponse {
         public HttpClientResponse build() throws IOException {
             HttpClientResponse response = new HttpClientResponse();
 
-            response.returnResult = CharsetUtils.discardBOMChar(StringUtils.defaultString(this.returnResult));
+            response.returnResult = StringUtils.defaultString(this.returnResult);
 
             response.exception = StringUtils.defaultString(this.exception);
 

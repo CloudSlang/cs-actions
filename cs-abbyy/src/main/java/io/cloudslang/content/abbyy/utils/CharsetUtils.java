@@ -14,21 +14,32 @@
  */
 package io.cloudslang.content.abbyy.utils;
 
-import io.cloudslang.content.abbyy.constants.MiscConstants;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+
 public final class CharsetUtils {
+
+    public static final String BOM_CHAR = "\uFEFF";
+    private static final String FALLBACK_CHAR = "\uFFFD";
+
+
     private CharsetUtils() {
 
     }
 
     public static String discardBOMChar(String str) {
-        if (str.startsWith(MiscConstants.BOM_CHAR)) {
-             return str.substring(1);
+        if (str.startsWith(BOM_CHAR)) {
+            return str.substring(1);
         }
-        if(str.startsWith(StringUtils.repeat("\uFFFD", 3))) {
+        if (str.startsWith(StringUtils.repeat(FALLBACK_CHAR, 3))) {
             return str.substring(3);
         }
         return str;
+    }
+
+    public static String toUTF8(String str, String crtEncoding) throws UnsupportedEncodingException {
+        return new String(str.getBytes(crtEncoding), StandardCharsets.UTF_8);
     }
 }

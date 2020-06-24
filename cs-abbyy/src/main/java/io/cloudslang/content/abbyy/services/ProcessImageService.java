@@ -16,7 +16,6 @@
 package io.cloudslang.content.abbyy.services;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
-import io.cloudslang.content.abbyy.constants.MiscConstants;
 import io.cloudslang.content.abbyy.constants.OutputNames;
 import io.cloudslang.content.abbyy.constants.XsdSchemas;
 import io.cloudslang.content.abbyy.entities.inputs.ProcessImageInput;
@@ -25,7 +24,6 @@ import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
-import io.cloudslang.content.abbyy.utils.CharsetUtils;
 import io.cloudslang.content.abbyy.validators.*;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
@@ -65,27 +63,41 @@ public class ProcessImageService extends AbbyyService<ProcessImageInput> {
 
 
     @Override
-    void handleTaskCompleted(@NotNull ProcessImageInput request, @NotNull AbbyyResponse response,
+    void handleTaskCompleted(@NotNull ProcessImageInput input, @NotNull AbbyyResponse response,
                              @NotNull Map<String, String> results) throws Exception {
-        super.handleTaskCompleted(request, response, results);
+        super.handleTaskCompleted(input, response, results);
 
         Map<ExportFormat, String> failure = new HashMap<>();
         String result;
 
-        for (ExportFormat exportFormat : request.getExportFormats()) {
+        for (ExportFormat exportFormat : input.getExportFormats()) {
             try {
                 switch (exportFormat) {
                     case XML:
-                        result = getClearTextResult(request, response, ExportFormat.XML, xmlResultValidator);
+                        result = getClearTextResult(input, response, ExportFormat.XML, xmlResultValidator);
                         results.put(OutputNames.XML_RESULT, result);
+                        if (input.getDestinationFile() != null) {
+                            saveClearTextOnDisk(input, result, exportFormat);
+                        }
                         break;
                     case TXT:
-                        result = getClearTextResult(request, response, ExportFormat.TXT, txtResultValidator);
+                        result = getClearTextResult(input, response, ExportFormat.TXT, txtResultValidator);
                         results.put(OutputNames.TXT_RESULT, result);
+                        if (input.getDestinationFile() != null) {
+                            saveClearTextOnDisk(input, result, exportFormat);
+                        }
                         break;
                     case PDF_SEARCHABLE:
-                        result = getBinaryResult(request, response, ExportFormat.PDF_SEARCHABLE, pdfResultValidator);
+                        result = getBinaryResult(input, response, ExportFormat.PDF_SEARCHABLE, pdfResultValidator);
                         results.put(OutputNames.PDF_URL, result);
+                        if (input.getDestinationFile() != null) {
+                            String targetPath = downloadOnDisk(input, result, exportFormat);
+                            ValidationException validationEx = pdfResultValidator.validateAfterDownload(input, targetPath);
+                            if (validationEx != null) {
+                                Files.delete(Paths.get(targetPath));
+                                throw validationEx;
+                            }
+                        }
                         break;
                 }
             } catch (Exception ex) {
@@ -104,8 +116,8 @@ public class ProcessImageService extends AbbyyService<ProcessImageInput> {
     }
 
 
-    private String getClearTextResult(@NotNull ProcessImageInput abbyyInput, @NotNull AbbyyResponse abbyyPreviousResponse,
-                                      @NotNull ExportFormat exportFormat, @NotNull AbbyyResultValidator resultValidator) throws Exception {
+    private String getClearTextResult(ProcessImageInput abbyyInput, AbbyyResponse abbyyPreviousResponse,
+                                      ExportFormat exportFormat, AbbyyResultValidator resultValidator) throws Exception {
         ValidationException validationEx;
 
         if (abbyyInput.getExportFormats().size() != abbyyPreviousResponse.getResultUrls().size()) {
@@ -126,16 +138,12 @@ public class ProcessImageService extends AbbyyService<ProcessImageInput> {
             throw validationEx;
         }
 
-        if (abbyyInput.getDestinationFile() != null) {
-            saveClearTextOnDisk(abbyyInput, result, exportFormat);
-        }
-
         return result;
     }
 
 
-    private String getBinaryResult(@NotNull ProcessImageInput abbyyInput, @NotNull AbbyyResponse abbyyPreviousResponse,
-                                   @NotNull ExportFormat exportFormat, @NotNull AbbyyResultValidator resultValidator) throws Exception {
+    private String getBinaryResult(ProcessImageInput abbyyInput, AbbyyResponse abbyyPreviousResponse,
+                                   ExportFormat exportFormat, AbbyyResultValidator resultValidator) throws Exception {
         ValidationException validationEx;
 
         if (abbyyInput.getExportFormats().size() != abbyyPreviousResponse.getResultUrls().size()) {
@@ -149,21 +157,11 @@ public class ProcessImageService extends AbbyyService<ProcessImageInput> {
             throw validationEx;
         }
 
-        if (abbyyInput.getDestinationFile() != null) {
-            String targetPath = downloadOnDisk(abbyyInput, resultUrl, exportFormat);
-            validationEx = resultValidator.validateAfterDownload(abbyyInput, targetPath);
-            if (validationEx != null) {
-                Files.delete(Paths.get(targetPath));
-                throw validationEx;
-            }
-        }
-
         return resultUrl;
     }
 
 
-    private void saveClearTextOnDisk(@NotNull ProcessImageInput request, @NotNull String clearText,
-                                     @NotNull ExportFormat exportFormat) throws IOException {
+    private void saveClearTextOnDisk(ProcessImageInput request, String clearText, ExportFormat exportFormat) throws IOException {
         String targetPath = getTargetPath(request, exportFormat);
         if (new File(targetPath).exists()) {
             throw new FileAlreadyExistsException(targetPath);
@@ -184,7 +182,7 @@ public class ProcessImageService extends AbbyyService<ProcessImageInput> {
     }
 
 
-    private String getTargetPath(@NotNull ProcessImageInput request, @NotNull ExportFormat exportFormat) {
+    private String getTargetPath(ProcessImageInput request, ExportFormat exportFormat) {
         return request.getDestinationFile().toAbsolutePath().toString() + "/" +
                 FilenameUtils.removeExtension(request.getSourceFile().getFileName().toString()) + "." +
                 exportFormat.getFileExtension();

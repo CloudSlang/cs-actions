@@ -32,6 +32,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 
 public class AbbyyApi {
@@ -84,7 +85,7 @@ public class AbbyyApi {
                 .keepAlive(abbyyInput.isKeepAlive())
                 .connectionsMaxPerRoute(abbyyInput.getConnectionsMaxPerRoute())
                 .connectionsMaxTotal(abbyyInput.getConnectionsMaxTotal())
-                .responseCharacterSet(abbyyInput.getResponseCharacterSet())
+                .responseCharacterSet(StandardCharsets.UTF_8.displayName())
                 .headers(abbyyInput.getHeaders())
                 .followRedirects(abbyyInput.isFollowRedirects())
                 .queryParams(abbyyInput.getQueryParams())
@@ -151,7 +152,7 @@ public class AbbyyApi {
                 .connectionsMaxPerRoute(abbyyInput.getConnectionsMaxPerRoute())
                 .connectionsMaxTotal(abbyyInput.getConnectionsMaxTotal())
                 .headers(abbyyInput.getHeaders())
-                .responseCharacterSet(abbyyInput.getResponseCharacterSet())
+                .responseCharacterSet(StandardCharsets.UTF_8.displayName())
                 .followRedirects(abbyyInput.isFollowRedirects())
                 .queryParams(abbyyInput.getQueryParams())
                 .queryParamsAreURLEncoded(abbyyInput.isQueryParamsAreURLEncoded())
@@ -219,7 +220,6 @@ public class AbbyyApi {
                 .sourceFile(abbyyInput.getSourceFile())
                 .destinationFile(downloadPath != null ? Paths.get(downloadPath) : null)
                 .body(abbyyInput.getBody())
-                .contentType(Headers.CONTENT_TYPE_XML)
                 .requestCharacterSet(abbyyInput.getRequestCharacterSet())
                 .multipartBodies(abbyyInput.getMultipartBodies())
                 .multipartBodiesContentType(abbyyInput.getMultipartBodiesContentType())
@@ -272,7 +272,7 @@ public class AbbyyApi {
                 .connectionsMaxPerRoute(abbyyInput.getConnectionsMaxPerRoute())
                 .connectionsMaxTotal(abbyyInput.getConnectionsMaxTotal())
                 .headers(abbyyInput.getHeaders())
-                .responseCharacterSet(abbyyInput.getResponseCharacterSet())
+                .responseCharacterSet(StandardCharsets.UTF_8.displayName())
                 .followRedirects(abbyyInput.isFollowRedirects())
                 .queryParams(abbyyInput.getQueryParams())
                 .queryParamsAreURLEncoded(abbyyInput.isQueryParamsAreURLEncoded())
@@ -349,7 +349,7 @@ public class AbbyyApi {
                 .connectionsMaxPerRoute(abbyyInput.getConnectionsMaxPerRoute())
                 .connectionsMaxTotal(abbyyInput.getConnectionsMaxTotal())
                 .headers(headers)
-                .responseCharacterSet(abbyyInput.getResponseCharacterSet())
+                .responseCharacterSet(StandardCharsets.UTF_8.displayName())
                 .followRedirects(abbyyInput.isFollowRedirects())
                 .queryParams(abbyyInput.getQueryParams())
                 .queryParamsAreURLEncoded(abbyyInput.isQueryParamsAreURLEncoded())

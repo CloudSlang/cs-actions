@@ -18,12 +18,15 @@ import io.cloudslang.content.abbyy.constants.HttpClientOutputNames;
 import io.cloudslang.content.abbyy.entities.requests.HttpRequest;
 import io.cloudslang.content.abbyy.entities.responses.HttpClientResponse;
 import io.cloudslang.content.abbyy.exceptions.HttpClientException;
+import io.cloudslang.content.abbyy.utils.CharsetUtils;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientAction;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 class HttpClient {
@@ -83,8 +86,13 @@ class HttpClient {
             throw new HttpClientException(rawResponse.get(HttpClientOutputNames.EXCEPTION));
         }
 
+        String returnResult = rawResponse.get(HttpClientOutputNames.RETURN_RESULT);
+        if(StringUtils.isNotEmpty(returnResult)){
+            returnResult = CharsetUtils.discardBOMChar(returnResult);
+        }
+
         return new HttpClientResponse.Builder()
-                .returnResult(rawResponse.get(HttpClientOutputNames.RETURN_RESULT))
+                .returnResult(returnResult)
                 .exception(rawResponse.get(HttpClientOutputNames.EXCEPTION))
                 .statusCode(rawResponse.get(HttpClientOutputNames.STATUS_CODE))
                 .responseHeaders(rawResponse.get(HttpClientOutputNames.RESPONSE_HEADERS))

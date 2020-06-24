@@ -16,7 +16,6 @@
 package io.cloudslang.content.abbyy.services;
 
 import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
-import io.cloudslang.content.abbyy.constants.MiscConstants;
 import io.cloudslang.content.abbyy.constants.OutputNames;
 import io.cloudslang.content.abbyy.constants.XsdSchemas;
 import io.cloudslang.content.abbyy.entities.inputs.ProcessTextFieldInput;
@@ -71,7 +70,7 @@ public class ProcessTextFieldService extends AbbyyService<ProcessTextFieldInput>
     }
 
 
-    private String getResult(@NotNull ProcessTextFieldInput abbyyInput, @NotNull AbbyyResponse abbyyPreviousResponse) throws Exception {
+    private String getResult(ProcessTextFieldInput abbyyInput, AbbyyResponse abbyyPreviousResponse) throws Exception {
         ValidationException validationEx;
 
         if (abbyyPreviousResponse.getResultUrls().isEmpty()) {
@@ -86,8 +85,6 @@ public class ProcessTextFieldService extends AbbyyService<ProcessTextFieldInput>
 
         String result = this.abbyyApi.getResult(abbyyInput, resultUrl, ExportFormat.XML, null, true);
 
-        result = result.replace("xmlns:xsi=\"@link\"", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
-
         validationEx = this.xmlResultValidator.validateAfterDownload(abbyyInput, result);
         if (validationEx != null) {
             throw validationEx;
@@ -97,7 +94,7 @@ public class ProcessTextFieldService extends AbbyyService<ProcessTextFieldInput>
     }
 
 
-    private void saveClearTextResultOnDisk(@NotNull ProcessTextFieldInput request, @NotNull String clearText) throws IOException {
+    private void saveClearTextResultOnDisk(ProcessTextFieldInput request, String clearText) throws IOException {
         try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(request.getDestinationFile().toFile()),
                 request.getResponseCharacterSet())) {
             writer.write(clearText);

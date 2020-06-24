@@ -34,6 +34,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import java.nio.charset.StandardCharsets;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.*;
@@ -99,6 +101,8 @@ public class XmlResultValidatorTest extends AbbyyResultValidatorTest {
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         final String xml = "";
 
+        when(abbyyInput.getResponseCharacterSet()).thenReturn(StandardCharsets.UTF_8.displayName());
+
         SchemaFactory schemaFactoryMock = mock(SchemaFactory.class);
         PowerMockito.mockStatic(SchemaFactory.class);
         PowerMockito.when(SchemaFactory.newInstance(anyString())).thenReturn(schemaFactoryMock);
@@ -127,6 +131,8 @@ public class XmlResultValidatorTest extends AbbyyResultValidatorTest {
         //Arrange
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
         final String xml = "";
+
+        when(abbyyInput.getResponseCharacterSet()).thenReturn(StandardCharsets.UTF_8.displayName());
 
         SchemaFactory schemaFactoryMock = mock(SchemaFactory.class);
         PowerMockito.mockStatic(SchemaFactory.class);
