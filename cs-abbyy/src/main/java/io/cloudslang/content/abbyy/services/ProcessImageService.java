@@ -24,6 +24,7 @@ import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
+import io.cloudslang.content.abbyy.utils.EncodingUtils;
 import io.cloudslang.content.abbyy.validators.*;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
@@ -75,14 +76,14 @@ public class ProcessImageService extends AbbyyService<ProcessImageInput> {
                 switch (exportFormat) {
                     case XML:
                         result = getClearTextResult(input, response, ExportFormat.XML, xmlResultValidator);
-                        results.put(OutputNames.XML_RESULT, result);
+                        results.put(OutputNames.XML_RESULT, EncodingUtils.escapePotentialMaliciousChars(result));
                         if (input.getDestinationFile() != null) {
                             saveClearTextOnDisk(input, result, exportFormat);
                         }
                         break;
                     case TXT:
                         result = getClearTextResult(input, response, ExportFormat.TXT, txtResultValidator);
-                        results.put(OutputNames.TXT_RESULT, result);
+                        results.put(OutputNames.TXT_RESULT, EncodingUtils.escapePotentialMaliciousChars(result));
                         if (input.getDestinationFile() != null) {
                             saveClearTextOnDisk(input, result, exportFormat);
                         }
