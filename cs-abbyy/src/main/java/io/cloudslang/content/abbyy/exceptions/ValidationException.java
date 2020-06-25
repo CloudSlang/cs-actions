@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.abbyy.exceptions;
 
-public class ValidationException extends ClientSideException {
+public class ValidationException extends AbbyySdkException {
     public ValidationException(String msg) {
         super(msg);
     }

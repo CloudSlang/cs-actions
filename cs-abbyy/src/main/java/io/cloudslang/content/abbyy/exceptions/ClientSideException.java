@@ -26,9 +26,4 @@ public class ClientSideException extends AbbyySdkException {
     public ClientSideException(Throwable innerEx, Map<String, String> resultsMap) {
         super(innerEx, resultsMap);
     }
-
-
-    public ClientSideException(String msg, Map<String, String> resultsMap) {
-        super(msg, resultsMap);
-    }
 }
