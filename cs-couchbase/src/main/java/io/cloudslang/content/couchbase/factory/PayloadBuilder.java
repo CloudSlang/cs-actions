@@ -14,20 +14,19 @@
  */
 
 
-
 package io.cloudslang.content.couchbase.factory;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import io.cloudslang.content.couchbase.factory.buckets.BucketsHelper;
 import io.cloudslang.content.couchbase.factory.cluster.ClusterHelper;
 import io.cloudslang.content.couchbase.factory.nodes.NodesHelper;
+import org.apache.http.client.methods.HttpPost;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.CREATE_OR_EDIT_BUCKET;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.REBALANCING_NODES;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.FAIL_OVER_NODE;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.GRACEFUL_FAIL_OVER_NODE;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeActions.SET_RECOVERY_TYPE;
-import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
 
 /**
  * Created by TusaM
@@ -39,14 +38,12 @@ public class PayloadBuilder {
     }
 
     public static void buildPayload(InputsWrapper wrapper) {
-        if (METHOD_NAME.equalsIgnoreCase(wrapper.getHttpClientInputs().getMethod())) {
+        if (HttpPost.METHOD_NAME.equalsIgnoreCase(wrapper.getHttpClientInputs().getMethod())) {
             switch (wrapper.getCommonInputs().getAction()) {
                 case CREATE_OR_EDIT_BUCKET:
                     wrapper.getHttpClientInputs().setBody(new BucketsHelper().getCreateBucketPayload(wrapper));
                     break;
                 case FAIL_OVER_NODE:
-                    wrapper.getHttpClientInputs().setBody(new NodesHelper().getFailOverNodePayloadString(wrapper));
-                    break;
                 case GRACEFUL_FAIL_OVER_NODE:
                     wrapper.getHttpClientInputs().setBody(new NodesHelper().getFailOverNodePayloadString(wrapper));
                     break;

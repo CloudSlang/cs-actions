@@ -14,18 +14,20 @@
  */
 
 
-
 package io.cloudslang.content.couchbase.factory.buckets;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.CREATE_OR_EDIT_BUCKET;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.FLUSH_BUCKET;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_ALL_BUCKETS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET_STATISTICS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.DELETE_BUCKET;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.Miscellaneous.SLASH;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.BUCKETS;
+import static io.cloudslang.content.couchbase.entities.couchbase.ApiUriSuffix.DO_FLUSH;
+import static io.cloudslang.content.couchbase.entities.couchbase.CouchbaseApi.CONTROLLER;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
@@ -40,18 +42,14 @@ public class BucketsUriFactory {
     public static String getBucketsUriValue(InputsWrapper wrapper) {
         String action = wrapper.getCommonInputs().getAction();
         switch (action) {
-            case CREATE_OR_EDIT_BUCKET:
-                return BUCKETS;
-            case GET_ALL_BUCKETS:
-                return BUCKETS;
             case GET_BUCKET:
-                return BUCKETS + SLASH + wrapper.getBucketInputs().getBucketName();
             case GET_BUCKET_STATISTICS:
-                return BUCKETS + SLASH + wrapper.getBucketInputs().getBucketName();
             case DELETE_BUCKET:
                 return BUCKETS + SLASH + wrapper.getBucketInputs().getBucketName();
+            case FLUSH_BUCKET:
+                return BUCKETS + SLASH + wrapper.getBucketInputs().getBucketName() + CONTROLLER.getValue() + DO_FLUSH.getValue();
             default:
-                return EMPTY;
+                return BUCKETS;
         }
     }
 }

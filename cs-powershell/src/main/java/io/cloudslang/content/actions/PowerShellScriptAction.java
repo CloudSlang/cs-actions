@@ -24,7 +24,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.entities.WSManRequestInputs;
-import io.cloudslang.content.services.WSManRemoteShellService;
+import io.cloudslang.content.services.PowerShellScriptService;
 import io.cloudslang.content.utils.Constants;
 
 import java.util.Map;
@@ -86,6 +86,13 @@ public class PowerShellScriptAction {
      * @param maxEnvelopeSize      The maximum size of a SOAP packet in bytes for all stream content.
      *                             Default value is '153600'.
      * @param script               The PowerShell script that will be executed on the remote shell.
+     * @param configurationName    The name of the PSSessionConfiguration to use. This can be used to target specific versions
+     *                             of PowerShell if the PSSessionConfiguration is properly configured on the target.
+     *                             By default, after PSRemoting is enabled on the target, the configuration name for PowerShell
+     *                             v5 or lower is 'microsoft.powershell', for PowerShell v6 is 'PowerShell.6', for PowerShell v7 is 'PowerShell.7'.
+     *                             Additional configurations can be created by the user on the target machines.
+     *                             Valid values: any PSConfiguration that exists on the host.
+     *                             Examples: 'microsoft.powershell', 'PowerShell.6', 'PowerShell.7'.
      * @param modules              Add modules to the current session. The Import-Module cmdlet is used which adds one or more modules to the current session.
      *                             The modules that you import must be installed on the local computer or a remote computer.
      *                             To import a module, use the Name, Assembly, ModuleInfo, MinimumVersion and RequiredVersion parameters to identify the module to import.
@@ -130,13 +137,12 @@ public class PowerShellScriptAction {
             @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
             @Param(value = MAX_ENVELOP_SIZE) String maxEnvelopeSize,
             @Param(value = INPUT_SCRIPT, required = true) String script,
+            @Param(value = CONFIGURATION_NAME) String configurationName,
             @Param(value = MODULES) String modules,
             @Param(value = WINRM_LOCALE) String winrmLocale,
             @Param(value = OPERATION_TIMEOUT) String operationTimeout
     ) {
         try {
-            WSManRemoteShellService wsManRemoteShellService = new WSManRemoteShellService();
-
             WSManRequestInputs wsManRequestInputs = new WSManRequestInputs.WSManRequestInputsBuilder()
                     .withHost(host)
                     .withPort(port)
@@ -144,6 +150,8 @@ public class PowerShellScriptAction {
                     .withUsername(username)
                     .withPassword(password)
                     .withAuthType(authType)
+                    .withScript(script)
+                    .withConfigurationName(configurationName)
                     .withKerberosConfFile(kerberosConfFile)
                     .withKerberosLoginConfFile(kerberosLoginConfFile)
                     .withKerberosSkipPortForLookup(kerberosSkipPortForLookup)
@@ -158,13 +166,12 @@ public class PowerShellScriptAction {
                     .withKeystorePassword(defaultIfEmpty(keystorePassword, CHANGEIT))
                     .withTrustKeystore(defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE))
                     .withTrustPassword(defaultIfEmpty(trustPassword, CHANGEIT))
-                    .withScript(script)
                     .withModules(modules)
                     .withWinrmLocale(winrmLocale)
                     .withOperationTimeout(operationTimeout)
                     .build();
 
-            Map<String, String> resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
+            Map<String, String> resultMap = new PowerShellScriptService().execute(wsManRequestInputs);
             verifyScriptExecutionStatus(resultMap);
             return resultMap;
         } catch (Exception e) {

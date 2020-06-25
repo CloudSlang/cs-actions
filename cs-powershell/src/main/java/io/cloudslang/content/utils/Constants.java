@@ -31,6 +31,7 @@ public class Constants {
         public static final String WINRM_LOCALE = "winrmLocale";
         public static final String PROTOCOL = "protocol";
         public static final String OPERATION_TIMEOUT = "operationTimeout";
+        public static final String CONFIGURATION_NAME = "configurationName";
     }
 
     public static final class OutputNames {
@@ -56,6 +57,7 @@ public class Constants {
         public static final String NON_INTERACTIVE_PARAMETER = "-NonInteractive";
         public static final String ENCODED_COMMAND_PARAMETER = "-EncodedCommand";
         public static final String IMPORT_MODULE_PARAMETER = "Import-Module";
+        public static final String CONFIGURATION_NAME_PARAMETER = "-ConfigurationName";
         public static final String SINGLE_QUOTE = "'";
         public static final String ZERO_SCRIPT_EXIT_CODE = "0";
         public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
