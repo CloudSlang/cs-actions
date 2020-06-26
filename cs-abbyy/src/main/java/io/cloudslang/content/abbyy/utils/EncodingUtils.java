@@ -15,21 +15,24 @@
 package io.cloudslang.content.abbyy.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
-public final class CharsetUtils {
+public final class EncodingUtils {
 
-    public static final String BOM_CHAR = "\uFEFF";
-    private static final String FALLBACK_CHAR = "\uFFFD";
+    static final String BOM_CHAR = "\uFEFF";
+    static final String FALLBACK_CHAR = "\uFFFD";
+    static final String POTENTIAL_MALICIOUS_CHARS = "?!@/#%*()~{}";
 
 
-    private CharsetUtils() {
+    private EncodingUtils() {
 
     }
 
-    public static String discardBOMChar(String str) {
+
+    public static String discardBOMChar(@NotNull String str) {
         if (str.startsWith(BOM_CHAR)) {
             return str.substring(1);
         }
@@ -39,7 +42,22 @@ public final class CharsetUtils {
         return str;
     }
 
-    public static String toUTF8(String str, String crtEncoding) throws UnsupportedEncodingException {
+
+    public static String toUTF8(@NotNull String str, @NotNull String crtEncoding) throws UnsupportedEncodingException {
         return new String(str.getBytes(crtEncoding), StandardCharsets.UTF_8);
+    }
+
+
+    public static String escapePotentialMaliciousChars(@NotNull String str) throws UnsupportedEncodingException {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if (POTENTIAL_MALICIOUS_CHARS.contains(String.valueOf(ch))) {
+                sb.append('%').append(Integer.toHexString(ch));
+            } else {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
     }
 }

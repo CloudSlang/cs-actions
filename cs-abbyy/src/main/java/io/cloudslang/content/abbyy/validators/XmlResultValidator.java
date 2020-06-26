@@ -21,9 +21,7 @@ import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.entities.others.ExportFormat;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
-import io.cloudslang.content.abbyy.utils.CharsetUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
+import io.cloudslang.content.abbyy.utils.EncodingUtils;
 import org.jetbrains.annotations.NotNull;
 import org.xml.sax.SAXException;
 
@@ -103,7 +101,7 @@ public class XmlResultValidator implements AbbyyResultValidator {
         Schema schema = factory.newSchema(new StreamSource(xsdStream));
         Validator xmlValidator = schema.newValidator();
 
-        xml = CharsetUtils.toUTF8(xml, abbyyInput.getResponseCharacterSet())
+        xml = EncodingUtils.toUTF8(xml, abbyyInput.getResponseCharacterSet())
                 .trim().replaceFirst("^([\\W]+)<", "<")
                 .replaceFirst("(\\uFFFD)+$", ">")
                 .replace("xmlns:xsi=\"@link\"", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
