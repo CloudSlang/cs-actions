@@ -18,7 +18,7 @@ import io.cloudslang.content.abbyy.constants.HttpClientOutputNames;
 import io.cloudslang.content.abbyy.entities.requests.HttpRequest;
 import io.cloudslang.content.abbyy.entities.responses.HttpClientResponse;
 import io.cloudslang.content.abbyy.exceptions.HttpClientException;
-import io.cloudslang.content.abbyy.utils.CharsetUtils;
+import io.cloudslang.content.abbyy.utils.EncodingUtils;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientAction;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 class HttpClient {
@@ -88,7 +87,7 @@ class HttpClient {
 
         String returnResult = rawResponse.get(HttpClientOutputNames.RETURN_RESULT);
         if(StringUtils.isNotEmpty(returnResult)){
-            returnResult = CharsetUtils.discardBOMChar(returnResult);
+            returnResult = EncodingUtils.discardBOMChar(returnResult);
         }
 
         return new HttpClientResponse.Builder()

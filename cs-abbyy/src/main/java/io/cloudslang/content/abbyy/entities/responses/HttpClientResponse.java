@@ -14,10 +14,7 @@
  */
 package io.cloudslang.content.abbyy.entities.responses;
 
-import io.cloudslang.content.abbyy.utils.CharsetUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.StringReader;

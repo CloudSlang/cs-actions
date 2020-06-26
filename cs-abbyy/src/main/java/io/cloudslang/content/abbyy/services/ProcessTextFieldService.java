@@ -24,6 +24,7 @@ import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
+import io.cloudslang.content.abbyy.utils.EncodingUtils;
 import io.cloudslang.content.abbyy.validators.AbbyyInputValidator;
 import io.cloudslang.content.abbyy.validators.AbbyyResultValidator;
 import io.cloudslang.content.abbyy.validators.ProcessTextFieldInputValidator;
@@ -63,7 +64,8 @@ public class ProcessTextFieldService extends AbbyyService<ProcessTextFieldInput>
 
         String xml = getResult(request, response);
 
-        results.put(OutputNames.XML_RESULT, xml);
+        results.put(OutputNames.XML_RESULT, EncodingUtils.escapePotentialMaliciousChars(xml));
+
         if (request.getDestinationFile() != null) {
             saveClearTextResultOnDisk(request, xml);
         }
