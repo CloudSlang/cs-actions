@@ -31,6 +31,10 @@ public class Outputs extends OutputNames {
         public static final String WORKSPACE_ID = "workspaceId";
     }
 
+    public static class CreateOrganizationOutputs {
+        public static final String ORGANIZATION_ID = "organizationId";
+    }
+
     public static class CreateRunOutputs {
         public static final String RUN_ID = "runId";
 
@@ -40,9 +44,19 @@ public class Outputs extends OutputNames {
         public static final String VARIABLE_ID = "variableId";
     }
 
+    public static class CreateWorkspaceVariableOutputs {
+        public static final String WORKSPACE_VARIABLE_ID = "workspaceVariableId";
+    }
+
+
     public static class ListWorkspacesOutputs {
         public static final String WORKSPACE_LIST = "workspaceList";
     }
+
+    public static class ListOrganizationsOutputs {
+        public static final String ORGANIZATION_NAME_LIST = "organizationNameList";
+    }
+
 
     public static class GetCurrentStateVersionOutputs {
         public static final String STATE_VERSION_ID = "stateVersionId";

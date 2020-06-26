@@ -24,7 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.ORGANIZATION_NAME;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateOrganizationInputs.EMAIL;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateVariableInputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceVariableInputs.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.VCS_REPO_ID;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorkspaceInputs.WORKSPACE_NAME;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateVariableOutputs.VARIABLE_ID;
@@ -79,6 +82,26 @@ public final class InputsValidation {
     }
 
     @NotNull
+    public static List<String> verifyCreateWorkspaceVariableInputs(@Nullable final String workspaceId,
+                                                          @Nullable final String workspaceVariableCategory,@Nullable final String workspaceVariableName,
+                                                          @Nullable final String requestBody,String sensitiveRequestBody) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+        if(!workspaceVariableName.isEmpty()) {
+            addVerifyString(exceptionMessages, workspaceId, WORKSPACE_ID);
+            addVerifyString(exceptionMessages,workspaceVariableName , WORKSPACE_VARIABLE_NAME);
+            validateInputPropertyName(exceptionMessages, workspaceVariableName, WORKSPACE_VARIABLE_NAME);
+            addVerifyString(exceptionMessages, workspaceVariableCategory, WORKSPACE_VARIABLE_CATEGORY);
+        }else if(!requestBody.isEmpty()) {
+            addVerifyRequestBody(exceptionMessages, requestBody);
+
+        }else{
+            addVerifyRequestBody(exceptionMessages, sensitiveRequestBody);
+        }
+        return exceptionMessages;
+    }
+
+    @NotNull
     public static List<String> verifyCreateVariablesInput(@Nullable final String variableJson,@Nullable final String sensitiveVariableJson) {
         final List<String> exceptionMessages = new ArrayList<>();
         if(!variableJson.isEmpty()){
@@ -88,6 +111,20 @@ public final class InputsValidation {
         } else{
             addVerifyRequestBody(exceptionMessages,variableJson);
             addVerifyRequestBody(exceptionMessages,sensitiveVariableJson);
+        }
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyCreateWorkspaceVariablesInput(@Nullable final String workspaceVariableJson,@Nullable final String sensitiveWorkspaceVariableJson) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        if(!workspaceVariableJson.isEmpty()){
+            addVerifyRequestBody(exceptionMessages,workspaceVariableJson);
+        }else if(!sensitiveWorkspaceVariableJson.isEmpty()){
+            addVerifyRequestBody(exceptionMessages,sensitiveWorkspaceVariableJson);
+        } else{
+            addVerifyRequestBody(exceptionMessages,workspaceVariableJson);
+            addVerifyRequestBody(exceptionMessages,sensitiveWorkspaceVariableJson);
         }
         return exceptionMessages;
     }
@@ -114,6 +151,19 @@ public final class InputsValidation {
             validateInputPropertyName(exceptionMessages, workspaceName, WORKSPACE_NAME);
             addVerifyString(exceptionMessages, vcsRepoId, VCS_REPO_ID);
             addVerifyString(exceptionMessages, oauthTokenId, OAUTH_TOKEN_ID);
+        } else {
+            addVerifyRequestBody(exceptionMessages, requestBody);
+        }
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyCreateOrganizationInputs(@Nullable final String organizationName, @Nullable final String email, @Nullable final String requestBody) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        if (requestBody.isEmpty()) {
+            addVerifyString(exceptionMessages, organizationName, ORGANIZATION_NAME);
+            validateInputPropertyName(exceptionMessages, organizationName, ORGANIZATION_NAME);
+            addVerifyString(exceptionMessages, email, EMAIL);
         } else {
             addVerifyRequestBody(exceptionMessages, requestBody);
         }
@@ -150,6 +200,14 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyString(exceptionMessages, workspaceName, WORKSPACE_NAME);
         validateInputPropertyName(exceptionMessages,workspaceName, WORKSPACE_NAME);
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyGetOrganizationDetailsInputs(@Nullable final String organizationName) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyString(exceptionMessages, organizationName, ORGANIZATION_NAME);
+        validateInputPropertyName(exceptionMessages,organizationName, ORGANIZATION_NAME);
         return exceptionMessages;
     }
 

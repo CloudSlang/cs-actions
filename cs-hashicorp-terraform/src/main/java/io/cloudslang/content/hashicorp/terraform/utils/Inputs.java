@@ -55,6 +55,17 @@ public class Inputs extends InputNames {
         public static final String VCS_BRANCH_NAME = "vcsBranchName";
     }
 
+    public static class CreateOrganizationInputs {
+        public static final String ORGANIZATION_DESCRIPTION = "organizationDescription";
+        public static final String EMAIL = "email";
+        public static final String SESSION_TIMEOUT = "sessionTimeout";
+        public static final String SESSION_REMEMBER = "sessionRemember";
+        public static final String COLLABORATOR_AUTH_POLICY = "collaboratorAuthPolicy";
+        public static final String COST_ESTIMATION_ENABLED = "costEstimationEnabled";
+        public static final String OWNERS_TEAM_SAML_ID = "ownersTeamSamlRoleId";
+    }
+
+
     public static class CreateVariableInputs {
         public static final String VARIABLE_NAME = "variableName";
         public static final String VARIABLE_VALUE = "variableValue";
@@ -66,6 +77,19 @@ public class Inputs extends InputNames {
         public static final String HCL = "hcl";
         public static final String VARIABLES_JSON = "variablesJson";
         public static final String SENSITIVE_VARIABLES_JSON = "sensitiveVariablesJson";
+    }
+
+    public static class CreateWorkspaceVariableInputs {
+        public static final String WORKSPACE_VARIABLE_NAME = "workspaceVariableName";
+        public static final String WORKSPACE_VARIABLE_VALUE = "workspaceVariableValue";
+        public static final String SENSITIVE_WORKSPACE_VARIABLE_NAME = "sensitiveWorkspaceVariableName";
+        public static final String SENSITIVE_WORKSPACE_VARIABLE_VALUE = "sensitiveWorkspaceVariableValue";
+        public static final String SENSITIVE_REQUEST_BODY = "sensitiveRequestBody";
+        public static final String WORKSPACE_VARIABLE_CATEGORY = "workspaceVariableCategory";
+        public static final String SENSITIVE = "sensitive";
+        public static final String HCL = "hcl";
+        public static final String WORKSPACE_VARIABLES_JSON = "workspaceVariablesJson";
+        public static final String SENSITIVE_WORKSPACE_VARIABLES_JSON = "sensitiveWorkspaceVariablesJson";
     }
 
     public static class CreateRunInputs {

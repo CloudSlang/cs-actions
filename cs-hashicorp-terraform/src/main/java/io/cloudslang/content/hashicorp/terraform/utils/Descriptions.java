@@ -130,6 +130,20 @@ public class Descriptions {
         public static final String WORKSPACE_ID_DESC = "The Id of the workspace";
     }
 
+    public static class CreateOrganization {
+        public static final String CREATE_ORGANIZATION_DESC = "Creates an organization which is " +
+                "managed by Terraform.";
+        public static final String ORGANIZATION_DESCRIPTION_DESC = "A description of the organization to be created.";
+        public static final String ORGANIZATION_REQUEST_BODY_DESC = "The request body of the organization.";
+        public static final String ORGANIZATION_ID_DESC = "The Id of the organization";
+        public static final String EMAIL_DESC = "The email ID of the Admin";
+        public static final String SESSION_TIMEOUT_DESC = "Session timeout after inactivity in minutes";
+        public static final String SESSION_REMEMBER_DESC = "Session expiration in minutes";
+        public static final String COLLABORATOR_AUTH_POLICY_DESC = "Authentication policy (password or two_factor_mandatory)";
+        public static final String COST_ESTIMATION_ENABLED_DESC = "Whether or not the cost estimation feature is enabled for all workspaces in the organization";
+        public static final String OWNERS_TEAM_SAML_ID_DESC = "Optional. SAML only The name of the owners team";
+    }
+
     public static class CreateRun {
         public static final String CREATE_RUN_DESC = "Creates a run in workspace.";
         public static final String CREATE_RUN_REQUEST_BODY_DESC = "The request body of the crate run.";
@@ -177,14 +191,49 @@ public class Descriptions {
         public static final String CREATE_VARIABLE_RETURN_RESULT_DESC = "The response of the apply run.";
     }
 
+    public static class CreateWorkspaceVariable {
+        public static final String CREATE_WORKSPACE_VARIABLE_DESC = "Create either a sensitive or a non-sensitive variable in a given workspace.";
+        public static final String CREATE_WORKSPACE_VARIABLES_DESC = "Creates  multiple sensitive and non-sensitive variables or both in a workspace.";
+        public static final String WORKSPACE_VARIABLE_NAME_DESC = "The name of the workspace variable.";
+        public static final String WORKSPACE_VARIABLE_VALUE_DESC = "The value of the workspace variable.";
+        public static final String SENSITIVE_WORKSPACE_VARIABLE_NAME_DESC = "The name of the sensitive workspace variable.";
+        public static final String SENSITIVE_WORKSPACE_VARIABLE_VALUE_DESC = "The value of the sensitive workspace variable.";
+        public static final String WORKSPACE_VARIABLE_CATEGORY_DESC = "Whether this is a Terraform or environment workspace variable. Valid " +
+                "values are \"terraform\" or \"env\".";
+        public static final String HCL_DESC = "Whether to evaluate the value of the variable as a string of HCL code." +
+                " Has no effect for environment variables.";
+        public static final String SENSITIVE_DESC = "Whether the value is sensitive. If true then the variable is " +
+                "written once and not visible thereafter.";
+
+        public static final String WORKSPACE_VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Workspace Variable.";
+        public static final String WORKSPACE_VARIABLE_SENSITIVE_REQUEST_BODY_DESC = "Request Body for the Create Workspace Sensitive Variable.";
+        public static final String WORKSPACE_VARIABLES_JSON_DESC = "List of workspace variables in json format." +
+                "Examples : [{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"env\\\"}]\",\"[{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"terraform\\\"}]";
+        public static final String SENSITIVE_WORKSPACE_VARIABLES_JSON_DESC = "List of sensitive workspace variables in json format.";
+        public static final String WORKSPACE_VARIABLE_ID_DESC = "The Id of created workspace variable.";
+        public static final String CREATE_WORKSPACE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while " +
+                "creating the workspace variable.";
+        public static final String CREATE_WORKSPACE_VARIABLE_RETURN_RESULT_DESC = "The response of the apply run.";
+    }
+
+
     public static class ListVariables {
         public static final String LIST_VARIABLE_DESC = "List all the variables in a workspace.";
+    }
+
+    public static class ListWorkspaceVariables {
+        public static final String LIST_WORKSPACE_VARIABLE_DESC = "List all the variables in a workspace.";
     }
 
     public static class GetWorkspaceDetails {
         public static final String GET_WORKSPACE_DETAILS_DESC = "Get details of workspace in an organization.";
         public static final String WORKSPACE_NAME_DESC = "The name of workspace whose description is to be fetched.";
         public static final String WORKSPACE_ID_DESC = "The Id of the workspace";
+    }
+
+    public static class GetOrganizationDetails {
+        public static final String GET_ORGANIZATION_DETAILS_DESC = "Get details of the organization.";
+        public static final String ORGANIZATION_ID_DESC = "The Id of the organization";
     }
 
     public static class GetRunDetails {
@@ -210,7 +259,16 @@ public class Descriptions {
     public static class DeleteWorkspace {
         public static final String DELETE_WORKSPACE_DESC = "Deletes the workspace from an organization using workspace " +
                 "name and organization name";
-        public static final String DELETE_WORKSPACE_SUCCESS_DESC = "The workspace deleted successfully.";
+        public static final String DELETE_WORKSPACE_SUCCESS_DESC = "The workspace is deleted successfully.";
+    }
+
+    public static class DeleteOrganization{
+        public static final String DELETE_ORGANIZATION_DESC = "Deletes the organization";
+        public static final String DELETE_ORGANIZATION_SUCCESS_DESC = "The organization is deleted successfully.";
+    }
+
+    public static class UpdateOrganization{
+        public static final String UPDATE_ORGANIZATION_DESC = "Updates the organization";
     }
 
     public static class ListWorkspaces {
@@ -218,14 +276,32 @@ public class Descriptions {
         public static final String WORKSPACE_LIST_DESC = "List of all workspaces under the organization.";
     }
 
+    public static class ListOrganizations {
+        public static final String LIST_ORGANIZATIONS_OPERATION_DESC = "List of organizations present";
+        public static final String ORGANIZATION_LIST_DESC = "List of all organizations";
+    }
+
     public static class UpdateVariables {
         public static final String UPDATE_VARIABLES_DESC = "Updates  multiple sensitive and non-sensitive variables or both in a workspace.";
         public static final String UPDATE_VARIABLE_DESC = "Updates  multiple sensitive and non-sensitive variable or both in a workspace.";
     }
 
+    public static class UpdateWorkspaceVariables {
+        public static final String WORKSPACE_VARIABLE_REQUEST_BODY_DESC = "Request Body for the Update Workspace Variable.";
+        public static final String WORKSPACE_VARIABLES_JSON_DESC = "List of workspace variables in json format." +
+                "Examples : [{\"data\": { \"id\":\"var-test1\", \"attributes\": { \"propertyName\":\"test1\", \"propertyValue\":\"1\", \"category\":\"terraform\" }}},{\"data\": { \"id\":\"var-test2te\", \"attributes\": { \"propertyName\":\"test2\", \"propertyValue\":\"2\", \"category\":\"env\" }}]";
+        public static final String UPDATE_WORKSPACE_VARIABLES_DESC = "Updates  multiple sensitive and non-sensitive variables or both in a workspace.";
+        public static final String UPDATE_WORKSPACE_VARIABLE_DESC = "Updates  multiple sensitive and non-sensitive variable or both in a workspace.";
+    }
+
     public static class DeleteVariable {
         public static final String DELETE_VAR_SUCCESS_DESC = "The variable deleted successfully.";
         public static final String DELETE_VARIABLE_DESC = "Deletes a variable from workspace.";
+    }
+
+    public static class DeleteWorkspaceVariable {
+        public static final String DELETE_WORKSPACE_VAR_SUCCESS_DESC = "The workspace variable deleted successfully.";
+        public static final String DELETE_WORKSPACE_VARIABLE_DESC = "Deletes a variable from workspace.";
     }
 
 

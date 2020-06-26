@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 package io.cloudslang.content.json.entities;
 
@@ -26,20 +27,6 @@ public class AddPropertyToObjectInputs {
     private final String newPropertyName;
     private final String newPropertyValue;
 
-    @NotNull
-    public String getJsonObject() {
-        return jsonObject;
-    }
-
-    @NotNull
-    public String getNewPropertyName() {
-        return newPropertyName;
-    }
-
-    @NotNull
-    public String getNewPropertyValue() {
-        return newPropertyValue;
-    }
 
     @java.beans.ConstructorProperties({"jsonObject", "newPropertyName", "newPropertyValue"})
     private AddPropertyToObjectInputs(String jsonObject, String newPropertyName, String newPropertyValue) {
@@ -49,9 +36,28 @@ public class AddPropertyToObjectInputs {
         this.newPropertyValue = newPropertyValue;
     }
 
+
     @NotNull
     public static AddPropertyToObjectInputsBuilder builder() {
         return new AddPropertyToObjectInputsBuilder();
+    }
+
+
+    @NotNull
+    public String getJsonObject() {
+        return jsonObject;
+    }
+
+
+    @NotNull
+    public String getNewPropertyName() {
+        return newPropertyName;
+    }
+
+
+    @NotNull
+    public String getNewPropertyValue() {
+        return newPropertyValue;
     }
 
     public static class AddPropertyToObjectInputsBuilder {
@@ -64,11 +70,13 @@ public class AddPropertyToObjectInputs {
         AddPropertyToObjectInputsBuilder() {
         }
 
+
         @NotNull
         public AddPropertyToObjectInputs.AddPropertyToObjectInputsBuilder jsonObject(@NotNull final String jsonObject) {
             this.jsonObject = jsonObject;
             return this;
         }
+
 
         @NotNull
         public AddPropertyToObjectInputs.AddPropertyToObjectInputsBuilder newPropertyName(@NotNull final String newPropertyName) {
@@ -76,11 +84,13 @@ public class AddPropertyToObjectInputs {
             return this;
         }
 
+
         @NotNull
         public AddPropertyToObjectInputs.AddPropertyToObjectInputsBuilder newPropertyValue(@NotNull final String newPropertyValue) {
             this.newPropertyValue = newPropertyValue;
             return this;
         }
+
 
         public AddPropertyToObjectInputs build() {
             return new AddPropertyToObjectInputs(jsonObject, newPropertyName, newPropertyValue);
