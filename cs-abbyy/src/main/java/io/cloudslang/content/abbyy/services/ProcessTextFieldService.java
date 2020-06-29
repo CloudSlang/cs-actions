@@ -64,7 +64,7 @@ public class ProcessTextFieldService extends AbbyyService<ProcessTextFieldInput>
 
         String xml = getResult(request, response);
 
-        results.put(OutputNames.XML_RESULT, EncodingUtils.escapePotentialMaliciousChars(xml));
+        results.put(OutputNames.XML_RESULT, EncodingUtils.escapePotentialMaliciousCharsInXml(xml));
 
         if (request.getDestinationFile() != null) {
             saveClearTextResultOnDisk(request, xml);
