@@ -118,44 +118,35 @@ public class GetTaskDetails {
                     .taskUUID(taskUUID)
                     .includeSubtasksInfo(includeSubtasksInfo)
                     .commonInputs(NutanixCommonInputs.builder()
-                                    .hostname(hostname)
-                                    .port(port)
-                                    .username(username)
-                                    .password(password)
-                                    .apiVersion(apiVersion)
-                                    .proxyHost(proxyHost)
-                                    .proxyPort(proxyPort)
-                                    .proxyUsername(proxyUsername)
-                                    .proxyPassword(proxyPassword)
-                                    .trustAllRoots(trustAllRoots)
-                                    .x509HostnameVerifier(x509HostnameVerifier)
-                                    .trustKeystore(trustKeystore)
-                                    .trustPassword(trustPassword)
-                                    .connectTimeout(connectTimeout)
-                                    .socketTimeout(socketTimeout)
-                                    .keepAlive(keepAlive)
-                                    .connectionsMaxPerRoot(connectionsMaxPerRoute)
-                                    .connectionsMaxTotal(connectionsMaxTotal)
-                                    .build()).build());
+                            .hostname(hostname)
+                            .port(port)
+                            .username(username)
+                            .password(password)
+                            .apiVersion(apiVersion)
+                            .proxyHost(proxyHost)
+                            .proxyPort(proxyPort)
+                            .proxyUsername(proxyUsername)
+                            .proxyPassword(proxyPassword)
+                            .trustAllRoots(trustAllRoots)
+                            .x509HostnameVerifier(x509HostnameVerifier)
+                            .trustKeystore(trustKeystore)
+                            .trustPassword(trustPassword)
+                            .connectTimeout(connectTimeout)
+                            .socketTimeout(socketTimeout)
+                            .keepAlive(keepAlive)
+                            .connectionsMaxPerRoot(connectionsMaxPerRoute)
+                            .connectionsMaxTotal(connectionsMaxTotal)
+                            .build()).build());
 
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
-            String taskStatus = null;
+            String taskStatus = JsonPath.read(returnMessage, TASK_STATUS_PATH);
             if (statusCode >= 200 && statusCode < 300) {
-                taskStatus = JsonPath.read(returnMessage, TASK_STATUS_PATH);
-                if (taskStatus.equals(SUCCEEDED)) {
-                    final List<String> vmUUID = JsonPath.read(returnMessage, VM_UUID_PATH);
-                    final String vmUUIDString = join(vmUUID.toArray(), DELIMITER);
-                    if (!vmUUIDString.isEmpty())
-                        results.put(VM_UUID, vmUUIDString);
-                    results.put(TASK_STATUS, taskStatus);
-                } else {
-                    return getTaskFailureResults(hostname, statusCode, taskStatus, returnMessage, returnMessage);
-                }
+                results.put(TASK_STATUS, taskStatus);
             } else {
-                return getFailureResults(hostname, statusCode, returnMessage, returnMessage);
+                return getTaskFailureResults(hostname, statusCode, taskStatus, returnMessage, returnMessage);
             }
             return results;
         } catch (Exception exception) {

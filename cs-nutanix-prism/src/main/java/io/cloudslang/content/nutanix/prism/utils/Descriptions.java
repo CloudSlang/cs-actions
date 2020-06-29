@@ -172,6 +172,29 @@ public class Descriptions {
                 "Default : 'false'";
     }
 
+    public static class UpdateVM {
+        public static final String UPDATE_VM_OPERATION_DESC = "Update a Virtual Machine with specified configuration." +
+                "This is an asynchronous operation that results in the creation of a task object. " +
+                "The UUID of this task object is returned as the response of this operation. " +
+                "This task can be monitored by using the /tasks/poll API.";
+        public static final String VM_NAME_DESC = "Name of the Virtual Machine that will be updated.";
+        public static final String VM_DESCRIPTION_DESC = "The description of the Virtual Machine that will be updated.";
+        public static final String VM_MEMORY_SIZE_DESC = "The memory amount (in GiB) attached to the virtual machine " +
+                "that will will be updated.";
+        public static final String NUM_VCPUS_DESC = "The number that indicates how many processors will have the " +
+                "virtual machine that will be updated.";
+        public static final String NUM_CORES_PER_VCPU_DESC = "This is the number of cores per vCPU.";
+        public static final String TIME_ZONE_DESC = "The timezone in which the Virtual Machine will be updated." +
+                "Example : 'Asia/Calcutta'";
+        public static final String HOST_UUIDS_DESC = "The Host UUIDs for which Virtual Machine will be mapped.";
+        public static final String AGENT_VM_DESC = "Indicates whether the VM is an agent VM. When their host enters " +
+                "maintenance mode, after normal VMs are evacuated, agent VMs are powered off. When the host is " +
+                "restored, agent VMs are powered on before normal VMs are restored. In other words, agent VMs cannot " +
+                "be HA-protected or live migrated." +
+                "Default : 'false'";
+
+    }
+
     public static class DeleteVM {
         public static final String DELETE_VM_OPERATION_DESC = "Deletes a virtual machine." +
                 "This is an idempotent operation. If the virtual machine is currently powered on, it will be " +

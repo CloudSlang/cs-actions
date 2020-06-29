@@ -35,6 +35,7 @@ public class Constants {
         public static final String BASIC = "basic";
         public static final String GET = "GET";
         public static final String POST = "POST";
+        public static final String PUT = "PUT";
         public static final String PATCH = "PATCH";
         public static final String DELETE = "DELETE";
         public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
@@ -89,6 +90,7 @@ public class Constants {
         public static final String VM_LOGICAL_TIMESTAMP_PATH = "$.vm_logical_timestamp";
         public static final String GET_VM_DETAILS_PATH = "/vms";
     }
+
     public static class DetachDisksConstants {
         public static final String DETACH_DISKS_OPERATION_NAME = "Detach Disks";
         public static final String DETACH_DISKS_PATH = "/disks/detach";
@@ -105,6 +107,7 @@ public class Constants {
         public static final String DELETE_NIC_PATH = "/nics/";
         public static final String VM_LOGICAL_TIMESTAMP_QUERY_PARAM = "vm_logical_timestamp=";
     }
+
     public static class ListVMsConstants {
         public static final String LIST_VMS_OPERATION_NAME = "List VMs";
         public static final String FILTER = "filter=";
@@ -118,6 +121,12 @@ public class Constants {
     public static class CreateVMConstants {
         public static final String CREATE_VM_OPERATION_NAME = "Create VM";
         public static final String TASK_UUID_PATH = "task_uuid";
+    }
+
+    public static class UpdateVMConstants {
+        public static final String UPDATE_VM_OPERATION_NAME = "Update VM";
+        public static final String TASK_UUID_PATH = "task_uuid";
+
     }
 
     public static class DeleteVMConstants {
