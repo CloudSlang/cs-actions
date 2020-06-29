@@ -119,12 +119,12 @@ public class CreateVM {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
         port = defaultIfEmpty(port, DEFAULT_NUTANIX_PORT);
         vmDescription = defaultIfEmpty(vmDescription, EMPTY);
-        hypervisorType = defaultIfEmpty(hypervisorType, DEFAULT_HYPERVISOR_TYPE);
+        hypervisorType = defaultIfEmpty(hypervisorType, EMPTY);
         timeZone = defaultIfEmpty(timeZone, DEFAULT_TIMEZONE);
         flashModeEnabled = defaultIfEmpty(flashModeEnabled, BOOLEAN_FALSE);
-        isSCSIPassThrough = defaultIfEmpty(isSCSIPassThrough, BOOLEAN_FALSE);
-        isThinProvisioned = defaultIfEmpty(isThinProvisioned, BOOLEAN_TRUE);
-        isEmptyDisk = defaultIfEmpty(isEmptyDisk, BOOLEAN_TRUE);
+        isSCSIPassThrough = defaultIfEmpty(isSCSIPassThrough, BOOLEAN_TRUE);
+        isThinProvisioned = defaultIfEmpty(isThinProvisioned, BOOLEAN_FALSE);
+        isEmptyDisk = defaultIfEmpty(isEmptyDisk, BOOLEAN_FALSE);
         diskLabel = defaultIfEmpty(diskLabel, EMPTY);
         deviceIndex = defaultIfEmpty(deviceIndex, ZERO);
         ndfsFilepath = defaultIfEmpty(ndfsFilepath, EMPTY);

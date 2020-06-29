@@ -224,15 +224,18 @@ public class VMImpl {
             diskAddress.setDevice_bus(nutanixCreateVMInputs.getDeviceBus());
             diskAddress.setDisk_label(nutanixCreateVMInputs.getDiskLabel());
             diskAddress.setDevice_index(Integer.parseInt(nutanixCreateVMInputs.getDeviceIndex()));
-            diskAddress.setNdfs_filepath(nutanixCreateVMInputs.getNdfsFilepath());
             vmDisks.setFlash_mode_enabled(Boolean.parseBoolean(nutanixCreateVMInputs.getFlashModeEnabled()));
             vmDisks.setIs_scsi_pass_through(Boolean.parseBoolean(nutanixCreateVMInputs.getIsSCSIPassThrough()));
             vmDisks.setIs_thin_provisioned(Boolean.parseBoolean(nutanixCreateVMInputs.getIsThinProvisioned()));
             vmDisks.setIs_cdrom(Boolean.parseBoolean(nutanixCreateVMInputs.getIsCDROM()));
             CreateVMRequestBody.VMDiskClone vmDiskClone = createVMBody.new VMDiskClone();
             CreateVMRequestBody.CloneDiskAddress cloneDiskAddress = createVMBody.new CloneDiskAddress();
-            cloneDiskAddress.setVmdisk_uuid(nutanixCreateVMInputs.getSourceVMDiskUUID());
-            vmDiskClone.setMinimum_size(Integer.parseInt(nutanixCreateVMInputs.getVmDiskMinimumSize()));
+            if (!nutanixCreateVMInputs.getSourceVMDiskUUID().isEmpty()) {
+                cloneDiskAddress.setVmdisk_uuid(nutanixCreateVMInputs.getSourceVMDiskUUID());
+            } else {
+                cloneDiskAddress.setNdfs_filepath(nutanixCreateVMInputs.getNdfsFilepath());
+            }
+            vmDiskClone.setMinimum_size(Long.parseLong(nutanixCreateVMInputs.getVmDiskMinimumSize()) * 1024 * 1024 * 1024);
             vmDiskClone.setStorage_container_uuid(nutanixCreateVMInputs.getStorageContainerUUID());
             vmDiskClone.setDisk_address(cloneDiskAddress);
             vmDisks.setVm_disk_clone(vmDiskClone);
@@ -240,7 +243,6 @@ public class VMImpl {
             diskAddress.setDevice_bus(nutanixCreateVMInputs.getDeviceBus());
             diskAddress.setDisk_label(nutanixCreateVMInputs.getDiskLabel());
             diskAddress.setDevice_index(Integer.parseInt(nutanixCreateVMInputs.getDeviceIndex()));
-            diskAddress.setNdfs_filepath(nutanixCreateVMInputs.getNdfsFilepath());
             vmDisks.setFlash_mode_enabled(Boolean.parseBoolean(nutanixCreateVMInputs.getFlashModeEnabled()));
             vmDisks.setIs_scsi_pass_through(Boolean.parseBoolean(nutanixCreateVMInputs.getIsSCSIPassThrough()));
             vmDisks.setIs_thin_provisioned(Boolean.parseBoolean(nutanixCreateVMInputs.getIsThinProvisioned()));
@@ -255,7 +257,6 @@ public class VMImpl {
             diskAddress.setDevice_bus(nutanixCreateVMInputs.getDeviceBus());
             diskAddress.setDisk_label(nutanixCreateVMInputs.getDiskLabel());
             diskAddress.setDevice_index(Integer.parseInt(nutanixCreateVMInputs.getDeviceIndex()));
-            diskAddress.setNdfs_filepath(nutanixCreateVMInputs.getNdfsFilepath());
             vmDisks.setFlash_mode_enabled(Boolean.parseBoolean(nutanixCreateVMInputs.getFlashModeEnabled()));
             vmDisks.setIs_scsi_pass_through(Boolean.parseBoolean(nutanixCreateVMInputs.getIsSCSIPassThrough()));
             vmDisks.setIs_thin_provisioned(Boolean.parseBoolean(nutanixCreateVMInputs.getIsThinProvisioned()));
