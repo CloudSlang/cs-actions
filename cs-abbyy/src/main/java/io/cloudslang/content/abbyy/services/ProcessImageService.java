@@ -76,14 +76,14 @@ public class ProcessImageService extends AbbyyService<ProcessImageInput> {
                 switch (exportFormat) {
                     case XML:
                         result = getClearTextResult(input, response, ExportFormat.XML, xmlResultValidator);
-                        results.put(OutputNames.XML_RESULT, EncodingUtils.escapePotentialMaliciousChars(result));
+                        results.put(OutputNames.XML_RESULT, EncodingUtils.escapePotentialMaliciousCharsInXml(result));
                         if (input.getDestinationFile() != null) {
                             saveClearTextOnDisk(input, result, exportFormat);
                         }
                         break;
                     case TXT:
                         result = getClearTextResult(input, response, ExportFormat.TXT, txtResultValidator);
-                        results.put(OutputNames.TXT_RESULT, EncodingUtils.escapePotentialMaliciousChars(result));
+                        results.put(OutputNames.TXT_RESULT, EncodingUtils.escapePotentialMaliciousCharsInTxt(result));
                         if (input.getDestinationFile() != null) {
                             saveClearTextOnDisk(input, result, exportFormat);
                         }
