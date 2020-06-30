@@ -63,8 +63,8 @@ public class DiskImplTest {
             .vmUUID("myvm")
             .deviceBusList("scsi")
             .deviceIndexList("0")
-            .vmDisksizeList("10737418240")
-            .storagecontainerUUIDDiskList("891a9fab-9484-4947-8c7d-155701cdee20")
+            .vmDiskSizeList("10")
+            .storageContainerUUIDList("891a9fab-9484-4947-8c7d-155701cdee20")
             .commonInputs(
                     NutanixCommonInputs.builder()
                             .hostname("myhost")

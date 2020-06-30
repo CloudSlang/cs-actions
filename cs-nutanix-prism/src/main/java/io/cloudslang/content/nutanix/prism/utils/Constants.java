@@ -22,7 +22,6 @@ public class Constants {
         public static final String NEW_LINE = "\n";
         public static final String DEFAULT_PROXY_PORT = "8080";
         public static final String DEFAULT_NUTANIX_PORT = "9440";
-        public static final String DEFAULT_HYPERVISOR_TYPE = "ACROPOLIS";
         public static final String DEFAULT_TIMEZONE = "UTC";
         public static final String BOOLEAN_FALSE = "false";
         public static final String BOOLEAN_TRUE = "true";
