@@ -41,7 +41,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class DiskImpl {
 
     @NotNull
-    public static String detachDisksBody(NutanixDetachDisksInputs nutanixDetachDisksInputs) throws NutanixDetachDiskException {
+    public static String detachDisksBody(NutanixDetachDisksInputs nutanixDetachDisksInputs) throws
+            NutanixDetachDiskException {
         String requestBody = EMPTY;
         ObjectMapper detachDisksMapper = new ObjectMapper();
         DetachDisksRequestBody detachDisksRequestBody = new DetachDisksRequestBody();
@@ -70,51 +71,105 @@ public class DiskImpl {
                 e.printStackTrace();
             }
         } else {
-            throw new NutanixDetachDiskException("Size of vmDiskUUIDList, deviceBusList and deviceIndexList should be same");
+            throw new NutanixDetachDiskException("Size of vmDiskUUIDList, deviceBusList and deviceIndexList should " +
+                    "be same");
         }
         return requestBody;
 
     }
 
     @NotNull
-    public static String AttachDisksBody(NutanixAttachDisksInputs nutanixAttachDisksInputs) throws NutanixDetachDiskException {
+    public static String AttachDisksBody(NutanixAttachDisksInputs nutanixAttachDisksInputs) throws
+            NutanixDetachDiskException {
         String requestBody = EMPTY;
         ObjectMapper detachDisksMapper = new ObjectMapper();
         AttachDisksRequestBody attachDisksRequestBody = new AttachDisksRequestBody();
         ArrayList vmDiskList = new ArrayList();
-        String[] deviceBusArray = nutanixAttachDisksInputs.getDeviceBus().split(",");
-        String[] deviceIndexArray = nutanixAttachDisksInputs.getDeviceIndex().split(",");
-        String[] vmDisksizeArray = nutanixAttachDisksInputs.getVmDisksize().split(",");
-        String[] vmStoragecontainerUUIDDiskArray = nutanixAttachDisksInputs.getStoragecontainerUUIDDisk().split(",");
+        String[] deviceBusArray = nutanixAttachDisksInputs.getDeviceBusList().split(",");
+        String[] deviceIndexArray = nutanixAttachDisksInputs.getDeviceIndexList().split(",");
+        String[] isCDROMArray = nutanixAttachDisksInputs.getIsCDROMList().split(",");
+        String[] isEmptyDiskArray = nutanixAttachDisksInputs.getIsEmptyList().split(",");
+        String[] sourceVMDiskUUIDArray = nutanixAttachDisksInputs.getSourceVMDiskUUIDList().split(",");
+        String[] vmDiskMinimumSizeArray = nutanixAttachDisksInputs.getVmDiskMinimumSizeList().split(",");
+        String[] ndfsFilepathArray = nutanixAttachDisksInputs.getNdfsFilepathList().split(",");
+        String[] vmDiskSizeArray = nutanixAttachDisksInputs.getVmDiskSizeList().split(",");
+        String[] vmStorageContainerUUIDArray = nutanixAttachDisksInputs.getStorageContainerUUIDList().split(",");
+        String[] isSCSIPassThroughArray = nutanixAttachDisksInputs.getIsSCSIPassThroughList().split(",");
+        String[] isThinProvisionedArray = nutanixAttachDisksInputs.getIsThinProvisionedList().split(",");
+        String[] isFlashModeEnabledArray = nutanixAttachDisksInputs.getIsFlashModeEnabledList().split(",");
 
-        if ((vmDisksizeArray.length == deviceBusArray.length) && (vmDisksizeArray.length == deviceIndexArray.length) && (vmDisksizeArray.length == vmStoragecontainerUUIDDiskArray.length)) {
-            for (int i = 0; i < vmDisksizeArray.length; i++) {
+        if (isCDROMArray[0] != "" && isCDROMArray.length > 0) {
+            for (int i = 0; i < isCDROMArray.length; i++) {
                 AttachDisksRequestBody.VMDisks vmDisks = attachDisksRequestBody.new VMDisks();
-                AttachDisksRequestBody.DiskAddress diskAddress = attachDisksRequestBody.new DiskAddress();
+
                 AttachDisksRequestBody.VMDiskCreate vmDiskCreate = attachDisksRequestBody.new VMDiskCreate();
-                diskAddress.setDeviceBus(deviceBusArray[i]);
-                diskAddress.setDeviceIndex(deviceIndexArray[i]);
-                vmDiskCreate.setSize(Long.parseLong(vmDisksizeArray[i])* 1024 * 1024 * 1024);
-                vmDiskCreate.setStorage_container_uuid(vmStoragecontainerUUIDDiskArray[i]);
+                AttachDisksRequestBody.VMDiskClone vmDiskClone = attachDisksRequestBody.new VMDiskClone();
 
-                vmDisks.setDiskAddress(diskAddress);
-                vmDisks.setVmDiskCreate(vmDiskCreate);
+                if ((deviceBusArray[0] != "" && (isCDROMArray.length == deviceBusArray.length)) || (deviceIndexArray[0]
+                        != "" && (isCDROMArray.length == deviceIndexArray.length))) {
+                    AttachDisksRequestBody.DiskAddress diskAddress = attachDisksRequestBody.new DiskAddress();
+                    if (deviceBusArray[0] != "" && (isCDROMArray.length == deviceBusArray.length))
+                        diskAddress.setDevice_bus(deviceBusArray[i]);
+                    if (deviceIndexArray[0] != "" && (isCDROMArray.length == deviceIndexArray.length))
+                        diskAddress.setDevice_index(Integer.parseInt(deviceIndexArray[i]));
+                    vmDisks.setDisk_address(diskAddress);
+                }
 
+                if ((isCDROMArray.length == vmStorageContainerUUIDArray.length) &&
+                        (isCDROMArray.length == vmDiskSizeArray.length) && (vmStorageContainerUUIDArray[0] != "") &&
+                        (vmDiskSizeArray[0] != "")) {
+                    vmDiskCreate.setSize(Long.parseLong(vmDiskSizeArray[i]) * 1024 * 1024 * 1024);
+                    vmDiskCreate.setStorage_container_uuid(vmStorageContainerUUIDArray[i]);
+                } else if ((isCDROMArray.length == sourceVMDiskUUIDArray.length) && (sourceVMDiskUUIDArray[0] != "")) {
+                    AttachDisksRequestBody.CloneDiskAddress cloneDiskAddress = attachDisksRequestBody.new
+                            CloneDiskAddress();
+                    cloneDiskAddress.setVmdisk_uuid(sourceVMDiskUUIDArray[i]);
+                    vmDiskClone.setDisk_address(cloneDiskAddress);
+                    if (vmStorageContainerUUIDArray[0] != "" && (isCDROMArray.length == vmStorageContainerUUIDArray.length))
+                        vmDiskClone.setStorage_container_uuid(vmStorageContainerUUIDArray[i]);
+                    if (vmDiskMinimumSizeArray[0] != "")
+                        vmDiskClone.setMinimum_size((Long.parseLong(vmDiskMinimumSizeArray[i])) * 1024 * 1024 * 1024);
+                } else if ((isCDROMArray.length == ndfsFilepathArray.length) && (ndfsFilepathArray[0] != "")) {
+                    AttachDisksRequestBody.CloneDiskAddress cloneDiskAddress = attachDisksRequestBody.new
+                            CloneDiskAddress();
+                    cloneDiskAddress.setNdfs_filepath(ndfsFilepathArray[i]);
+                    vmDiskClone.setDisk_address(cloneDiskAddress);
+                    if (vmStorageContainerUUIDArray[0] != "" && (isCDROMArray.length == vmStorageContainerUUIDArray.length))
+                        vmDiskClone.setStorage_container_uuid(vmStorageContainerUUIDArray[i]);
+                    if (vmDiskMinimumSizeArray[i] != "")
+                        vmDiskClone.setMinimum_size((Long.parseLong(vmDiskMinimumSizeArray[i])) * 1024 * 1024 * 1024);
+                } else {
+                    throw new NutanixDetachDiskException("Size of the isCDROMList, storageContainerUUIDList, " +
+                            "vmDiskSizeList should be same in case of empty disk creation, and size of isCDROMList, " +
+                            "sourceVMDiskUUIDList or ndfsFilepathList, vmDiskSizeList should be same in case of disk clone.");
+                }
+
+                vmDisks.setIs_cdrom(Boolean.parseBoolean(isCDROMArray[i]));
+                if (isEmptyDiskArray[0] != "" && (isCDROMArray.length == isEmptyDiskArray.length))
+                    vmDisks.setIs_empty(Boolean.parseBoolean(isEmptyDiskArray[i]));
+                if (isSCSIPassThroughArray[0] != "" && (isCDROMArray.length == isSCSIPassThroughArray.length))
+                    vmDisks.setIs_scsi_pass_through(Boolean.parseBoolean(isSCSIPassThroughArray[i]));
+                if (isThinProvisionedArray[0] != "" && (isCDROMArray.length == isThinProvisionedArray.length))
+                    vmDisks.setIs_thin_provisioned(Boolean.parseBoolean(isThinProvisionedArray[i]));
+                if (isFlashModeEnabledArray[0] != "" && (isCDROMArray.length == isFlashModeEnabledArray.length))
+                    vmDisks.setFlash_mode_enabled(Boolean.parseBoolean(isFlashModeEnabledArray[i]));
+                if ((isCDROMArray.length == vmStorageContainerUUIDArray.length) &&
+                        (isCDROMArray.length == vmDiskSizeArray.length) && (vmStorageContainerUUIDArray[0] != "") &&
+                        (vmDiskSizeArray[0] != "")) {
+                    vmDisks.setVm_disk_create(vmDiskCreate);
+                } else {
+                    vmDisks.setVm_disk_clone(vmDiskClone);
+                }
                 vmDiskList.add(vmDisks);
             }
-
             attachDisksRequestBody.setVmDisks(vmDiskList);
             try {
                 requestBody = detachDisksMapper.writeValueAsString(attachDisksRequestBody);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-        } else {
-
-            throw new NutanixDetachDiskException("Size of the deviceBus and deviceIndex and diskSize and storageContainerUUID should be same");
         }
         return requestBody;
-
     }
 
     @NotNull

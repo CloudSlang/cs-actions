@@ -101,8 +101,16 @@ public class Inputs extends InputNames {
     public static class AttachDisksInputs {
         public static final String DEVICE_BUS_LIST = "deviceBusList";
         public static final String DEVICE_INDEX_LIST = "deviceIndexList";
-        public static final String VM_DISK_SIZE_LIST = "deviceDisksizeList";
-        public static final String STORAGE_CONTAINER_UUID_DISK_LIST = "storagecontainerUUIDDiskList";
+        public static final String IS_CDROM_LIST = "isCDROMList";
+        public static final String IS_EMPTY_DISK_LIST = "isEmptyDiskList";
+        public static final String SOURCE_VM_DISK_UUID_LIST = "sourceVMDiskUUIDList";
+        public static final String VM_DISK_MINIMUM_SIZE_LIST = "vmDiskMinimumSizeList";
+        public static final String NDFS_FILE_PATH_LIST = "ndfsFilepathList";
+        public static final String VM_DISK_SIZE_LIST = "deviceDiskSizeList";
+        public static final String STORAGE_CONTAINER_UUID_LIST = "storageContainerUUIDList";
+        public static final String IS_SCSI_PASS_THROUGH_LIST = "isSCSIPassThroughList";
+        public static final String IS_THIN_PROVISIONED_LIST = "isThinProvisionedList";
+        public static final String IS_FLASH_MODE_ENABLED_LIST = "isFlashModeEnabledList";
 
     }
 

@@ -227,8 +227,6 @@ public class CreateVMRequestBody {
         String disk_label;
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         int device_index;
-        @JsonInclude(JsonInclude.Include.NON_EMPTY)
-        String ndfs_filepath;
 
         public String getDevice_bus() {
             return device_bus;
@@ -254,18 +252,11 @@ public class CreateVMRequestBody {
             this.device_index = device_index;
         }
 
-        public String getNdfs_filepath() {
-            return ndfs_filepath;
-        }
-
-        public void setNdfs_filepath(String ndfs_filepath) {
-            this.ndfs_filepath = ndfs_filepath;
-        }
     }
     public class VMDiskClone {
         CloneDiskAddress disk_address;
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-        int minimum_size;
+        long minimum_size;
         @JsonInclude(JsonInclude.Include.NON_EMPTY)
         String storage_container_uuid;
 
@@ -277,12 +268,12 @@ public class CreateVMRequestBody {
             this.disk_address = disk_address;
         }
 
-        public int getMinimum_size() {
+        public long getMinimum_size() {
             return minimum_size;
         }
 
         @NotNull
-        public void setMinimum_size(int minimum_size) {
+        public void setMinimum_size(long minimum_size) {
             this.minimum_size = minimum_size;
         }
 
@@ -297,6 +288,8 @@ public class CreateVMRequestBody {
     public class CloneDiskAddress {
         @JsonInclude(JsonInclude.Include.NON_EMPTY)
         String vmdisk_uuid;
+        @JsonInclude(JsonInclude.Include.NON_EMPTY)
+        String ndfs_filepath;
 
         public String getVmdisk_uuid() {
             return vmdisk_uuid;
@@ -304,6 +297,14 @@ public class CreateVMRequestBody {
 
         public void setVmdisk_uuid(String vmdisk_uuid) {
             this.vmdisk_uuid = vmdisk_uuid;
+        }
+
+        public String getNdfs_filepath() {
+            return ndfs_filepath;
+        }
+
+        public void setNdfs_filepath(String ndfs_filepath) {
+            this.ndfs_filepath = ndfs_filepath;
         }
     }
     public class VMDiskCloneExternal {

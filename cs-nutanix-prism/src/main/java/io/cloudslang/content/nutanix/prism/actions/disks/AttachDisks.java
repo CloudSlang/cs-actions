@@ -76,10 +76,18 @@ public class AttachDisks {
                                        @Param(value = USERNAME, required = true, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
                                        @Param(value = VM_UUID, required = true, description = VM_UUID_DESC) String vmUUID,
-                                       @Param(value = DEVICE_BUS_LIST, required = true, description = DEVICE_BUS_LIST_DESC) String deviceBusList,
+                                       @Param(value = IS_CDROM_LIST, required = true, description = IS_CDROM_LIST_DESC) String isCDROMList,
+                                       @Param(value = IS_EMPTY_DISK_LIST, description = IS_EMPTY_DISK_LIST_DESC) String isEmptyDiskList,
+                                       @Param(value = DEVICE_BUS_LIST, description = DEVICE_BUS_LIST_DESC) String deviceBusList,
                                        @Param(value = DEVICE_INDEX_LIST, description = DEVICE_INDEX_LIST_DESC) String deviceIndexList,
-                                       @Param(value = VM_DISK_SIZE_LIST, required = true, description = VM_DISK_SIZE_LIST_DESC) String vmDisksizeList,
-                                       @Param(value = STORAGE_CONTAINER_UUID_DISK_LIST, required = true, description = STORAGE_CONTAINER_UUID_DISK_LIST_DESC) String storagecontainerUUIDDiskList,
+                                       @Param(value = SOURCE_VM_DISK_UUID_LIST, description = SOURCE_VM_DISK_UUID_LIST_DESC) String sourceVMDiskUUIDList,
+                                       @Param(value = VM_DISK_MINIMUM_SIZE_LIST, description = VM_DISK_MINIMUM_SIZE_LIST_DESC) String vmDiskMinimumSizeList,
+                                       @Param(value = NDFS_FILE_PATH_LIST, description = NDFS_FILE_PATH_LIST_DESC) String ndfsFilepathList,
+                                       @Param(value = VM_DISK_SIZE_LIST, description = VM_DISK_SIZE_LIST_DESC) String vmDiskSizeList,
+                                       @Param(value = STORAGE_CONTAINER_UUID_LIST, description = STORAGE_CONTAINER_UUID_DISK_LIST_DESC) String storageContainerUUIDList,
+                                       @Param(value = IS_SCSI_PASS_THROUGH_LIST, description = IS_SCSI_PASS_THROUGH_LIST_DESC) String isSCSIPassThroughList,
+                                       @Param(value = IS_THIN_PROVISIONED_LIST, description = IS_THIN_PROVISIONED_LIST_DESC) String isThinProvisionedList,
+                                       @Param(value = IS_FLASH_MODE_ENABLED_LIST, description = IS_FLASH_MODE_ENABLED_LIST_DESC) String isFlashModeEnabledList,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -96,7 +104,16 @@ public class AttachDisks {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
         port = defaultIfEmpty(port, DEFAULT_NUTANIX_PORT);
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
+        deviceBusList = defaultIfEmpty(deviceBusList, EMPTY);
         deviceIndexList = defaultIfEmpty(deviceIndexList, EMPTY);
+        isCDROMList = defaultIfEmpty(isCDROMList, EMPTY);
+        isEmptyDiskList = defaultIfEmpty(isEmptyDiskList, EMPTY);
+        sourceVMDiskUUIDList = defaultIfEmpty(sourceVMDiskUUIDList, EMPTY);
+        vmDiskMinimumSizeList = defaultIfEmpty(vmDiskMinimumSizeList, EMPTY);
+        ndfsFilepathList = defaultIfEmpty(ndfsFilepathList, EMPTY);
+        isSCSIPassThroughList = defaultIfEmpty(isSCSIPassThroughList, EMPTY);
+        isThinProvisionedList = defaultIfEmpty(isThinProvisionedList, EMPTY);
+        isFlashModeEnabledList = defaultIfEmpty(isFlashModeEnabledList, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -121,8 +138,16 @@ public class AttachDisks {
                     .vmUUID(vmUUID)
                     .deviceBusList(deviceBusList)
                     .deviceIndexList(deviceIndexList)
-                    .vmDisksizeList(vmDisksizeList)
-                    .storagecontainerUUIDDiskList(storagecontainerUUIDDiskList)
+                    .isCDROMList(isCDROMList)
+                    .isEmptyDiskList(isEmptyDiskList)
+                    .sourceVMDiskUUIDList(sourceVMDiskUUIDList)
+                    .vmDiskMinimumSizeList(vmDiskMinimumSizeList)
+                    .ndfsFilepathList(ndfsFilepathList)
+                    .vmDiskSizeList(vmDiskSizeList)
+                    .storageContainerUUIDList(storageContainerUUIDList)
+                    .isSCSIPassThroughList(isSCSIPassThroughList)
+                    .isThinProvisionedList(isThinProvisionedList)
+                    .isFlashModeEnabledList(isFlashModeEnabledList)
                     .commonInputs(
                             NutanixCommonInputs.builder()
                                     .hostname(hostname)
@@ -146,7 +171,6 @@ public class AttachDisks {
                                     .build()).build());
 
             final String returnMessage = result.get(RETURN_RESULT);
-
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
