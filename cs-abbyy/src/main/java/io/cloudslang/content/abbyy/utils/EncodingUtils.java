@@ -24,7 +24,7 @@ public final class EncodingUtils {
 
     static final String BOM_CHAR = "\uFEFF";
     static final String FALLBACK_CHAR = "\uFFFD";
-    static final String POTENTIAL_MALICIOUS_CHARS = "?!@/#%*()~{}";
+    static final String POTENTIAL_MALICIOUS_CHARS = "?!@./#%^*()_=~+{}";
 
 
     private EncodingUtils() {
@@ -48,11 +48,36 @@ public final class EncodingUtils {
     }
 
 
-    public static String escapePotentialMaliciousChars(@NotNull String str) throws UnsupportedEncodingException {
+    public static String escapePotentialMaliciousCharsInTxt(@NotNull String str) throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
+
             if (POTENTIAL_MALICIOUS_CHARS.contains(String.valueOf(ch))) {
+                sb.append('%').append(Integer.toHexString(ch));
+            } else {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
+
+
+    public static String escapePotentialMaliciousCharsInXml(@NotNull String str) throws UnsupportedEncodingException {
+        StringBuilder sb = new StringBuilder();
+        boolean isInsideElement = false;
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+
+            if (ch == '<') {
+                sb.append(ch);
+                isInsideElement = true;
+            } else if (ch == '>') {
+                sb.append(ch);
+                isInsideElement = false;
+            } else if (isInsideElement) {
+                sb.append(ch);
+            } else if (POTENTIAL_MALICIOUS_CHARS.contains(String.valueOf(ch))) {
                 sb.append('%').append(Integer.toHexString(ch));
             } else {
                 sb.append(ch);
