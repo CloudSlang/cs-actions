@@ -1,18 +1,3 @@
-/*
- * (c) Copyright 2020 Micro Focus, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package io.cloudslang.content.oracle.oci.actions.vnics;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -21,6 +6,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
@@ -39,10 +25,10 @@ import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
-import static io.cloudslang.content.oracle.oci.utils.Constants.DetachVnicDetailsConstants.DETACH_VNIC_OPERATION_NAME;
+import static io.cloudslang.content.oracle.oci.utils.Constants.GetVnicAttachmentDetailsConstants.GET_VNIC_ATTACHMENT_DETAILS_OPERATION_NAME;
+import static io.cloudslang.content.oracle.oci.utils.Constants.GetVnicAttachmentDetailsConstants.VNIC_ID_JSON_PATH;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.DetachVnic.DETACH_VNIC_OPERATION_DESC;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.DetachVnic.DETACH_VNIC_SUCCESS_MESSAGE_DESC;
+import static io.cloudslang.content.oracle.oci.utils.Descriptions.GetVnicAttachmentDetails.GET_VNIC_ATTACHMENT_DETAILS_OPERATION_NAME_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_HOST;
@@ -54,12 +40,12 @@ import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DetachVnic {
-
-    @Action(name = DETACH_VNIC_OPERATION_NAME,
-            description = DETACH_VNIC_OPERATION_DESC,
+public class GetVnicAttachmentDetails {
+    @Action(name = GET_VNIC_ATTACHMENT_DETAILS_OPERATION_NAME,
+            description = GET_VNIC_ATTACHMENT_DETAILS_OPERATION_NAME_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = VNIC_ID, description = VNIC_ID_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
@@ -117,7 +103,7 @@ public class DetachVnic {
 
         try {
             final Map<String, String> result =
-                    VnicImpl.detachVnic(OCIVnicAttachmentInputs.builder().
+                    VnicImpl.getVnicAttachmentDetails(OCIVnicAttachmentInputs.builder().
                             vnicAttachmentId(vnicAttachmentId).
                             commonInputs(
                                     OCICommonInputs.builder()
@@ -146,12 +132,13 @@ public class DetachVnic {
                                             .connectionsMaxTotal(connectionsMaxTotal)
                                             .responseCharacterSet(responseCharacterSet)
                                             .build()).build());
+
             final String returnMessage = result.get(RETURN_RESULT);
-            final Map<String, String> results;
+            final Map<String, String> results = HttpUtils.getOperationResults(result, returnMessage, returnMessage, returnMessage);
             Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                results = HttpUtils.getOperationResults(result, DETACH_VNIC_SUCCESS_MESSAGE_DESC, DETACH_VNIC_SUCCESS_MESSAGE_DESC, DETACH_VNIC_SUCCESS_MESSAGE_DESC);
+                results.put(VNIC_ID, JsonPath.read(returnMessage, VNIC_ID_JSON_PATH));
             } else {
                 return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
             }
