@@ -113,6 +113,11 @@ public class Constants {
         public static final String DETACH_VNIC_OPERATION_NAME = "Detach Vnic";
     }
 
+    public static class AttachVolumeConstants {
+        public static final String ATTACH_VOLUME_OPERATION_NAME = "Attach Volume";
+        public static final String VOLUME_ATTACHMENT_ID_JSON_PATH = "$.id";
+    }
+
     public static class DetachVolumeDetailsConstants {
         public static final String DETACH_VOLUME_OPERATION_NAME = "Detach Volume";
     }

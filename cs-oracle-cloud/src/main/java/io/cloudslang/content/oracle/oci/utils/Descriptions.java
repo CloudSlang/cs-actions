@@ -108,8 +108,6 @@ public class Descriptions {
                 "ASC\n" +
                 "DESC";
         public static final String LIFECYCLE_STATE_DESC = "A filter to only return resources that match the given lifecycle state. The state value is case-insensitive.";
-
-
     }
 
     public static class GetInstanceDetails {
@@ -163,51 +161,89 @@ public class Descriptions {
     }
 
     public static class UpdateInstance {
-        public static final String UPDATE_INSTANCE_OPERATION_NAME_DESC = "Updates certain fields on the specified instance. Fields that are not provided in the request will not be updated.";
+        public static final String UPDATE_INSTANCE_OPERATION_NAME_DESC = "Updates certain fields on the specified " +
+                "instance. Fields that are not provided in the request will not be updated.";
     }
 
     public static class DetachVnic {
-        public static final String DETACH_VNIC_OPERATION_DESC = "Detaches and deletes the specified secondary VNIC. This operation cannot be used on the instance's primary VNIC.";
+        public static final String DETACH_VNIC_OPERATION_DESC = "Detaches and deletes the specified secondary VNIC. " +
+                "This operation cannot be used on the instance's primary VNIC.";
         public static final String DETACH_VNIC_SUCCESS_MESSAGE_DESC = "Vnic detached and deleted successfully.";
     }
 
+    public static class AttachVolume {
+        public static final String ATTACH_VOLUME_OPERATION_DESC = "Attaches the specified storage volume to the " +
+                "specified instance.";
+        public static final String VOLUME_TYPE_DESC = "The type of volume. " +
+                "The only supported values are \"iscsi\" and \"paravirtualized\".";
+        public static final String DEVICE_NAME_DESC = "The device name.";
+        public static final String DISPLAY_NAME_DESC = "A user-friendly name. Does not have to be unique, and it " +
+                "cannot be changed. Avoid entering confidential information.";
+        public static final String IS_READ_ONLY_DESC = "Whether the attachment was created in read-only mode.";
+        public static final String IS_SHAREABLE_DESC = "Whether the attachment should be created in shareable mode. " +
+                "If an attachment is created in shareable mode, then other instances can attach the same volume, " +
+                "provided that they also create their attachments in shareable mode. Only certain volume types can " +
+                "be attached in shareable mode. Defaults to false if not specified.";
+    }
+
     public static class DetachVolume {
-        public static final String DETACH_VOLUME_OPERATION_DESC = "Detaches a storage volume from an instance. You must specify the OCID of the volume attachment.";
+        public static final String DETACH_VOLUME_OPERATION_DESC = "Detaches a storage volume from an instance." +
+                " You must specify the OCID of the volume attachment.";
         public static final String DETACH_VOLUME_SUCCESS_MESSAGE_DESC = "Volume detached successfully.";
     }
 
     public static class CreateInstance {
-        public static final String CREATE_INSTANCE_OPERATION_NAME_DESC = "Creates a new instance in the specified compartment and the specified availability domain.";
-        public static final String IS_MANAGEMENT_DISABLED_DESC = "Whether the agent running on the instance can run all the available management plugins." +
+        public static final String CREATE_INSTANCE_OPERATION_NAME_DESC = "Creates a new instance in the specified " +
+                "compartment and the specified availability domain.";
+        public static final String IS_MANAGEMENT_DISABLED_DESC = "Whether the agent running on the instance can run " +
+                "all the available management plugins." +
                 "Default: 'false'";
-        public static final String IS_MONITORING_DISABLED_DESC = "Whether the agent running on the instance can gather performance metrics and monitor the instance" +
+        public static final String IS_MONITORING_DISABLED_DESC = "Whether the agent running on the instance can " +
+                "gather performance metrics and monitor the instance" +
                 "Default: 'false'";
         public static final String AVAILABILITY_DOMAIN_DESC = "The availability domain of the instance.";
-        public static final String ASSIGN_PUBLIC_IP_DESC = "Whether the VNIC should be assigned a public IP address. Defaults to whether the subnet is public or private.";
-        public static final String DEFINED_TAGS_DESC = "Defined tags for this resource. Each key is predefined and scoped to a namespace." +
+        public static final String ASSIGN_PUBLIC_IP_DESC = "Whether the VNIC should be assigned a public IP address. " +
+                "Defaults to whether the subnet is public or private.";
+        public static final String DEFINED_TAGS_DESC = "Defined tags for this resource. Each key is predefined and " +
+                "scoped to a namespace." +
                 "Ex: {\"Operations\": {\"CostCenter\": \"42\"}}";
 
-        public static final String DISPLAY_NAME_DESC = "A user-friendly name. Does not have to be unique, and it's changeable" +
+        public static final String DISPLAY_NAME_DESC = "A user-friendly name. Does not have to be unique, and it's " +
+                "changeable" +
                 "Ex: My bare metal instance";
-        public static final String FREEFORM_TAGS_DESC = "Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace." +
+        public static final String FREEFORM_TAGS_DESC = "Free-form tags for this resource. Each tag is a simple " +
+                "key-value pair with no predefined name, type, or namespace." +
                 "Ex: {\"Department\": \"Finance\"}";
-        public static final String HOSTNAME_LABEL_DESC = "The hostname for the VNIC's primary private IP. Used for DNS. The value is the hostname portion of the primary private IP's fully qualified domain name.";
-        public static final String NETWORK_SECURITY_GROUP_IDS_DESC = "A list of the OCIDs of the network security groups (NSGs) to add the VNIC to. Maximum allowed security groups are 5" +
+        public static final String HOSTNAME_LABEL_DESC = "The hostname for the VNIC's primary private IP. Used for" +
+                " DNS. The value is the hostname portion of the primary private IP's fully qualified domain name.";
+        public static final String NETWORK_SECURITY_GROUP_IDS_DESC = "A list of the OCIDs of the network security " +
+                "groups (NSGs) to add the VNIC to. Maximum allowed security groups are 5" +
                 "Ex: [nsg1,nsg2]";
-        public static final String PRIVATE_IP_DESC = "A private IP address of your choice to assign to the VNIC. Must be an available IP address within the subnet's CIDR. If you don't specify a value, Oracle automatically assigns a private IP address from the subnet. This is the VNIC's primary private IP address.";
-        public static final String SKIP_SOURCE_DEST_CHECK_DESC = "Whether the source/destination check is disabled on the VNIC." +
+        public static final String PRIVATE_IP_DESC = "A private IP address of your choice to assign to the VNIC. " +
+                "Must be an available IP address within the subnet's CIDR. If you don't specify a value, Oracle " +
+                "automatically assigns a private IP address from the subnet. This is the VNIC's primary private " +
+                "IP address.";
+        public static final String SKIP_SOURCE_DEST_CHECK_DESC = "Whether the source/destination check is disabled " +
+                "on the VNIC." +
                 "Default: 'false'";
         public static final String SUBNET_ID_DESC = "The OCID of the subnet to create the VNIC in.";
         public static final String DEDICATED_VM_HOST_ID_DESC = "The OCID of the dedicated VM host.";
-        public static final String VNIC_DEFINED_TAGS_DESC = "Defined tags for VNIC. Each key is predefined and scoped to a namespace." +
+        public static final String VNIC_DEFINED_TAGS_DESC = "Defined tags for VNIC. Each key is predefined and " +
+                "scoped to a namespace." +
                 "Ex: {\"Operations\": {\"CostCenter\": \"42\"}}";
-        public static final String VNIC_FREEFORM_TAGS_DESC = "Free-form tags for VNIC. Each tag is a simple key-value pair with no predefined name, type, or namespace." +
+        public static final String VNIC_FREEFORM_TAGS_DESC = "Free-form tags for VNIC. Each tag is a simple key-value" +
+                " pair with no predefined name, type, or namespace." +
                 "Ex: {\"Department\": \"Finance\"}";
         ;
-        public static final String VNIC_DISPLAY_NAME_DESC = "A user-friendly name for the VNIC. Does not have to be unique.";
-        public static final String EXTENDED_METADATA_DESC = "Additional metadata key/value pairs that you provide. They serve the same purpose and functionality as fields in the 'metadata' object.\n" +
-                "They are distinguished from 'metadata' fields in that these can be nested JSON objects (whereas 'metadata' fields are string/string maps only).";
-        public static final String FAULT_DOMAIN_DESC = "A fault domain is a grouping of hardware and infrastructure within an availability domain. Each availability domain contains three fault domains. Fault domains let you distribute your instances so that they are not on the same physical hardware within a single availability domain. A hardware failure or Compute hardware maintenance that affects one fault domain does not affect instances in other fault domains.\n" +
+        public static final String VNIC_DISPLAY_NAME_DESC = "A user-friendly name for the VNIC. Does not have to be " +
+                "unique.";
+        public static final String EXTENDED_METADATA_DESC = "Additional metadata key/value pairs that you provide. " +
+                "They serve the same purpose and functionality as fields in the 'metadata' object.\n" +
+                "They are distinguished from 'metadata' fields in that these can be nested JSON objects (whereas " +
+                "'metadata' fields are string/string maps only).";
+        public static final String FAULT_DOMAIN_DESC = "A fault domain is a grouping of hardware and infrastructure" +
+                " within an availability domain. Each availability domain contains three fault domains. Fault domains " +
+                "let you distribute your instances so that they are not on the same physical hardware within a single availability domain. A hardware failure or Compute hardware maintenance that affects one fault domain does not affect instances in other fault domains.\n" +
                 "If you do not specify the fault domain, the system selects one for you. ";
         public static final String IPXE_SCRIPT_DESC = "When a bare metal or virtual machine instance boots, the iPXE firmware that runs on the instance is configured to run an iPXE script to continue the boot process.\n" +
                 "If you want more control over the boot process, you can provide your own custom iPXE script that will run when the instance boots; however, you should be aware that the same iPXE script will run every time an instance boots; not only after the initial LaunchInstance call.";
