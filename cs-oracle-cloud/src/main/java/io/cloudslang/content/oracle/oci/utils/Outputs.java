@@ -38,6 +38,7 @@ public class Outputs extends OutputNames {
 
     public static class ListVnicAttachmentsOutputs {
         public static final String VNIC_LIST = "vnic_list";
+        public static final String VNIC_ATTACHMENTS_LIST = "vnic_attachments_list";
     }
 
     public static class GetVnicDetailsOutputs {

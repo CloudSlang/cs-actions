@@ -85,6 +85,9 @@ public class Descriptions {
         public static final String INSTANCE_ID_DESC = "The OCID of the instance.";
         public static final String INSTANCE_NAME_DESC = "The instance name.";
         public static final String VNIC_ID_DESC = "The OCID of the vnic.";
+        public static final String VNIC_ATTACHMENT_ID_DESC = "The OCID of the VNIC attachment.";
+        public static final String VOLUME_ID_DESC = "The OCID of the volume.";
+        public static final String VOLUME_ATTACHMENT_ID_DESC = "The OCID of the volume attachment.";
         public static final String PAGE_DESC = "For list pagination. The value of the opc-next-page response header from the previous \"List\" call.";
         public static final String LIMIT_DESC = "For list pagination. The maximum number of results per page, or items to return in a paginated \"List\" call. ";
     }
@@ -140,6 +143,7 @@ public class Descriptions {
     public static class ListVnicAttachments {
         public static final String LIST_VNIC_ATTACHMENTS_OPERATION_DESC = "Lists the VNIC attachments in the specified compartment. A VNIC attachment resides in the same compartment as the attached instance.The list can be filtered by instance, VNIC, or availability domain.";
         public static final String VNIC_LIST_DESC = "List of Vnics OCIDs.";
+        public static final String VNIC_ATTACHMENTS_LIST_DESC = "List of Vnic attachment OCIDs.";
     }
 
     public static class GetVnicDetails {
@@ -160,6 +164,16 @@ public class Descriptions {
 
     public static class UpdateInstance {
         public static final String UPDATE_INSTANCE_OPERATION_NAME_DESC = "Updates certain fields on the specified instance. Fields that are not provided in the request will not be updated.";
+    }
+
+    public static class DetachVnic {
+        public static final String DETACH_VNIC_OPERATION_DESC = "Detaches and deletes the specified secondary VNIC. This operation cannot be used on the instance's primary VNIC.";
+        public static final String DETACH_VNIC_SUCCESS_MESSAGE_DESC = "Vnic detached and deleted successfully.";
+    }
+
+    public static class DetachVolume {
+        public static final String DETACH_VOLUME_OPERATION_DESC = "Detaches a storage volume from an instance. You must specify the OCID of the volume attachment.";
+        public static final String DETACH_VOLUME_SUCCESS_MESSAGE_DESC = "Volume detached successfully.";
     }
 
     public static class CreateInstance {

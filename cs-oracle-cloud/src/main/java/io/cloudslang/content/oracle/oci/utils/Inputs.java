@@ -34,6 +34,9 @@ public class Inputs extends InputNames {
         public static final String INSTANCE_ID = "instanceId";
         public static final String AVAILABILITY_DOMAIN = "availabilityDomain";
         public static final String VNIC_ID = "vnicId";
+        public static final String VNIC_ATTACHMENT_ID = "vnicAttachmentId";
+        public static final String VOLUME_ID = "volumeId";
+        public static final String VOLUME_ATTACHMENT_ID = "volumeAttachmentId";
         public static final String PAGE = "page";
         public static final String LIMIT = "limit";
     }

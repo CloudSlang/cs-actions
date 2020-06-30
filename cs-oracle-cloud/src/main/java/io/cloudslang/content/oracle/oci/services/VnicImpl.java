@@ -3,6 +3,7 @@ package io.cloudslang.content.oracle.oci.services;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
+import io.cloudslang.content.oracle.oci.entities.inputs.OCIDetachVnicAttachmentInputs;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -61,6 +62,22 @@ public class VnicImpl {
     }
 
     @NotNull
+    public static Map<String, String> detachVnic(@NotNull final OCIDetachVnicAttachmentInputs ociDetachVnicAttachmentInputs)
+            throws Exception {
+
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        httpClientInputs.setUrl(detachVnicUrl(ociDetachVnicAttachmentInputs.getCommonInputs().getRegion(), ociDetachVnicAttachmentInputs.getVnicAttachmentId()));
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(DELETE);
+        URI uri = URI.create(httpClientInputs.getUrl());
+        Map<String, String> headers = getRequestSigner(ociDetachVnicAttachmentInputs.getCommonInputs()).signRequest(uri, DELETE, EMPTY);
+        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        HttpCommons.setCommonHttpInputs(httpClientInputs, ociDetachVnicAttachmentInputs.getCommonInputs());
+        return new HttpClientService().execute(httpClientInputs);
+
+    }
+
+    @NotNull
     public static String getVnicDetailsUrl(@NotNull final String region, @NotNull final String vnicId) throws Exception {
         final URIBuilder uriBuilder = HttpUtils.getUriBuilder(region);
         uriBuilder.setPath(getVnicDetailsPath(vnicId));
@@ -87,7 +104,23 @@ public class VnicImpl {
     public static String listVnicAttachmentsPath() {
         StringBuilder pathString = new StringBuilder()
                 .append(API_VERSION)
-                .append(LIST_VNIC_ATTACHMENTS);
+                .append(VNIC_ATTACHMENTS);
+        return pathString.toString();
+    }
+
+    @NotNull
+    public static String detachVnicUrl(@NotNull final String region, @NotNull final String vnicOCID) throws Exception {
+        final URIBuilder uriBuilder = HttpUtils.getUriBuilder(region);
+        uriBuilder.setPath(detachVnicPath(vnicOCID));
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    public static String detachVnicPath(@NotNull final String vnicOCID) {
+        StringBuilder pathString = new StringBuilder()
+                .append(API_VERSION)
+                .append(VNIC_ATTACHMENTS)
+                .append(vnicOCID);
         return pathString.toString();
     }
 }
