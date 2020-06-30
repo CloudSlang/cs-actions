@@ -46,7 +46,8 @@ public class Constants {
         public static final String IAAS = "iaas";
         public static final String OCI_HOST = "oraclecloud.com";
         public static final String LIST_INSTANCES = "/instances/";
-        public static final String LIST_VNIC_ATTACHMENTS = "/vnicAttachments/";
+        public static final String VNIC_ATTACHMENTS = "/vnicAttachments/";
+        public static final String VOLUME_ATTACHMENTS = "/volumeAttachments/";
         public static final String GET_VNIC = "/vnics/";
         public static final String COMPARTMENT_ID_QUERY_PARAM = "compartmentId=";
         public static final String INSTANCE_ID_QUERY_PARAM = "instanceId=";
@@ -108,9 +109,18 @@ public class Constants {
         public static final String ACTION_NAME_QUERY_PARAM = "action=";
     }
 
+    public static class DetachVnicDetailsConstants {
+        public static final String DETACH_VNIC_OPERATION_NAME = "Detach Vnic";
+    }
+
+    public static class DetachVolumeDetailsConstants {
+        public static final String DETACH_VOLUME_OPERATION_NAME = "Detach Volume";
+    }
+
     public static class ListVnicAttachmentsConstants {
         public static final String LIST_VNIC_ATTACHMENTS_OPERATION_NAME = "List Vnics";
         public static final String LIST_VNIC_JSON_PATH = "$.[*].vnicId";
+        public static final String LIST_VNIC_ATTACHMENTS_JSON_PATH = "$.[*].id";
     }
 
     public static class GetVnicDetailsConstants {

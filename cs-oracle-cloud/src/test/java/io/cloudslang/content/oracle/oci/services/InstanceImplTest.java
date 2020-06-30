@@ -53,17 +53,20 @@ public class InstanceImplTest {
             .region(REGION)
             .instanceId(INSTANCE_ID)
             .build();
+
     @Test
     public void listInstancesPathTest() {
         String path = listInstancesPath();
         assertEquals(EXPECTED_LIST_INSTANCES_PATH, path);
     }
+
     @Test
     public void getInstanceDetailsPathTest() {
         String path = getInstanceDetailsPath(INSTANCE_ID);
         assertEquals(EXPECTED_GET_INSTANCE_PATH, path);
 
     }
+
     @Test
     public void getDefaultCredentialsTest() {
         String path = getInstanceDefaultCredentialsPath(INSTANCE_ID);
