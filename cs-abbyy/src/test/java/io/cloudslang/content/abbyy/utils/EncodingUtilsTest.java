@@ -123,23 +123,46 @@ public class EncodingUtilsTest {
 
 
     @Test
-    public void escapePotentialMaliciousChars_strDoesNotContainMaliciousChars_equalStrReturned() throws UnsupportedEncodingException {
+    public void escapePotentialMaliciousCharsInTxt_strDoesNotContainMaliciousChars_equalStrReturned() throws UnsupportedEncodingException {
         // Arrange
         final String str = "qwerty";
         // Act
-        String result = EncodingUtils.escapePotentialMaliciousChars(str);
+        String result = EncodingUtils.escapePotentialMaliciousCharsInTxt(str);
         // Assert
         assertEquals(str, result);
     }
 
 
     @Test
-    public void escapePotentialMaliciousChars_strDoesContainMaliciousChars_maliciousCharsEscaped() throws UnsupportedEncodingException {
+    public void escapePotentialMaliciousCharsInTxt_strDoesContainMaliciousChars_maliciousCharsEscaped() throws UnsupportedEncodingException {
         // Arrange
         final String str = EncodingUtils.POTENTIAL_MALICIOUS_CHARS;
-        final String expectedStr = "%3f%21%40%2f%23%25%2a%28%29%7e%7b%7d";
+        final String expectedStr = "%3f%21%40%2e%2f%23%25%5e%2a%28%29%5f%3d%7e%2b%7b%7d";
         // Act
-        String result = EncodingUtils.escapePotentialMaliciousChars(str);
+        String result = EncodingUtils.escapePotentialMaliciousCharsInTxt(str);
+        // Assert
+        assertEquals(expectedStr, result);
+    }
+
+
+    @Test
+    public void escapePotentialMaliciousCharsInXml_strDoesNotContainMaliciousChars_equalStrReturned() throws UnsupportedEncodingException {
+        // Arrange
+        final String str = "<xml>qwerty</xml>";
+        // Act
+        String result = EncodingUtils.escapePotentialMaliciousCharsInXml(str);
+        // Assert
+        assertEquals(str, result);
+    }
+
+
+    @Test
+    public void escapePotentialMaliciousCharsInXml_strDoesContainMaliciousChars_maliciousCharsEscaped() throws UnsupportedEncodingException {
+        // Arrange
+        final String str = "<" + EncodingUtils.POTENTIAL_MALICIOUS_CHARS + ">" + EncodingUtils.POTENTIAL_MALICIOUS_CHARS;
+        final String expectedStr = "<" + EncodingUtils.POTENTIAL_MALICIOUS_CHARS + ">%3f%21%40%2e%2f%23%25%5e%2a%28%29%5f%3d%7e%2b%7b%7d";
+        // Act
+        String result = EncodingUtils.escapePotentialMaliciousCharsInXml(str);
         // Assert
         assertEquals(expectedStr, result);
     }
