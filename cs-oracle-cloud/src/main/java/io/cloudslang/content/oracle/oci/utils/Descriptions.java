@@ -190,6 +190,7 @@ public class Descriptions {
     public static class GetVolumeAttachmentDetails {
         public static final String GET_VOLUME_ATTACHMENT_DETAILS_OPERATION_DESC = "Gets information about the " +
                 "specified volume attachment.";
+    }
 
     public static class AttachVnic {
         public static final String ATTACH_VNIC_OPERATION_DESC = "Creates a secondary VNIC and attaches it to the specified instance.";
