@@ -124,6 +124,19 @@ public class Constants {
         public static final String LIFECYCLE_STATE_JSON_PATH = "$.lifecycleState";
     }
 
+    public static class AttachVnicDetailsConstants {
+        public static final String ATTACH_VNIC_OPERATION_NAME = "Attach Vnic";
+        public static final String NIC_INDEX = "nicIndex";
+        public static final String VNIC_ATTACHMENT_DISPLAY_NAME = "vnicAttachmentDisplayName";
+        public static final String VNIC_ATTACHMENT__ID_JSON_PATH = "$.id";
+        public static final String VNIC_ATTACHMENT_LIFE_CYCLE_STATE_JSON_PATH = "$.lifecycleState";
+    }
+
+    public static class GetVnicAttachmentDetailsConstants {
+        public static final String GET_VNIC_ATTACHMENT_DETAILS_OPERATION_NAME = "Get Vnic Attachment Details";
+        public static final String VNIC_ID_JSON_PATH = "$.vnicId";
+    }
+
     public static class DetachVolumeDetailsConstants {
         public static final String DETACH_VOLUME_OPERATION_NAME = "Detach Volume";
     }
@@ -173,7 +186,6 @@ public class Constants {
         public static final String DEDICATED_VM_HOST_ID = "dedicatedVmHostId";
         public static final String VNIC_DEFINED_TAGS = "vnicDefinedTags";
         public static final String VNIC_FREEFORM_TAGS = "vnicFreeformTags";
-        ;
         public static final String VNIC_DISPLAY_NAME = "vnicDisplayName";
         public static final String EXTENDED_METADATA = "extendedMetadata";
         public static final String FAULT_DOMAIN = "faultDomain";

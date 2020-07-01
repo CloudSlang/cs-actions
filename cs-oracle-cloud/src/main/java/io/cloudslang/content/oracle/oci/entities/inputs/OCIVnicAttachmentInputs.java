@@ -2,19 +2,19 @@ package io.cloudslang.content.oracle.oci.entities.inputs;
 
 import org.jetbrains.annotations.NotNull;
 
-public class OCIDetachVnicAttachmentInputs {
+public class OCIVnicAttachmentInputs {
     private final String vnicAttachmentId;
     private final OCICommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"vnicAttachmentId", "commonInputs"})
-    private OCIDetachVnicAttachmentInputs(String vnicAttachmentId, OCICommonInputs commonInputs) {
+    private OCIVnicAttachmentInputs(String vnicAttachmentId, OCICommonInputs commonInputs) {
         this.vnicAttachmentId = vnicAttachmentId;
         this.commonInputs = commonInputs;
     }
 
     @NotNull
-    public static OCIDetachVnicAttachmentInputs.OCIDetachVnicAttachmentInputsBuilder builder() {
-        return new OCIDetachVnicAttachmentInputs.OCIDetachVnicAttachmentInputsBuilder();
+    public static OCIVnicAttachmentInputs.OCIVnicAttachmentInputsBuilder builder() {
+        return new OCIVnicAttachmentInputs.OCIVnicAttachmentInputsBuilder();
     }
 
     @NotNull
@@ -27,26 +27,26 @@ public class OCIDetachVnicAttachmentInputs {
         return commonInputs;
     }
 
-    public static final class OCIDetachVnicAttachmentInputsBuilder {
+    public static final class OCIVnicAttachmentInputsBuilder {
         private String vnicAttachmentId;
         private OCICommonInputs commonInputs;
 
-        private OCIDetachVnicAttachmentInputsBuilder() {
+        private OCIVnicAttachmentInputsBuilder() {
         }
 
 
-        public OCIDetachVnicAttachmentInputs.OCIDetachVnicAttachmentInputsBuilder vnicAttachmentId(String vnicAttachmentId) {
+        public OCIVnicAttachmentInputs.OCIVnicAttachmentInputsBuilder vnicAttachmentId(String vnicAttachmentId) {
             this.vnicAttachmentId = vnicAttachmentId;
             return this;
         }
 
-        public OCIDetachVnicAttachmentInputs.OCIDetachVnicAttachmentInputsBuilder commonInputs(OCICommonInputs commonInputs) {
+        public OCIVnicAttachmentInputs.OCIVnicAttachmentInputsBuilder commonInputs(OCICommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
-        public OCIDetachVnicAttachmentInputs build() {
-            return new OCIDetachVnicAttachmentInputs(vnicAttachmentId, commonInputs);
+        public OCIVnicAttachmentInputs build() {
+            return new OCIVnicAttachmentInputs(vnicAttachmentId, commonInputs);
 
         }
     }

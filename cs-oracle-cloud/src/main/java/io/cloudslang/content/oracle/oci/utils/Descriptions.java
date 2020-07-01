@@ -190,6 +190,18 @@ public class Descriptions {
     public static class GetVolumeAttachmentDetails {
         public static final String GET_VOLUME_ATTACHMENT_DETAILS_OPERATION_DESC = "Gets information about the " +
                 "specified volume attachment.";
+
+    public static class AttachVnic {
+        public static final String ATTACH_VNIC_OPERATION_DESC = "Creates a secondary VNIC and attaches it to the specified instance.";
+        public static final String NIC_INDEX_DESC = "Which physical network interface card (NIC) the VNIC will use. Defaults to 0. Certain bare metal instance shapes have two active physical NICs (0 and 1). If you add a secondary VNIC to one of these instances, you can specify which NIC the VNIC will use.";
+        public static final String VNIC_ATTACHMENT_DISPLAY_NAME_DESC = "A user-friendly name for the attachment. Does not have to be unique, and it cannot be changed.";
+        public static final String VNIC_ID_DESC = "The OCID of the vnic.";
+        public static final String VNIC_ATTACHMENTS_ID_DESC = "The OCID of the vnic attachment.";
+        public static final String VNIC_ATTACHMENTS_STATE_DESC = "Life cycle state of the vnic attachment.";
+    }
+
+    public static class GetVnicAttachmentDetails {
+        public static final String GET_VNIC_ATTACHMENT_DETAILS_OPERATION_NAME_DESC = "Gets the information for the specified VNIC attachment.";
     }
 
     public static class DetachVolume {

@@ -2,7 +2,7 @@ package io.cloudslang.content.oracle.oci.services;
 
 import org.junit.Test;
 
-import static io.cloudslang.content.oracle.oci.services.VnicImpl.detachVnicPath;
+import static io.cloudslang.content.oracle.oci.services.VnicImpl.vnicPath;
 import static org.junit.Assert.assertEquals;
 
 public class VnicImplTest {
@@ -14,7 +14,7 @@ public class VnicImplTest {
 
     @Test
     public void detachVolumeTest() {
-        String path = detachVnicPath(VNIC_ATTACHMENT_ID);
+        String path = vnicPath(VNIC_ATTACHMENT_ID);
         assertEquals(EXPECTED_DETACH_VNIC_PATH, path);
 
     }

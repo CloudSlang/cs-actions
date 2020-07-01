@@ -41,6 +41,12 @@ public class Outputs extends OutputNames {
         public static final String VNIC_ATTACHMENTS_LIST = "vnic_attachments_list";
     }
 
+    public static class AttachVnicOutputs {
+        public static final String VNIC_ID = "vnicId";
+        public static final String VNIC_ATTACHMENTS_ID = "vnicAttachmentsId";
+        public static final String VNIC_ATTACHMENTS_STATE = "vnicAttachmentsState";
+    }
+
     public static class GetVnicDetailsOutputs {
         public static final String PRIVATE_IP = "private_ip";
         public static final String PUBLIC_IP = "public_ip";
