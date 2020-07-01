@@ -38,8 +38,8 @@ import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_P
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
-import static io.cloudslang.content.oracle.oci.utils.Outputs.AttachVnicOutputs.VNIC_ATTACHMENTS_ID;
-import static io.cloudslang.content.oracle.oci.utils.Outputs.AttachVnicOutputs.VNIC_ATTACHMENTS_STATE;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.AttachVnicOutputs.VNIC_ATTACHMENT_ID;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.AttachVnicOutputs.VNIC_ATTACHMENT_STATE;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.CreateInstanceOutputs.INSTANCE_ID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -49,8 +49,8 @@ public class AttachVnic {
             description = ATTACH_VNIC_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
-                    @Output(value = VNIC_ATTACHMENTS_STATE, description = VNIC_ATTACHMENTS_STATE_DESC),
-                    @Output(value = VNIC_ATTACHMENTS_ID, description = VNIC_ATTACHMENTS_ID_DESC),
+                    @Output(value = VNIC_ATTACHMENT_STATE, description = VNIC_ATTACHMENT_STATE_DESC),
+                    @Output(value = VNIC_ATTACHMENT_ID, description = VNIC_ATTACHMENT_ID_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
@@ -76,7 +76,7 @@ public class AttachVnic {
                                        @Param(value = NETWORK_SECURITY_GROUP_IDS, description = NETWORK_SECURITY_GROUP_IDS_DESC) String networkSecurityGroupIds,
                                        @Param(value = PRIVATE_IP, description = PRIVATE_IP_DESC) String privateIp,
                                        @Param(value = SKIP_SOURCE_DEST_CHECK, description = SKIP_SOURCE_DEST_CHECK_DESC) String skipSourceDestCheck,
-                                       @Param(value = VNIC_ATTACHMENT_DISPLAY_NAME, required = true, description = VNIC_ATTACHMENT_DISPLAY_NAME_DESC) String vnicAttachmentDisplayName,
+                                       @Param(value = VNIC_ATTACHMENT_DISPLAY_NAME, description = VNIC_ATTACHMENT_DISPLAY_NAME_DESC) String vnicAttachmentDisplayName,
                                        @Param(value = NIC_INDEX, description = NIC_INDEX_DESC) String nicIndex,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -164,8 +164,8 @@ public class AttachVnic {
             Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
-                results.put(VNIC_ATTACHMENTS_ID, JsonPath.read(returnMessage, VNIC_ATTACHMENT__ID_JSON_PATH));
-                results.put(VNIC_ATTACHMENTS_STATE, JsonPath.read(returnMessage, VNIC_ATTACHMENT_LIFE_CYCLE_STATE_JSON_PATH));
+                results.put(VNIC_ATTACHMENT_ID, JsonPath.read(returnMessage, VNIC_ATTACHMENT__ID_JSON_PATH));
+                results.put(VNIC_ATTACHMENT_STATE, JsonPath.read(returnMessage, VNIC_ATTACHMENT_LIFE_CYCLE_STATE_JSON_PATH));
             } else {
                 return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
             }

@@ -22,9 +22,10 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.oracle.oci.utils.Constants.AttachVolumeConstants.*;
+import static io.cloudslang.content.oracle.oci.utils.Constants.AttachVolumeConstants.ATTACH_VOLUME_OPERATION_NAME;
+import static io.cloudslang.content.oracle.oci.utils.Constants.AttachVolumeConstants.VOLUME_ATTACHMENT_ID_JSON_PATH;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
-import static io.cloudslang.content.oracle.oci.utils.Constants.ListInstancesConstants.LIFECYCLE_STATE;
+import static io.cloudslang.content.oracle.oci.utils.Constants.GetVolumeAttachmentDetailsConstants.VOLUME_ATTACHMENT_LIFECYCLE_STATE_JSON_PATH;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.AttachVolume.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
@@ -36,6 +37,7 @@ import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_P
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.AttachVolumeOutputs.VOLUME_ATTACHMENT_STATE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -48,7 +50,7 @@ public class AttachVolume {
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = VOLUME_ATTACHMENT_ID, description = VOLUME_ATTACHMENT_ID_DESC),
-                    @Output(value = LIFECYCLE_STATE, description = LIFECYCLE_STATE_DESC)
+                    @Output(value = VOLUME_ATTACHMENT_STATE, description = VOLUME_ATTACHMENT_STATE_DESC)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS,
@@ -157,7 +159,7 @@ public class AttachVolume {
             Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
             if (statusCode >= 200 && statusCode < 300) {
                 results.put(VOLUME_ATTACHMENT_ID, JsonPath.read(returnMessage, VOLUME_ATTACHMENT_ID_JSON_PATH));
-                results.put(LIFECYCLE_STATE, JsonPath.read(returnMessage, LIFECYCLE_STATE_JSON_PATH));
+                results.put(VOLUME_ATTACHMENT_STATE, JsonPath.read(returnMessage, VOLUME_ATTACHMENT_LIFECYCLE_STATE_JSON_PATH));
             } else {
                 return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
             }

@@ -83,7 +83,6 @@ public class Constants {
 
     }
 
-
     public static class ListInstancesConstants {
         public static final String LIST_INSTANCES_OPERATION_NAME = "List Instances";
         public static final String INSTANCES_LIST_JSON_PATH = "$.[*].displayName";
@@ -119,9 +118,9 @@ public class Constants {
         public static final String LIFECYCLE_STATE_JSON_PATH = "$.lifecycleState";
     }
 
-    public static class GetVolumeAttchmentDetailsConstants {
+    public static class GetVolumeAttachmentDetailsConstants {
         public static final String GET_VOLUME_ATTACHMENT_DETAILS_OPERATION_NAME = "Get Volume Attachment Details";
-        public static final String LIFECYCLE_STATE_JSON_PATH = "$.lifecycleState";
+        public static final String VOLUME_ATTACHMENT_LIFECYCLE_STATE_JSON_PATH = "$.lifecycleState";
     }
 
     public static class AttachVnicDetailsConstants {

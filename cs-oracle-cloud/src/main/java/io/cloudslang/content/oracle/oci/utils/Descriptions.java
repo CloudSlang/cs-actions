@@ -66,9 +66,6 @@ public class Descriptions {
         public static final String SOCKET_TIMEOUT_DESC = "The timeout for waiting for data (a maximum period " +
                 "inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' " +
                 "represents an infinite timeout.";
-        public static final String POLLING_INTERVAL_DESC = "The time, in seconds, to wait before a new request that " +
-                "verifies if the operation finished is executed." +
-                "Default: '1000'";
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout." +
                 "Default: '10000'";
@@ -139,14 +136,18 @@ public class Descriptions {
     }
 
     public static class ListVnicAttachments {
-        public static final String LIST_VNIC_ATTACHMENTS_OPERATION_DESC = "Lists the VNIC attachments in the specified compartment. A VNIC attachment resides in the same compartment as the attached instance.The list can be filtered by instance, VNIC, or availability domain.";
+        public static final String LIST_VNIC_ATTACHMENTS_OPERATION_DESC = "Lists the VNIC attachments in the " +
+                "specified compartment. A VNIC attachment resides in the same compartment as the attached instance. " +
+                "The list can be filtered by instance, VNIC, or availability domain.";
         public static final String VNIC_LIST_DESC = "List of Vnics OCIDs.";
         public static final String VNIC_ATTACHMENTS_LIST_DESC = "List of Vnic attachment OCIDs.";
     }
 
     public static class GetVnicDetails {
-        public static final String GET_VNIC_DETAILS_OPERATION_DESC = "Gets the information for the specified virtual network interface card (VNIC).";
-        public static final String PRIVATE_IP_DESC = "The private IP address of the primary privateIp object on the VNIC. The address is within the CIDR of the VNIC's subnet.";
+        public static final String GET_VNIC_DETAILS_OPERATION_DESC = "Gets the information for the specified virtual" +
+                " network interface card (VNIC).";
+        public static final String PRIVATE_IP_DESC = "The private IP address of the primary privateIp object on the " +
+                "VNIC. The address is within the CIDR of the VNIC's subnet.";
         public static final String PUBLIC_IP_DESC = "The public IP address of the VNIC.";
         public static final String VNIC_NAME_DESC = "Name of the VNIC.";
         public static final String VNIC_HOSTNAME_DESC = "The hostname for the VNIC's primary private IP. Used for DNS.";
@@ -155,7 +156,8 @@ public class Descriptions {
     }
 
     public static class GetInstanceDefaultCredentials {
-        public static final String GET_INSTANCE_DEFAULT_CREDENTIALS_OPERATION_DESC = "Gets the generated credentials for the instance. Only works for instances that require a password to log in, such as Windows.";
+        public static final String GET_INSTANCE_DEFAULT_CREDENTIALS_OPERATION_DESC = "Gets the generated credentials " +
+                "for the instance. Only works for instances that require a password to log in, such as Windows.";
         public static final String INSTANCE_USERNAME_DESC = "Username of the instance.";
         public static final String INSTANCE_PASSWORD_DESC = "Password of the instance.";
     }
@@ -184,7 +186,7 @@ public class Descriptions {
                 "If an attachment is created in shareable mode, then other instances can attach the same volume, " +
                 "provided that they also create their attachments in shareable mode. Only certain volume types can " +
                 "be attached in shareable mode. Defaults to false if not specified.";
-        public static final String LIFECYCLE_STATE_DESC = "The current state of the volume attachment.";
+        public static final String VOLUME_ATTACHMENT_STATE_DESC = "The current state of the volume attachment.";
     }
 
     public static class GetVolumeAttachmentDetails {
@@ -193,16 +195,19 @@ public class Descriptions {
     }
 
     public static class AttachVnic {
-        public static final String ATTACH_VNIC_OPERATION_DESC = "Creates a secondary VNIC and attaches it to the specified instance.";
-        public static final String NIC_INDEX_DESC = "Which physical network interface card (NIC) the VNIC will use. Defaults to 0. Certain bare metal instance shapes have two active physical NICs (0 and 1). If you add a secondary VNIC to one of these instances, you can specify which NIC the VNIC will use.";
-        public static final String VNIC_ATTACHMENT_DISPLAY_NAME_DESC = "A user-friendly name for the attachment. Does not have to be unique, and it cannot be changed.";
-        public static final String VNIC_ID_DESC = "The OCID of the vnic.";
-        public static final String VNIC_ATTACHMENTS_ID_DESC = "The OCID of the vnic attachment.";
-        public static final String VNIC_ATTACHMENTS_STATE_DESC = "Life cycle state of the vnic attachment.";
+        public static final String ATTACH_VNIC_OPERATION_DESC = "Creates a secondary VNIC and attaches it to the " +
+                "specified instance.";
+        public static final String NIC_INDEX_DESC = "Which physical network interface card (NIC) the VNIC will use. " +
+                "Defaults to 0. Certain bare metal instance shapes have two active physical NICs (0 and 1). If you " +
+                "add a secondary VNIC to one of these instances, you can specify which NIC the VNIC will use.";
+        public static final String VNIC_ATTACHMENT_DISPLAY_NAME_DESC = "A user-friendly name for the attachment. " +
+                "Does not have to be unique, and it cannot be changed.";
+        public static final String VNIC_ATTACHMENT_STATE_DESC = "The current state of the VNIC attachment.";
     }
 
     public static class GetVnicAttachmentDetails {
-        public static final String GET_VNIC_ATTACHMENT_DETAILS_OPERATION_NAME_DESC = "Gets the information for the specified VNIC attachment.";
+        public static final String GET_VNIC_ATTACHMENT_DETAILS_OPERATION_NAME_DESC = "Gets the information for the " +
+                "specified VNIC attachment.";
     }
 
     public static class DetachVolume {
@@ -226,7 +231,6 @@ public class Descriptions {
         public static final String DEFINED_TAGS_DESC = "Defined tags for this resource. Each key is predefined and " +
                 "scoped to a namespace." +
                 "Ex: {\"Operations\": {\"CostCenter\": \"42\"}}";
-
         public static final String DISPLAY_NAME_DESC = "A user-friendly name. Does not have to be unique, and it's " +
                 "changeable" +
                 "Ex: My bare metal instance";
@@ -253,7 +257,6 @@ public class Descriptions {
         public static final String VNIC_FREEFORM_TAGS_DESC = "Free-form tags for VNIC. Each tag is a simple key-value" +
                 " pair with no predefined name, type, or namespace." +
                 "Ex: {\"Department\": \"Finance\"}";
-        ;
         public static final String VNIC_DISPLAY_NAME_DESC = "A user-friendly name for the VNIC. Does not have to be " +
                 "unique.";
         public static final String EXTENDED_METADATA_DESC = "Additional metadata key/value pairs that you provide. " +
@@ -294,16 +297,6 @@ public class Descriptions {
                 "VFIO - Direct attached Virtual Function storage. This is the default option for Local data volumes on Oracle provided images.\n" +
                 "PARAVIRTUALIZED - Paravirtualized disk.This is the default for Boot Volumes and Remote Block Storage volumes on Oracle provided images.";
         public static final String SHAPE_DESC = "The shape of an instance. The shape determines the number of CPUs, amount of memory, and other resources allocated to the instance.";
-//        public static final String METADATA_DESC = "Custom metadata key/value pairs that you provide, such as the SSH public key required to connect to the instance." +
-//                "You can use the following metadata key names to provide information to Cloud-Init:\n" +
-//                "\"ssh_authorized_keys\" - Provide one or more public SSH keys to be included in the ~/.ssh/authorized_keys file for the default user on the instance. Use a newline character to separate multiple keys. The SSH keys must be in the format necessary for the authorized_keys file, as shown in the example below.\n" +
-//                "\"user_data\" - Provide your own base64-encoded data to be used by Cloud-Init to run custom scripts or provide custom Cloud-Init configuration." +
-//                "Ex:  \"metadata\" : {\n" +
-//                "     \"quake_bot_level\" : \"Severe\",\n" +
-//                "     \"ssh_authorized_keys\" : \"ssh-rsa <your_public_SSH_key>== rsa-key-20160227\",\n" +
-//                "     \"user_data\" : \"<your_public_SSH_key>==\"\n" +
-//                "  }";
-
         public static final String SSH_AUTHORIZED_KEYS_DESC = " Provide one or more public SSH keys  for the default user on the instance. Use a newline character to separate multiple keys.";
         public static final String USERDATA_DESC = "Provide your own base64-encoded data to be used by Cloud-Init to run custom scripts or provide custom Cloud-Init configuration.";
         public static final String OCPUS_DESC = "The total number of OCPUs available to the instance.";
@@ -316,7 +309,6 @@ public class Descriptions {
 
 
     public static class Counter {
-        public static final String FAILURE_MESSAGE = "Something went wrong";
         public static final String COUNTER_DESC = "Counts from one number to another number.";
         public static final String RESULT_STRING_DESC = "The primary result is resultString, Result can also be used. result (All lower case) should not be used as it is the response code.";
         public static final String RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";

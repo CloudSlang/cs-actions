@@ -24,9 +24,11 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.oracle.oci.utils.Constants.AttachVnicDetailsConstants.VNIC_ATTACHMENT_LIFE_CYCLE_STATE_JSON_PATH;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.GetVnicAttachmentDetailsConstants.GET_VNIC_ATTACHMENT_DETAILS_OPERATION_NAME;
 import static io.cloudslang.content.oracle.oci.utils.Constants.GetVnicAttachmentDetailsConstants.VNIC_ID_JSON_PATH;
+import static io.cloudslang.content.oracle.oci.utils.Descriptions.AttachVnic.VNIC_ATTACHMENT_STATE_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.GetVnicAttachmentDetails.GET_VNIC_ATTACHMENT_DETAILS_OPERATION_NAME_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
@@ -37,6 +39,7 @@ import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_P
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.AttachVnicOutputs.VNIC_ATTACHMENT_STATE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -46,6 +49,7 @@ public class GetVnicAttachmentDetails {
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = VNIC_ID, description = VNIC_ID_DESC),
+                    @Output(value = VNIC_ATTACHMENT_STATE, description = VNIC_ATTACHMENT_STATE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
@@ -138,6 +142,7 @@ public class GetVnicAttachmentDetails {
             Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode >= 200 && statusCode < 300) {
+                results.put(VNIC_ATTACHMENT_STATE, JsonPath.read(returnMessage, VNIC_ATTACHMENT_LIFE_CYCLE_STATE_JSON_PATH));
                 results.put(VNIC_ID, JsonPath.read(returnMessage, VNIC_ID_JSON_PATH));
             } else {
                 return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
