@@ -45,5 +45,12 @@ public class Inputs extends InputNames {
         public static final String COMPARTMENT_OCID = "compartmentOcid";
     }
 
+    public static class AttachVolumeInputs {
+        public static final String VOLUME_TYPE = "volumeType";
+        public static final String DEVICE_NAME = "deviceName";
+        public static final String DISPLAY_NAME = "displayName";
+        public static final String IS_READ_ONLY = "isReadOnly";
+        public static final String IS_SHAREABLE = "isShareable";
+    }
 
 }

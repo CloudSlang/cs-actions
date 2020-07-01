@@ -2,19 +2,19 @@ package io.cloudslang.content.oracle.oci.entities.inputs;
 
 import org.jetbrains.annotations.NotNull;
 
-public class OCIDetachVolumeAttachmentInputs {
+public class OCIVolumeInputs {
     private final String volumeAttachmentId;
     private final OCICommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"volumeAttachmentId", "commonInputs"})
-    private OCIDetachVolumeAttachmentInputs(String volumeAttachmentId, OCICommonInputs commonInputs) {
+    private OCIVolumeInputs(String volumeAttachmentId, OCICommonInputs commonInputs) {
         this.volumeAttachmentId = volumeAttachmentId;
         this.commonInputs = commonInputs;
     }
 
     @NotNull
-    public static OCIDetachVolumeAttachmentInputs.OCIDetachVolumeAttachmentInputsBuilder builder() {
-        return new OCIDetachVolumeAttachmentInputs.OCIDetachVolumeAttachmentInputsBuilder();
+    public static OCIVolumeInputs.OCIDetachVolumeAttachmentInputsBuilder builder() {
+        return new OCIVolumeInputs.OCIDetachVolumeAttachmentInputsBuilder();
     }
 
     @NotNull
@@ -35,18 +35,18 @@ public class OCIDetachVolumeAttachmentInputs {
         }
 
 
-        public OCIDetachVolumeAttachmentInputs.OCIDetachVolumeAttachmentInputsBuilder volumeAttachmentId(String volumeAttachmentId) {
+        public OCIVolumeInputs.OCIDetachVolumeAttachmentInputsBuilder volumeAttachmentId(String volumeAttachmentId) {
             this.volumeAttachmentId = volumeAttachmentId;
             return this;
         }
 
-        public OCIDetachVolumeAttachmentInputs.OCIDetachVolumeAttachmentInputsBuilder commonInputs(OCICommonInputs commonInputs) {
+        public OCIVolumeInputs.OCIDetachVolumeAttachmentInputsBuilder commonInputs(OCICommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
-        public OCIDetachVolumeAttachmentInputs build() {
-            return new OCIDetachVolumeAttachmentInputs(volumeAttachmentId, commonInputs);
+        public OCIVolumeInputs build() {
+            return new OCIVolumeInputs(volumeAttachmentId, commonInputs);
 
         }
     }

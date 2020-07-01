@@ -33,15 +33,10 @@ package io.cloudslang.content.oracle.oci.services;
 
 import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import static io.cloudslang.content.oracle.oci.services.InstanceImpl.*;
 import static org.junit.Assert.assertEquals;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(InstanceImpl.class)
 public class InstanceImplTest {
 
     private static final String EXPECTED_LIST_INSTANCES_PATH = "/20160918/instances/";
