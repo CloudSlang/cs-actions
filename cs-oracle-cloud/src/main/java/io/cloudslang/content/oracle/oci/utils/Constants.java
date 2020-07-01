@@ -47,7 +47,7 @@ public class Constants {
         public static final String OCI_HOST = "oraclecloud.com";
         public static final String LIST_INSTANCES = "/instances/";
         public static final String VNIC_ATTACHMENTS = "/vnicAttachments/";
-        public static final String VOLUME_ATTACHMENTS = "/volumeAttachments/";
+        public static final String VOLUME_ATTACHMENTS = "/volumeAttachments";
         public static final String GET_VNIC = "/vnics/";
         public static final String COMPARTMENT_ID_QUERY_PARAM = "compartmentId=";
         public static final String INSTANCE_ID_QUERY_PARAM = "instanceId=";
@@ -116,6 +116,12 @@ public class Constants {
     public static class AttachVolumeConstants {
         public static final String ATTACH_VOLUME_OPERATION_NAME = "Attach Volume";
         public static final String VOLUME_ATTACHMENT_ID_JSON_PATH = "$.id";
+        public static final String LIFECYCLE_STATE_JSON_PATH = "$.lifecycleState";
+    }
+
+    public static class GetVolumeAttchmentDetailsConstants {
+        public static final String GET_VOLUME_ATTACHMENT_DETAILS_OPERATION_NAME = "Get Volume Attachment Details";
+        public static final String LIFECYCLE_STATE_JSON_PATH = "$.lifecycleState";
     }
 
     public static class DetachVolumeDetailsConstants {

@@ -175,7 +175,7 @@ public class Descriptions {
         public static final String ATTACH_VOLUME_OPERATION_DESC = "Attaches the specified storage volume to the " +
                 "specified instance.";
         public static final String VOLUME_TYPE_DESC = "The type of volume. " +
-                "The only supported values are \"iscsi\" and \"paravirtualized\".";
+                "Allowed values: ''iscsi' and 'paravirtualized''.";
         public static final String DEVICE_NAME_DESC = "The device name.";
         public static final String DISPLAY_NAME_DESC = "A user-friendly name. Does not have to be unique, and it " +
                 "cannot be changed. Avoid entering confidential information.";
@@ -184,6 +184,12 @@ public class Descriptions {
                 "If an attachment is created in shareable mode, then other instances can attach the same volume, " +
                 "provided that they also create their attachments in shareable mode. Only certain volume types can " +
                 "be attached in shareable mode. Defaults to false if not specified.";
+        public static final String LIFECYCLE_STATE_DESC = "The current state of the volume attachment.";
+    }
+
+    public static class GetVolumeAttachmentDetails {
+        public static final String GET_VOLUME_ATTACHMENT_DETAILS_OPERATION_DESC = "Gets information about the " +
+                "specified volume attachment.";
     }
 
     public static class DetachVolume {

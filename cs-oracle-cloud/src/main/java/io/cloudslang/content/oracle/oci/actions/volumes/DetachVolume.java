@@ -25,7 +25,7 @@ import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
-import io.cloudslang.content.oracle.oci.entities.inputs.OCIDetachVolumeAttachmentInputs;
+import io.cloudslang.content.oracle.oci.entities.inputs.OCIVolumeInputs;
 import io.cloudslang.content.oracle.oci.services.VolumeImpl;
 import io.cloudslang.content.oracle.oci.utils.Descriptions;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
@@ -117,7 +117,7 @@ public class DetachVolume {
 
         try {
             final Map<String, String> result =
-                    VolumeImpl.detachVolume(OCIDetachVolumeAttachmentInputs.builder()
+                    VolumeImpl.detachVolume(OCIVolumeInputs.builder()
                             .volumeAttachmentId(volumeAttachmentId)
                             .commonInputs(
                                     OCICommonInputs.builder()
