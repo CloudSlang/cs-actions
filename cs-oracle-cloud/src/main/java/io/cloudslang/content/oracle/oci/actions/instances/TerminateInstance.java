@@ -137,7 +137,7 @@ public class TerminateInstance {
             if (statusCode >= 200 && statusCode < 300) {
                 result.put(RETURN_RESULT, TERMINATE_INSTANCE_SUCCESS_MESSAGE_DESC);
                 return result;
-            }else {
+            } else {
                 return HttpUtils.getFailureResults(compartmentOcid, statusCode, result.get(RETURN_RESULT));
             }
         } catch (Exception exception) {
