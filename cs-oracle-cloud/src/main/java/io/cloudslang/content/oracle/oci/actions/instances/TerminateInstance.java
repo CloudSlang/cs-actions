@@ -13,6 +13,7 @@ import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCITerminateInstanceInputs;
 import io.cloudslang.content.oracle.oci.services.InstanceImpl;
 import io.cloudslang.content.oracle.oci.utils.Descriptions;
+import io.cloudslang.content.oracle.oci.utils.HttpUtils;
 import io.cloudslang.content.oracle.oci.utils.InputsValidation;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -133,13 +134,12 @@ public class TerminateInstance {
                                     .build()).build());
 
             Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
-
             if (statusCode >= 200 && statusCode < 300) {
                 result.put(RETURN_RESULT, TERMINATE_INSTANCE_SUCCESS_MESSAGE_DESC);
                 return result;
+            }else {
+                return HttpUtils.getFailureResults(compartmentOcid, statusCode, result.get(RETURN_RESULT));
             }
-
-            return result;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
