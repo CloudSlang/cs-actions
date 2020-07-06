@@ -54,6 +54,7 @@ public class SSHShellInputs {
     private boolean allowExpectCommands;
     private int connectTimeout;
     private boolean useShell;
+    private boolean removeEscapeSequences;
 
     public String getHost() {
         return host;
@@ -270,5 +271,13 @@ public class SSHShellInputs {
 
     public void setUseShell(String useShell) {
         this.useShell = StringUtils.toBoolean(useShell, Constants.DEFAULT_USE_SHELL);
+    }
+
+    public boolean isRemoveEscapeSequences() {
+        return removeEscapeSequences;
+    }
+
+    public void setRemoveEscapeSequences(String removeEscapeSequences) {
+        this.removeEscapeSequences = StringUtils.toBoolean(removeEscapeSequences, Constants.DEFAULT_REMOVE_ESCAPE_SEQUENCES);
     }
 }

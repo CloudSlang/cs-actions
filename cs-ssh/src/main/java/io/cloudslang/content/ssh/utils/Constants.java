@@ -62,6 +62,7 @@ public class Constants {
     public static final boolean DEFAULT_CLOSE_SESSION = false;
     public static final String DEFAULT_KNOWN_HOSTS_POLICY = "allow";
     public static final Path DEFAULT_KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
+    public static final boolean DEFAULT_REMOVE_ESCAPE_SEQUENCES = false;
 
     // errors
     public static final String ARGS_IS_DEPRECATED = "This input is deprecated, use the command input to provide arguments.";
@@ -75,5 +76,6 @@ public class Constants {
         public static final String CHARACTER_SET = "characterSet";
         public static final String TIMEOUT = "timeout";
         public static final String AGENT_FORWARDING = "agentForwarding";
+        public static final String REMOVE_ESCAPE_SEQUENCES = "removeEscapeSequences";
     }
 }

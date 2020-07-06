@@ -23,10 +23,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ssh.entities.*;
 import io.cloudslang.content.ssh.services.SSHService;
 import io.cloudslang.content.ssh.services.impl.SSHServiceImpl;
-import io.cloudslang.content.ssh.utils.Constants;
-import io.cloudslang.content.ssh.utils.IdentityKeyUtils;
-import io.cloudslang.content.ssh.utils.ProxyUtils;
-import io.cloudslang.content.ssh.utils.StringUtils;
+import io.cloudslang.content.ssh.utils.*;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.nio.file.Path;
@@ -126,7 +123,7 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
         handleSessionClosure(sshShellInputs, service, sessionId, saveSSHSession);
 
         // populate the results
-        populateResult(returnResult, commandResult);
+        populateResult(returnResult, commandResult, sshShellInputs);
     }
 
     private void handleSessionClosure(SSHShellInputs sshShellInputs, SSHService service, String sessionId, boolean saveSSHSession) {
@@ -147,14 +144,21 @@ public class ScoreSSHShellCommand extends SSHShellAbstract {
         service.removeFromCache(sshShellInputs.getSshGlobalSessionObject(), sessionId);
     }
 
-    private void populateResult(Map<String, String> returnResult, CommandResult commandResult) {
-        returnResult.put(Constants.STDERR, commandResult.getStandardError());
-        returnResult.put(Constants.STDOUT, commandResult.getStandardOutput());
+    private void populateResult(Map<String, String> returnResult, CommandResult commandResult, SSHShellInputs sshShellInputs) {
+        final String stderr = sshShellInputs.isRemoveEscapeSequences() ?
+                AnsiEscapeUtils.removeEscapeSequences(commandResult.getStandardError()) :
+                commandResult.getStandardError();
+        final String stdout = sshShellInputs.isRemoveEscapeSequences() ?
+                AnsiEscapeUtils.removeEscapeSequences(commandResult.getStandardOutput()):
+                commandResult.getStandardOutput();
+
+        returnResult.put(Constants.STDERR, stderr);
+        returnResult.put(Constants.STDOUT, stdout);
         if (commandResult.getExitCode() >= 0) {
-            returnResult.put(OutputNames.RETURN_RESULT, commandResult.getStandardOutput());
+            returnResult.put(OutputNames.RETURN_RESULT, stdout);
             returnResult.put(OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
         } else {
-            returnResult.put(OutputNames.RETURN_RESULT, commandResult.getStandardError());
+            returnResult.put(OutputNames.RETURN_RESULT, stderr);
             returnResult.put(OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
         }
         returnResult.put(Constants.EXIT_STATUS, String.valueOf(commandResult.getExitCode()));

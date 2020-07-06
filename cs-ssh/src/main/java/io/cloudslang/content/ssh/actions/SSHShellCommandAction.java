@@ -14,7 +14,6 @@
  */
 
 
-
 package io.cloudslang.content.ssh.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -38,49 +37,53 @@ import java.util.Map;
  * The operation executes a Shell command(s) on the remote machine using the SSH protocol.
  *
  * @author ioanvranauhp
- *         Date: 10/29/14
+ * Date: 10/29/14
  */
 public class SSHShellCommandAction {
 
     /**
      * Executes a Shell command(s) on the remote machine using the SSH protocol.
      *
-     * @param host                The hostname or the ip address of the remote machine.
-     * @param port                The port number for running the command. It overwrites the port given inside the host input (in a syntax like host:port), if this exists.
-     * @param username            The username of the account on the remote machine.
-     * @param password            The password of the user. If using a private key file this will be used as the passphrase for the file.
-     * @param privateKeyFile      The path to the private key file (OpenSSH type) on the machine where is the worker.
-     * @param privateKeyData      A string representing the private key (OpenSSH type) used for authenticating the user.
-     *                            This string is usually the content of a private key file. The 'privateKeyData' and the
-     *                            'privateKeyFile' inputs are mutually exclusive. For security reasons it is recommend
-     *                            that the private key be protected by a passphrase that should be provided through the
-     *                            'password' input.
-     * @param knownHostsPolicy    The policy used for managing known_hosts file. Valid values: allow, strict, add. Default value: allow
-     * @param knownHostsPath      The path to the known hosts file.
-     * @param command             The command(s) to execute.
-     * @param arguments           The arguments to pass to the command.
-     * @param characterSet        The character encoding used for input stream encoding from the target machine.
-     *                            Valid values: SJIS, EUC-JP, UTF-8. Default value: UTF-8.
-     * @param pty                 Whether to use a pseudo-terminal (PTY) session. Valid values: false, true. Default value: false
-     * @param agentForwarding     Enables or disables the forwarding of the authentication agent connection.
-     *                            Agent forwarding should be enabled with caution.
-     * @param timeout             Time in milliseconds to wait for the command to complete. Default value is 90000 (90 seconds)
-     * @param connectTimeout      Time in milliseconds to wait for the connection to be made. Default value: 10000
-     * @param allowedCiphers      A comma separated list of ciphers that will be used in the client-server handshake
-     *                            mechanism when the connection is created. Check the notes section for security concerns
-     *                            regarding your choice of ciphers. The default value will be used even if the input is not
-     *                            added to the operation.
-     *                            Default value: aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc
-     * @param globalSessionObject the sessionObject that holds the connection if the close session is false.
-     * @param closeSession        If true it closes the SSH session at completion of this operation.
-     *                            If false the SSH session will be cached for future calls of this operation during the life of the flow.
-     *                            Valid values: false, true. Default value: false
-     * @param useShell            Specifies whether to use shell mode to run the commands. This will start a shell
-     *                            session and run the command, after which it will issue an 'exit' command, to close
-     *                            the shell.
-     *                            Note: If the output does not show the whole expected output, increase the <timeout> value.
-     *                            Valid values: true, false.
-     *                            Default value: false.
+     * @param host                  The hostname or the ip address of the remote machine.
+     * @param port                  The port number for running the command. It overwrites the port given inside the host input (in a syntax like host:port), if this exists.
+     * @param username              The username of the account on the remote machine.
+     * @param password              The password of the user. If using a private key file this will be used as the passphrase for the file.
+     * @param privateKeyFile        The path to the private key file (OpenSSH type) on the machine where is the worker.
+     * @param privateKeyData        A string representing the private key (OpenSSH type) used for authenticating the user.
+     *                              This string is usually the content of a private key file. The 'privateKeyData' and the
+     *                              'privateKeyFile' inputs are mutually exclusive. For security reasons it is recommend
+     *                              that the private key be protected by a passphrase that should be provided through the
+     *                              'password' input.
+     * @param knownHostsPolicy      The policy used for managing known_hosts file. Valid values: allow, strict, add. Default value: allow
+     * @param knownHostsPath        The path to the known hosts file.
+     * @param command               The command(s) to execute.
+     * @param arguments             The arguments to pass to the command.
+     * @param characterSet          The character encoding used for input stream encoding from the target machine.
+     *                              Valid values: SJIS, EUC-JP, UTF-8. Default value: UTF-8.
+     * @param pty                   Whether to use a pseudo-terminal (PTY) session. Valid values: false, true. Default value: false
+     * @param agentForwarding       Enables or disables the forwarding of the authentication agent connection.
+     *                              Agent forwarding should be enabled with caution.
+     * @param timeout               Time in milliseconds to wait for the command to complete. Default value is 90000 (90 seconds)
+     * @param connectTimeout        Time in milliseconds to wait for the connection to be made. Default value: 10000
+     * @param allowedCiphers        A comma separated list of ciphers that will be used in the client-server handshake
+     *                              mechanism when the connection is created. Check the notes section for security concerns
+     *                              regarding your choice of ciphers. The default value will be used even if the input is not
+     *                              added to the operation.
+     *                              Default value: aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc
+     * @param globalSessionObject   the sessionObject that holds the connection if the close session is false.
+     * @param closeSession          If true it closes the SSH session at completion of this operation.
+     *                              If false the SSH session will be cached for future calls of this operation during the life of the flow.
+     *                              Valid values: false, true. Default value: false
+     * @param useShell              Specifies whether to use shell mode to run the commands. This will start a shell
+     *                              session and run the command, after which it will issue an 'exit' command, to close
+     *                              the shell.
+     *                              Note: If the output does not show the whole expected output, increase the <timeout> value.
+     *                              Valid values: true, false.
+     *                              Default value: false.
+     * @param removeEscapeSequences Specifies whether to remove ANSI escape sequences (e.g. "ESC[91m" etc.) from standard_out
+     *                              and standard_err outputs.
+     *                              Valid values: 'true', 'false'
+     *                              Default: 'false'
      * @return - a map containing the output of the operation. Keys present in the map are:
      * <br><b>returnResult</b> - The primary output.
      * <br><b>STDOUT</b> - The standard output of the command(s).
@@ -127,7 +130,8 @@ public class SSHShellCommandAction {
             @Param(Constants.PROXY_USERNAME) String proxyUsername,
             @Param(value = Constants.PROXY_PASSWORD, encrypted = true) String proxyPassword,
             @Param(Constants.ALLOW_EXPECT_COMMANDS) String allowExpectCommands,
-            @Param(Constants.USE_SHELL) String useShell) {
+            @Param(Constants.USE_SHELL) String useShell,
+            @Param(Constants.InputNames.REMOVE_ESCAPE_SEQUENCES) String removeEscapeSequences) {
 
         SSHShellInputs sshShellInputs = new SSHShellInputs();
         sshShellInputs.setHost(host);
@@ -154,6 +158,7 @@ public class SSHShellCommandAction {
         sshShellInputs.setProxyPassword(proxyPassword);
         sshShellInputs.setAllowExpectCommands(allowExpectCommands);
         sshShellInputs.setUseShell(useShell);
+        sshShellInputs.setRemoveEscapeSequences(removeEscapeSequences);
 
         return new ScoreSSHShellCommand().execute(sshShellInputs);
     }
