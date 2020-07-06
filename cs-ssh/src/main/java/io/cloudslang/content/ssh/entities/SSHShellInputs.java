@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -54,6 +54,7 @@ public class SSHShellInputs {
     private boolean allowExpectCommands;
     private int connectTimeout;
     private boolean useShell;
+    private boolean removeEscapeSequences;
 
     public String getHost() {
         return host;
@@ -270,5 +271,13 @@ public class SSHShellInputs {
 
     public void setUseShell(String useShell) {
         this.useShell = StringUtils.toBoolean(useShell, Constants.DEFAULT_USE_SHELL);
+    }
+
+    public boolean isRemoveEscapeSequences() {
+        return removeEscapeSequences;
+    }
+
+    public void setRemoveEscapeSequences(String removeEscapeSequences) {
+        this.removeEscapeSequences = StringUtils.toBoolean(removeEscapeSequences, Constants.DEFAULT_REMOVE_ESCAPE_SEQUENCES);
     }
 }
