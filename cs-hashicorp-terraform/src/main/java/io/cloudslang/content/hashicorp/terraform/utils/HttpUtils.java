@@ -118,6 +118,14 @@ public class HttpUtils {
         httpClientInputs.setKeepAlive(keepAlive);
         httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
         httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
+    }
+
+    public static void setTLSParameters(HttpClientInputs httpClientInputs) {
+        httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12);
+        httpClientInputs.setAllowedCyphers(ALLOWED_CYPHERS);
+
     }
 
     @NotNull
