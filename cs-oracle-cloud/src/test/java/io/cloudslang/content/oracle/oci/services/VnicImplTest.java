@@ -44,6 +44,7 @@ public class VnicImplTest {
 
     }
 
+    
     @Test
     public void getListVnicAttachmentsTest() {
         String path = listVnicAttachmentsPath();

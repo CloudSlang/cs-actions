@@ -94,6 +94,7 @@ public class InstanceImplTest {
 
     }
 
+
     @Test
     public void getInstanceActionPathTest() {
         String path = getInstanceDetailsPath(INSTANCE_ID);
