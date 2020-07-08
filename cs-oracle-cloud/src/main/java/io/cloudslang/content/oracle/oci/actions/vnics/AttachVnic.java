@@ -30,14 +30,12 @@ import static io.cloudslang.content.oracle.oci.utils.Constants.CreateInstanceCon
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.AttachVnic.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.CreateInstance.*;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.AttachVnicOutputs.VNIC_ATTACHMENT_ID;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.AttachVnicOutputs.VNIC_ATTACHMENT_STATE;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.CreateInstanceOutputs.INSTANCE_ID;
@@ -63,7 +61,6 @@ public class AttachVnic {
                                        @Param(value = FINGER_PRINT, encrypted = true, required = true, description = FINGER_PRINT_DESC) String fingerPrint,
                                        @Param(value = PRIVATE_KEY_DATA, encrypted = true, description = PRIVATE_KEY_DATA_DESC) String privateKeyData,
                                        @Param(value = PRIVATE_KEY_FILE, description = PRIVATE_KEY_FILE_DESC) String privateKeyFile,
-                                       @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
                                        @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) String instanceId,
@@ -134,7 +131,6 @@ public class AttachVnic {
                             .commonInputs(
                                     OCICommonInputs.builder()
                                             .tenancyOcid(tenancyOcid)
-                                            .compartmentOcid(compartmentOcid)
                                             .userOcid(userOcid)
                                             .fingerPrint(fingerPrint)
                                             .privateKeyData(privateKeyData)
@@ -167,7 +163,7 @@ public class AttachVnic {
                 results.put(VNIC_ATTACHMENT_ID, JsonPath.read(returnMessage, VNIC_ATTACHMENT__ID_JSON_PATH));
                 results.put(VNIC_ATTACHMENT_STATE, JsonPath.read(returnMessage, VNIC_ATTACHMENT_LIFE_CYCLE_STATE_JSON_PATH));
             } else {
-                return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
+                return HttpUtils.getFailureResults(instanceId, statusCode, returnMessage);
             }
             return results;
         } catch (Exception exception) {
