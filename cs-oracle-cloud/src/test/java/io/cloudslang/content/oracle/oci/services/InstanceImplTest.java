@@ -40,7 +40,11 @@ import static org.junit.Assert.assertEquals;
 public class InstanceImplTest {
 
     private static final String EXPECTED_LIST_INSTANCES_PATH = "/20160918/instances/";
+    private static final String EXPECTED_CREATE_INSTANCES_PATH = "/20160918/instances/";
     private static final String EXPECTED_GET_INSTANCE_PATH = "/20160918/instances/myinstance";
+    private static final String EXPECTED_TERMINATE_INSTANCE_PATH = "/20160918/instances/myinstance";
+    private static final String EXPECTED_UPDATE_INSTANCE_PATH = "/20160918/instances/myinstance";
+    private static final String EXPECTED_ACTION_INSTANCE_PATH = "/20160918/instances/myinstance";
     private static final String EXPECTED_GET_INSTANCE_DEFAULT_CREDENTIALS_PATH = "/20160918/instances/myinstance/defaultCredentials";
     private final String REGION = "ap-hyderabad-1";
     private final String INSTANCE_ID = "myinstance";
@@ -50,7 +54,7 @@ public class InstanceImplTest {
             .build();
 
     @Test
-    public void listInstancesPathTest() {
+    public void getlistInstancesPathTest() {
         String path = listInstancesPath();
         assertEquals(EXPECTED_LIST_INSTANCES_PATH, path);
     }
@@ -66,6 +70,35 @@ public class InstanceImplTest {
     public void getDefaultCredentialsTest() {
         String path = getInstanceDefaultCredentialsPath(INSTANCE_ID);
         assertEquals(EXPECTED_GET_INSTANCE_DEFAULT_CREDENTIALS_PATH, path);
+
+    }
+
+
+    @Test
+    public void getTerminateInstancePathTest() {
+        String path = getInstanceDetailsPath(INSTANCE_ID);
+        assertEquals(EXPECTED_TERMINATE_INSTANCE_PATH, path);
+
+    }
+
+    @Test
+    public void getCreateInstancePathTest() {
+        String path = listInstancesPath();
+        assertEquals(EXPECTED_CREATE_INSTANCES_PATH, path);
+    }
+
+    @Test
+    public void getUpdateInstancePathTest() {
+        String path = getInstanceDetailsPath(INSTANCE_ID);
+        assertEquals(EXPECTED_UPDATE_INSTANCE_PATH, path);
+
+    }
+
+
+    @Test
+    public void getInstanceActionPathTest() {
+        String path = getInstanceDetailsPath(INSTANCE_ID);
+        assertEquals(EXPECTED_ACTION_INSTANCE_PATH, path);
 
     }
 }
