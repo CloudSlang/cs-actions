@@ -143,7 +143,7 @@ public class ListInstances {
                 }
 
             } else {
-                return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
+                return HttpUtils.getFailureResults(tenancyOcid, statusCode, returnMessage);
             }
             return results;
         } catch (Exception exception) {

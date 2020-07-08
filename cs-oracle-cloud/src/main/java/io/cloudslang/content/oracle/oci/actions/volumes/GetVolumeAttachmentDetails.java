@@ -28,14 +28,12 @@ import static io.cloudslang.content.oracle.oci.utils.Constants.GetVolumeAttachme
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.AttachVolume.VOLUME_ATTACHMENT_STATE_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.GetVolumeAttachmentDetails.GET_VOLUME_ATTACHMENT_DETAILS_OPERATION_DESC;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.AttachVolumeOutputs.VOLUME_ATTACHMENT_STATE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -62,7 +60,6 @@ public class GetVolumeAttachmentDetails {
                                        @Param(value = FINGER_PRINT, encrypted = true, required = true, description = FINGER_PRINT_DESC) String fingerPrint,
                                        @Param(value = PRIVATE_KEY_DATA, encrypted = true, description = PRIVATE_KEY_DATA_DESC) String privateKeyData,
                                        @Param(value = PRIVATE_KEY_FILE, description = PRIVATE_KEY_FILE_DESC) String privateKeyFile,
-                                       @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
                                        @Param(value = VOLUME_ATTACHMENT_ID, required = true, description = VOLUME_ATTACHMENT_ID_DESC) String volumeAttachmentId,
@@ -87,7 +84,6 @@ public class GetVolumeAttachmentDetails {
                     .commonInputs(
                             OCICommonInputs.builder()
                                     .tenancyOcid(tenancyOcid)
-                                    .compartmentOcid(compartmentOcid)
                                     .userOcid(userOcid)
                                     .fingerPrint(fingerPrint)
                                     .privateKeyData(privateKeyData)
@@ -106,7 +102,7 @@ public class GetVolumeAttachmentDetails {
             if (statusCode >= 200 && statusCode < 300) {
                 results.put(VOLUME_ATTACHMENT_STATE, JsonPath.read(returnMessage, VOLUME_ATTACHMENT_LIFECYCLE_STATE_JSON_PATH));
             } else {
-                return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
+                return HttpUtils.getFailureResults(volumeAttachmentId, statusCode, returnMessage);
             }
             return results;
         } catch (Exception exception) {

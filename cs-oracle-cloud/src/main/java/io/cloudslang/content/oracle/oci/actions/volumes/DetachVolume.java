@@ -43,14 +43,12 @@ import static io.cloudslang.content.oracle.oci.utils.Constants.DetachVolumeDetai
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.DetachVolume.DETACH_VOLUME_OPERATION_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.DetachVolume.DETACH_VOLUME_SUCCESS_MESSAGE_DESC;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -72,7 +70,6 @@ public class DetachVolume {
                                        @Param(value = FINGER_PRINT, encrypted = true, required = true, description = FINGER_PRINT_DESC) String fingerPrint,
                                        @Param(value = PRIVATE_KEY_DATA, encrypted = true, description = PRIVATE_KEY_DATA_DESC) String privateKeyData,
                                        @Param(value = PRIVATE_KEY_FILE, description = PRIVATE_KEY_FILE_DESC) String privateKeyFile,
-                                       @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
                                        @Param(value = VOLUME_ATTACHMENT_ID, required = true, description = VOLUME_ATTACHMENT_ID_DESC) String volumeAttachmentId,
@@ -97,7 +94,6 @@ public class DetachVolume {
                             .commonInputs(
                                     OCICommonInputs.builder()
                                             .tenancyOcid(tenancyOcid)
-                                            .compartmentOcid(compartmentOcid)
                                             .userOcid(userOcid)
                                             .fingerPrint(fingerPrint)
                                             .privateKeyData(privateKeyData)
@@ -116,7 +112,7 @@ public class DetachVolume {
             if (statusCode >= 200 && statusCode < 300) {
                 results = HttpUtils.getOperationResults(result, DETACH_VOLUME_SUCCESS_MESSAGE_DESC, DETACH_VOLUME_SUCCESS_MESSAGE_DESC, DETACH_VOLUME_SUCCESS_MESSAGE_DESC);
             } else {
-                return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
+                return HttpUtils.getFailureResults(volumeAttachmentId, statusCode, returnMessage);
             }
             return results;
         } catch (Exception exception) {

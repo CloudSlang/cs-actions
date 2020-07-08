@@ -42,14 +42,12 @@ import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.GetInstanceDefaultCredentialsConstants.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.GetInstanceDefaultCredentials.*;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.GetInstanceDefaultCredentialsOutputs.INSTANCE_PASSWORD;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.GetInstanceDefaultCredentialsOutputs.INSTANCE_USERNAME;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -76,7 +74,6 @@ public class GetInstanceDefaultCredentials {
                                        @Param(value = FINGER_PRINT, encrypted = true, required = true, description = FINGER_PRINT_DESC) String fingerPrint,
                                        @Param(value = PRIVATE_KEY_DATA, encrypted = true, description = PRIVATE_KEY_DATA_DESC) String privateKeyData,
                                        @Param(value = PRIVATE_KEY_FILE, description = PRIVATE_KEY_FILE_DESC) String privateKeyFile,
-                                       @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
                                        @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) String instanceId,
@@ -100,7 +97,6 @@ public class GetInstanceDefaultCredentials {
             final Map<String, String> result =
                     InstanceImpl.getInstanceDefaultCredentials(OCICommonInputs.builder()
                             .tenancyOcid(tenancyOcid)
-                            .compartmentOcid(compartmentOcid)
                             .userOcid(userOcid)
                             .fingerPrint(fingerPrint)
                             .privateKeyData(privateKeyData)
@@ -121,7 +117,7 @@ public class GetInstanceDefaultCredentials {
                 results.put(INSTANCE_USERNAME, JsonPath.read(returnMessage, INSTANCE_USERNAME_JSON_PATH));
                 results.put(INSTANCE_PASSWORD, JsonPath.read(returnMessage, INSTANCE_PASSWORD_JSON_PATH));
             } else {
-                return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
+                return HttpUtils.getFailureResults(instanceId, statusCode, returnMessage);
             }
             return results;
         } catch (Exception exception) {

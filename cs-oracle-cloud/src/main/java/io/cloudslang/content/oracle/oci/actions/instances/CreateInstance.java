@@ -224,7 +224,7 @@ public class CreateInstance {
                 results.put(INSTANCE_NAME, JsonPath.read(returnMessage, INSTANCE_NAME_JSON_PATH));
 
             } else {
-                return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
+                return HttpUtils.getFailureResults(tenancyOcid, statusCode, returnMessage);
             }
             return results;
         } catch (Exception exception) {

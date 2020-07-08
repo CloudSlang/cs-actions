@@ -31,14 +31,12 @@ import static io.cloudslang.content.oracle.oci.utils.Constants.GetVnicAttachment
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.AttachVnic.VNIC_ATTACHMENT_STATE_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.GetVnicAttachmentDetails.GET_VNIC_ATTACHMENT_DETAILS_OPERATION_NAME_DESC;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.AttachVnicOutputs.VNIC_ATTACHMENT_STATE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -62,7 +60,6 @@ public class GetVnicAttachmentDetails {
                                        @Param(value = FINGER_PRINT, encrypted = true, required = true, description = FINGER_PRINT_DESC) String fingerPrint,
                                        @Param(value = PRIVATE_KEY_DATA, encrypted = true, description = PRIVATE_KEY_DATA_DESC) String privateKeyData,
                                        @Param(value = PRIVATE_KEY_FILE, description = PRIVATE_KEY_FILE_DESC) String privateKeyFile,
-                                       @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
                                        @Param(value = VNIC_ATTACHMENT_ID, required = true, description = VNIC_ATTACHMENT_ID_DESC) String vnicAttachmentId,
@@ -88,7 +85,6 @@ public class GetVnicAttachmentDetails {
                             commonInputs(
                                     OCICommonInputs.builder()
                                             .tenancyOcid(tenancyOcid)
-                                            .compartmentOcid(compartmentOcid)
                                             .userOcid(userOcid)
                                             .fingerPrint(fingerPrint)
                                             .privateKeyData(privateKeyData)
@@ -109,7 +105,7 @@ public class GetVnicAttachmentDetails {
                 results.put(VNIC_ATTACHMENT_STATE, JsonPath.read(returnMessage, VNIC_ATTACHMENT_LIFE_CYCLE_STATE_JSON_PATH));
                 results.put(VNIC_ID, JsonPath.read(returnMessage, VNIC_ID_JSON_PATH));
             } else {
-                return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
+                return HttpUtils.getFailureResults(vnicAttachmentId, statusCode, returnMessage);
             }
             return results;
         } catch (Exception exception) {
