@@ -30,7 +30,9 @@ import io.cloudslang.content.ssh.entities.SSHConnection;
 import io.cloudslang.content.ssh.entities.SSHShellInputs;
 import io.cloudslang.content.ssh.services.actions.ScoreSSHShellCommand;
 import io.cloudslang.content.ssh.utils.Constants;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -134,32 +136,39 @@ public class SSHShellCommandAction {
             @Param(Constants.InputNames.REMOVE_ESCAPE_SEQUENCES) String removeEscapeSequences) {
 
         SSHShellInputs sshShellInputs = new SSHShellInputs();
-        sshShellInputs.setHost(host);
-        sshShellInputs.setPort(port);
-        sshShellInputs.setUsername(username);
-        sshShellInputs.setPassword(password);
-        sshShellInputs.setPrivateKeyFile(privateKeyFile);
-        sshShellInputs.setPrivateKeyData(privateKeyData);
-        sshShellInputs.setCommand(command);
-        sshShellInputs.setArguments(arguments);
-        sshShellInputs.setCharacterSet(characterSet);
-        sshShellInputs.setPty(pty);
-        sshShellInputs.setAgentForwarding(agentForwarding);
-        sshShellInputs.setTimeout(timeout);
-        sshShellInputs.setConnectTimeout(connectTimeout);
-        sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
-        sshShellInputs.setCloseSession(closeSession);
-        sshShellInputs.setKnownHostsPolicy(knownHostsPolicy);
-        sshShellInputs.setKnownHostsPath(knownHostsPath);
-        sshShellInputs.setAllowedCiphers(allowedCiphers);
-        sshShellInputs.setProxyHost(proxyHost);
-        sshShellInputs.setProxyPort(proxyPort);
-        sshShellInputs.setProxyUsername(proxyUsername);
-        sshShellInputs.setProxyPassword(proxyPassword);
-        sshShellInputs.setAllowExpectCommands(allowExpectCommands);
-        sshShellInputs.setUseShell(useShell);
-        sshShellInputs.setRemoveEscapeSequences(removeEscapeSequences);
-
-        return new ScoreSSHShellCommand().execute(sshShellInputs);
+        try {
+            sshShellInputs.setHost(host);
+            sshShellInputs.setPort(port);
+            sshShellInputs.setUsername(username);
+            sshShellInputs.setPassword(password);
+            sshShellInputs.setPrivateKeyFile(privateKeyFile);
+            sshShellInputs.setPrivateKeyData(privateKeyData);
+            sshShellInputs.setCommand(command);
+            sshShellInputs.setArguments(arguments);
+            sshShellInputs.setCharacterSet(characterSet);
+            sshShellInputs.setPty(pty);
+            sshShellInputs.setAgentForwarding(agentForwarding);
+            sshShellInputs.setTimeout(timeout);
+            sshShellInputs.setConnectTimeout(connectTimeout);
+            sshShellInputs.setSshGlobalSessionObject(globalSessionObject);
+            sshShellInputs.setCloseSession(closeSession);
+            sshShellInputs.setKnownHostsPolicy(knownHostsPolicy);
+            sshShellInputs.setKnownHostsPath(knownHostsPath);
+            sshShellInputs.setAllowedCiphers(allowedCiphers);
+            sshShellInputs.setProxyHost(proxyHost);
+            sshShellInputs.setProxyPort(proxyPort);
+            sshShellInputs.setProxyUsername(proxyUsername);
+            sshShellInputs.setProxyPassword(proxyPassword);
+            sshShellInputs.setAllowExpectCommands(allowExpectCommands);
+            sshShellInputs.setUseShell(useShell);
+            sshShellInputs.setRemoveEscapeSequences(removeEscapeSequences);
+            return new ScoreSSHShellCommand().execute(sshShellInputs);
+        } catch (Exception ex) {
+            Map<String, String> output = new HashMap<>();
+            output.put(OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
+            output.put(OutputNames.EXCEPTION, ExceptionUtils.getStackTrace(ex));
+            output.put(OutputNames.RETURN_RESULT, ex.getMessage());
+            return output;
+        }
     }
 }
