@@ -20,6 +20,7 @@ package io.cloudslang.content.ssh.entities;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.ssh.utils.Constants;
 import io.cloudslang.content.ssh.utils.StringUtils;
+import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.Map;
 
@@ -278,6 +279,8 @@ public class SSHShellInputs {
     }
 
     public void setRemoveEscapeSequences(String removeEscapeSequences) {
-        this.removeEscapeSequences = StringUtils.toBoolean(removeEscapeSequences, Constants.DEFAULT_REMOVE_ESCAPE_SEQUENCES);
+        removeEscapeSequences = org.apache.commons.lang3.StringUtils.defaultIfEmpty(
+                removeEscapeSequences, String.valueOf(Constants.DEFAULT_REMOVE_ESCAPE_SEQUENCES));
+        this.removeEscapeSequences = BooleanUtils.toBoolean(removeEscapeSequences, "true", "false");
     }
 }
