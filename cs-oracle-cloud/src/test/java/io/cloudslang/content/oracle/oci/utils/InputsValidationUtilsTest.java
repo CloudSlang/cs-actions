@@ -42,19 +42,18 @@ public class InputsValidationUtilsTest {
 
     @Test
     public void verifyCommonInputsValid() {
-        exceptionMessages = verifyCommonInputs(PRIVATE_KEY_DATA, PRIVATE_KEY_FILE, PROXY_PORT, TRUST_ALL_ROOTS,
-                CONNECT_TIMEOUT, SOCKET_TIMEOUT, KEEP_ALIVE, CONNECTIONS_MAX_PER_ROUTE, CONNECTIONS_MAX_TOTAL);
+        exceptionMessages = verifyCommonInputs(PRIVATE_KEY_DATA, PRIVATE_KEY_FILE, PROXY_PORT);
         assertEquals(exceptionMessages.size(), 0);
     }
 
-    @Test
+    /* Not required as we are removing extra properties from OCI */
+/*    @Test
     public void verifyCommonInputsInvalidBooleanAndNumber() {
-        exceptionMessages = verifyCommonInputs(PRIVATE_KEY_DATA, PRIVATE_KEY_FILE, PROXY_PORT, INVALID,
-                CONNECT_TIMEOUT, INVALID, KEEP_ALIVE, CONNECTIONS_MAX_PER_ROUTE, CONNECTIONS_MAX_TOTAL);
+        exceptionMessages = verifyCommonInputs(PRIVATE_KEY_DATA, PRIVATE_KEY_FILE, PROXY_PORT);
         assertEquals(exceptionMessages.size(), 2);
         assertEquals(exceptionMessages.get(0), BOOLEAN_VALIDATOR);
         assertEquals(exceptionMessages.get(1), NUMBER_VALIDATOR_EXCEPTION);
-    }
+    }*/
 
 
 }
