@@ -121,6 +121,7 @@ public class OCIAttachVnicInputs {
             this.vnicAttachmentDisplayName = vnicAttachmentDisplayName;
             return this;
         }
+
         public OCIAttachVnicInputsBuilder nicIndex(String nicIndex) {
             this.nicIndex = nicIndex;
             return this;
