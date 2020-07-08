@@ -34,20 +34,9 @@ public class HttpCommons {
                 commonInputs.getProxyUsername(),
                 commonInputs.getProxyPassword());
 
-        HttpUtils.setSecurityInputs(httpClientInputs,
-                commonInputs.getTrustAllRoots(),
-                commonInputs.getX509HostnameVerifier(),
-                commonInputs.getTrustKeystore(),
-                commonInputs.getTrustPassword(),
-                commonInputs.getKeystore(),
-                commonInputs.getKeystorePassword());
+        HttpUtils.setSecurityInputs(httpClientInputs);
 
-        HttpUtils.setConnectionParameters(httpClientInputs,
-                commonInputs.getConnectTimeout(),
-                commonInputs.getSocketTimeout(),
-                commonInputs.getKeepAlive(),
-                commonInputs.getConnectionsMaxPerRoot(),
-                commonInputs.getConnectionsMaxTotal());
+        HttpUtils.setConnectionParameters(httpClientInputs);
         setTLSParameters(httpClientInputs);
     }
 }

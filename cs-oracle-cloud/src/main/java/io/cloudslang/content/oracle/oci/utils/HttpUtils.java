@@ -106,32 +106,10 @@ public class HttpUtils {
         return results;
     }
 
-    public static void setSecurityInputs(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs,
-                                         @org.jetbrains.annotations.NotNull final String trustAllRoots,
-                                         @org.jetbrains.annotations.NotNull final String x509HostnameVerifier,
-                                         @org.jetbrains.annotations.NotNull final String trustKeystore,
-                                         @org.jetbrains.annotations.NotNull final String trustPassword,
-                                         @org.jetbrains.annotations.NotNull final String keystore,
-                                         @org.jetbrains.annotations.NotNull final String keystorePassword) {
-        httpClientInputs.setTrustAllRoots(trustAllRoots);
-        httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
-        httpClientInputs.setTrustKeystore(trustKeystore);
-        httpClientInputs.setTrustPassword(trustPassword);
-        httpClientInputs.setKeystore(keystore);
-        httpClientInputs.setKeystorePassword(keystorePassword);
+    public static void setSecurityInputs(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs) {
     }
 
-    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
-                                               @NotNull final String connectTimeout,
-                                               @NotNull final String socketTimeout,
-                                               @NotNull final String keepAlive,
-                                               @NotNull final String connectionsMaxPerRoot,
-                                               @NotNull final String connectionsMaxTotal) {
-        httpClientInputs.setConnectTimeout(connectTimeout);
-        httpClientInputs.setSocketTimeout(socketTimeout);
-        httpClientInputs.setKeepAlive(keepAlive);
-        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
-        httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
+    public static void setConnectionParameters(HttpClientInputs httpClientInputs) {
     }
 
     @NotNull
