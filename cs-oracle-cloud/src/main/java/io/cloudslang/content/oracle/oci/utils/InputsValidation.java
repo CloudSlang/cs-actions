@@ -36,7 +36,6 @@ public class InputsValidation {
     public static List<String> verifyCommonInputs(@Nullable final String privateKeyData,
                                                   @Nullable final String privateKeyFile,
                                                   @Nullable final String proxyPort,
-                                                  @Nullable final String trust_all_roots,
                                                   @Nullable final String connectTimeout,
                                                   @Nullable final String socketTimeout,
                                                   @Nullable final String keepAlive,
@@ -45,7 +44,6 @@ public class InputsValidation {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
-        addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
         addVerifyNumber(exceptionMessages, connectTimeout, CONNECT_TIMEOUT);
         addVerifyNumber(exceptionMessages, socketTimeout, SOCKET_TIMEOUT);
         addVerifyBoolean(exceptionMessages, keepAlive, KEEP_ALIVE);
