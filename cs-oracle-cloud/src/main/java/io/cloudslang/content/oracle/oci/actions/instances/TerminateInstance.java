@@ -13,6 +13,7 @@ import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCITerminateInstanceInputs;
 import io.cloudslang.content.oracle.oci.services.InstanceImpl;
 import io.cloudslang.content.oracle.oci.utils.Descriptions;
+import io.cloudslang.content.oracle.oci.utils.HttpUtils;
 import io.cloudslang.content.oracle.oci.utils.InputsValidation;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -26,7 +27,6 @@ import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.TerminateInstanceConstants.PRESERVE_BOOT_VOLUME;
 import static io.cloudslang.content.oracle.oci.utils.Constants.TerminateInstanceConstants.TERMINATE_INSTANCE_OPERATION_NAME;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.TerminateInstance.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_HOST;
@@ -34,7 +34,6 @@ import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_P
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -55,7 +54,6 @@ public class TerminateInstance {
                                        @Param(value = FINGER_PRINT, encrypted = true, required = true, description = FINGER_PRINT_DESC) String fingerPrint,
                                        @Param(value = PRIVATE_KEY_DATA, encrypted = true, description = PRIVATE_KEY_DATA_DESC) String privateKeyData,
                                        @Param(value = PRIVATE_KEY_FILE, description = PRIVATE_KEY_FILE_DESC) String privateKeyFile,
-                                       @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
                                        @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) String instanceId,
@@ -106,7 +104,6 @@ public class TerminateInstance {
                             .preserveBootVolume(preserveBootVolume)
                             .commonInputs(OCICommonInputs.builder()
                                     .tenancyOcid(tenancyOcid)
-                                    .compartmentOcid(compartmentOcid)
                                     .userOcid(userOcid)
                                     .fingerPrint(fingerPrint)
                                     .privateKeyData(privateKeyData)
@@ -133,13 +130,12 @@ public class TerminateInstance {
                                     .build()).build());
 
             Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
-
             if (statusCode >= 200 && statusCode < 300) {
                 result.put(RETURN_RESULT, TERMINATE_INSTANCE_SUCCESS_MESSAGE_DESC);
                 return result;
+            } else {
+                return HttpUtils.getFailureResults(instanceId, statusCode, result.get(RETURN_RESULT));
             }
-
-            return result;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

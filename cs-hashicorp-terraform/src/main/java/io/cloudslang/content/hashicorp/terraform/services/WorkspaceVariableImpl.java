@@ -97,10 +97,10 @@ public class WorkspaceVariableImpl {
             JSONObject createSensitiveWorkspaceVariableJson;
             for (int i = 0; i < createWorkspaceVariableJsonArray.size(); i++) {
                 createWorkspaceVariableJson = (JSONObject) createWorkspaceVariableJsonArray.get(i);
-                workspaceVariableName = (String) ((JSONObject) ((JSONObject) createWorkspaceVariableJson.get("data")).get("attributes")).get("propertyName");
-                workspaceVariableValue = (String) ((JSONObject) ((JSONObject) createWorkspaceVariableJson.get("data")).get("attributes")).get("propertyValue");
-                hcl = Boolean.toString((boolean) ((JSONObject) ((JSONObject) createWorkspaceVariableJson.get("data")).get("attributes")).get("HCL"));
-                workspaceVariableCategory = (String) ((JSONObject) ((JSONObject) createWorkspaceVariableJson.get("data")).get("attributes")).get("Category");
+                workspaceVariableName = (String) createWorkspaceVariableJson.get("propertyName");
+                workspaceVariableValue = (String) createWorkspaceVariableJson.get("propertyValue");
+                hcl = Boolean.toString((boolean) createWorkspaceVariableJson.get("HCL"));
+                workspaceVariableCategory = (String) createWorkspaceVariableJson.get("Category");
 
 
                 terraformWorkspaceVariableInputs = terraformWorkspaceVariableInputs.builder()
@@ -117,10 +117,10 @@ public class WorkspaceVariableImpl {
             }
             for (int i = 0; i < createSensitiveWorkspaceVariableJsonArray.size(); i++) {
                 createSensitiveWorkspaceVariableJson = (JSONObject) createSensitiveWorkspaceVariableJsonArray.get(i);
-                workspaceVariableName = (String) ((JSONObject) ((JSONObject) createSensitiveWorkspaceVariableJson.get("data")).get("attributes")).get("propertyName");
-                sensitiveWorkspaceVariableValue = (String) ((JSONObject) ((JSONObject) createSensitiveWorkspaceVariableJson.get("data")).get("attributes")).get("propertyValue");
-                hcl = Boolean.toString((boolean) ((JSONObject) ((JSONObject) createSensitiveWorkspaceVariableJson.get("data")).get("attributes")).get("HCL"));
-                workspaceVariableCategory = (String) ((JSONObject) ((JSONObject) createSensitiveWorkspaceVariableJson.get("data")).get("attributes")).get("Category");
+                workspaceVariableName = (String) createSensitiveWorkspaceVariableJson.get("propertyName");
+                sensitiveWorkspaceVariableValue = (String) createSensitiveWorkspaceVariableJson.get("propertyValue");
+                hcl = Boolean.toString((boolean) createSensitiveWorkspaceVariableJson.get("HCL"));
+                workspaceVariableCategory = (String) createSensitiveWorkspaceVariableJson.get("Category");
 
 
                 terraformWorkspaceVariableInputs = terraformWorkspaceVariableInputs.builder()
@@ -142,10 +142,10 @@ public class WorkspaceVariableImpl {
             JSONObject createWorkspaceVariableJson;
             for (int i = 0; i < createWorkspaceVariableJsonArray.size(); i++) {
                 createWorkspaceVariableJson = (JSONObject) createWorkspaceVariableJsonArray.get(i);
-                workspaceVariableName = (String) ((JSONObject) ((JSONObject) createWorkspaceVariableJson.get("data")).get("attributes")).get("propertyName");
-                workspaceVariableValue = (String) ((JSONObject) ((JSONObject) createWorkspaceVariableJson.get("data")).get("attributes")).get("propertyValue");
-                hcl = Boolean.toString((boolean) ((JSONObject) ((JSONObject) createWorkspaceVariableJson.get("data")).get("attributes")).get("HCL"));
-                workspaceVariableCategory = (String) ((JSONObject) ((JSONObject) createWorkspaceVariableJson.get("data")).get("attributes")).get("Category");
+                workspaceVariableName = (String) createWorkspaceVariableJson.get("propertyName");
+                workspaceVariableValue = (String) createWorkspaceVariableJson.get("propertyValue");
+                hcl = Boolean.toString((boolean) createWorkspaceVariableJson.get("HCL"));
+                workspaceVariableCategory = (String) createWorkspaceVariableJson.get("Category");
 
 
                 terraformWorkspaceVariableInputs = terraformWorkspaceVariableInputs.builder()
@@ -166,10 +166,10 @@ public class WorkspaceVariableImpl {
             JSONObject createSensitiveWorkspaceVariableJson;
             for (int i = 0; i < createSensitiveWorkspaceVariableJsonArray.size(); i++) {
                 createSensitiveWorkspaceVariableJson = (JSONObject) createSensitiveWorkspaceVariableJsonArray.get(i);
-                workspaceVariableName = (String) ((JSONObject) ((JSONObject) createSensitiveWorkspaceVariableJson.get("data")).get("attributes")).get("propertyName");
-                workspaceVariableValue = (String) ((JSONObject) ((JSONObject) createSensitiveWorkspaceVariableJson.get("data")).get("attributes")).get("propertyValue");
-                hcl = Boolean.toString((boolean) ((JSONObject) ((JSONObject) createSensitiveWorkspaceVariableJson.get("data")).get("attributes")).get("HCL"));
-                workspaceVariableCategory = (String) ((JSONObject) ((JSONObject) createSensitiveWorkspaceVariableJson.get("data")).get("attributes")).get("Category");
+                workspaceVariableName = (String) createSensitiveWorkspaceVariableJson.get("propertyName");
+                workspaceVariableValue = (String) createSensitiveWorkspaceVariableJson.get("propertyValue");
+                hcl = Boolean.toString((boolean) createSensitiveWorkspaceVariableJson.get("HCL"));
+                workspaceVariableCategory = (String) createSensitiveWorkspaceVariableJson.get("Category");
 
 
                 terraformWorkspaceVariableInputs = terraformWorkspaceVariableInputs.builder()
@@ -197,6 +197,7 @@ public class WorkspaceVariableImpl {
         String workspaceVariableName;
         String workspaceVariableValue;
         String sensitiveWorkspaceVariableValue;
+        String workspaceVariableCategory;
         String workspaceVariableId;
         String hcl = null;
         String sensitive = null;
@@ -219,25 +220,28 @@ public class WorkspaceVariableImpl {
             JSONObject updateSensitiveWorkspaceVariableJson;
             for (int i = 0; i < updateWorkspaceVariableJsonArray.size(); i++) {
                 updateWorkspaceVariableJson = (JSONObject) updateWorkspaceVariableJsonArray.get(i);
-                workspaceVariableName = (String) ((JSONObject) ((JSONObject) updateWorkspaceVariableJson.get("data")).get("attributes")).get("propertyName");
-                workspaceVariableValue = (String) ((JSONObject) ((JSONObject) updateWorkspaceVariableJson.get("data")).get("attributes")).get("propertyValue");
-                workspaceVariableId = (String) (((JSONObject) updateWorkspaceVariableJson.get("data")).get("id"));
-                if (((JSONObject) ((JSONObject) updateWorkspaceVariableJson.get("data")).get("attributes")).containsKey("HCL")) {
-                    hcl = Boolean.toString((boolean) ((JSONObject) ((JSONObject) updateWorkspaceVariableJson.get("data")).get("attributes")).get("HCL"));
+                workspaceVariableName = (String) updateWorkspaceVariableJson.get("propertyName");
+                workspaceVariableValue = (String) updateWorkspaceVariableJson.get("propertyValue");
+                workspaceVariableCategory = (String) updateWorkspaceVariableJson.get("Category");
+                if (updateWorkspaceVariableJson.containsKey("HCL")) {
+                    hcl = Boolean.toString((boolean) updateWorkspaceVariableJson.get("HCL"));
                 }
-                if (((JSONObject) ((JSONObject) updateWorkspaceVariableJson.get("data")).get("attributes")).containsKey("sensitive")) {
-                    sensitive = Boolean.toString((boolean) ((JSONObject) ((JSONObject) updateWorkspaceVariableJson.get("data")).get("attributes")).get("sensitive"));
+                if (updateWorkspaceVariableJson.containsKey("sensitive")) {
+                    sensitive = Boolean.toString((boolean) updateWorkspaceVariableJson.get("sensitive"));
                 }
                 JSONObject workspaceVariableJsonObj = (JSONObject) parser.parse(listWorkspaceVariablesResult.get("returnResult"));
                 JSONArray workspaceVariableJsonArray = (JSONArray) workspaceVariableJsonObj.get("data");
                 for (int j = 0; j < workspaceVariableJsonArray.size(); j++) {
-                    final String workspaceVariableID = JsonPath.read(workspaceVariableJsonArray.get(j), "id");
-                    if (workspaceVariableId.equals(workspaceVariableID)) {
+                    final String workspaceVariableCatagory = JsonPath.read(workspaceVariableJsonArray.get(j), "attributes.category");
+                    final String workspaceVariableKey = JsonPath.read(workspaceVariableJsonArray.get(j), "attributes.key");
+                    if (workspaceVariableName.equals(workspaceVariableKey)&& workspaceVariableCategory.equals(workspaceVariableCatagory)) {
+                        workspaceVariableId = JsonPath.read(workspaceVariableJsonArray.get(j), "id");
                         terraformWorkspaceVariableInputs = TerraformWorkspaceVariableInputs.builder()
                                 .workspaceVariableName(workspaceVariableName)
                                 .workspaceVariableValue(workspaceVariableValue)
                                 .hcl(hcl)
                                 .sensitive(sensitive)
+                                .workspaceVariableCategory(workspaceVariableCategory)
                                 .workspaceVariableId(workspaceVariableId)
                                 .workspaceId(terraformWorkspaceVariableInputs.getWorkspaceId())
                                 .build();
@@ -251,16 +255,19 @@ public class WorkspaceVariableImpl {
                 updateSensitiveWorkspaceVariableJson = (JSONObject) updateSensitiveWorkspaceVariableJsonArray.get(i);
                 workspaceVariableName = (String) updateSensitiveWorkspaceVariableJson.get("propertyName");
                 sensitiveWorkspaceVariableValue = (String) updateSensitiveWorkspaceVariableJson.get("propertyValue");
-                workspaceVariableId = (String) (((JSONObject) updateSensitiveWorkspaceVariableJson.get("data")).get("id"));
+                workspaceVariableCategory = (String) updateSensitiveWorkspaceVariableJson.get("Category");
                 JSONObject sensitiveWorkspaceVariableJsonObj = (JSONObject) parser.parse(listWorkspaceVariablesResult.get("returnResult"));
                 JSONArray sensitiveWorkspaceVariableJsonArray = (JSONArray) sensitiveWorkspaceVariableJsonObj.get("data");
                 for (int j = 0; j < sensitiveWorkspaceVariableJsonArray.size(); j++) {
-                    final String workspaceVariableID = JsonPath.read(sensitiveWorkspaceVariableJsonArray.get(j), "id");
-                    if (workspaceVariableId.equals(workspaceVariableID)) {
+                    final String workspaceVariableCatagory = JsonPath.read(sensitiveWorkspaceVariableJsonArray.get(j), "attributes.category");
+                    final String sensitiveWorkspaceVariableKey = JsonPath.read(sensitiveWorkspaceVariableJsonArray.get(j), "attributes.key");
+                    if (workspaceVariableName.equals(sensitiveWorkspaceVariableKey)&&workspaceVariableCategory.equals(workspaceVariableCatagory)) {
+                        workspaceVariableId = JsonPath.read(sensitiveWorkspaceVariableJsonArray.get(j), "id");
                         terraformWorkspaceVariableInputs = TerraformWorkspaceVariableInputs.builder()
                                 .workspaceVariableName(workspaceVariableName)
                                 .workspaceVariableValue(EMPTY)
                                 .sensitiveWorkspaceVariableValue(sensitiveWorkspaceVariableValue)
+                                .workspaceVariableCategory(workspaceVariableCategory)
                                 .workspaceVariableId(workspaceVariableId)
                                 .workspaceId(terraformWorkspaceVariableInputs.getWorkspaceId())
                                 .build();
@@ -276,25 +283,28 @@ public class WorkspaceVariableImpl {
             JSONObject updateWorkspaceVariableJson;
             for (int i = 0; i < updateWorkspaceVariableJsonArray.size(); i++) {
                 updateWorkspaceVariableJson = (JSONObject) updateWorkspaceVariableJsonArray.get(i);
-                workspaceVariableName = (String) ((JSONObject) ((JSONObject) updateWorkspaceVariableJson.get("data")).get("attributes")).get("propertyName");
-                workspaceVariableValue = (String) ((JSONObject) ((JSONObject) updateWorkspaceVariableJson.get("data")).get("attributes")).get("propertyValue");
-                workspaceVariableId = (String) (((JSONObject) updateWorkspaceVariableJson.get("data")).get("id"));
-                if (((JSONObject) ((JSONObject) updateWorkspaceVariableJson.get("data")).get("attributes")).containsKey("HCL")) {
-                    hcl = Boolean.toString((boolean) ((JSONObject) ((JSONObject) updateWorkspaceVariableJson.get("data")).get("attributes")).get("HCL"));
+                workspaceVariableName = (String) updateWorkspaceVariableJson.get("propertyName");
+                workspaceVariableValue = (String) updateWorkspaceVariableJson.get("propertyValue");
+                workspaceVariableCategory = (String) updateWorkspaceVariableJson.get("Category");
+                if (updateWorkspaceVariableJson.containsKey("HCL")) {
+                    hcl = Boolean.toString((boolean) updateWorkspaceVariableJson.get("HCL"));
                 }
-                if (((JSONObject) ((JSONObject) updateWorkspaceVariableJson.get("data")).get("attributes")).containsKey("sensitive")) {
-                    sensitive = Boolean.toString((boolean) ((JSONObject) ((JSONObject) updateWorkspaceVariableJson.get("data")).get("attributes")).get("sensitive"));
+                if (updateWorkspaceVariableJson.containsKey("sensitive")) {
+                    sensitive = Boolean.toString((boolean) updateWorkspaceVariableJson.get("sensitive"));
                 }
                 JSONObject workspaceVariableJsonObj = (JSONObject) parser.parse(listWorkspaceVariablesResult.get("returnResult"));
                 JSONArray workspaceVariableJsonArray = (JSONArray) workspaceVariableJsonObj.get("data");
                 for (int j = 0; j < workspaceVariableJsonArray.size(); j++) {
-                    final String workspaceVariableID = JsonPath.read(workspaceVariableJsonArray.get(j), "id");
-                    if (workspaceVariableId.equals(workspaceVariableID)) {
+                    final String workspaceVariableCatagory = JsonPath.read(workspaceVariableJsonArray.get(j), "attributes.category");
+                    final String workspaceVariableKey = JsonPath.read(workspaceVariableJsonArray.get(j), "attributes.key");
+                    if (workspaceVariableName.equals(workspaceVariableKey)&& workspaceVariableCategory.equals(workspaceVariableCatagory)) {
+                        workspaceVariableId = JsonPath.read(workspaceVariableJsonArray.get(j), "id");
                         terraformWorkspaceVariableInputs = TerraformWorkspaceVariableInputs.builder()
                                 .workspaceVariableName(workspaceVariableName)
                                 .workspaceVariableValue(workspaceVariableValue)
                                 .hcl(hcl)
                                 .sensitive(sensitive)
+                                .workspaceVariableCategory(workspaceVariableCategory)
                                 .workspaceVariableId(workspaceVariableId)
                                 .workspaceId(terraformWorkspaceVariableInputs.getWorkspaceId())
                                 .build();
@@ -310,18 +320,21 @@ public class WorkspaceVariableImpl {
             JSONObject updateSensitiveWorkspaceVariableJson;
             for (int i = 0; i < updateSensitiveWorkspaceVariableJsonArray.size(); i++) {
                 updateSensitiveWorkspaceVariableJson = (JSONObject) updateSensitiveWorkspaceVariableJsonArray.get(i);
-                workspaceVariableName = (String) ((JSONObject) ((JSONObject) updateSensitiveWorkspaceVariableJson.get("data")).get("attributes")).get("propertyName");
-                sensitiveWorkspaceVariableValue = (String) ((JSONObject) ((JSONObject) updateSensitiveWorkspaceVariableJson.get("data")).get("attributes")).get("propertyValue");
-                workspaceVariableId = (String) (((JSONObject) updateSensitiveWorkspaceVariableJson.get("data")).get("id"));
+                workspaceVariableName = (String) updateSensitiveWorkspaceVariableJson.get("propertyName");
+                sensitiveWorkspaceVariableValue = (String) updateSensitiveWorkspaceVariableJson.get("propertyValue");
+                workspaceVariableCategory = (String) updateSensitiveWorkspaceVariableJson.get("Category");
                 JSONObject sensitiveWorkspaceVariableJsonObj = (JSONObject) parser.parse(listWorkspaceVariablesResult.get("returnResult"));
                 JSONArray sensitiveWorkspaceVariableJsonArray = (JSONArray) sensitiveWorkspaceVariableJsonObj.get("data");
                 for (int j = 0; j < sensitiveWorkspaceVariableJsonArray.size(); j++) {
-                    final String workspaceVariableID = JsonPath.read(updateSensitiveWorkspaceVariableJson.get(j), "id");
-                    if (workspaceVariableId.equals(workspaceVariableID)) {
+                    final String workspaceVariableCatagory = JsonPath.read(sensitiveWorkspaceVariableJsonArray.get(j), "attributes.category");
+                    final String sensitiveWorkspaceVariableKey = JsonPath.read(sensitiveWorkspaceVariableJsonArray.get(j), "attributes.key");
+                    if (workspaceVariableName.equals(sensitiveWorkspaceVariableKey)&&workspaceVariableCategory.equals(workspaceVariableCatagory)) {
+                        workspaceVariableId = JsonPath.read(sensitiveWorkspaceVariableJsonArray.get(j), "id");
                         terraformWorkspaceVariableInputs = TerraformWorkspaceVariableInputs.builder()
                                 .workspaceVariableName(workspaceVariableName)
                                 .workspaceVariableValue(EMPTY)
                                 .sensitiveWorkspaceVariableValue(sensitiveWorkspaceVariableValue)
+                                .workspaceVariableCategory(workspaceVariableCategory)
                                 .workspaceVariableId(workspaceVariableId)
                                 .workspaceId(terraformWorkspaceVariableInputs.getWorkspaceId())
                                 .build();
@@ -353,7 +366,7 @@ public class WorkspaceVariableImpl {
 
                 for (int i = 0; i < createWorkspaceVariableJsonArray.size(); i++) {
                     createWorkspaceVariableJson = (JSONObject) createWorkspaceVariableJsonArray.get(i);
-                    workspaceVariableName = (String) ((JSONObject) ((JSONObject) createWorkspaceVariableJson.get("data")).get("attributes")).get("propertyName");
+                    workspaceVariableName = (String) createWorkspaceVariableJson.get("propertyName");
 
 
                     for (String workspaceVariableResult : result.keySet()) {
@@ -368,7 +381,7 @@ public class WorkspaceVariableImpl {
                 }
                 for (int i = 0; i < createSensitiveWorkspaceVariableJsonArray.size(); i++) {
                     createSensitiveWorkspaceVariableJson = (JSONObject) createSensitiveWorkspaceVariableJsonArray.get(i);
-                    sensitiveWorkspaceVariableName = (String) ((JSONObject) ((JSONObject) createSensitiveWorkspaceVariableJson.get("data")).get("attributes")).get("propertyName");
+                    sensitiveWorkspaceVariableName = (String) createSensitiveWorkspaceVariableJson.get("propertyName");
 
 
                     for (String workspaceVariableResult : result.keySet()) {
@@ -389,7 +402,7 @@ public class WorkspaceVariableImpl {
                 String sensitiveWorkspaceVariableName = EMPTY;
                 for (int i = 0; i < createSensitiveWorkspaceVariableJsonArray.size(); i++) {
                     createSensitiveWorkspaceVariableJson = (JSONObject) createSensitiveWorkspaceVariableJsonArray.get(i);
-                    sensitiveWorkspaceVariableName = (String) ((JSONObject) ((JSONObject) createSensitiveWorkspaceVariableJson.get("data")).get("attributes")).get("propertyName");
+                    sensitiveWorkspaceVariableName = (String) createSensitiveWorkspaceVariableJson.get("propertyName");
 
 
                     for (String workspaceVariableResult : result.keySet()) {
@@ -413,7 +426,7 @@ public class WorkspaceVariableImpl {
 
                 for (int i = 0; i < createWorkspaceVariableJsonArray.size(); i++) {
                     createWorkspaceVariableJson = (JSONObject) createWorkspaceVariableJsonArray.get(i);
-                    workspaceVariableName = (String) ((JSONObject) ((JSONObject) createWorkspaceVariableJson.get("data")).get("attributes")).get("propertyName");
+                    workspaceVariableName = (String) createWorkspaceVariableJson.get("propertyName");
 
 
                     for (String workspaceVariableResult : result.keySet()) {

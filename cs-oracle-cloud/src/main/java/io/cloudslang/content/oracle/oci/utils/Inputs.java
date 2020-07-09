@@ -34,6 +34,9 @@ public class Inputs extends InputNames {
         public static final String INSTANCE_ID = "instanceId";
         public static final String AVAILABILITY_DOMAIN = "availabilityDomain";
         public static final String VNIC_ID = "vnicId";
+        public static final String VNIC_ATTACHMENT_ID = "vnicAttachmentId";
+        public static final String VOLUME_ID = "volumeId";
+        public static final String VOLUME_ATTACHMENT_ID = "volumeAttachmentId";
         public static final String PAGE = "page";
         public static final String LIMIT = "limit";
     }
@@ -42,5 +45,12 @@ public class Inputs extends InputNames {
         public static final String COMPARTMENT_OCID = "compartmentOcid";
     }
 
+    public static class AttachVolumeInputs {
+        public static final String VOLUME_TYPE = "volumeType";
+        public static final String DEVICE_NAME = "deviceName";
+        public static final String DISPLAY_NAME = "displayName";
+        public static final String IS_READ_ONLY = "isReadOnly";
+        public static final String IS_SHAREABLE = "isShareable";
+    }
 
 }

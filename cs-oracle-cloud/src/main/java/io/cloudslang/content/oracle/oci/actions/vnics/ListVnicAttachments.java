@@ -42,13 +42,11 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.CreateInstanceConstants.AVAILABILITY_DOMAIN;
-import static io.cloudslang.content.oracle.oci.utils.Constants.ListVnicAttachmentsConstants.LIST_VNIC_ATTACHMENTS_OPERATION_NAME;
-import static io.cloudslang.content.oracle.oci.utils.Constants.ListVnicAttachmentsConstants.LIST_VNIC_JSON_PATH;
+import static io.cloudslang.content.oracle.oci.utils.Constants.ListVnicAttachmentsConstants.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.CreateInstance.AVAILABILITY_DOMAIN_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListVnicAttachments.LIST_VNIC_ATTACHMENTS_OPERATION_DESC;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListVnicAttachments.VNIC_LIST_DESC;
+import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListVnicAttachments.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PASSWORD;
@@ -56,6 +54,7 @@ import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_P
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
+import static io.cloudslang.content.oracle.oci.utils.Outputs.ListVnicAttachmentsOutputs.VNIC_ATTACHMENTS_LIST;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.ListVnicAttachmentsOutputs.VNIC_LIST;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -69,6 +68,7 @@ public class ListVnicAttachments {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = VNIC_LIST, description = VNIC_LIST_DESC),
+                    @Output(value = VNIC_ATTACHMENTS_LIST, description = VNIC_ATTACHMENTS_LIST_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
@@ -166,15 +166,22 @@ public class ListVnicAttachments {
 
             if (statusCode >= 200 && statusCode < 300) {
                 final List<String> vnicList = JsonPath.read(returnMessage, LIST_VNIC_JSON_PATH);
+                final List<String> vnicAttachmentsList = JsonPath.read(returnMessage, LIST_VNIC_ATTACHMENTS_JSON_PATH);
                 if (!vnicList.isEmpty()) {
                     final String instanceListAsString = StringUtils.join(vnicList.toArray(), Constants.Common.DELIMITER);
                     results.put(VNIC_LIST, instanceListAsString);
                 } else {
                     results.put(VNIC_LIST, EMPTY);
                 }
+                if (!vnicAttachmentsList.isEmpty()) {
+                    final String instanceListAsString = StringUtils.join(vnicAttachmentsList.toArray(), Constants.Common.DELIMITER);
+                    results.put(VNIC_ATTACHMENTS_LIST, instanceListAsString);
+                } else {
+                    results.put(VNIC_ATTACHMENTS_LIST, EMPTY);
+                }
 
             } else {
-                return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
+                return HttpUtils.getFailureResults(tenancyOcid, statusCode, returnMessage);
             }
             return results;
         } catch (Exception exception) {

@@ -12,9 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.cloudslang.content.abbyy.validators;
 
+import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
+import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,33 +23,22 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.IOException;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
 
 @RunWith(PowerMockRunner.class)
 public abstract class AbbyyResultValidatorTest {
 
+    AbbyyResultValidator sut;
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
-    AbbyyResultValidator sut;
-
 
     @Before
-    public void setUp() throws Exception {
-        this.sut = this.newSutInstance();
+    public void setUp() {
+        this.sut = newSutInstance();
     }
 
 
-    protected abstract AbbyyResultValidator newSutInstance() throws Exception;
-
-
-    @Test
-    public void validate_resultIsNull_IllegalArgumentException() throws IOException {
-        //Arrange
-        final String result = null;
-        //Assert
-        exception.expect(IllegalArgumentException.class);
-        //Act
-        this.sut.validate(result);
-    }
+    abstract AbbyyResultValidator newSutInstance();
 }

@@ -12,250 +12,172 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.cloudslang.content.abbyy.services;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
-import io.cloudslang.content.abbyy.constants.MiscConstants;
-import io.cloudslang.content.abbyy.constants.OutputNames;
-import io.cloudslang.content.abbyy.entities.*;
+import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
+import io.cloudslang.content.abbyy.entities.inputs.ProcessTextFieldInput;
+import io.cloudslang.content.abbyy.entities.others.*;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
+import io.cloudslang.content.abbyy.exceptions.TimeoutException;
+import io.cloudslang.content.abbyy.exceptions.ValidationException;
+import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
+import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.validators.AbbyyResultValidator;
-import io.cloudslang.content.constants.ReturnCodes;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.FileWriter;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @PrepareForTest({ProcessTextFieldService.class})
-public class ProcessTextFieldServiceTest extends AbstractPostRequestServiceTest<ProcessTextFieldInput> {
-
-    private static final LocationId LOCATION_ID = LocationId.EU;
-    private static final String APPLICATION_ID = "dummy";
-    private static final String PASSWORD = "dummy";
-    private static final Region REGION = new Region(-1, -1, -1, -1);
-    private static final List<String> LANGUAGES = Collections.singletonList("English");
-    private static final String LETTER_SET = "dummy";
-    private static final String REG_EXP = "dummy";
-    private static final TextType TEXT_TYPE = TextType.NORMAL;
-    private static final boolean ONE_TEXT_LINE = false;
-    private static final boolean ONE_WORD_PER_TEXT_LINE = false;
-    private static final MarkingType MARKING_TYPE = MarkingType.SIMPLE_TEXT;
-    private static final int PLACEHOLDERS_COUNT = 1;
-    private static final WritingStyle WRITING_STYLE = WritingStyle.DEFAULT;
-    private static final String DESCRIPTION = "dummy";
-    private static final String PDF_PASSWORD = "dummy";
-
+public class ProcessTextFieldServiceTest extends AbbyyServiceTest<ProcessTextFieldInput> {
 
     @Mock
-    private AbbyyResultValidator resultValidatorMock;
+    private AbbyyResultValidator xmlResultValidatorMock;
 
 
-    @Override
-    protected AbstractPostRequestService<ProcessTextFieldInput> newSutInstance() throws ParserConfigurationException, SAXException {
-        return new ProcessTextFieldService(this.responseParserMock, this.httpClientMock, this.requestValidator, this.resultValidatorMock);
-    }
+    @Test
+    public void handleTaskCompleted_exportFormatsListDoesNotMatchResultUrls_exceptionThrown() throws Exception {
+        //Arrange
+        ProcessTextFieldInput requestMock = mockAbbyyRequest();
 
+        AbbyyResponse responseMock = mockAbbyyResponse();
+        when(responseMock.getResultUrls()).thenReturn(Collections.<String>emptyList());
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        mockRequest();
-    }
-
-
-    @Override
-    public void execute_validInput_correspondingUrlCalled() throws Exception {
-        final String expectedUrl = "https://cloud-eu.ocrsdk.com/processTextField?region=-1%2C-1%2C-1%2C-1&language=English" +
-                "&letterSet=dummy&regExp=dummy&textType=normal&oneTextLine=false&oneWordPerTextLine=false&markingType=simpleText" +
-                "&placeholdersCount=1&writingStyle=default&description=dummy&pdfPassword=dummy";
-        mockRequest();
-        when(this.httpClientMock.execute(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(null);
+        Map<String, String> resultsDummy = new HashMap<>();
 
         try {
-            this.sut.execute(this.requestMock);
+            //Act
+            this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy);
+
+            //Assert
             fail();
-        } catch (Exception ex) {
-            verify(this.httpClientMock).execute(eq(expectedUrl), anyString(), anyString(), anyString(), anyString(), anyString(),
-                    anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                    anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                    anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                    anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                    anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                    any(SerializableSessionObject.class), any(GlobalSessionObject.class));
+        } catch (AbbyySdkException ex) {
+            assertTrue(ex.getMessage().contains(ExceptionMsgs.EXPORT_FORMAT_AND_RESULT_URLS_DO_NOT_MATCH));
         }
     }
 
 
     @Test
-    public void execute_xmlResultCouldNotBeRetrieved_AbbyySdkException() throws Exception {
+    public void handleTaskCompleted_validationBeforeDownloadFails_exceptionThrown() throws Exception {
         //Arrange
-        final String taskId = "taskId";
-        final int credits = 1;
-        final long estimatedProcessingTime = 5L;
-        final List<String> resultUrls = Arrays.asList("url1", "url2", "url3");
-        final String statusCode = "123";
+        final String errMsg = "This is the error message";
 
-        Map<String, String> rawResponse = new HashMap<>();
-        rawResponse.put(MiscConstants.HTTP_STATUS_CODE_OUTPUT, statusCode);
-        when(this.httpClientMock.execute(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(rawResponse);
+        ProcessTextFieldInput requestMock = mockAbbyyRequest();
 
-        AbbyyResponse responseMock = mock(AbbyyResponse.class);
-        when(responseMock.getTaskStatus())
-                .thenReturn(AbbyyResponse.TaskStatus.QUEUED)
-                .thenReturn(AbbyyResponse.TaskStatus.COMPLETED);
-        when(responseMock.getTaskId()).thenReturn(taskId);
-        when(responseMock.getCredits()).thenReturn(credits);
-        when(responseMock.getEstimatedProcessingTime()).thenReturn(estimatedProcessingTime);
-        when(responseMock.getResultUrls()).thenReturn(resultUrls);
-        when(this.responseParserMock.parseResponse(anyMapOf(String.class, String.class))).thenReturn(responseMock);
+        AbbyyResponse responseMock = mockAbbyyResponse();
+        when(responseMock.getResultUrls()).thenReturn(Collections.singletonList("txt"));
 
-        //Assert
-        exception.expect(AbbyySdkException.class);
+        Map<String, String> resultsDummy = new HashMap<>();
 
-        //Act
-        this.sut.execute(this.requestMock);
+        when(this.xmlResultValidatorMock.validateBeforeDownload(eq(requestMock), anyString()))
+                .thenReturn(new ValidationException(errMsg));
+
+        try {
+            //Act
+            this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy);
+
+            //Assert
+            fail();
+        } catch (AbbyySdkException ex) {
+            assertTrue(ex.toString().contains(ValidationException.class.getSimpleName()));
+            assertTrue(ex.getMessage().contains(errMsg));
+        }
     }
 
 
     @Test
-    public void execute_txtResultRetrieved_Success() throws Exception {
+    public void handleTaskCompleted_abbyyApiCallFails_exceptionThrown() throws Exception {
         //Arrange
-        final String taskId = "taskId";
-        final int credits = 1;
-        final long estimatedProcessingTime = 5L;
-        final List<String> resultUrls = Arrays.asList("url1", "url2", "url3");
-        final String statusCode = "200";
-        final String xmlResult = "txtResult";
+        final String errMsg = "This is the error message";
 
-        Map<String, String> rawResponse = new HashMap<>();
-        rawResponse.put(MiscConstants.HTTP_STATUS_CODE_OUTPUT, statusCode);
-        rawResponse.put(MiscConstants.HTTP_RETURN_RESULT_OUTPUT, xmlResult);
-        when(this.httpClientMock.execute(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(rawResponse);
+        ProcessTextFieldInput requestMock = mockAbbyyRequest();
 
-        AbbyyResponse responseMock = mock(AbbyyResponse.class);
-        when(responseMock.getTaskStatus())
-                .thenReturn(AbbyyResponse.TaskStatus.QUEUED)
-                .thenReturn(AbbyyResponse.TaskStatus.COMPLETED);
-        when(responseMock.getTaskId()).thenReturn(taskId);
-        when(responseMock.getCredits()).thenReturn(credits);
-        when(responseMock.getEstimatedProcessingTime()).thenReturn(estimatedProcessingTime);
-        when(responseMock.getResultUrls()).thenReturn(resultUrls);
-        when(this.responseParserMock.parseResponse(anyMapOf(String.class, String.class))).thenReturn(responseMock);
+        AbbyyResponse responseMock = mockAbbyyResponse();
+        when(responseMock.getResultUrls()).thenReturn(Collections.singletonList("txt"));
 
-        //Act
-        Map<String, String> results = this.sut.execute(this.requestMock);
+        Map<String, String> resultsDummy = new HashMap<>();
 
-        //Assert
-        assertEquals(taskId, results.get(OutputNames.TASK_ID));
-        assertEquals(String.valueOf(credits), results.get(OutputNames.CREDITS));
-        assertEquals(statusCode, results.get(OutputNames.STATUS_CODE));
-        assertEquals(xmlResult, results.get(OutputNames.XML_RESULT));
-        assertEquals(ReturnCodes.SUCCESS, results.get(io.cloudslang.content.constants.OutputNames.RETURN_CODE));
-        assertEquals(StringUtils.EMPTY, results.get(io.cloudslang.content.constants.OutputNames.EXCEPTION));
+        when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), eq(ExportFormat.XML), anyString(), anyBoolean()))
+                .thenThrow(new TimeoutException(errMsg));
+
+        try {
+            //Act
+            this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy);
+
+            //Assert
+            fail();
+        } catch (TimeoutException ex) {
+            assertEquals(errMsg, ex.getMessage());
+        }
     }
 
 
     @Test
-    public void execute_destinationFileIsNotNull_resultIsWrittenToCorrespondingFile() throws Exception {
+    public void handleTaskCompleted_abbyyApiCallSucceeds_noExceptionThrown() throws Exception {
         //Arrange
-        final String taskId = "taskId";
-        final int credits = 1;
-        final long estimatedProcessingTime = 5L;
-        final List<String> resultUrls = Arrays.asList("url1", "url2", "url3");
-        final String statusCode = "200";
-        final String txtResult = "txtResult";
-        final String sourceFileName = "sourceFile";
-        final String destinationFilePath = "destDir";
+        ProcessTextFieldInput requestMock = mockAbbyyRequest();
 
-        File destinationFileMock = mock(File.class);
-        when(destinationFileMock.getAbsolutePath()).thenReturn(destinationFilePath);
-        when(this.requestMock.getDestinationFile()).thenReturn(destinationFileMock);
-        File sourceFileMock = mock(File.class);
-        when(sourceFileMock.getName()).thenReturn(sourceFileName);
-        when(this.requestMock.getSourceFile()).thenReturn(sourceFileMock);
+        AbbyyResponse responseMock = mockAbbyyResponse();
+        when(responseMock.getResultUrls()).thenReturn(Collections.singletonList("txt"));
 
-        Map<String, String> rawResponse = new HashMap<>();
-        rawResponse.put(MiscConstants.HTTP_STATUS_CODE_OUTPUT, statusCode);
-        rawResponse.put(MiscConstants.HTTP_RETURN_RESULT_OUTPUT, txtResult);
-        when(this.httpClientMock.execute(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(rawResponse);
+        when(this.abbyyApiMock.getResult(any(AbbyyInput.class), anyString(), any(ExportFormat.class), anyString(), anyBoolean()))
+                .thenReturn(StringUtils.EMPTY);
 
-        AbbyyResponse responseMock = mock(AbbyyResponse.class);
-        when(responseMock.getTaskStatus())
-                .thenReturn(AbbyyResponse.TaskStatus.QUEUED)
-                .thenReturn(AbbyyResponse.TaskStatus.COMPLETED);
-        when(responseMock.getTaskId()).thenReturn(taskId);
-        when(responseMock.getCredits()).thenReturn(credits);
-        when(responseMock.getEstimatedProcessingTime()).thenReturn(estimatedProcessingTime);
-        when(responseMock.getResultUrls()).thenReturn(resultUrls);
-        when(this.responseParserMock.parseResponse(anyMapOf(String.class, String.class))).thenReturn(responseMock);
-
-        FileWriter fileWriterMock = PowerMockito.mock(FileWriter.class);
-        PowerMockito.whenNew(FileWriter.class).withAnyArguments().thenReturn(fileWriterMock);
+        Map<String, String> resultsDummy = new HashMap<>();
 
         //Act
-        this.sut.execute(this.requestMock);
-
-        //Assert
-        PowerMockito.verifyNew(FileWriter.class).withArguments(eq(destinationFileMock));
-        verify(fileWriterMock).write(eq(txtResult));
+        this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy);
     }
 
 
-    private void mockRequest() {
-        this.requestMock = mock(ProcessTextFieldInput.class);
-        when(this.requestMock.getLocationId()).thenReturn(LOCATION_ID);
-        when(this.requestMock.getApplicationId()).thenReturn(APPLICATION_ID);
-        when(this.requestMock.getPassword()).thenReturn(PASSWORD);
-        when(this.requestMock.getRegion()).thenReturn(REGION);
-        when(this.requestMock.getLanguages()).thenReturn(LANGUAGES);
-        when(this.requestMock.getLetterSet()).thenReturn(LETTER_SET);
-        when(this.requestMock.getRegExp()).thenReturn(REG_EXP);
-        when(this.requestMock.getTextType()).thenReturn(TEXT_TYPE);
-        when(this.requestMock.isOneTextLine()).thenReturn(ONE_TEXT_LINE);
-        when(this.requestMock.isOneWordPerTextLine()).thenReturn(ONE_WORD_PER_TEXT_LINE);
-        when(this.requestMock.getMarkingType()).thenReturn(MARKING_TYPE);
-        when(this.requestMock.getPlaceholdersCount()).thenReturn(PLACEHOLDERS_COUNT);
-        when(this.requestMock.getWritingStyle()).thenReturn(WRITING_STYLE);
-        when(this.requestMock.getDescription()).thenReturn(DESCRIPTION);
-        when(this.requestMock.getPdfPassword()).thenReturn(PDF_PASSWORD);
-        when(this.requestMock.getSourceFile()).thenReturn(mock(File.class));
+    @Override
+    AbbyyService<ProcessTextFieldInput> newSutInstance() {
+        return new ProcessTextFieldService(this.requestValidatorMock, this.xmlResultValidatorMock, this.abbyyApiMock);
+    }
+
+
+    @Override
+    ProcessTextFieldInput mockAbbyyRequest() {
+        ProcessTextFieldInput requestMock = mock(ProcessTextFieldInput.class);
+
+        when(requestMock.getLocationId()).thenReturn(LocationId.EU);
+        when(requestMock.getApplicationId()).thenReturn("dummy");
+        when(requestMock.getPassword()).thenReturn("dummy");
+        when(requestMock.getLanguages()).thenReturn(Collections.singletonList("English"));
+        Path sourceFileMock = mock(Path.class);
+        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
+        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(true);
+        when(requestMock.getSourceFile()).thenReturn(sourceFileMock);
+        when(requestMock.getDestinationFile()).thenReturn(null);
+        when(requestMock.getLetterSet()).thenReturn("dummy");
+        when(requestMock.getRegExp()).thenReturn("dummy");
+        when(requestMock.getTextType()).thenReturn(TextType.NORMAL);
+        when(requestMock.isOneTextLine()).thenReturn(true);
+        when(requestMock.isOneWordPerTextLine()).thenReturn(true);
+        when(requestMock.getMarkingType()).thenReturn(MarkingType.SIMPLE_TEXT);
+        when(requestMock.getPlaceholdersCount()).thenReturn(1);
+        when(requestMock.getDescription()).thenReturn("dummy");
+        when(requestMock.getPdfPassword()).thenReturn("dummy");
+
+        when(requestMock.getProxyPort()).thenReturn((short) 8080);
+        when(requestMock.getConnectTimeout()).thenReturn(0);
+        when(requestMock.getSocketTimeout()).thenReturn(0);
+        when(requestMock.getConnectionsMaxPerRoute()).thenReturn(20);
+        when(requestMock.getConnectionsMaxTotal()).thenReturn(0);
+
+        return requestMock;
     }
 }

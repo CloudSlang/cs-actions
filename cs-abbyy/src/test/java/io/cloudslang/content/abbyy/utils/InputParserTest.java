@@ -15,8 +15,8 @@
 
 package io.cloudslang.content.abbyy.utils;
 
-import io.cloudslang.content.abbyy.entities.LocationId;
-import io.cloudslang.content.abbyy.entities.Region;
+import io.cloudslang.content.abbyy.entities.others.LocationId;
+import io.cloudslang.content.abbyy.entities.others.Region;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,7 +49,7 @@ public class InputParserTest {
     @Test
     public void parseDescription_descrHasMaxNrOfChars_descrIsNotTrimmed() {
         //Arrange
-        final String descr = getDescription(255);
+        final String descr = StringUtils.repeat("-", 255);
         //Act
         String result = InputParser.parseDescription(descr);
         //Assert
@@ -60,7 +60,7 @@ public class InputParserTest {
     @Test
     public void parseDescription_descrHasMoreThanMaxNrOfChars_descrIsTrimmed() {
         //Arrange
-        final String descr = getDescription(256);
+        final String descr = StringUtils.repeat("-", 256);
         //Act
         String result = InputParser.parseDescription(descr);
         //Assert
@@ -69,13 +69,13 @@ public class InputParserTest {
 
 
     @Test
-    public void parseNonNegativeShort_valueIsNull_IllegalArgumentException() {
+    public void parseShort_valueIsNull_IllegalArgumentException() {
         //Arrange
         final String value = null;
 
         try {
             //Act
-            InputParser.parseNonNegativeShort(value, INPUT_NAME);
+            InputParser.parseShort(value, INPUT_NAME);
             //Assert
             fail();
         } catch (IllegalArgumentException ex) {
@@ -85,29 +85,13 @@ public class InputParserTest {
 
 
     @Test
-    public void parseNonNegativeShort_valueIsNaN_IllegalArgumentException() {
+    public void parseShort_valueIsNaN_IllegalArgumentException() {
         //Arrange
         final String value = "not a number";
 
         try {
             //Act
-            InputParser.parseNonNegativeShort(value, INPUT_NAME);
-            //Assert
-            fail();
-        } catch (IllegalArgumentException ex) {
-            assertTrue(ex.getMessage().contains(INPUT_NAME));
-        }
-    }
-
-
-    @Test
-    public void parseNonNegativeShort_valueIsNegative_correspondingNumberReturned() {
-        //Arrange
-        final String value = "-1";
-
-        try {
-            //Act
-            InputParser.parseNonNegativeShort(value, INPUT_NAME);
+            InputParser.parseShort(value, INPUT_NAME);
             //Assert
             fail();
         } catch (IllegalArgumentException ex) {
@@ -121,20 +105,20 @@ public class InputParserTest {
         //Arrange
         final String value = "0";
         //Act
-        short result = InputParser.parseNonNegativeShort(value, INPUT_NAME);
+        short result = InputParser.parseShort(value, INPUT_NAME);
         //Assert
-        assertEquals((short) 0, result);
+        assertEquals(Short.parseShort(value), result);
     }
 
 
     @Test
-    public void parseNonNegativeInt_valueIsNull_IllegalArgumentException() {
+    public void parseInt_valueIsNull_IllegalArgumentException() {
         //Arrange
         final String value = null;
 
         try {
             //Act
-            InputParser.parseNonNegativeInt(value, INPUT_NAME);
+            InputParser.parseInt(value, INPUT_NAME);
             //Assert
             fail();
         } catch (IllegalArgumentException ex) {
@@ -144,13 +128,13 @@ public class InputParserTest {
 
 
     @Test
-    public void parseNonNegativeInt_valueIsNaN_IllegalArgumentException() {
+    public void parseInt_valueIsNaN_IllegalArgumentException() {
         //Arrange
         final String value = "not a number";
 
         try {
             //Act
-            InputParser.parseNonNegativeInt(value, INPUT_NAME);
+            InputParser.parseInt(value, INPUT_NAME);
             //Assert
             fail();
         } catch (IllegalArgumentException ex) {
@@ -160,29 +144,13 @@ public class InputParserTest {
 
 
     @Test
-    public void parseNonNegativeInt_valueIsNegative_correspondingNumberReturned() {
-        //Arrange
-        final String value = "-1";
-
-        try {
-            //Act
-            InputParser.parseNonNegativeInt(value, INPUT_NAME);
-            //Assert
-            fail();
-        } catch (IllegalArgumentException ex) {
-            assertTrue(ex.getMessage().contains(INPUT_NAME));
-        }
-    }
-
-
-    @Test
-    public void parseNonNegativeInt_valueIsValid_correspondingNumberReturned() {
+    public void parseInt_valueIsValid_correspondingNumberReturned() {
         //Arrange
         final String value = "0";
         //Act
-        int result = InputParser.parseNonNegativeInt(value, INPUT_NAME);
+        int result = InputParser.parseInt(value, INPUT_NAME);
         //Assert
-        assertEquals(0, result);
+        assertEquals(Integer.parseInt(value), result);
     }
 
 
@@ -365,14 +333,5 @@ public class InputParserTest {
         LocationId result = InputParser.parseEnum(value, LocationId.class, INPUT_NAME);
         //Assert
         assertEquals(LocationId.WEST_US, result);
-    }
-
-
-    private String getDescription(int length) {
-        StringBuilder descrBuilder = new StringBuilder();
-        for (int i = 1; i <= length; i++) {
-            descrBuilder.append("\n");
-        }
-        return descrBuilder.toString();
     }
 }

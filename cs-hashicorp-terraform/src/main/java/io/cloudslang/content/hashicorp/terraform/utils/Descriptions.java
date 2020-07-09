@@ -183,7 +183,7 @@ public class Descriptions {
         public static final String VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Variable.";
         public static final String VARIABLE_SENSITIVE_REQUEST_BODY_DESC = "Request Body for the Create Sensitive Variable.";
         public static final String VARIABLES_JSON_DESC = "List of variables in json format." +
-                                        "Examples : [{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"env\\\"}]\",\"[{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"terraform\\\"}]";
+                                        "Examples : [{\"propertyName\":\"test1\",\"propertyValue\":\"1\",\"HCL\":false,\"Category\":\"terraform\"},{\"propertyName\":\"test2\",\"propertyValue\":\"1\",\"HCL\":false,\"Category\":\"env\"}]";
         public static final String SENSITIVE_VARIABLES_JSON_DESC = "List of sensitive variables in json format.";
         public static final String VARIABLE_ID_DESC = "The Id of created variable.";
         public static final String CREATE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while " +
@@ -208,7 +208,7 @@ public class Descriptions {
         public static final String WORKSPACE_VARIABLE_REQUEST_BODY_DESC = "Request Body for the Create Workspace Variable.";
         public static final String WORKSPACE_VARIABLE_SENSITIVE_REQUEST_BODY_DESC = "Request Body for the Create Workspace Sensitive Variable.";
         public static final String WORKSPACE_VARIABLES_JSON_DESC = "List of workspace variables in json format." +
-                "Examples : [{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"env\\\"}]\",\"[{\\\"propertyName\\\":\\\"test\\\",\\\"propertyValue\\\":\\\"1\\\",\\\"HCL\\\":false,\\\"Category\\\":\\\"terraform\\\"}]";
+                "Examples : [{\"propertyName\":\"test1\",\"propertyValue\":\"1\",\"HCL\":false,\"Category\":\"terraform\"},{\"propertyName\":\"test2\",\"propertyValue\":\"1\",\"HCL\":false,\"Category\":\"env\"}]";
         public static final String SENSITIVE_WORKSPACE_VARIABLES_JSON_DESC = "List of sensitive workspace variables in json format.";
         public static final String WORKSPACE_VARIABLE_ID_DESC = "The Id of created workspace variable.";
         public static final String CREATE_WORKSPACE_VARIABLE_EXCEPTION_DESC = "An error message in case there was an error while " +
@@ -289,7 +289,7 @@ public class Descriptions {
     public static class UpdateWorkspaceVariables {
         public static final String WORKSPACE_VARIABLE_REQUEST_BODY_DESC = "Request Body for the Update Workspace Variable.";
         public static final String WORKSPACE_VARIABLES_JSON_DESC = "List of workspace variables in json format." +
-                "Examples : [{\"data\": { \"id\":\"var-test1\", \"attributes\": { \"propertyName\":\"test1\", \"propertyValue\":\"1\", \"category\":\"terraform\" }}},{\"data\": { \"id\":\"var-test2te\", \"attributes\": { \"propertyName\":\"test2\", \"propertyValue\":\"2\", \"category\":\"env\" }}]";
+                "Examples : [{\"propertyName\":\"test1\",\"propertyValue\":\"1\",\"HCL\":false,\"Category\":\"terraform\"},{\"propertyName\":\"test2\",\"propertyValue\":\"1\",\"HCL\":false,\"Category\":\"env\"}]";
         public static final String UPDATE_WORKSPACE_VARIABLES_DESC = "Updates  multiple sensitive and non-sensitive variables or both in a workspace.";
         public static final String UPDATE_WORKSPACE_VARIABLE_DESC = "Updates  multiple sensitive and non-sensitive variable or both in a workspace.";
     }
