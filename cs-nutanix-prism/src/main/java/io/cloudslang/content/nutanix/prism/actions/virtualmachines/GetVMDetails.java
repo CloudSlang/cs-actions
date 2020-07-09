@@ -27,6 +27,7 @@ import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixGetVMDetailsInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +72,8 @@ public class GetVMDetails {
                     @Output(value = POWER_STATE, description = POWER_STATE_DESC),
                     @Output(value = VM_DISK_UUID, description = VM_DISK_UUID_DESC),
                     @Output(value = STORAGE_CONTAINER_UUID, description = STORAGE_CONTAINER_UUID_DESC),
-                    @Output(value = VM_LOGICAL_TIMESTAMP, description = VM_LOGICAL_TIMESTAMP_DESC)
+                    @Output(value = VM_LOGICAL_TIMESTAMP, description = VM_LOGICAL_TIMESTAMP_DESC),
+                    @Output(value = HOST_UUIDS, description = HOST_UUIDS_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL,
@@ -182,6 +184,17 @@ public class GetVMDetails {
                 final String storageContainerUUIDString = join(storageContainerUUID.toArray(), DELIMITER);
                 results.put(STORAGE_CONTAINER_UUID, storageContainerUUIDString);
                 results.put(VM_LOGICAL_TIMESTAMP, vmLogicalTimestamp);
+
+                final LinkedHashMap<String, String> affinity = (JsonPath.using(configuration).parse(returnMessage)
+                        .read(AFFINITY_PATH));
+                if (affinity != null) {
+                    final List<String> hostUUIDList = (JsonPath.using(configuration).parse(returnMessage)
+                            .read(HOST_UUID_PATH));
+                    final String hostUUIDString = join(hostUUIDList.toArray(), DELIMITER);
+                    results.put(HOST_UUIDS, hostUUIDString);
+                } else {
+                    results.put(HOST_UUIDS, EMPTY);
+                }
             } else {
                 return getFailureResults(hostname, statusCode, returnMessage, returnMessage);
             }

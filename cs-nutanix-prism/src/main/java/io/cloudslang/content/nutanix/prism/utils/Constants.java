@@ -87,6 +87,8 @@ public class Constants {
         public static final String VM_DISK_UUID_PATH = "$.vm_disk_info[*].disk_address.vmdisk_uuid";
         public static final String STORAGE_CONTAINER_UUID_PATH = "$.vm_disk_info[*].storage_container_uuid";
         public static final String VM_LOGICAL_TIMESTAMP_PATH = "$.vm_logical_timestamp";
+        public static final String AFFINITY_PATH = "$.affinity";
+        public static final String HOST_UUID_PATH = "$.affinity.host_uuids[*]";
         public static final String GET_VM_DETAILS_PATH = "/vms";
     }
     public static class DetachDisksConstants {

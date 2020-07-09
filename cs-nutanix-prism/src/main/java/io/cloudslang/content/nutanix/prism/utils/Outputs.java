@@ -31,6 +31,7 @@ public class Outputs extends OutputNames {
         public static final String VM_DISK_UUID = "vmDiskUUID";
         public static final String STORAGE_CONTAINER_UUID = "storageContainerUUID";
         public static final String VM_LOGICAL_TIMESTAMP = "vmLogicalTimestamp";
+        public static final String HOST_UUIDS = "hostUUIDs";
     }
 
     public static class ListVMOutputs {

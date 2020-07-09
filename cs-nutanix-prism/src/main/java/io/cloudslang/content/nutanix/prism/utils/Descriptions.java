@@ -93,6 +93,8 @@ public class Descriptions {
         public static final String STORAGE_CONTAINER_UUID_DESC = "The UUID of the storage container of the virtual " +
                 "machine.";
         public static final String VM_LOGICAL_TIMESTAMP_DESC = "The virtual logical timestamp of the virtual machine.";
+        public static final String HOST_UUIDS_DESC = "The host UUID on which to power on the VM. This parameter is " +
+                "only honored for kPowerOn, or kPowerCycle when change host is also requested explicitly.";
     }
 
     public static class ListVMsInputs {

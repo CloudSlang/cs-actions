@@ -136,9 +136,9 @@ public class AttachDisks {
         try {
             final Map<String, String> result = AttachDisk(NutanixAttachDisksInputs.builder()
                     .vmUUID(vmUUID)
+                    .isCDROMList(isCDROMList)
                     .deviceBusList(deviceBusList)
                     .deviceIndexList(deviceIndexList)
-                    .isCDROMList(isCDROMList)
                     .isEmptyDiskList(isEmptyDiskList)
                     .sourceVMDiskUUIDList(sourceVMDiskUUIDList)
                     .vmDiskMinimumSizeList(vmDiskMinimumSizeList)
