@@ -86,6 +86,7 @@ public class AttachVolume {
         isReadOnly = defaultIfEmpty(isReadOnly, EMPTY);
         isShareable = defaultIfEmpty(isShareable, EMPTY);
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
+        privateKeyData = defaultIfEmpty(privateKeyData, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
