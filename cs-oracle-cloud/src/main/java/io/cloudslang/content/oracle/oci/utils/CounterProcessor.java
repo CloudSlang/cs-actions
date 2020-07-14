@@ -24,8 +24,8 @@ import java.util.Map;
 
 public class CounterProcessor {
 
-    private static final String END_INDEX="endIndex";
-    private static final String INDEX="index";
+    private static final String END_INDEX = "endIndex";
+    private static final String INDEX = "index";
     private static final Long endIndex = -1L;
     private long end;
     private long start;
@@ -62,13 +62,13 @@ public class CounterProcessor {
         } catch (Exception e) {
             throw new CounterImplException("Start or end is not a long integer, or by is not an integer.\nfrom: " + from + "\nto: " + to + "\nby:" + by);
         }
-        try{
+        try {
             index = (Integer) sessionMap.get(INDEX);
         } catch (Exception e) {
             index = 0;
         }
 
-        if(index == 0 && initialized(session)) {
+        if (index == 0 && initialized(session)) {
             sessionMap.put(INDEX, 0);
 
         }
@@ -109,7 +109,7 @@ public class CounterProcessor {
     }
 
     public void setStepSessionEnd(GlobalSessionObject<Map<String, Object>> session) {
-        session.get().put(END_INDEX,endIndex);
+        session.get().put(END_INDEX, endIndex);
     }
 
 

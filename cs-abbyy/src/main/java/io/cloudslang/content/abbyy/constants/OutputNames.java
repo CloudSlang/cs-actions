@@ -22,6 +22,10 @@ public final class OutputNames {
     public static final String CREDITS = "credits";
     public static final String STATUS_CODE = "statusCode";
     public static final String TIMED_OUT = "timedOut";
+    public static final String RETURN_RESULT = io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+    public static final String RETURN_CODE = io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+    public static final String EXCEPTION = io.cloudslang.content.constants.OutputNames.EXCEPTION;
+
 
     private OutputNames() {
 

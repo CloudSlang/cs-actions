@@ -57,7 +57,7 @@ public class Inputs extends InputNames {
         public static final String IS_SCSI_PASS_THROUGH = "isSCSIPassThrough";
         public static final String IS_THIN_PROVISIONED = "isThinProvisioned";
         public static final String IS_CDROM = "isCDROM";
-        public static final String IS_EMPTY = "isEmpty";
+        public static final String IS_EMPTY_DISK = "isEmptyDisk";
         public static final String DEVICE_BUS = "deviceBus";
         public static final String DISK_LABEL = "diskLabel";
         public static final String DEVICE_INDEX = "deviceIndex";
@@ -75,6 +75,17 @@ public class Inputs extends InputNames {
         public static final String AGENT_VM = "agentVM";
     }
 
+    public static class DeleteVMInputs {
+        public static final String DELETE_SNAPSHOTS = "deleteSnapshots";
+        public static final String LOGICAL_TIMESTAMP = "logicalTimestamp";
+    }
+
+    public static class SetVMPowerStateInputs {
+        public static final String HOST_UUID = "hostUUID";
+        public static final String POWER_STATE = "powerState";
+        public static final String VM_LOGICAL_TIMESTAMP = "vmLogicalTimestamp";
+    }
+
     public static class GetTaskDetailsInputs {
         public static final String TASK_UUID = "taskUUID";
         public static final String INCLUDE_SUBTASKS_INFO = "includeSubtasksInfo";
@@ -86,8 +97,33 @@ public class Inputs extends InputNames {
         public static final String DEVICE_INDEX_LIST = "deviceIndexList";
 
     }
+
+    public static class AttachDisksInputs {
+        public static final String DEVICE_BUS_LIST = "deviceBusList";
+        public static final String DEVICE_INDEX_LIST = "deviceIndexList";
+        public static final String IS_CDROM_LIST = "isCDROMList";
+        public static final String IS_EMPTY_DISK_LIST = "isEmptyDiskList";
+        public static final String SOURCE_VM_DISK_UUID_LIST = "sourceVMDiskUUIDList";
+        public static final String VM_DISK_MINIMUM_SIZE_LIST = "vmDiskMinimumSizeList";
+        public static final String NDFS_FILE_PATH_LIST = "ndfsFilepathList";
+        public static final String VM_DISK_SIZE_LIST = "deviceDiskSizeList";
+        public static final String STORAGE_CONTAINER_UUID_LIST = "storageContainerUUIDList";
+        public static final String IS_SCSI_PASS_THROUGH_LIST = "isSCSIPassThroughList";
+        public static final String IS_THIN_PROVISIONED_LIST = "isThinProvisionedList";
+        public static final String IS_FLASH_MODE_ENABLED_LIST = "isFlashModeEnabledList";
+
+    }
+
     public static class DeleteNICInputs {
         public static final String VM_LOGICAL_TIMESTAMP = "vmLogicalTimestamp";
         public static final String NIC_MAC_ADDRESS = "nicMacAddress";
+    }
+    public static class AddNicInput{
+        public static final String NETWORK_UUID = "networkUUID";
+        public static final String REQUESTED_IP_ADDRESS = "requestedIPAddress";
+        public static final String IS_CONNECTED = "isConnected";
+        public static final String VLAN_ID = "vlanId";
+
+
     }
 }

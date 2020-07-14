@@ -27,6 +27,7 @@ import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixGetVMDetailsInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.nutanix.prism.service.VMImpl.getVMDetails;
+import static io.cloudslang.content.nutanix.prism.services.VMImpl.getVMDetails;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetVMDetailsConstants.*;
 import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
@@ -67,10 +68,12 @@ public class GetVMDetails {
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = VM_NAME, description = VM_NAME_DESC),
                     @Output(value = IP_ADDRESS, description = IP_ADDRESS_DESC),
+                    @Output(value = MAC_ADDRESS, description = MAC_ADDRESS_DESC),
                     @Output(value = POWER_STATE, description = POWER_STATE_DESC),
                     @Output(value = VM_DISK_UUID, description = VM_DISK_UUID_DESC),
                     @Output(value = STORAGE_CONTAINER_UUID, description = STORAGE_CONTAINER_UUID_DESC),
-                    @Output(value = VM_LOGICAL_TIMESTAMP, description = VM_LOGICAL_TIMESTAMP_DESC)
+                    @Output(value = VM_LOGICAL_TIMESTAMP, description = VM_LOGICAL_TIMESTAMP_DESC),
+                    @Output(value = HOST_UUIDS, description = HOST_UUIDS_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL,
@@ -163,10 +166,14 @@ public class GetVMDetails {
                 } else {
                     results.put(IP_ADDRESS, EMPTY);
                 }
+                final List<String> MACAddressList = (JsonPath.using(configuration).parse(returnMessage).read(MAC_ADDRESS_PATH));
                 final String powerState = JsonPath.read(returnMessage, POWER_STATE_PATH);
                 final List<String> vmDiskUUID = JsonPath.read(returnMessage, VM_DISK_UUID_PATH);
                 final List<String> storageContainerUUID = JsonPath.read(returnMessage, STORAGE_CONTAINER_UUID_PATH);
                 final String vmLogicalTimestamp = JsonPath.read(returnMessage, VM_LOGICAL_TIMESTAMP_PATH).toString();
+
+                final String MACAddressString = join(MACAddressList.toArray(), DELIMITER);
+                results.put(MAC_ADDRESS, MACAddressString);
 
                 results.put(VM_NAME, vmName);
                 results.put(POWER_STATE, powerState);
@@ -177,8 +184,19 @@ public class GetVMDetails {
                 final String storageContainerUUIDString = join(storageContainerUUID.toArray(), DELIMITER);
                 results.put(STORAGE_CONTAINER_UUID, storageContainerUUIDString);
                 results.put(VM_LOGICAL_TIMESTAMP, vmLogicalTimestamp);
+
+                final LinkedHashMap<String, String> affinity = (JsonPath.using(configuration).parse(returnMessage)
+                        .read(AFFINITY_PATH));
+                if (affinity != null) {
+                    final List<String> hostUUIDList = (JsonPath.using(configuration).parse(returnMessage)
+                            .read(HOST_UUID_PATH));
+                    final String hostUUIDString = join(hostUUIDList.toArray(), DELIMITER);
+                    results.put(HOST_UUIDS, hostUUIDString);
+                } else {
+                    results.put(HOST_UUIDS, EMPTY);
+                }
             } else {
-                return getFailureResults(hostname, statusCode, returnMessage);
+                return getFailureResults(hostname, statusCode, returnMessage, returnMessage);
             }
             return results;
         } catch (Exception exception) {

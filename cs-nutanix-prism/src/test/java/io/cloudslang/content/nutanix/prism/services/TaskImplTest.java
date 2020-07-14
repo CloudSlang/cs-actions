@@ -22,20 +22,20 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static io.cloudslang.content.nutanix.prism.service.TaskImpl.getTaskDetailsURL;
+import static io.cloudslang.content.nutanix.prism.services.TaskImpl.getTaskDetailsURL;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(TaskImplTest.class)
 public class TaskImplTest {
-    private static final String EXPECTED_GET_TASK_DETAILS_PATH = "https://myhost:9080/api/nutanix/v2.0/tasks/1234";
+    private static final String EXPECTED_GET_TASK_DETAILS_PATH = "https://myhost:9440/api/nutanix/v2.0/tasks/1234";
 
     private final NutanixGetTaskDetailsInputs nutanixGetTaskDetailsInputs = NutanixGetTaskDetailsInputs.builder()
             .taskUUID("1234")
             .includeSubtasksInfo("")
             .commonInputs(NutanixCommonInputs.builder()
                     .hostname("myhost")
-                    .port("9080")
+                    .port("9440")
                     .username("username")
                     .password("password")
                     .apiVersion("v2.0")

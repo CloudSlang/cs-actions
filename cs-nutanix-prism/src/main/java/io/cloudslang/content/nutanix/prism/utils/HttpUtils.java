@@ -29,11 +29,13 @@ import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.DeleteNICConstants.VM_LOGICAL_TIMESTAMP_QUERY_PARAM;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.FAILED;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetTaskDetailsConstants.TASK_FAILURE_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.DOCUMENT;
+import static io.cloudslang.content.nutanix.prism.utils.Outputs.GetTaskDetailsOutputs.TASK_STATUS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
@@ -135,7 +137,15 @@ public class HttpUtils {
     public static void setTLSParameters(HttpClientInputs httpClientInputs) {
         httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12);
         httpClientInputs.setAllowedCyphers(ALLOWED_CYPHERS);
+    }
 
+    @NotNull
+    public static URIBuilder getUriBuilder(NutanixCommonInputs nutanixCommonInputs) {
+        final URIBuilder uriBuilder = new URIBuilder();
+        uriBuilder.setHost(nutanixCommonInputs.getHostname());
+        uriBuilder.setPort(Integer.parseInt(nutanixCommonInputs.getPort()));
+        uriBuilder.setScheme(HTTPS);
+        return uriBuilder;
     }
 
     @NotNull
@@ -144,7 +154,7 @@ public class HttpUtils {
         final StringBuilder queryParams = new StringBuilder()
                 .append(Constants.GetVMDetailsConstants.INCLUDE_VM_DISK_CONFIG_INFO)
                 .append(includeVMDiskConfigInfo)
-                .append(Constants.Common.AND)
+                .append(AND)
                 .append(Constants.GetVMDetailsConstants.INCLUDE_VM_NIC_CONFIG_INFO)
                 .append(includeVMNicConfigInfo);
         return queryParams.toString();
@@ -159,7 +169,7 @@ public class HttpUtils {
         return queryParams.toString();
     }
 
-  
+
     @NotNull
     public static String getTaskDetailsQueryParams(@NotNull String includeSubtasksInfo) {
 
@@ -170,12 +180,15 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static URIBuilder getUriBuilder(NutanixCommonInputs nutanixCommonInputs) {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setHost(nutanixCommonInputs.getHostname());
-        uriBuilder.setPort(Integer.parseInt(nutanixCommonInputs.getPort()));
-        uriBuilder.setScheme(HTTPS);
-        return uriBuilder;
+    public static String getDeleteVMQueryParams(@NotNull String deleteSnapshots,
+                                                @NotNull String logicalTimestamp) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(Constants.DeleteVMConstants.DELETE_SNAPSHOTS)
+                .append(deleteSnapshots)
+                .append(Constants.Common.AND)
+                .append(Constants.DeleteVMConstants.LOGICAL_TIMESTAMP)
+                .append(logicalTimestamp);
+        return queryParams.toString();
     }
 
     @NotNull
@@ -203,42 +216,58 @@ public class HttpUtils {
                 .append(Constants.Common.AND)
                 .append(Constants.GetVMDetailsConstants.INCLUDE_VM_NIC_CONFIG_INFO)
                 .append(includeVMNicConfigInfo);
+        if (length.equals(ZERO)) {
+            queryParams.delete(17, 26);
+        }
         return queryParams.toString();
 
     }
 
-    @NotNull
-    public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode,
-                                                        @NotNull String throwable) {
-        Map<String, String> results = new HashMap();
-        results.put("returnCode", "-1");
-        results.put("statusCode", statusCode.toString());
-        if (statusCode.equals(404)) {
-            results.put("returnResult", inputName + " not found, or user unauthorized to perform action");
-            results.put("exception ", "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
-        } else {
-            results.put("returnResult", throwable);
-            results.put("exception", throwable);
-        }
-        return results;
-    }
 
     @NotNull
-    public static Map<String, String> getTaskFailureResults(@NotNull Integer statusCode,
+    public static Map<String, String> getTaskFailureResults(@NotNull String inputName, @NotNull Integer statusCode,
                                                             @NotNull String taskStatus, @NotNull String returnMessage,
                                                             @NotNull String throwable) {
         Map<String, String> results = new HashMap();
-        results.put("returnCode", "-1");
-        results.put("statusCode", statusCode.toString());
-        if (statusCode.equals(200) && taskStatus.equals(FAILED)) {
+        results.put(RETURN_CODE, "-1");
+        results.put(STATUS_CODE, statusCode.toString());
+        if (statusCode.equals(401)) {
+            results.put(RETURN_RESULT, inputName + " not found, or user unauthorized to perform action");
+            results.put(EXCEPTION, "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
+        } else if (statusCode.equals(200) || statusCode.equals(201) && taskStatus.equals(FAILED)) {
             final String errorDetail = JsonPath.read(returnMessage, TASK_FAILURE_PATH);
-            results.put("returnResult ", " task failed due to " + errorDetail);
-            results.put("exception ", " status : " + statusCode + ", Title : task failed due to " + errorDetail);
+            results.put(RETURN_RESULT, errorDetail);
+            results.put(TASK_STATUS, taskStatus);
+            results.put(EXCEPTION, " status : " + statusCode + ", Title :  " + errorDetail);
+        } else if (statusCode.equals(500)) {
+            final String errorDetail = JsonPath.read(returnMessage, ERROR_MESSAGE_PATH);
+            results.put(RETURN_RESULT, "  error Message : " + errorDetail);
+            results.put(EXCEPTION, " statusCode : " + statusCode + ", Title : message " + errorDetail);
         } else {
-            results.put("returnResult", throwable);
-            results.put("exception", throwable);
+            results.put(RETURN_RESULT, throwable);
+            results.put(EXCEPTION, throwable);
         }
         return results;
     }
 
+    @NotNull
+    public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode,
+                                                        @NotNull String returnMessage,
+                                                        @NotNull String throwable) {
+        Map<String, String> results = new HashMap();
+        results.put(RETURN_CODE, "-1");
+        results.put(STATUS_CODE, statusCode.toString());
+        if (statusCode.equals(401)) {
+            results.put(RETURN_RESULT, inputName + " not found, or user unauthorized to perform action");
+            results.put(EXCEPTION, "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
+        } else if (statusCode.equals(500)) {
+            final String errorDetail = JsonPath.read(returnMessage, ERROR_MESSAGE_PATH);
+            results.put(RETURN_RESULT, "  error Message : " + errorDetail);
+            results.put(EXCEPTION, " statusCode : " + statusCode + ", Title : message " + errorDetail);
+        } else {
+            results.put(RETURN_RESULT, throwable);
+            results.put(EXCEPTION, throwable);
+        }
+        return results;
+    }
 }

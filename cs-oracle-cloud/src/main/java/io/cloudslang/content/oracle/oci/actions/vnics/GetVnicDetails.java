@@ -44,15 +44,12 @@ import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.GetVnicDetailsConstants.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Descriptions.GetVnicDetails.*;
-import static io.cloudslang.content.oracle.oci.utils.Descriptions.ListInstances.COMPARTMENT_OCID_DESC;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.VNIC_ID;
 import static io.cloudslang.content.oracle.oci.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.oracle.oci.utils.Inputs.ListInstancesInputs.COMPARTMENT_OCID;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.GetVnicDetailsOutputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -80,8 +77,8 @@ public class GetVnicDetails {
     public Map<String, String> execute(@Param(value = TENANCY_OCID, required = true, description = TENANCY_OCID_DESC) String tenancyOcid,
                                        @Param(value = USER_OCID, required = true, description = USER_OCID_DESC) String userOcid,
                                        @Param(value = FINGER_PRINT, encrypted = true, required = true, description = FINGER_PRINT_DESC) String fingerPrint,
-                                       @Param(value = PRIVATE_KEY_DATA, encrypted = true, required = true, description = PRIVATE_KEY_DATA_DESC) String privateKeyData,
-                                       @Param(value = COMPARTMENT_OCID, required = true, description = COMPARTMENT_OCID_DESC) String compartmentOcid,
+                                       @Param(value = PRIVATE_KEY_DATA, encrypted = true, description = PRIVATE_KEY_DATA_DESC) String privateKeyData,
+                                       @Param(value = PRIVATE_KEY_FILE, description = PRIVATE_KEY_FILE_DESC) String privateKeyFile,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
                                        @Param(value = VNIC_ID, required = true, description = VNIC_ID_DESC) String vnicId,
@@ -89,36 +86,23 @@ public class GetVnicDetails {
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
-                                       @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
-                                       @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,
-                                       @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
-                                       @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
-                                       @Param(value = KEYSTORE, description = KEYSTORE_DESC) String keystore,
-                                       @Param(value = KEYSTORE_PASSWORD, encrypted = true, description = KEYSTORE_PASSWORD_DESC) String keystorePassword,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
-                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
+                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
-        trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
-        x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
-        trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
-        trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
-        keystore = defaultIfEmpty(keystore, DEFAULT_JAVA_KEYSTORE);
-        keystorePassword = defaultIfEmpty(keystorePassword, CHANGEIT);
         connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
-        responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
-        final List<String> exceptionMessage = InputsValidation.verifyCommonInputs(proxyPort, trustAllRoots,
+
+        final List<String> exceptionMessage = InputsValidation.verifyCommonInputs(privateKeyData, privateKeyFile, proxyPort,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
@@ -128,10 +112,10 @@ public class GetVnicDetails {
             final Map<String, String> result =
                     VnicImpl.getVnicDetails(OCICommonInputs.builder()
                             .tenancyOcid(tenancyOcid)
-                            .compartmentOcid(compartmentOcid)
                             .userOcid(userOcid)
                             .fingerPrint(fingerPrint)
                             .privateKeyData(privateKeyData)
+                            .privateKeyFile(privateKeyFile)
                             .apiVersion(apiVersion)
                             .region(region)
                             .vnicId(vnicId)
@@ -139,18 +123,11 @@ public class GetVnicDetails {
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
                             .proxyPassword(proxyPassword)
-                            .trustAllRoots(trustAllRoots)
-                            .x509HostnameVerifier(x509HostnameVerifier)
-                            .trustKeystore(trustKeystore)
-                            .trustPassword(trustPassword)
-                            .keystore(keystore)
-                            .keystorePassword(keystorePassword)
                             .connectTimeout(connectTimeout)
                             .socketTimeout(socketTimeout)
                             .keepAlive(keepAlive)
                             .connectionsMaxPerRoot(connectionsMaxPerRoute)
                             .connectionsMaxTotal(connectionsMaxTotal)
-                            .responseCharacterSet(responseCharacterSet)
                             .build());
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = HttpUtils.getOperationResults(result, returnMessage, returnMessage, returnMessage);
@@ -170,7 +147,7 @@ public class GetVnicDetails {
                 results.put(VNIC_STATE, JsonPath.read(returnMessage, VNIC_STATE_JSON_PATH));
                 results.put(MAC_ADDRESS, JsonPath.read(returnMessage, MAC_ADDRESS_JSON_PATH));
             } else {
-                return HttpUtils.getFailureResults(compartmentOcid, statusCode, returnMessage);
+                return HttpUtils.getFailureResults(vnicId, statusCode, returnMessage);
             }
             return results;
         } catch (Exception exception) {

@@ -26,6 +26,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
@@ -38,8 +40,14 @@ import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 
 public class SignerImpl {
 
-    public static PrivateKey loadPrivateKey(String privateKey) {
-        try (InputStream privateKeyStream = new ByteArrayInputStream(privateKey.getBytes())) {
+    public static PrivateKey loadPrivateKey(String privateKeyData, String privateKeyFile) {
+        try {
+            InputStream privateKeyStream;
+            if (!(privateKeyData).isEmpty()) {
+                privateKeyStream = new ByteArrayInputStream(privateKeyData.getBytes());
+            } else {
+                privateKeyStream = Files.newInputStream(Paths.get(privateKeyFile));
+            }
             return PEM.readPrivateKey(privateKeyStream);
         } catch (InvalidKeySpecException e) {
             throw new RuntimeException("Invalid format for private key");
@@ -93,16 +101,16 @@ public class SignerImpl {
             if (method.equals(PUT) || method.equals(POST)) {
                 headers.put(CONTENT_TYPE, APPLICATION_JSON);
                 myheaders.put(CONTENT_TYPE + COLON, APPLICATION_JSON);
+                byte[] body = requestBody.getBytes();
 
-                if (!isEmpty(requestBody)) {
-                    byte[] body = requestBody.getBytes();
-
-                    headers.put(CONTENT_LENGTH, Integer.toString(body.length));
+                headers.put(CONTENT_LENGTH, Integer.toString(body.length));
 //                    myheaders.put(CONTENT_LENGTH + COLON, Integer.toString(body.length));
 
-                    headers.put(X_CONTENT_SHA256, calculateSHA256(body));
-                    myheaders.put(X_CONTENT_SHA256 + COLON, calculateSHA256(body));
+                headers.put(X_CONTENT_SHA256, calculateSHA256(body));
+                myheaders.put(X_CONTENT_SHA256 + COLON, calculateSHA256(body));
 
+                if (isEmpty(requestBody)) {
+                    myheaders.put(CONTENT_LENGTH + COLON, Integer.toString(body.length));
                 }
             }
             String path;

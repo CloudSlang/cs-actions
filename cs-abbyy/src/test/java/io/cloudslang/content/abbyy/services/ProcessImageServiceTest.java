@@ -12,307 +12,254 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.cloudslang.content.abbyy.services;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
-import io.cloudslang.content.abbyy.constants.MiscConstants;
-import io.cloudslang.content.abbyy.constants.OutputNames;
-import io.cloudslang.content.abbyy.entities.*;
+import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
+import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
+import io.cloudslang.content.abbyy.entities.inputs.ProcessImageInput;
+import io.cloudslang.content.abbyy.entities.others.*;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
+import io.cloudslang.content.abbyy.exceptions.TimeoutException;
+import io.cloudslang.content.abbyy.exceptions.ValidationException;
+import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.validators.AbbyyResultValidator;
-import io.cloudslang.content.constants.ReturnCodes;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @PrepareForTest({ProcessImageService.class})
-public class ProcessImageServiceTest extends AbstractPostRequestServiceTest<ProcessImageInput> {
+public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput> {
 
-    private static final LocationId LOCATION_ID = LocationId.EU;
-    private static final String APPLICATION_ID = "dummy";
-    private static final String PASSWORD = "dummy";
-    private static final List<String> LANGUAGES = Collections.singletonList("English");
-    private static final Profile PROFILE = Profile.TEXT_EXTRACTION;
-    private static final List<TextType> TEXT_TYPES = Collections.singletonList(TextType.NORMAL);
-    private static final ImageSource IMAGE_SOURCE = ImageSource.AUTO;
-    private static final boolean CORRECT_ORIENTATION = true;
-    private static final boolean CORRECT_SKEW = true;
-    private static final boolean READ_BARCODES = false;
-    private static final List<ExportFormat> EXPORT_FORMATS = Arrays.asList(ExportFormat.PDF_SEARCHABLE, ExportFormat.XML, ExportFormat.TXT);
-    private static final boolean WRITE_FORMATTING = false;
-    private static final boolean WRITE_RECOGNITION_VARIANTS = false;
-    private static final WriteTags WRITE_TAGS = WriteTags.AUTO;
-    private static final String DESCRIPTION = "dummy";
-    private static final String PDF_PASSWORD = "dummy";
 
     @Mock
-    private AbbyyResultValidator resultValidatorMock;
-
-    @Override
-    protected AbstractPostRequestService<ProcessImageInput> newSutInstance() throws ParserConfigurationException, SAXException {
-        return new ProcessImageService(this.responseParserMock, this.httpClientMock, this.requestValidator, this.resultValidatorMock);
-    }
-
-
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        mockRequest();
-    }
-
-
-    @Override
-    public void execute_validInput_correspondingUrlCalled() throws Exception {
-        final String expectedUrl = "https://cloud-eu.ocrsdk.com/processImage?language=English&profile=textExtraction&textType=" +
-                "normal&imageSource=auto&correctOrientation=true&correctSkew=true&readBarcodes=false&" +
-                "exportFormat=pdfSearchable%2Cxml%2Ctxt&description=dummy&pdfPassword=dummy&xml%3AwriteFormatting=false&" +
-                "xml%3AwriteRecognitionVariants=false&pdf%3AwriteTags=auto";
-        mockRequest();
-        when(this.httpClientMock.execute(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(null);
-
-        try {
-            this.sut.execute(this.requestMock);
-            fail();
-        } catch (Exception ex) {
-            verify(this.httpClientMock).execute(eq(expectedUrl), anyString(), anyString(), anyString(), anyString(), anyString(),
-                    anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                    anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                    anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                    anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                    anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                    any(SerializableSessionObject.class), any(GlobalSessionObject.class));
-        }
-    }
+    private AbbyyResultValidator xmlResultValidatorMock;
+    @Mock
+    private AbbyyResultValidator txtResultValidatorMock;
+    @Mock
+    private AbbyyResultValidator pdfResultValidatorMock;
 
 
     @Test
-    public void execute_txtResultCouldNotBeRetrieved_AbbyySdkException() throws Exception {
+    public void handleTaskCompleted_exportFormatsListDoesNotMatchResultUrls_exceptionThrown() throws Exception {
         //Arrange
-        final String taskId = "taskId";
-        final int credits = 1;
-        final long estimatedProcessingTime = 5L;
-        final List<String> resultUrls = Arrays.asList("url1", "url2", "url3");
-        final String statusCode = "123";
+        ProcessImageInput requestMock = mockAbbyyRequest();
+        when(requestMock.getExportFormats())
+                .thenReturn(Arrays.asList(ExportFormat.TXT, ExportFormat.XML, ExportFormat.PDF_SEARCHABLE));
 
-        when(this.requestMock.getExportFormats())
-                .thenReturn(Arrays.asList(ExportFormat.XML, ExportFormat.TXT, ExportFormat.PDF_SEARCHABLE));
+        AbbyyResponse responseMock = mockAbbyyResponse();
+        when(responseMock.getResultUrls()).thenReturn(Collections.singletonList("txt"));
 
-        Map<String, String> rawResponse = new HashMap<>();
-        rawResponse.put(MiscConstants.HTTP_STATUS_CODE_OUTPUT, statusCode);
-        when(this.httpClientMock.execute(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(rawResponse);
-
-        AbbyyResponse responseMock = mock(AbbyyResponse.class);
-        when(responseMock.getTaskStatus())
-                .thenReturn(AbbyyResponse.TaskStatus.QUEUED)
-                .thenReturn(AbbyyResponse.TaskStatus.COMPLETED);
-        when(responseMock.getTaskId()).thenReturn(taskId);
-        when(responseMock.getCredits()).thenReturn(credits);
-        when(responseMock.getEstimatedProcessingTime()).thenReturn(estimatedProcessingTime);
-        when(responseMock.getResultUrls()).thenReturn(resultUrls);
-        when(this.responseParserMock.parseResponse(anyMapOf(String.class, String.class))).thenReturn(responseMock);
-
-        //Assert
-        exception.expect(AbbyySdkException.class);
-
-        //Act
-        this.sut.execute(this.requestMock);
-    }
-
-
-    @Test
-    public void execute_txtResultRetrieved_Success() throws Exception {
-        //Arrange
-        final String taskId = "taskId";
-        final int credits = 1;
-        final long estimatedProcessingTime = 5L;
-        final List<String> resultUrls = Arrays.asList("url1", "url2", "url3");
-        final String statusCode = "200";
-        final String txtResult = "txtResult";
-
-        when(this.requestMock.getExportFormats())
-                .thenReturn(Arrays.asList(ExportFormat.XML, ExportFormat.TXT, ExportFormat.PDF_SEARCHABLE));
-
-        Map<String, String> rawResponse = new HashMap<>();
-        rawResponse.put(MiscConstants.HTTP_STATUS_CODE_OUTPUT, statusCode);
-        rawResponse.put(MiscConstants.HTTP_RETURN_RESULT_OUTPUT, txtResult);
-        when(this.httpClientMock.execute(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(rawResponse);
-
-        AbbyyResponse responseMock = mock(AbbyyResponse.class);
-        when(responseMock.getTaskStatus())
-                .thenReturn(AbbyyResponse.TaskStatus.QUEUED)
-                .thenReturn(AbbyyResponse.TaskStatus.COMPLETED);
-        when(responseMock.getTaskId()).thenReturn(taskId);
-        when(responseMock.getCredits()).thenReturn(credits);
-        when(responseMock.getEstimatedProcessingTime()).thenReturn(estimatedProcessingTime);
-        when(responseMock.getResultUrls()).thenReturn(resultUrls);
-        when(this.responseParserMock.parseResponse(anyMapOf(String.class, String.class))).thenReturn(responseMock);
-
-        //Act
-        Map<String, String> results = this.sut.execute(this.requestMock);
-
-        //Assert
-        assertEquals(taskId, results.get(OutputNames.TASK_ID));
-        assertEquals(String.valueOf(credits), results.get(OutputNames.CREDITS));
-        assertEquals(statusCode, results.get(OutputNames.STATUS_CODE));
-        assertTrue(results.get(OutputNames.PDF_URL).contains(resultUrls.get(2)));
-        assertEquals(txtResult, results.get(OutputNames.TXT_RESULT));
-        assertEquals(txtResult, results.get(OutputNames.XML_RESULT));
-        assertEquals(ReturnCodes.SUCCESS, results.get(io.cloudslang.content.constants.OutputNames.RETURN_CODE));
-        assertEquals(StringUtils.EMPTY, results.get(io.cloudslang.content.constants.OutputNames.EXCEPTION));
-    }
-
-
-    @Test
-    public void execute_resultXmlIsInvalid_AbbyySdkException() throws Exception {
-        //Arrange
-        final String taskId = "taskId";
-        final int credits = 1;
-        final long estimatedProcessingTime = 5L;
-        final List<String> resultUrls = Arrays.asList("url1", "url2", "url3");
-        final String statusCode = "200";
-        final String txtResult = "txtResult";
-
-        when(this.requestMock.getExportFormats()).thenReturn(Collections.singletonList(ExportFormat.XML));
-
-        Map<String, String> rawResponse = new HashMap<>();
-        rawResponse.put(MiscConstants.HTTP_STATUS_CODE_OUTPUT, statusCode);
-        rawResponse.put(MiscConstants.HTTP_RETURN_RESULT_OUTPUT, txtResult);
-        when(this.httpClientMock.execute(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(rawResponse);
-
-        AbbyyResponse responseMock = mock(AbbyyResponse.class);
-        when(responseMock.getTaskStatus())
-                .thenReturn(AbbyyResponse.TaskStatus.QUEUED)
-                .thenReturn(AbbyyResponse.TaskStatus.COMPLETED);
-        when(responseMock.getTaskId()).thenReturn(taskId);
-        when(responseMock.getCredits()).thenReturn(credits);
-        when(responseMock.getEstimatedProcessingTime()).thenReturn(estimatedProcessingTime);
-        when(responseMock.getResultUrls()).thenReturn(resultUrls);
-        when(this.responseParserMock.parseResponse(anyMapOf(String.class, String.class))).thenReturn(responseMock);
-
-        final AbbyySdkException expectedEx = new AbbyySdkException("msg");
-        when(this.resultValidatorMock.validate(anyString())).thenReturn(expectedEx);
+        Map<String, String> resultsDummy = new HashMap<>();
 
         try {
             //Act
-            this.sut.execute(this.requestMock);
+            this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy);
+
+            //Assert
             fail();
         } catch (AbbyySdkException ex) {
-            //Assert
-            assertTrue(ex.getMessage().contains(expectedEx.getMessage()));
+            assertTrue(ex.getMessage().contains(ExceptionMsgs.EXPORT_FORMAT_AND_RESULT_URLS_DO_NOT_MATCH));
+            assertTrue(ex.getMessage().contains(ExportFormat.TXT.toString()));
+            assertTrue(ex.getMessage().contains(ExportFormat.XML.toString()));
+            assertTrue(ex.getMessage().contains(ExportFormat.PDF_SEARCHABLE.toString()));
         }
     }
 
 
     @Test
-    public void execute_destinationFileIsNotNull_resultIsWrittenToCorrespondingFile() throws Exception {
+    public void handleTaskCompleted_validationBeforeDownloadFails_exceptionThrown() throws Exception {
         //Arrange
-        final String taskId = "taskId";
-        final int credits = 1;
-        final long estimatedProcessingTime = 5L;
-        final List<String> resultUrls = Arrays.asList("url1", "url2", "url3");
-        final String statusCode = "200";
-        final String txtResult = "txtResult";
-        final String sourceFileName = "sourceFile";
-        final String destinationFilePath = "destDir";
+        final String errMsg = "This is the error message";
 
-        when(this.requestMock.getExportFormats()).thenReturn(Collections.singletonList(ExportFormat.XML));
-        File destinationFileMock = mock(File.class);
-        when(destinationFileMock.getAbsolutePath()).thenReturn(destinationFilePath);
-        when(this.requestMock.getDestinationFile()).thenReturn(destinationFileMock);
-        File sourceFileMock = mock(File.class);
-        when(sourceFileMock.getName()).thenReturn(sourceFileName);
-        when(this.requestMock.getSourceFile()).thenReturn(sourceFileMock);
+        ProcessImageInput requestMock = mockAbbyyRequest();
+        when(requestMock.getExportFormats())
+                .thenReturn(Arrays.asList(ExportFormat.TXT, ExportFormat.XML, ExportFormat.PDF_SEARCHABLE));
 
-        Map<String, String> rawResponse = new HashMap<>();
-        rawResponse.put(MiscConstants.HTTP_STATUS_CODE_OUTPUT, statusCode);
-        rawResponse.put(MiscConstants.HTTP_RETURN_RESULT_OUTPUT, txtResult);
-        when(this.httpClientMock.execute(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(rawResponse);
+        AbbyyResponse responseMock = mockAbbyyResponse();
+        when(responseMock.getResultUrls()).thenReturn(Arrays.asList("txt", "xml", "pdf"));
 
-        AbbyyResponse responseMock = mock(AbbyyResponse.class);
-        when(responseMock.getTaskStatus())
-                .thenReturn(AbbyyResponse.TaskStatus.QUEUED)
-                .thenReturn(AbbyyResponse.TaskStatus.COMPLETED);
-        when(responseMock.getTaskId()).thenReturn(taskId);
-        when(responseMock.getCredits()).thenReturn(credits);
-        when(responseMock.getEstimatedProcessingTime()).thenReturn(estimatedProcessingTime);
-        when(responseMock.getResultUrls()).thenReturn(resultUrls);
-        when(this.responseParserMock.parseResponse(anyMapOf(String.class, String.class))).thenReturn(responseMock);
+        Map<String, String> resultsDummy = new HashMap<>();
 
-        FileWriter fileWriterMock = PowerMockito.mock(FileWriter.class);
-        PowerMockito.whenNew(FileWriter.class).withAnyArguments().thenReturn(fileWriterMock);
+        when(this.txtResultValidatorMock.validateBeforeDownload(eq(requestMock), anyString()))
+                .thenReturn(new ValidationException(errMsg));
+        when(this.xmlResultValidatorMock.validateBeforeDownload(eq(requestMock), anyString()))
+                .thenReturn(new ValidationException(errMsg));
+        when(this.pdfResultValidatorMock.validateBeforeDownload(eq(requestMock), anyString()))
+                .thenReturn(new ValidationException(errMsg));
 
-        //Act
-        this.sut.execute(this.requestMock);
+        try {
+            //Act
+            this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy);
 
-        //Assert
-        PowerMockito.verifyNew(FileWriter.class).withArguments(contains(destinationFilePath));
-        PowerMockito.verifyNew(FileWriter.class).withArguments(contains(sourceFileName));
-        verify(fileWriterMock).write(eq(txtResult));
+            //Assert
+            fail();
+        } catch (AbbyySdkException ex) {
+            assertTrue(ex.getMessage().contains(ValidationException.class.getSimpleName()));
+            assertTrue(ex.getMessage().contains(errMsg));
+            assertTrue(ex.getMessage().contains(ExportFormat.TXT.toString()));
+            assertTrue(ex.getMessage().contains(ExportFormat.XML.toString()));
+            assertTrue(ex.getMessage().contains(ExportFormat.PDF_SEARCHABLE.toString()));
+        }
     }
 
 
-    private void mockRequest() {
-        this.requestMock = mock(ProcessImageInput.class);
-        when(this.requestMock.getLocationId()).thenReturn(LOCATION_ID);
-        when(this.requestMock.getApplicationId()).thenReturn(APPLICATION_ID);
-        when(this.requestMock.getPassword()).thenReturn(PASSWORD);
-        when(this.requestMock.getLanguages()).thenReturn(LANGUAGES);
-        when(this.requestMock.getProfile()).thenReturn(PROFILE);
-        when(this.requestMock.getTextTypes()).thenReturn(TEXT_TYPES);
-        when(this.requestMock.getImageSource()).thenReturn(IMAGE_SOURCE);
-        when(this.requestMock.isCorrectOrientation()).thenReturn(CORRECT_ORIENTATION);
-        when(this.requestMock.isCorrectSkew()).thenReturn(CORRECT_SKEW);
-        when(this.requestMock.isReadBarcodes()).thenReturn(READ_BARCODES);
-        when(this.requestMock.getExportFormats()).thenReturn(EXPORT_FORMATS);
-        when(this.requestMock.isWriteFormatting()).thenReturn(WRITE_FORMATTING);
-        when(this.requestMock.isWriteRecognitionVariants()).thenReturn(WRITE_RECOGNITION_VARIANTS);
-        when(this.requestMock.getWriteTags()).thenReturn(WRITE_TAGS);
-        when(this.requestMock.getDescription()).thenReturn(DESCRIPTION);
-        when(this.requestMock.getPdfPassword()).thenReturn(PDF_PASSWORD);
-        when(this.requestMock.getSourceFile()).thenReturn(mock(File.class));
+    @Test
+    public void handleTaskCompleted_validationAfterDownloadFails_exceptionThrown() throws Exception {
+        //Arrange
+        final String errMsg = "This is the error message";
+
+        ProcessImageInput requestMock = mockAbbyyRequest();
+        when(requestMock.getExportFormats())
+                .thenReturn(Arrays.asList(ExportFormat.TXT, ExportFormat.XML, ExportFormat.PDF_SEARCHABLE));
+        Path destinationFileMock = mock(Path.class);
+        when(destinationFileMock.toAbsolutePath()).thenReturn(Paths.get(StringUtils.EMPTY));
+        when(requestMock.getDestinationFile()).thenReturn(destinationFileMock);
+
+        AbbyyResponse responseMock = mockAbbyyResponse();
+        when(responseMock.getResultUrls()).thenReturn(Arrays.asList("txt", "xml", "pdf"));
+
+        Map<String, String> resultsDummy = new HashMap<>();
+
+        PowerMockito.whenNew(FileWriter.class).withAnyArguments().thenReturn(mock(FileWriter.class));
+
+        when(this.txtResultValidatorMock.validateAfterDownload(any(AbbyyInput.class), anyString()))
+                .thenReturn(new ValidationException(errMsg));
+        when(this.xmlResultValidatorMock.validateAfterDownload(any(AbbyyInput.class), anyString()))
+                .thenReturn(new ValidationException(errMsg));
+        when(this.pdfResultValidatorMock.validateAfterDownload(any(AbbyyInput.class), anyString()))
+                .thenReturn(new ValidationException(errMsg));
+
+
+        try {
+            //Act
+            this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy);
+
+            //Assert
+            fail();
+        } catch (AbbyySdkException ex) {
+            assertTrue(ex.getMessage().contains(ValidationException.class.getSimpleName()));
+            assertTrue(ex.getMessage().contains(errMsg));
+            assertTrue(ex.getMessage().contains(ExportFormat.TXT.toString()));
+            assertTrue(ex.getMessage().contains(ExportFormat.XML.toString()));
+            assertTrue(ex.getMessage().contains(ExportFormat.PDF_SEARCHABLE.toString()));
+        }
+    }
+
+
+    @Test
+    public void handleTaskCompleted_abbyyApiCallFails_exceptionThrown() throws Exception {
+        //Arrange
+        final String errMsg = "This is the error message";
+
+        ProcessImageInput requestMock = mockAbbyyRequest();
+        when(requestMock.getExportFormats())
+                .thenReturn(Arrays.asList(ExportFormat.TXT, ExportFormat.XML, ExportFormat.PDF_SEARCHABLE));
+        Path destinationFileMock = mock(Path.class);
+        when(destinationFileMock.toAbsolutePath()).thenReturn(Paths.get(StringUtils.EMPTY));
+        when(requestMock.getDestinationFile()).thenReturn(destinationFileMock);
+
+        AbbyyResponse responseMock = mockAbbyyResponse();
+        when(responseMock.getResultUrls()).thenReturn(Arrays.asList("txt", "xml", "pdf"));
+
+        Map<String, String> resultsDummy = new HashMap<>();
+
+        PowerMockito.whenNew(FileWriter.class).withAnyArguments().thenReturn(mock(FileWriter.class));
+
+        when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), any(ExportFormat.class), anyString(), anyBoolean()))
+                .thenThrow(new TimeoutException(errMsg));
+
+        try {
+            //Act
+            this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy);
+
+            //Assert
+            fail();
+        } catch (AbbyySdkException ex) {
+            assertTrue(ex.getMessage().contains(TimeoutException.class.getSimpleName()));
+            assertTrue(ex.getMessage().contains(errMsg));
+            assertTrue(ex.getMessage().contains(ExportFormat.TXT.toString()));
+            assertTrue(ex.getMessage().contains(ExportFormat.XML.toString()));
+            assertTrue(ex.getMessage().contains(ExportFormat.PDF_SEARCHABLE.toString()));
+        }
+    }
+
+
+    @Test
+    public void handleTaskCompleted_abbyyApiCallSucceeds_noExceptionThrown() throws Exception {
+        //Arrange
+        final String result = "result";
+
+        ProcessImageInput requestMock = mockAbbyyRequest();
+        when(requestMock.getExportFormats())
+                .thenReturn(Arrays.asList(ExportFormat.TXT, ExportFormat.XML, ExportFormat.PDF_SEARCHABLE));
+
+        AbbyyResponse responseMock = mockAbbyyResponse();
+        when(responseMock.getResultUrls()).thenReturn(Arrays.asList("txt", "xml", "pdf"));
+
+        Map<String, String> resultsDummy = new HashMap<>();
+
+        when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), any(ExportFormat.class), anyString(), anyBoolean()))
+                .thenReturn(result);
+
+        //Act
+        this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy);
+    }
+
+
+    @Override
+    AbbyyService<ProcessImageInput> newSutInstance() {
+        return new ProcessImageService(requestValidatorMock, xmlResultValidatorMock, txtResultValidatorMock,
+                pdfResultValidatorMock, abbyyApiMock);
+    }
+
+
+    @Override
+    ProcessImageInput mockAbbyyRequest() {
+        ProcessImageInput requestMock = mock(ProcessImageInput.class);
+
+        when(requestMock.getLocationId()).thenReturn(LocationId.EU);
+        when(requestMock.getApplicationId()).thenReturn("dummy");
+        when(requestMock.getPassword()).thenReturn("dummy");
+        when(requestMock.getLanguages()).thenReturn(Collections.singletonList("English"));
+        Path sourceFileMock = Paths.get(StringUtils.EMPTY);
+        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
+        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(true);
+        when(requestMock.getSourceFile()).thenReturn(sourceFileMock);
+        when(requestMock.getDestinationFile()).thenReturn(null);
+        when(requestMock.getProfile()).thenReturn(Profile.TEXT_EXTRACTION);
+        when(requestMock.getTextTypes()).thenReturn(Collections.singletonList(TextType.NORMAL));
+        when(requestMock.getImageSource()).thenReturn(ImageSource.AUTO);
+        when(requestMock.isCorrectOrientation()).thenReturn(true);
+        when(requestMock.isCorrectSkew()).thenReturn(true);
+        when(requestMock.getExportFormats()).thenReturn(Collections.singletonList(ExportFormat.PDF_SEARCHABLE));
+        when(requestMock.getWriteTags()).thenReturn(WriteTags.AUTO);
+        when(requestMock.getDescription()).thenReturn("dummy");
+        when(requestMock.getPdfPassword()).thenReturn("dummy");
+
+        when(requestMock.getProxyPort()).thenReturn((short) 8080);
+        when(requestMock.getConnectTimeout()).thenReturn(0);
+        when(requestMock.getSocketTimeout()).thenReturn(0);
+        when(requestMock.getConnectionsMaxPerRoute()).thenReturn(20);
+        when(requestMock.getConnectionsMaxTotal()).thenReturn(0);
+
+        return requestMock;
     }
 }

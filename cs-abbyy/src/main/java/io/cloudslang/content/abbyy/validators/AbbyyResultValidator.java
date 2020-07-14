@@ -15,10 +15,12 @@
 
 package io.cloudslang.content.abbyy.validators;
 
-import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
-
-import java.io.IOException;
+import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
+import io.cloudslang.content.abbyy.exceptions.ValidationException;
+import org.jetbrains.annotations.NotNull;
 
 public interface AbbyyResultValidator {
-    AbbyySdkException validate(String result) throws IOException;
+    ValidationException validateBeforeDownload(@NotNull AbbyyInput abbyyInput, @NotNull String downloadUrl) throws Exception;
+
+    ValidationException validateAfterDownload(@NotNull AbbyyInput abbyyInput, @NotNull String result) throws Exception;
 }

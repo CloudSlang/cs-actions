@@ -25,6 +25,7 @@ public class Constants {
         public static final String STRICT = "strict";
         public static final String EMPTY = "";
         public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
+        public static final String EXCEPTION_NULL_EMPTY_PRIVATE_KEY = "PrivateKeyData and PrivateKeyFile can't be null or empty.";
         public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid proxy details.";
         public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
         public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
@@ -45,7 +46,8 @@ public class Constants {
         public static final String IAAS = "iaas";
         public static final String OCI_HOST = "oraclecloud.com";
         public static final String LIST_INSTANCES = "/instances/";
-        public static final String LIST_VNIC_ATTACHMENTS = "/vnicAttachments/";
+        public static final String VNIC_ATTACHMENTS = "/vnicAttachments/";
+        public static final String VOLUME_ATTACHMENTS = "/volumeAttachments";
         public static final String GET_VNIC = "/vnics/";
         public static final String COMPARTMENT_ID_QUERY_PARAM = "compartmentId=";
         public static final String INSTANCE_ID_QUERY_PARAM = "instanceId=";
@@ -81,7 +83,6 @@ public class Constants {
 
     }
 
-
     public static class ListInstancesConstants {
         public static final String LIST_INSTANCES_OPERATION_NAME = "List Instances";
         public static final String INSTANCES_LIST_JSON_PATH = "$.[*].displayName";
@@ -95,9 +96,54 @@ public class Constants {
         public static final String INSTANCE_STATE_JSON_PATH = "$.lifecycleState";
     }
 
+    public static class TerminateInstanceConstants {
+        public static final String TERMINATE_INSTANCE_OPERATION_NAME = "Terminate Instance";
+        public static final String PRESERVE_BOOT_VOLUME = "preserveBootVolume";
+        public static final String PRESERVE_BOOT_VOLUME_QUERY_PARAM = "preserveBootVolume=";
+    }
+
+    public static class InstanceActionConstants {
+        public static final String INSTANCE_ACTION_OPERATION_NAME = "Instance Action";
+        public static final String ACTION_NAME = "actionName";
+        public static final String ACTION_NAME_QUERY_PARAM = "action=";
+    }
+
+    public static class DetachVnicDetailsConstants {
+        public static final String DETACH_VNIC_OPERATION_NAME = "Detach Vnic";
+    }
+
+    public static class AttachVolumeConstants {
+        public static final String ATTACH_VOLUME_OPERATION_NAME = "Attach Volume";
+        public static final String VOLUME_ATTACHMENT_ID_JSON_PATH = "$.id";
+        public static final String LIFECYCLE_STATE_JSON_PATH = "$.lifecycleState";
+    }
+
+    public static class GetVolumeAttachmentDetailsConstants {
+        public static final String GET_VOLUME_ATTACHMENT_DETAILS_OPERATION_NAME = "Get Volume Attachment Details";
+        public static final String VOLUME_ATTACHMENT_LIFECYCLE_STATE_JSON_PATH = "$.lifecycleState";
+    }
+
+    public static class AttachVnicDetailsConstants {
+        public static final String ATTACH_VNIC_OPERATION_NAME = "Attach Vnic";
+        public static final String NIC_INDEX = "nicIndex";
+        public static final String VNIC_ATTACHMENT_DISPLAY_NAME = "vnicAttachmentDisplayName";
+        public static final String VNIC_ATTACHMENT__ID_JSON_PATH = "$.id";
+        public static final String VNIC_ATTACHMENT_LIFE_CYCLE_STATE_JSON_PATH = "$.lifecycleState";
+    }
+
+    public static class GetVnicAttachmentDetailsConstants {
+        public static final String GET_VNIC_ATTACHMENT_DETAILS_OPERATION_NAME = "Get Vnic Attachment Details";
+        public static final String VNIC_ID_JSON_PATH = "$.vnicId";
+    }
+
+    public static class DetachVolumeDetailsConstants {
+        public static final String DETACH_VOLUME_OPERATION_NAME = "Detach Volume";
+    }
+
     public static class ListVnicAttachmentsConstants {
         public static final String LIST_VNIC_ATTACHMENTS_OPERATION_NAME = "List Vnics";
         public static final String LIST_VNIC_JSON_PATH = "$.[*].vnicId";
+        public static final String LIST_VNIC_ATTACHMENTS_JSON_PATH = "$.[*].id";
     }
 
     public static class GetVnicDetailsConstants {
@@ -118,6 +164,10 @@ public class Constants {
         public static final String INSTANCE_PASSWORD_JSON_PATH = "$.password";
     }
 
+    public static class UpdateInstanceConstants {
+        public static final String UPDATE_INSTANCE_OPERATION_NAME = "Update Instance";
+    }
+
     public static class CreateInstanceConstants {
         public static final String CREATE_INSTANCE_OPERATION_NAME = "Create Instance";
         public static final String IS_MANAGEMENT_DISABLED = "isManagementDisabled";
@@ -135,7 +185,6 @@ public class Constants {
         public static final String DEDICATED_VM_HOST_ID = "dedicatedVmHostId";
         public static final String VNIC_DEFINED_TAGS = "vnicDefinedTags";
         public static final String VNIC_FREEFORM_TAGS = "vnicFreeformTags";
-        ;
         public static final String VNIC_DISPLAY_NAME = "vnicDisplayName";
         public static final String EXTENDED_METADATA = "extendedMetadata";
         public static final String FAULT_DOMAIN = "faultDomain";

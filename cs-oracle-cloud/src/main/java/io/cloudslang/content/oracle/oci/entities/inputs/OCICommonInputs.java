@@ -25,57 +25,47 @@ public class OCICommonInputs {
     private final String userOcid;
     private final String fingerPrint;
     private final String privateKeyData;
+    private final String privateKeyFile;
     private final String apiVersion;
     private final String region;
     private final String proxyHost;
     private final String proxyPort;
     private final String proxyUsername;
     private final String proxyPassword;
-    private final String trustAllRoots;
-    private final String x509HostnameVerifier;
-    private final String trustKeystore;
-    private final String trustPassword;
-    private final String keystore;
-    private final String keystorePassword;
     private final String connectTimeout;
     private final String socketTimeout;
     private final String keepAlive;
     private final String connectionsMaxPerRoot;
     private final String connectionsMaxTotal;
-    private final String responseCharacterSet;
     private final String instanceId;
     private final String vnicId;
+    private final String volumeId;
     private final String availabilityDomain;
     private final String page;
     private final String limit;
 
-    @java.beans.ConstructorProperties({"compartmentOcid", "tenancyOcid", "userOcid", "fingerPrint", "privateKeyData", "apiVersion", "region", "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "keystore", "keystorePassword", "connectTimeout", "socketTimeout", "keepAlive", "connectionsMaxPerRoot", "connectionsMaxTotal", "responseCharacterSet", "instanceId", "vnicId", "availabilityDomain", "page", "limit"})
-    private OCICommonInputs(String compartmentOcid, String tenancyOcid, String userOcid, String fingerPrint, String privateKeyData, String apiVersion, String region, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier, String trustKeystore, String trustPassword, String keystore, String keystorePassword, String connectTimeout, String socketTimeout, String keepAlive, String connectionsMaxPerRoot, String connectionsMaxTotal, String responseCharacterSet, String instanceId, String vnicId, String availabilityDomain, String page, String limit) {
+    @java.beans.ConstructorProperties({"compartmentOcid", "tenancyOcid", "userOcid", "fingerPrint", "privateKeyData", "privateKeyFile", "apiVersion", "region", "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "connectTimeout", "socketTimeout", "keepAlive", "connectionsMaxPerRoot", "connectionsMaxTotal", "instanceId", "vnicId", "volumeId", "availabilityDomain", "page", "limit"})
+    private OCICommonInputs(String compartmentOcid, String tenancyOcid, String userOcid, String fingerPrint, String privateKeyData, String privateKeyFile, String apiVersion, String region, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword, String connectTimeout, String socketTimeout, String keepAlive, String connectionsMaxPerRoot, String connectionsMaxTotal, String instanceId, String vnicId, String volumeId, String availabilityDomain, String page, String limit) {
         this.compartmentOcid = compartmentOcid;
         this.tenancyOcid = tenancyOcid;
         this.userOcid = userOcid;
         this.fingerPrint = fingerPrint;
         this.privateKeyData = privateKeyData;
+        this.privateKeyFile = privateKeyFile;
         this.apiVersion = apiVersion;
         this.region = region;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
         this.proxyUsername = proxyUsername;
         this.proxyPassword = proxyPassword;
-        this.trustAllRoots = trustAllRoots;
-        this.x509HostnameVerifier = x509HostnameVerifier;
-        this.trustKeystore = trustKeystore;
-        this.trustPassword = trustPassword;
-        this.keystore = keystore;
-        this.keystorePassword = keystorePassword;
         this.connectTimeout = connectTimeout;
         this.socketTimeout = socketTimeout;
         this.keepAlive = keepAlive;
         this.connectionsMaxPerRoot = connectionsMaxPerRoot;
         this.connectionsMaxTotal = connectionsMaxTotal;
-        this.responseCharacterSet = responseCharacterSet;
         this.instanceId = instanceId;
         this.vnicId = vnicId;
+        this.volumeId = volumeId;
         this.availabilityDomain = availabilityDomain;
         this.page = page;
         this.limit = limit;
@@ -112,6 +102,11 @@ public class OCICommonInputs {
     }
 
     @NotNull
+    public String getPrivateKeyFile() {
+        return privateKeyFile;
+    }
+
+    @NotNull
     public String getAPIVersion() {
         return apiVersion;
     }
@@ -141,35 +136,6 @@ public class OCICommonInputs {
         return this.proxyPassword;
     }
 
-    @NotNull
-    public String getTrustAllRoots() {
-        return this.trustAllRoots;
-    }
-
-    @NotNull
-    public String getX509HostnameVerifier() {
-        return this.x509HostnameVerifier;
-    }
-
-    @NotNull
-    public String getTrustKeystore() {
-        return this.trustKeystore;
-    }
-
-    @NotNull
-    public String getTrustPassword() {
-        return this.trustPassword;
-    }
-
-    @NotNull
-    public String getKeystore() {
-        return this.keystore;
-    }
-
-    @NotNull
-    public String getKeystorePassword() {
-        return this.keystorePassword;
-    }
 
     @NotNull
     public String getConnectTimeout() {
@@ -196,10 +162,6 @@ public class OCICommonInputs {
         return connectionsMaxTotal;
     }
 
-    @NotNull
-    public String getResponseCharacterSet() {
-        return this.responseCharacterSet;
-    }
 
     @NotNull
     public String getInstanceId() {
@@ -209,6 +171,11 @@ public class OCICommonInputs {
     @NotNull
     public String getVnicId() {
         return this.vnicId;
+    }
+
+    @NotNull
+    public String getVolumeId() {
+        return this.volumeId;
     }
 
     @NotNull
@@ -232,26 +199,21 @@ public class OCICommonInputs {
         private String userOcid = EMPTY;
         private String fingerPrint = EMPTY;
         private String privateKeyData = EMPTY;
+        private String privateKeyFile = EMPTY;
         private String apiVersion = EMPTY;
         private String region = EMPTY;
         private String proxyHost = EMPTY;
         private String proxyPort = EMPTY;
         private String proxyUsername = EMPTY;
         private String proxyPassword = EMPTY;
-        private String trustAllRoots = EMPTY;
-        private String x509HostnameVerifier = EMPTY;
-        private String trustKeystore = EMPTY;
-        private String trustPassword = EMPTY;
-        private String keystore = EMPTY;
-        private String keystorePassword = EMPTY;
         private String connectTimeout = EMPTY;
         private String socketTimeout = EMPTY;
         private String keepAlive = EMPTY;
         private String connectionsMaxPerRoot = EMPTY;
         private String connectionsMaxTotal = EMPTY;
-        private String responseCharacterSet = EMPTY;
         private String instanceId = EMPTY;
         private String vnicId = EMPTY;
+        private String volumeId = EMPTY;
         private String availabilityDomain = EMPTY;
         private String page = EMPTY;
         private String limit = EMPTY;
@@ -290,6 +252,12 @@ public class OCICommonInputs {
         }
 
         @NotNull
+        public OCICommonInputs.OCICommonInputsBuilder privateKeyFile(@NotNull final String privateKeyFile) {
+            this.privateKeyFile = privateKeyFile;
+            return this;
+        }
+
+        @NotNull
         public OCICommonInputs.OCICommonInputsBuilder apiVersion(@NotNull final String apiVersion) {
             this.apiVersion = apiVersion;
             return this;
@@ -301,42 +269,6 @@ public class OCICommonInputs {
             return this;
         }
 
-
-        @NotNull
-        public OCICommonInputs.OCICommonInputsBuilder trustAllRoots(@NotNull final String trustAllRoots) {
-            this.trustAllRoots = trustAllRoots;
-            return this;
-        }
-
-        @NotNull
-        public OCICommonInputs.OCICommonInputsBuilder x509HostnameVerifier(@NotNull final String x509HostnameVerifier) {
-            this.x509HostnameVerifier = x509HostnameVerifier;
-            return this;
-        }
-
-        @NotNull
-        public OCICommonInputs.OCICommonInputsBuilder trustKeystore(@NotNull final String trustKeystore) {
-            this.trustKeystore = trustKeystore;
-            return this;
-        }
-
-        @NotNull
-        public OCICommonInputs.OCICommonInputsBuilder trustPassword(@NotNull final String trustPassword) {
-            this.trustPassword = trustPassword;
-            return this;
-        }
-
-        @NotNull
-        public OCICommonInputs.OCICommonInputsBuilder keystore(@NotNull final String keystore) {
-            this.keystore = keystore;
-            return this;
-        }
-
-        @NotNull
-        public OCICommonInputs.OCICommonInputsBuilder keystorePassword(@NotNull final String keystorePassword) {
-            this.keystorePassword = keystorePassword;
-            return this;
-        }
 
         @NotNull
         public OCICommonInputs.OCICommonInputsBuilder proxyHost(@NotNull final String proxyHost) {
@@ -395,12 +327,6 @@ public class OCICommonInputs {
 
 
         @NotNull
-        public OCICommonInputs.OCICommonInputsBuilder responseCharacterSet(@NotNull final String responseCharacterSet) {
-            this.responseCharacterSet = responseCharacterSet;
-            return this;
-        }
-
-        @NotNull
         public OCICommonInputs.OCICommonInputsBuilder instanceId(@NotNull final String instanceId) {
             this.instanceId = instanceId;
             return this;
@@ -409,6 +335,12 @@ public class OCICommonInputs {
         @NotNull
         public OCICommonInputs.OCICommonInputsBuilder vnicId(@NotNull final String vnicId) {
             this.vnicId = vnicId;
+            return this;
+        }
+
+        @NotNull
+        public OCICommonInputs.OCICommonInputsBuilder volumeId(@NotNull final String volumeId) {
+            this.volumeId = volumeId;
             return this;
         }
 
@@ -431,8 +363,8 @@ public class OCICommonInputs {
         }
 
         public OCICommonInputs build() {
-            return new OCICommonInputs(compartmentOcid, tenancyOcid, userOcid, fingerPrint, privateKeyData, apiVersion, region, proxyHost, proxyPort, proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, keystore, keystorePassword, connectTimeout,
-                    socketTimeout, keepAlive, connectionsMaxPerRoot, connectionsMaxTotal, responseCharacterSet, instanceId, vnicId, availabilityDomain, page, limit);
+            return new OCICommonInputs(compartmentOcid, tenancyOcid, userOcid, fingerPrint, privateKeyData, privateKeyFile, apiVersion, region, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeout,
+                    socketTimeout, keepAlive, connectionsMaxPerRoot, connectionsMaxTotal, instanceId, vnicId, volumeId, availabilityDomain, page, limit);
         }
     }
 }

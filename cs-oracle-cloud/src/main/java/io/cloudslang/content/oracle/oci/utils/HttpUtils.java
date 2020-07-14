@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
+import static io.cloudslang.content.oracle.oci.utils.Constants.InstanceActionConstants.ACTION_NAME_QUERY_PARAM;
+import static io.cloudslang.content.oracle.oci.utils.Constants.TerminateInstanceConstants.PRESERVE_BOOT_VOLUME_QUERY_PARAM;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -104,19 +106,8 @@ public class HttpUtils {
         return results;
     }
 
-    public static void setSecurityInputs(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs,
-                                         @org.jetbrains.annotations.NotNull final String trustAllRoots,
-                                         @org.jetbrains.annotations.NotNull final String x509HostnameVerifier,
-                                         @org.jetbrains.annotations.NotNull final String trustKeystore,
-                                         @org.jetbrains.annotations.NotNull final String trustPassword,
-                                         @org.jetbrains.annotations.NotNull final String keystore,
-                                         @org.jetbrains.annotations.NotNull final String keystorePassword) {
-        httpClientInputs.setTrustAllRoots(trustAllRoots);
-        httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
-        httpClientInputs.setTrustKeystore(trustKeystore);
-        httpClientInputs.setTrustPassword(trustPassword);
-        httpClientInputs.setKeystore(keystore);
-        httpClientInputs.setKeystorePassword(keystorePassword);
+    public static void setSecurityInputs(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs) {
+
     }
 
     public static void setConnectionParameters(HttpClientInputs httpClientInputs,
@@ -141,6 +132,22 @@ public class HttpUtils {
     }
 
     @NotNull
+    public static String getQueryParamForTerminateInstance(@NotNull final String preserveBootVolume) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(PRESERVE_BOOT_VOLUME_QUERY_PARAM)
+                .append(preserveBootVolume);
+        return queryParams.toString();
+    }
+
+    @NotNull
+    public static String getQueryParamForInstanceAction(@NotNull final String instanceAction) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(ACTION_NAME_QUERY_PARAM)
+                .append(instanceAction);
+        return queryParams.toString();
+    }
+
+    @NotNull
     public static String getQueryParams(@NotNull final String availabilityDomain, @NotNull final String compartmentId, @NotNull final String instanceId, @NotNull final String page, @NotNull final String limit, @NotNull final String vnicId) {
         StringBuilder queryParams = new StringBuilder();
         Map<String, String> map = new HashMap<>();
@@ -152,7 +159,7 @@ public class HttpUtils {
         map.put(limit, LIMIT_QUERY_PARAM);
         for (Map.Entry<String, String> entry : map.entrySet()) {
             if (!isEmpty(entry.getKey())) {
-                queryParams = queryParams.append ((entry.getValue() + entry.getKey()) + AND);
+                queryParams = queryParams.append((entry.getValue() + entry.getKey()) + AND);
             }
         }
 
@@ -173,7 +180,7 @@ public class HttpUtils {
         map.put(sortOrder, SORT_ORDER_QUERY_PARAM);
         for (Map.Entry<String, String> entry : map.entrySet()) {
             if (!isEmpty(entry.getKey())) {
-                queryParams = queryParams.append ( (entry.getValue() + entry.getKey()) + AND);
+                queryParams = queryParams.append((entry.getValue() + entry.getKey()) + AND);
             }
         }
 

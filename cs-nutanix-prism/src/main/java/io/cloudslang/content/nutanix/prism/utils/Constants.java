@@ -22,7 +22,6 @@ public class Constants {
         public static final String NEW_LINE = "\n";
         public static final String DEFAULT_PROXY_PORT = "8080";
         public static final String DEFAULT_NUTANIX_PORT = "9440";
-        public static final String DEFAULT_HYPERVISOR_TYPE = "ACROPOLIS";
         public static final String DEFAULT_TIMEZONE = "UTC";
         public static final String BOOLEAN_FALSE = "false";
         public static final String BOOLEAN_TRUE = "true";
@@ -36,6 +35,7 @@ public class Constants {
         public static final String BASIC = "basic";
         public static final String GET = "GET";
         public static final String POST = "POST";
+        public static final String PUT = "PUT";
         public static final String PATCH = "PATCH";
         public static final String DELETE = "DELETE";
         public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
@@ -54,6 +54,7 @@ public class Constants {
         public static final String STATUS_CODE = "statusCode";
         public static final String APPLICATION_API_JSON = "application/json";
         public static final String DELIMITER = ",";
+        public static final String ERROR_MESSAGE_PATH = "message";
         public static final String ALLOWED_CYPHERS = "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256," +
                 "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384," +
                 "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256," +
@@ -82,21 +83,33 @@ public class Constants {
         public static final String INCLUDE_VM_NIC_CONFIG_INFO = "include_vm_nic_config=";
         public static final String VM_NAME_PATH = "name";
         public static final String IP_ADDRESS_PATH = "$.vm_nics[*].ip_address";
+        public static final String MAC_ADDRESS_PATH = "$.vm_nics[*].mac_address";
         public static final String POWER_STATE_PATH = "power_state";
         public static final String VM_DISK_UUID_PATH = "$.vm_disk_info[*].disk_address.vmdisk_uuid";
         public static final String STORAGE_CONTAINER_UUID_PATH = "$.vm_disk_info[*].storage_container_uuid";
         public static final String VM_LOGICAL_TIMESTAMP_PATH = "$.vm_logical_timestamp";
+        public static final String AFFINITY_PATH = "$.affinity";
+        public static final String HOST_UUID_PATH = "$.affinity.host_uuids[*]";
         public static final String GET_VM_DETAILS_PATH = "/vms";
     }
+
     public static class DetachDisksConstants {
         public static final String DETACH_DISKS_OPERATION_NAME = "Detach Disks";
         public static final String DETACH_DISKS_PATH = "/disks/detach";
     }
+
+    public static class AttachDisksConstants {
+        public static final String ATTACH_DISKS_OPERATION_NAME = "Attach Disks";
+        public static final String ATTACH_DISKS_PATH = "/disks/attach";
+        public static final String TASK_UUID_PATH = "task_uuid";
+    }
+
     public static class DeleteNICConstants {
         public static final String DELETE_NIC_OPERATION_NAME = "Delete NIC";
         public static final String DELETE_NIC_PATH = "/nics/";
         public static final String VM_LOGICAL_TIMESTAMP_QUERY_PARAM = "vm_logical_timestamp=";
     }
+
     public static class ListVMsConstants {
         public static final String LIST_VMS_OPERATION_NAME = "List VMs";
         public static final String FILTER = "filter=";
@@ -112,6 +125,23 @@ public class Constants {
         public static final String TASK_UUID_PATH = "task_uuid";
     }
 
+    public static class UpdateVMConstants {
+        public static final String UPDATE_VM_OPERATION_NAME = "Update VM";
+        public static final String TASK_UUID_PATH = "task_uuid";
+
+    }
+
+    public static class DeleteVMConstants {
+        public static final String DELETE_VM_OPERATION_NAME = "Delete VM";
+        public static final String DELETE_SNAPSHOTS = "delete_snapshots=";
+        public static final String LOGICAL_TIMESTAMP = "logical_timestamp=";
+    }
+
+    public static class SetVMPowerStateConstants {
+        public static final String SET_VM_POWER_STATE_OPERATION_NAME = "Set VM Power State";
+        public static final String SET_POWER_STATE_PATH = "set_power_state";
+    }
+
     public static class GetTaskDetailsConstants {
         public static final String GET_TASK_DETAILS_OPERATION_NAME = "Get Task Details";
         public static final String INCLUDE_SUBTASKS_INFO = "include_subtasks_info=";
@@ -121,6 +151,12 @@ public class Constants {
         public static final String SUCCEEDED = "Succeeded";
         public static final String FAILED = "Failed";
         public static final String TASK_FAILURE_PATH = "$.meta_response.error_detail";
+    }
+
+    public static class AddNICConstants {
+        public static final String ADD_NIC_OPERATION_NAME = "Add NIC";
+        public static final String ADD_NIC_PATH = "/nics";
+        public static final String TASK_UUID_PATH = "task_uuid";
     }
 
 }

@@ -19,10 +19,9 @@ package io.cloudslang.content.oracle.oci.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
-import io.cloudslang.content.oracle.oci.entities.inputs.OCIInstanceInputs;
-import io.cloudslang.content.oracle.oci.entities.inputs.OCIListInstanceInputs;
+import io.cloudslang.content.oracle.oci.entities.inputs.*;
 import io.cloudslang.content.oracle.oci.services.models.instances.CreateInstanceRequestBody;
+import io.cloudslang.content.oracle.oci.services.models.instances.UpdateInstanceRequestBody;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -36,14 +35,14 @@ import java.util.Map;
 
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.GetInstanceDefaultCredentialsConstants.GET_INSTANCE_DEFAULT_CREDENTIALS_OPERATION_PATH;
-import static io.cloudslang.content.oracle.oci.utils.HttpUtils.getQueryParams;
+import static io.cloudslang.content.oracle.oci.utils.HttpUtils.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class InstanceImpl {
 
 
-    private static String createInstanceRequestBody(@NotNull final OCIInstanceInputs createInstancesInputs) {
+    private static String createInstanceRequestBody(@NotNull final OCICreateInstanceInputs createInstancesInputs) {
         String requestBody = EMPTY;
         ObjectMapper createInstanceMapper = new ObjectMapper();
         CreateInstanceRequestBody createInstanceRequestBody = new CreateInstanceRequestBody();
@@ -131,17 +130,51 @@ public class InstanceImpl {
         return requestBody;
     }
 
+    private static String updateInstanceRequestBody(@NotNull final OCIUpdateInstanceInputs ociUpdateInstanceInputs) {
+        String requestBody = EMPTY;
+        ObjectMapper updateInstanceMapper = new ObjectMapper();
+        UpdateInstanceRequestBody updateInstanceRequestBody = new UpdateInstanceRequestBody();
+        UpdateInstanceRequestBody.AgentConfig agentConfig = updateInstanceRequestBody.new AgentConfig();
+
+        UpdateInstanceRequestBody.ShapeConfig shapeConfig = updateInstanceRequestBody.new ShapeConfig();
+        if (!isEmpty(ociUpdateInstanceInputs.getOcpus())) {
+            shapeConfig.setOcpus(Integer.parseInt(ociUpdateInstanceInputs.getOcpus()));
+            updateInstanceRequestBody.setShapeConfig(shapeConfig);
+        }
+
+        JSONParser jsonParser = new JSONParser();
+        updateInstanceRequestBody.setShape(ociUpdateInstanceInputs.getShape());
+        updateInstanceRequestBody.setDisplayName(ociUpdateInstanceInputs.getDisplayName());
+
+        if (!isEmpty(ociUpdateInstanceInputs.getIsManagementDisabled()))
+            agentConfig.setIsManagementDisabled(stringToBoolean(ociUpdateInstanceInputs.getIsManagementDisabled()));
+        if (!isEmpty(ociUpdateInstanceInputs.getIsMonitoringDisabled()))
+            agentConfig.setIsMonitoringDisabled(stringToBoolean(ociUpdateInstanceInputs.getIsMonitoringDisabled()));
+        if (!isEmpty(ociUpdateInstanceInputs.getIsManagementDisabled()) || !isEmpty(ociUpdateInstanceInputs.getIsMonitoringDisabled()))
+            updateInstanceRequestBody.setAgentConfig(agentConfig);
+
+
+        try {
+            updateInstanceRequestBody.setDefinedTags(stringToJSON(jsonParser, ociUpdateInstanceInputs.getDefinedTags()));
+            updateInstanceRequestBody.setFreeformTags(stringToJSON(jsonParser, ociUpdateInstanceInputs.getFreeformTags()));
+            requestBody = updateInstanceMapper.writeValueAsString(updateInstanceRequestBody);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return requestBody;
+    }
+
     @NotNull
     private static SignerImpl.RequestSigner getRequestSigner(OCICommonInputs ociCommonInputs) {
         String apiKey = (ociCommonInputs.getTenancyOcid() + FORWARD_SLASH
                 + ociCommonInputs.getUserOcid() + FORWARD_SLASH
                 + ociCommonInputs.getFingerPrint());
-        PrivateKey privateKeyData = SignerImpl.loadPrivateKey(ociCommonInputs.getPrivateKeyData());
+        PrivateKey privateKeyData = SignerImpl.loadPrivateKey(ociCommonInputs.getPrivateKeyData(), ociCommonInputs.getPrivateKeyFile());
         return new SignerImpl.RequestSigner(apiKey, privateKeyData);
     }
 
     @NotNull
-    public static Map<String, String> createInstance(@NotNull final OCIInstanceInputs createInstancesInputs)
+    public static Map<String, String> createInstance(@NotNull final OCICreateInstanceInputs createInstancesInputs)
             throws Exception {
 
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
@@ -153,6 +186,22 @@ public class InstanceImpl {
         Map<String, String> headers = getRequestSigner(createInstancesInputs.getCommonInputs()).signRequest(uri, POST, httpClientInputs.getBody());
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, createInstancesInputs.getCommonInputs());
+        return new HttpClientService().execute(httpClientInputs);
+
+    }
+
+    @NotNull
+    public static Map<String, String> updateInstance(@NotNull final OCIUpdateInstanceInputs ociUpdateInstanceInputs) throws Exception {
+
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        httpClientInputs.setUrl(getInstanceDetailsUrl(ociUpdateInstanceInputs.getCommonInputs().getRegion(), ociUpdateInstanceInputs.getCommonInputs().getInstanceId()));
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(PUT);
+        httpClientInputs.setBody(updateInstanceRequestBody(ociUpdateInstanceInputs));
+        URI uri = URI.create(httpClientInputs.getUrl());
+        Map<String, String> headers = getRequestSigner(ociUpdateInstanceInputs.getCommonInputs()).signRequest(uri, PUT, httpClientInputs.getBody());
+        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        HttpCommons.setCommonHttpInputs(httpClientInputs, ociUpdateInstanceInputs.getCommonInputs());
         return new HttpClientService().execute(httpClientInputs);
 
     }
@@ -171,6 +220,38 @@ public class InstanceImpl {
         Map<String, String> headers = getRequestSigner(ociListInstanceInputs.getCommonInputs()).signRequest(uri, GET, EMPTY);
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociListInstanceInputs.getCommonInputs());
+        return new HttpClientService().execute(httpClientInputs);
+
+    }
+
+    @NotNull
+    public static Map<String, String> terminateInstance(@NotNull final OCITerminateInstanceInputs ociTerminateInstanceInputs) throws Exception {
+
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        httpClientInputs.setUrl(getInstanceDetailsUrl(ociTerminateInstanceInputs.getCommonInputs().getRegion(), ociTerminateInstanceInputs.getCommonInputs().getInstanceId()));
+        httpClientInputs.setQueryParams(getQueryParamForTerminateInstance(ociTerminateInstanceInputs.getPreserveBootVolume()));
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(DELETE);
+        URI uri = URI.create(httpClientInputs.getUrl() + QUERY + httpClientInputs.getQueryParams());
+        Map<String, String> headers = getRequestSigner(ociTerminateInstanceInputs.getCommonInputs()).signRequest(uri, DELETE, EMPTY);
+        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        HttpCommons.setCommonHttpInputs(httpClientInputs, ociTerminateInstanceInputs.getCommonInputs());
+        return new HttpClientService().execute(httpClientInputs);
+
+    }
+
+    @NotNull
+    public static Map<String, String> instanceAction(@NotNull final OCIInstanceActionInputs ociInstanceActionInputs) throws Exception {
+
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        httpClientInputs.setUrl(getInstanceDetailsUrl(ociInstanceActionInputs.getCommonInputs().getRegion(), ociInstanceActionInputs.getCommonInputs().getInstanceId()));
+        httpClientInputs.setQueryParams(getQueryParamForInstanceAction(ociInstanceActionInputs.getActionName()));
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(POST);
+        URI uri = URI.create(httpClientInputs.getUrl() + QUERY + httpClientInputs.getQueryParams());
+        Map<String, String> headers = getRequestSigner(ociInstanceActionInputs.getCommonInputs()).signRequest(uri, POST, EMPTY);
+        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        HttpCommons.setCommonHttpInputs(httpClientInputs, ociInstanceActionInputs.getCommonInputs());
         return new HttpClientService().execute(httpClientInputs);
 
     }

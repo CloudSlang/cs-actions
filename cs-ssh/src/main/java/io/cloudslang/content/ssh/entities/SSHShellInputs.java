@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -20,6 +20,7 @@ package io.cloudslang.content.ssh.entities;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.ssh.utils.Constants;
 import io.cloudslang.content.ssh.utils.StringUtils;
+import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.Map;
 
@@ -54,6 +55,7 @@ public class SSHShellInputs {
     private boolean allowExpectCommands;
     private int connectTimeout;
     private boolean useShell;
+    private boolean removeEscapeSequences;
 
     public String getHost() {
         return host;
@@ -270,5 +272,15 @@ public class SSHShellInputs {
 
     public void setUseShell(String useShell) {
         this.useShell = StringUtils.toBoolean(useShell, Constants.DEFAULT_USE_SHELL);
+    }
+
+    public boolean isRemoveEscapeSequences() {
+        return removeEscapeSequences;
+    }
+
+    public void setRemoveEscapeSequences(String removeEscapeSequences) {
+        removeEscapeSequences = org.apache.commons.lang3.StringUtils.defaultIfEmpty(
+                removeEscapeSequences, String.valueOf(Constants.DEFAULT_REMOVE_ESCAPE_SEQUENCES));
+        this.removeEscapeSequences = BooleanUtils.toBoolean(removeEscapeSequences, "true", "false");
     }
 }
