@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setConnectionParameters;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setProxy;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setSecurityInputs;
+import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setTLSParameters;
 
 public class HttpCommons {
 
@@ -46,5 +47,6 @@ public class HttpCommons {
                 commonInputs.getKeepAlive(),
                 commonInputs.getConnectionsMaxPerRoot(),
                 commonInputs.getConnectionsMaxTotal());
+        setTLSParameters(httpClientInputs);
     }
 }
