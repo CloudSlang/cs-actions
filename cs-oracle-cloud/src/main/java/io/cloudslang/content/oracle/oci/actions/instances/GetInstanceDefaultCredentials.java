@@ -27,6 +27,7 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
 import io.cloudslang.content.oracle.oci.services.InstanceImpl;
+import io.cloudslang.content.oracle.oci.utils.Constants;
 import io.cloudslang.content.oracle.oci.utils.Descriptions;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
 import io.cloudslang.content.oracle.oci.utils.InputsValidation;
@@ -87,6 +88,7 @@ public class GetInstanceDefaultCredentials {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
+        privateKeyData = defaultIfEmpty(privateKeyData, Constants.Common.EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);

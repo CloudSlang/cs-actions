@@ -17,11 +17,16 @@ package io.cloudslang.content.oracle.oci.utils;
 
 public class Descriptions {
     public static class Common {
-        public static final String TENANCY_OCID_DESC = "Oracle creates a tenancy for your company, which is a secure and isolated partition where you can create, organize, and administer your cloud resources. This is ID of the tenancy.";
-        public static final String USER_OCID_DESC = "ID of an individual employee or system that needs to manage or use your company’s Oracle Cloud Infrastructure resources.";
+        public static final String TENANCY_OCID_DESC = "Oracle creates a tenancy for your company, which is a secure " +
+                "and isolated partition where you can create, organize, and administer your cloud resources. This is ID " +
+                "of the tenancy.";
+        public static final String USER_OCID_DESC = "ID of an individual employee or system that needs to manage or use " +
+                "your company’s Oracle Cloud Infrastructure resources.";
         public static final String FINGER_PRINT_DESC = "Finger print of the public key generated for OCI account.";
-        public static final String PRIVATE_KEY_DATA_DESC = "A string representing the private key for the OCI. This string is usually the content of a private key file.";
-        public static final String PRIVATE_KEY_FILE_DESC = "The path to the private key file on the machine where is the worker. ";
+        public static final String PRIVATE_KEY_DATA_DESC = "A string representing the private key for the OCI. This " +
+                "string is usually the content of a private key file.";
+        public static final String PRIVATE_KEY_FILE_DESC = "The path to the private key file on the machine where is " +
+                "the worker. ";
         public static final String API_VERSION_DESC = "Version of the API of OCI." +
                 "Default: '20160918'";
         public static final String REGION_DESC = "The region's name.";
@@ -31,30 +36,6 @@ public class Descriptions {
         public static final String PROXY_USERNAME_DESC = "Proxy server user name.";
         public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxy_username " +
                 "input value.";
-        public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL/TSL. " +
-                "A certificate is trusted even if no trusted certification authority issued it." +
-                "Default: 'false'";
-        public static final String X509_DESC = "Specifies the way the server hostname must match a domain name in " +
-                "the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to " +
-                "\"allow_all\" to skip any checking. For the value \"browser_compatible\" the hostname verifier " +
-                "works the same way as Curl and Firefox. The hostname must match either the first CN, or any of " +
-                "the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only " +
-                "difference between \"browser_compatible\" and \"strict\" is that a wildcard (such as \"*.foo.com\") " +
-                "with \"browser_compatible\" matches all subdomains, including \"a.b.foo.com\"." +
-                "Default: 'strict'";
-        public static final String TRUST_KEYSTORE_DESC = "The pathname of the Java TrustStore file. This contains " +
-                "certificates from other parties that you expect to communicate with, or from Certificate Authorities" +
-                " that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https' " +
-                "or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS)";
-        public static final String TRUST_PASSWORD_DESC = "The password associated with the TrustStore file. If " +
-                "trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied.";
-        public static final String KEYSTORE_DESC = "The pathname of the Java KeyStore file. You only need this if the" +
-                "server requires client authentication. If the protocol (specified by the 'url') is not 'https' or if " +
-                "trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS)" +
-                "Default: <OO_Home>/java/lib/security/cacerts";
-        public static final String KEYSTORE_PASSWORD_DESC = "The password associated with the KeyStore file. If " +
-                "trustAllRoots is false and keystore is empty, keystorePassword default will be supplied." +
-                "Default: changeit";
         public static final String CONN_MAX_TOTAL_DESC = "The maximum limit of connections in total." +
                 "Default: '20'";
         public static final String CONN_MAX_ROUTE_DESC = "The maximum limit of connections on a per route basis." +
@@ -75,18 +56,22 @@ public class Descriptions {
                 "header is empty, the default value will be used. You should not use this for method=HEAD or OPTIONS." +
                 "Default: 'UTF-8'";
         public static final String STATUS_CODE_DESC = "The HTTP status code for OCI API request.";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the " +
+                "request.";
         public static final String FAILURE_DESC = "There was an error while executing the request.";
         public static final String SUCCESS_DESC = "The request was successfully executed.";
-        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
+        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of " +
+                "an error this output will contain the error message.";
         public static final String INSTANCE_ID_DESC = "The OCID of the instance.";
         public static final String INSTANCE_NAME_DESC = "The instance name.";
         public static final String VNIC_ID_DESC = "The OCID of the vnic.";
         public static final String VNIC_ATTACHMENT_ID_DESC = "The OCID of the VNIC attachment.";
         public static final String VOLUME_ID_DESC = "The OCID of the volume.";
         public static final String VOLUME_ATTACHMENT_ID_DESC = "The OCID of the volume attachment.";
-        public static final String PAGE_DESC = "For list pagination. The value of the opc-next-page response header from the previous \"List\" call.";
-        public static final String LIMIT_DESC = "For list pagination. The maximum number of results per page, or items to return in a paginated \"List\" call. ";
+        public static final String PAGE_DESC = "For list pagination. The value of the opc-next-page response header " +
+                "from the previous \"List\" call.";
+        public static final String LIMIT_DESC = "For list pagination. The maximum number of results per page, or items " +
+                "to return in a paginated \"List\" call. ";
     }
 
     public static class ListInstances {
@@ -94,17 +79,23 @@ public class Descriptions {
                 "the specified availability domain. You can filter the results by specifying an instance name " +
                 "(the list will include all the identically-named instances in the compartment).";
         public static final String INSTANCE_NAME_LIST_DESC = "List of all instance names.";
-        public static final String COMPARTMENT_OCID_DESC = "Compartments are a fundamental component of Oracle Cloud Infrastructure for organizing and isolating your cloud resources. This is ID of the compartment.";
-        public static final String DISPLAY_NAME_DESC = "A filter to return only resources that match the given display name exactly.";
-        public static final String SORT_BY_DESC = "The field to sort by. You can provide one sort order (sortOrder). Default order for TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The DISPLAYNAME sort order is case sensitive." +
+        public static final String COMPARTMENT_OCID_DESC = "Compartments are a fundamental component of Oracle Cloud " +
+                "Infrastructure for organizing and isolating your cloud resources. This is ID of the compartment.";
+        public static final String DISPLAY_NAME_DESC = "A filter to return only resources that match the given display " +
+                "name exactly.";
+        public static final String SORT_BY_DESC = "The field to sort by. You can provide one sort order (sortOrder). " +
+                "Default order for TIMECREATED is descending. Default order for DISPLAYNAME is ascending. The " +
+                "DISPLAYNAME sort order is case sensitive." +
                 "Allowed values are:\n" +
                 "TIMECREATED\n" +
                 "DISPLAYNAME";
-        public static final String SORT_ORDER_DESC = "The sort order to use, either ascending (ASC) or descending (DESC). The DISPLAYNAME sort order is case sensitive." + "\n" +
+        public static final String SORT_ORDER_DESC = "The sort order to use, either ascending (ASC) or descending " +
+                "(DESC). The DISPLAYNAME sort order is case sensitive." + "\n" +
                 "Allowed values are:\n" +
                 "ASC\n" +
                 "DESC";
-        public static final String LIFECYCLE_STATE_DESC = "A filter to only return resources that match the given lifecycle state. The state value is case-insensitive.";
+        public static final String LIFECYCLE_STATE_DESC = "A filter to only return resources that match the given " +
+                "lifecycle state. The state value is case-insensitive.";
     }
 
     public static class GetInstanceDetails {
@@ -113,19 +104,31 @@ public class Descriptions {
     }
 
     public static class TerminateInstance {
-        public static final String TERMINATE_INSTANCE_OPERATION_DESC = "Terminates the specified instance. Any attached VNICs and volumes are automatically detached when the instance terminates.\n" +
-                "To preserve the boot volume associated with the instance, specify true for PreserveBootVolumeQueryParam.To delete the boot volume when the instance is deleted, specify false or do not specify a value for PreserveBootVolume.";
-        public static final String PRESERVE_BOOT_VOLUME_DESC = "Specifies whether to delete or preserve the boot volume when terminating an instance." +
+        public static final String TERMINATE_INSTANCE_OPERATION_DESC = "Terminates the specified instance. Any attached " +
+                "VNICs and volumes are automatically detached when the instance terminates.\n" +
+                "To preserve the boot volume associated with the instance, specify true for PreserveBootVolumeQueryParam." +
+                "To delete the boot volume when the instance is deleted, specify false or do not specify a value for " +
+                "PreserveBootVolume.";
+        public static final String PRESERVE_BOOT_VOLUME_DESC = "Specifies whether to delete or preserve the boot volume " +
+                "when terminating an instance." +
                 "Default: 'false'";
         public static final String TERMINATE_INSTANCE_SUCCESS_MESSAGE_DESC = "Instance terminated successfully.";
     }
 
     public static class InstanceAction {
-        public static final String INSTANCE_ACTION_OPERATION_DESC = "Performs one of the following power actions on the specified instance: START - Powers on the instance.\n" +
+        public static final String INSTANCE_ACTION_OPERATION_DESC = "Performs one of the following power actions on the" +
+                " specified instance: START - Powers on the instance.\n" +
                 "\n" +
                 "STOP - Powers off the instance.\n" +
                 "\n" +
-                "RESET - Powers off the instance and then powers it back on.";
+                "RESET - Powers off the instance and then powers it back on." +"\n" +
+                "SOFTSTOP - Gracefully shuts down the instance by sending a shutdown command to the operating system. " +
+                "If the applications that run on the instance take a long time to shut down, they could be improperly " +
+                "stopped, resulting in data corruption. To avoid this, shut down the instance using the commands " +
+                "available in the OS before you softstop the instance.\n"+
+                        "\n"+
+                "SOFTRESET - Gracefully reboots the instance by sending a shutdown command to the operating system, and " +
+                "then powers the instance back on.";
         public static final String ACTION_NAME_DESC = "The action to perform on the instance.\n" +
                 "\n" +
                 "Allowed values are:\n" +
@@ -265,57 +268,87 @@ public class Descriptions {
                 "'metadata' fields are string/string maps only).";
         public static final String FAULT_DOMAIN_DESC = "A fault domain is a grouping of hardware and infrastructure" +
                 " within an availability domain. Each availability domain contains three fault domains. Fault domains " +
-                "let you distribute your instances so that they are not on the same physical hardware within a single availability domain. A hardware failure or Compute hardware maintenance that affects one fault domain does not affect instances in other fault domains.\n" +
+                "let you distribute your instances so that they are not on the same physical hardware within a single " +
+                "availability domain. A hardware failure or Compute hardware maintenance that affects one fault domain " +
+                "does not affect instances in other fault domains.\n" +
                 "If you do not specify the fault domain, the system selects one for you. ";
-        public static final String IPXE_SCRIPT_DESC = "When a bare metal or virtual machine instance boots, the iPXE firmware that runs on the instance is configured to run an iPXE script to continue the boot process.\n" +
-                "If you want more control over the boot process, you can provide your own custom iPXE script that will run when the instance boots; however, you should be aware that the same iPXE script will run every time an instance boots; not only after the initial LaunchInstance call.";
-        public static final String IS_PV_ENCRYPTION_IN_TRANSIT_ENABLED_DESC = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment." +
+        public static final String IPXE_SCRIPT_DESC = "When a bare metal or virtual machine instance boots, the iPXE " +
+                "firmware that runs on the instance is configured to run an iPXE script to continue the boot process.\n" +
+                "If you want more control over the boot process, you can provide your own custom iPXE script that will " +
+                "run when the instance boots; however, you should be aware that the same iPXE script will run every " +
+                "time an instance boots; not only after the initial LaunchInstance call.";
+        public static final String IS_PV_ENCRYPTION_IN_TRANSIT_ENABLED_DESC = "Whether to enable in-transit encryption " +
+                "for the data volume's paravirtualized attachment." +
                 "Default: 'false'";
-        public static final String LAUNCH_MODE_DESC = "Specifies the configuration mode for launching virtual machine (VM) instances. The configuration modes are:\n" +
-                "NATIVE - VM instances launch with iSCSI boot and VFIO devices. The default value for Oracle-provided images.\n" +
-                "EMULATED - VM instances launch with emulated devices, such as the E1000 network driver and emulated SCSI disk controller.\n" +
+        public static final String LAUNCH_MODE_DESC = "Specifies the configuration mode for launching virtual machine " +
+                "(VM) instances. The configuration modes are:\n" +
+                "NATIVE - VM instances launch with iSCSI boot and VFIO devices. The default value for Oracle-provided " +
+                "images.\n" +
+                "EMULATED - VM instances launch with emulated devices, such as the E1000 network driver and emulated " +
+                "SCSI disk controller.\n" +
                 "PARAVIRTUALIZED - VM instances launch with paravirtualized devices using virtio drivers.\n" +
-                "CUSTOM - VM instances launch with custom configuration settings specified in the LaunchOptions parameter.";
+                "CUSTOM - VM instances launch with custom configuration settings specified in the LaunchOptions " +
+                "parameter.";
         public static final String BOOT_VOLUME_TYPE_DESC = "Emulation type for volume.\n" +
                 "ISCSI - ISCSI attached block storage device.\n" +
                 "SCSI - Emulated SCSI disk.\n" +
                 "IDE - Emulated IDE disk.\n" +
-                "VFIO - Direct attached Virtual Function storage. This is the default option for Local data volumes on Oracle provided images.\n" +
-                "PARAVIRTUALIZED - Paravirtualized disk. This is the default for Boot Volumes and Remote Block Storage volumes on Oracle provided images.";
-        public static final String FIRMWARE_DESC = "Firmware used to boot VM. Select the option that matches your operating system.\n" +
-                "BIOS - Boot VM using BIOS style firmware. This is compatible with both 32 bit and 64 bit operating systems that boot using MBR style bootloaders.\n" +
-                "UEFI_64 - Boot VM using UEFI style firmware compatible with 64 bit operating systems. This is the default for Oracle provided images.";
-        public static final String IS_CONSISTENT_VOLUME_NAMING_ENABLED_DESC = "Whether to enable consistent volume naming feature. Defaults to false.";
+                "VFIO - Direct attached Virtual Function storage. This is the default option for Local data volumes on " +
+                "Oracle provided images.\n" +
+                "PARAVIRTUALIZED - Paravirtualized disk. This is the default for Boot Volumes and Remote Block Storage " +
+                "volumes on Oracle provided images.";
+        public static final String FIRMWARE_DESC = "Firmware used to boot VM. Select the option that matches your " +
+                "operating system.\n" +
+                "BIOS - Boot VM using BIOS style firmware. This is compatible with both 32 bit and 64 bit operating " +
+                "systems that boot using MBR style bootloaders.\n" +
+                "UEFI_64 - Boot VM using UEFI style firmware compatible with 64 bit operating systems. This is the " +
+                "default for Oracle provided images.";
+        public static final String IS_CONSISTENT_VOLUME_NAMING_ENABLED_DESC = "Whether to enable consistent volume " +
+                "naming feature. Defaults to false.";
         public static final String NETWORKTYPE_DESC = "Emulation type for the physical network interface card (NIC).\n" +
                 "E1000 - Emulated Gigabit ethernet controller. Compatible with Linux e1000 network driver.\n" +
-                "VFIO - Direct attached Virtual Function network controller. This is the networking type when you launch an instance using hardware-assisted (SR-IOV) networking.\n" +
+                "VFIO - Direct attached Virtual Function network controller. This is the networking type when you " +
+                "launch an instance using hardware-assisted (SR-IOV) networking.\n" +
                 "PARAVIRTUALIZED - VM instances launch with paravirtualized devices using virtio drivers.";
         public static final String REMOTE_DATA_VOLUME_TYPE_DESC = "Emulation type for volume.\n" +
                 "ISCSI - ISCSI attached block storage device.\n" +
                 "SCSI - Emulated SCSI disk.\n" +
                 "IDE - Emulated IDE disk.\n" +
-                "VFIO - Direct attached Virtual Function storage. This is the default option for Local data volumes on Oracle provided images.\n" +
-                "PARAVIRTUALIZED - Paravirtualized disk.This is the default for Boot Volumes and Remote Block Storage volumes on Oracle provided images.";
-        public static final String SHAPE_DESC = "The shape of an instance. The shape determines the number of CPUs, amount of memory, and other resources allocated to the instance.";
-        public static final String SSH_AUTHORIZED_KEYS_DESC = " Provide one or more public SSH keys  for the default user on the instance. Use a newline character to separate multiple keys.";
-        public static final String USERDATA_DESC = "Provide your own base64-encoded data to be used by Cloud-Init to run custom scripts or provide custom Cloud-Init configuration.";
+                "VFIO - Direct attached Virtual Function storage. This is the default option for Local data volumes on " +
+                "Oracle provided images.\n" +
+                "PARAVIRTUALIZED - Paravirtualized disk.This is the default for Boot Volumes and Remote Block Storage " +
+                "volumes on Oracle provided images.";
+        public static final String SHAPE_DESC = "The shape of an instance. The shape determines the number of CPUs, " +
+                "amount of memory, and other resources allocated to the instance.";
+        public static final String SSH_AUTHORIZED_KEYS_DESC = " Provide one or more public SSH keys  for the default " +
+                "user on the instance. Use a newline character to separate multiple keys.";
+        public static final String USERDATA_DESC = "Provide your own base64-encoded data to be used by Cloud-Init to " +
+                "run custom scripts or provide custom Cloud-Init configuration.";
         public static final String OCPUS_DESC = "The total number of OCPUs available to the instance.";
-        public static final String SOURCE_TYPE_DESC = "The source type for the instance. Use image when specifying the image OCID. Use bootVolume when specifying the boot volume OCID.";
-        public static final String BOOT_VOLUME_SIZE_IN_GBS_DESC = "The size of the boot volume in GBs. Minimum value is 50 GB and maximum value is 16384 GB (16TB).";
-        public static final String IMAGE_ID_DESC = "The OCID of the image used to boot the instance. If the sourceType is 'image', then this value is required.";
-        public static final String KMS_KEY_ID_DESC = "The OCID of the Key Management key to assign as the master encryption key for the boot volume.";
-        public static final String BOOT_VOLUME_ID_DESC = "The OCID of the boot volume used to boot the instance. If the sourceType is 'bootVolume', then this value is required.";
+        public static final String SOURCE_TYPE_DESC = "The source type for the instance. Use image when specifying " +
+                "the image OCID. Use bootVolume when specifying the boot volume OCID.";
+        public static final String BOOT_VOLUME_SIZE_IN_GBS_DESC = "The size of the boot volume in GBs. Minimum " +
+                "value is 50 GB and maximum value is 16384 GB (16TB).";
+        public static final String IMAGE_ID_DESC = "The OCID of the image used to boot the instance. If the sourceType " +
+                "is 'image', then this value is required.";
+        public static final String KMS_KEY_ID_DESC = "The OCID of the Key Management key to assign as the master " +
+                "encryption key for the boot volume.";
+        public static final String BOOT_VOLUME_ID_DESC = "The OCID of the boot volume used to boot the instance. " +
+                "If the sourceType is 'bootVolume', then this value is required.";
     }
 
 
     public static class Counter {
         public static final String COUNTER_DESC = "Counts from one number to another number.";
-        public static final String RESULT_STRING_DESC = "The primary result is resultString, Result can also be used. result (All lower case) should not be used as it is the response code.";
-        public static final String RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
+        public static final String RESULT_STRING_DESC = "The primary result is resultString, Result can also be used. " +
+                "result (All lower case) should not be used as it is the response code.";
+        public static final String RESULT_DESC = "If successful, returns the complete API response. In case of an " +
+                "error this output will contain the error message.";
         public static final String FROM_DESC = "The number to start counting at.";
         public static final String TO_DESC = "The number to count to.";
         public static final String RESET_DESC = "If true, then the counter will restart counting from the beginning.";
-        public static final String INCREMENT_BY_DESC = "The number to increment by while counting. If unspecified this is 1. If you wanted to count 2,4,6,8 this would be 2.";
+        public static final String INCREMENT_BY_DESC = "The number to increment by while counting. If unspecified " +
+                "this is 1. If you wanted to count 2,4,6,8 this would be 2.";
 
 
     }

@@ -126,6 +126,7 @@ public class CreateInstance {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
+        privateKeyData = defaultIfEmpty(privateKeyData, EMPTY);
         isManagementDisabled = defaultIfEmpty(isManagementDisabled, EMPTY);
         isMonitoringDisabled = defaultIfEmpty(isMonitoringDisabled, EMPTY);
         assignPublicIp = defaultIfEmpty(assignPublicIp, EMPTY);
