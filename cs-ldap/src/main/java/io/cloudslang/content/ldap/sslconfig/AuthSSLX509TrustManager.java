@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package main.java.io.cloudslang.content.ldap.sslconfig;
+package io.cloudslang.content.ldap.sslconfig;
 
 /*
  * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/contrib/org/apache/commons/httpclient/contrib/ssl/AuthSSLX509TrustManager.java,v 1.2 2004/06/10 18:25:24 olegk Exp $
@@ -52,21 +52,6 @@ import org.apache.commons.logging.LogFactory;
 import javax.net.ssl.X509TrustManager;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-
-/**
- * <p>
- * AuthSSLX509TrustManager can be used to extend the default {@link X509TrustManager}
- * with additional trust decisions.
- * </p>
- *
- * @author <a href="mailto:oleg@ural.ru">Oleg Kalnichevski</a>
- *         <p/>
- *         <p>
- *         DISCLAIMER: HttpClient developers DO NOT actively support this component.
- *         The component is provided as a reference material, which may be inappropriate
- *         for use without additional customization.
- *         </p>
- */
 
 public class AuthSSLX509TrustManager implements X509TrustManager {
     /**
