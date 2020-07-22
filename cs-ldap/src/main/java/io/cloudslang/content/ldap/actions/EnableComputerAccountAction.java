@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -24,15 +24,15 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.InputNames;
 import io.cloudslang.content.ldap.constants.OutputNames;
-import io.cloudslang.content.ldap.entities.DeleteComputerAccountInput;
-import io.cloudslang.content.ldap.services.DeleteComputerAccountService;
+import io.cloudslang.content.ldap.entities.EnableComputerAccountInput;
+import io.cloudslang.content.ldap.services.EnableComputerAccountService;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
-public class DeleteComputerAccountAction {
+public class EnableComputerAccountAction {
     /**
-     * Deletes a computer account from Active Directory.
+     * Enables a computer account in Active Directory.
      *
      * @param host                       The domain controller to connect to.
      * @param OU                         The Organizational Unit DN or Common Name DN to add the computer to.
@@ -56,15 +56,14 @@ public class DeleteComputerAccountAction {
      * @param trustKeystore              The location of the TrustStore file.
      *                                   Example: %JAVA_HOME%/jre/lib/security/cacerts.
      * @param trustPassword              The password associated with the TrustStore file.
-     * @param escapeChars                Add this input and set to true if you want the operation to escape the special AD chars.
      *
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - The return result of the operation.
      * <br><b>returnCode</b> - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
      * <br><b>exception</b> - The exception message if the operation goes to failure.
-     * <br><b>computerDN</b> - The distinguished Name of the computer account that was deleted.
+     * <br><b>computerDN</b> - The distinguished name of the computer account that was enabled.
      */
-    @Action(name = "Delete Computer Account",
+    @Action(name = "Enable Computer Account",
             outputs = {
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
                     @Output(OutputNames.RESULT_COMPUTER_DN),
@@ -90,9 +89,8 @@ public class DeleteComputerAccountAction {
             @Param(value = InputNames.KEYSTORE) String keyStore,
             @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword,
-            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
-        DeleteComputerAccountInput.Builder inputBuilder = new DeleteComputerAccountInput.Builder()
+            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword){
+        EnableComputerAccountInput.Builder inputBuilder = new EnableComputerAccountInput.Builder()
                 .host(host)
                 .OU(OU)
                 .computerCommonName(computerCommonName)
@@ -103,10 +101,9 @@ public class DeleteComputerAccountAction {
                 .keyStore(keyStore)
                 .keyStorePassword(keyStorePassword)
                 .trustKeystore(trustKeystore)
-                .trustPassword(trustPassword)
-                .escapeChars(escapeChars);
+                .trustPassword(trustPassword);
         try {
-            return new DeleteComputerAccountService().execute(inputBuilder.build());
+            return new EnableComputerAccountService().execute(inputBuilder.build());
         } catch (Exception e) {
             return ResultUtils.fromException(e);
         }

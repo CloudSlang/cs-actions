@@ -28,4 +28,7 @@ public final class InputNames {
     public static final String TRUST_KEYSTORE = "trustKeystore";
     public static final String TRUST_PASSWORD = "trustPassword";
     public static final String ESCAPE_CHARS = "escapeChars";
+    public static final String ROOT_DN = "rootDN";
+    public static final String COMPUTER_DN = "computerDN";
+    public static final String NEW_OUDN = "newOUDN";
 }

@@ -12,11 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package main.java.io.cloudslang.content.ldap.entities;
+package io.cloudslang.content.ldap.entities;
 
-import main.java.io.cloudslang.content.ldap.constants.Constants;
-
-import static main.java.io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
+import io.cloudslang.content.ldap.constants.Constants;
+import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class DeleteComputerAccountInput implements LDAPInput{
@@ -169,9 +168,9 @@ public class DeleteComputerAccountInput implements LDAPInput{
         public DeleteComputerAccountInput build() throws Exception {
             DeleteComputerAccountInput input = new DeleteComputerAccountInput();
 
-            input.host = buildHost(host);
+            input.host = buildHost(host, true);
 
-            input.OU = buildOU(OU);
+            input.OU = buildOU(OU, true);
 
             input.computerCommonName = buildComputerCommonName(computerCommonName,true);
 

@@ -23,15 +23,15 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public final class InputBuilderUtils {
 
-    public static String buildHost(String hostname) throws Exception {
-        if (isEmpty(hostname)) {
+    public static String buildHost(String hostname, boolean mandatory) throws Exception {
+        if (isEmpty(hostname) && mandatory) {
             throw new Exception(ExceptionMsgs.HOST_NOT_SPECIFIED);
         }
         return hostname.trim();
     }
 
-    public static String buildOU(String OU) throws Exception {
-        if (isEmpty(OU)) {
+    public static String buildOU(String OU, boolean mandatory) throws Exception {
+        if (isEmpty(OU) && mandatory) {
             throw new Exception(ExceptionMsgs.OU_NOT_SPECIFIED);
         }
         return OU.trim();
@@ -88,6 +88,27 @@ public final class InputBuilderUtils {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static String buildRootDN(String rootDN, boolean mandatory) throws Exception {
+        if (isEmpty(rootDN) && mandatory) {
+            throw new Exception(ExceptionMsgs.ROOTDN_NOT_SPECIFIED);
+        }
+        return rootDN;
+    }
+
+    public static String buildComputerDN(String computerDN, boolean mandatory) throws Exception {
+        if (isEmpty(computerDN) && mandatory) {
+            throw new Exception(ExceptionMsgs.COMPDN_NOT_SPECIFIED);
+        }
+        return computerDN;
+    }
+
+    public static String buildNewOUDN(String newOUDN, boolean mandatory) throws Exception {
+        if (isEmpty(newOUDN) && mandatory) {
+            throw new Exception(ExceptionMsgs.NEWOUDN_NOT_SPECIFIED);
+        }
+        return newOUDN;
     }
 
 }

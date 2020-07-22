@@ -89,7 +89,7 @@ public class LDAPQuery {
         env.put(Context.REFERRAL, "ignore");
 
         /******* VERY IMPORTANT LINE - the parameter is the fully qualified name of your socket factory class *********/
-        env.put("java.naming.ldap.factory.socket", "main.java.io.cloudslang.content.ldap.utils.DummySSLSocketFactory");
+        env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.ldap.utils.DummySSLSocketFactory");
 
         return new InitialDirContext(env);
     }

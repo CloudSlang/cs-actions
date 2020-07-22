@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 Micro Focus
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,12 +19,11 @@ import io.cloudslang.content.ldap.constants.Constants;
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class CreateComputerAccountInput implements LDAPInput{
+public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
 
     private String host;
-    private String OU;
-    private String computerCommonName;
-    private String sAMAccountName;
+    private String computerDN;
+    private String newOUDN;
     private String username;
     private String password;
     private boolean useSSL;
@@ -33,25 +32,18 @@ public class CreateComputerAccountInput implements LDAPInput{
     private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
-    private boolean escapeChars;
 
-    private CreateComputerAccountInput() {
+    private MoveComputerAccountToOUInput() {
     }
 
     public String getHost() {
         return host;
     }
 
-    public String getOU() {
-        return OU;
-    }
+    public String getComputerDN() { return computerDN; }
 
-    public String getComputerCommonName() {
-        return computerCommonName;
-    }
-
-    public String getSAMAccountName() {
-        return sAMAccountName;
+    public String getNewOUDN() {
+        return newOUDN;
     }
 
     public String getUsername() {
@@ -86,16 +78,12 @@ public class CreateComputerAccountInput implements LDAPInput{
         return trustPassword;
     }
 
-    public Boolean getEscapeChars() {
-        return escapeChars;
-    }
 
     public static class Builder {
 
         private String host;
-        private String OU;
-        private String computerCommonName;
-        private String sAMAccountName;
+        private String computerDN;
+        private String newOUDN;
         private String username;
         private String password;
         private String useSSL;
@@ -104,26 +92,19 @@ public class CreateComputerAccountInput implements LDAPInput{
         private String keystorePassword;
         private String trustKeystore;
         private String trustPassword;
-        private String escapeChars;
-
 
         public Builder host(String host) {
             this.host = host;
             return this;
         }
 
-        public Builder OU(String OU) {
-            this.OU = OU;
+        public Builder computerDN(String computerDN) {
+            this.computerDN = computerDN;
             return this;
         }
 
-        public Builder computerCommonName(String computerCommonName) {
-            this.computerCommonName = computerCommonName;
-            return this;
-        }
-
-        public Builder sAMAccountName(String sAMAccountName) {
-            this.sAMAccountName = sAMAccountName;
+        public Builder newOUDN(String newOUDN) {
+            this.newOUDN = newOUDN;
             return this;
         }
 
@@ -172,21 +153,14 @@ public class CreateComputerAccountInput implements LDAPInput{
         }
 
 
-        public Builder escapeChars(String escapeChars) {
-            this.escapeChars = escapeChars;
-            return this;
-        }
-
-        public CreateComputerAccountInput build() throws Exception {
-            CreateComputerAccountInput input = new CreateComputerAccountInput();
+        public MoveComputerAccountToOUInput build() throws Exception {
+            MoveComputerAccountToOUInput input = new MoveComputerAccountToOUInput();
 
             input.host = buildHost(host, true);
 
-            input.OU = buildOU(OU, true);
+            input.computerDN = buildRootDN(computerDN, true);
 
-            input.computerCommonName = buildComputerCommonName(computerCommonName,true);
-
-            input.sAMAccountName = buildSAMAccountName(sAMAccountName,computerCommonName);
+            input.newOUDN = buildNewOUDN(newOUDN,true);
 
             input.username = buildUsername(username);
 
@@ -203,8 +177,6 @@ public class CreateComputerAccountInput implements LDAPInput{
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 
             input.trustPassword = trustPassword;
-
-            input.escapeChars = buildEscapeChars(escapeChars);
 
             return input;
         }

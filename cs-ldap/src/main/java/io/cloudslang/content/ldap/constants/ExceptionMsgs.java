@@ -22,6 +22,9 @@ public final class ExceptionMsgs {
     public static final String OU_NOT_SPECIFIED = "The required OU input is not specified!";
     public static final String CN_NOT_SPECIFIED = "The required computerCommonName input is not specified!";
     public static final String USERNAME_NOT_SPECIFIED = "The username input is not specified!";
+    public static final String ROOTDN_NOT_SPECIFIED = "The required rootDN input is not specified!";
+    public static final String COMPDN_NOT_SPECIFIED = "The required computerDN input is not specified!";
+    public static final String NEWOUDN_NOT_SPECIFIED = "The required newOUDN input is not specified!";
 
     public static final String TIMEOUT_MUST_BE_POSITIVE = "timeout value must be a positive number";
     public static final String INVALID_PORT_NUMBER = "Invalid port number";

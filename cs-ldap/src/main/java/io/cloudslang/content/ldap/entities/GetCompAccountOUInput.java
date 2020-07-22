@@ -12,9 +12,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.ldap.constants;
+package io.cloudslang.content.ldap.entities;
 
-public final class OutputNames {
-    public static final String RESULT_COMPUTER_DN = "computerDN";
-    public static final String RESULT_OU_DN = "OU";
+public interface GetCompAccountOUInput {
+    String getPassword();
+
+    String getUsername();
+
+    String getHost();
+
+    String getRootDN();
+
+    Boolean getUseSSL();
+
+    Boolean getTrustAllRoots();
+
+    String getKeyStore();
+
+    String getKeyStorePassword();
+
+    String getTrustKeystore();
+
+    String getTrustPassword();
+
 }

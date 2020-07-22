@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -23,21 +23,19 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.InputNames;
-import io.cloudslang.content.ldap.constants.OutputNames;
-import io.cloudslang.content.ldap.entities.DeleteComputerAccountInput;
-import io.cloudslang.content.ldap.services.DeleteComputerAccountService;
+import io.cloudslang.content.ldap.entities.MoveComputerAccountToOUInput;
+import io.cloudslang.content.ldap.services.MoveComputerAccountToOUService;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
-public class DeleteComputerAccountAction {
+public class MoveComputerAccountToOUAction {
     /**
-     * Deletes a computer account from Active Directory.
+     * Moves a computer account in a new OU in Active Directory.
      *
      * @param host                       The domain controller to connect to.
-     * @param OU                         The Organizational Unit DN or Common Name DN to add the computer to.
-     *                                   (i.e. OU=OUTest1,DC=battleground,DC=ad)
-     * @param computerCommonName         The name of the computer (its CN).
+     * @param computerDN                 The distinguished name of the computer account we want to move.
+     * @param newOUDN                    The Organizational Unit that the computer account will be moved to.
      * @param username                   The user to connect to AD as.
      * @param password                   The password to connect to AD as.
      * @param useSSL                     If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer
@@ -56,18 +54,15 @@ public class DeleteComputerAccountAction {
      * @param trustKeystore              The location of the TrustStore file.
      *                                   Example: %JAVA_HOME%/jre/lib/security/cacerts.
      * @param trustPassword              The password associated with the TrustStore file.
-     * @param escapeChars                Add this input and set to true if you want the operation to escape the special AD chars.
      *
      * @return a map containing the output of the operations. Keys present in the map are:
      * <br><b>returnResult</b> - The return result of the operation.
      * <br><b>returnCode</b> - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
      * <br><b>exception</b> - The exception message if the operation goes to failure.
-     * <br><b>computerDN</b> - The distinguished Name of the computer account that was deleted.
      */
-    @Action(name = "Delete Computer Account",
+    @Action(name = "Create Computer Account",
             outputs = {
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
-                    @Output(OutputNames.RESULT_COMPUTER_DN),
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
                     @Output(io.cloudslang.content.constants.OutputNames.EXCEPTION)
             },
@@ -81,8 +76,8 @@ public class DeleteComputerAccountAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.OU, required = true) String OU,
-            @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true) String computerCommonName,
+            @Param(value = InputNames.COMPUTER_DN, required = true) String computerDN,
+            @Param(value = InputNames.NEW_OUDN, required = true) String newOUDN,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD) String password,
             @Param(value = InputNames.USE_SSL) String useSSL,
@@ -90,12 +85,11 @@ public class DeleteComputerAccountAction {
             @Param(value = InputNames.KEYSTORE) String keyStore,
             @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword,
-            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
-        DeleteComputerAccountInput.Builder inputBuilder = new DeleteComputerAccountInput.Builder()
+            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword{
+        MoveComputerAccountToOUInput.Builder inputBuilder = new MoveComputerAccountToOUInput.Builder()
                 .host(host)
-                .OU(OU)
-                .computerCommonName(computerCommonName)
+                .computerDN(computerDN)
+                .newOUDN(newOUDN)
                 .username(username)
                 .password(password)
                 .useSSL(useSSL)
@@ -103,10 +97,9 @@ public class DeleteComputerAccountAction {
                 .keyStore(keyStore)
                 .keyStorePassword(keyStorePassword)
                 .trustKeystore(trustKeystore)
-                .trustPassword(trustPassword)
-                .escapeChars(escapeChars);
+                .trustPassword(trustPassword);
         try {
-            return new DeleteComputerAccountService().execute(inputBuilder.build());
+            return new MoveComputerAccountToOUService().execute(inputBuilder.build());
         } catch (Exception e) {
             return ResultUtils.fromException(e);
         }
