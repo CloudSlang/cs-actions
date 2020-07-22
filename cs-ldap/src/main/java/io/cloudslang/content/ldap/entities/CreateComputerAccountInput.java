@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package main.java.io.cloudslang.content.ldap.entities;
+package io.cloudslang.content.ldap.entities;
 
-import main.java.io.cloudslang.content.ldap.constants.Constants;
+import io.cloudslang.content.ldap.constants.Constants;
 
-import static main.java.io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
+import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateComputerAccountInput implements LDAPInput{

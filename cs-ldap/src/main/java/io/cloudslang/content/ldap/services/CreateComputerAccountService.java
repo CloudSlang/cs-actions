@@ -1,10 +1,23 @@
-package main.java.io.cloudslang.content.ldap.services;
+/*
+ * (c) Copyright 2020 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.cloudslang.content.ldap.services;
 
-import com.sun.istack.internal.NotNull;
-import main.java.io.cloudslang.content.ldap.entities.CreateComputerAccountInput;
-import main.java.io.cloudslang.content.ldap.utils.LDAPQuery;
-import main.java.io.cloudslang.content.ldap.utils.MySSLSocketFactory;
-import main.java.io.cloudslang.content.ldap.utils.ResultUtils;
+import io.cloudslang.content.ldap.entities.CreateComputerAccountInput;
+import io.cloudslang.content.ldap.utils.LDAPQuery;
+import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
+import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import javax.naming.CompositeName;
 import javax.naming.Name;
@@ -13,13 +26,13 @@ import javax.naming.directory.*;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
-import static main.java.io.cloudslang.content.ldap.constants.OutputNames.RESULT_COMPUTER_DN;
-import static main.java.io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLCharacters;
+import static io.cloudslang.content.ldap.constants.OutputNames.RESULT_COMPUTER_DN;
+import static io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLCharacters;
 
 
 public class CreateComputerAccountService {
 
-    public @NotNull Map<String, String> execute(@NotNull CreateComputerAccountInput input) {
+    public Map<String, String> execute(CreateComputerAccountInput input) {
 
         Map<String, String> results = ResultUtils.createNewEmptyMap();
 

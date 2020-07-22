@@ -1,4 +1,4 @@
-package main.java.io.cloudslang.content.ldap.utils;
+package io.cloudslang.content.ldap.utils;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;

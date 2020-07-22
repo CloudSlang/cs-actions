@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package main.java.io.cloudslang.content.ldap.actions;
+package io.cloudslang.content.ldap.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -22,11 +22,11 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import main.java.io.cloudslang.content.ldap.constants.InputNames;
-import main.java.io.cloudslang.content.ldap.constants.OutputNames;
-import main.java.io.cloudslang.content.ldap.entities.CreateComputerAccountInput;
-import main.java.io.cloudslang.content.ldap.services.CreateComputerAccountService;
-import main.java.io.cloudslang.content.ldap.utils.ResultUtils;
+import io.cloudslang.content.ldap.constants.InputNames;
+import io.cloudslang.content.ldap.constants.OutputNames;
+import io.cloudslang.content.ldap.entities.CreateComputerAccountInput;
+import io.cloudslang.content.ldap.services.CreateComputerAccountService;
+import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 

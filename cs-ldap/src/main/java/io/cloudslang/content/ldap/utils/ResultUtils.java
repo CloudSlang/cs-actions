@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,9 +13,8 @@
  * limitations under the License.
  */
 
-package main.java.io.cloudslang.content.ldap.utils;
+package io.cloudslang.content.ldap.utils;
 
-import com.sun.istack.internal.NotNull;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +22,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.*;
 
-import static main.java.io.cloudslang.content.ldap.constants.OutputNames.*;
+import static io.cloudslang.content.ldap.constants.OutputNames.*;
 
 public final class ResultUtils {
 
@@ -38,7 +37,7 @@ public final class ResultUtils {
     }
 
 
-    public static Map<String, String> fromException(@NotNull Exception ex) {
+    public static Map<String, String> fromException(Exception ex) {
         Map<String, String> results = createNewEmptyMap();
 
         results.put(OutputNames.RETURN_RESULT, ex.getMessage());

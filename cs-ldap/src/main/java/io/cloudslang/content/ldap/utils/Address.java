@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -14,8 +14,7 @@
  */
 
 
-
-package main.java.io.cloudslang.content.ldap.utils;
+package io.cloudslang.content.ldap.utils;
 
 import java.net.URI;
 
