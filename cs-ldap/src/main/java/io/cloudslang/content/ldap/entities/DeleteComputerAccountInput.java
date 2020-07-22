@@ -19,12 +19,11 @@ import main.java.io.cloudslang.content.ldap.constants.Constants;
 import static main.java.io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class CreateComputerAccountInput implements LDAPInput{
+public class DeleteComputerAccountInput implements LDAPInput{
 
     private String host;
     private String OU;
     private String computerCommonName;
-    private String sAMAccountName;
     private String username;
     private String password;
     private boolean useSSL;
@@ -35,7 +34,7 @@ public class CreateComputerAccountInput implements LDAPInput{
     private String trustPassword;
     private boolean escapeChars;
 
-    private CreateComputerAccountInput() {
+    private DeleteComputerAccountInput() {
     }
 
     public String getHost() {
@@ -48,10 +47,6 @@ public class CreateComputerAccountInput implements LDAPInput{
 
     public String getComputerCommonName() {
         return computerCommonName;
-    }
-
-    public String getSAMAccountName() {
-        return sAMAccountName;
     }
 
     public String getUsername() {
@@ -95,7 +90,6 @@ public class CreateComputerAccountInput implements LDAPInput{
         private String host;
         private String OU;
         private String computerCommonName;
-        private String sAMAccountName;
         private String username;
         private String password;
         private String useSSL;
@@ -119,11 +113,6 @@ public class CreateComputerAccountInput implements LDAPInput{
 
         public Builder computerCommonName(String computerCommonName) {
             this.computerCommonName = computerCommonName;
-            return this;
-        }
-
-        public Builder sAMAccountName(String sAMAccountName) {
-            this.sAMAccountName = sAMAccountName;
             return this;
         }
 
@@ -177,16 +166,14 @@ public class CreateComputerAccountInput implements LDAPInput{
             return this;
         }
 
-        public CreateComputerAccountInput build() throws Exception {
-            CreateComputerAccountInput input = new CreateComputerAccountInput();
+        public DeleteComputerAccountInput build() throws Exception {
+            DeleteComputerAccountInput input = new DeleteComputerAccountInput();
 
             input.host = buildHost(host);
 
             input.OU = buildOU(OU);
 
             input.computerCommonName = buildComputerCommonName(computerCommonName,true);
-
-            input.sAMAccountName = buildSAMAccountName(sAMAccountName,computerCommonName);
 
             input.username = buildUsername(username);
 

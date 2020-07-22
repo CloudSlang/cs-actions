@@ -8,11 +8,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
-/**
- * Used to connect to LDAP using SSL
- *
- * @author nistorc
- */
 public class DummySSLSocketFactory extends SSLSocketFactory {
     private SSLSocketFactory factory;
 

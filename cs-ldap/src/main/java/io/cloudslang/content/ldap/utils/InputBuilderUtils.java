@@ -82,4 +82,12 @@ public final class InputBuilderUtils {
         return defaultIfEmpty(keystore, Constants.DEFAULT_JAVA_KEYSTORE);
     }
 
+    public static boolean buildEscapeChars(String escapeChars) {
+        try {
+            return Boolean.parseBoolean(escapeChars);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }
