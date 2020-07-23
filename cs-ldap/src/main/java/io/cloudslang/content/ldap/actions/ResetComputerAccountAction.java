@@ -23,21 +23,19 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.InputNames;
-import io.cloudslang.content.ldap.entities.MoveComputerAccountToOUInput;
-import io.cloudslang.content.ldap.services.MoveComputerAccountToOUService;
+import io.cloudslang.content.ldap.entities.ResetComputerAccountInput;
+import io.cloudslang.content.ldap.services.ResetComputerAccountService;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
-public class MoveComputerAccountToOUAction {
+public class ResetComputerAccountAction {
     /**
-     * Moves a computer account in a new OU in Active Directory.
+     * Resets a computer account in Active Directory, by resetting the password to an initial password.
      *
      * @param host                       The domain controller to connect to.
-     * @param computerDN                 The distinguished name of the computer account we want to move.
-     *                                   Example: CN=computer_name,OU=OldContainer,DC=example,DC=com
-     * @param newOUDN                    The Organizational Unit that the computer account will be moved to.
-     *                                   Example: OU(or CN)=NewContainer,DC=example,DC=com
+     * @param computerDN                 The distinguished name of the computer account we want to reset.
+     *                                   Example: CN=computer_name,DC=example,DC=com
      * @param username                   The user to connect to AD as.
      * @param password                   The password to connect to AD as.
      * @param useSSL                     If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer
@@ -58,11 +56,11 @@ public class MoveComputerAccountToOUAction {
      * @param trustPassword              The password associated with the TrustStore file.
      *
      * @return a map containing the output of the operations. Keys present in the map are:
-     * <br><b>returnResult</b> - The new distinguished name (DN) of the computer account, after it was moved to the new OU.
+     * <br><b>returnResult</b> - The return result of the operation.
      * <br><b>returnCode</b> - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
      * <br><b>exception</b> - The exception message if the operation goes to failure.
      */
-    @Action(name = "Create Computer Account",
+    @Action(name = "Reset Computer Account",
             outputs = {
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
@@ -79,7 +77,6 @@ public class MoveComputerAccountToOUAction {
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String host,
             @Param(value = InputNames.COMPUTER_DN, required = true) String computerDN,
-            @Param(value = InputNames.NEW_OUDN, required = true) String newOUDN,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD) String password,
             @Param(value = InputNames.USE_SSL) String useSSL,
@@ -88,10 +85,9 @@ public class MoveComputerAccountToOUAction {
             @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD) String trustPassword){
-        MoveComputerAccountToOUInput.Builder inputBuilder = new MoveComputerAccountToOUInput.Builder()
+        ResetComputerAccountInput.Builder inputBuilder = new ResetComputerAccountInput.Builder()
                 .host(host)
                 .computerDN(computerDN)
-                .newOUDN(newOUDN)
                 .username(username)
                 .password(password)
                 .useSSL(useSSL)
@@ -101,7 +97,7 @@ public class MoveComputerAccountToOUAction {
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword);
         try {
-            return new MoveComputerAccountToOUService().execute(inputBuilder.build());
+            return new ResetComputerAccountService().execute(inputBuilder.build());
         } catch (Exception e) {
             return ResultUtils.fromException(e);
         }

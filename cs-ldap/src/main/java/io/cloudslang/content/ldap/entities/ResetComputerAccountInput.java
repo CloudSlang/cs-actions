@@ -33,11 +33,10 @@ import io.cloudslang.content.ldap.constants.Constants;
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class EnableComputerAccountInput implements LDAPInput{
+public class ResetComputerAccountInput implements ResetCompAccountInput{
 
     private String host;
-    private String OU;
-    private String computerCommonName;
+    private String computerDN;
     private String username;
     private String password;
     private boolean useSSL;
@@ -47,20 +46,14 @@ public class EnableComputerAccountInput implements LDAPInput{
     private String trustKeystore;
     private String trustPassword;
 
-    private EnableComputerAccountInput() {
+    private ResetComputerAccountInput() {
     }
 
     public String getHost() {
         return host;
     }
 
-    public String getOU() {
-        return OU;
-    }
-
-    public String getComputerCommonName() {
-        return computerCommonName;
-    }
+    public String getComputerDN() { return computerDN; }
 
     public String getUsername() {
         return username;
@@ -98,8 +91,7 @@ public class EnableComputerAccountInput implements LDAPInput{
     public static class Builder {
 
         private String host;
-        private String OU;
-        private String computerCommonName;
+        private String computerDN;
         private String username;
         private String password;
         private String useSSL;
@@ -114,15 +106,11 @@ public class EnableComputerAccountInput implements LDAPInput{
             return this;
         }
 
-        public Builder OU(String OU) {
-            this.OU = OU;
+        public Builder computerDN(String computerDN) {
+            this.computerDN = computerDN;
             return this;
         }
 
-        public Builder computerCommonName(String computerCommonName) {
-            this.computerCommonName = computerCommonName;
-            return this;
-        }
 
         public Builder username(String username) {
             this.username = username;
@@ -169,14 +157,12 @@ public class EnableComputerAccountInput implements LDAPInput{
         }
 
 
-        public EnableComputerAccountInput build() throws Exception {
-            EnableComputerAccountInput input = new EnableComputerAccountInput();
+        public ResetComputerAccountInput build() throws Exception {
+            ResetComputerAccountInput input = new ResetComputerAccountInput();
 
             input.host = buildHost(host, true);
 
-            input.OU = buildOU(OU, true);
-
-            input.computerCommonName = buildComputerCommonName(computerCommonName,true);
+            input.computerDN = buildRootDN(computerDN, true);
 
             input.username = buildUsername(username);
 
