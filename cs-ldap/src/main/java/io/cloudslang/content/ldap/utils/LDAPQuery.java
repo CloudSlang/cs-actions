@@ -114,7 +114,7 @@ public class LDAPQuery {
         env.put(Context.REFERRAL, "ignore");
 
         ///******* VERY IMPORTANT LINE - the parameter is the fully qualified name of your socket factory class *********/
-        env.put("java.naming.ldap.factory.socket", "com.iconclude.content.actions.ldap.MySSLSocketFactory");
+        env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.ldap.utils.MySSLSocketFactory");
 
         return new InitialDirContext(env);
     }

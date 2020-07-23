@@ -31,4 +31,6 @@ public final class InputNames {
     public static final String ROOT_DN = "rootDN";
     public static final String COMPUTER_DN = "computerDN";
     public static final String NEW_OUDN = "newOUDN";
+    public static final String USER_COMMON_NAME = "userCommonName";
+    public static final String USER_PASSWORD = "userPassword";
 }

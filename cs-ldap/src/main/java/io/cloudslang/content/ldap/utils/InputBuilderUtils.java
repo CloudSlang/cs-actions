@@ -111,4 +111,17 @@ public final class InputBuilderUtils {
         return newOUDN;
     }
 
+    public static String buildUserCommonName(String userCommonName) throws Exception {
+        if (isEmpty(userCommonName)) {
+            throw new Exception(ExceptionMsgs.USERNAME_NOT_SPECIFIED);
+        }
+        return userCommonName.trim();
+    }
+
+    public static String buildUserPassword(String userPassword) throws Exception {
+        if (isEmpty(userPassword)) {
+            throw new Exception(ExceptionMsgs.USER_PASSWORD_NOT_SPECIFIED);
+        }
+        return userPassword.trim();
+    }
 }
