@@ -1,22 +1,23 @@
 package io.cloudslang.content.ldap.services;
 
-import com.sun.istack.internal.NotNull;
 import io.cloudslang.content.ldap.entities.DeleteComputerAccountInput;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
 import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
+
 import javax.naming.CompositeName;
 import javax.naming.Name;
 import javax.naming.NamingException;
-import javax.naming.directory.*;
+import javax.naming.directory.DirContext;
 import java.util.Map;
+
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.ldap.constants.OutputNames.RESULT_COMPUTER_DN;
 import static io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLCharacters;
 
 public class DeleteComputerAccountService {
 
-    public @NotNull Map<String, String> execute(@NotNull DeleteComputerAccountInput input) {
+    public Map<String, String> execute(DeleteComputerAccountInput input) {
 
         Map<String, String> results = ResultUtils.createNewEmptyMap();
 

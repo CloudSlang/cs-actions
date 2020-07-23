@@ -1,6 +1,5 @@
 package io.cloudslang.content.ldap.services;
 
-import com.sun.istack.internal.NotNull;
 import io.cloudslang.content.ldap.entities.EnableComputerAccountInput;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
 import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
@@ -16,8 +15,7 @@ import static io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLChar
 
 public class EnableComputerAccountService {
 
-    public @NotNull
-    Map<String, String> execute(@NotNull EnableComputerAccountInput input) {
+    public Map<String, String> execute(EnableComputerAccountInput input) {
 
         Map<String, String> results = ResultUtils.createNewEmptyMap();
 

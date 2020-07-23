@@ -1,14 +1,14 @@
 package io.cloudslang.content.ldap.services;
 
-import com.sun.istack.internal.NotNull;
-import io.cloudslang.content.ldap.entities.EnableComputerAccountInput;
 import io.cloudslang.content.ldap.entities.IsComputerAccountEnabledInput;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
 import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import javax.naming.NamingException;
-import javax.naming.directory.*;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
@@ -17,8 +17,7 @@ import static io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLChar
 
 public class IsComputerAccountEnabledService {
 
-    public @NotNull
-    Map<String, String> execute(@NotNull IsComputerAccountEnabledInput input) {
+    public Map<String, String> execute(IsComputerAccountEnabledInput input) {
 
         Map<String, String> results = ResultUtils.createNewEmptyMap();
 

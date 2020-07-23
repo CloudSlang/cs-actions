@@ -85,7 +85,7 @@ public class MoveComputerAccountToOUAction {
             @Param(value = InputNames.KEYSTORE) String keyStore,
             @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword{
+            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword){
         MoveComputerAccountToOUInput.Builder inputBuilder = new MoveComputerAccountToOUInput.Builder()
                 .host(host)
                 .computerDN(computerDN)

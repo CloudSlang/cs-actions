@@ -1,6 +1,5 @@
 package io.cloudslang.content.ldap.services;
 
-import com.sun.istack.internal.NotNull;
 import io.cloudslang.content.ldap.entities.MoveComputerAccountToOUInput;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
 import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
@@ -17,8 +16,7 @@ import static io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLChar
 
 public class MoveComputerAccountToOUService {
 
-    public @NotNull
-    Map<String, String> execute(@NotNull MoveComputerAccountToOUInput input) {
+    public Map<String, String> execute(MoveComputerAccountToOUInput input) {
 
         Map<String, String> results = ResultUtils.createNewEmptyMap();
 
@@ -39,9 +37,10 @@ public class MoveComputerAccountToOUService {
                 ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
             }
 
-            String nameComp = input.getComputerDN();
+           // String nameComp = input.getComputerDN();
+            String nameComp = input.getComputerDN().substring(3, input.getComputerDN().indexOf(","));
             String newCompDN = "CN=" + nameComp + "," + OU;
-            ctx.rename(nameComp, newCompDN);
+            ctx.rename(input.getComputerDN(), newCompDN);
             // Specify the changes to make
             ModificationItem[] mods = new ModificationItem[1];
             mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
