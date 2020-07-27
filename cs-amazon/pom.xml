@@ -130,20 +130,14 @@
                 <exclusion>
                     <groupId>commons-beanutils</groupId>
                     <artifactId>commons-beanutils</artifactId>
-                    <version>1.6</version>
-                </exclusion>
-               <exclusion>
-                    <groupId>commons-beanutils</groupId>
-                    <artifactId>commons-beanutils</artifactId>
-                    <version>1.7.0</version>
-                </exclusion>
-              <exclusion>
-                    <groupId>commons-beanutils</groupId>
-                    <artifactId>commons-beanutils</artifactId>
-                    <version>1.9.2</version>
-                </exclusion>               
+                </exclusion>            
             </exclusions>
         </dependency>
+        <dependency>
+           <groupId>commons-beanutils</groupId>
+           <artifactId>commons-beanutils</artifactId>
+           <version>1.9.4</version>
+        </dependency>   
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
