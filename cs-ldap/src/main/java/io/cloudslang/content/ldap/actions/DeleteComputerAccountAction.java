@@ -48,48 +48,47 @@ public class DeleteComputerAccountAction {
     /**
      * Deletes a computer account from Active Directory.
      *
-     * @param host                       The domain controller to connect to.
-     * @param OU                         The Organizational Unit DN or Common Name DN to add the computer to.
-     *                                   (i.e. OU=OUTest1,DC=battleground,DC=ad)
-     * @param computerCommonName         The name of the computer (its CN).
-     * @param username                   The user to connect to AD as.
-     * @param password                   The password to connect to AD as.
-     * @param useSSL                     If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer
-     *                                   Security (TLS) protocol to establish a connection to the remote computer. By default,
-     *                                   the operation tries to establish a secure connection over TLSv1.2. Default port
-     *                                   for SSL/TLS is 636.
-     *                                   Valid values: true, false.
-     *                                   Default value: false.
-     * @param trustAllRoots              Specifies whether to enable weak security over SSL. A SSL certificate is trusted
-     *                                   even if no trusted certification authority issued it.
-     *                                   Valid values: true, false.
-     *                                   Default value: true.
-     * @param keyStore                   The location of the KeyStore file.
-     *                                   Example: %JAVA_HOME%/jre/lib/security/cacerts.
-     * @param keyStorePassword           The password associated with the KeyStore file.
-     * @param trustKeystore              The location of the TrustStore file.
-     *                                   Example: %JAVA_HOME%/jre/lib/security/cacerts.
-     * @param trustPassword              The password associated with the TrustStore file.
-     * @param escapeChars                Add this input and set to true if you want the operation to escape the special AD chars.
-     *
+     * @param host               The domain controller to connect to.
+     * @param OU                 The Organizational Unit DN or Common Name DN to add the computer to.
+     *                           (i.e. OU=OUTest1,DC=battleground,DC=ad)
+     * @param computerCommonName The name of the computer (its CN).
+     * @param username           The user to connect to AD as.
+     * @param password           The password to connect to AD as.
+     * @param useSSL             If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer
+     *                           Security (TLS) protocol to establish a connection to the remote computer. By default,
+     *                           the operation tries to establish a secure connection over TLSv1.2. Default port
+     *                           for SSL/TLS is 636.
+     *                           Valid values: true, false.
+     *                           Default value: false.
+     * @param trustAllRoots      Specifies whether to enable weak security over SSL. A SSL certificate is trusted
+     *                           even if no trusted certification authority issued it.
+     *                           Valid values: true, false.
+     *                           Default value: true.
+     * @param keyStore           The location of the KeyStore file.
+     *                           Example: %JAVA_HOME%/jre/lib/security/cacerts.
+     * @param keyStorePassword   The password associated with the KeyStore file.
+     * @param trustKeystore      The location of the TrustStore file.
+     *                           Example: %JAVA_HOME%/jre/lib/security/cacerts.
+     * @param trustPassword      The password associated with the TrustStore file.
+     * @param escapeChars        Add this input and set to true if you want the operation to escape the special AD chars.
      * @return a map containing the output of the operations. Keys present in the map are:
-     * <br><b>returnResult</b> - The return result of the operation.
-     * <br><b>returnCode</b> - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
-     * <br><b>exception</b> - The exception message if the operation goes to failure.
-     * <br><b>computerDN</b> - The distinguished Name of the computer account that was deleted.
+     * returnResult - The return result of the operation.
+     * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
+     * exception - The exception message if the operation goes to failure.
+     * computerDN - The distinguished Name of the computer account that was deleted.
      */
     @Action(name = "Delete Computer Account",
             outputs = {
-                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.RETURN_RESULT),
                     @Output(OutputNames.RESULT_COMPUTER_DN),
-                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
-                    @Output(io.cloudslang.content.constants.OutputNames.EXCEPTION)
+                    @Output(OutputNames.RETURN_CODE),
+                    @Output(OutputNames.EXCEPTION)
             },
             responses = {
-                    @Response(text = ResponseNames.SUCCESS, field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE,
                             value = ReturnCodes.SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = ResponseNames.FAILURE, field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE,
                             value = ReturnCodes.FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             })
