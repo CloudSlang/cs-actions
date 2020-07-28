@@ -70,7 +70,7 @@ public class CreateUserAction {
      * @param trustPassword    - The password associated with the TrustStore file.
      * @param escapeChars      - Add this input and set to true if you want the operation to escape the special AD chars.
      * @return - a map containing the output of the operation. Keys present in the map are:
-     * returnResult - The text from the PDF file.
+     * returnResult - A message with the cn name of the user in case of success or the error in case of failure..
      * returnCode - the return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
      * exception - the exception message if the operation fails.
      * userDN - The distinguished name of the newly created user
