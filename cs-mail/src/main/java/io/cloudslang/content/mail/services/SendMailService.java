@@ -25,6 +25,10 @@ import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import io.cloudslang.content.mail.utils.HtmlImageNodeVisitor;
 import io.cloudslang.content.mail.utils.ProxyUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import org.bouncycastle.mail.smime.SMIMEException;
@@ -58,9 +62,6 @@ import static com.sun.mail.smtp.SMTPMessage.NOTIFY_DELAY;
 import static com.sun.mail.smtp.SMTPMessage.NOTIFY_FAILURE;
 import static com.sun.mail.smtp.SMTPMessage.NOTIFY_SUCCESS;
 
-/**
- * Created by giloan on 10/30/2014.
- */
 public class SendMailService {
 
     //Operation inputs
@@ -207,7 +208,7 @@ public class SendMailService {
     }
 
     private void processHTMLBodyWithBASE64Images(MimeMultipart multipart) throws ParserException,
-            MessagingException, NoSuchAlgorithmException, SMIMEException, java.security.NoSuchProviderException {
+            MessagingException, SMIMEException, CMSException {
         if (null != input.getBody() && input.getBody().contains(Encodings.BASE64)) {
             Parser parser = new Parser(input.getBody());
             NodeList nodeList = parser.parse(null);
@@ -220,7 +221,7 @@ public class SendMailService {
     }
 
     private void addAllBase64ImagesToMimeMultipart(MimeMultipart multipart, Map<String, String> base64ImagesMap)
-            throws MessagingException, NoSuchAlgorithmException, NoSuchProviderException, SMIMEException {
+            throws MessagingException, SMIMEException, CMSException {
         for (String contentId : base64ImagesMap.keySet()) {
             MimeBodyPart imagePart = getImageMimeBodyPart(base64ImagesMap, contentId);
             imagePart = encryptMimeBodyPart(imagePart);
@@ -237,10 +238,11 @@ public class SendMailService {
         return imagePart;
     }
 
-    private MimeBodyPart encryptMimeBodyPart(MimeBodyPart mimeBodyPart) throws NoSuchAlgorithmException,
-            NoSuchProviderException, SMIMEException {
+    private MimeBodyPart encryptMimeBodyPart(MimeBodyPart mimeBodyPart) throws
+            SMIMEException, CMSException {
         if (input.isEncryptedMessage()) {
-            mimeBodyPart = gen.generate(mimeBodyPart, input.getEncryptionAlgorithm(), SecurityConstants.BOUNCY_CASTLE_PROVIDER);
+            mimeBodyPart = gen.generate(mimeBodyPart, new JceCMSContentEncryptorBuilder(
+                    ASN1ObjectIdentifier.getInstance(input.getEncryptionAlgorithm())).setProvider("BC").build());
         }
         return mimeBodyPart;
     }
@@ -278,7 +280,8 @@ public class SendMailService {
             //
             // create the generator for creating an smime/encrypted message
             //
-            gen.addKeyTransRecipient((X509Certificate) chain[0]);
+            X509Certificate cert = (X509Certificate) chain[0];
+            gen.addRecipientInfoGenerator(new JceKeyTransRecipientInfoGenerator(cert));
         }
     }
 

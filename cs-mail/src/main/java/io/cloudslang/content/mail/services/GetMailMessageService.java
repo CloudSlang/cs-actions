@@ -26,10 +26,12 @@ import org.bouncycastle.cms.PasswordRecipientId;
 import org.bouncycastle.cms.RecipientId;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.RecipientInformationStore;
+import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
 import org.bouncycastle.mail.smime.SMIMEEnveloped;
 
 import java.io.*;
 import java.security.KeyStore;
+import java.security.PrivateKey;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.MimeBodyPart;
@@ -37,6 +39,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
 import static io.cloudslang.content.mail.constants.Constants.*;
+import static io.cloudslang.content.mail.constants.SecurityConstants.BOUNCY_CASTLE_PROVIDER;
 import static org.bouncycastle.mail.smime.SMIMEUtil.toMimeBodyPart;
 
 public class GetMailMessageService {
@@ -332,9 +335,9 @@ public class GetMailMessageService {
             throw new Exception(errorMessage.toString());
         }
 
-        return toMimeBodyPart(recipient.getContent(
-                ks.getKey(input.getDecryptionKeyAlias(), null),
-                SecurityConstants.BOUNCY_CASTLE_PROVIDER));
+        return toMimeBodyPart(recipient.getContentStream(new JceKeyTransEnvelopedRecipient((PrivateKey)
+                ks.getKey(input.getDecryptionKeyAlias(),null)).setProvider(BOUNCY_CASTLE_PROVIDER)));
+
     }
 
 

@@ -24,10 +24,8 @@ import io.cloudslang.content.mail.entities.GetMailAttachmentInput;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import io.cloudslang.content.mail.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.cms.KeyTransRecipientId;
-import org.bouncycastle.cms.RecipientId;
-import org.bouncycastle.cms.RecipientInformation;
-import org.bouncycastle.cms.RecipientInformationStore;
+import org.bouncycastle.cms.*;
+import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
 import org.bouncycastle.mail.smime.SMIMEEnveloped;
 import org.bouncycastle.mail.smime.SMIMEUtil;
 
@@ -36,14 +34,18 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeUtility;
 import java.io.*;
 import java.security.KeyStore;
+import java.security.PrivateKey;
 import java.util.*;
+
+import static io.cloudslang.content.mail.constants.SecurityConstants.BOUNCY_CASTLE_PROVIDER;
 
 public class GetMailAttachmentService {
 
     protected GetMailAttachmentInput input;
 
     private Map<String, String> results = new HashMap<>();
-    private RecipientId recId = null;
+    private KeyTransRecipientId recId = null;
+//    private KEKRecipientId recId = null;
     private KeyStore ks = null;
 
 
@@ -144,10 +146,10 @@ public class GetMailAttachmentService {
             if (nextObj instanceof RecipientInformation) {
                 RecipientInformation testRecipient = (RecipientInformation) nextObj;
 
-                RecipientId recipientId = testRecipient.getRID();
+                KeyTransRecipientId recipientId = (KeyTransRecipientId) testRecipient.getRID();
 
                 if (recipientId.getSerialNumber().equals(recId.getSerialNumber()) &&
-                        recipientId.getIssuerAsString().equals(recId.getIssuerAsString())) {
+                        recipientId.getIssuer().equals(recId.getIssuer())) {
                     recipient = testRecipient;
                     break;
                 }
@@ -168,10 +170,8 @@ public class GetMailAttachmentService {
             throw new Exception(errorMessage.toString());
         }
 
-        return SMIMEUtil.toMimeBodyPart(recipient.getContent(
-                ks.getKey(input.getDecryptionKeyAlias(), null),
-                SecurityConstants.BOUNCY_CASTLE_PROVIDER)
-        );
+        return SMIMEUtil.toMimeBodyPart(recipient.getContentStream(new JceKeyTransEnvelopedRecipient((PrivateKey)
+                ks.getKey(input.getDecryptionKeyAlias(),null)).setProvider(BOUNCY_CASTLE_PROVIDER)));
     }
 
 

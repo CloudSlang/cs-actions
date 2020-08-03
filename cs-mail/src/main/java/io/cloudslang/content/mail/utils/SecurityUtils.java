@@ -17,12 +17,22 @@ package io.cloudslang.content.mail.utils;
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import io.cloudslang.content.mail.entities.DecryptableMailInput;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.asn1.cms.RecipientIdentifier;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.cert.cmp.RevocationDetailsBuilder;
+import org.bouncycastle.cms.KEKRecipientId;
+import org.bouncycastle.cms.KeyTransRecipientInformation;
 import org.bouncycastle.cms.RecipientId;
+import org.bouncycastle.cms.RecipientInformation;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipient;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipientId;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.security.KeyStore;
+import java.security.Security;
+import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
@@ -31,7 +41,7 @@ public final class SecurityUtils {
     public static void addDecryptionSettings(KeyStore ks, RecipientId recId, DecryptableMailInput input) throws Exception {
         char[] smimePw = input.getDecryptionKeystorePassword().toCharArray();
 
-        java.security.Security.addProvider(new BouncyCastleProvider());
+        Security.addProvider(new BouncyCastleProvider());
 
         try (InputStream decryptionStream = new URL(input.getDecryptionKeystore()).openStream()) {
             ks.load(decryptionStream, smimePw);
@@ -63,7 +73,7 @@ public final class SecurityUtils {
             cert.checkValidity();
         }
 
-        recId.setSerialNumber(cert.getSerialNumber());
-        recId.setIssuer(cert.getIssuerX500Principal().getEncoded());
+        //        recId.setSerialNumber(cert.getSerialNumber());
+//        recId.setIssuer(X500Name.getInstance(cert.getIssuerX500Principal().getEncoded()));
     }
 }
