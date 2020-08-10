@@ -12,15 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.maps.constants;
+package io.cloudslang.content.maps.exceptions;
 
-public final class InputNames {
-    
-    public static final String MAP = "map";
-    public static final String KEY = "key";
-    public static final String VALUE = "value";
-    
-    private InputNames() {
-
+public class ValidationException extends Exception {
+    public ValidationException(String message) {
+        super(message);
     }
 }

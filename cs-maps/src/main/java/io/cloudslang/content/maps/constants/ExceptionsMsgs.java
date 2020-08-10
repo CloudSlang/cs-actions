@@ -14,13 +14,16 @@
  */
 package io.cloudslang.content.maps.constants;
 
-public final class InputNames {
-    
-    public static final String MAP = "map";
-    public static final String KEY = "key";
-    public static final String VALUE = "value";
-    
-    private InputNames() {
+public final class ExceptionsMsgs {
+
+    public static final String KEY_CANNOT_CONTAIN_DELIMITER = String.format("Key cannot contain delimiter '%s', '%s' or '%s'.",
+            Delimiters.KEY_VALUE_PAIR_DELIM, Delimiters.MAP_ENTRY_DELIM, Delimiters.QUOTE_DELIM);
+    public static final String VALUE_CANNOT_CONTAIN_DELIMITER = String.format("Value cannot contain delimiter '%s', '%s' or '%s'.",
+            Delimiters.KEY_VALUE_PAIR_DELIM, Delimiters.MAP_ENTRY_DELIM, Delimiters.QUOTE_DELIM);
+    public static final String MAP_HAS_INVALID_FORMAT = "Given map has invalid format";
+    public static final String NO_MAP_PROVIDED = "No map provided";
+
+    private ExceptionsMsgs(){
 
     }
 }

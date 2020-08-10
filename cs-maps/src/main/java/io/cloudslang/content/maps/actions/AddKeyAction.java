@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.maps.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -7,11 +21,16 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.maps.constants.InputNames;
+import io.cloudslang.content.maps.entities.AddKeyInput;
+import io.cloudslang.content.maps.services.AddKeyService;
+import io.cloudslang.content.utils.OutputUtilities;
 
 import java.util.Map;
 
 
-public class AddKey {
+public class AddKeyAction {
+
+    private final AddKeyService service = new AddKeyService();
 
     @Action(name = "Add Key",
             outputs = {
@@ -33,6 +52,15 @@ public class AddKey {
     public Map<String, String> execute(@Param(value = InputNames.MAP, required = true) String map,
                                        @Param(value = InputNames.KEY, required = true) String key,
                                        @Param(value = InputNames.VALUE) String value) {
-        return null;
+        try{
+            AddKeyInput input = new AddKeyInput.Builder()
+                    .map(map)
+                    .key(key)
+                    .value(value)
+                    .build();
+            return service.execute(input);
+        } catch (Exception ex) {
+            return OutputUtilities.getFailureResultsMap(ex);
+        }
     }
 }
