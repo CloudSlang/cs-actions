@@ -341,6 +341,7 @@
         <module>cs-vmware</module>
         <module>cs-xml</module>
         <module>cs-hashicorp-terraform</module>
+        <module>cs-maps</module>
     </modules>
 
 </project>
