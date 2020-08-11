@@ -24,6 +24,10 @@ public final class InputNames {
     public static final String MAP_START = "mapStart";
     public static final String MAP_END = "mapEnd";
 
+    public static final String MAP1 = "map1";
+    public static final String MAP2 = "map2";
+
+
 
     private InputNames() {
 
