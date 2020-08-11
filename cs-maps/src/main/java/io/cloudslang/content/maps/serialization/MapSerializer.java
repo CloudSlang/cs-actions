@@ -14,7 +14,6 @@
  */
 package io.cloudslang.content.maps.serialization;
 
-import io.cloudslang.content.maps.constants.Delimiters;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -22,35 +21,38 @@ import java.util.Map;
 
 public class MapSerializer {
 
+    private final String pairDelimiter;
+    private final String entryDelimiter;
+    private final String mapStart;
+    private final String mapEnd;
+
+
+    public MapSerializer(@NotNull String pairDelimiter, @NotNull String entryDelimiter,
+                         @NotNull String mapStart, @NotNull String mapEnd) {
+        this.pairDelimiter = pairDelimiter;
+        this.entryDelimiter = entryDelimiter;
+        this.mapStart = mapStart;
+        this.mapEnd = mapEnd;
+    }
+
+
     public @NotNull String serialize(@NotNull Map<String, String> map) {
         StringBuilder mapAsString = new StringBuilder();
-        mapAsString.append(Delimiters.MAP_START);
+        mapAsString.append(this.mapStart);
 
         Iterator<String> iterator = map.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
             String value = map.get(key);
 
-            if(key == null) {
-                mapAsString.append((String) null);
-            } else {
-                mapAsString.append(Delimiters.QUOTE_DELIM).append(key).append(Delimiters.QUOTE_DELIM);
-            }
-
-            mapAsString.append(Delimiters.KEY_VALUE_PAIR_DELIM).append(" ");
-
-            if(value == null) {
-                mapAsString.append((String) null);
-            } else {
-                mapAsString.append(Delimiters.QUOTE_DELIM).append(value).append(Delimiters.QUOTE_DELIM);
-            }
+            mapAsString.append(key).append(this.pairDelimiter).append(value);
 
             if (iterator.hasNext()) {
-                mapAsString.append(Delimiters.MAP_ENTRY_DELIM).append(" ");
+                mapAsString.append(this.entryDelimiter);
             }
         }
 
-        mapAsString.append(Delimiters.MAP_END);
+        mapAsString.append(this.mapEnd);
         return mapAsString.toString();
     }
 }

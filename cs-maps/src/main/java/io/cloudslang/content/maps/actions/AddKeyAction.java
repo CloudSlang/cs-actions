@@ -32,6 +32,7 @@ public class AddKeyAction {
 
     private final AddKeyService service = new AddKeyService();
 
+
     @Action(name = "Add Key",
             outputs = {
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
@@ -50,13 +51,21 @@ public class AddKeyAction {
                             isOnFail = true, isDefault = true)
             })
     public Map<String, String> execute(@Param(value = InputNames.MAP, required = true) String map,
-                                       @Param(value = InputNames.KEY, required = true) String key,
-                                       @Param(value = InputNames.VALUE) String value) {
-        try{
+                                       @Param(value = InputNames.KEY) String key,
+                                       @Param(value = InputNames.VALUE) String value,
+                                       @Param(value = InputNames.PAIR_DELIMITER, required = true) String pairDelimiter,
+                                       @Param(value = InputNames.ENTRY_DELIMITER, required = true) String entryDelimiter,
+                                       @Param(value = InputNames.MAP_START) String mapStart,
+                                       @Param(value = InputNames.MAP_END) String mapEnd) {
+        try {
             AddKeyInput input = new AddKeyInput.Builder()
                     .map(map)
                     .key(key)
                     .value(value)
+                    .pairDelimiter(pairDelimiter)
+                    .entryDelimiter(entryDelimiter)
+                    .mapStart(mapStart)
+                    .mapEnd(mapEnd)
                     .build();
             return service.execute(input);
         } catch (Exception ex) {

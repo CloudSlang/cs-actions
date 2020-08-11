@@ -14,38 +14,50 @@
  */
 package io.cloudslang.content.maps.serialization;
 
-import io.cloudslang.content.maps.constants.Delimiters;
+import io.cloudslang.content.maps.constants.ExceptionsMsgs;
+import io.cloudslang.content.maps.exceptions.DeserializationException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class MapDeserializer {
 
-    public @NotNull Map<String, String> deserialize(@NotNull String mapAsString) {
+    private final String pairDelimiter;
+    private final String entryDelimiter;
+    private final String mapStart;
+    private final String mapEnd;
+
+
+    public MapDeserializer(@NotNull String pairDelimiter, @NotNull String entryDelimiter,
+                           @NotNull String mapStart, @NotNull String mapEnd) {
+        this.pairDelimiter = pairDelimiter;
+        this.entryDelimiter = entryDelimiter;
+        this.mapStart = mapStart;
+        this.mapEnd = mapEnd;
+    }
+
+
+    public @NotNull Map<String, String> deserialize(@NotNull String mapAsString) throws DeserializationException {
         Map<String, String> map = new LinkedHashMap<>();
 
-        mapAsString = mapAsString.trim();
-        mapAsString = mapAsString.substring(1, mapAsString.length() - 1);
-        if(mapAsString.trim().length() == 0) {
-            return map;
-        }
-        String[] mapEntries = mapAsString.split(Delimiters.MAP_ENTRY_DELIM);
+        int beginIndex = this.mapStart.length();
+        int endIndex = mapAsString.length() - this.mapEnd.length();
+        mapAsString = mapAsString.substring(beginIndex, endIndex);
 
-        for(String mapEntry : mapEntries) {
-            mapEntry = mapEntry.trim();
-            String[] keyValuePair = mapEntry.split(Delimiters.KEY_VALUE_PAIR_DELIM);
+        String[] mapEntries = mapAsString.split(Pattern.quote(this.entryDelimiter));
 
+        for (String mapEntry : mapEntries) {
+            String[] keyValuePair = mapEntry.split(Pattern.quote(this.pairDelimiter));
+            if (keyValuePair.length < 2) {
+                throw new DeserializationException(ExceptionsMsgs.MISSING_PAIR_DELIMITER);
+            }
+            if(keyValuePair.length > 2) {
+                throw new DeserializationException(ExceptionsMsgs.PAIR_DELIMITER_APPEARS_MORE_THAN_ONCE);
+            }
             String key = keyValuePair[0].trim();
-            if(key.startsWith(Delimiters.QUOTE_DELIM)) {
-                key = key.substring(1, key.length() - 1);
-            }
-
             String value = keyValuePair[1].trim();
-            if(value.startsWith(Delimiters.QUOTE_DELIM)) {
-                value = value.substring(1, value.length() - 1);
-            }
-
             map.put(key, value);
         }
 

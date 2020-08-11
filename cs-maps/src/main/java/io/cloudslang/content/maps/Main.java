@@ -12,17 +12,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.maps.constants;
+package io.cloudslang.content.maps;
 
-public final class Delimiters {
+import io.cloudslang.content.maps.actions.AddKeyAction;
 
-    public static final String KEY_VALUE_PAIR_DELIM = ":";
-    public static final String MAP_ENTRY_DELIM = ",";
-    public static final String QUOTE_DELIM = "'";
-    public static final String MAP_START = "{";
-    public static final String MAP_END = "}";
+import java.util.Map;
 
-    private Delimiters() {
-
+public class Main {
+    public static void main(String[] args) {
+        Map<String, String> output = new AddKeyAction().execute(
+                "{{Ana are mere|Ana are pere||Ion|Ion}",
+                "{Ion",
+                "Ana",
+                "|",
+                "||",
+                "{",
+                "}"
+        );
+        for (String key : output.keySet()) {
+            System.out.println(key + ": " + output.get(key));
+        }
     }
 }

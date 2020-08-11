@@ -27,14 +27,18 @@ import java.util.Map;
 public class AddKeyService {
 
     private final AddKeyInputValidator validator = new AddKeyInputValidator();
-    private final MapDeserializer deserializer = new MapDeserializer();
-    private final MapSerializer serializer = new MapSerializer();
+
 
     public @NotNull Map<String, String> execute(@NotNull AddKeyInput input) throws Exception {
         ValidationException validationEx = validator.validate(input);
-        if(validationEx != null) {
+        if (validationEx != null) {
             throw validationEx;
         }
+
+        MapSerializer serializer = new MapSerializer(input.getPairDelimiter(), input.getEntryDelimiter(),
+                input.getMapStart(), input.getMapEnd());
+        MapDeserializer deserializer = new MapDeserializer(input.getPairDelimiter(), input.getEntryDelimiter(),
+                input.getMapStart(), input.getMapEnd());
 
         Map<String, String> map = deserializer.deserialize(input.getMap());
         map.put(input.getKey(), input.getValue());

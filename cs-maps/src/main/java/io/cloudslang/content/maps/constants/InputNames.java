@@ -15,11 +15,16 @@
 package io.cloudslang.content.maps.constants;
 
 public final class InputNames {
-    
+
     public static final String MAP = "map";
     public static final String KEY = "key";
     public static final String VALUE = "value";
-    
+    public static final String PAIR_DELIMITER = "pairDelimiter";
+    public static final String ENTRY_DELIMITER = "entryDelimiter";
+    public static final String MAP_START = "mapStart";
+    public static final String MAP_END = "mapEnd";
+
+
     private InputNames() {
 
     }

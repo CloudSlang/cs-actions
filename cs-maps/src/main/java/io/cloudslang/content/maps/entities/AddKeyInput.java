@@ -14,16 +14,26 @@
  */
 package io.cloudslang.content.maps.entities;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class AddKeyInput {
     private final String map;
     private final String key;
     private final String value;
+    private final String pairDelimiter;
+    private final String entryDelimiter;
+    private final String mapStart;
+    private final String mapEnd;
 
 
     private AddKeyInput(Builder builder) {
         this.map = builder.map;
         this.key = builder.key;
         this.value = builder.value;
+        this.pairDelimiter = builder.pairDelimiter;
+        this.entryDelimiter = builder.entryDelimiter;
+        this.mapStart = builder.mapStart;
+        this.mapEnd = builder.mapEnd;
     }
 
 
@@ -42,10 +52,34 @@ public class AddKeyInput {
     }
 
 
+    public String getPairDelimiter() {
+        return pairDelimiter;
+    }
+
+
+    public String getEntryDelimiter() {
+        return entryDelimiter;
+    }
+
+
+    public String getMapStart() {
+        return mapStart;
+    }
+
+
+    public String getMapEnd() {
+        return mapEnd;
+    }
+
+
     public static class Builder {
         private String map;
         private String key;
         private String value;
+        private String pairDelimiter;
+        private String entryDelimiter;
+        private String mapStart;
+        private String mapEnd;
 
 
         public Builder map(String map) {
@@ -62,6 +96,30 @@ public class AddKeyInput {
 
         public Builder value(String value) {
             this.value = value;
+            return this;
+        }
+
+
+        public Builder pairDelimiter(String pairDelimiter) {
+            this.pairDelimiter = pairDelimiter;
+            return this;
+        }
+
+
+        public Builder entryDelimiter(String entryDelimiter) {
+            this.entryDelimiter = entryDelimiter;
+            return this;
+        }
+
+
+        public Builder mapStart(String mapStart) {
+            this.mapStart = StringUtils.defaultString(mapStart);
+            return this;
+        }
+
+
+        public Builder mapEnd(String mapEnd) {
+            this.mapEnd = StringUtils.defaultString(mapEnd);
             return this;
         }
 
