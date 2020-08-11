@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.maps.serialization;
 
+import io.cloudslang.content.maps.constants.Chars;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -45,7 +47,21 @@ public class MapSerializer {
             String key = iterator.next();
             String value = map.get(key);
 
+            if((this.entryDelimiter.concat(key).lastIndexOf(this.entryDelimiter) > 0) ||
+                    (StringUtils.isEmpty(key) && this.entryDelimiter.concat(this.pairDelimiter).lastIndexOf(this.entryDelimiter) > 0)) {
+                mapAsString.append(Chars.NON_BREAKING_SPACE);
+            }
+
             mapAsString.append(key).append(this.pairDelimiter).append(value);
+
+            // avoid situation like map=<> key=whatever value=val| and entryDelim=|| => <whatever=val|||>
+            // or map=<> key=whatever value=EMPTY_STRING pairDelim=| and entryDelim=|| => <whatever|||>
+            // that would break the next deserialization
+            if((value.concat(this.entryDelimiter).indexOf(this.entryDelimiter) < value.length()) ||
+                    (StringUtils.isEmpty(value) && this.pairDelimiter.concat(this.entryDelimiter).indexOf(this.entryDelimiter)
+                            < this.pairDelimiter.length())) {
+                mapAsString.append(Chars.NON_BREAKING_SPACE);
+            }
 
             if (iterator.hasNext()) {
                 mapAsString.append(this.entryDelimiter);

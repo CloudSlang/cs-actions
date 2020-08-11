@@ -21,11 +21,20 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args) {
         Map<String, String> output = new AddKeyAction().execute(
-                "{}",
+                "{key||a}",
                 null,
-                "Ana",
-                "|",
+                null,
                 "||",
+                "|||",
+                "{",
+                "}"
+        );
+        new AddKeyAction().execute(
+                output.get("returnResult"),
+                null,
+                null,
+                "||",
+                "|||",
                 "{",
                 "}"
         );
