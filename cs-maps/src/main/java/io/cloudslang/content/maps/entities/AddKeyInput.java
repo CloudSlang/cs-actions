@@ -89,13 +89,13 @@ public class AddKeyInput {
 
 
         public Builder key(String key) {
-            this.key = key;
+            this.key = StringUtils.defaultString(key);
             return this;
         }
 
 
         public Builder value(String value) {
-            this.value = value;
+            this.value = StringUtils.defaultString(value);
             return this;
         }
 

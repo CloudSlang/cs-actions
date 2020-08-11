@@ -46,6 +46,10 @@ public class MapDeserializer {
         int endIndex = mapAsString.length() - this.mapEnd.length();
         mapAsString = mapAsString.substring(beginIndex, endIndex);
 
+        if (mapAsString.length() == 0) {
+            return map;
+        }
+
         String[] mapEntries = mapAsString.split(Pattern.quote(this.entryDelimiter));
 
         for (String mapEntry : mapEntries) {
@@ -53,7 +57,7 @@ public class MapDeserializer {
             if (keyValuePair.length < 2) {
                 throw new DeserializationException(ExceptionsMsgs.MISSING_PAIR_DELIMITER);
             }
-            if(keyValuePair.length > 2) {
+            if (keyValuePair.length > 2) {
                 throw new DeserializationException(ExceptionsMsgs.PAIR_DELIMITER_APPEARS_MORE_THAN_ONCE);
             }
             String key = keyValuePair[0].trim();
