@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.maps.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -20,8 +34,8 @@ public class MergeMapsAction {
     /**
      * Merges 2 maps into one map.
      *
-     * This operation does not modify either of the maps inputs. The maps can have different structures, but the resulted map
-     * will keep the map1's structure. If a key exists in both maps, the operation will prioritize the pair from map2.
+     * The maps can have different structures, but the resulted map will keep the map1's structure.
+     * If a key exists in both maps, the result map will contain it only once, with the value found in map2.
      *
      * Examples:
      * map1=|A|1||B|2|, map1_pair_delimiter=|, map1_entry_delimiter=||, map1_start=|, map1_end=|
@@ -94,11 +108,11 @@ public class MergeMapsAction {
         try {
             MergeMapsInput input = new MergeMapsInput.Builder()
                     .map1(map1)
-                    .map2(map2)
                     .map1PairDelimiter(map1PairDelimiter)
                     .map1EntryDelimiter(map1EntryDelimiter)
                     .map1Start(map1Start)
                     .map1End(map1End)
+                    .map2(map2)
                     .map2PairDelimiter(map2PairDelimiter)
                     .map2EntryDelimiter(map2EntryDelimiter)
                     .map2Start(map2Start)
