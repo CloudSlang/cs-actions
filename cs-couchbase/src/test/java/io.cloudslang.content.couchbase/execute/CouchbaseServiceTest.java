@@ -192,6 +192,21 @@ public class CouchbaseServiceTest {
     }
 
     @Test
+    public void testGetAutoFailOverSettings() throws MalformedURLException {
+        httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
+                "", "", "", "", "", "",
+                "", "", "", "", "", "", "GET");
+        CommonInputs commonInputs = getCommonInputs("GetAutoFailOverSettings", "cluster", "http://somewhere.couchbase.com:8091");
+        toTest.execute(httpClientInputs, commonInputs);
+
+        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
+        verifyNoMoreInteractions(csHttpClientMock);
+
+        assertEquals("http://somewhere.couchbase.com:8091/settings/autoFailover", httpClientInputs.getUrl());
+        assertEquals("application/json", httpClientInputs.getContentType());
+    }
+
+    @Test
     public void testGetBucket() throws MalformedURLException {
         httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
                 "", "", "", "", "", "",

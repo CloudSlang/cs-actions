@@ -94,7 +94,7 @@ public class GetInstanceDetails {
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
-
+        privateKeyData = defaultIfEmpty(privateKeyData, EMPTY);
         connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);

@@ -79,7 +79,7 @@
         <cs-commons.version>0.0.5</cs-commons.version>
         <cs-xml.version>0.0.13</cs-xml.version>
         <cs-http-client.version>0.1.74</cs-http-client.version>
-        <jackson.version>2.9.10.4</jackson.version>
+        <jackson.version>2.9.10.5</jackson.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
