@@ -46,7 +46,7 @@ public class AddKeyAction {
      * This is the default format.
      *
      * @param map            Optional - The map to add a key to.
-     *                       Example: {a:1,b:2,c:3,d:4}, <John|1||George|2>, Apples=3;Oranges=2
+     *                       Example: {a:1,b:2,c:3,d:4}, Apples=3;Oranges=2
      *                       Default: {''}.
      *                       Valid values: Any string representing a valid map according to specified delimiters
      *                       (pair_delimiter, entry_delimiter, map_start, map_end).
