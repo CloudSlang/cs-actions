@@ -20,7 +20,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-hashicorp-terraform</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.4-SNAPSHOT</version>
 	
  <name>${project.groupId}:${project.artifactId}</name>
     <description>Terraform Integration</description>
@@ -90,7 +90,7 @@
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <junit.version>4.12</junit.version>
         <common-codec.version>1.10</common-codec.version>
-        <cs-http-client.version>0.1.75</cs-http-client.version>
+        <cs-http-client.version>0.1.77</cs-http-client.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>

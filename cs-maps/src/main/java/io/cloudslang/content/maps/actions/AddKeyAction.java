@@ -36,25 +36,38 @@ public class AddKeyAction {
     /**
      * Adds a key to a map. If the given key already exists in the map then its value will be overwritten.
      * <p>
+     * Notes: CRLF will be replaced with LF for proper handling.
+     * <p>
      * Examples:
      * 1. For an SQL like map ---
      * map=|A|1||B|2|, key=B, value=3, pair_delimiter=|, entry_delimiter=||, map_start=|, map_end=| => |A|1||B|3|
      * 2. For a JSON like map ---
      * map={'A':'1','B':'2'}, key=B, value=3, pair_delimiter=':', entry_delimiter=',', map_start={', map_end='} => {'A':'1','B':'3'}
+     * This is the default format.
      *
-     * @param map            The map to add a key to.
+     * @param map            Optional - The map to add a key to.
      *                       Example: {a:1,b:2,c:3,d:4}, <John|1||George|2>, Apples=3;Oranges=2
+     *                       Default: {''}.
+     *                       Valid values: Any string representing a valid map according to specified delimiters
+     *                       (pair_delimiter, entry_delimiter, map_start, map_end).
      * @param key            Optional - The key to add.
-     *                       Valid values: Any string that does not contain or is equal to value of pairDelimiter or entryDelimiter.
+     *                       Default value: NULL.
+     *                       Valid values: Any string that does not contain or is equal to value of pair_delimiter or entry_delimiter.
      * @param value          Optional - The value to map to the added key.
-     *                       Valid values: Any string that does not contain or is equal to value of pairDelimiter or entryDelimiter.
-     * @param pairDelimiter  The separator to use for splitting key-value pairs into key, respectively value.
+     *                       Default value: NULL
+     *                       Valid values: Any string that does not contain or is equal to value of pair_delimiter or entry_delimiter.
+     * @param pairDelimiter  Optional - The separator to use for splitting key-value pairs into key, respectively value.
+     *                       Default value: ':'.
+     *                       Valid values: Any value that does not contain or is equal to entry_delimiter.
+     * @param entryDelimiter Optional - The separator to use for splitting the map into entries.
+     *                       Default value: ','.
      *                       Valid values: Any value.
-     * @param entryDelimiter The separator to use for splitting the map into entries.
+     * @param mapStart       Optional - A sequence of 0 or more characters that marks the beginning of the map.
+     *                       Default value: {'.
+     *                       Valid values: Any value.A sequence of 0 or more characters that marks the beginning of the map.
      *                       Valid values: Any value.
-     * @param mapStart       A sequence of 0 or more characters that marks the beginning of the map.
-     *                       Valid values: Any value.
-     * @param mapEnd         A sequence of 0 or more characters that marks the end of the map.
+     * @param mapEnd         Optional - A sequence of 0 or more characters that marks the end of the map.
+     *                       Default value: '}.
      *                       Valid values: Any value.
      * @return a map with following entries:
      * return_result: The map with the added key if operation succeeded. Otherwise it will contain the message of the exception.
@@ -78,11 +91,11 @@ public class AddKeyAction {
                             matchType = MatchType.COMPARE_EQUAL,
                             isOnFail = true, isDefault = true)
             })
-    public Map<String, String> execute(@Param(value = InputNames.MAP, required = true) String map,
+    public Map<String, String> execute(@Param(value = InputNames.MAP) String map,
                                        @Param(value = InputNames.KEY) String key,
                                        @Param(value = InputNames.VALUE) String value,
-                                       @Param(value = InputNames.PAIR_DELIMITER, required = true) String pairDelimiter,
-                                       @Param(value = InputNames.ENTRY_DELIMITER, required = true) String entryDelimiter,
+                                       @Param(value = InputNames.PAIR_DELIMITER) String pairDelimiter,
+                                       @Param(value = InputNames.ENTRY_DELIMITER) String entryDelimiter,
                                        @Param(value = InputNames.MAP_START) String mapStart,
                                        @Param(value = InputNames.MAP_END) String mapEnd) {
         try {
