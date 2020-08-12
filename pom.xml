@@ -325,8 +325,10 @@
         <module>cs-google</module>
         <module>cs-http-client</module>
         <module>cs-json</module>
+        <module>cs-ldap</module>  
         <module>cs-lists</module>
         <module>cs-mail</module>
+        <module>cs-maps</module>
         <module>cs-microfocus-dca</module>
         <module>cs-microfocus-hcm</module>
         <module>cs-nutanix-prism</module>
@@ -341,7 +343,6 @@
         <module>cs-vmware</module>
         <module>cs-xml</module>
         <module>cs-hashicorp-terraform</module>
-        <module>cs-ldap</module>
     </modules>
 
 </project>
