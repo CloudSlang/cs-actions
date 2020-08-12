@@ -34,15 +34,17 @@ public class MapDeserializer {
 
     public MapDeserializer(@NotNull String pairDelimiter, @NotNull String entryDelimiter,
                            @NotNull String mapStart, @NotNull String mapEnd) {
-        this.pairDelimiter = pairDelimiter;
-        this.entryDelimiter = entryDelimiter;
-        this.mapStart = mapStart;
-        this.mapEnd = mapEnd;
+        this.pairDelimiter = pairDelimiter.replace(Chars.CRLF, Chars.LF);
+        this.entryDelimiter = entryDelimiter.replace(Chars.CRLF, Chars.LF);
+        this.mapStart = mapStart.replace(Chars.CRLF, Chars.LF);
+        this.mapEnd = mapEnd.replace(Chars.CRLF, Chars.LF);
     }
 
 
     public @NotNull Map<String, String> deserialize(@NotNull String mapAsString) throws DeserializationException {
         Map<String, String> map = new LinkedHashMap<>();
+
+        mapAsString = mapAsString.replace(Chars.CRLF, Chars.LF);
 
         int beginIndex = this.mapStart.length();
         int endIndex = mapAsString.length() - this.mapEnd.length();
@@ -58,7 +60,7 @@ public class MapDeserializer {
             String[] keyValuePair = mapEntry.split(Pattern.quote(this.pairDelimiter));
 
             if (keyValuePair.length < 2) {
-                if(mapEntry.endsWith(this.pairDelimiter)) {
+                if (mapEntry.endsWith(this.pairDelimiter)) {
                     String[] tmp = new String[2];
                     tmp[0] = keyValuePair[0];
                     tmp[1] = StringUtils.EMPTY;
@@ -73,6 +75,10 @@ public class MapDeserializer {
 
             String key = keyValuePair[0].replace(Chars.NON_BREAKING_SPACE, " ").trim();
             String value = keyValuePair[1].replace(Chars.NON_BREAKING_SPACE, " ").trim();
+
+            if (map.containsKey(key)) {
+                throw new DeserializationException(ExceptionsMsgs.DUPLICATE_KEY);
+            }
             map.put(key, value);
         }
 

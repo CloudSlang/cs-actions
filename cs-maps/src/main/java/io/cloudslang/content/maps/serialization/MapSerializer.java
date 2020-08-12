@@ -31,10 +31,10 @@ public class MapSerializer {
 
     public MapSerializer(@NotNull String pairDelimiter, @NotNull String entryDelimiter,
                          @NotNull String mapStart, @NotNull String mapEnd) {
-        this.pairDelimiter = pairDelimiter;
-        this.entryDelimiter = entryDelimiter;
-        this.mapStart = mapStart;
-        this.mapEnd = mapEnd;
+        this.pairDelimiter = pairDelimiter.replace(Chars.CRLF, Chars.LF);
+        this.entryDelimiter = entryDelimiter.replace(Chars.CRLF, Chars.LF);
+        this.mapStart = mapStart.replace(Chars.CRLF, Chars.LF);
+        this.mapEnd = mapEnd.replace(Chars.CRLF, Chars.LF);
     }
 
 

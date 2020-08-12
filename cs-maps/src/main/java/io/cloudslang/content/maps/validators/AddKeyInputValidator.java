@@ -39,7 +39,8 @@ public class AddKeyInputValidator {
 
 
     private void validateMap(AddKeyInput input) throws ValidationException {
-        if (StringUtils.isBlank(input.getMap())) {
+        if (StringUtils.isEmpty(input.getMap()) &&
+                (StringUtils.isNotEmpty(input.getMapStart()) || StringUtils.isNotEmpty(input.getMapStart()))) {
             throw new ValidationException(ExceptionsMsgs.NO_MAP_PROVIDED);
         }
 

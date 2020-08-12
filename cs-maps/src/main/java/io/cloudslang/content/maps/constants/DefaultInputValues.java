@@ -14,13 +14,19 @@
  */
 package io.cloudslang.content.maps.constants;
 
-public final class Chars {
+import org.apache.commons.lang3.StringUtils;
 
-    public static final String NON_BREAKING_SPACE = "\u00A0";
-    public static final String LF = "\n";
-    public static final String CRLF = "\r\n";
+public final class DefaultInputValues {
 
-    private Chars() {
+    public static final String MAP = StringUtils.EMPTY;
+    public static final String KEY = "NULL";
+    public static final String VALUE = "NULL";
+    public static final String PAIR_DELIMITER = "':'";
+    public static final String ENTRY_DELIMITER = "','";
+    public static final String MAP_START = "{'";
+    public static final String MAP_END = "'}";
+
+    private DefaultInputValues() {
 
     }
 }

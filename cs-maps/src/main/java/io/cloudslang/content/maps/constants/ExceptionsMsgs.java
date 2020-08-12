@@ -33,6 +33,7 @@ public final class ExceptionsMsgs {
     public static final String PAIR_DELIMITER_CANNOT_CONTAIN_ENTRY_DELIMITER = InputNames.PAIR_DELIMITER + " cannot contain " + InputNames.ENTRY_DELIMITER;
     public static final String NO_MAP_PROVIDED = "No map provided";
     public static final String INVALID_MAP = "Invalid map provided";
+    public static final String DUPLICATE_KEY = "Duplicate key found in map.";
     public static final String MAP_EXPECTED_TO_START_WITH_MAP_START = "Map was expected to start with value of " + InputNames.MAP_START + " input.";
     public static final String MAP_EXPECTED_TO_END_WITH_MAP_END = "Map was expected to end with value of " + InputNames.MAP_END + " input.";
     public static final String MISSING_PAIR_DELIMITER = "Missing key-value pair delimiter in map.";

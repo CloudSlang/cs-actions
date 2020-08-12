@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.maps.entities;
 
+import io.cloudslang.content.maps.constants.DefaultInputValues;
 import org.apache.commons.lang3.StringUtils;
 
 public class AddKeyInput {
@@ -83,43 +84,43 @@ public class AddKeyInput {
 
 
         public Builder map(String map) {
-            this.map = map;
+            this.map = StringUtils.defaultString(map, DefaultInputValues.MAP);
             return this;
         }
 
 
         public Builder key(String key) {
-            this.key = StringUtils.defaultString(key);
+            this.key = StringUtils.defaultString(key, DefaultInputValues.KEY);
             return this;
         }
 
 
         public Builder value(String value) {
-            this.value = StringUtils.defaultString(value);
+            this.value = StringUtils.defaultString(value, DefaultInputValues.VALUE);
             return this;
         }
 
 
         public Builder pairDelimiter(String pairDelimiter) {
-            this.pairDelimiter = pairDelimiter;
+            this.pairDelimiter = StringUtils.defaultString(pairDelimiter, DefaultInputValues.PAIR_DELIMITER);
             return this;
         }
 
 
         public Builder entryDelimiter(String entryDelimiter) {
-            this.entryDelimiter = entryDelimiter;
+            this.entryDelimiter = StringUtils.defaultString(entryDelimiter, DefaultInputValues.ENTRY_DELIMITER);
             return this;
         }
 
 
         public Builder mapStart(String mapStart) {
-            this.mapStart = StringUtils.defaultString(mapStart);
+            this.mapStart = StringUtils.defaultString(mapStart, DefaultInputValues.MAP_START);
             return this;
         }
 
 
         public Builder mapEnd(String mapEnd) {
-            this.mapEnd = StringUtils.defaultString(mapEnd);
+            this.mapEnd = StringUtils.defaultString(mapEnd, DefaultInputValues.MAP_END);
             return this;
         }
 
