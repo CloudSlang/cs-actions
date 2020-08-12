@@ -26,6 +26,14 @@ public final class InputNames {
 
     public static final String MAP1 = "map1";
     public static final String MAP2 = "map2";
+    public static final String MAP1_PAIR_DELIMITER = "pairDelimiter";
+    public static final String MAP1_ENTRY_DELIMITER = "entryDelimiter";
+    public static final String MAP1_START = "mapStart";
+    public static final String MAP1_END = "mapEnd";
+    public static final String MAP2_PAIR_DELIMITER = "pairDelimiter";
+    public static final String MAP2_ENTRY_DELIMITER = "entryDelimiter";
+    public static final String MAP2_START = "mapStart";
+    public static final String MAP2_END = "mapEnd";
 
 
 

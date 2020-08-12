@@ -20,20 +20,23 @@ public class MergeMapsService {
             throw validationException;
         }
 
-        MapSerializer serializer = new MapSerializer(input.getPairDelimiter(), input.getEntryDelimiter(),
-                input.getMapStart(), input.getMapEnd());
-        MapDeserializer deserializer = new MapDeserializer(input.getPairDelimiter(), input.getEntryDelimiter(),
-                input.getMapStart(), input.getMapEnd());
+        MapSerializer serializer = new MapSerializer(input.getMap1PairDelimiter(), input.getMap1EntryDelimiter(),
+                input.getMap1Start(), input.getMap1End());
 
-        Map<String, String> map1 = deserializer.deserialize(input.getMap1());
-        Map<String, String> map2 = deserializer.deserialize(input.getMap2());
+        MapDeserializer map1Deserializer = new MapDeserializer(input.getMap1PairDelimiter(), input.getMap1EntryDelimiter(),
+                input.getMap1Start(), input.getMap1End());
+
+        MapDeserializer map2Deserializer = new MapDeserializer(input.getMap2PairDelimiter(), input.getMap2EntryDelimiter(),
+                input.getMap2Start(), input.getMap2End());
+
+        Map<String, String> map1 = map1Deserializer.deserialize(input.getMap1());
+        Map<String, String> map2 = map2Deserializer.deserialize(input.getMap2());
 
         for(Map.Entry<String,String> entry : map2.entrySet()){
             map1.put(entry.getKey(),entry.getValue());
         }
 
         String returnResult = serializer.serialize(map1);
-
         return OutputUtilities.getSuccessResultsMap(returnResult);
     }
 }
