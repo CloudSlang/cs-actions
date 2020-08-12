@@ -43,7 +43,7 @@ public class MergeMapsAction {
      * return_result = |A|1||B|5||C|6|
      *
      * @param map1               Optional - The first map to merge.
-     *                           Example: {a:1,b:2,c:3,d:4}, <John|1||George|2>, Apples=3;Oranges=2
+     *                           Example: {a:1,b:2,c:3,d:4}, Apples=3;Oranges=2
      * @param map1PairDelimiter  Optional - The separator to use for splitting first map's key-value pairs into key, respectively value.
      *                           Default value: ':'.
      *                           Valid values: Any value that does not contain or is equal to map1_entry_delimiter.
@@ -57,7 +57,7 @@ public class MergeMapsAction {
      *                           Default value: '}.
      *                           Valid values: Any value.
      * @param map2               Optional - The second map to merge.
-     *                           Example: {a:1,b:2,c:3,d:4}, <John|1||George|2>, Apples=3;Oranges=2
+     *                           Example: {a:1,b:2,c:3,d:4}, Apples=3;Oranges=2
      * @param map2PairDelimiter  Optional - The separator to use for splitting second map's key-value pairs into key, respectively value.
      *                           Default value: ':'.
      *                           Valid values: Any value that does not contain or is equal to map2_entry_delimiter.
