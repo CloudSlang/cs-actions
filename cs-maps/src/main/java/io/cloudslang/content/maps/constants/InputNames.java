@@ -23,17 +23,21 @@ public final class InputNames {
     public static final String ENTRY_DELIMITER = "entryDelimiter";
     public static final String MAP_START = "mapStart";
     public static final String MAP_END = "mapEnd";
+    public static final String ELEMENT_WRAPPER = "elementWrapper";
+    public static final String STRIP_WHITESPACES = "stripWhitespaces";
 
     public static final String MAP1 = "map1";
     public static final String MAP1_PAIR_DELIMITER = "map1PairDelimiter";
     public static final String MAP1_ENTRY_DELIMITER = "map1EntryDelimiter";
     public static final String MAP1_START = "map1Start";
     public static final String MAP1_END = "map1End";
+    public static final String MAP1_ELEMENT_WRAPPER = "map1ElementWrapper";
     public static final String MAP2 = "map2";
     public static final String MAP2_PAIR_DELIMITER = "map2PairDelimiter";
     public static final String MAP2_ENTRY_DELIMITER = "map2EntryDelimiter";
     public static final String MAP2_START = "map2Start";
     public static final String MAP2_END = "map2End";
+    public static final String MAP2_ELEMENT_WRAPPER = "map2ElementWrapper";
 
 
     private InputNames() {

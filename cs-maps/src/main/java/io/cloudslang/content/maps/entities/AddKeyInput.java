@@ -15,6 +15,7 @@
 package io.cloudslang.content.maps.entities;
 
 import io.cloudslang.content.maps.constants.DefaultInputValues;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class AddKeyInput {
@@ -25,6 +26,8 @@ public class AddKeyInput {
     private final String entryDelimiter;
     private final String mapStart;
     private final String mapEnd;
+    private final String elementWrapper;
+    private final boolean stripWhitespaces;
 
 
     private AddKeyInput(Builder builder) {
@@ -35,6 +38,8 @@ public class AddKeyInput {
         this.entryDelimiter = builder.entryDelimiter;
         this.mapStart = builder.mapStart;
         this.mapEnd = builder.mapEnd;
+        this.elementWrapper = builder.elementWrapper;
+        this.stripWhitespaces = builder.stripWhitespaces;
     }
 
 
@@ -73,6 +78,16 @@ public class AddKeyInput {
     }
 
 
+    public String getElementWrapper() {
+        return elementWrapper;
+    }
+
+
+    public boolean isStripWhitespaces() {
+        return stripWhitespaces;
+    }
+
+
     public static class Builder {
         private String map;
         private String key;
@@ -81,6 +96,8 @@ public class AddKeyInput {
         private String entryDelimiter;
         private String mapStart;
         private String mapEnd;
+        private String elementWrapper;
+        private boolean stripWhitespaces;
 
 
         public Builder map(String map) {
@@ -90,7 +107,7 @@ public class AddKeyInput {
 
 
         public Builder key(String key) {
-            this.key = StringUtils.defaultString(key, DefaultInputValues.KEY);
+            this.key = key;
             return this;
         }
 
@@ -102,13 +119,13 @@ public class AddKeyInput {
 
 
         public Builder pairDelimiter(String pairDelimiter) {
-            this.pairDelimiter = StringUtils.defaultString(pairDelimiter, DefaultInputValues.PAIR_DELIMITER);
+            this.pairDelimiter = pairDelimiter;
             return this;
         }
 
 
         public Builder entryDelimiter(String entryDelimiter) {
-            this.entryDelimiter = StringUtils.defaultString(entryDelimiter, DefaultInputValues.ENTRY_DELIMITER);
+            this.entryDelimiter = entryDelimiter;
             return this;
         }
 
@@ -121,6 +138,19 @@ public class AddKeyInput {
 
         public Builder mapEnd(String mapEnd) {
             this.mapEnd = StringUtils.defaultString(mapEnd, DefaultInputValues.MAP_END);
+            return this;
+        }
+
+
+        public Builder elementWrapper(String elementWrapper) {
+            this.elementWrapper = StringUtils.defaultString(elementWrapper, DefaultInputValues.ELEMENT_WRAPPER);
+            return this;
+        }
+
+
+        public Builder stripWhitespaces(String stripWhitespaces) {
+            stripWhitespaces = StringUtils.defaultIfEmpty(stripWhitespaces, DefaultInputValues.STRIP_WHITESPACES);
+            this.stripWhitespaces = BooleanUtils.toBoolean(stripWhitespaces.toLowerCase(), String.valueOf(true), String.valueOf(false));
             return this;
         }
 

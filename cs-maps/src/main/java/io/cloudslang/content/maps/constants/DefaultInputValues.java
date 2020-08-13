@@ -19,12 +19,11 @@ import org.apache.commons.lang3.StringUtils;
 public final class DefaultInputValues {
 
     public static final String MAP = StringUtils.EMPTY;
-    public static final String KEY = "NULL";
-    public static final String VALUE = "NULL";
-    public static final String PAIR_DELIMITER = "':'";
-    public static final String ENTRY_DELIMITER = "','";
-    public static final String MAP_START = "{'";
-    public static final String MAP_END = "'}";
+    public static final String VALUE = StringUtils.EMPTY;
+    public static final String MAP_START = StringUtils.EMPTY;
+    public static final String MAP_END = StringUtils.EMPTY;
+    public static final String ELEMENT_WRAPPER = StringUtils.EMPTY;
+    public static final String STRIP_WHITESPACES = String.valueOf(false);
 
     private DefaultInputValues() {
 
