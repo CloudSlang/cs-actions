@@ -33,11 +33,15 @@ public class MergeMapsService {
             throw validationException;
         }
 
-        MapSerializer map1Serializer = new MapSerializer(input.getMap1PairDelimiter(), input.getMap1EntryDelimiter(),
-                input.getMap1Start(), input.getMap1End());
+        MapSerializer map1Serializer = new MapSerializer(
+                input.getMap1PairDelimiter(), input.getMap1EntryDelimiter(),
+                input.getMap1Start(), input.getMap1End(),
+                input.getMap1ElementWrapper(), input.isStripWhitespaces());
 
-        MapSerializer map2Serializer = new MapSerializer(input.getMap2PairDelimiter(), input.getMap2EntryDelimiter(),
-                input.getMap2Start(), input.getMap2End());
+        MapSerializer map2Serializer = new MapSerializer(
+                input.getMap2PairDelimiter(), input.getMap2EntryDelimiter(),
+                input.getMap2Start(), input.getMap2End(),
+                input.getMap2ElementWrapper(), input.isStripWhitespaces());
 
         Map<String, String> map1 = map1Serializer.deserialize(input.getMap1());
         Map<String, String> map2 = map2Serializer.deserialize(input.getMap2());

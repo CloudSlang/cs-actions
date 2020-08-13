@@ -16,7 +16,7 @@ package io.cloudslang.content.maps.constants;
 
 public final class Chars {
 
-    public static final String NON_BREAKING_SPACE = "\u00A0";
+    public static final String RECORD_SEPARATOR = "\u001E";
     public static final String LF = "\n";
     public static final String CRLF = "\r\n";
 

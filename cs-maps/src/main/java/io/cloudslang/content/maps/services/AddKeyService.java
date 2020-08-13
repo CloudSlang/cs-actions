@@ -34,8 +34,10 @@ public class AddKeyService {
             throw validationEx;
         }
 
-        MapSerializer serializer = new MapSerializer(input.getPairDelimiter(), input.getEntryDelimiter(),
-                input.getMapStart(), input.getMapEnd());
+        MapSerializer serializer = new MapSerializer(
+                input.getPairDelimiter(), input.getEntryDelimiter(),
+                input.getMapStart(), input.getMapEnd(),
+                input.getElementWrapper(), input.isStripWhitespaces());
 
         Map<String, String> map = serializer.deserialize(input.getMap());
         map.put(input.getKey(), input.getValue());

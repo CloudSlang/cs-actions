@@ -16,28 +16,25 @@ package io.cloudslang.content.maps.constants;
 
 public final class ExceptionsMsgs {
 
-    public static final String KEY_CANNOT_CONTAIN_MAP_START = "Key cannot contain value of " + InputNames.MAP_START + " input";
-    public static final String KEY_CANNOT_CONTAIN_MAP_END = "Key cannot contain value of " + InputNames.MAP_END + " input";
-    public static final String KEY_CANNOT_CONTAIN_PAIR_DELIMITER = "Key cannot contain value of " + InputNames.PAIR_DELIMITER + " input";
-    public static final String KEY_CANNOT_CONTAIN_ENTRY_DELIMITER = "Key cannot contain value of " + InputNames.ENTRY_DELIMITER + " input";
-    public static final String VALUE_CANNOT_CONTAIN_MAP_START = "Value cannot contain " + InputNames.MAP_START;
-    public static final String VALUE_CANNOT_CONTAIN_MAP_END = "Value cannot contain " + InputNames.MAP_END;
-    public static final String VALUE_CANNOT_CONTAIN_PAIR_DELIMITER = "Value cannot contain " + InputNames.PAIR_DELIMITER;
-    public static final String VALUE_CANNOT_CONTAIN_ENTRY_DELIMITER = "Value cannot contain " + InputNames.ENTRY_DELIMITER;
+    public static final String KEY_CANNOT_CONTAIN = "Key cannot contain value of input %s or a subset of it.";
+    public static final String VALUE_CANNOT_CONTAIN = "Value cannot contain value of input %s or a subset of it.";
     public static final String NULL_OR_EMPTY_PAIR_DELIMITER = "Value of " + InputNames.PAIR_DELIMITER + " was null or empty.";
     public static final String NULL_OR_EMPTY_ENTRY_DELIMITER = "Value of " + InputNames.ENTRY_DELIMITER + " was null or empty.";
     public static final String ENTRY_AND_PAIR_DELIMITER_MUST_BE_DISTINCT = InputNames.ENTRY_DELIMITER + " and " +
             InputNames.PAIR_DELIMITER + " must be distinct.";
     public static final String PAIR_DELIMITER_CANNOT_CONTAIN_ENTRY_DELIMITER = InputNames.PAIR_DELIMITER + " cannot contain " + InputNames.ENTRY_DELIMITER;
-    public static final String NO_MAP_PROVIDED = "No map provided";
-    public static final String INVALID_MAP = "Invalid map provided";
     public static final String DUPLICATE_KEY = "Duplicate key found in map.";
     public static final String MAP_EXPECTED_TO_START_WITH_MAP_START = "Map was expected to start with value of " + InputNames.MAP_START + " input.";
     public static final String MAP_EXPECTED_TO_END_WITH_MAP_END = "Map was expected to end with value of " + InputNames.MAP_END + " input.";
     public static final String MISSING_PAIR_DELIMITER = "Missing key-value pair delimiter in map.";
-    public static final String PAIR_DELIMITER_APPEARS_MORE_THAN_ONCE = "Key-value pair delimiter appears more than once in entry.";
+    public static final String PAIR_DELIMITER_APPEARS_MORE_THAN_ONCE = "Key-value pair delimiter appears more than once in entry. Are you missing an "
+            + InputNames.ENTRY_DELIMITER + "?";
     public static final String NULL_KEY = "Key cannot be null or blank.";
     public static final String INVALID_VALUE_FOR_INPUT = "Invalid value for input %s";
+    public static final String ELEMENT_WRAPPER_CANNOT_HAVE_COMMON_CHAR_WITH = "Input " + InputNames.ELEMENT_WRAPPER +
+            " cannot contain character that also appears in %s.";
+    public static final String KEY_OR_VALUE_WAS_EXPECTED_TO_START_WITH_WRAPPER = "Key or value was expected to start with value of " + InputNames.ELEMENT_WRAPPER;
+    public static final String KEY_OR_VALUE_WAS_EXPECTED_TO_END_WITH_WRAPPER = "Key or value was expected to end with value of " + InputNames.ELEMENT_WRAPPER;
 
     private ExceptionsMsgs() {
 

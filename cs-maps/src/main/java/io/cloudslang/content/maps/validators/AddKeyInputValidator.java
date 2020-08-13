@@ -24,10 +24,13 @@ public class AddKeyInputValidator {
 
     public ValidationException validate(@NotNull AddKeyInput input) {
         try {
-            FieldValidator.validateKey(input.getKey(), input.getPairDelimiter(), input.getEntryDelimiter());
-            FieldValidator.validateValue(input.getValue(), input.getPairDelimiter(), input.getEntryDelimiter());
             FieldValidator.validatePairDelimiter(input.getPairDelimiter(), input.getEntryDelimiter());
             FieldValidator.validateEntryDelimiter(input.getEntryDelimiter(), input.getPairDelimiter());
+            FieldValidator.validateKey(input.getKey(), input.getPairDelimiter(), input.getEntryDelimiter(),
+                    input.getElementWrapper(), input.getMapStart(), input.getMapEnd());
+            FieldValidator.validateValue(input.getValue(), input.getPairDelimiter(), input.getEntryDelimiter(),
+                    input.getElementWrapper(), input.getMapStart(), input.getMapEnd());
+            FieldValidator.validateElementWrapper(input.getElementWrapper(), input.getPairDelimiter(), input.getEntryDelimiter());
             FieldValidator.validateMap(input.getMap(), input.getMapStart(), input.getMapEnd());
             return null;
         } catch (ValidationException ex) {

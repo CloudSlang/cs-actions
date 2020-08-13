@@ -73,6 +73,10 @@ public class MergeMapsInput {
         return map1End;
     }
 
+    public String getMap1ElementWrapper() {
+        return map1ElementWrapper;
+    }
+
     public String getMap2() {
         return map2;
     }
@@ -89,9 +93,21 @@ public class MergeMapsInput {
         return map2Start;
     }
 
+
     public String getMap2End() {
         return map2End;
     }
+
+
+    public String getMap2ElementWrapper() {
+        return map2ElementWrapper;
+    }
+
+
+    public boolean isStripWhitespaces() {
+        return stripWhitespaces;
+    }
+
 
     public static class Builder {
         private String map1;

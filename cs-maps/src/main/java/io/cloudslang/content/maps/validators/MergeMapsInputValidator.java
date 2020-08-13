@@ -28,11 +28,13 @@ public class MergeMapsInputValidator {
             FieldValidator.validatePairDelimiter(input.getMap1PairDelimiter(), input.getMap1EntryDelimiter());
             FieldValidator.validateEntryDelimiter(input.getMap1EntryDelimiter(), input.getMap1PairDelimiter());
             FieldValidator.validateMap(input.getMap1(), input.getMap1Start(), input.getMap1End());
+            FieldValidator.validateElementWrapper(input.getMap1ElementWrapper(), input.getMap1PairDelimiter(), input.getMap1EntryDelimiter());
 
             FieldValidator.validatePairDelimiter(input.getMap2PairDelimiter(), input.getMap2EntryDelimiter());
             FieldValidator.validateEntryDelimiter(input.getMap2EntryDelimiter(), input.getMap2PairDelimiter());
             FieldValidator.validateMap(input.getMap2(), input.getMap2Start(), input.getMap2End());
-            
+            FieldValidator.validateElementWrapper(input.getMap2ElementWrapper(), input.getMap2PairDelimiter(), input.getMap2EntryDelimiter());
+
             return null;
         } catch (ValidationException ex) {
             return ex;
