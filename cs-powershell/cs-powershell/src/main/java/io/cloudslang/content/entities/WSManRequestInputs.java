@@ -1,0 +1,381 @@
+/*******************************************************************************
+ * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
+package io.cloudslang.content.entities;
+
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * Created by giloan on 5/12/2016.
+ */
+public class WSManRequestInputs {
+
+    private String host;
+    private String port;
+    private String protocol;
+    private String username;
+    private String password;
+    private String authType;
+    private String kerberosConfFile;
+    private String kerberosLoginConfFile;
+    private String kerberosSkipPortForLookup;
+    private String proxyHost;
+    private String proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
+    private int maxEnvelopeSize;
+    private String trustAllRoots;
+    private String x509HostnameVerifier;
+    private String keystore;
+    private String keystorePassword;
+    private String trustKeystore;
+    private String trustPassword;
+    private String script;
+    private String modules;
+    private String returnTable;
+    private String delimiter;
+    private String colDelimiter;
+    private String rowDelimiter;
+    private String winrmLocale;
+    private int operationTimeout;
+    private final int connectTimeout;
+
+    public WSManRequestInputs(WSManRequestInputsBuilder builder) {
+        this.host = builder.host;
+        this.port = builder.port;
+        this.protocol = builder.protocol;
+        this.username = builder.username;
+        this.password = builder.password;
+        this.authType = builder.authType;
+        this.kerberosConfFile = builder.kerberosConfFile;
+        this.kerberosLoginConfFile = builder.kerberosLoginConfFile;
+        this.kerberosSkipPortForLookup = builder.kerberosSkipPortForLookup;
+        this.proxyHost = builder.proxyHost;
+        this.proxyPort = builder.proxyPort;
+        this.proxyUsername = builder.proxyUsername;
+        this.proxyPassword = builder.proxyPassword;
+        this.maxEnvelopeSize = builder.maxEnvelopeSize;
+        this.trustAllRoots = builder.trustAllRoots;
+        this.x509HostnameVerifier = builder.x509HostnameVerifier;
+        this.keystore = builder.keystore;
+        this.keystorePassword = builder.keystorePassword;
+        this.trustKeystore = builder.trustKeystore;
+        this.trustPassword = builder.trustPassword;
+        this.script = builder.script;
+        this.modules = builder.modules;
+        this.returnTable = builder.returnTable;
+        this.delimiter = builder.delimiter;
+        this.colDelimiter = builder.colDelimiter;
+        this.rowDelimiter = builder.rowDelimiter;
+        this.winrmLocale = builder.winrmLocale;
+        this.operationTimeout = builder.operationTimeout;
+        this.connectTimeout = builder.connectTimeout;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getAuthType() {
+        return authType;
+    }
+
+    public String getKerberosConfFile() {
+        return kerberosConfFile;
+    }
+
+    public String getKerberosLoginConfFile() {
+        return kerberosLoginConfFile;
+    }
+
+    public String getKerberosSkipPortForLookup() {
+        return kerberosSkipPortForLookup;
+    }
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public String getProxyPort() {
+        return proxyPort;
+    }
+
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    public int getMaxEnvelopeSize() {
+        return maxEnvelopeSize;
+    }
+
+    public String getTrustAllRoots() {
+        return trustAllRoots;
+    }
+
+    public String getX509HostnameVerifier() {
+        return x509HostnameVerifier;
+    }
+
+    public String getKeystore() {
+        return keystore;
+    }
+
+    public String getKeystorePassword() {
+        return keystorePassword;
+    }
+
+    public String getTrustKeystore() {
+        return trustKeystore;
+    }
+
+    public String getTrustPassword() {
+        return trustPassword;
+    }
+
+    public String getScript() {
+        return script;
+    }
+
+    public String getModules() {
+        return modules;
+    }
+
+    public String getReturnTable() {
+        return returnTable;
+    }
+
+    public String getDelimiter() {
+        return delimiter;
+    }
+
+    public String getColDelimiter() {
+        return colDelimiter;
+    }
+
+    public String getRowDelimiter() {
+        return rowDelimiter;
+    }
+
+    public String getWinrmLocale() {
+        return winrmLocale;
+    }
+
+    public int getOperationTimeout() {
+        return operationTimeout;
+    }
+
+    public int getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    public static class WSManRequestInputsBuilder {
+        private String host;
+        private String port;
+        private String protocol;
+        private String username;
+        private String password;
+        private String authType;
+        private String kerberosConfFile;
+        private String kerberosLoginConfFile;
+        private String kerberosSkipPortForLookup;
+        private String proxyHost;
+        private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
+        private int maxEnvelopeSize;
+        private String trustAllRoots;
+        private String x509HostnameVerifier;
+        private String keystore;
+        private String keystorePassword;
+        private String trustKeystore;
+        private String trustPassword;
+        private String script;
+        private String modules;
+        private String returnTable;
+        private String delimiter;
+        private String colDelimiter;
+        private String rowDelimiter;
+        private String winrmLocale;
+        private int operationTimeout;
+        private int connectTimeout;
+
+        public WSManRequestInputs build() {
+            return new WSManRequestInputs(this);
+        }
+
+        public WSManRequestInputsBuilder withHost(String host) {
+            this.host = host;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withPort(String port) {
+            this.port = StringUtils.isBlank(port) ? InputDefaults.PORT.getValue() : port;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withProtocol(String protocol) {
+            this.protocol = StringUtils.isBlank(protocol) ? InputDefaults.PROTOCOL.getValue() : protocol;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withUsername(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withProxyHost(String proxyHost) {
+            this.proxyHost = proxyHost;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withProxyPort(String proxyPort) {
+            this.proxyPort = proxyPort;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withProxyUsername(String proxyUsername) {
+            this.proxyUsername = proxyUsername;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withProxyPassword(String proxyPassword) {
+            this.proxyPassword = proxyPassword;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withMaxEnvelopeSize(String maxEnvelopeSize) {
+            maxEnvelopeSize = StringUtils.isBlank(maxEnvelopeSize) ? InputDefaults.MAX_ENVELOPE_SIZE.getValue() : maxEnvelopeSize;
+            this.maxEnvelopeSize = Integer.parseInt(maxEnvelopeSize);
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withTrustAllRoots(String trustAllRoots) {
+            this.trustAllRoots = StringUtils.isBlank(trustAllRoots) ? InputDefaults.TRUST_ALL_ROOTS.getValue() : trustAllRoots;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withX509HostnameVerifier(String x509HostnameVerifier) {
+            this.x509HostnameVerifier = StringUtils.isBlank(x509HostnameVerifier) ? InputDefaults.X_509_HOSTNAME_VERIFIER.getValue() : x509HostnameVerifier;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withKeystore(String keystore) {
+            this.keystore = keystore;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withKeystorePassword(String keystorePassword) {
+            this.keystorePassword = keystorePassword;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withTrustKeystore(String trustKeystore) {
+            this.trustKeystore = trustKeystore;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withTrustPassword(String trustPassword) {
+            this.trustPassword = trustPassword;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withScript(String script) {
+            this.script = script;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withWinrmLocale(String winrmLocale) {
+            this.winrmLocale = StringUtils.isBlank(winrmLocale) ? InputDefaults.WINRM_LOCALE.getValue() : winrmLocale;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withOperationTimeout(String operationTimeout) {
+            operationTimeout = StringUtils.isBlank(operationTimeout) ? InputDefaults.OPERATION_TIMEOUT.getValue() : operationTimeout;
+            this.operationTimeout = Integer.parseInt(operationTimeout);
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withConnectTimeout(String connectTimeout) {
+            connectTimeout = StringUtils.isBlank(connectTimeout) ? InputDefaults.CONNECT_TIMEOUT.getValue() : connectTimeout;
+            this.connectTimeout = Integer.parseInt(connectTimeout);
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withAuthType(String authType) {
+            authType = StringUtils.isBlank(authType) ? InputDefaults.AUTH_TYPE.getValue() : authType;
+            this.authType = authType;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withKerberosConfFile(String kerberosConfFile) {
+            this.kerberosConfFile = kerberosConfFile;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withKerberosLoginConfFile(String kerberosLoginConfFile) {
+            this.kerberosLoginConfFile = kerberosLoginConfFile;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withKerberosSkipPortForLookup(String kerberosSkipPortForLookup) {
+            this.kerberosSkipPortForLookup = kerberosSkipPortForLookup;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withModules(String modules) {
+            this.modules = modules;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withReturnTable(String returnTable) {
+            this.returnTable = StringUtils.isBlank(returnTable) ? InputDefaults.RETURN_TABLE.getValue() : returnTable;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withDelimiter(String delimiter) {
+            this.delimiter = StringUtils.isBlank(delimiter) ? InputDefaults.DELIMITER.getValue() : delimiter;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withColDelimiter(String colDelimiter) {
+            this.colDelimiter = StringUtils.isBlank(colDelimiter) ? InputDefaults.COL_DELIMITER.getValue() : colDelimiter;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withRowDelimiter(String rowDelimiter) {
+            this.rowDelimiter = StringUtils.isBlank(rowDelimiter) ? InputDefaults.ROW_DELIMITER.getValue() : rowDelimiter;
+            return this;
+        }
+    }
+}

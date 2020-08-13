@@ -1,0 +1,36 @@
+<s:Envelope
+        xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+        xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+        xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+    <s:Header>
+        <wsa:To>$PLACEHOLDER_FOR_SERVICE_NETWORK_ADDRESS</wsa:To>
+        <wsman:ResourceURI s:mustUnderstand="true">
+            http://schemas.microsoft.com/wbem/wsman/1/windows/shell/cmd
+        </wsman:ResourceURI>
+        <wsa:ReplyTo>
+            <wsa:Address s:mustUnderstand="true">
+                http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous
+            </wsa:Address>
+        </wsa:ReplyTo>
+        <wsa:Action s:mustUnderstand="true">
+            http://schemas.xmlsoap.org/ws/2004/09/transfer/Create
+        </wsa:Action>
+        <wsman:MaxEnvelopeSize s:mustUnderstand="true">$PLACEHOLDER_FOR_MAX_ENVELOPE_SIZE</wsman:MaxEnvelopeSize>
+        <wsa:MessageID>$PLACEHOLDER_FOR_MESSAGE_ID</wsa:MessageID>
+        <wsman:Locale xml:lang="$PLACEHOLDER_FOR_LOCALE"
+                      s:mustUnderstand="false"/>
+        <wsman:OptionSet>
+            <wsman:Option Name="WINRS_NOPROFILE">TRUE</wsman:Option>
+            <wsman:Option Name="WINRS_CODEPAGE">437</wsman:Option>
+        </wsman:OptionSet>
+        <wsman:OperationTimeout>PT$PLACEHOLDER_FOR_OPERATION_TIMEOUT.000S</wsman:OperationTimeout>
+    </s:Header>
+    <s:Body>
+        <rsp:Shell xmlns:rsp="http://schemas.microsoft.com/wbem/wsman/1/windows/shell">
+            <rsp:WorkingDirectory>c:\</rsp:WorkingDirectory>
+            <rsp:Lifetime>PT1000.000S</rsp:Lifetime>
+            <rsp:InputStreams>stdin</rsp:InputStreams>
+            <rsp:OutputStreams>stdout stderr</rsp:OutputStreams>
+        </rsp:Shell>
+    </s:Body>
+</s:Envelope>
