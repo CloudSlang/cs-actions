@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.maps.serialization;
+package io.cloudslang.content.maps.utils;
 
 import io.cloudslang.content.maps.constants.Chars;
 import io.cloudslang.content.maps.constants.ExceptionsMsgs;
@@ -20,11 +20,12 @@ import io.cloudslang.content.maps.exceptions.DeserializationException;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class MapDeserializer {
+public class MapSerializer {
 
     private final String pairDelimiter;
     private final String entryDelimiter;
@@ -32,12 +33,47 @@ public class MapDeserializer {
     private final String mapEnd;
 
 
-    public MapDeserializer(@NotNull String pairDelimiter, @NotNull String entryDelimiter,
-                           @NotNull String mapStart, @NotNull String mapEnd) {
+    public MapSerializer(@NotNull String pairDelimiter, @NotNull String entryDelimiter,
+                         @NotNull String mapStart, @NotNull String mapEnd) {
         this.pairDelimiter = pairDelimiter.replace(Chars.CRLF, Chars.LF);
         this.entryDelimiter = entryDelimiter.replace(Chars.CRLF, Chars.LF);
         this.mapStart = mapStart.replace(Chars.CRLF, Chars.LF);
         this.mapEnd = mapEnd.replace(Chars.CRLF, Chars.LF);
+    }
+
+
+    public @NotNull String serialize(@NotNull Map<String, String> map) {
+        StringBuilder mapAsString = new StringBuilder();
+        mapAsString.append(this.mapStart);
+
+        Iterator<String> iterator = map.keySet().iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            String value = map.get(key);
+
+            if ((this.entryDelimiter.concat(key).lastIndexOf(this.entryDelimiter) > 0) ||
+                    (StringUtils.isEmpty(key) && this.entryDelimiter.concat(this.pairDelimiter).lastIndexOf(this.entryDelimiter) > 0)) {
+                mapAsString.append(Chars.NON_BREAKING_SPACE);
+            }
+
+            mapAsString.append(key).append(this.pairDelimiter).append(value);
+
+            // avoid situation like map=<> key=whatever value=val| and entryDelim=|| => <whatever=val|||>
+            // or map=<> key=whatever value=EMPTY_STRING pairDelim=| and entryDelim=|| => <whatever|||>
+            // that would break the next deserialization
+            if ((value.concat(this.entryDelimiter).indexOf(this.entryDelimiter) < value.length()) ||
+                    (StringUtils.isEmpty(value) && this.pairDelimiter.concat(this.entryDelimiter).indexOf(this.entryDelimiter)
+                            < this.pairDelimiter.length())) {
+                mapAsString.append(Chars.NON_BREAKING_SPACE);
+            }
+
+            if (iterator.hasNext()) {
+                mapAsString.append(this.entryDelimiter);
+            }
+        }
+
+        mapAsString.append(this.mapEnd);
+        return mapAsString.toString();
     }
 
 

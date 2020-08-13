@@ -15,7 +15,8 @@
 package io.cloudslang.content.maps.entities;
 
 import io.cloudslang.content.maps.constants.DefaultInputValues;
-import org.apache.commons.lang3.BooleanUtils;
+import io.cloudslang.content.maps.exceptions.ValidationException;
+import io.cloudslang.content.maps.utils.BuilderUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class MergeMapsInput {
@@ -174,9 +175,8 @@ public class MergeMapsInput {
             return this;
         }
 
-        public Builder stripWhitespaces(String stripWhitespaces) {
-            stripWhitespaces = StringUtils.defaultIfEmpty(stripWhitespaces, DefaultInputValues.STRIP_WHITESPACES);
-            this.stripWhitespaces = BooleanUtils.toBoolean(stripWhitespaces.toLowerCase(), String.valueOf(true), String.valueOf(false));
+        public Builder stripWhitespaces(String stripWhitespaces) throws ValidationException {
+            this.stripWhitespaces = BuilderUtils.parseStripWhitespaces(stripWhitespaces);
             return this;
         }
 

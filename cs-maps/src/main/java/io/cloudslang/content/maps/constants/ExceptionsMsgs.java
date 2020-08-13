@@ -26,8 +26,6 @@ public final class ExceptionsMsgs {
     public static final String VALUE_CANNOT_CONTAIN_ENTRY_DELIMITER = "Value cannot contain " + InputNames.ENTRY_DELIMITER;
     public static final String NULL_OR_EMPTY_PAIR_DELIMITER = "Value of " + InputNames.PAIR_DELIMITER + " was null or empty.";
     public static final String NULL_OR_EMPTY_ENTRY_DELIMITER = "Value of " + InputNames.ENTRY_DELIMITER + " was null or empty.";
-    public static final String NULL_MAP_START = "Value of " + InputNames.MAP_START + " was null.";
-    public static final String NULL_MAP_END = "Value of " + InputNames.MAP_END + " was null.";
     public static final String ENTRY_AND_PAIR_DELIMITER_MUST_BE_DISTINCT = InputNames.ENTRY_DELIMITER + " and " +
             InputNames.PAIR_DELIMITER + " must be distinct.";
     public static final String PAIR_DELIMITER_CANNOT_CONTAIN_ENTRY_DELIMITER = InputNames.PAIR_DELIMITER + " cannot contain " + InputNames.ENTRY_DELIMITER;
@@ -38,7 +36,8 @@ public final class ExceptionsMsgs {
     public static final String MAP_EXPECTED_TO_END_WITH_MAP_END = "Map was expected to end with value of " + InputNames.MAP_END + " input.";
     public static final String MISSING_PAIR_DELIMITER = "Missing key-value pair delimiter in map.";
     public static final String PAIR_DELIMITER_APPEARS_MORE_THAN_ONCE = "Key-value pair delimiter appears more than once in entry.";
-
+    public static final String NULL_KEY = "Key cannot be null or blank.";
+    public static final String INVALID_VALUE_FOR_INPUT = "Invalid value for input %s";
 
     private ExceptionsMsgs() {
 

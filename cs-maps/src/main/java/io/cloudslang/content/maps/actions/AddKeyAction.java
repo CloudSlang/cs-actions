@@ -92,10 +92,10 @@ public class AddKeyAction {
                             isOnFail = true, isDefault = true)
             })
     public Map<String, String> execute(@Param(value = InputNames.MAP) String map,
-                                       @Param(value = InputNames.KEY) String key,
+                                       @Param(value = InputNames.KEY, required = true) String key,
                                        @Param(value = InputNames.VALUE) String value,
-                                       @Param(value = InputNames.PAIR_DELIMITER) String pairDelimiter,
-                                       @Param(value = InputNames.ENTRY_DELIMITER) String entryDelimiter,
+                                       @Param(value = InputNames.PAIR_DELIMITER, required = true) String pairDelimiter,
+                                       @Param(value = InputNames.ENTRY_DELIMITER, required = true) String entryDelimiter,
                                        @Param(value = InputNames.MAP_START) String mapStart,
                                        @Param(value = InputNames.MAP_END) String mapEnd,
                                        @Param(value = InputNames.ELEMENT_WRAPPER) String elementWrapper,
