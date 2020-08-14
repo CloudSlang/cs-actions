@@ -16,8 +16,7 @@ package io.cloudslang.content.maps.services;
 
 import io.cloudslang.content.maps.entities.MergeMapsInput;
 import io.cloudslang.content.maps.exceptions.ValidationException;
-import io.cloudslang.content.maps.serialization.MapDeserializer;
-import io.cloudslang.content.maps.serialization.MapSerializer;
+import io.cloudslang.content.maps.utils.MapSerializer;
 import io.cloudslang.content.maps.validators.MergeMapsInputValidator;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.jetbrains.annotations.NotNull;
@@ -34,23 +33,24 @@ public class MergeMapsService {
             throw validationException;
         }
 
-        MapSerializer serializer = new MapSerializer(input.getMap1PairDelimiter(), input.getMap1EntryDelimiter(),
-                input.getMap1Start(), input.getMap1End());
+        MapSerializer map1Serializer = new MapSerializer(
+                input.getMap1PairDelimiter(), input.getMap1EntryDelimiter(),
+                input.getMap1Start(), input.getMap1End(),
+                input.getMap1ElementWrapper(), input.isStripWhitespaces());
 
-        MapDeserializer map1Deserializer = new MapDeserializer(input.getMap1PairDelimiter(), input.getMap1EntryDelimiter(),
-                input.getMap1Start(), input.getMap1End());
+        MapSerializer map2Serializer = new MapSerializer(
+                input.getMap2PairDelimiter(), input.getMap2EntryDelimiter(),
+                input.getMap2Start(), input.getMap2End(),
+                input.getMap2ElementWrapper(), input.isStripWhitespaces());
 
-        MapDeserializer map2Deserializer = new MapDeserializer(input.getMap2PairDelimiter(), input.getMap2EntryDelimiter(),
-                input.getMap2Start(), input.getMap2End());
-
-        Map<String, String> map1 = map1Deserializer.deserialize(input.getMap1());
-        Map<String, String> map2 = map2Deserializer.deserialize(input.getMap2());
+        Map<String, String> map1 = map1Serializer.deserialize(input.getMap1());
+        Map<String, String> map2 = map2Serializer.deserialize(input.getMap2());
 
         for(Map.Entry<String,String> entry : map2.entrySet()){
             map1.put(entry.getKey(),entry.getValue());
         }
 
-        String returnResult = serializer.serialize(map1);
+        String returnResult = map1Serializer.serialize(map1);
         return OutputUtilities.getSuccessResultsMap(returnResult);
     }
 }

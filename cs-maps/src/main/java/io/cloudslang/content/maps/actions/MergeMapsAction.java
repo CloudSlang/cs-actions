@@ -95,15 +95,18 @@ public class MergeMapsAction {
                             isOnFail = true, isDefault = true)
             })
     public Map<String, String> execute(@Param(value = InputNames.MAP1) String map1,
-                                       @Param(value = InputNames.MAP1_PAIR_DELIMITER) String map1PairDelimiter,
-                                       @Param(value = InputNames.MAP1_ENTRY_DELIMITER) String map1EntryDelimiter,
+                                       @Param(value = InputNames.MAP1_PAIR_DELIMITER, required = true) String map1PairDelimiter,
+                                       @Param(value = InputNames.MAP1_ENTRY_DELIMITER, required = true) String map1EntryDelimiter,
                                        @Param(value = InputNames.MAP1_START) String map1Start,
                                        @Param(value = InputNames.MAP1_END) String map1End,
+                                       @Param(value = InputNames.MAP1_ELEMENT_WRAPPER) String map1ElementWrapper,
                                        @Param(value = InputNames.MAP2) String map2,
-                                       @Param(value = InputNames.MAP2_PAIR_DELIMITER) String map2PairDelimiter,
-                                       @Param(value = InputNames.MAP2_ENTRY_DELIMITER) String map2EntryDelimiter,
+                                       @Param(value = InputNames.MAP2_PAIR_DELIMITER, required = true) String map2PairDelimiter,
+                                       @Param(value = InputNames.MAP2_ENTRY_DELIMITER, required = true) String map2EntryDelimiter,
                                        @Param(value = InputNames.MAP2_START) String map2Start,
-                                       @Param(value = InputNames.MAP2_END) String map2End){
+                                       @Param(value = InputNames.MAP2_END) String map2End,
+                                       @Param(value = InputNames.MAP2_ELEMENT_WRAPPER) String map2ElementWrapper,
+                                       @Param(value = InputNames.STRIP_WHITESPACES) String stripWhitespaces){
 
         try {
             MergeMapsInput input = new MergeMapsInput.Builder()
@@ -112,11 +115,14 @@ public class MergeMapsAction {
                     .map1EntryDelimiter(map1EntryDelimiter)
                     .map1Start(map1Start)
                     .map1End(map1End)
+                    .map1ElementWrapper(map1ElementWrapper)
                     .map2(map2)
                     .map2PairDelimiter(map2PairDelimiter)
                     .map2EntryDelimiter(map2EntryDelimiter)
                     .map2Start(map2Start)
                     .map2End(map2End)
+                    .map2ElementWrapper(map2ElementWrapper)
+                    .stripWhitespaces(stripWhitespaces)
                     .build();
             return service.execute(input);
         } catch (Exception ex) {

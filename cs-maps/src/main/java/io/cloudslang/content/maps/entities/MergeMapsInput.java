@@ -14,6 +14,9 @@
  */
 package io.cloudslang.content.maps.entities;
 
+import io.cloudslang.content.maps.constants.DefaultInputValues;
+import io.cloudslang.content.maps.exceptions.ValidationException;
+import io.cloudslang.content.maps.utils.BuilderUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class MergeMapsInput {
@@ -23,11 +26,14 @@ public class MergeMapsInput {
     private final String map1EntryDelimiter;
     private final String map1Start;
     private final String map1End;
+    private final String map1ElementWrapper;
     private final String map2;
     private final String map2PairDelimiter;
     private final String map2EntryDelimiter;
     private final String map2Start;
     private final String map2End;
+    private final String map2ElementWrapper;
+    private final boolean stripWhitespaces;
 
     private MergeMapsInput(Builder builder) {
         this.map1 = builder.map1;
@@ -35,21 +41,20 @@ public class MergeMapsInput {
         this.map1EntryDelimiter = builder.map1EntryDelimiter;
         this.map1Start = builder.map1Start;
         this.map1End = builder.map1End;
+        this.map1ElementWrapper = builder.map1ElementWrapper;
 
         this.map2 = builder.map2;
         this.map2PairDelimiter = builder.map2PairDelimiter;
         this.map2EntryDelimiter = builder.map2EntryDelimiter;
         this.map2Start = builder.map2Start;
         this.map2End = builder.map2End;
+        this.map2ElementWrapper = builder.map2ElementWrapper;
 
+        this.stripWhitespaces = builder.stripWhitespaces;
     }
 
     public String getMap1() {
         return map1;
-    }
-
-    public String getMap2() {
-        return map2;
     }
 
     public String getMap1PairDelimiter() {
@@ -68,6 +73,14 @@ public class MergeMapsInput {
         return map1End;
     }
 
+    public String getMap1ElementWrapper() {
+        return map1ElementWrapper;
+    }
+
+    public String getMap2() {
+        return map2;
+    }
+
     public String getMap2PairDelimiter() {
         return map2PairDelimiter;
     }
@@ -80,31 +93,42 @@ public class MergeMapsInput {
         return map2Start;
     }
 
+
     public String getMap2End() {
         return map2End;
     }
 
+
+    public String getMap2ElementWrapper() {
+        return map2ElementWrapper;
+    }
+
+
+    public boolean isStripWhitespaces() {
+        return stripWhitespaces;
+    }
+
+
     public static class Builder {
         private String map1;
-        private String map2;
         private String map1PairDelimiter;
         private String map1EntryDelimiter;
         private String map1Start;
+        private String map1ElementWrapper;
         private String map1End;
+        private String map2;
         private String map2PairDelimiter;
         private String map2EntryDelimiter;
         private String map2Start;
         private String map2End;
+        private String map2ElementWrapper;
+        private boolean stripWhitespaces;
 
         public Builder map1(String map1) {
-            this.map1 = map1;
+            this.map1 = StringUtils.defaultString(map1, DefaultInputValues.MAP);
             return this;
         }
 
-        public Builder map2(String map2) {
-            this.map2 = map2;
-            return this;
-        }
 
         public Builder map1PairDelimiter(String map1PairDelimiter) {
             this.map1PairDelimiter = map1PairDelimiter;
@@ -119,13 +143,23 @@ public class MergeMapsInput {
 
 
         public Builder map1Start(String map1Start) {
-            this.map1Start = StringUtils.defaultString(map1Start);
+            this.map1Start = StringUtils.defaultString(map1Start, DefaultInputValues.MAP_START);
             return this;
         }
 
 
         public Builder map1End(String map1End) {
-            this.map1End = StringUtils.defaultString(map1End);
+            this.map1End = StringUtils.defaultString(map1End, DefaultInputValues.MAP_END);
+            return this;
+        }
+
+        public Builder map1ElementWrapper(String map1ElementWrapper) {
+            this.map1ElementWrapper = StringUtils.defaultString(map1ElementWrapper, DefaultInputValues.ELEMENT_WRAPPER);
+            return this;
+        }
+
+        public Builder map2(String map2) {
+            this.map2 = StringUtils.defaultString(map2, DefaultInputValues.MAP);
             return this;
         }
 
@@ -142,16 +176,25 @@ public class MergeMapsInput {
 
 
         public Builder map2Start(String map2Start) {
-            this.map2Start = StringUtils.defaultString(map2Start);
+            this.map2Start = StringUtils.defaultString(map2Start, DefaultInputValues.MAP_START);
             return this;
         }
 
 
         public Builder map2End(String map2End) {
-            this.map2End = StringUtils.defaultString(map2End);
+            this.map2End = StringUtils.defaultString(map2End, DefaultInputValues.MAP_END);
             return this;
         }
 
+        public Builder map2ElementWrapper(String map2ElementWrapper) {
+            this.map2ElementWrapper = StringUtils.defaultString(map2ElementWrapper, DefaultInputValues.ELEMENT_WRAPPER);
+            return this;
+        }
+
+        public Builder stripWhitespaces(String stripWhitespaces) throws ValidationException {
+            this.stripWhitespaces = BuilderUtils.parseStripWhitespaces(stripWhitespaces);
+            return this;
+        }
 
         public MergeMapsInput build() {
             return new MergeMapsInput(this);

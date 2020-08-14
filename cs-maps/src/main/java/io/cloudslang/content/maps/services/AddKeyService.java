@@ -16,8 +16,7 @@ package io.cloudslang.content.maps.services;
 
 import io.cloudslang.content.maps.entities.AddKeyInput;
 import io.cloudslang.content.maps.exceptions.ValidationException;
-import io.cloudslang.content.maps.serialization.MapDeserializer;
-import io.cloudslang.content.maps.serialization.MapSerializer;
+import io.cloudslang.content.maps.utils.MapSerializer;
 import io.cloudslang.content.maps.validators.AddKeyInputValidator;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.jetbrains.annotations.NotNull;
@@ -35,12 +34,12 @@ public class AddKeyService {
             throw validationEx;
         }
 
-        MapSerializer serializer = new MapSerializer(input.getPairDelimiter(), input.getEntryDelimiter(),
-                input.getMapStart(), input.getMapEnd());
-        MapDeserializer deserializer = new MapDeserializer(input.getPairDelimiter(), input.getEntryDelimiter(),
-                input.getMapStart(), input.getMapEnd());
+        MapSerializer serializer = new MapSerializer(
+                input.getPairDelimiter(), input.getEntryDelimiter(),
+                input.getMapStart(), input.getMapEnd(),
+                input.getElementWrapper(), input.isStripWhitespaces());
 
-        Map<String, String> map = deserializer.deserialize(input.getMap());
+        Map<String, String> map = serializer.deserialize(input.getMap());
         map.put(input.getKey(), input.getValue());
         String returnResult = serializer.serialize(map);
 
