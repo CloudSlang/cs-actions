@@ -30,6 +30,13 @@ public class WSManRequestInputs {
     private String script;
     private String winrmLocale;
     private int operationTimeout;
+    private String modules;
+    private String returnTable;
+    private String delimiter;
+    private String colDelimiter;
+    private String rowDelimiter;
+    private final int connectTimeout;
+
 
     public WSManRequestInputs(WSManRequestInputsBuilder builder) {
         this.host = builder.host;
@@ -55,6 +62,14 @@ public class WSManRequestInputs {
         this.script = builder.script;
         this.winrmLocale = builder.winrmLocale;
         this.operationTimeout = builder.operationTimeout;
+        this.connectTimeout = builder.connectTimeout;
+        this.delimiter = builder.delimiter;
+        this.colDelimiter = builder.colDelimiter;
+        this.rowDelimiter = builder.rowDelimiter;
+        this.winrmLocale = builder.winrmLocale;
+        this.operationTimeout = builder.operationTimeout;
+        this.modules = builder.modules;
+        this.returnTable = builder.returnTable;
     }
 
     public String getHost() {
@@ -141,12 +156,36 @@ public class WSManRequestInputs {
         return script;
     }
 
+    public String getModules() {
+        return modules;
+    }
+
+    public String getReturnTable() {
+        return returnTable;
+    }
+
+    public String getDelimiter() {
+        return delimiter;
+    }
+
+    public String getColDelimiter() {
+        return colDelimiter;
+    }
+
+    public String getRowDelimiter() {
+        return rowDelimiter;
+    }
+
     public String getWinrmLocale() {
         return winrmLocale;
     }
 
     public int getOperationTimeout() {
         return operationTimeout;
+    }
+
+    public int getConnectTimeout() {
+        return connectTimeout;
     }
 
     public static class WSManRequestInputsBuilder {
@@ -173,6 +212,13 @@ public class WSManRequestInputs {
         private String script;
         private String winrmLocale;
         private int operationTimeout;
+        private String modules;
+        private String returnTable;
+        private String delimiter;
+        private String colDelimiter;
+        private String rowDelimiter;
+        private int connectTimeout;
+
 
         public WSManRequestInputs build() {
             return new WSManRequestInputs(this);
@@ -293,6 +339,37 @@ public class WSManRequestInputs {
 
         public WSManRequestInputsBuilder withKerberosSkipPortForLookup(String kerberosSkipPortForLookup) {
             this.kerberosSkipPortForLookup = kerberosSkipPortForLookup;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withModules(String modules) {
+            this.modules = modules;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withReturnTable(String returnTable) {
+            this.returnTable = StringUtils.isBlank(returnTable) ? InputDefaults.RETURN_TABLE.getValue() : returnTable;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withDelimiter(String delimiter) {
+            this.delimiter = StringUtils.isBlank(delimiter) ? InputDefaults.DELIMITER.getValue() : delimiter;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withColDelimiter(String colDelimiter) {
+            this.colDelimiter = StringUtils.isBlank(colDelimiter) ? InputDefaults.COL_DELIMITER.getValue() : colDelimiter;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withRowDelimiter(String rowDelimiter) {
+            this.rowDelimiter = StringUtils.isBlank(rowDelimiter) ? InputDefaults.ROW_DELIMITER.getValue() : rowDelimiter;
+            return this;
+        }
+
+        public WSManRequestInputsBuilder withConnectTimeout(String connectTimeout) {
+            connectTimeout = StringUtils.isBlank(connectTimeout) ? InputDefaults.CONNECT_TIMEOUT.getValue() : connectTimeout;
+            this.connectTimeout = Integer.parseInt(connectTimeout);
             return this;
         }
     }

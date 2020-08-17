@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
  */
 public class EncoderDecoder {
 
+
     /**
      * Encodes a string to base64.
      *

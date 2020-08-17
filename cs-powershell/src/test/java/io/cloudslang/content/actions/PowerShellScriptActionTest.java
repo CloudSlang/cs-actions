@@ -59,6 +59,13 @@ public class PowerShellScriptActionTest {
     private static final String KERBEROS_CONF_FILE = "/kerberosConfFile";
     private static final String KERBEROS_LOGIN_CONF_FILE = "/kerberosLoginConfFile";
     private static final String KERBEROS_SKIP_PORT_FOR_LOOKUP = "true";
+    public static final String MODULES = "modules";
+    public static final String RETURN_TABLE = "returnTable";
+    public static final String DELIMITER = "delimiter";
+    public static final String COL_DELIMITER = "colDelimiter";
+    public static final String ROW_DELIMITER = "rowDelimiter";
+    public static final String CONNECT_TIMEOUT = "connectTimeout";
+
 
     private PowerShellScriptAction powerShellScriptAction;
 
@@ -89,9 +96,8 @@ public class PowerShellScriptActionTest {
     public void testExecute() throws Exception {
         configureMocksForSuccessTests();
 
-        Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, PORT, HTTPS, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, Boolean.TRUE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
-                MAX_ENVELOPE_SIZE, SCRIPT, WINRM_LOCALE_EN_US, OPERATION_TIMEOUT);
+        Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, PORT, HTTPS, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,PROXY_USER, PASS, Boolean.TRUE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
+                MAX_ENVELOPE_SIZE, SCRIPT, WINRM_LOCALE_EN_US, OPERATION_TIMEOUT, MODULES,RETURN_TABLE,DELIMITER,COL_DELIMITER,ROW_DELIMITER,CONNECT_TIMEOUT);
 
         verifyNew(WSManRemoteShellService.class).withNoArguments();
         verifyMockInteractions();
@@ -104,7 +110,7 @@ public class PowerShellScriptActionTest {
 
         Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
                 PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
-                EMPTY_STRING, SCRIPT, EMPTY_STRING, EMPTY_STRING);
+                EMPTY_STRING, SCRIPT, EMPTY_STRING, EMPTY_STRING,EMPTY_STRING,EMPTY_STRING,EMPTY_STRING,EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);
 
         verifyNew(WSManRemoteShellService.class).withNoArguments();
         verifyMockInteractions();
@@ -118,7 +124,7 @@ public class PowerShellScriptActionTest {
 
         Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, BASIC_AUTH_TYPE, PASS, PROXY_HOST, PROXY_PORT,
                 PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
-                EMPTY_STRING, SCRIPT, EMPTY_STRING, EMPTY_STRING);
+                EMPTY_STRING, SCRIPT, EMPTY_STRING, EMPTY_STRING,EMPTY_STRING,EMPTY_STRING,EMPTY_STRING,EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);
 
         assertTrue(result.get(EXCEPTION).contains(EXCEPTION_MESSAGE));
         assertEquals(RETURN_CODE_FAILURE, result.get(RETURN_CODE));
@@ -133,7 +139,7 @@ public class PowerShellScriptActionTest {
 
         Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
                 PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
-                EMPTY_STRING, SCRIPT, EMPTY_STRING, EMPTY_STRING);
+                EMPTY_STRING, SCRIPT, EMPTY_STRING, EMPTY_STRING,EMPTY_STRING,EMPTY_STRING,EMPTY_STRING,EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);
 
         verifyNew(WSManRemoteShellService.class).withNoArguments();
         verify(serviceMock, times(1)).runCommand(any(WSManRequestInputs.class));

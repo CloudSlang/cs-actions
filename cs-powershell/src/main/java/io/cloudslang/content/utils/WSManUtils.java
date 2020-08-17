@@ -1,12 +1,29 @@
 package io.cloudslang.content.utils;
 
+import io.cloudslang.content.entities.EncoderDecoder;
+import io.cloudslang.content.entities.WSManRequestInputs;
+import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
+import static io.cloudslang.content.utils.Constants.Others.*;
+import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.utils.Constants.OutputNames.SCRIPT_EXIT_CODE;
+import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAILURE;
+import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCCESS;
+import static org.apache.commons.lang3.StringUtils.LF;
+import static org.apache.commons.lang3.StringUtils.SPACE;
 
 /**
  * Created by giloan on 3/29/2016.
@@ -90,5 +107,99 @@ public class WSManUtils {
         if (!WSManUtils.isUUID(uuid)) {
             throw new RuntimeException("The returned " + uuidValueOf + " is not a valid UUID value! " + uuidValueOf + ": " + uuid);
         }
+    }
+
+    public static String constructCommand(final WSManRequestInputs wsManRequestInputs) {
+        final StringBuilder command = new StringBuilder()
+                .append(POWERSHELL_SCRIPT_PREFIX)
+                .append(SPACE)
+                .append(NON_INTERACTIVE_PARAMETER)
+                .append(SPACE)
+                .append(ENCODED_COMMAND_PARAMETER)
+                .append(SPACE);
+
+        String script = getScript(wsManRequestInputs);
+
+        if (StringUtilities.isNotBlank(wsManRequestInputs.getModules())) {
+            command.append(EncoderDecoder.encodeStringInBase64(
+                    IMPORT_MODULE_PARAMETER +
+                            SPACE +
+                            getEscapedModules(wsManRequestInputs) +
+                            LF +
+                            script, Charsets.UTF_16LE));
+        } else {
+            command.append(EncoderDecoder.encodeStringInBase64(script, Charsets.UTF_16LE));
+        }
+        return command.toString();
+    }
+
+    private static String getScript(final WSManRequestInputs wsManRequestInputs) {
+        return Boolean.parseBoolean(wsManRequestInputs.getReturnTable()) ? wsManRequestInputs.getScript() + " | Format-List *" : wsManRequestInputs.getScript();
+    }
+
+    private static String getEscapedModules(final WSManRequestInputs wsManRequestInputs) {
+        final String[] modules = StringUtilities.split(wsManRequestInputs.getModules(), COMMA_DELIMITER);
+        final List<String> escapedModules = new ArrayList<>();
+        for (String module : modules) {
+            module = StringUtilities.trim(module);
+            module = StringUtilities.prependIfMissing(module, SINGLE_QUOTE);
+            module = StringUtilities.appendIfMissing(module, SINGLE_QUOTE);
+            escapedModules.add(module);
+        }
+        return StringUtilities.join(escapedModules, COMMA_DELIMITER);
+    }
+
+    public static Pair<String,Integer> fromListToTable(BufferedReader reader, String propDelim, String colDelim, String rowDelim){
+
+        StringBuilder result = new StringBuilder();
+        StringBuilder tmp = new StringBuilder();
+        int objectCount = 0;
+
+        try {
+            String line = null;
+            boolean newBatch = false;
+
+            while ((line = reader.readLine()) != null) {
+
+                if (line.isEmpty()) {
+                    newBatch = true;
+                }
+
+                if (newBatch) {
+                    newBatch = false;
+                    if (tmp.length() > 0) {
+                        result.append(tmp).append(rowDelim);
+                        objectCount++;
+                    }
+                    tmp = new StringBuilder();
+                } else {
+                    if (StringUtilities.contains(line, ":")) {
+                        String[] keyVal = line.split(":", -1);
+                        if (tmp.length() == 0) {
+                            tmp.append(keyVal[0].trim()).append(propDelim).append(keyVal[1].trim());
+                        } else {
+                            tmp.append(colDelim).append(keyVal[0].trim()).append(propDelim).append(keyVal[1].trim());
+                        }
+                    } else {
+                        tmp.append(line.trim());
+                    }
+
+                }
+
+            }
+
+            if (tmp.length() > 0 ) {
+                result.append(tmp).append(rowDelim);
+                objectCount++;
+            }
+
+            System.out.println(result);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // ???
+        }
+
+        return Pair.of(result.toString(),objectCount);
     }
 }

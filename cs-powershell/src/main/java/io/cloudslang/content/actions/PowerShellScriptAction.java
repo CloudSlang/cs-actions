@@ -9,13 +9,18 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.utils.Constants;
+import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.httpclient.HttpClientInputs.*;
 import static io.cloudslang.content.utils.Constants.InputNames.*;
+import static io.cloudslang.content.utils.Constants.InputNames.COL_DELIMITER;
+import static io.cloudslang.content.utils.Constants.InputNames.ROW_DELIMITER;
+import static io.cloudslang.content.utils.Constants.Others.NEGOTIATE;
 import static io.cloudslang.content.utils.Constants.OutputNames.*;
 import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAILURE;
 import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCCESS;
@@ -112,7 +117,13 @@ public class PowerShellScriptAction {
             @Param(value = MAX_ENVELOP_SIZE) String maxEnvelopeSize,
             @Param(value = INPUT_SCRIPT, required = true) String script,
             @Param(value = WINRM_LOCALE) String winrmLocale,
-            @Param(value = OPERATION_TIMEOUT) String operationTimeout
+            @Param(value = OPERATION_TIMEOUT) String operationTimeout,
+            @Param(value = MODULES) String modules,
+            @Param(value = RETURN_TABLE) String returnTable,
+            @Param(value = DELIMITER) String delimiter,
+            @Param(value = COL_DELIMITER) String colDelimiter,
+            @Param(value = ROW_DELIMITER) String rowDelimiter,
+            @Param(value = CONNECT_TIMEOUT) String connectTimeout
     ) {
         Map<String, String> resultMap = new HashMap<>();
         try {
@@ -142,9 +153,21 @@ public class PowerShellScriptAction {
                     .withScript(script)
                     .withWinrmLocale(winrmLocale)
                     .withOperationTimeout(operationTimeout)
+                    .withModules(modules)
+                    .withReturnTable(returnTable)
+                    .withDelimiter(delimiter)
+                    .withColDelimiter(colDelimiter)
+                    .withRowDelimiter(rowDelimiter)
+                    .withConnectTimeout(connectTimeout)
                     .build();
 
-            resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
+            if (StringUtilities.equalsIgnoreCase(NEGOTIATE, authType)) {
+                resultMap = wsManRemoteShellService.runCommandWithJwsmvAndNtlm(wsManRequestInputs,
+                        new URL(wsManRequestInputs.getProtocol(), host, Integer.parseInt(wsManRequestInputs.getPort()), "/WSMAN"),
+                        wsManRequestInputs.getUsername(), wsManRequestInputs.getPassword());
+            } else {
+                resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
+            }
             verifyScriptExecutionStatus(resultMap);
         } catch (NumberFormatException nfe) {
             resultMap.put(EXCEPTION, ExceptionUtils.getStackTrace(nfe));

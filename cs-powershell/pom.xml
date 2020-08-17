@@ -153,6 +153,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.busuioc</groupId>
+            <artifactId>megajar</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-http-client</artifactId>
             <version>0.1.67</version>
@@ -162,6 +168,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-commons</artifactId>
+            <version>0.0.3</version>
         </dependency>
 
         <!--Test dependencies-->

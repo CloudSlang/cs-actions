@@ -2,23 +2,26 @@ package io.cloudslang.content.services;
 
 import io.cloudslang.content.entities.EncoderDecoder;
 import io.cloudslang.content.entities.OutputStream;
+import io.cloudslang.content.entities.StreamCopier;
 import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.httpclient.HttpClientInputs;
 import io.cloudslang.content.httpclient.CSHttpClient;
-import io.cloudslang.content.utils.Constants;
-import io.cloudslang.content.utils.ResourceLoader;
-import io.cloudslang.content.utils.WSManUtils;
-import io.cloudslang.content.utils.XMLUtils;
+import io.cloudslang.content.joval.Shell;
+import io.cloudslang.content.joval.wsman.Port;
+import io.cloudslang.content.utils.*;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.client.methods.HttpPost;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
@@ -27,6 +30,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.utils.WSManUtils.constructCommand;
 
 /**
  * Created by giloan on 3/27/2016.
@@ -102,6 +106,90 @@ public class WSManRemoteShellService {
         Map<String, String> scriptResults = receiveCommandResult(csHttpClient, httpClientInputs, shellId, commandId, wsManRequestInputs);
         deleteShell(csHttpClient, httpClientInputs, shellId, wsManRequestInputs);
         return scriptResults;
+    }
+
+    public Map<String, String> runCommandWithJwsmvAndNtlm(WSManRequestInputs wsManRequestInputs, URL url, String username, String password) throws Exception {
+        Port port = new Port(String.valueOf(url), new PasswordAuthentication(username, password.toCharArray()), wsManRequestInputs.getConnectTimeout());
+        port.setEncryption(true);
+        String[] environment = null;
+
+        Pair pair;
+        int tries = 0;
+        while ((pair = openShell(port, false, false, null, environment, "%USERPROFILE%")).getLeft() == null && tries++ < 3) {
+            if (pair.getRight() instanceof IOException) {
+                Thread.sleep(1000);
+            } else {
+                break;
+            }
+        }
+        Shell shell = (Shell) pair.getLeft();
+
+        if (shell == null) {
+            String err = "Can not open Shell.";
+
+            if (pair.getRight() != null) {
+                err += " Reason: " + ((Exception) pair.getRight()).getMessage();
+                err += " Stacktrace: " + ExceptionUtils.getStackTrace((Exception) pair.getRight());
+            }
+            Map<String, String> scriptResults = OutputUtilities.getFailureResultsMap(err);
+            scriptResults.put(Constants.OutputNames.STDERR, err);
+            scriptResults.put(Constants.OutputNames.SCRIPT_EXIT_CODE, String.valueOf(-1) + "");
+            return scriptResults;
+        }
+        Process p = shell.exec(constructCommand(wsManRequestInputs));
+
+        InputStream in = p.getInputStream();
+
+        ByteArrayOutputStream errStream = new ByteArrayOutputStream();
+
+        StreamCopier errorThread = new StreamCopier(p.getErrorStream(), errStream);
+        errorThread.start();
+
+        int ch;
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        while ((ch = in.read()) != -1) {
+            stream.write((byte)(ch & 0xFF));
+        }
+
+        String result  = new String(stream.toByteArray());
+        Map<String, String> scriptResults;
+        if (Boolean.parseBoolean(wsManRequestInputs.getReturnTable())) {
+            scriptResults = getResultMapWithReturnTable(wsManRequestInputs, result);
+        } else {
+            scriptResults = OutputUtilities.getSuccessResultsMap(result);
+        }
+
+        try {
+            int exitValue = p.exitValue();
+            String err  = new String(errStream.toByteArray());
+            scriptResults.put(Constants.OutputNames.STDERR, err);
+            scriptResults.put(Constants.OutputNames.SCRIPT_EXIT_CODE, exitValue + "");
+        } catch (IllegalThreadStateException e) {
+            scriptResults.put(Constants.OutputNames.STDERR, ExceptionUtils.getMessage(e.getCause()) + "\n" + ExceptionUtils.getStackTrace(e.getCause()));
+            scriptResults.put(Constants.OutputNames.SCRIPT_EXIT_CODE, String.valueOf(-1) + "");
+        } finally {
+            errorThread.close();
+        }
+        shell.dispose();
+        return scriptResults;
+    }
+
+    private Map<String, String> getResultMapWithReturnTable(WSManRequestInputs wsManRequestInputs, String scriptResult) {
+        Map<String, String> scriptResults;
+        Pair<String, Integer> tableAndCount = WSManUtils.fromListToTable(new BufferedReader(new StringReader(scriptResult)), wsManRequestInputs.getDelimiter(),
+                wsManRequestInputs.getColDelimiter(), wsManRequestInputs.getRowDelimiter());
+        scriptResults = OutputUtilities.getSuccessResultsMap(tableAndCount.getLeft());
+        scriptResults.put(Constants.OutputNames.OBJECTS_COUNT, String.valueOf(tableAndCount.getRight()));
+        return scriptResults;
+    }
+
+    private Pair<Shell, ? extends Exception> openShell(Port port, boolean compress, boolean noProfile, String codepage, String[] env, String cwd){
+        try {
+            return Pair.of(new Shell(port, compress, noProfile, codepage, env, cwd), null);
+        } catch (Exception e) {
+            return Pair.of(null, e);
+        }
     }
 
     /**

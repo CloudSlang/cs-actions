@@ -11,7 +11,12 @@ public enum InputDefaults {
     X_509_HOSTNAME_VERIFIER("strict"),
     WINRM_LOCALE("en-US"),
     OPERATION_TIMEOUT("60"),
-    AUTH_TYPE("Basic");
+    AUTH_TYPE("Basic"),
+    RETURN_TABLE("false"),
+    DELIMITER(":"),
+    COL_DELIMITER(","),
+    CONNECT_TIMEOUT("60000"),   //ms
+    ROW_DELIMITER("\n");
 
     private String defaultValue;
 
