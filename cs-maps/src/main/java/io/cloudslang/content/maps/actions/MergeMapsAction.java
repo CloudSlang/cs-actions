@@ -109,7 +109,7 @@ public class MergeMapsAction {
                                        @Param(value = InputNames.MAP2_END) String map2End,
                                        @Param(value = InputNames.MAP2_ELEMENT_WRAPPER) String map2ElementWrapper,
                                        @Param(value = InputNames.STRIP_WHITESPACES) String stripWhitespaces,
-                                       @Param(value = InputNames.STRIP_WHITESPACES) String handleEmptyValue
+                                       @Param(value = InputNames.HANDLE_EMPTY_VALUE) String handleEmptyValue
     ) {
 
         try {

@@ -103,7 +103,7 @@ public class AddKeyAction {
                                        @Param(value = InputNames.MAP_END) String mapEnd,
                                        @Param(value = InputNames.ELEMENT_WRAPPER) String elementWrapper,
                                        @Param(value = InputNames.STRIP_WHITESPACES) String stripWhitespaces,
-                                       @Param(value = InputNames.STRIP_WHITESPACES) String handleEmptyValue
+                                       @Param(value = InputNames.HANDLE_EMPTY_VALUE) String handleEmptyValue
                                        ) {
         try {
             AddKeyInput input = new AddKeyInput.Builder()
