@@ -70,7 +70,9 @@ public class MergeMapsAction {
      * @param map2End            Optional - A sequence of 0 or more characters that marks the end of the second map.
      *                           Default value: '}.
      *                           Valid values: Any value.
-     *
+     * @param handleEmptyValue Optional - If the value is empty and this input is true it will fill the value with NULL.
+     *                       Default value: false.
+     *                       Valid values: true, false.
      * @return a map with following entries:
      * return_result: The map resulted from the merge of map1 and map2. Otherwise, it will contain the message of the exception.
      * return_code: 0 if operation succeeded, -1 otherwise.
@@ -106,7 +108,9 @@ public class MergeMapsAction {
                                        @Param(value = InputNames.MAP2_START) String map2Start,
                                        @Param(value = InputNames.MAP2_END) String map2End,
                                        @Param(value = InputNames.MAP2_ELEMENT_WRAPPER) String map2ElementWrapper,
-                                       @Param(value = InputNames.STRIP_WHITESPACES) String stripWhitespaces){
+                                       @Param(value = InputNames.STRIP_WHITESPACES) String stripWhitespaces,
+                                       @Param(value = InputNames.STRIP_WHITESPACES) String handleEmptyValue
+    ) {
 
         try {
             MergeMapsInput input = new MergeMapsInput.Builder()
@@ -123,6 +127,7 @@ public class MergeMapsAction {
                     .map2End(map2End)
                     .map2ElementWrapper(map2ElementWrapper)
                     .stripWhitespaces(stripWhitespaces)
+                    .handleEmptyValue(handleEmptyValue)
                     .build();
             return service.execute(input);
         } catch (Exception ex) {
