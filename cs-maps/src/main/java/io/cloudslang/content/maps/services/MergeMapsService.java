@@ -27,27 +27,27 @@ public class MergeMapsService {
 
     private final MergeMapsInputValidator validator = new MergeMapsInputValidator();
 
-    public @NotNull Map<String,String> execute(@NotNull MergeMapsInput input) throws Exception{
+    public @NotNull Map<String, String> execute(@NotNull MergeMapsInput input) throws Exception {
         ValidationException validationException = validator.validate(input);
-        if(validationException != null){
+        if (validationException != null) {
             throw validationException;
         }
 
         MapSerializer map1Serializer = new MapSerializer(
                 input.getMap1PairDelimiter(), input.getMap1EntryDelimiter(),
                 input.getMap1Start(), input.getMap1End(),
-                input.getMap1ElementWrapper(), input.isStripWhitespaces());
+                input.getMap1ElementWrapper(), input.isStripWhitespaces(), input.isHandleEmptyValue());
 
         MapSerializer map2Serializer = new MapSerializer(
                 input.getMap2PairDelimiter(), input.getMap2EntryDelimiter(),
                 input.getMap2Start(), input.getMap2End(),
-                input.getMap2ElementWrapper(), input.isStripWhitespaces());
+                input.getMap2ElementWrapper(), input.isStripWhitespaces(), input.isHandleEmptyValue());
 
         Map<String, String> map1 = map1Serializer.deserialize(input.getMap1());
         Map<String, String> map2 = map2Serializer.deserialize(input.getMap2());
 
-        for(Map.Entry<String,String> entry : map2.entrySet()){
-            map1.put(entry.getKey(),entry.getValue());
+        for (Map.Entry<String, String> entry : map2.entrySet()) {
+            map1.put(entry.getKey(), entry.getValue());
         }
 
         String returnResult = map1Serializer.serialize(map1);

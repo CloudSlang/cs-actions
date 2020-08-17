@@ -24,6 +24,7 @@ public final class DefaultInputValues {
     public static final String MAP_END = StringUtils.EMPTY;
     public static final String ELEMENT_WRAPPER = StringUtils.EMPTY;
     public static final String STRIP_WHITESPACES = String.valueOf(false);
+    public static final String HANDLE_EMPTY_VALUE = String.valueOf(false);
 
     private DefaultInputValues() {
 

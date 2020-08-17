@@ -34,4 +34,13 @@ public final class BuilderUtils {
             throw new ValidationException(String.format(ExceptionsMsgs.INVALID_VALUE_FOR_INPUT, InputNames.STRIP_WHITESPACES));
         }
     }
+
+    public static boolean handleEmptyValue(String handleEmptyValue) throws ValidationException {
+        try {
+            handleEmptyValue = StringUtils.defaultIfEmpty(handleEmptyValue, DefaultInputValues.HANDLE_EMPTY_VALUE);
+            return BooleanUtils.toBoolean(handleEmptyValue.toLowerCase(), String.valueOf(true), String.valueOf(false));
+        } catch (IllegalArgumentException ex) {
+            throw new ValidationException(String.format(ExceptionsMsgs.INVALID_VALUE_FOR_INPUT, InputNames.HANDLE_EMPTY_VALUE));
+        }
+    }
 }

@@ -35,40 +35,48 @@ public class AddKeyAction {
 
     /**
      * Adds a key to a map. If the given key already exists in the map then its value will be overwritten.
-     * <p>
+     *
      * Notes: CRLF will be replaced with LF for proper handling.
-     * <p>
+     *
      * Examples:
      * 1. For an SQL like map ---
-     * map=|A|1||B|2|, key=B, value=3, pair_delimiter=|, entry_delimiter=||, map_start=|, map_end=| => |A|1||B|3|
+     * map=|A|1||B|2|, key=B, value=3, pair_delimiter=|, entry_delimiter=||, map_start=|, map_end=|
      * 2. For a JSON like map ---
-     * map={'A':'1','B':'2'}, key=B, value=3, pair_delimiter=':', entry_delimiter=',', map_start={', map_end='} => {'A':'1','B':'3'}
+     * map={'A':'1','B':'2'}, key=B, value=3, pair_delimiter=':', entry_delimiter=',', map_start={', map_end='}
      * This is the default format.
      *
-     * @param map            Optional - The map to add a key to.
-     *                       Example: {a:1,b:2,c:3,d:4}, Apples=3;Oranges=2
-     *                       Default: {''}.
-     *                       Valid values: Any string representing a valid map according to specified delimiters
-     *                       (pair_delimiter, entry_delimiter, map_start, map_end).
-     * @param key            Optional - The key to add.
-     *                       Default value: NULL.
-     *                       Valid values: Any string that does not contain or is equal to value of pair_delimiter or entry_delimiter.
-     * @param value          Optional - The value to map to the added key.
-     *                       Default value: NULL
-     *                       Valid values: Any string that does not contain or is equal to value of pair_delimiter or entry_delimiter.
-     * @param pairDelimiter  Optional - The separator to use for splitting key-value pairs into key, respectively value.
-     *                       Default value: ':'.
-     *                       Valid values: Any value that does not contain or is equal to entry_delimiter.
-     * @param entryDelimiter Optional - The separator to use for splitting the map into entries.
-     *                       Default value: ','.
-     *                       Valid values: Any value.
-     * @param mapStart       Optional - A sequence of 0 or more characters that marks the beginning of the map.
-     *                       Default value: {'.
-     *                       Valid values: Any value.A sequence of 0 or more characters that marks the beginning of the map.
-     *                       Valid values: Any value.
-     * @param mapEnd         Optional - A sequence of 0 or more characters that marks the end of the map.
-     *                       Default value: '}.
-     *                       Valid values: Any value.
+     * @param map              Optional - The map to add a key to.
+     *                         Example: {a:1,b:2,c:3,d:4}, Apples=3;Oranges=2
+     *                         Default: {''}.
+     *                         Valid values: Any string representing a valid map according to specified delimiters
+     *                         (pair_delimiter, entry_delimiter, map_start, map_end).
+     * @param key              Optional - The key to add.
+     *                         Default value: NULL.
+     *                         Valid values: Any string that does not contain or is equal to value of pair_delimiter or entry_delimiter.
+     * @param value            Optional - The value to map to the added key.
+     *                         Default value: NULL
+     *                         Valid values: Any string that does not contain or is equal to value of pair_delimiter or entry_delimiter.
+     * @param pairDelimiter    Optional - The separator to use for splitting key-value pairs into key, respectively value.
+     *                         Default value: ':'.
+     *                         Valid values: Any value that does not contain or is equal to entry_delimiter.
+     * @param entryDelimiter   Optional - The separator to use for splitting the map into entries.
+     *                         Default value: ','.
+     *                         Valid values: Any value.
+     * @param mapStart         Optional - A sequence of 0 or more characters that marks the beginning of the map.
+     *                         Default value: {'.
+     *                         Valid values: Any value.A sequence of 0 or more characters that marks the beginning of the map.
+     *                         Valid values: Any value.
+     * @param mapEnd           Optional - A sequence of 0 or more characters that marks the end of the map.
+     *                         Default value: '}.
+     *                         Valid values: Any value.
+     * @param elementWrapper   Optional - A sequence of 0 or more characters that marks the beginning and the end of a key or value.
+     *                         Valid values: Any value that does not have common characters with pair_delimiter or entry_delimiter.
+     * @param stripWhitespaces Optional - True if leading and trailing whitespaces should be removed from the keys and values of the map.
+     *                         Default: false.
+     *                         Valid values: true, false.
+     * @param handleEmptyValue Optional - If the value is empty and this input is true it will fill the value with NULL.
+     *                         Default value: false.
+     *                         Valid values: true, false.
      * @return a map with following entries:
      * return_result: The map with the added key if operation succeeded. Otherwise it will contain the message of the exception.
      * return_code: 0 if operation succeeded, -1 otherwise.
@@ -99,7 +107,9 @@ public class AddKeyAction {
                                        @Param(value = InputNames.MAP_START) String mapStart,
                                        @Param(value = InputNames.MAP_END) String mapEnd,
                                        @Param(value = InputNames.ELEMENT_WRAPPER) String elementWrapper,
-                                       @Param(value = InputNames.STRIP_WHITESPACES) String stripWhitespaces) {
+                                       @Param(value = InputNames.STRIP_WHITESPACES) String stripWhitespaces,
+                                       @Param(value = InputNames.HANDLE_EMPTY_VALUE) String handleEmptyValue
+                                       ) {
         try {
             AddKeyInput input = new AddKeyInput.Builder()
                     .map(map)
@@ -111,6 +121,7 @@ public class AddKeyAction {
                     .mapEnd(mapEnd)
                     .elementWrapper(elementWrapper)
                     .stripWhitespaces(stripWhitespaces)
+                    .handleEmptyValue(handleEmptyValue)
                     .build();
             return service.execute(input);
         } catch (Exception ex) {
