@@ -56,6 +56,8 @@ public class MergeMapsAction {
      * @param map1End            Optional - A sequence of 0 or more characters that marks the end of the first map.
      *                           Default value: '}.
      *                           Valid values: Any value.
+     * @param map1ElementWrapper Optional - A sequence of 0 or more characters that marks the beginning and the end of a key or value of map1.
+     *                           Valid values: Any value that does not have common characters with pair_delimiter or entry_delimiter.
      * @param map2               Optional - The second map to merge.
      *                           Example: {a:1,b:2,c:3,d:4}, Apples=3;Oranges=2
      * @param map2PairDelimiter  Optional - The separator to use for splitting second map's key-value pairs into key, respectively value.
@@ -70,9 +72,14 @@ public class MergeMapsAction {
      * @param map2End            Optional - A sequence of 0 or more characters that marks the end of the second map.
      *                           Default value: '}.
      *                           Valid values: Any value.
-     * @param handleEmptyValue Optional - If the value is empty and this input is true it will fill the value with NULL.
-     *                       Default value: false.
-     *                       Valid values: true, false.
+     * @param map2ElementWrapper Optional - A sequence of 0 or more characters that marks the beginning and the end of a key or value of map2.
+     *                           Valid values: Any value that does not have common characters with pair_delimiter or entry_delimiter.
+     * @param stripWhitespaces   Optional - True if leading and trailing whitespaces should be removed from the keys and values of the map.
+     *                           Default: false.
+     *                           Valid values: true, false.
+     * @param handleEmptyValue   Optional - If the value is empty and this input is true it will fill the value with NULL.
+     *                           Default value: false.
+     *                           Valid values: true, false.
      * @return a map with following entries:
      * return_result: The map resulted from the merge of map1 and map2. Otherwise, it will contain the message of the exception.
      * return_code: 0 if operation succeeded, -1 otherwise.
