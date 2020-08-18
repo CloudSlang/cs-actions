@@ -19,12 +19,15 @@ public final class InputNames {
     public static final String MAP = "map";
     public static final String KEY = "key";
     public static final String VALUE = "value";
+    public static final String METHOD_VALUE = "value";
     public static final String PAIR_DELIMITER = "pairDelimiter";
     public static final String ENTRY_DELIMITER = "entryDelimiter";
     public static final String MAP_START = "mapStart";
     public static final String MAP_END = "mapEnd";
     public static final String ELEMENT_WRAPPER = "elementWrapper";
     public static final String STRIP_WHITESPACES = "stripWhitespaces";
+    public static final String ELEMENTS = "elements";
+    public static final String METHOD = "method";
 
     public static final String MAP1 = "map1";
     public static final String MAP1_PAIR_DELIMITER = "map1PairDelimiter";

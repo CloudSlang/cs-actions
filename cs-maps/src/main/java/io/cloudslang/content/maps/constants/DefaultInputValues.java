@@ -24,6 +24,10 @@ public final class DefaultInputValues {
     public static final String MAP_END = StringUtils.EMPTY;
     public static final String ELEMENT_WRAPPER = StringUtils.EMPTY;
     public static final String STRIP_WHITESPACES = String.valueOf(false);
+    public static final String ELEMENTS = StringUtils.EMPTY;
+    public static final String METHOD = StringUtils.EMPTY;
+    public static final String METHOD_VALUE = StringUtils.EMPTY;
+
 
     private DefaultInputValues() {
 
