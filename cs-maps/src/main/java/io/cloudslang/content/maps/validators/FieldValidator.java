@@ -19,6 +19,9 @@ import io.cloudslang.content.maps.constants.InputNames;
 import io.cloudslang.content.maps.exceptions.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class FieldValidator {
 
     private FieldValidator() {
@@ -84,6 +87,22 @@ public final class FieldValidator {
         }
     }
 
+    public static void validateMethod(String method) throws ValidationException {
+        List<String> methodsList = Arrays.asList("to_lowercase", "to_uppercase", "add_prefix", "add_suffix", "strip_spaces");
+
+
+        if (!methodsList.contains(method.toLowerCase())) {
+            throw new ValidationException(String.format(ExceptionsMsgs.INVALID_VALUE_FOR_INPUT, InputNames.METHOD));
+        }
+    }
+
+    public static void validateElements(String elements) throws ValidationException {
+        List<String> elementsList = Arrays.asList("keys", "values", "all");
+
+        if (!elementsList.contains(elements.toLowerCase())) {
+            throw new ValidationException(String.format(ExceptionsMsgs.INVALID_VALUE_FOR_INPUT, InputNames.ELEMENTS));
+        }
+    }
 
     public static void validateElementWrapper(String elementWrapper, String pairDelimiter, String entryDelimiter) throws ValidationException {
         throwIfCommonCharacter(elementWrapper, pairDelimiter,
