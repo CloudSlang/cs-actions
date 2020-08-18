@@ -82,7 +82,6 @@ public class GetKeysInput {
         private String mapEnd;
         private String elementWrapper;
         private boolean stripWhitespaces;
-        private boolean handleEmptyValue;
 
 
         public Builder map(String map) {
