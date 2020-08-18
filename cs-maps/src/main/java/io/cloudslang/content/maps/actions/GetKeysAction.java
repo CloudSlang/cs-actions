@@ -42,10 +42,10 @@ public class GetKeysAction {
      *                         Default: {''}.
      *                         Valid values: Any string representing a valid map according to specified delimiters
      *                         (pair_delimiter, entry_delimiter, map_start, map_end).
-      * @param pairDelimiter   Optional - The separator to use for splitting key-value pairs into key, respectively value.
+      * @param pairDelimiter   The separator to use for splitting key-value pairs into key, respectively value.
      *                         Default value: ':'.
      *                         Valid values: Any value that does not contain or is equal to entry_delimiter.
-     * @param entryDelimiter   Optional - The separator to use for splitting the map into entries.
+     * @param entryDelimiter   The separator to use for splitting the map into entries.
      *                         Default value: ','.
      *                         Valid values: Any value.
      * @param mapStart         Optional - A sequence of 0 or more characters that marks the beginning of the map.
