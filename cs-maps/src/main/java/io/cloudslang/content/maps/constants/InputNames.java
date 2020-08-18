@@ -25,6 +25,7 @@ public final class InputNames {
     public static final String MAP_END = "mapEnd";
     public static final String ELEMENT_WRAPPER = "elementWrapper";
     public static final String STRIP_WHITESPACES = "stripWhitespaces";
+    public static final String HANDLE_EMPTY_VALUE = "handleEmptyValue";
 
     public static final String MAP1 = "map1";
     public static final String MAP1_PAIR_DELIMITER = "map1PairDelimiter";
