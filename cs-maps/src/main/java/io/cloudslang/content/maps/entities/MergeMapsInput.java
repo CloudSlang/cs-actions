@@ -34,6 +34,8 @@ public class MergeMapsInput {
     private final String map2End;
     private final String map2ElementWrapper;
     private final boolean stripWhitespaces;
+    private final boolean handleEmptyValue;
+
 
     private MergeMapsInput(Builder builder) {
         this.map1 = builder.map1;
@@ -51,6 +53,8 @@ public class MergeMapsInput {
         this.map2ElementWrapper = builder.map2ElementWrapper;
 
         this.stripWhitespaces = builder.stripWhitespaces;
+        this.handleEmptyValue = builder.handleEmptyValue;
+
     }
 
     public String getMap1() {
@@ -108,6 +112,9 @@ public class MergeMapsInput {
         return stripWhitespaces;
     }
 
+    public boolean isHandleEmptyValue() {
+        return handleEmptyValue;
+    }
 
     public static class Builder {
         private String map1;
@@ -123,6 +130,8 @@ public class MergeMapsInput {
         private String map2End;
         private String map2ElementWrapper;
         private boolean stripWhitespaces;
+        private boolean handleEmptyValue;
+
 
         public Builder map1(String map1) {
             this.map1 = StringUtils.defaultString(map1, DefaultInputValues.MAP);
@@ -193,6 +202,11 @@ public class MergeMapsInput {
 
         public Builder stripWhitespaces(String stripWhitespaces) throws ValidationException {
             this.stripWhitespaces = BuilderUtils.parseStripWhitespaces(stripWhitespaces);
+            return this;
+        }
+
+        public Builder handleEmptyValue(String handleEmptyValue) throws ValidationException {
+            this.handleEmptyValue = BuilderUtils.handleEmptyValue(handleEmptyValue);
             return this;
         }
 

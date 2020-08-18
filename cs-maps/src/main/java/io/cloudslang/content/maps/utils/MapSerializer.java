@@ -35,17 +35,19 @@ public class MapSerializer {
     private final String mapEnd;
     private final String elementWrapper;
     private final boolean stripWhitespaces;
+    private final boolean handleEmptyValue;
 
 
     public MapSerializer(@NotNull String pairDelimiter, @NotNull String entryDelimiter,
                          @NotNull String mapStart, @NotNull String mapEnd,
-                         @NotNull String elementWrapper, boolean stripWhitespaces) {
+                         @NotNull String elementWrapper, boolean stripWhitespaces, boolean handleEmptyValue) {
         this.pairDelimiter = pairDelimiter.replace(Chars.CRLF, Chars.LF);
         this.entryDelimiter = entryDelimiter.replace(Chars.CRLF, Chars.LF);
         this.mapStart = mapStart.replace(Chars.CRLF, Chars.LF);
         this.mapEnd = mapEnd.replace(Chars.CRLF, Chars.LF);
         this.elementWrapper = elementWrapper.replace(Chars.CRLF, Chars.LF);
         this.stripWhitespaces = stripWhitespaces;
+        this.handleEmptyValue = handleEmptyValue;
     }
 
 
@@ -62,8 +64,8 @@ public class MapSerializer {
                     .append(this.pairDelimiter)
                     .append(this.elementWrapper).append(value).append(this.elementWrapper);
 
-            if (StringUtils.isEmpty(value) && this.entryDelimiter.contains(this.pairDelimiter)) {
-                mapAsString.append(Chars.RECORD_SEPARATOR);
+            if (StringUtils.isEmpty(value) && this.handleEmptyValue) {
+                mapAsString.append(Chars.NULL);
             }
 
             if (iterator.hasNext()) {

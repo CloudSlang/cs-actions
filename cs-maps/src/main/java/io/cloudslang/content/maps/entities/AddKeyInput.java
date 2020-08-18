@@ -30,6 +30,7 @@ public class AddKeyInput {
     private final String mapEnd;
     private final String elementWrapper;
     private final boolean stripWhitespaces;
+    private final boolean handleEmptyValue;
 
 
     private AddKeyInput(Builder builder) {
@@ -42,6 +43,7 @@ public class AddKeyInput {
         this.mapEnd = builder.mapEnd;
         this.elementWrapper = builder.elementWrapper;
         this.stripWhitespaces = builder.stripWhitespaces;
+        this.handleEmptyValue = builder.handleEmptyValue;
     }
 
 
@@ -89,6 +91,10 @@ public class AddKeyInput {
         return stripWhitespaces;
     }
 
+    public boolean isHandleEmptyValue() {
+        return handleEmptyValue;
+    }
+
 
     public static class Builder {
         private String map;
@@ -100,6 +106,7 @@ public class AddKeyInput {
         private String mapEnd;
         private String elementWrapper;
         private boolean stripWhitespaces;
+        private boolean handleEmptyValue;
 
 
         public Builder map(String map) {
@@ -152,6 +159,11 @@ public class AddKeyInput {
 
         public Builder stripWhitespaces(String stripWhitespaces) throws ValidationException {
             this.stripWhitespaces = BuilderUtils.parseStripWhitespaces(stripWhitespaces);
+            return this;
+        }
+
+        public Builder handleEmptyValue(String handleEmptyValue) throws ValidationException {
+            this.handleEmptyValue = BuilderUtils.handleEmptyValue(handleEmptyValue);
             return this;
         }
 
