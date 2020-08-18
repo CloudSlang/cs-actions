@@ -42,7 +42,7 @@ public class GetKeysAction {
      *                         Default: {''}.
      *                         Valid values: Any string representing a valid map according to specified delimiters
      *                         (pair_delimiter, entry_delimiter, map_start, map_end).
-      * @param pairDelimiter   The separator to use for splitting key-value pairs into key, respectively value.
+     * @param pairDelimiter   The separator to use for splitting key-value pairs into key, respectively value.
      *                         Default value: ':'.
      *                         Valid values: Any value that does not contain or is equal to entry_delimiter.
      * @param entryDelimiter   The separator to use for splitting the map into entries.
@@ -59,9 +59,6 @@ public class GetKeysAction {
      *                         Valid values: Any value that does not have common characters with pair_delimiter or entry_delimiter.
      * @param stripWhitespaces Optional - True if leading and trailing whitespaces should be removed from the keys and values of the map.
      *                         Default: false.
-     *                         Valid values: true, false.
-     * @param handleEmptyValue Optional - If the value is empty and this input is true it will fill the value with NULL.
-     *                         Default value: false.
      *                         Valid values: true, false.
      * @return a map with following entries:
      * return_result: List of the keys from the map.
@@ -91,8 +88,7 @@ public class GetKeysAction {
                                                 @Param(value = InputNames.MAP_START) String mapStart,
                                                 @Param(value = InputNames.MAP_END) String mapEnd,
                                                 @Param(value = InputNames.ELEMENT_WRAPPER) String elementWrapper,
-                                                @Param(value = InputNames.STRIP_WHITESPACES) String stripWhitespaces,
-                                                @Param(value = InputNames.HANDLE_EMPTY_VALUE) String handleEmptyValue) {
+                                                @Param(value = InputNames.STRIP_WHITESPACES) String stripWhitespaces) {
         try {
             GetKeysInput input = new GetKeysInput.Builder()
                     .map(map)
@@ -102,7 +98,6 @@ public class GetKeysAction {
                     .mapEnd(mapEnd)
                     .elementWrapper(elementWrapper)
                     .stripWhitespaces(stripWhitespaces)
-                    .handleEmptyValue(handleEmptyValue)
                     .build();
             return service.execute(input);
         } catch (Exception ex) {

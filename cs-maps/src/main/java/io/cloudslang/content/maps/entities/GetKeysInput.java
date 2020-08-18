@@ -27,8 +27,6 @@ public class GetKeysInput {
     private final String mapEnd;
     private final String elementWrapper;
     private final boolean stripWhitespaces;
-    private final boolean handleEmptyValue;
-
 
     private GetKeysInput(Builder builder) {
         this.map = builder.map;
@@ -38,7 +36,6 @@ public class GetKeysInput {
         this.mapEnd = builder.mapEnd;
         this.elementWrapper = builder.elementWrapper;
         this.stripWhitespaces = builder.stripWhitespaces;
-        this.handleEmptyValue = builder.handleEmptyValue;
     }
 
 
@@ -74,11 +71,6 @@ public class GetKeysInput {
 
     public boolean isStripWhitespaces() {
         return stripWhitespaces;
-    }
-
-
-    public boolean isHandleEmptyValue() {
-        return handleEmptyValue;
     }
 
 
@@ -131,12 +123,6 @@ public class GetKeysInput {
 
         public Builder stripWhitespaces(String stripWhitespaces) throws ValidationException {
             this.stripWhitespaces = BuilderUtils.parseStripWhitespaces(stripWhitespaces);
-            return this;
-        }
-
-
-        public Builder handleEmptyValue(String handleEmptyValue) throws ValidationException {
-            this.handleEmptyValue = BuilderUtils.handleEmptyValue(handleEmptyValue);
             return this;
         }
 
