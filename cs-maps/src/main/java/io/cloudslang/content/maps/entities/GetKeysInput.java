@@ -27,6 +27,7 @@ public class GetKeysInput {
     private final String mapEnd;
     private final String elementWrapper;
     private final boolean stripWhitespaces;
+    private final boolean handleEmptyValue;
 
 
     private GetKeysInput(Builder builder) {
@@ -37,6 +38,7 @@ public class GetKeysInput {
         this.mapEnd = builder.mapEnd;
         this.elementWrapper = builder.elementWrapper;
         this.stripWhitespaces = builder.stripWhitespaces;
+        this.handleEmptyValue = builder.handleEmptyValue;
     }
 
 
@@ -75,6 +77,11 @@ public class GetKeysInput {
     }
 
 
+    public boolean isHandleEmptyValue() {
+        return handleEmptyValue;
+    }
+
+
     public static class Builder {
         private String map;
         private String pairDelimiter;
@@ -83,6 +90,7 @@ public class GetKeysInput {
         private String mapEnd;
         private String elementWrapper;
         private boolean stripWhitespaces;
+        private boolean handleEmptyValue;
 
 
         public Builder map(String map) {
@@ -126,6 +134,11 @@ public class GetKeysInput {
             return this;
         }
 
+
+        public Builder handleEmptyValue(String handleEmptyValue) throws ValidationException {
+            this.handleEmptyValue = BuilderUtils.handleEmptyValue(handleEmptyValue);
+            return this;
+        }
 
         public GetKeysInput build() {
             return new GetKeysInput(this);

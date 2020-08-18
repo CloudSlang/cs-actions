@@ -36,7 +36,7 @@ public class GetKeysService {
         MapSerializer serializer = new MapSerializer(
                 input.getPairDelimiter(), input.getEntryDelimiter(),
                 input.getMapStart(), input.getMapEnd(),
-                input.getElementWrapper(), input.isStripWhitespaces());
+                input.getElementWrapper(), input.isStripWhitespaces(), input.isHandleEmptyValue());
 
         Map<String, String> map = serializer.deserialize(input.getMap());
 

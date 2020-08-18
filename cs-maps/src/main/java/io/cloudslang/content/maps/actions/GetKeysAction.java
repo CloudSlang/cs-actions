@@ -60,6 +60,9 @@ public class GetKeysAction {
      * @param stripWhitespaces Optional - True if leading and trailing whitespaces should be removed from the keys and values of the map.
      *                         Default: false.
      *                         Valid values: true, false.
+     * @param handleEmptyValue Optional - If the value is empty and this input is true it will fill the value with NULL.
+     *                         Default value: false.
+     *                         Valid values: true, false.
      * @return a map with following entries:
      * return_result: List of the keys from the map.
      * return_code: 0 if operation succeeded, -1 otherwise.
@@ -82,13 +85,14 @@ public class GetKeysAction {
                             matchType = MatchType.COMPARE_EQUAL,
                             isOnFail = true, isDefault = true)
             })
-    public @NotNull Map<String, String> execute(@Param(value = InputNames.MAP) String map,
+    public @NotNull Map<String, String> execute(@Param(value = InputNames.MAP, required = true) String map,
                                                 @Param(value = InputNames.PAIR_DELIMITER, required = true) String pairDelimiter,
                                                 @Param(value = InputNames.ENTRY_DELIMITER, required = true) String entryDelimiter,
                                                 @Param(value = InputNames.MAP_START) String mapStart,
                                                 @Param(value = InputNames.MAP_END) String mapEnd,
                                                 @Param(value = InputNames.ELEMENT_WRAPPER) String elementWrapper,
-                                                @Param(value = InputNames.STRIP_WHITESPACES) String stripWhitespaces) {
+                                                @Param(value = InputNames.STRIP_WHITESPACES) String stripWhitespaces,
+                                                @Param(value = InputNames.HANDLE_EMPTY_VALUE) String handleEmptyValue) {
         try {
             GetKeysInput input = new GetKeysInput.Builder()
                     .map(map)
@@ -98,6 +102,7 @@ public class GetKeysAction {
                     .mapEnd(mapEnd)
                     .elementWrapper(elementWrapper)
                     .stripWhitespaces(stripWhitespaces)
+                    .handleEmptyValue(handleEmptyValue)
                     .build();
             return service.execute(input);
         } catch (Exception ex) {
