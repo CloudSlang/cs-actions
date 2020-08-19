@@ -46,15 +46,15 @@ public class ModifyMapElementsService {
 
         switch (input.getElements().toLowerCase()) {
             case "keys":
-                newMap = map.keySet().stream()
+                newMap = map.keySet().parallelStream()
                         .collect(Collectors.toMap(key -> StringMethods.execute(key, input.getMethod(), input.getValue()), map::get));
                 break;
             case "values":
-                newMap = map.keySet().stream()
+                newMap = map.keySet().parallelStream()
                         .collect(Collectors.toMap(key -> key, key -> StringMethods.execute(map.get(key), input.getMethod(), input.getValue())));
                 break;
             default:
-                newMap = map.keySet().stream()
+                newMap = map.keySet().parallelStream()
                         .collect(Collectors.toMap(key -> StringMethods.execute(key, input.getMethod(), input.getValue()),
                                 key -> StringMethods.execute(map.get(key), input.getMethod(), input.getValue())));
                 break;
