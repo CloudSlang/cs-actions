@@ -20,12 +20,12 @@ import io.cloudslang.content.maps.utils.MapSerializer;
 import io.cloudslang.content.maps.validators.GetKeysInputValidator;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Map;
 
 public class GetKeysService {
 
     private final GetKeysInputValidator validator = new GetKeysInputValidator();
+    String returnResult = "";
 
     public Map<String, String> execute(@NotNull GetKeysInput input) throws Exception {
         ValidationException validationEx = validator.validate(input);
@@ -40,7 +40,14 @@ public class GetKeysService {
 
         Map<String, String> map = serializer.deserialize(input.getMap());
 
-        String returnResult = map.keySet().toString();
+        Object[] keys = map.keySet().toArray();
+
+        for (int i=0; i<keys.length-1; i++){
+            returnResult = returnResult.concat(keys[i].toString());
+            returnResult = returnResult.concat(",");
+        }
+        returnResult = returnResult.concat(keys[keys.length-1].toString());
+
         return OutputUtilities.getSuccessResultsMap(returnResult);
     }
 }
