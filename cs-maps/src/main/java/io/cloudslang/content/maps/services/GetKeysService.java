@@ -39,8 +39,21 @@ public class GetKeysService {
                 input.getElementWrapper(), input.isStripWhitespaces(), false);
 
         Map<String, String> map = serializer.deserialize(input.getMap());
+        String returnResult = getKeys(map);
 
-        String returnResult = map.keySet().toString();
         return OutputUtilities.getSuccessResultsMap(returnResult);
+    }
+
+    private String getKeys(Map<String, String> map) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        Object[] keys = map.keySet().toArray();
+
+        for (Object key : keys) {
+            stringBuilder.append(key.toString()).append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+
+        return stringBuilder.toString();
     }
 }
