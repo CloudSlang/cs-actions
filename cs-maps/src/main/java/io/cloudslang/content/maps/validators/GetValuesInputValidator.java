@@ -16,6 +16,7 @@ package io.cloudslang.content.maps.validators;
 
 import io.cloudslang.content.maps.entities.GetValuesInput;
 import io.cloudslang.content.maps.exceptions.ValidationException;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class GetValuesInputValidator {
@@ -26,6 +27,9 @@ public class GetValuesInputValidator {
             FieldValidator.validateEntryDelimiter(input.getEntryDelimiter(), input.getPairDelimiter());
             FieldValidator.validateElementWrapper(input.getElementWrapper(), input.getPairDelimiter(), input.getEntryDelimiter());
             FieldValidator.validateMap(input.getMap(), input.getMapStart(), input.getMapEnd());
+            if(!StringUtils.isEmpty(input.getKey()))
+                FieldValidator.validateKey(input.getKey(), input.getPairDelimiter(), input.getEntryDelimiter(),
+                    input.getElementWrapper(), input.getMapStart(), input.getMapEnd());
             return null;
         } catch (ValidationException ex) {
             return ex;
