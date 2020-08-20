@@ -20,12 +20,12 @@ import io.cloudslang.content.maps.utils.MapSerializer;
 import io.cloudslang.content.maps.validators.GetKeysInputValidator;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
 public class GetKeysService {
 
     private final GetKeysInputValidator validator = new GetKeysInputValidator();
-    String returnResult = "";
 
     public Map<String, String> execute(@NotNull GetKeysInput input) throws Exception {
         ValidationException validationEx = validator.validate(input);
@@ -39,15 +39,21 @@ public class GetKeysService {
                 input.getElementWrapper(), input.isStripWhitespaces(), false);
 
         Map<String, String> map = serializer.deserialize(input.getMap());
-
-        Object[] keys = map.keySet().toArray();
-
-        for (int i=0; i<keys.length-1; i++){
-            returnResult = returnResult.concat(keys[i].toString());
-            returnResult = returnResult.concat(",");
-        }
-        returnResult = returnResult.concat(keys[keys.length-1].toString());
+        String returnResult = getKeys(map);
 
         return OutputUtilities.getSuccessResultsMap(returnResult);
+    }
+
+    private String getKeys(Map<String, String> map) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        Object[] keys = map.keySet().toArray();
+
+        for (Object key : keys) {
+            stringBuilder.append(key.toString()).append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+
+        return stringBuilder.toString();
     }
 }
