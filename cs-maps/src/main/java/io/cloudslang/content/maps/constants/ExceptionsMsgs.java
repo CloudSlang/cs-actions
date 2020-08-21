@@ -36,6 +36,7 @@ public final class ExceptionsMsgs {
     public static final String KEY_OR_VALUE_WAS_EXPECTED_TO_START_WITH_WRAPPER = "Key or value was expected to start with value of " + InputNames.ELEMENT_WRAPPER;
     public static final String KEY_OR_VALUE_WAS_EXPECTED_TO_END_WITH_WRAPPER = "Key or value was expected to end with value of " + InputNames.ELEMENT_WRAPPER;
     public static final String MISSING_KEY = "The key provided it's not in map.";
+    public static final String NULL_MAP = "The provided map is empty.";
 
     private ExceptionsMsgs() {
 
