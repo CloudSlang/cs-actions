@@ -16,7 +16,7 @@ package io.cloudslang.content.maps.utils;
 
 public class StringMethods {
 
-    public static String execute(String object, String method, String value) {
+    public static String execute(String object, String method, String value, boolean stripWhitespaces) {
 
         switch (method.toLowerCase()) {
             case "to_uppercase":
@@ -24,11 +24,17 @@ public class StringMethods {
             case "to_lowercase":
                 return object.toLowerCase();
             case "add_prefix":
-                return value + object;
+                if(stripWhitespaces)
+                    return (value + object).replaceAll("\\s+","");
+                else
+                    return value + object;
             case "add_suffix":
-                return object + value;
+                if(stripWhitespaces)
+                    return (object + value).replaceAll("\\s+","");
+                else
+                    return object + value;
             default:
-                return object.trim();
+                return object.replaceAll("\\s+","");
         }
     }
 }
