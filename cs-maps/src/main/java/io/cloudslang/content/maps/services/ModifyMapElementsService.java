@@ -47,16 +47,16 @@ public class ModifyMapElementsService {
         switch (input.getElements().toLowerCase()) {
             case "keys":
                 newMap = map.keySet().stream()
-                        .collect(Collectors.toMap(key -> StringMethods.execute(key, input.getMethod(), input.getValue()), map::get));
+                        .collect(Collectors.toMap(key -> StringMethods.execute(key, input.getMethod(), input.getValue(),input.isStripWhitespaces()), map::get));
                 break;
             case "values":
                 newMap = map.keySet().stream()
-                        .collect(Collectors.toMap(key -> key, key -> StringMethods.execute(map.get(key), input.getMethod(), input.getValue())));
+                        .collect(Collectors.toMap(key -> key, key -> StringMethods.execute(map.get(key), input.getMethod(), input.getValue(),input.isStripWhitespaces())));
                 break;
             default:
                 newMap = map.keySet().stream()
-                        .collect(Collectors.toMap(key -> StringMethods.execute(key, input.getMethod(), input.getValue()),
-                                key -> StringMethods.execute(map.get(key), input.getMethod(), input.getValue())));
+                        .collect(Collectors.toMap(key -> StringMethods.execute(key, input.getMethod(), input.getValue(),input.isStripWhitespaces()),
+                                key -> StringMethods.execute(map.get(key), input.getMethod(), input.getValue(),input.isStripWhitespaces())));
                 break;
         }
 
