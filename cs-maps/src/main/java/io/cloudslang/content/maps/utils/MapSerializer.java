@@ -60,13 +60,13 @@ public class MapSerializer {
             String key = iterator.next();
             String value = map.get(key);
 
+            if (StringUtils.isEmpty(value) && this.handleEmptyValue) {
+                value = Chars.NULL;
+            }
+
             mapAsString.append(this.elementWrapper).append(key).append(this.elementWrapper)
                     .append(this.pairDelimiter)
                     .append(this.elementWrapper).append(value).append(this.elementWrapper);
-
-            if (StringUtils.isEmpty(value) && this.handleEmptyValue) {
-                mapAsString.append(Chars.NULL);
-            }
 
             if (iterator.hasNext()) {
                 mapAsString.append(this.entryDelimiter);
@@ -122,11 +122,11 @@ public class MapSerializer {
         }
 
         if (StringUtils.isNotEmpty(this.elementWrapper)) {
-            if(!keyOrValue.startsWith(this.elementWrapper)){
+            if (!keyOrValue.startsWith(this.elementWrapper)) {
                 throw new DeserializationException(ExceptionsMsgs.KEY_OR_VALUE_WAS_EXPECTED_TO_START_WITH_WRAPPER);
             }
 
-            if(!keyOrValue.endsWith(this.elementWrapper)) {
+            if (!keyOrValue.endsWith(this.elementWrapper)) {
                 throw new DeserializationException(ExceptionsMsgs.KEY_OR_VALUE_WAS_EXPECTED_TO_END_WITH_WRAPPER);
             }
 
@@ -141,7 +141,7 @@ public class MapSerializer {
 
     private String[] splitMapEntry(String mapEntry) throws DeserializationException {
         String[] keyValuePair = mapEntry.split(Pattern.quote(this.pairDelimiter));
-        if(keyValuePair.length == 2) {
+        if (keyValuePair.length == 2) {
             return keyValuePair;
         } else if (keyValuePair.length < 2) {
             if (mapEntry.endsWith(this.pairDelimiter)) {
