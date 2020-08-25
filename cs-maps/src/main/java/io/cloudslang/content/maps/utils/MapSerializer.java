@@ -134,7 +134,7 @@ public class MapSerializer {
         }
 
         if (this.stripWhitespaces) {
-            keyOrValue = keyOrValue.trim();
+            keyOrValue = keyOrValue.replaceAll("\\s+","");;
         }
         return keyOrValue.replace(Chars.RECORD_SEPARATOR, StringUtils.EMPTY);
     }

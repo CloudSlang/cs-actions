@@ -15,6 +15,7 @@
 package io.cloudslang.content.maps.services;
 
 import io.cloudslang.content.maps.entities.GetKeysInput;
+import io.cloudslang.content.maps.exceptions.ServiceException;
 import io.cloudslang.content.maps.exceptions.ValidationException;
 import io.cloudslang.content.maps.utils.MapSerializer;
 import io.cloudslang.content.maps.validators.GetKeysInputValidator;
@@ -22,6 +23,8 @@ import io.cloudslang.content.utils.OutputUtilities;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+
+import static io.cloudslang.content.maps.constants.ExceptionsMsgs.NULL_MAP;
 
 public class GetKeysService {
 
@@ -39,6 +42,11 @@ public class GetKeysService {
                 input.getElementWrapper(), input.isStripWhitespaces(), false);
 
         Map<String, String> map = serializer.deserialize(input.getMap());
+
+        if (map.size() == 0){
+            throw new ServiceException(NULL_MAP);
+        }
+
         String returnResult = getKeys(map);
 
         return OutputUtilities.getSuccessResultsMap(returnResult);
