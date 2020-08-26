@@ -18,6 +18,7 @@ package io.cloudslang.content.office365.utils;
 public final class Constants {
     public static final String API = "api";
     public static final String NATIVE = "native";
+    public static final String CERTIFICATE = "certificate";
     public static final String NEW_LINE = "\n";
     public static final String DEFAULT_LOGIN_TYPE = "API";
     public static final String DEFAULT_RESOURCE = "https://graph.microsoft.com";
@@ -25,7 +26,7 @@ public final class Constants {
     public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
     public static final String STRICT = "strict";
-    public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
+    public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be 'API', 'Native' or 'Certificate'.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port.";

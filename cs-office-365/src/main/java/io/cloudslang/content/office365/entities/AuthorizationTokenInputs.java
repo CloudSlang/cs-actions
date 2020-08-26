@@ -31,10 +31,12 @@ public class AuthorizationTokenInputs {
     private final int proxyPort;
     private final String proxyUsername;
     private final String proxyPassword;
+    private final String certificatePath;
+    private final String certificatePassword;
 
-    @java.beans.ConstructorProperties({"loginType", "clientId", "clientSecret", "username", "password", "authority", "resource", "proxyHost", "proxyPort", "proxyUsername", "proxyPassword"})
+    @java.beans.ConstructorProperties({"loginType", "clientId", "clientSecret", "username", "password", "authority", "resource", "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "certificatePath", "certificatePassword"})
     private AuthorizationTokenInputs(final String loginType, final String clientId, final String clientSecret, final String username, final String password, final String authority,
-                                     final String resource, final String proxyHost, final int proxyPort, final String proxyUsername, final String proxyPassword) {
+                                     final String resource, final String proxyHost, final int proxyPort, final String proxyUsername, final String proxyPassword, final String certificatePath, final String certificatePassword) {
         this.loginType = loginType;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
@@ -46,6 +48,8 @@ public class AuthorizationTokenInputs {
         this.proxyPort = proxyPort;
         this.proxyUsername = proxyUsername;
         this.proxyPassword = proxyPassword;
+        this.certificatePath = certificatePath;
+        this.certificatePassword = certificatePassword;
     }
 
     @NotNull
@@ -107,6 +111,16 @@ public class AuthorizationTokenInputs {
         return this.proxyPassword;
     }
 
+    @NotNull
+    public String getCertificatePath() {
+        return this.certificatePath;
+    }
+
+    @NotNull
+    public String getCertificatePassword() {
+        return this.certificatePassword;
+    }
+
     public static class AuthorizationTokenInputsBuilder {
         private String loginType = EMPTY;
         private String clientId = EMPTY;
@@ -119,6 +133,8 @@ public class AuthorizationTokenInputs {
         private int proxyPort;
         private String proxyUsername = EMPTY;
         private String proxyPassword = EMPTY;
+        private String certificatePath = EMPTY;
+        private String certificatePassword = EMPTY;
 
         AuthorizationTokenInputsBuilder() {
         }
@@ -190,17 +206,29 @@ public class AuthorizationTokenInputs {
         }
 
         @NotNull
+        public AuthorizationTokenInputsBuilder certificatePath(@NotNull final String certificatePath) {
+            this.certificatePath = certificatePath;
+            return this;
+        }
+
+        @NotNull
+        public AuthorizationTokenInputsBuilder certificatePassword(@NotNull final String certificatePassword) {
+            this.certificatePassword = certificatePassword;
+            return this;
+        }
+
+        @NotNull
         public AuthorizationTokenInputs build() {
-            return new AuthorizationTokenInputs(loginType, clientId, clientSecret, username, password, authority, resource, proxyHost, proxyPort, proxyUsername, proxyPassword);
+            return new AuthorizationTokenInputs(loginType, clientId, clientSecret, username, password, authority, resource, proxyHost, proxyPort, proxyUsername, proxyPassword, certificatePath, certificatePassword);
         }
 
         @Override
         public String toString() {
             return String.format("AuthorizationTokenInputsBuilder(loginType=%s, clientId=%s, clientSecret=%s," +
                             " username=%s, password=%s, clientId=%s, authority=%s, resource=%s, proxyHost=%s," +
-                            " proxyPort=%s, proxyUsername=%s, proxyPassword=%s)",
+                            " proxyPort=%s, proxyUsername=%s, proxyPassword=%s, certificatePath=%s, certificatePassword=%s)",
                     this.loginType, this.clientId, this.clientSecret, this.username, this.password, this.authority,
-                    this.resource, this.proxyHost, this.proxyPort, this.proxyUsername, this.proxyPassword);
+                    this.resource, this.proxyHost, this.proxyPort, this.proxyUsername, this.proxyPassword, this.certificatePath, this.certificatePassword);
         }
     }
 }
