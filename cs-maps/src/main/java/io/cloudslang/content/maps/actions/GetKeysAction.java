@@ -49,11 +49,9 @@ public class GetKeysAction {
      *                         Default value: ','.
      *                         Valid values: Any value.
      * @param mapStart         Optional - A sequence of 0 or more characters that marks the beginning of the map.
-     *                         Default value: {'.
      *                         Valid values: Any value.A sequence of 0 or more characters that marks the beginning of the map.
      *                         Valid values: Any value.
      * @param mapEnd           Optional - A sequence of 0 or more characters that marks the end of the map.
-     *                         Default value: '}.
      *                         Valid values: Any value.
      * @param elementWrapper   Optional - A sequence of 0 or more characters that marks the beginning and the end of a key or value.
      *                         Valid values: Any value that does not have common characters with pair_delimiter or entry_delimiter.
