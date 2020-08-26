@@ -119,4 +119,19 @@ public final class FieldValidator {
             }
         }
     }
+
+    public static void validateOrder(String sortOrder) throws ValidationException {
+        List<String> orderList = Arrays.asList("asc", "desc");
+
+        if (!orderList.contains(sortOrder.toLowerCase())) {
+            throw new ValidationException(String.format(ExceptionsMsgs.INVALID_VALUE_FOR_INPUT, InputNames.SORT_ORDER));
+        }
+    }
+
+    public static void validateSortBy(String sortBy) throws ValidationException {
+
+        if (sortBy.isEmpty()) {
+            throw new ValidationException(String.format(ExceptionsMsgs.EMPTY_SORT_BY, InputNames.SORT_BY));
+        }
+    }
 }
