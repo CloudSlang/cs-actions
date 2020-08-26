@@ -47,7 +47,6 @@ public class SortMapsAction {
      * @param entryDelimiter   The separator to use for splitting the map into entries.
      *                         Valid values: Any value.
      * @param mapStart         Optional - A sequence of 0 or more characters that marks the beginning of the map.
-     *                         Valid values: Any value.A sequence of 0 or more characters that marks the beginning of the map.
      *                         Valid values: Any value.
      * @param mapEnd           Optional - A sequence of 0 or more characters that marks the end of the map.
      *                         Valid values: Any value.
