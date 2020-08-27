@@ -31,12 +31,14 @@ public final class ExceptionsMsgs {
             + InputNames.ENTRY_DELIMITER + "?";
     public static final String NULL_KEY = "Key cannot be null or blank.";
     public static final String INVALID_VALUE_FOR_INPUT = "Invalid value for input %s";
+    public static final String INVALID_VALUE_FOR_MATCH_TYPE = "Invalid value for input match_type";
     public static final String ELEMENT_WRAPPER_CANNOT_HAVE_COMMON_CHAR_WITH = "Input " + InputNames.ELEMENT_WRAPPER +
             " cannot contain character that also appears in %s.";
     public static final String KEY_OR_VALUE_WAS_EXPECTED_TO_START_WITH_WRAPPER = "Key or value was expected to start with value of " + InputNames.ELEMENT_WRAPPER;
     public static final String KEY_OR_VALUE_WAS_EXPECTED_TO_END_WITH_WRAPPER = "Key or value was expected to end with value of " + InputNames.ELEMENT_WRAPPER;
     public static final String MISSING_KEY = "The key provided it's not in map.";
     public static final String NULL_MAP = "The provided map is empty.";
+
 
     private ExceptionsMsgs() {
 

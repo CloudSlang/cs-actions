@@ -43,4 +43,13 @@ public final class BuilderUtils {
             throw new ValidationException(String.format(ExceptionsMsgs.INVALID_VALUE_FOR_INPUT, InputNames.HANDLE_EMPTY_VALUE));
         }
     }
+
+    public static boolean ignoreCaseValue (String ignoreCase) throws ValidationException {
+        try {
+            ignoreCase = StringUtils.defaultIfEmpty(ignoreCase, DefaultInputValues.IGNORE_CASE);
+            return BooleanUtils.toBoolean(ignoreCase.toLowerCase(), String.valueOf(true), String.valueOf(false));
+        } catch (IllegalArgumentException ex) {
+            throw new ValidationException(String.format(ExceptionsMsgs.INVALID_VALUE_FOR_INPUT, InputNames.IGNORE_CASE));
+        }
+    }
 }

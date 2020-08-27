@@ -22,6 +22,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.List;
 
+import static io.cloudslang.content.maps.constants.Chars.CONTAINS;
+import static io.cloudslang.content.maps.constants.Chars.EQUALS;
+
 public final class FieldValidator {
 
     private FieldValidator() {
@@ -85,6 +88,12 @@ public final class FieldValidator {
         if (entryDelimiter.equals(pairDelimiter)) {
             throw new ValidationException(ExceptionsMsgs.ENTRY_AND_PAIR_DELIMITER_MUST_BE_DISTINCT);
         }
+    }
+
+    public static void validateEntryMatchType(String matchType) throws ValidationException {
+        if (!matchType.toLowerCase().trim().equals(EQUALS) && !matchType.toLowerCase().trim().equals(CONTAINS))
+            throw new ValidationException(ExceptionsMsgs.INVALID_VALUE_FOR_MATCH_TYPE);
+
     }
 
     public static void validateMethod(String method) throws ValidationException {
