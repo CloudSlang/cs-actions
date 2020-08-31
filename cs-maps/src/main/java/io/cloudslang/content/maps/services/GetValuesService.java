@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+import static io.cloudslang.content.maps.constants.Chars.COMMA;
 import static io.cloudslang.content.maps.constants.ExceptionsMsgs.MISSING_KEY;
 
 public class GetValuesService {
@@ -48,18 +49,27 @@ public class GetValuesService {
         return OutputUtilities.getSuccessResultsMap(returnResult);
     }
 
-    private String getValues(Map<String, String>map, GetValuesInput input) throws ServiceException {
+    private String getValues(Map<String, String> map, GetValuesInput input) throws ServiceException {
         StringBuilder stringBuilder = new StringBuilder();
-        if(StringUtils.isEmpty(input.getKey())) {
+        String keysList = input.getKey();
+        if(input.isStripWhitespaces())
+            keysList = input.getKey().replaceAll("\\s+","");
+
+        if (StringUtils.isEmpty(keysList)) {
             for (String value : map.values()) {
                 stringBuilder.append(value).append(',');
             }
-            stringBuilder.deleteCharAt(stringBuilder.length()-1);
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
             return stringBuilder.toString();
-        }
-        else {
-            if(map.get(input.getKey())!=null)
-                return map.get(input.getKey());
+        } else {
+            String[] keys = keysList.split(input.getKeyDelimiter());
+            for (int i = 0; i < keys.length; i++)
+                if(map.get(keys[i]) != null)
+                stringBuilder.append(map.get(keys[i])).append(COMMA);
+            if(stringBuilder.length()>0)
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+            if (stringBuilder.toString().length() > 0 )
+                return stringBuilder.toString();
             else
                 throw new ServiceException(MISSING_KEY);
         }
