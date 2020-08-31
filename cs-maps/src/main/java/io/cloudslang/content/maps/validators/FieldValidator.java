@@ -129,9 +129,14 @@ public final class FieldValidator {
     }
 
     public static void validateSortBy(String sortBy) throws ValidationException {
+        List<String> sortList = Arrays.asList("key", "value");
 
         if (sortBy.isEmpty()) {
             throw new ValidationException(String.format(ExceptionsMsgs.EMPTY_SORT_BY, InputNames.SORT_BY));
         }
+        else if (!sortList.contains(sortBy.toLowerCase())) {
+            throw new ValidationException(String.format(ExceptionsMsgs.INVALID_VALUE_FOR_INPUT, InputNames.SORT_BY));
+        }
+
     }
 }
