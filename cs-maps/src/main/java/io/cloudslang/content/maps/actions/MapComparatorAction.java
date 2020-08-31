@@ -46,9 +46,10 @@ public class MapComparatorAction {
      * @param map2       The map that is compared with map1.
      *                   Example: {a:1,b:2,c:3,d:4}, Apples=3;Oranges=2
      *                   Default: {''}.
-     * @param matchType  The separator to use for splitting the map into entries.
-     *                   Default value: ','.
-     *                   Valid values: Any value.
+     * @param matchType  The matching options which should be used on the maps.
+     *                   When "equals" is used the operation validates if the provided maps have the same entries.
+     *                   When "contains" is used the operation checks if map1 contains map2.
+     *                   Valid values: "equals"  or "contains"
      * @param map1PairDelimiter  Optional - The separator to use for splitting first map's key-value pairs into key,
      *                           respectively value.
      *                           Default value: ':'.
