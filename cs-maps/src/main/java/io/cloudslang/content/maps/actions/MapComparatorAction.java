@@ -34,20 +34,23 @@ public class MapComparatorAction {
 
 
     /**
-     * Get all values or a specific value from a map.
+     * Based on the value provided in the matchType input, the operation checks either if the maps have the same entries
+     * when "equals"  is used, or checks if map1 contains map2 when "contains" is provided as a value
+     * for the matchType input.
      *
-     * @param map1       The map from where the values will be retrieved.
+     * @param map1       The map where the entries from map 2 are searched.
      *                   Example: {a:1,b:2,c:3,d:4}, Apples=3;Oranges=2
      *                   Default: {''}.
      *                   Valid values: Any string representing a valid map according to specified delimiters
      *                   (pair_delimiter, entry_delimiter, map_start, map_end).
-     * @param map2       The separator to use for splitting key-value pairs into key, respectively value.
+     * @param map2       The map that is compared with map1.
      *                   Default value: ':'.
      *                   Valid values: Any value that does not contain or is equal to entry_delimiter.
      * @param matchType  The separator to use for splitting the map into entries.
      *                   Default value: ','.
      *                   Valid values: Any value.
-     * @param map1PairDelimiter  Optional - The separator to use for splitting first map's key-value pairs into key, respectively value.
+     * @param map1PairDelimiter  Optional - The separator to use for splitting first map's key-value pairs into key,
+     *                           respectively value.
      *                           Default value: ':'.
      *                           Valid values: Any value that does not contain or is equal to map1_entry_delimiter.
      * @param map1EntryDelimiter Optional - The separator to use for splitting the first map into entries.
@@ -59,7 +62,8 @@ public class MapComparatorAction {
      * @param map1End            Optional - A sequence of 0 or more characters that marks the end of the first map.
      *                           Default value: '}.
      *                           Valid values: Any value.
-     * @param map1ElementWrapper Optional - A sequence of 0 or more characters that marks the beginning and the end of a key or value of map1.
+     * @param map1ElementWrapper Optional - A sequence of 0 or more characters that marks the beginning and the end of
+     *                           a key or value of map1.
      *                           Valid values: Any value that does not have common characters with pair_delimiter or entry_delimiter.
      * @param map2PairDelimiter  Optional - The separator to use for splitting second map's key-value pairs into key, respectively value.
      *                           Default value: ':'.
@@ -73,15 +77,21 @@ public class MapComparatorAction {
      * @param map2End            Optional - A sequence of 0 or more characters that marks the end of the second map.
      *                           Default value: '}.
      *                           Valid values: Any value.
-     * @param map2ElementWrapper Optional - A sequence of 0 or more characters that marks the beginning and the end of a key or value of map2.
-     *                           Valid values: Any value that does not have common characters with pair_delimiter or entry_delimiter.
-     * @param ignoreCase Optional - A sequence of 0 or more characters that marks the beginning of the map.
-     *                   Default value: {'.
-     *                   Valid values: Any value.A sequence of 0 or more characters that marks the beginning of the map.
-     *                   Valid values: Any value.
+     * @param map2ElementWrapper Optional - A sequence of 0 or more characters that marks the beginning and the end of
+     *                           a key or value of map2.
+     *                           Valid values: Any value that does not have common characters with pair_delimiter or
+     *                           entry_delimiter.
+     * @param ignoreCase Optional - If set to 'True' then the compare is not case sensitive.
+     *                   Default: false.
+     *                   Valid values: true, false.
+     * @param stripWhitespaces Optional - True if leading and trailing whitespaces should be removed from the keys and
+     *                         values of the map.
+     *                           Default: false.
+     *                           Valid values: true, false.
      * @return a map with following entries:
-     * return_result: List of the values from the map or the value of the key in case of success or error message in case
-     * of failure.
+     * return_result: True if the map are equal or if map1 contains map2(based on the provided value for the matchType
+     * input)
+     *                False if the map1 is not equal or if it doesn't contain map2.
      * return_code: 0 if operation succeeded, -1 otherwise.
      * exception: The exception's stack trace if operation failed. Empty otherwise.
      */

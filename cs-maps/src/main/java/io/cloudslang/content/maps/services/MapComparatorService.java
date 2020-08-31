@@ -23,8 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-import static io.cloudslang.content.maps.constants.Chars.CONTAINS;
-import static io.cloudslang.content.maps.constants.Chars.EQUALS;
+import static io.cloudslang.content.maps.constants.Chars.*;
 
 public class MapComparatorService {
 
@@ -41,27 +40,33 @@ public class MapComparatorService {
                 input.getMap1Start(), input.getMap1End(),
                 input.getMap1ElementWrapper(), input.isStripWhitespaces(), false);
 
+
         MapSerializer map2Serializer = new MapSerializer(
                 input.getMap2PairDelimiter(), input.getMap2EntryDelimiter(),
                 input.getMap2Start(), input.getMap2End(),
                 input.getMap2ElementWrapper(), input.isStripWhitespaces(), false);
 
-        Map<String, String> map1 = map1Serializer.deserialize(input.getMap1());
-        Map<String, String> map2 = map2Serializer.deserialize(input.getMap2());
+        Map<String, String> map1;
+        Map<String, String> map2;
 
-        String returnResult = "false";
+        if (input.isIgnoreCase()) {
+            map1 = map1Serializer.deserialize(input.getMap1().toLowerCase());
+            map2 = map2Serializer.deserialize(input.getMap2().toLowerCase());
+        } else {
+            map1 = map1Serializer.deserialize(input.getMap1());
+            map2 = map2Serializer.deserialize(input.getMap2());
+        }
+
+
+        String returnResult = FALSE;
         if (input.getMatchType().equals(EQUALS)) {
             if (map1.equals(map2))
-                returnResult = "true";
+                returnResult = TRUE;
+        } else if (input.getMatchType().equals(CONTAINS)) {
+            if (map1.entrySet().containsAll(map2.entrySet()))
+                returnResult = TRUE;
             else
-                returnResult = "false";
-        }
-        else if(input.getMatchType().equals(CONTAINS))
-        {
-            if(map1.entrySet().containsAll(map2.entrySet()))
-                returnResult = "true";
-            else
-                returnResult = "false";
+                returnResult = FALSE;
         }
         return OutputUtilities.getSuccessResultsMap(returnResult);
     }

@@ -28,6 +28,7 @@ public class GetValuesInput {
     private final String elementWrapper;
     private final boolean stripWhitespaces;
     private final String key;
+    private final String keyDelimiter;
 
     private GetValuesInput(Builder builder) {
         this.map = builder.map;
@@ -38,6 +39,7 @@ public class GetValuesInput {
         this.elementWrapper = builder.elementWrapper;
         this.stripWhitespaces = builder.stripWhitespaces;
         this.key = builder.key;
+        this.keyDelimiter = builder.keyDelimiter;
     }
 
 
@@ -79,6 +81,10 @@ public class GetValuesInput {
         return key;
     }
 
+    public String getKeyDelimiter() {
+        return keyDelimiter;
+    }
+
 
     public static class Builder {
         private String map;
@@ -89,6 +95,7 @@ public class GetValuesInput {
         private String elementWrapper;
         private boolean stripWhitespaces;
         private String key;
+        private String keyDelimiter;
 
         public Builder map(String map) {
             this.map = StringUtils.defaultString(map, DefaultInputValues.MAP);
@@ -135,6 +142,12 @@ public class GetValuesInput {
             this.key = StringUtils.defaultString(key, StringUtils.EMPTY);
             return this;
         }
+
+        public Builder keyDelimiter(String keyDelimiter) {
+            this.keyDelimiter = StringUtils.defaultString(keyDelimiter, StringUtils.EMPTY);
+            return this;
+        }
+
 
         public GetValuesInput build() {
             return new GetValuesInput(this);
