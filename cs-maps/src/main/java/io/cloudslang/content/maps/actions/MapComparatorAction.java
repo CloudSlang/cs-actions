@@ -44,8 +44,8 @@ public class MapComparatorAction {
      *                   Valid values: Any string representing a valid map according to specified delimiters
      *                   (pair_delimiter, entry_delimiter, map_start, map_end).
      * @param map2       The map that is compared with map1.
-     *                   Default value: ':'.
-     *                   Valid values: Any value that does not contain or is equal to entry_delimiter.
+     *                   Example: {a:1,b:2,c:3,d:4}, Apples=3;Oranges=2
+     *                   Default: {''}.
      * @param matchType  The separator to use for splitting the map into entries.
      *                   Default value: ','.
      *                   Valid values: Any value.
