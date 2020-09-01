@@ -30,6 +30,8 @@ public final class InputNames {
     public static final String ELEMENTS = "elements";
     public static final String METHOD = "method";
     public static final String HANDLE_EMPTY_VALUE = "handleEmptyValue";
+    public static final String SORT_ORDER = "sortOrder";
+    public static final String SORT_BY = "sortBy";
 
     public static final String MAP1 = "map1";
     public static final String MAP1_PAIR_DELIMITER = "map1PairDelimiter";
