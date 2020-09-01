@@ -52,24 +52,29 @@ public class GetValuesService {
     private String getValues(Map<String, String> map, GetValuesInput input) throws ServiceException {
         StringBuilder stringBuilder = new StringBuilder();
         String keysList = input.getKey();
-        if(input.isStripWhitespaces())
-            keysList = input.getKey().replaceAll("\\s+","");
+        if (input.isStripWhitespaces())
+            keysList = input.getKey().replaceAll("\\s+", "");
 
         if (StringUtils.isEmpty(keysList)) {
             for (String value : map.values()) {
                 stringBuilder.append(value).append(',');
             }
-            if(stringBuilder.length()>0)
-            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+            if (stringBuilder.length() > 0)
+                stringBuilder.deleteCharAt(stringBuilder.length() - 1);
             return stringBuilder.toString();
         } else {
-            String[] keys = keysList.split(input.getKeyDelimiter());
+            String[] keys;
+            if (!StringUtils.isEmpty(input.getKeyDelimiter())) {
+                keys = keysList.split(input.getKeyDelimiter());
+            } else {
+                keys = new String[]{keysList};
+            }
             for (int i = 0; i < keys.length; i++)
-                if(map.get(keys[i]) != null)
-                stringBuilder.append(map.get(keys[i])).append(COMMA);
-            if(stringBuilder.length()>0)
-            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-            if (stringBuilder.toString().length() > 0 )
+                if (map.get(keys[i]) != null)
+                    stringBuilder.append(map.get(keys[i])).append(COMMA);
+            if (stringBuilder.length() > 0)
+                stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+            if (stringBuilder.toString().length() > 0)
                 return stringBuilder.toString();
             else
                 throw new ServiceException(MISSING_KEY);
