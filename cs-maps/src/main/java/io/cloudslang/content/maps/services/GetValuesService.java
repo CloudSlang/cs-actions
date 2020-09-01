@@ -59,6 +59,7 @@ public class GetValuesService {
             for (String value : map.values()) {
                 stringBuilder.append(value).append(',');
             }
+            if(stringBuilder.length()>0)
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
             return stringBuilder.toString();
         } else {
