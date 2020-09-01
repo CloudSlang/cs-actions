@@ -47,6 +47,7 @@ public final class InputNames {
     public static final String MAP2_ELEMENT_WRAPPER = "map2ElementWrapper";
     public static final String MATCH_TYPE = "matchType";
     public static final String IGNORE_CASE = "ignoreCase";
+    public static final String IGNORE_CASE_CS = "ignore_case";
 
 
     private InputNames() {

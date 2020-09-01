@@ -96,7 +96,7 @@ public class MapComparatorAction {
      * return_code: 0 if operation succeeded, -1 otherwise.
      * exception: The exception's stack trace if operation failed. Empty otherwise.
      */
-    @Action(name = "Map Comparator",
+    @Action(name = "Compare maps",
             outputs = {
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
