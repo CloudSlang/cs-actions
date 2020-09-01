@@ -27,6 +27,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.maps.constants.Chars.COMMA;
 import static io.cloudslang.content.maps.constants.ExceptionsMsgs.MISSING_KEY;
+import static io.cloudslang.content.maps.constants.ExceptionsMsgs.NULL_MAP;
 
 public class GetValuesService {
 
@@ -45,6 +46,10 @@ public class GetValuesService {
 
         Map<String, String> map = serializer.deserialize(input.getMap());
         String returnResult = getValues(map, input);
+
+        if (map.size() == 0){
+            throw new ServiceException(NULL_MAP);
+        }
 
         return OutputUtilities.getSuccessResultsMap(returnResult);
     }
