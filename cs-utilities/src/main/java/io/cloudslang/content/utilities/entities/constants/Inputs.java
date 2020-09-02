@@ -30,4 +30,6 @@ public class Inputs {
     public static final String PATH_TO_FILE = "pathToFile";
     public static final String PATHS_TO_PDF_FILES = "pathsToPDFFiles";
     public static final String PASSWORD = "password";
+    public static final String FIRST_STRING = "firstString";
+    public static final String SECOND_STRING = "secondString";
 }
