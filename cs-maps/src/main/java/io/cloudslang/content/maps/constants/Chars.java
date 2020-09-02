@@ -20,6 +20,11 @@ public final class Chars {
     public static final String NULL = "NULL";
     public static final String LF = "\n";
     public static final String CRLF = "\r\n";
+    public static final String EQUALS = "equals";
+    public static final String CONTAINS = "contains";
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
+    public static final String COMMA = ",";
 
     private Chars() {
 

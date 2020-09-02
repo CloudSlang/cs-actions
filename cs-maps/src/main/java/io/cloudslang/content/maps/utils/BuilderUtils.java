@@ -21,6 +21,8 @@ import io.cloudslang.content.maps.exceptions.ValidationException;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import static io.cloudslang.content.maps.constants.InputNames.IGNORE_CASE_CS;
+
 public final class BuilderUtils {
     private BuilderUtils () {
 
@@ -41,6 +43,15 @@ public final class BuilderUtils {
             return BooleanUtils.toBoolean(handleEmptyValue.toLowerCase(), String.valueOf(true), String.valueOf(false));
         } catch (IllegalArgumentException ex) {
             throw new ValidationException(String.format(ExceptionsMsgs.INVALID_VALUE_FOR_INPUT, InputNames.HANDLE_EMPTY_VALUE));
+        }
+    }
+
+    public static boolean ignoreCaseValue (String ignoreCase) throws ValidationException {
+        try {
+            ignoreCase = StringUtils.defaultIfEmpty(ignoreCase, DefaultInputValues.IGNORE_CASE);
+            return BooleanUtils.toBoolean(ignoreCase.toLowerCase(), String.valueOf(true), String.valueOf(false));
+        } catch (IllegalArgumentException ex) {
+            throw new ValidationException(String.format(ExceptionsMsgs.INVALID_VALUE_FOR_INPUT, IGNORE_CASE_CS ));
         }
     }
 }

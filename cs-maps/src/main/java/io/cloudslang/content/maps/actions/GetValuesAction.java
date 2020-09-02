@@ -60,9 +60,11 @@ public class GetValuesAction {
      * @param stripWhitespaces Optional - True if leading and trailing whitespaces should be removed from the keys and values of the map.
      *                         Default: false.
      *                         Valid values: true, false.
-     * @param key              Optional - The the key from which the value will be taken.
+     * @param key              Optional - A key or a list of keys from which the value will be retrieved. If a list of keys is used
+     *                         the delimiter should be provided in the key_delimiter input.
      *                         Default value: NULL.
-     *                         Valid values: Any string that does not contain or is equal to value of pair_delimiter or entry_delimiter.
+     * @param keyDelimiter     Optional - A delimiter to separate the keys from the key input. Only populate this input when
+     *                         a list of keys is provided in the key input.
      * @return a map with following entries:
      * return_result: List of the values from the map or the value of the key in case of success or error message in case
      * of failure.
@@ -93,7 +95,8 @@ public class GetValuesAction {
                                                 @Param(value = InputNames.MAP_END) String mapEnd,
                                                 @Param(value = InputNames.ELEMENT_WRAPPER) String elementWrapper,
                                                 @Param(value = InputNames.STRIP_WHITESPACES) String stripWhitespaces,
-                                                @Param(value = InputNames.KEY) String key) {
+                                                @Param(value = InputNames.KEY) String key,
+                                                @Param(value = InputNames.KEY_DELIMITER) String keyDelimiter) {
         try {
             GetValuesInput input = new GetValuesInput.Builder()
                     .map(map)
@@ -104,6 +107,7 @@ public class GetValuesAction {
                     .elementWrapper(elementWrapper)
                     .stripWhitespaces(stripWhitespaces)
                     .key(key)
+                    .keyDelimiter(keyDelimiter)
                     .build();
             return service.execute(input);
         } catch (Exception ex) {

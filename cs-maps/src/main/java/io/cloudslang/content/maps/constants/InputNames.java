@@ -18,6 +18,7 @@ public final class InputNames {
 
     public static final String MAP = "map";
     public static final String KEY = "key";
+    public static final String KEY_DELIMITER = "keyDelimiter";
     public static final String VALUE = "value";
     public static final String METHOD_VALUE = "value";
     public static final String PAIR_DELIMITER = "pairDelimiter";
@@ -44,6 +45,9 @@ public final class InputNames {
     public static final String MAP2_START = "map2Start";
     public static final String MAP2_END = "map2End";
     public static final String MAP2_ELEMENT_WRAPPER = "map2ElementWrapper";
+    public static final String MATCH_TYPE = "matchType";
+    public static final String IGNORE_CASE = "ignoreCase";
+    public static final String IGNORE_CASE_CS = "ignore_case";
 
 
     private InputNames() {
