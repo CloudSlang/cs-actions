@@ -66,4 +66,13 @@ public class Descriptions {
         public static final String FORBIDDEN_CHARACTERS_DESC = "A list of characters that the password should not contain. Example: []{}.";
     }
 
+    public static class StringEqualsDescriptions{
+        public static final String FIRST_STRING_DESC = "First string to compare.";
+        public static final String SECOND_STRING_DESC = "Second string to compare.";
+        public static final String IGNORE_CASE_DESC = "If set to 'true', then the comparison ignores case considerations. The two strings are\n" +
+                "considered equal ignoring case if they are of the same length and corresponding characters in the\n" +
+                "two strings are equal ignoring case. If set to any value other than 'true', then the strings must\n" +
+                "match exactly to be considered equal";
+    }
+
 }
