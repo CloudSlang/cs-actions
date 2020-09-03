@@ -25,8 +25,13 @@ public class Constants {
     public static final String EMPTY_STRING = "";
     public static final String TRUE = "true";
     public static final String FALSE = "false";
-    public static final String INPUT_NOT_BOOLEAN = "Input %s not a boolean value!";
-
+    static final String INPUT_NOT_BOOLEAN = "Input %s not a boolean value!";
+    static final String ADD_PREFIX = "add_prefix";
+    static final String ADD_SUFIX = "add_sufix";
+    static final String WHITESPACES = "\\s+";
+    static final String TO_LOWERCASE = "to_lowercase";
+    static final String TO_UPPERCASE = "to_uppercase";
+    public static final String[] METHOD_LIST = new String[] {"to_lowercase","to_uppercase","add_sufix","add_prefix"};
 
     public static final class OutputNames {
         public static final String RETURN_RESULT = "returnResult";
