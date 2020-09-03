@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -23,7 +37,7 @@ public class ModifyListElementsAction {
     /**
      * This method checks to see if a list contains every element in another list.
      *
-     * @param list              - The list to modify elements.
+     * @param list              The list to modify elements.
      * @param delimiter         A delimiter separating elements in the two lists.
      *                          Default value : comma.
      * @param method            The method for modifying the elements.
@@ -31,8 +45,8 @@ public class ModifyListElementsAction {
      * @param value             Optional - The value for suffix or prefix.
      *                          Default value: empty string.
      * @param stripWhitespaces: Optional - True if leading and trailing whitespaces should be removed from the list.
-     *                          #!                           Default: false.
-     *                          #!                           Valid values: true, false.
+     *                          Default: false.
+     *                          Valid values: true, false.
      * @return a map with following entries:
      * return_result: The modified list if operation succeeded. Otherwise it will contain the message of the exception.
      * return_code: 0 if operation succeeded, -1 otherwise.
