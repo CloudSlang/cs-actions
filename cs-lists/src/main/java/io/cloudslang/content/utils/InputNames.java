@@ -12,25 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.utils;
 
+public final class InputNames {
 
+    public static final String LIST = "list";
+    public static final String DELIMITER = "delimiter";
+    public static final String VALUE = "value";
+    public static final String METHOD = "method";
+    public static final String STRIP_WHITESPACES = "stripWhitespaces";
+    static final String CS_STRIP_WHITESPACES = "strip_whitespaces";
 
-package io.cloudslang.content.actions;
+    private InputNames() {
 
-import org.junit.Test;
-
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-
-public class ListItemGrabberActionTest {
-
-    private static final String LIST = "Ana,Ion,Vasile,Maria,George";
-
-    @Test
-    public void testGetItem() {
-        Map<String, String> result = new ListItemGrabberAction().grabItemFromList(LIST, ",", "1");
-        assertEquals("success", result.get("response"));
-        assertEquals("Ion", result.get("result"));
     }
 }

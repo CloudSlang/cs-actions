@@ -12,25 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.utils;
 
+public class ListExceptions {
 
+    static final String INVALID_VALUE_FOR_INPUT = "Invalid value for input %s";
 
-package io.cloudslang.content.actions;
+    private ListExceptions() {
 
-import org.junit.Test;
-
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-
-public class ListItemGrabberActionTest {
-
-    private static final String LIST = "Ana,Ion,Vasile,Maria,George";
-
-    @Test
-    public void testGetItem() {
-        Map<String, String> result = new ListItemGrabberAction().grabItemFromList(LIST, ",", "1");
-        assertEquals("success", result.get("response"));
-        assertEquals("Ion", result.get("result"));
     }
 }
