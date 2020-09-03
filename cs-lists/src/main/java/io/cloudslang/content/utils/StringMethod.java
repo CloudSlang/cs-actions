@@ -34,7 +34,7 @@ public class StringMethod {
                 else
                     return list.toUpperCase();
             case ADD_PREFIX:
-            case ADD_SUFIX:
+            case ADD_SUFFIX:
                 if (stripWhitespaces)
                     return iterateList(value.replaceAll(WHITESPACES, EMPTY_STRING), list.replaceAll(WHITESPACES, EMPTY_STRING), delimiter, method);
                 else
@@ -55,7 +55,7 @@ public class StringMethod {
         for (String aListString : listString) {
             if (method.equals(ADD_PREFIX))
                 newString.append(value).append(aListString).append(delimiter);
-            else if (method.equals(ADD_SUFIX))
+            else if (method.equals(ADD_SUFFIX))
                 newString.append(aListString).append(value).append(delimiter);
         }
         if (newString.length() > 0)

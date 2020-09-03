@@ -35,9 +35,9 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class ModifyListElementsAction {
 
     /**
-     * This method checks to see if a list contains every element in another list.
+     * Modify elements of a given list.
      *
-     * @param list              The list to modify elements.
+     * @param list              The list to be modified.
      * @param delimiter         A delimiter separating elements in the list.
      *                          Default value : comma.
      * @param method            The method for modifying the list.
@@ -47,7 +47,7 @@ public class ModifyListElementsAction {
      * @param stripWhitespaces: Optional - True if leading and trailing whitespaces should be removed from the list.
      *                          Default: false.
      *                          Valid values: true, false.
-     * @return a map with following entries:
+     * @return a list with following entries:
      * return_result: The modified list if operation succeeded. Otherwise it will contain the message of the exception.
      * return_code: 0 if operation succeeded, -1 otherwise.
      * exception: The exception's stack trace if operation failed. Empty otherwise.
