@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -38,9 +38,9 @@ public class ModifyListElementsAction {
      * This method checks to see if a list contains every element in another list.
      *
      * @param list              The list to modify elements.
-     * @param delimiter         A delimiter separating elements in the two lists.
+     * @param delimiter         A delimiter separating elements in the list.
      *                          Default value : comma.
-     * @param method            The method for modifying the elements.
+     * @param method            The method for modifying the list.
      *                          Valid values: to_uppercase, to_lowercase, add_prefix, add_suffix.
      * @param value             Optional - The value for suffix or prefix.
      *                          Default value: empty string.
