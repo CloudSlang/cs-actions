@@ -32,7 +32,7 @@ public class StringMethod {
                 if (stripWhitespaces)
                     return list.replaceAll(WHITESPACES, EMPTY_STRING).toLowerCase();
                 else
-                    return list.toUpperCase();
+                    return list.toLowerCase();
             case ADD_PREFIX:
             case ADD_SUFFIX:
                 if (stripWhitespaces)
@@ -58,7 +58,7 @@ public class StringMethod {
             else if (method.equals(ADD_SUFFIX))
                 newString.append(aListString).append(value).append(delimiter);
         }
-        if (newString.length() > 0)
+        if (newString.length() > 0 && !StringUtils.isEmpty(delimiter))
             newString.deleteCharAt(newString.length() - 1);
         return newString.toString();
     }
