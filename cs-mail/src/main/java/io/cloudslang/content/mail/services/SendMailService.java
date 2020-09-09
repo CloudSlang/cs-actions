@@ -190,7 +190,7 @@ public class SendMailService {
             msg.saveChanges();
 
             if (!StringUtils.isEmpty(input.getUsername())) {
-                transport = session.getTransport(SmtpPropNames.SMTP + SecurityConstants.SECURE_SUFFIX);
+                transport = session.getTransport(SmtpPropNames.SMTP);
                 transport.connect(input.getHostname(), input.getPort(), input.getUsername(), input.getPassword());
                 transport.sendMessage(msg, msg.getAllRecipients());
             } else {

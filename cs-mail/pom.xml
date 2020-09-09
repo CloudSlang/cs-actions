@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-mail</artifactId>
-    <version>0.0.50-SNAPSHOT-bcprov_downgraded</version>
+    <version>0.0.50-SNAPSHOT-bcmail-smtps_fix</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
