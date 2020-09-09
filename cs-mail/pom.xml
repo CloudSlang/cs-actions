@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-mail</artifactId>
-    <version>0.0.50-SNAPSHOT</version>
+    <version>0.0.50-SNAPSHOT-bcprov_downgraded</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -123,10 +123,11 @@
             <artifactId>javax.mail</artifactId>
             <version>1.6.0</version>
         </dependency>
+<!--        bcprov-jdk15on throws NoClassDefFoundError: org/bouncycastle/asn1/DEREncodable for versions above 1.46-->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.64</version>
+            <version>1.46</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
