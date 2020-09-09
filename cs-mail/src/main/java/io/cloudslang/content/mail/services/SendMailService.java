@@ -25,6 +25,8 @@ import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import io.cloudslang.content.mail.utils.HtmlImageNodeVisitor;
 import io.cloudslang.content.mail.utils.ProxyUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cms.bc.BcRSAKeyTransRecipientInfoGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import org.bouncycastle.mail.smime.SMIMEException;
@@ -270,15 +272,16 @@ public class SendMailService {
             }
 
             Certificate[] chain = ks.getCertificateChain(input.getEncryptionKeyAlias());
-
             if (chain == null) {
                 throw new Exception("The key with alias \"" + input.getEncryptionKeyAlias() + "\" can't be found in given keystore.");
             }
 
+            X509CertificateHolder certificateHolder = new X509CertificateHolder(chain[0].getEncoded());
+
             //
             // create the generator for creating an smime/encrypted message
             //
-            gen.addKeyTransRecipient((X509Certificate) chain[0]);
+            gen.addRecipientInfoGenerator(new BcRSAKeyTransRecipientInfoGenerator(certificateHolder));
         }
     }
 

@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-mail</artifactId>
-    <version>0.0.50-SNAPSHOT-bcmail-smtps_fix</version>
+    <version>0.0.50-SNAPSHOT-bcmail-2nd_method</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -139,6 +139,11 @@
                     <artifactId>bcprov-jdk16</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>1.60</version>
         </dependency>
         <dependency>
             <groupId>org.htmlparser</groupId>
