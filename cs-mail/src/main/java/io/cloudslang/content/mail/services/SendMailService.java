@@ -189,11 +189,17 @@ public class SendMailService {
 
             msg.saveChanges();
 
-            if (!StringUtils.isEmpty(input.getUsername())) {
+            if (!input.isEnableTLS() && !StringUtils.isEmpty(input.getUsername())) {
+                transport = session.getTransport(SmtpPropNames.SMTP);
+                transport.connect(input.getHostname(), input.getPort(), input.getUsername(), input.getPassword());
+                transport.sendMessage(msg, msg.getAllRecipients());
+            }
+            else if (input.isEnableTLS() && !StringUtils.isEmpty(input.getUsername())) {
                 transport = session.getTransport(SmtpPropNames.SMTP + SecurityConstants.SECURE_SUFFIX);
                 transport.connect(input.getHostname(), input.getPort(), input.getUsername(), input.getPassword());
                 transport.sendMessage(msg, msg.getAllRecipients());
-            } else {
+            }
+            else {
                 Transport.send(msg);
             }
             result.put(OutputNames.RETURN_RESULT, Constants.MAIL_WAS_SENT);
