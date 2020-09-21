@@ -30,44 +30,30 @@
 package io.cloudslang.content.json.services;
 
 import io.cloudslang.content.json.entities.GetArraySublistInput;
+import io.cloudslang.content.json.validators.GetArraySublistValidator;
 import io.cloudslang.content.utils.OutputUtilities;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.json.utils.Constants.GetArraySublistAction.INVALID_FROM_INDEX_VALUE;
-import static io.cloudslang.content.json.utils.Constants.GetArraySublistAction.INVALID_TO_INDEX_VALUE;
-import static io.cloudslang.content.json.utils.Constants.InputNames.*;
-
 public class GetArraySublistService {
 
-    public @NotNull Map<String, String> execute(@NotNull GetArraySublistInput input) {
+    private final GetArraySublistValidator validator = new GetArraySublistValidator();
 
+
+    public @NotNull Map<String, String> execute(@NotNull GetArraySublistInput input) {
         List<String> outputArray = new ArrayList<>();
 
-        if (Integer.parseInt(input.getfromIndex()) > input.getArray().size()) {
-            return OutputUtilities.getFailureResultsMap(INVALID_FROM_INDEX_VALUE);
+        List<RuntimeException> validationErrs = validator.validate(input);
+        if (!validationErrs.isEmpty()) {
+            throw validationErrs.get(0);
         }
-        if (!StringUtils.isEmpty(input.gettoIndex()) && Integer.parseInt(input.gettoIndex()) > input.getArray().size()) {
-            return OutputUtilities.getFailureResultsMap(INVALID_TO_INDEX_VALUE);
+
+        for (int i = input.getFromIndex(); i < input.getToIndex(); i++) {
+            outputArray.add(input.getArray().get(i).toString());
         }
-        if (StringUtils.isEmpty(input.gettoIndex())) {
-            for (int i = Integer.parseInt(input.getfromIndex()); i < input.getArray().size(); i++) {
-                if (input.getArray().get(i).toString().startsWith(BRACKET) || input.getArray().get(i).toString().startsWith(SQUARE_BRACKET) || input.getArray().get(i).toString().startsWith(DOUBLE_QUOTES))
-                    outputArray.add(input.getArray().get(i).toString());
-                else
-                    outputArray.add(DOUBLE_QUOTES + input.getArray().get(i).toString() + DOUBLE_QUOTES);
-            }
-        } else
-            for (int i = Integer.parseInt(input.getfromIndex()); i < Integer.parseInt(input.gettoIndex()); i++) {
-                if (input.getArray().get(i).toString().startsWith(BRACKET) || input.getArray().get(i).toString().startsWith(SQUARE_BRACKET) || input.getArray().get(i).toString().startsWith(DOUBLE_QUOTES))
-                    outputArray.add(input.getArray().get(i).toString());
-                else
-                    outputArray.add(DOUBLE_QUOTES + input.getArray().get(i).toString() + DOUBLE_QUOTES);
-            }
         return OutputUtilities.getSuccessResultsMap(outputArray.toString());
     }
 }
