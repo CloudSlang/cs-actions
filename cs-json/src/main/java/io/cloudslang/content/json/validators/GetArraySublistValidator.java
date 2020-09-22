@@ -15,6 +15,7 @@
 package io.cloudslang.content.json.validators;
 
 
+import io.cloudslang.content.json.entities.GetArraySublistInput;
 import io.cloudslang.content.json.utils.Constants;
 import io.cloudslang.content.json.utils.ExceptionMsgs;
 import io.cloudslang.content.json.utils.StringUtils;
@@ -26,37 +27,35 @@ import java.util.List;
 import static io.cloudslang.content.json.utils.Constants.GetArraySublistAction.*;
 
 public class GetArraySublistValidator {
-    public static @NotNull List<RuntimeException> validate(String array, String fromIndex, String toIndex) {
+    public @NotNull List<RuntimeException> validate(GetArraySublistInput input) {
         List<RuntimeException> errs = new ArrayList<>();
 
-        if (StringUtils.isEmpty(array)) {
-            errs.add(new IllegalArgumentException(String.format(ExceptionMsgs.NULL_OR_EMPTY_INPUT, Constants.InputNames.ARRAY)));
-        }
-
-        try {
-            if (StringUtils.isEmpty(fromIndex)) {
-                errs.add(new IllegalArgumentException(String.format(ExceptionMsgs.NULL_OR_EMPTY_INPUT, Constants.InputNames.FROM_INDEX)));
-            }
-            if (Integer.parseInt(fromIndex) < 0) {
-                errs.add(new IllegalArgumentException(NEGATIVE_FROM_INPUT_VALUE));
-            }
-        } catch (Exception e) {
-            errs.add(new RuntimeException(e.getMessage()));
-        }
-
-        try {
-            if (!StringUtils.isEmpty(toIndex)) {
-                if (Integer.parseInt(toIndex) < 0) {
-                    errs.add(new IllegalArgumentException(NEGATIVE_TO_INPUT_VALUE));
-                }
-                if (Integer.parseInt(toIndex) <= Integer.parseInt(fromIndex)) {
-                    errs.add(new IllegalArgumentException(TO_INDEX_HIGHER_THAN_FROM_INDEX));
-                }
-            }
-        } catch (Exception e) {
-            errs.add(new RuntimeException(e.getMessage()));
-        }
+        addErrsForArray(errs, input);
+        addErrsForFromIndex(errs, input);
+        addErrsForToIndex(errs, input);
 
         return errs;
+    }
+
+
+    private void addErrsForArray(List<RuntimeException> errs, GetArraySublistInput input) {
+        if (input.getArray() == null) {
+            errs.add(new IllegalArgumentException(String.format(ExceptionMsgs.NULL_OR_EMPTY_INPUT, Constants.InputNames.ARRAY)));
+        }
+    }
+
+    private void addErrsForFromIndex(List<RuntimeException> errs, GetArraySublistInput input) {
+        if(input.getFromIndex() >= input.getArray().size() || input.getFromIndex() < 0) {
+            errs.add(new IllegalArgumentException(INVALID_FROM_INDEX_VALUE));
+        }
+    }
+
+    private void addErrsForToIndex(List<RuntimeException> errs, GetArraySublistInput input) {
+        if(input.getToIndex() > input.getArray().size() || input.getToIndex() < 0) {
+            errs.add(new IllegalArgumentException(INVALID_TO_INDEX_VALUE));
+        }
+        if(input.getFromIndex() >= input.getToIndex()) {
+            errs.add(new IllegalArgumentException(TO_INDEX_HIGHER_THAN_FROM_INDEX));
+        }
     }
 }
