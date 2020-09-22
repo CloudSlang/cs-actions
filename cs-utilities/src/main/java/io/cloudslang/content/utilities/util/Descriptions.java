@@ -75,4 +75,8 @@ public class Descriptions {
                 "match exactly to be considered equal";
     }
 
+    public static class IsTrueDescriptions{
+        public static final String BOOL_VALUE_DESC = "Boolean value to check.";
+    }
+
 }
