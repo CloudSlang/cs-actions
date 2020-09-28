@@ -26,10 +26,13 @@ import io.cloudslang.content.mail.utils.HtmlImageNodeVisitor;
 import io.cloudslang.content.mail.utils.ProxyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.cms.bc.BcCMSContentEncryptorBuilder;
 import org.bouncycastle.cms.bc.BcRSAKeyTransRecipientInfoGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import org.bouncycastle.mail.smime.SMIMEException;
+import org.bouncycastle.operator.OutputEncryptor;
 import org.bouncycastle.util.encoders.Base64;
 import org.htmlparser.Parser;
 import org.htmlparser.util.NodeList;
@@ -48,7 +51,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.security.*;
 import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -209,7 +211,7 @@ public class SendMailService {
     }
 
     private void processHTMLBodyWithBASE64Images(MimeMultipart multipart) throws ParserException,
-            MessagingException, NoSuchAlgorithmException, SMIMEException, java.security.NoSuchProviderException {
+            MessagingException, NoSuchAlgorithmException, SMIMEException, java.security.NoSuchProviderException, CMSException {
         if (null != input.getBody() && input.getBody().contains(Encodings.BASE64)) {
             Parser parser = new Parser(input.getBody());
             NodeList nodeList = parser.parse(null);
@@ -222,7 +224,7 @@ public class SendMailService {
     }
 
     private void addAllBase64ImagesToMimeMultipart(MimeMultipart multipart, Map<String, String> base64ImagesMap)
-            throws MessagingException, NoSuchAlgorithmException, NoSuchProviderException, SMIMEException {
+            throws MessagingException, NoSuchAlgorithmException, NoSuchProviderException, SMIMEException, CMSException {
         for (String contentId : base64ImagesMap.keySet()) {
             MimeBodyPart imagePart = getImageMimeBodyPart(base64ImagesMap, contentId);
             imagePart = encryptMimeBodyPart(imagePart);
@@ -239,10 +241,10 @@ public class SendMailService {
         return imagePart;
     }
 
-    private MimeBodyPart encryptMimeBodyPart(MimeBodyPart mimeBodyPart) throws NoSuchAlgorithmException,
-            NoSuchProviderException, SMIMEException {
+    private MimeBodyPart encryptMimeBodyPart(MimeBodyPart mimeBodyPart) throws SMIMEException, CMSException {
         if (input.isEncryptedMessage()) {
-            mimeBodyPart = gen.generate(mimeBodyPart, input.getEncryptionAlgorithm(), SecurityConstants.BOUNCY_CASTLE_PROVIDER);
+            OutputEncryptor outputEncryptor = new BcCMSContentEncryptorBuilder(input.getEncryptionAlgorithm().getAsn10ObjId()).build();
+            mimeBodyPart = gen.generate(mimeBodyPart, outputEncryptor);
         }
         return mimeBodyPart;
     }

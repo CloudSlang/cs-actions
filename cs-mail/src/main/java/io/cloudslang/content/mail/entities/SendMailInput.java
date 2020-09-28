@@ -60,7 +60,7 @@ public class SendMailInput implements MailInput {
     private String encryptionKeystorePassword;
     private boolean enableTLS;
     private String username;
-    private String encryptionAlgorithm;
+    private EncryptionAlgorithmsEnum encryptionAlgorithm;
     private String proxyHost;
     private Short proxyPort;
     private String proxyUsername;
@@ -219,7 +219,7 @@ public class SendMailInput implements MailInput {
     }
 
 
-    public String getEncryptionAlgorithm() {
+    public EncryptionAlgorithmsEnum getEncryptionAlgorithm() {
         return encryptionAlgorithm;
     }
 
@@ -547,7 +547,7 @@ public class SendMailInput implements MailInput {
 
                     input.encryptionKeystorePassword = (encryptionKeystorePassword == null) ? StringUtils.EMPTY : encryptionKeystorePassword;
 
-                    input.encryptionAlgorithm = EncryptionAlgorithmsEnum.getEncryptionAlgorithm(encryptionAlgorithm).getEncryptionOID();
+                    input.encryptionAlgorithm = EncryptionAlgorithmsEnum.getEncryptionAlgorithm(encryptionAlgorithm);
                 }
             }
 

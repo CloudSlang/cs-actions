@@ -123,16 +123,15 @@
             <artifactId>javax.mail</artifactId>
             <version>1.6.0</version>
         </dependency>
-<!--        bcprov-jdk15on throws NoClassDefFoundError: org/bouncycastle/asn1/DEREncodable for versions above 1.46-->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.46</version>
+            <version>1.66</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcmail-jdk16</artifactId>
-            <version>1.46</version>
+            <artifactId>bcmail-jdk15on</artifactId>
+            <version>1.66</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.bouncycastle</groupId>
@@ -143,7 +142,7 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
-            <version>1.60</version>
+            <version>1.66</version>
         </dependency>
         <dependency>
             <groupId>org.htmlparser</groupId>

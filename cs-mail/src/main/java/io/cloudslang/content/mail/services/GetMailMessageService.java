@@ -22,14 +22,14 @@ import io.cloudslang.content.mail.entities.StringOutputStream;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import io.cloudslang.content.mail.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.cms.PasswordRecipientId;
-import org.bouncycastle.cms.RecipientId;
-import org.bouncycastle.cms.RecipientInformation;
-import org.bouncycastle.cms.RecipientInformationStore;
+import org.bouncycastle.cms.*;
+import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
 import org.bouncycastle.mail.smime.SMIMEEnveloped;
+import org.bouncycastle.mail.smime.SMIMEUtil;
 
 import java.io.*;
 import java.security.KeyStore;
+import java.security.PrivateKey;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.MimeBodyPart;
@@ -37,7 +37,6 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
 import static io.cloudslang.content.mail.constants.Constants.*;
-import static org.bouncycastle.mail.smime.SMIMEUtil.toMimeBodyPart;
 
 public class GetMailMessageService {
 
@@ -54,8 +53,7 @@ public class GetMailMessageService {
 
             if (input.isEncryptedMessage()) {
                 ks = KeyStore.getInstance(SecurityConstants.PKCS_KEYSTORE_TYPE, SecurityConstants.BOUNCY_CASTLE_PROVIDER);
-                recId = new PasswordRecipientId();
-                SecurityUtils.addDecryptionSettings(ks, recId, input);
+                recId = SecurityUtils.addDecryptionSettings(ks, input);
             }
 
             //delete message
@@ -315,15 +313,15 @@ public class GetMailMessageService {
     private MimeBodyPart decryptPart(MimeBodyPart part) throws Exception {
 
         SMIMEEnveloped smimeEnveloped = new SMIMEEnveloped(part);
-        RecipientInformationStore recipients = smimeEnveloped.getRecipientInfos();
-        RecipientInformation recipient = recipients.get(recId);
+        RecipientInformationStore recipientInfos = smimeEnveloped.getRecipientInfos();
+        RecipientInformation recipientInfo = recipientInfos.get(recId);
 
-        if (null == recipient) {
+        if (null == recipientInfo) {
             StringBuilder errorMessage = new StringBuilder();
             errorMessage.append("This email wasn't encrypted with \"" + recId.toString() + "\".\n");
             errorMessage.append(SecurityConstants.ENCRYPT_RECID);
 
-            for (Object rec : recipients.getRecipients()) {
+            for (Object rec : recipientInfos.getRecipients()) {
                 if (rec instanceof RecipientInformation) {
                     RecipientId recipientId = ((RecipientInformation) rec).getRID();
                     errorMessage.append("\"" + recipientId.toString() + "\"\n");
@@ -332,9 +330,9 @@ public class GetMailMessageService {
             throw new Exception(errorMessage.toString());
         }
 
-        return toMimeBodyPart(recipient.getContent(
-                ks.getKey(input.getDecryptionKeyAlias(), null),
-                SecurityConstants.BOUNCY_CASTLE_PROVIDER));
+        PrivateKey privateKey = (PrivateKey)ks.getKey(input.getDecryptionKeyAlias(), input.getDecryptionKeystorePassword().toCharArray());
+        Recipient recipient = new JceKeyTransEnvelopedRecipient(privateKey).setProvider(SecurityConstants.BOUNCY_CASTLE_PROVIDER);
+        return SMIMEUtil.toMimeBodyPart(recipientInfo.getContent(recipient));
     }
 
 
