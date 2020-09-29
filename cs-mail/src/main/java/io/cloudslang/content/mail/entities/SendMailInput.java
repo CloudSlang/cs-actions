@@ -16,10 +16,7 @@
 
 package io.cloudslang.content.mail.entities;
 
-import io.cloudslang.content.mail.constants.Constants;
-import io.cloudslang.content.mail.constants.Encodings;
-import io.cloudslang.content.mail.constants.SmtpPropNames;
-import io.cloudslang.content.mail.constants.TlsVersions;
+import io.cloudslang.content.mail.constants.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -225,7 +222,7 @@ public class SendMailInput implements MailInput {
 
 
     public String getProtocol() {
-        return SmtpPropNames.SMTP;
+        return this.getTlsVersions().isEmpty() ? SmtpPropNames.SMTP : SmtpPropNames.SMTP + SecurityConstants.SECURE_SUFFIX;
     }
 
 

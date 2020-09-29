@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.mail.entities;
 
+import io.cloudslang.content.mail.constants.SecurityConstants;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -60,7 +61,7 @@ public class GetMailMessageCountInput implements GetMailInput {
 
 
     public String getProtocol() {
-        return protocol;
+        return this.getTlsVersions().isEmpty() ? protocol : protocol + SecurityConstants.SECURE_SUFFIX;
     }
 
 

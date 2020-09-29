@@ -225,7 +225,7 @@ public class SendMailServiceTest {
      */
     @Test
     public void testExecuteWithHeaders() throws Exception {
-        Mockito.doReturn(transportMock).when(sessionMock).getTransport(SMTP_PROTOCOL + SecurityConstants.SECURE_SUFFIX);
+        Mockito.doReturn(transportMock).when(sessionMock).getTransport(SMTP_PROTOCOL);
 
         inputBuilder.hostname(SMTP_HOSTANME)
                 .port(PORT)
@@ -295,7 +295,7 @@ public class SendMailServiceTest {
      */
     @Test
     public void testExecuteGoesToSuccessScenario1() throws Exception {
-        Mockito.doReturn(transportMock).when(sessionMock).getTransport(SMTP_PROTOCOL + SecurityConstants.SECURE_SUFFIX);
+        Mockito.doReturn(transportMock).when(sessionMock).getTransport(SMTP_PROTOCOL);
         Mockito.doNothing().when(transportMock).connect(SMTP_HOSTANME, INT_PORT, USER, PASSWORD);
         Mockito.doNothing().when(transportMock).sendMessage(Matchers.<SMTPMessage>any(), Matchers.<Address[]>any());
         Mockito.doReturn(addresses).when(smtpMessageMock).getAllRecipients();
@@ -319,7 +319,7 @@ public class SendMailServiceTest {
         verify(propertiesMock).put(eq(SMTP_USER_CONFIG), eq(USER));
         verify(propertiesMock).put(eq(SMTP_PASSWORD_CONFIG), eq(PASSWORD));
         verify(propertiesMock).put(eq(SMTP_AUTH_CONFIG), eq("true"));
-        verify(sessionMock).getTransport(SMTP_PROTOCOL + SecurityConstants.SECURE_SUFFIX);
+        verify(sessionMock).getTransport(SMTP_PROTOCOL);
         verify(transportMock).connect(SMTP_HOSTANME, INT_PORT, USER, PASSWORD);
         verify(transportMock).sendMessage(Matchers.<SMTPMessage>any(), Matchers.<Address[]>any());
         verify(mimeBodyPartMock).setContent(BODY, TEXT_PLAIN + CHARSET_CST + DEFAULT_CHARACTERSET);

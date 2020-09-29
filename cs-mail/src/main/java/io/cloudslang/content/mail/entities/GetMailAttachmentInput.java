@@ -15,6 +15,7 @@
 package io.cloudslang.content.mail.entities;
 
 
+import io.cloudslang.content.mail.constants.SecurityConstants;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -134,7 +135,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
 
 
     public String getProtocol() {
-        return protocol;
+        return this.getTlsVersions().isEmpty() ? protocol : protocol + SecurityConstants.SECURE_SUFFIX;
     }
 
 

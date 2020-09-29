@@ -71,7 +71,7 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
 
 
     public String getProtocol() {
-        return protocol;
+        return this.getTlsVersions().isEmpty() ? protocol : protocol + SecurityConstants.SECURE_SUFFIX;
     }
 
 
