@@ -220,12 +220,12 @@ public class SSLUtilsTest {
         Store store = SSLUtils.configureStoreWithTLS(propertiesMock, authenticatorMock, input);
 
         assertEquals(storeMock, store);
-        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SSL_ENABLE, String.valueOf(false));
-        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.START_TLS_ENABLE, String.valueOf(true));
-        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.START_TLS_REQUIRED, String.valueOf(true));
+        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + SecurityConstants.SECURE_SUFFIX + PropNames.SSL_ENABLE, String.valueOf(false));
+        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + SecurityConstants.SECURE_SUFFIX + PropNames.START_TLS_ENABLE, String.valueOf(true));
+        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + SecurityConstants.SECURE_SUFFIX + PropNames.START_TLS_REQUIRED, String.valueOf(true));
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        verify(sessionMock).getStore(PopPropNames.POP3);
+        verify(sessionMock).getStore(PopPropNames.POP3 + SecurityConstants.SECURE_SUFFIX);
     }
 
     /**

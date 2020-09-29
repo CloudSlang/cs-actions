@@ -25,5 +25,10 @@ public final class ProxyUtils {
         props.setProperty(String.format(PropNames.MAIL_PROXY_PORT, input.getProtocol()), String.valueOf(input.getProxyPort()));
         props.setProperty(String.format(PropNames.MAIL_PROXY_USER, input.getProtocol()), input.getProxyUsername());
         props.setProperty(String.format(PropNames.MAIL_PROXY_PASSWORD, input.getProtocol()), input.getProxyPassword());
+
+        props.setProperty(String.format(PropNames.MAIL_PROXY_HOST, input.getProtocol() + SecurityConstants.SECURE_SUFFIX), input.getProxyHost());
+        props.setProperty(String.format(PropNames.MAIL_PROXY_PORT, input.getProtocol() + SecurityConstants.SECURE_SUFFIX), String.valueOf(input.getProxyPort()));
+        props.setProperty(String.format(PropNames.MAIL_PROXY_USER, input.getProtocol() + SecurityConstants.SECURE_SUFFIX), input.getProxyUsername());
+        props.setProperty(String.format(PropNames.MAIL_PROXY_PASSWORD, input.getProtocol() + SecurityConstants.SECURE_SUFFIX), input.getProxyPassword());
     }
 }
