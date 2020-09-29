@@ -16,6 +16,7 @@ package io.cloudslang.content.mail.entities;
 
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import io.cloudslang.content.mail.constants.SecurityConstants;
+import io.cloudslang.content.mail.constants.SmtpPropNames;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -71,7 +72,9 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
 
 
     public String getProtocol() {
-        return protocol;
+        return this.isEnableTLS() && !this.getTlsVersions().isEmpty()?
+                protocol + SecurityConstants.SECURE_SUFFIX :
+                protocol;
     }
 
 
