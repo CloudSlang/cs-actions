@@ -17,6 +17,7 @@ package io.cloudslang.content.mail.utils;
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import io.cloudslang.content.mail.entities.DecryptableMailInput;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cms.KeyTransRecipientId;
 import org.bouncycastle.cms.RecipientId;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -64,6 +65,6 @@ public final class SecurityUtils {
             cert.checkValidity();
         }
 
-        return new KeyTransRecipientId(null, cert.getSerialNumber(),cert.getIssuerX500Principal().getEncoded());
+        return new KeyTransRecipientId(new X500Name(cert.getIssuerDN().getName()), cert.getSerialNumber(),cert.getIssuerX500Principal().getEncoded());
     }
 }

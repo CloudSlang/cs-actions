@@ -26,6 +26,7 @@ import io.cloudslang.content.mail.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.cms.*;
 import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnveloped;
 import org.bouncycastle.mail.smime.SMIMEUtil;
 
@@ -35,6 +36,7 @@ import javax.mail.internet.MimeUtility;
 import java.io.*;
 import java.security.KeyStore;
 import java.security.PrivateKey;
+import java.security.Security;
 import java.util.*;
 
 public class GetMailAttachmentService {
@@ -65,6 +67,9 @@ public class GetMailAttachmentService {
             Message message = folder.getMessage(input.getMessageNumber());
 
             if (input.isEncryptedMessage()) {
+                if (Security.getProvider(SecurityConstants.BOUNCY_CASTLE_PROVIDER) == null) {
+                    Security.addProvider(new BouncyCastleProvider());
+                }
                 ks = KeyStore.getInstance(SecurityConstants.PKCS_KEYSTORE_TYPE, SecurityConstants.BOUNCY_CASTLE_PROVIDER);
                 recId = SecurityUtils.addDecryptionSettings(ks, input);
             }
@@ -99,9 +104,8 @@ public class GetMailAttachmentService {
             if (mpart != null) {
                 for (int i = 0, n = mpart.getCount(); i < n; i++) {
                     Part part = mpart.getBodyPart(i);
-
                     if (input.isEncryptedMessage() && part.getContentType() != null &&
-                            part.getContentType().equals(SecurityConstants.ENCRYPTED_CONTENT_TYPE)) {
+                            part.getContentType().matches(SecurityConstants.ENCRYPTED_CONTENT_TYPE)) {
                         part = decryptPart((MimeBodyPart) part);
                     }
 
@@ -225,7 +229,7 @@ public class GetMailAttachmentService {
                         Part part = mpart.getBodyPart(i);
 
                         if (input.isEncryptedMessage() && part.getContentType() != null &&
-                                part.getContentType().equals(SecurityConstants.ENCRYPTED_CONTENT_TYPE)) {
+                                part.getContentType().matches(SecurityConstants.ENCRYPTED_CONTENT_TYPE)) {
                             part = decryptPart((MimeBodyPart) part);
                         }
 

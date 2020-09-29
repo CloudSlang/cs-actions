@@ -254,7 +254,9 @@ public class SendMailService {
         try (InputStream publicKeystoreInputStream = keystoreUrl.openStream()) {
             char[] smimePw = input.getEncryptionKeystorePassword().toCharArray();
             gen = new SMIMEEnvelopedGenerator();
-            Security.addProvider(new BouncyCastleProvider());
+            if (Security.getProvider(SecurityConstants.BOUNCY_CASTLE_PROVIDER) == null) {
+                Security.addProvider(new BouncyCastleProvider());
+            }
             KeyStore ks = KeyStore.getInstance(SecurityConstants.PKCS_KEYSTORE_TYPE, SecurityConstants.BOUNCY_CASTLE_PROVIDER);
             ks.load(publicKeystoreInputStream, smimePw);
 
