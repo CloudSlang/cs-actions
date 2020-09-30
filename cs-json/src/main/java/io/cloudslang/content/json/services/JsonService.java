@@ -17,25 +17,30 @@
 package io.cloudslang.content.json.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.InvalidJsonException;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.internal.JsonContext;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
 import io.cloudslang.content.json.exceptions.RemoveEmptyElementException;
+import io.cloudslang.content.json.utils.ExceptionMsgs;
 import io.cloudslang.content.json.utils.JsonUtils;
 import io.cloudslang.content.json.utils.StringUtils;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONStyle;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Folea Ilie Cristian on 2/3/2016.
@@ -59,13 +64,28 @@ public class JsonService {
 
         try {
             parseJsonForInconsistencies(normalizedJson);
-            jsonMap = JsonPath.read(normalizedJson, "$");
-        } catch (com.jayway.jsonpath.InvalidJsonException | com.google.gson.JsonSyntaxException ije) {
+            Object jsonElement = new JSONParser(JSONParser.MODE_PERMISSIVE).parse(normalizedJson);
+            if(jsonElement instanceof JSONObject) {
+                jsonMap = JsonPath.read(normalizedJson, "$");
+                removeEmptyElementsFromMap(jsonMap);
+                return generateResultingJsonString(wrappingQuote, jsonMap);
+            } else if(jsonElement instanceof JSONArray) {
+                JSONArray jsonArray = (JSONArray) jsonElement;
+                Map<String, Object> tmpMap = new LinkedHashMap<>();
+                tmpMap.put("", jsonArray);
+                JSONObject jsonObject = new JSONObject(tmpMap);
+
+                jsonMap = JsonPath.read(jsonObject.toJSONString(), "$");
+                removeEmptyElementsFromMap(jsonMap);
+                return jsonMap.isEmpty() ?
+                        generateResultingJsonString(wrappingQuote, new JSONArray()) :
+                        generateResultingJsonString(wrappingQuote, (JSONArray)jsonMap.get(""));
+            } else {
+                throw new RemoveEmptyElementException(ExceptionMsgs.JSON_OBJECT_SHOULD_BE_OBJECT_OR_ARRAY);
+            }
+        } catch (InvalidJsonException | JsonSyntaxException | ParseException ije) {
             throw new RemoveEmptyElementException(ije);
         }
-
-        removeEmptyElementsFromMap(jsonMap);
-        return generateResultingJsonString(wrappingQuote, jsonMap);
     }
 
 
@@ -78,6 +98,10 @@ public class JsonService {
         }
 
         return newJson;
+    }
+
+    private String generateResultingJsonString(char wrappingQuote, JSONArray jsonArray) {
+        return jsonArray.toJSONString(JSONStyle.LT_COMPRESS);
     }
 
 
@@ -152,7 +176,6 @@ public class JsonService {
                 }
             }
         }
-
     }
 
 

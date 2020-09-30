@@ -222,7 +222,9 @@ public class SendMailInput implements MailInput {
 
 
     public String getProtocol() {
-        return this.getTlsVersions().isEmpty() ? SmtpPropNames.SMTP : SmtpPropNames.SMTP + SecurityConstants.SECURE_SUFFIX;
+        return this.isEnableTLS() && !this.getTlsVersions().isEmpty()?
+                SmtpPropNames.SMTP + SecurityConstants.SECURE_SUFFIX :
+                SmtpPropNames.SMTP;
     }
 
 

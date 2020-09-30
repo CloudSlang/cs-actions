@@ -32,4 +32,5 @@ public class Inputs {
     public static final String PASSWORD = "password";
     public static final String FIRST_STRING = "firstString";
     public static final String SECOND_STRING = "secondString";
+    public static final String BOOL_VALUE = "boolValue";
 }
