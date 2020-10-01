@@ -193,13 +193,14 @@ public class SendMailService {
 
             msg.saveChanges();
 
+            transport = session.getTransport(input.getProtocol());
             if (StringUtils.isNotEmpty(input.getUsername())) {
-                transport = session.getTransport(input.getProtocol());
                 transport.connect(input.getHostname(), input.getPort(), input.getUsername(), input.getPassword());
-                transport.sendMessage(msg, msg.getAllRecipients());
             } else {
-                Transport.send(msg);
+                transport.connect();
             }
+            transport.sendMessage(msg, msg.getAllRecipients());
+
             result.put(OutputNames.RETURN_RESULT, Constants.MAIL_WAS_SENT);
             result.put(OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
         } finally {
