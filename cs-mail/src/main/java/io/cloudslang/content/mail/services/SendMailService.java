@@ -78,8 +78,8 @@ public class SendMailService {
             this.input = sendMailInput;
             // Create a mail session
             java.util.Properties props = new java.util.Properties();
-            props.put(String.format(PropNames.MAIL_HOST, input.getProtocol()), input.getHostname());
-            props.put(String.format(PropNames.MAIL_PORT, input.getProtocol()), StringUtils.EMPTY + input.getPort());
+            props.put(String.format(PropNames.MAIL_HOST, Constants.SMTP), input.getHostname());
+            props.put(String.format(PropNames.MAIL_PORT, Constants.SMTP), StringUtils.EMPTY + input.getPort());
 
             if (null != input.getUsername() && input.getUsername().length() > 0) {
                 props.put(String.format(PropNames.MAIL_USER, input.getProtocol()), input.getUsername());
@@ -200,6 +200,7 @@ public class SendMailService {
             } else {
                 Transport.send(msg);
             }
+
             result.put(OutputNames.RETURN_RESULT, Constants.MAIL_WAS_SENT);
             result.put(OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
         } finally {
