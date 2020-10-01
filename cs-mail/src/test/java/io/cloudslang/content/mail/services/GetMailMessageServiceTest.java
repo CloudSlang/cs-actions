@@ -18,10 +18,10 @@ package io.cloudslang.content.mail.services;
 
 import com.sun.mail.util.ASCIIUtility;
 import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.mail.constants.Constants;
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import io.cloudslang.content.mail.constants.MimeTypes;
 import io.cloudslang.content.mail.constants.OutputNames;
-import io.cloudslang.content.mail.constants.PopPropNames;
 import io.cloudslang.content.mail.entities.GetMailInput;
 import io.cloudslang.content.mail.entities.GetMailMessageInput;
 import io.cloudslang.content.mail.entities.StringOutputStream;
@@ -521,8 +521,8 @@ public class GetMailMessageServiceTest {
      */
     private void addRequiredInputs() {
         inputBuilder.hostname(HOST);
-        inputBuilder.port(PopPropNames.POP3_PORT);
-        inputBuilder.protocol(PopPropNames.POP3);
+        inputBuilder.port(Constants.POP3_PORT);
+        inputBuilder.protocol(Constants.POP3);
         inputBuilder.username(USERNAME);
         inputBuilder.password(PASSWORD);
         inputBuilder.folder(FOLDER);

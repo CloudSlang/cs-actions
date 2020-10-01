@@ -18,12 +18,11 @@
 package io.cloudslang.content.mail.sslconfig;
 
 import com.sun.mail.util.MailConnectException;
-import io.cloudslang.content.mail.constants.PopPropNames;
+import io.cloudslang.content.mail.constants.Constants;
 import io.cloudslang.content.mail.constants.PropNames;
 import io.cloudslang.content.mail.constants.SecurityConstants;
 import io.cloudslang.content.mail.entities.GetMailAttachmentInput;
 import io.cloudslang.content.mail.entities.GetMailInput;
-import io.cloudslang.content.mail.entities.MailInput;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import junit.framework.Assert;
 import org.apache.commons.lang3.StringUtils;
@@ -110,8 +109,8 @@ public class SSLUtilsTest {
     public void setUp() {
         inputBuilder = new GetMailAttachmentInput.Builder();
         inputBuilder.hostname(HOST);
-        inputBuilder.port(PopPropNames.POP3_PORT);
-        inputBuilder.protocol(PopPropNames.POP3);
+        inputBuilder.port(Constants.POP3_PORT);
+        inputBuilder.protocol(Constants.POP3);
         inputBuilder.username(USERNAME);
         inputBuilder.password(PASSWORD);
         inputBuilder.folder(FOLDER);
@@ -187,10 +186,14 @@ public class SSLUtilsTest {
     @Test
     public void testConfigureStoreWithSSL() throws Exception {
         GetMailInput input = inputBuilder.build();
-        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SOCKET_FACTORY_CLASS, SecurityConstants.SSL_SOCKET_FACTORY);
-        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SOCKET_FACTORY_FALLBACK, String.valueOf(false));
-        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.PORT, PopPropNames.POP3_PORT);
-        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SOCKET_FACTORY_PORT, PopPropNames.POP3_PORT);
+        doReturn(objectMock).when(propertiesMock)
+                .setProperty(String.format(PropNames.MAIL_SOCKET_FACTORY_CLASS, Constants.POP3), SecurityConstants.SSL_SOCKET_FACTORY);
+        doReturn(objectMock).when(propertiesMock)
+                .setProperty(String.format(PropNames.MAIL_SOCKET_FACTORY_FALLBACK, Constants.POP3), String.valueOf(false));
+        doReturn(objectMock).when(propertiesMock)
+                .setProperty(String.format(PropNames.MAIL_PORT, Constants.POP3), Constants.POP3_PORT);
+        doReturn(objectMock).when(propertiesMock)
+                .setProperty(String.format(PropNames.MAIL_SOCKET_FACTORY_PORT, Constants.POP3), Constants.POP3_PORT);
         PowerMockito.mockStatic(Session.class);
         PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
         doReturn(storeMock).when(sessionMock).getStore(any(URLName.class));
@@ -198,10 +201,10 @@ public class SSLUtilsTest {
         Store store = SSLUtils.configureStoreWithSSL(propertiesMock, authenticatorMock, input);
 
         assertEquals(storeMock, store);
-        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SOCKET_FACTORY_CLASS, SecurityConstants.SSL_SOCKET_FACTORY);
-        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SOCKET_FACTORY_FALLBACK, String.valueOf(false));
-        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.PORT, PopPropNames.POP3_PORT);
-        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SOCKET_FACTORY_PORT, PopPropNames.POP3_PORT);
+        verify(propertiesMock).setProperty(String.format(PropNames.MAIL_SOCKET_FACTORY_CLASS, Constants.POP3), SecurityConstants.SSL_SOCKET_FACTORY);
+        verify(propertiesMock).setProperty(String.format(PropNames.MAIL_SOCKET_FACTORY_FALLBACK, Constants.POP3), String.valueOf(false));
+        verify(propertiesMock).setProperty(String.format(PropNames.MAIL_PORT, Constants.POP3), Constants.POP3_PORT);
+        verify(propertiesMock).setProperty(String.format(PropNames.MAIL_SOCKET_FACTORY_PORT, Constants.POP3), Constants.POP3_PORT);
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
         verify(sessionMock).getStore(any(URLName.class));
@@ -210,9 +213,12 @@ public class SSLUtilsTest {
     @Test
     public void testConfigureStoreWithTLS() throws Exception {
         GetMailInput input = inputBuilder.build();
-        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SSL_ENABLE, String.valueOf(false));
-        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.START_TLS_ENABLE, String.valueOf(true));
-        doReturn(objectMock).when(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.START_TLS_REQUIRED, String.valueOf(true));
+        doReturn(objectMock).when(propertiesMock)
+                .setProperty(String.format(PropNames.MAIL_SSL_ENABLE, Constants.POP3), String.valueOf(false));
+        doReturn(objectMock).when(propertiesMock)
+                .setProperty(String.format(PropNames.MAIL_STARTTLS_ENABLE, Constants.POP3), String.valueOf(true));
+        doReturn(objectMock).when(propertiesMock)
+                .setProperty(String.format(PropNames.MAIL_STARTTLS_REQUIRED, Constants.POP3), String.valueOf(true));
         PowerMockito.mockStatic(Session.class);
         PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
         doReturn(storeMock).when(sessionMock).getStore(any(String.class));
@@ -220,12 +226,12 @@ public class SSLUtilsTest {
         Store store = SSLUtils.configureStoreWithTLS(propertiesMock, authenticatorMock, input);
 
         assertEquals(storeMock, store);
-        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.SSL_ENABLE, String.valueOf(false));
-        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.START_TLS_ENABLE, String.valueOf(true));
-        verify(propertiesMock).setProperty(PropNames.MAIL + PopPropNames.POP3 + PropNames.START_TLS_REQUIRED, String.valueOf(true));
+        verify(propertiesMock).setProperty(String.format(PropNames.MAIL_SSL_ENABLE, Constants.POP3), String.valueOf(false));
+        verify(propertiesMock).setProperty(String.format(PropNames.MAIL_STARTTLS_ENABLE, Constants.POP3), String.valueOf(true));
+        verify(propertiesMock).setProperty(String.format(PropNames.MAIL_STARTTLS_REQUIRED, Constants.POP3), String.valueOf(true));
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        verify(sessionMock).getStore(PopPropNames.POP3);
+        verify(sessionMock).getStore(Constants.POP3);
     }
 
     /**
@@ -236,23 +242,23 @@ public class SSLUtilsTest {
     @Test
     public void testConfigureStoreWithoutSSL() throws Exception {
         GetMailInput input = inputBuilder.build();
-        doReturn(objectMock).when(propertiesMock).put(PropNames.MAIL + PopPropNames.POP3 + PropNames.HOST, HOST);
-        doReturn(objectMock).when(propertiesMock).put(PropNames.MAIL + PopPropNames.POP3 + PropNames.PORT, Short.parseShort(PopPropNames.POP3_PORT));
+        doReturn(objectMock).when(propertiesMock).put(String.format(PropNames.MAIL_HOST, Constants.POP3), HOST);
+        doReturn(objectMock).when(propertiesMock).put(String.format(PropNames.MAIL_PORT, Constants.POP3), Short.parseShort(Constants.POP3_PORT));
         PowerMockito.mockStatic(Session.class);
         PowerMockito.doReturn(sessionMock)
                 .when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        doReturn(storeMock).when(sessionMock).getStore(PopPropNames.POP3);
+        doReturn(storeMock).when(sessionMock).getStore(Constants.POP3);
         PowerMockito.mockStatic(SSLUtils.class);
         when(SSLUtils.configureStoreWithoutSSL(propertiesMock, authenticatorMock, input)).thenCallRealMethod();
 
         Store store = SSLUtils.configureStoreWithoutSSL(propertiesMock, authenticatorMock, input);
 
         assertEquals(storeMock, store);
-        verify(propertiesMock).put(PropNames.MAIL + PopPropNames.POP3 + PropNames.HOST, HOST);
-        verify(propertiesMock).put(PropNames.MAIL + PopPropNames.POP3 + PropNames.PORT, Short.parseShort(PopPropNames.POP3_PORT));
+        verify(propertiesMock).put(String.format(PropNames.MAIL_HOST, Constants.POP3), HOST);
+        verify(propertiesMock).put(String.format(PropNames.MAIL_PORT, Constants.POP3), Short.parseShort(Constants.POP3_PORT));
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        verify(sessionMock).getStore(PopPropNames.POP3);
+        verify(sessionMock).getStore(Constants.POP3);
     }
 
     /**
