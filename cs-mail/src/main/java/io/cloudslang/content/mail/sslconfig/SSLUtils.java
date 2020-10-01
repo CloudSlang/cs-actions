@@ -95,7 +95,7 @@ public class SSLUtils {
     public static Store createMessageStore(GetMailInput input) throws Exception {
         Properties props = new Properties();
         if (input.getTimeout() > 0) {
-            props.put(PropNames.MAIL + input.getProtocol() + PropNames.TIMEOUT, input.getTimeout());
+            props.put(String.format(PropNames.MAIL_TIMEOUT, input.getProtocol()), input.getTimeout());
         }
         if(StringUtils.isNotEmpty(input.getProxyHost())) {
             ProxyUtils.setPropertiesProxy(props, input);
@@ -202,10 +202,10 @@ public class SSLUtils {
     }
 
     private static void configureWithSSL(Properties props, MailInput input) {
-        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SOCKET_FACTORY_CLASS, SecurityConstants.SSL_SOCKET_FACTORY);
-        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SOCKET_FACTORY_FALLBACK, String.valueOf(false));
-        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.PORT, String.valueOf(input.getPort()));
-        props.setProperty(PropNames.MAIL + input.getProtocol() + PropNames.SOCKET_FACTORY_PORT, String.valueOf(input.getPort()));
+        props.setProperty(String.format(PropNames.MAIL_SOCKET_FACTORY_CLASS, input.getProtocol()), SecurityConstants.SSL_SOCKET_FACTORY);
+        props.setProperty(String.format(PropNames.MAIL_SOCKET_FACTORY_FALLBACK, input.getProtocol()), String.valueOf(false));
+        props.setProperty(String.format(PropNames.MAIL_PORT, input.getProtocol()), String.valueOf(input.getPort()));
+        props.setProperty(String.format(PropNames.MAIL_SOCKET_FACTORY_PORT, input.getProtocol()), String.valueOf(input.getPort()));
     }
 
 
@@ -265,8 +265,8 @@ public class SSLUtils {
 
 
     static Store configureStoreWithoutSSL(Properties props, Authenticator auth, GetMailInput input) throws NoSuchProviderException {
-        props.put(PropNames.MAIL + input.getProtocol() + PropNames.HOST, input.getHostname());
-        props.put(PropNames.MAIL + input.getProtocol() + PropNames.PORT, input.getPort());
+        props.put(String.format(PropNames.MAIL_HOST, input.getProtocol()), input.getHostname());
+        props.put(String.format(PropNames.MAIL_PORT, input.getProtocol()), input.getPort());
         Session session = Session.getInstance(props, auth);
         return session.getStore(input.getProtocol());
     }

@@ -14,9 +14,8 @@
  */
 package io.cloudslang.content.mail.entities;
 
+import io.cloudslang.content.mail.constants.Constants;
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
-import io.cloudslang.content.mail.constants.ImapPropNames;
-import io.cloudslang.content.mail.constants.PopPropNames;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -26,8 +25,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import static io.cloudslang.content.mail.constants.Constants.*;
 
 
 @RunWith(PowerMockRunner.class)
@@ -199,7 +196,7 @@ public class GetMailMessageInputTest {
 
     @Test
     public void testProcessInputProtocolNullPortImap() throws Exception {
-        inputsBuilder.port(ImapPropNames.PORT)
+        inputsBuilder.port(Constants.IMAP_PORT)
                 .protocol(StringUtils.EMPTY);
 
         inputsBuilder.build();
@@ -208,7 +205,7 @@ public class GetMailMessageInputTest {
 
     @Test
     public void testProcessInputProtocolNullPortPop3() throws Exception {
-        inputsBuilder.port(PopPropNames.POP3_PORT)
+        inputsBuilder.port(Constants.POP3_PORT)
                 .protocol(StringUtils.EMPTY);
 
         inputsBuilder.build();
@@ -218,7 +215,7 @@ public class GetMailMessageInputTest {
     @Test
     public void testProcessInputPortEmptyProtocolImap() throws Exception {
         inputsBuilder.port(StringUtils.EMPTY)
-                .protocol(ImapPropNames.IMAP);
+                .protocol(Constants.IMAP);
 
         inputsBuilder.build();
     }
@@ -227,7 +224,7 @@ public class GetMailMessageInputTest {
     @Test
     public void testProcessInputPortEmptyProtocolImap4() throws Exception {
         inputsBuilder.port(StringUtils.EMPTY)
-                .protocol(ImapPropNames.IMAP4);
+                .protocol(Constants.IMAP4);
 
         inputsBuilder.build();
     }
@@ -236,7 +233,7 @@ public class GetMailMessageInputTest {
     @Test
     public void testProcessInputPortEmptyProtocolPop3() throws Exception {
         inputsBuilder.port(StringUtils.EMPTY)
-                .protocol(PopPropNames.POP3);
+                .protocol(Constants.POP3);
 
         inputsBuilder.build();
     }

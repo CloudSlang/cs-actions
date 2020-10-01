@@ -21,4 +21,11 @@ public final class Constants {
     public static final String SUBJECT_HEADER = "Subject";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String MAIL_WAS_SENT = "SentMailSuccessfully";
+    public static final String IMAP = "imap";
+    public static final String IMAP4 = "imap4";
+    public static final String IMAP_PORT = "143";
+    public static final String POP3 = "pop3";
+    public static final String POP3_PORT = "110";
+    public static final String MAIL_POP3 = "mail.pop3.";
+    public static final String SMTP = "smtp";
 }

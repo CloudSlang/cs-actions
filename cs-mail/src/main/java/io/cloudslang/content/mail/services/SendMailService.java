@@ -78,23 +78,23 @@ public class SendMailService {
             this.input = sendMailInput;
             // Create a mail session
             java.util.Properties props = new java.util.Properties();
-            props.put(SmtpPropNames.HOST, input.getHostname());
-            props.put(SmtpPropNames.PORT, StringUtils.EMPTY + input.getPort());
+            props.put(String.format(PropNames.MAIL_HOST, input.getProtocol()), input.getHostname());
+            props.put(String.format(PropNames.MAIL_PORT, input.getProtocol()), StringUtils.EMPTY + input.getPort());
 
             if (null != input.getUsername() && input.getUsername().length() > 0) {
-                props.put(SmtpPropNames.USER, input.getUsername());
-                props.put(SmtpPropNames.PASSWORD, input.getPassword());
-                props.put(SmtpPropNames.AUTH, String.valueOf(true));
+                props.put(String.format(PropNames.MAIL_USER, input.getProtocol()), input.getUsername());
+                props.put(String.format(PropNames.MAIL_PASSWORD, input.getProtocol()), input.getPassword());
+                props.put(String.format(PropNames.MAIL_AUTH, input.getProtocol()), String.valueOf(true));
             }
             if (input.isEnableTLS()) {
                 SSLUtils.addSSLSettings(true, StringUtils.EMPTY,
                         StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY);
                 SSLUtils.configureWithTLS(props, input);
             } else {
-                props.put(SmtpPropNames.START_TLS_ENABLE, String.valueOf(false));
+                props.put(String.format(PropNames.MAIL_STARTTLS_ENABLE, input.getProtocol()), String.valueOf(false));
             }
             if (input.getTimeout() > 0) {
-                props.put(SmtpPropNames.TIMEOUT, input.getTimeout());
+                props.put(String.format(PropNames.MAIL_TIMEOUT, input.getProtocol()), input.getTimeout());
             }
             if (StringUtils.isNotEmpty(input.getProxyHost())) {
                 ProxyUtils.setPropertiesProxy(props, input);
@@ -193,7 +193,7 @@ public class SendMailService {
 
             msg.saveChanges();
 
-            if (!StringUtils.isEmpty(input.getUsername())) {
+            if (StringUtils.isNotEmpty(input.getUsername())) {
                 transport = session.getTransport(input.getProtocol());
                 transport.connect(input.getHostname(), input.getPort(), input.getUsername(), input.getPassword());
                 transport.sendMessage(msg, msg.getAllRecipients());
