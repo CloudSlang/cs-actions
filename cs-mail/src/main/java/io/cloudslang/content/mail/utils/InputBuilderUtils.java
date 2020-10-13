@@ -165,7 +165,7 @@ public final class InputBuilderUtils {
 
 
     public static List<String> buildTlsVersions(String tlsVersionInput) throws Exception {
-        if (StringUtils.isEmpty(tlsVersionInput)) {
+        if (StringUtils.isEmpty(tlsVersionInput) ||  tlsVersionInput.equals("STARTTLS")) {
             return Collections.emptyList();
         }
 
