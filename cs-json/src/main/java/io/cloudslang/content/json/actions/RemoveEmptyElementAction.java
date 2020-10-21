@@ -28,6 +28,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.json.services.JsonService;
 import io.cloudslang.content.json.utils.Constants;
 import io.cloudslang.content.utils.OutputUtilities;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public class RemoveEmptyElementAction {
             })
     public Map<String, String> removeEmptyElements(@Param(value = Constants.InputNames.JSON_OBJECT, required = true) String json) {
         try {
-            final String result = new JsonService().removeEmptyElementsJson(json);
+            final String result = new JsonService().removeEmptyElementsJson(StringUtils.defaultString(json));
             return OutputUtilities.getSuccessResultsMap(result);
         } catch (Exception ex) {
             return OutputUtilities.getFailureResultsMap(ex);

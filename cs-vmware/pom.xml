@@ -75,7 +75,7 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <cs-commons.version>0.0.5</cs-commons.version>
-        <jackson-databind.version>2.9.10.4</jackson-databind.version>
+        <jackson-databind.version>2.9.10.5</jackson-databind.version>
         <commons-compress.version>1.19</commons-compress.version>
         <commons-io.version>2.5</commons-io.version>
         <gson.version>2.7</gson.version>

@@ -15,7 +15,7 @@
 package io.cloudslang.content.mail.services;
 
 import io.cloudslang.content.constants.OutputNames;
-import io.cloudslang.content.mail.constants.PopPropNames;
+import io.cloudslang.content.mail.constants.Constants;
 import io.cloudslang.content.mail.entities.GetMailInput;
 import io.cloudslang.content.mail.entities.GetMailMessageCountInput;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
@@ -55,8 +55,8 @@ public class GetMailMessageCountServiceTest {
     public void setUp() {
         inputBuilder = new GetMailMessageCountInput.Builder();
         inputBuilder.hostname("host");
-        inputBuilder.port(PopPropNames.POP3_PORT);
-        inputBuilder.protocol(PopPropNames.POP3);
+        inputBuilder.port(Constants.POP3_PORT);
+        inputBuilder.protocol(Constants.POP3);
         inputBuilder.username("username");
         inputBuilder.password("password");
         inputBuilder.folder("folder");

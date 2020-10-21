@@ -56,28 +56,28 @@ public final class InputBuilderUtils {
         result.put(protocolKey, protocol);
         if (isEmpty(protocol) && isEmpty(port)) {
             throw new Exception(ExceptionMsgs.SPECIFY_PORT_OR_PROTOCOL_OR_BOTH);
-        } else if ((protocol != null && !protocol.isEmpty()) && (!protocol.equalsIgnoreCase(ImapPropNames.IMAP)) &&
-                (!protocol.equalsIgnoreCase(PopPropNames.POP3)) && (!protocol.equalsIgnoreCase(ImapPropNames.IMAP4)) &&
+        } else if ((protocol != null && !protocol.isEmpty()) && (!protocol.equalsIgnoreCase(Constants.IMAP)) &&
+                (!protocol.equalsIgnoreCase(Constants.POP3)) && (!protocol.equalsIgnoreCase(Constants.IMAP4)) &&
                 isEmpty(port)) {
             throw new Exception(ExceptionMsgs.SPECIFY_PORT_FOR_PROTOCOL);
         } else if (isEmpty(protocol) && !isEmpty(port) &&
-                (!port.equalsIgnoreCase(ImapPropNames.PORT)) && (!port.equalsIgnoreCase(PopPropNames.POP3_PORT))) {
+                (!port.equalsIgnoreCase(Constants.IMAP_PORT)) && (!port.equalsIgnoreCase(Constants.POP3_PORT))) {
             throw new Exception(ExceptionMsgs.SPECIFY_PROTOCOL_FOR_GIVEN_PORT);
-        } else if (isEmpty(protocol) && port.trim().equalsIgnoreCase(ImapPropNames.PORT)) {
-            result.put(protocolKey, ImapPropNames.IMAP);
-        } else if (isEmpty(protocol) && port.trim().equalsIgnoreCase(PopPropNames.POP3_PORT)) {
-            result.put(protocolKey, PopPropNames.POP3);
-        } else if (protocol.trim().equalsIgnoreCase(PopPropNames.POP3) && isEmpty(port)) {
-            result.put(portKey, Short.parseShort(PopPropNames.POP3_PORT));
-        } else if (protocol.trim().equalsIgnoreCase(ImapPropNames.IMAP) && isEmpty(port)) {
-            result.put(portKey, Short.parseShort(ImapPropNames.PORT));
-        } else if (protocol.trim().equalsIgnoreCase(ImapPropNames.IMAP4) && (isEmpty(port))) {
-            result.put(portKey, Short.parseShort(ImapPropNames.PORT));
+        } else if (isEmpty(protocol) && port.trim().equalsIgnoreCase(Constants.IMAP_PORT)) {
+            result.put(protocolKey, Constants.IMAP);
+        } else if (isEmpty(protocol) && port.trim().equalsIgnoreCase(Constants.POP3_PORT)) {
+            result.put(protocolKey, Constants.POP3);
+        } else if (protocol.trim().equalsIgnoreCase(Constants.POP3) && isEmpty(port)) {
+            result.put(portKey, Short.parseShort(Constants.POP3_PORT));
+        } else if (protocol.trim().equalsIgnoreCase(Constants.IMAP) && isEmpty(port)) {
+            result.put(portKey, Short.parseShort(Constants.IMAP_PORT));
+        } else if (protocol.trim().equalsIgnoreCase(Constants.IMAP4) && (isEmpty(port))) {
+            result.put(portKey, Short.parseShort(Constants.IMAP_PORT));
         }
         //The protocol should be given in lowercase to be recognised.
         result.put(protocolKey, result.get(protocolKey).toString().toLowerCase());
-        if (result.get(protocolKey).toString().trim().equalsIgnoreCase(ImapPropNames.IMAP4)) {
-            result.put(protocolKey, ImapPropNames.IMAP);
+        if (result.get(protocolKey).toString().trim().equalsIgnoreCase(Constants.IMAP4)) {
+            result.put(protocolKey, Constants.IMAP);
         }
 
         return result;
@@ -165,7 +165,7 @@ public final class InputBuilderUtils {
 
 
     public static List<String> buildTlsVersions(String tlsVersionInput) throws Exception {
-        if (StringUtils.isEmpty(tlsVersionInput)) {
+        if (StringUtils.isEmpty(tlsVersionInput) ||  tlsVersionInput.equals("STARTTLS")) {
             return Collections.emptyList();
         }
 

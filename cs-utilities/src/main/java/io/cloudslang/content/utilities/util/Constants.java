@@ -39,5 +39,5 @@ public final class Constants {
             "of characters should be a number greater or equal to 0.";
     static final String EXCEPTION_NUMBER_FORMAT = "Wrong input number provided.";
 
-
+    public static final String DEFAULT_IGNORE_CASE = "false";
 }

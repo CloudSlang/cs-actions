@@ -61,23 +61,23 @@ public class CreateComputerAccountAction {
      * @param escapeChars                Add this input and set to true if you want the operation to escape the special AD chars.
      *
      * @return a map containing the output of the operations. Keys present in the map are:
-     * <br><b>returnResult</b> - The return result of the operation.
-     * <br><b>returnCode</b> - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
-     * <br><b>exception</b> - The exception message if the operation goes to failure.
-     * <br><b>computerDN</b> - The distinguished name of the newly created computer account.
+     * returnResult - The return result of the operation.
+     * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
+     * exception - The exception message if the operation goes to failure.
+     * computerDN - The distinguished name of the newly created computer account.
      */
     @Action(name = "Create Computer Account",
             outputs = {
-                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.RETURN_RESULT),
                     @Output(OutputNames.RESULT_COMPUTER_DN),
-                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
-                    @Output(io.cloudslang.content.constants.OutputNames.EXCEPTION)
+                    @Output(OutputNames.RETURN_CODE),
+                    @Output(OutputNames.EXCEPTION)
             },
             responses = {
-                    @Response(text = ResponseNames.SUCCESS, field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE,
                             value = ReturnCodes.SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
-                    @Response(text = ResponseNames.FAILURE, field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE,
                             value = ReturnCodes.FAILURE,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             })
