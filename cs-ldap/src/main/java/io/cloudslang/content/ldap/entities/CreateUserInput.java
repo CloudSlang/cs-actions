@@ -95,10 +95,6 @@ public class CreateUserInput implements LDAPInput {
         return userPassword;
     }
 
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
-
     public static class Builder {
 
         private String host;
