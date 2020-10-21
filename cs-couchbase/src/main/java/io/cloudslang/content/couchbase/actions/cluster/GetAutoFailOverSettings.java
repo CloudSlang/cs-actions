@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.couchbase.actions.buckets;
+package io.cloudslang.content.couchbase.actions.cluster;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -21,7 +21,6 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.couchbase.entities.inputs.BucketInputs;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.execute.CouchbaseService;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
@@ -33,9 +32,8 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.BUCKETS;
-import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.FLUSH_BUCKET;
-import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.BUCKET_NAME;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.Api.CLUSTER;
+import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.GET_AUTO_FAILOVER_SETTINGS;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECT_TIMEOUT;
@@ -55,30 +53,13 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.USERNAM
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.USE_COOKIES;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
+import static org.apache.http.client.methods.HttpGet.METHOD_NAME;
 
-/**
- * Created by TusaM
- * 5/6/2020.
- */
-public class FlushBucket {
+public class GetAutoFailOverSettings {
     /**
-     * Empties the contents of the specified bucket, deleting all stored data..
-     * https://docs.couchbase.com/server/6.5/rest-api/rest-bucket-flush.html
-     * <p>
-     * Note:
-     * 1. The Flush Bucket operation succeeds only if flush was configured either during the initial bucket setup or after
-     * the bucket settings have been changed.
-     * 2. Parameters and payload data are ignored, but the request must including the authorization header if the system
-     * has been secured.
-     * 3. The flush request may lead to significant disk activity as the data in the bucket is deleted from the database.
-     * The high disk utilization may affect the performance of your server until the data has been successfully deleted.
-     * 4. The flush request is not transmitted over XDCR replication configurations. The remote bucket is not flushed.
-     * <p>
-     * Warning: It is recommended that the flush capability is not used in production systems as it irreversibly deletes
-     * every document in the bucket. Even for use cases where this is the desired behaviour, flushing is not recommended
-     * as it is a very disruptive process. You can control and limit the ability to flush individual buckets by setting
-     * the flushEnabled parameter on a bucket in the Couchbase Web Console.
+     * Retrieve any auto-failover settings for a cluster.
+     * Auto-failover is a global setting for all clusters. Authenticated is required to read this value.
+     * https://developer.couchbase.com/documentation/server/3.x/admin/REST/rest-cluster-autofailover-settings.html
      *
      * @param endpoint             Endpoint to which request will be sent. A valid endpoint will be formatted as it shows in
      *                             bellow example.
@@ -137,11 +118,10 @@ public class FlushBucket {
      *                             execution it will close it.
      *                             Valid values: "true", "false"
      *                             Default value: "true"
-     * @param bucketName           Name of the bucket to be deleted
      * @return A map with strings as keys and strings as values that contains: outcome of the action (or failure message
      * and the exception if there is one), returnCode of the operation and the ID of the request
      */
-    @Action(name = "Flush Bucket",
+    @Action(name = "Get Auto Fail Over Settings",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
@@ -169,24 +149,19 @@ public class FlushBucket {
                                        @Param(value = CONNECT_TIMEOUT) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT) String socketTimeout,
                                        @Param(value = USE_COOKIES) String useCookies,
-                                       @Param(value = KEEP_ALIVE) String keepAlive,
-                                       @Param(value = BUCKET_NAME, required = true) String bucketName) {
+                                       @Param(value = KEEP_ALIVE) String keepAlive) {
         try {
             final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
                     proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
                     keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
-                    .withAction(FLUSH_BUCKET)
-                    .withApi(BUCKETS)
+                    .withAction(GET_AUTO_FAILOVER_SETTINGS)
+                    .withApi(CLUSTER)
                     .withEndpoint(endpoint)
                     .build();
 
-            final BucketInputs bucketInputs = new BucketInputs.Builder()
-                    .withBucketName(bucketName)
-                    .build();
-
-            return new CouchbaseService().execute(httpClientInputs, commonInputs, bucketInputs);
+            return new CouchbaseService().execute(httpClientInputs, commonInputs);
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
