@@ -36,6 +36,15 @@ public final class ResultUtils {
         return results;
     }
 
+    public static Map<String, String> createNewResultsEmptyMap() {
+        Map<String, String> results = new HashMap<>();
+
+        results.put(OutputNames.RETURN_RESULT, StringUtils.EMPTY);
+        results.put(OutputNames.EXCEPTION, StringUtils.EMPTY);
+        results.put(OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
+        return results;
+    }
+
 
     public static Map<String, String> fromException(Exception ex) {
         Map<String, String> results = createNewEmptyMap();
