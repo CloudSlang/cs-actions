@@ -17,7 +17,7 @@ package io.cloudslang.content.json.utils;
 public final class ExceptionMsgs {
     public static final String EXCEPTION_WHILE_PARSING = "Exception occurred while parsing input '%s': %s";
     public static final String NULL_OR_EMPTY_INPUT = "Value of input '%s' was null or empty.";
-
+    public static final String JSON_OBJECT_SHOULD_BE_OBJECT_OR_ARRAY = "Json object should be object or array.";
 
     private ExceptionMsgs() {
 

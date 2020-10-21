@@ -16,10 +16,7 @@
 
 package io.cloudslang.content.mail.entities;
 
-import io.cloudslang.content.mail.constants.Constants;
-import io.cloudslang.content.mail.constants.Encodings;
-import io.cloudslang.content.mail.constants.SmtpPropNames;
-import io.cloudslang.content.mail.constants.TlsVersions;
+import io.cloudslang.content.mail.constants.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -60,7 +57,7 @@ public class SendMailInput implements MailInput {
     private String encryptionKeystorePassword;
     private boolean enableTLS;
     private String username;
-    private String encryptionAlgorithm;
+    private EncryptionAlgorithmsEnum encryptionAlgorithm;
     private String proxyHost;
     private Short proxyPort;
     private String proxyUsername;
@@ -219,13 +216,15 @@ public class SendMailInput implements MailInput {
     }
 
 
-    public String getEncryptionAlgorithm() {
+    public EncryptionAlgorithmsEnum getEncryptionAlgorithm() {
         return encryptionAlgorithm;
     }
 
 
     public String getProtocol() {
-        return SmtpPropNames.SMTP;
+        return this.isEnableTLS() && !this.getTlsVersions().isEmpty()?
+                Constants.SMTP + SecurityConstants.SECURE_SUFFIX :
+                Constants.SMTP;
     }
 
 
@@ -547,7 +546,7 @@ public class SendMailInput implements MailInput {
 
                     input.encryptionKeystorePassword = (encryptionKeystorePassword == null) ? StringUtils.EMPTY : encryptionKeystorePassword;
 
-                    input.encryptionAlgorithm = EncryptionAlgorithmsEnum.getEncryptionAlgorithm(encryptionAlgorithm).getEncryptionOID();
+                    input.encryptionAlgorithm = EncryptionAlgorithmsEnum.getEncryptionAlgorithm(encryptionAlgorithm);
                 }
             }
 

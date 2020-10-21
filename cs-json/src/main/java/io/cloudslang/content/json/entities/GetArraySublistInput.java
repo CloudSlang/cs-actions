@@ -31,12 +31,15 @@ package io.cloudslang.content.json.entities;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import io.cloudslang.content.json.utils.Constants;
+import io.cloudslang.content.json.utils.ExceptionMsgs;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class GetArraySublistInput {
     private JsonArray array;
-    private String fromIndex;
-    private String toIndex;
+    private Integer fromIndex;
+    private Integer toIndex;
 
 
     private GetArraySublistInput() {
@@ -48,13 +51,19 @@ public class GetArraySublistInput {
         return array;
     }
 
-    public String getfromIndex() {
-        return fromIndex;
+
+    public int getFromIndex() {
+        return fromIndex >= 0 ? fromIndex : array.size() + fromIndex;
     }
 
-    public String gettoIndex() {
-        return toIndex;
+
+    public int getToIndex() {
+        if(toIndex == null) {
+            return array.size();
+        }
+        return toIndex >= 0 ? toIndex : array.size() + toIndex;
     }
+
 
     public static class Builder {
         private String array;
@@ -73,6 +82,7 @@ public class GetArraySublistInput {
             return this;
         }
 
+
         public Builder toIndex(String toIndex) {
             this.toIndex = toIndex;
             return this;
@@ -82,11 +92,16 @@ public class GetArraySublistInput {
         public @NotNull GetArraySublistInput build() throws Exception {
             GetArraySublistInput input = new GetArraySublistInput();
 
+            if(StringUtils.isEmpty(this.array)) {
+                throw new IllegalArgumentException(String.format(ExceptionMsgs.NULL_OR_EMPTY_INPUT, Constants.InputNames.ARRAY));
+            }
             input.array = new JsonParser().parse(this.array).getAsJsonArray();
 
-            input.fromIndex = this.fromIndex;
+            input.fromIndex = Integer.parseInt(this.fromIndex);
 
-            input.toIndex = this.toIndex;
+            if (StringUtils.isNotEmpty(this.toIndex)) {
+                input.toIndex = Integer.parseInt(this.toIndex);
+            }
 
             return input;
         }
