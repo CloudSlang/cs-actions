@@ -20,6 +20,7 @@ public final class ExceptionMsgs {
             "connection?";
     public static final String HOST_NOT_SPECIFIED = "The required host input is not specified!";
     public static final String OU_NOT_SPECIFIED = "The required OU input is not specified!";
+    public static final String USER_DN_NOT_SPECIFIED = "The required userDN input is not specified!";
     public static final String CN_NOT_SPECIFIED = "The required computerCommonName input is not specified!";
     public static final String USERNAME_NOT_SPECIFIED = "The username input is not specified!";
     public static final String USER_PASSWORD_NOT_SPECIFIED = "The required userPassword input is not specified!";
