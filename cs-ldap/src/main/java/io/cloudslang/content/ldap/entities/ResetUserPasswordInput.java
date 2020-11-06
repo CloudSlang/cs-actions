@@ -1,3 +1,4 @@
+package io.cloudslang.content.ldap.entities;
 /*
  * (c) Copyright 2020 Micro Focus
  * All rights reserved. This program and the accompanying materials
@@ -12,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.ldap.entities;
 
 import io.cloudslang.content.ldap.constants.Constants;
 
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class CreateUserInput implements LDAPInput {
+public class ResetUserPasswordInput{
 
     private String host;
-    private String OU;
-    private String userCommonName;
+    private String userDN;
     private String userPassword;
-    private String sAMAccountName;
     private String username;
     private String password;
     private boolean useSSL;
@@ -34,25 +32,16 @@ public class CreateUserInput implements LDAPInput {
     private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
-    private boolean escapeChars;
 
-    private CreateUserInput() {
+    private ResetUserPasswordInput() {
     }
 
     public String getHost() {
         return host;
     }
 
-    public String getOU() {
-        return OU;
-    }
-
-    public String getUserCommonName() {
-        return userCommonName;
-    }
-
-    public String getSAMAccountName() {
-        return sAMAccountName;
+    public String getUserDN() {
+        return userDN;
     }
 
     public String getUsername() {
@@ -87,10 +76,6 @@ public class CreateUserInput implements LDAPInput {
         return trustPassword;
     }
 
-    public Boolean getEscapeChars() {
-        return escapeChars;
-    }
-
     public String getUserPassword() {
         return userPassword;
     }
@@ -98,10 +83,8 @@ public class CreateUserInput implements LDAPInput {
     public static class Builder {
 
         private String host;
-        private String OU;
-        private String userCommonName;
+        private String userDN;
         private String userPassword;
-        private String sAMAccountName;
         private String username;
         private String password;
         private String useSSL;
@@ -110,96 +93,75 @@ public class CreateUserInput implements LDAPInput {
         private String keystorePassword;
         private String trustKeystore;
         private String trustPassword;
-        private String escapeChars;
 
 
-        public CreateUserInput.Builder host(String host) {
+        public Builder host(String host) {
             this.host = host;
             return this;
         }
 
-        public CreateUserInput.Builder OU(String OU) {
-            this.OU = OU;
+        public Builder userDN(String userDN) {
+            this.userDN = userDN;
             return this;
         }
 
-        public CreateUserInput.Builder userCommonName(String userCommonName) {
-            this.userCommonName = userCommonName;
-            return this;
-        }
-
-        public CreateUserInput.Builder userPassword(String userPassword) {
+        public Builder userPassword(String userPassword) {
             this.userPassword = userPassword;
             return this;
         }
 
-        public CreateUserInput.Builder sAMAccountName(String sAMAccountName) {
-            this.sAMAccountName = sAMAccountName;
-            return this;
-        }
-
-        public CreateUserInput.Builder username(String username) {
+        public Builder username(String username) {
             this.username = username;
             return this;
         }
 
 
-        public CreateUserInput.Builder password(String password) {
+        public Builder password(String password) {
             this.password = password;
             return this;
         }
 
-        public CreateUserInput.Builder useSSL(String useSSL) {
+        public Builder useSSL(String useSSL) {
             this.useSSL = useSSL;
             return this;
         }
 
-        public CreateUserInput.Builder trustAllRoots(String trustAllRoots) {
+        public Builder trustAllRoots(String trustAllRoots) {
             this.trustAllRoots = trustAllRoots;
             return this;
         }
 
-        public CreateUserInput.Builder keyStore(String keystore) {
+        public Builder keyStore(String keystore) {
             this.keystore = keystore;
             return this;
         }
 
 
-        public CreateUserInput.Builder keyStorePassword(String keystorePassword) {
+        public Builder keyStorePassword(String keystorePassword) {
             this.keystorePassword = keystorePassword;
             return this;
         }
 
 
-        public CreateUserInput.Builder trustKeystore(String trustKeystore) {
+        public Builder trustKeystore(String trustKeystore) {
             this.trustKeystore = trustKeystore;
             return this;
         }
 
 
-        public CreateUserInput.Builder trustPassword(String trustPassword) {
+        public Builder trustPassword(String trustPassword) {
             this.trustPassword = trustPassword;
             return this;
         }
 
-
-        public CreateUserInput.Builder escapeChars(String escapeChars) {
-            this.escapeChars = escapeChars;
-            return this;
-        }
-
-        public CreateUserInput build() throws Exception {
-            CreateUserInput input = new CreateUserInput();
+        public ResetUserPasswordInput build() throws Exception {
+            ResetUserPasswordInput input = new ResetUserPasswordInput();
 
             input.host = buildHost(host, true);
 
-            input.OU = buildOU(OU, true);
-
-            input.userCommonName = buildUserCommonName(userCommonName);
+            input.userDN = buildUserDN(userDN, true);
 
             input.userPassword = buildUserPassword(userPassword);
-
-            input.sAMAccountName = buildSAMAccountName(sAMAccountName, userCommonName);
 
             input.username = buildUsername(username);
 
@@ -216,8 +178,6 @@ public class CreateUserInput implements LDAPInput {
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 
             input.trustPassword = trustPassword;
-
-            input.escapeChars = buildEscapeChars(escapeChars);
 
             return input;
         }

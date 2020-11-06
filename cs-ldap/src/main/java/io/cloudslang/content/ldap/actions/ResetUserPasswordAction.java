@@ -25,12 +25,13 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.InputNames;
 import io.cloudslang.content.ldap.constants.OutputNames;
 import io.cloudslang.content.ldap.entities.CreateUserInput;
+import io.cloudslang.content.ldap.entities.ResetUserPasswordInput;
 import io.cloudslang.content.ldap.services.UserService;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
-public class CreateUserAction {
+public class ResetUserPasswordAction {
 
     /**
      * This operation creates a new user in Active Directory.
@@ -43,14 +44,9 @@ public class CreateUserAction {
      *                         IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
      *                         a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
      *                         The prefix length is optional.
-     * @param OU               - The Organizational Unit DN or Common Name DN to add the user to.
-     *                         Example: OU=OUTest1,DC=battleground,DC=ad
-     * @param userCommonName   - The CN, generally the full name of user.
-     *                         Example: Bob Smith
-     * @param sAMAccountName   - The sAMAccountName. If this input is empty, the value will be assigned from
-     *                         input "userCommonName".
-     * @param userPassword     - The password for the new user. See the "Notes" section for more information regarding the
-     *                         password.
+     * @param userDN           - Distinguished name of the user whose password you want to change.
+     *                         Example: CN=User, OU=OUTest1, DC=battleground, DC=ad).
+     * @param userPassword     - The new password (must meet complexity requirements specified in notes section).
      * @param username         - User to connect to Active Directory as.
      * @param password         - Password to connect to Active Directory as.
      * @param useSSL           - If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS)
@@ -68,18 +64,15 @@ public class CreateUserAction {
      * @param trustKeystore    - The location of the TrustStore file.
      *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
      * @param trustPassword    - The password associated with the TrustStore file.
-     * @param escapeChars      - Add this input and set to true if you want the operation to escape the special AD chars.
      * @return - a map containing the output of the operation. Keys present in the map are:
-     * returnResult - A message with the cn name of the user in case of success or the error in case of failure..
+     * returnResult - The message 'Password Changed' in case of success or the error in case of failure..
      * returnCode - the return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
      * exception - the exception message if the operation fails.
-     * userDN - The distinguished name of the newly created user
      */
 
-    @Action(name = "Create User",
+    @Action(name = "Reset User Password",
             outputs = {
                     @Output(OutputNames.RETURN_RESULT),
-                    @Output(OutputNames.RESULT_USER_DN),
                     @Output(OutputNames.RETURN_CODE),
                     @Output(OutputNames.EXCEPTION)
             },
@@ -91,10 +84,8 @@ public class CreateUserAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.OU, required = true) String OU,
-            @Param(value = InputNames.USER_COMMON_NAME, required = true) String userCommonName,
+            @Param(value = InputNames.USER_DN, required = true) String userDN,
             @Param(value = InputNames.USER_PASSWORD, required = true) String userPassword,
-            @Param(value = InputNames.SAM_ACCOUNT_NAME) String sAMAccountName,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD) String password,
             @Param(value = InputNames.USE_SSL) String useSSL,
@@ -102,14 +93,12 @@ public class CreateUserAction {
             @Param(value = InputNames.KEYSTORE) String keyStore,
             @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword,
-            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
-        CreateUserInput.Builder inputBuilder = new CreateUserInput.Builder()
+            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword){
+
+        ResetUserPasswordInput.Builder inputBuilder = new ResetUserPasswordInput.Builder()
                 .host(host)
-                .OU(OU)
-                .userCommonName(userCommonName)
+                .userDN(userDN)
                 .userPassword(userPassword)
-                .sAMAccountName(sAMAccountName)
                 .username(username)
                 .password(password)
                 .useSSL(useSSL)
@@ -117,12 +106,12 @@ public class CreateUserAction {
                 .keyStore(keyStore)
                 .keyStorePassword(keyStorePassword)
                 .trustKeystore(trustKeystore)
-                .trustPassword(trustPassword)
-                .escapeChars(escapeChars);
+                .trustPassword(trustPassword);
         try {
-            return new UserService().createUser(inputBuilder.build());
+            return new UserService().resetUserPassword(inputBuilder.build());
         } catch (Exception e) {
             return ResultUtils.fromException(e);
         }
     }
 }
+
