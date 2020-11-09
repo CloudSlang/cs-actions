@@ -17,6 +17,8 @@ package io.cloudslang.content.mail.utils;
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import io.cloudslang.content.mail.entities.DecryptableMailInput;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.cms.KeyTransRecipientId;
 import org.bouncycastle.cms.RecipientId;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -28,7 +30,7 @@ import java.util.Enumeration;
 
 public final class SecurityUtils {
 
-    public static void addDecryptionSettings(KeyStore ks, RecipientId recId, DecryptableMailInput input) throws Exception {
+    public static KeyTransRecipientId addDecryptionSettings(KeyStore ks, DecryptableMailInput input) throws Exception {
         char[] smimePw = input.getDecryptionKeystorePassword().toCharArray();
 
         java.security.Security.addProvider(new BouncyCastleProvider());
@@ -63,7 +65,6 @@ public final class SecurityUtils {
             cert.checkValidity();
         }
 
-        recId.setSerialNumber(cert.getSerialNumber());
-        recId.setIssuer(cert.getIssuerX500Principal().getEncoded());
+        return new KeyTransRecipientId(new X500Name(cert.getIssuerDN().getName()), cert.getSerialNumber(),cert.getIssuerX500Principal().getEncoded());
     }
 }

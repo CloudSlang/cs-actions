@@ -14,7 +14,7 @@
  */
 package io.cloudslang.content.mail.services;
 
-import io.cloudslang.content.mail.constants.PopPropNames;
+import io.cloudslang.content.mail.constants.Constants;
 import io.cloudslang.content.mail.entities.GetMailAttachmentInput;
 import io.cloudslang.content.mail.entities.GetMailInput;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
@@ -52,8 +52,8 @@ public class GetMailAttachmentServiceTest {
     public void setUp() {
         inputBuilder = new GetMailAttachmentInput.Builder();
         inputBuilder.hostname("host");
-        inputBuilder.port(PopPropNames.POP3_PORT);
-        inputBuilder.protocol(PopPropNames.POP3);
+        inputBuilder.port(Constants.POP3_PORT);
+        inputBuilder.protocol(Constants.POP3);
         inputBuilder.username("testUser");
         inputBuilder.password("testPassword");
         inputBuilder.folder("INBOX");

@@ -15,24 +15,21 @@
 package io.cloudslang.content.mail.constants;
 
 public final class PropNames {
-    public static final String MAIL = "mail.";
-    public static final String SSL_ENABLE = ".ssl.enable";
-    public static final String START_TLS_ENABLE = ".starttls.enable";
-    public static final String START_TLS_REQUIRED = ".starttls.required";
-    public static final String SOCKET_FACTORY = ".socketFactory";
-    public static final String SOCKET_FACTORY_CLASS = ".socketFactory.class";
-    public static final String SOCKET_FACTORY_FALLBACK = ".socketFactory.fallback";
-    public static final String SOCKET_FACTORY_PORT = ".socketFactory.port";
-    public static final String HOST = ".host";
-    public static final String PORT = ".port";
-    public static final String TIMEOUT = ".timeout";
     public static final String JAVA_HOME = "java.home";
     public static final String FILE_SEPARATOR = "file.separator";
 
+    public static final String MAIL_TIMEOUT = "mail.%s.timeout";
+    public static final String MAIL_HOST = "mail.%s.host";
+    public static final String MAIL_PORT = "mail.%s.port";
+    public static final String MAIL_USER = "mail.%s.user";
+    public static final String MAIL_PASSWORD = "mail.%s.password";
+    public static final String MAIL_AUTH = "mail.%s.auth";
     public static final String MAIL_SSL_ENABLE = "mail.%s.ssl.enable";
     public static final String MAIL_STARTTLS_ENABLE = "mail.%s.starttls.enable";
     public static final String MAIL_STARTTLS_REQUIRED = "mail.%s.starttls.required";
     public static final String MAIL_SOCKET_FACTORY = "mail.%s.socketFactory";
+    public static final String MAIL_SOCKET_FACTORY_PORT = "mail.%s.socketFactory.port";
+    public static final String MAIL_SOCKET_FACTORY_CLASS = "mail.%s.socketFactory.class";
     public static final String MAIL_SOCKET_FACTORY_FALLBACK = "mail.%s.socketFactory.fallback";
     public static final String MAIL_PROXY_HOST = "mail.%s.proxy.host";
     public static final String MAIL_PROXY_PORT = "mail.%s.proxy.port";
