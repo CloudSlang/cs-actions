@@ -24,8 +24,19 @@ object OperationStatus {
     if (operation.getError == null) SuccessOperation(operation) else ErrorOperation(operation.getError.toPrettyString)
 }
 
+object SQLOperationStatus {
+  def apply(sqloperation: com.google.api.services.sqladmin.model.Operation): SQLOperationStatus =
+    if (sqloperation.getError == null) SQLSuccessOperation(sqloperation) else SQLErrorOperation(sqloperation.getError.toPrettyString)
+}
+
 sealed abstract class OperationStatus extends Serializable
 
 case class SuccessOperation(operation: Operation) extends OperationStatus
 
+sealed abstract class SQLOperationStatus extends Serializable
+
+case class SQLSuccessOperation(sqloperation: com.google.api.services.sqladmin.model.Operation) extends SQLOperationStatus
+
 case class ErrorOperation(error: String) extends OperationStatus
+
+case class SQLErrorOperation(error: String) extends SQLOperationStatus
