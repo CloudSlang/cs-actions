@@ -15,6 +15,8 @@
 
 package io.cloudslang.content.google.utils.action
 
+import io.cloudslang.content.google.utils.action.InputNames.{ASYNC, POLLING_INTERVAL, TIMEOUT}
+
 object Descriptions {
 
   object Common {
@@ -24,13 +26,14 @@ object Descriptions {
     final val PROXY_PORT_DESC = "Proxy server port used to access the provider services. Default: 8080"
     final val PROXY_USERNAME_DESC = "Proxy server user name"
     final val PROXY_PASSWORD_DESC = "Proxy server password associated with the <proxyUsername> input value."
-    final val PRETTY_PRINT_DESC = "Whether to format (pretty print) the resulting json." +
-      "Valid values: true or false" +
-      "Default: true"
-    final val RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of " +
-      "an error this output will contain the error message."
+    final val PRETTY_PRINT_DESC = "Whether to format (pretty print) the resulting json. \nValid values: true or false \nDefault: true"
+    final val RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message."
     final val STATUS_CODE_DESC = "The HTTP status code for the request."
     final val RETURN_CODE_DESC = "0 if operation was successfully executed, -1 otherwise."
+    final val EXCEPTION_DESC = " The stack trace of the thrown error (if an error occurred)."
+    final val ASYNC_DESC = "Boolean specifying whether the operation to run sync or async.\nValid values: true, false\nDefault: true"
+    final val TIMEOUT_DESC = "The time, in seconds, to wait for a response if the async input is set to \"false\". If the value is 0, the operation will wait until zone operation progress is 100.\nValid values: Any positive number including 0.\nDefault: 30"
+    final val POLLING_INTERVAL_DESC = "The time, in seconds, to wait before a new request that verifies if the operation finished is executed, if the async input is set to \"false\".\nValid values: Any positive number including 0.\nDefault: 1"
   }
 
   object CreateSQLDataBaseInstance {

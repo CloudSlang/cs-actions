@@ -18,8 +18,8 @@ package io.cloudslang.content.google.services.databases.sql.instances
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
-import com.google.api.services.sqladmin.model.{DatabaseInstance, InstancesListResponse, MaintenanceWindow, Operation, Settings}
-import io.cloudslang.content.google.services.databases.DatabaseService
+import com.google.api.services.sqladmin.model._
+import io.cloudslang.content.google.services.databases._
 
 object SQLDatabaseInstanceService {
 
@@ -37,8 +37,10 @@ object SQLDatabaseInstanceService {
              databaseInstanceId: String, password: String, region: String, zone: String, databaseVersion: String,
              tier: String, dataDiskType: String, dataDiskSizeInGB: Long,
              storageAutoResize: Boolean, availabilityType: String, maintenanceWindowDay: Int, maintenanceWindowHour: Int
-             , activationPolicy: String, labels: java.util.Map[String, String]): Operation =
-    DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
+             , activationPolicy: String, labels: java.util.Map[String, String], async: Boolean, timeout: Long,
+             pollingInterval: Long): Operation = {
+
+    val operation = DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
       .insert(projectId, new DatabaseInstance().setProject(projectId).setName(databaseInstanceId).setRegion(region).
         setDatabaseVersion(databaseVersion).setRootPassword(password).setGceZone(zone).
         setSettings(new Settings().setTier(tier).setUserLabels(labels).setDataDiskType(dataDiskType)
@@ -46,6 +48,11 @@ object SQLDatabaseInstanceService {
           setAvailabilityType(availabilityType)
           .setMaintenanceWindow(new MaintenanceWindow().setDay(maintenanceWindowDay).setHour(maintenanceWindowHour))
           .setActivationPolicy(activationPolicy))).execute()
+    DatabaseController.awaitSuccessOperation(httpTransport, jsonFactory, credential, projectId, operation,
+      Some(databaseInstanceId)
+      ,async, timeout, pollingInterval)
+  }
+
 
 
 }

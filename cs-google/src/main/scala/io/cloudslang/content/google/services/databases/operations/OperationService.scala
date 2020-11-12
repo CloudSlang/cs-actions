@@ -1,3 +1,4 @@
+
 /*
  * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
@@ -13,17 +14,17 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.google.services.databases
+package io.cloudslang.content.google.services.databases.operations
 
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
-import com.google.api.services.sqladmin.SQLAdmin
+import com.google.api.services.sqladmin.model.Operation
+import io.cloudslang.content.google.services.databases.DatabaseService
 
-object DatabaseService {
-  private def sqlDatabaseService(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential):
-  SQLAdmin = new SQLAdmin(httpTransport, jsonFactory, credential)
-  def sqlDatabaseInstanceService: (HttpTransport, JsonFactory, Credential) => SQLAdmin#Instances =
-    sqlDatabaseService(_, _, _).instances()
-  def OperationsService: (HttpTransport, JsonFactory, Credential) => SQLAdmin#Operations = sqlDatabaseService(_, _, _).operations()
+object OperationService {
+  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String,
+          operationName: String): Operation =
+    DatabaseService.OperationsService(httpTransport, jsonFactory, credential).get(project, operationName).execute()
+
 }

@@ -68,6 +68,12 @@
             <organization>Hewlett Packard Enterprise</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
         </developer>
+        <developer>
+            <name>Rajesh Kalyankar</name>
+            <email>rajesh.kum.kalyankar@microfocus.com</email>
+            <organization>Micro Focus</organization>
+            <organizationUrl>https://www.microfocus.com/about/</organizationUrl>
+        </developer>
     </developers>
 
     <properties>
@@ -91,8 +97,8 @@
         <specs2.version>3.9.5</specs2.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <maven.sources.skip>true</maven.sources.skip>
         <custom.nexus>overwritten_by_ci</custom.nexus>
     </properties>

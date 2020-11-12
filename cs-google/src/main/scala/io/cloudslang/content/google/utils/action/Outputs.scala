@@ -17,7 +17,7 @@ package io.cloudslang.content.google.utils.action
 
 object Outputs {
 
-  object CreateSQLDatabaseInstance {
+  object SQLDatabaseInstance {
     final val CONNECTION_NAME = "connectionName"
     final val PUBLIC_IP_ADDRESS = "publicIPAddresses"
     final val SELF_LINK = "selfLink"
