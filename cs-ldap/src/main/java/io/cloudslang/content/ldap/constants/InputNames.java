@@ -33,4 +33,5 @@ public final class InputNames {
     public static final String NEW_OUDN = "newOUDN";
     public static final String USER_COMMON_NAME = "userCommonName";
     public static final String USER_PASSWORD = "userPassword";
+    public static final String USER_DN = "userDN";
 }

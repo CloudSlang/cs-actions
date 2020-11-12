@@ -37,6 +37,13 @@ public final class InputBuilderUtils {
         return OU.trim();
     }
 
+    public static String buildUserDN(String userDN, boolean mandatory) throws Exception {
+        if (isEmpty(userDN) && mandatory) {
+            throw new Exception(ExceptionMsgs.USER_DN_NOT_SPECIFIED);
+        }
+        return userDN.trim();
+    }
+
     public static String buildComputerCommonName(String computerCommonName, boolean mandatory) throws Exception {
         if (isEmpty(computerCommonName) && mandatory) {
             throw new Exception(ExceptionMsgs.CN_NOT_SPECIFIED);
