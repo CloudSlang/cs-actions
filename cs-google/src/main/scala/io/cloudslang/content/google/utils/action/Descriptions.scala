@@ -15,8 +15,6 @@
 
 package io.cloudslang.content.google.utils.action
 
-import io.cloudslang.content.google.utils.action.InputNames.{ASYNC, POLLING_INTERVAL, TIMEOUT}
-
 object Descriptions {
 
   object Common {
@@ -57,7 +55,7 @@ object Descriptions {
     final val PUBLIC_IP_ADDRESS_DESC = "The assigned public IP addresses for the instance."
 
     final val SELF_LINK_DESC = "The URI of this resource."
-    final val STATE_DESC = "The current serving state of the Cloud SQL instance"
+    final val STATE_DESC = "The current serving state of the Cloud SQL instance."
   }
 
 }

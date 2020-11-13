@@ -120,7 +120,8 @@ class GetSQLInstance {
         (AVAILABILITY_TYPE -> sqlInstanceSettings.getAvailabilityType) +
         (STORAGE_TYPE -> sqlInstanceSettings.getDataDiskType) +
         (STORAGE_CAPACITY -> sqlInstanceSettings.getDataDiskSizeGb.toString) +
-        (STATE -> sqlInstance.getState)
+        (STATE -> sqlInstance.getState) +
+        (MACHINE_TYPE -> sqlInstanceSettings.getTier)
     } catch {
       case e: Throwable => getFailureResultsMap(e)
     }

@@ -30,7 +30,7 @@ import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs._
 import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs.{MACHINE_TYPE, ZONE}
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
-import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeDouble, validateNonNegativeLong, validateProxyPort}
+import io.cloudslang.content.google.utils.action.InputValidator._
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.action.Outputs.SQLDatabaseInstance.{CONNECTION_NAME, PUBLIC_IP_ADDRESS, SELF_LINK, STATE}
 import io.cloudslang.content.google.utils.service.Utility
@@ -50,7 +50,7 @@ class CreateSQLInstance {
 
   @Action(name = "Create SQL Instance",
 
-    outputs = Array(
+     outputs = Array(
       new Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
       new Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
       new Output(value = EXCEPTION, description = EXCEPTION_DESC),
@@ -59,7 +59,6 @@ class CreateSQLInstance {
       new Output(value = DATABASE_VERSION, description = DATABASE_VERSION_DESC),
       new Output(value = ZONE, description = ZONE_DESC),
       new Output(value = PUBLIC_IP_ADDRESS, description = PUBLIC_IP_ADDRESS_DESC),
-      new Output(value = INSTANCE_ID, description = INSTANCE_ID_DESC),
       new Output(value = REGION, description = REGION_DESC),
       new Output(value = SELF_LINK, description = SELF_LINK_DESC),
       new Output(value = AVAILABILITY_TYPE, description = AVAILABILITY_TYPE_DESC),
@@ -125,7 +124,11 @@ class CreateSQLInstance {
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
 
-    val validationStream = validateProxyPort(proxyPortInt) ++
+    val validationStream = validateDiskSize(storageCapacityInt,STORAGE_CAPACITY ) ++
+      validateNonNegativeInteger(preferredMaintenanceWindowDayInt, PREFERRED_MAINTENANCE_WINDOW_DAY) ++
+      validateNonNegativeInteger(preferredMaintenanceWindowHourInt, PREFERRED_MAINTENANCE_WINDOW_HOUR) ++
+      validateBoolean(storageAutoResizeStr, STORAGE_AUTO_RESIZE) ++
+      validateProxyPort(proxyPortInt) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
       validateBoolean(asyncStr, ASYNC) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
@@ -156,7 +159,8 @@ class CreateSQLInstance {
         activationPolicyStr, Utility.jsonToMap(labelsStr), async,
         timeout, pollingIntervalMilli)) match {
         case SQLSuccessOperation(sqlOperation) =>
-          val resultMap = getSuccessResultsMap(toPretty(prettyPrint, sqlOperation)) + (INSTANCE_ID -> sqlOperation.getName)
+          val resultMap = getSuccessResultsMap(toPretty(prettyPrint, sqlOperation)) + (INSTANCE_ID -> sqlOperation.getTargetId) +
+                            (SELF_LINK -> sqlOperation.getSelfLink)
 
           if (async) {
             val status = defaultIfEmpty(sqlOperation.getStatus, EMPTY)
