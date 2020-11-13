@@ -30,6 +30,7 @@ object InputNames {
   final val PROXY_USERNAME = "proxyUsername"
   final val PROXY_PASSWORD = "proxyPassword"
   final val PRETTY_PRINT = "prettyPrint"
+  final val STATUS_CODE = "statusCode"
   final val TIMEOUT = "timeout"
   final val SCOPES = "scopes"
   final val SCOPES_DELIMITER = "scopesDelimiter"
@@ -105,5 +106,26 @@ object InputNames {
 
   final val CONSOLE_PORT = "consolePort"
   final val START_INDEX = "startIndex"
+
+  object CreateSQLDatabaseInstanceInputs {
+
+    final val INSTANCE_ID = "instanceId"
+    final val INSTANCE_PASSWORD = "databaseInstancePassword"
+    final val ZONE = "zone"
+    final val REGION = "region"
+    final val DATABASE_VERSION = "databaseVersion"
+    final val MACHINE_TYPE = "machineType"
+    final val STORAGE_TYPE = "storageType"
+    final val STORAGE_CAPACITY = "storageCapacity"
+    final val STORAGE_AUTO_RESIZE = "storageAutoResize"
+    final val AVAILABILITY_TYPE = "availabilityType"
+    final val PREFERRED_MAINTENANCE_WINDOW_DAY = "preferredMaintenanceWindowDay"
+    final val PREFERRED_MAINTENANCE_WINDOW_HOUR = "preferredMaintenanceWindowHour"
+    final val ACTIVATION_POLICY = "activationPolicy"
+    final val LABELS = "labels"
+  }
+
+
+
 
 }
