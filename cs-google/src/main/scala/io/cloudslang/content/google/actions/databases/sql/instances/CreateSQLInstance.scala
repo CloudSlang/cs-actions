@@ -42,15 +42,14 @@ import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
-import io.cloudslang.content.google.utils.action.GoogleOutputNames.STATUS
 
 import scala.collection.JavaConversions._
 
 class CreateSQLInstance {
 
   @Action(name = "Create SQL Instance",
-
-     outputs = Array(
+    description = "Creates a resource containing information about a database inside a Google Cloud SQL instance.",
+    outputs = Array(
       new Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
       new Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
       new Output(value = EXCEPTION, description = EXCEPTION_DESC),
@@ -66,8 +65,6 @@ class CreateSQLInstance {
       new Output(value = STORAGE_CAPACITY, description = STORAGE_CAPACITY_DESC),
       new Output(value = STATE, description = STATE_DESC),
       new Output(value = MACHINE_TYPE, description = MACHINE_TYPE_DESC)
-
-
     )
     ,
     responses = Array(
@@ -124,7 +121,7 @@ class CreateSQLInstance {
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
 
-    val validationStream = validateDiskSize(storageCapacityInt,STORAGE_CAPACITY ) ++
+    val validationStream = validateDiskSize(storageCapacityInt, STORAGE_CAPACITY) ++
       validateNonNegativeInteger(preferredMaintenanceWindowDayInt, PREFERRED_MAINTENANCE_WINDOW_DAY) ++
       validateNonNegativeInteger(preferredMaintenanceWindowHourInt, PREFERRED_MAINTENANCE_WINDOW_HOUR) ++
       validateBoolean(storageAutoResizeStr, STORAGE_AUTO_RESIZE) ++
@@ -160,13 +157,13 @@ class CreateSQLInstance {
         timeout, pollingIntervalMilli)) match {
         case SQLSuccessOperation(sqlOperation) =>
           val resultMap = getSuccessResultsMap(toPretty(prettyPrint, sqlOperation)) + (INSTANCE_ID -> sqlOperation.getTargetId) +
-                            (SELF_LINK -> sqlOperation.getSelfLink)
+            (SELF_LINK -> sqlOperation.getSelfLink)
 
           if (async) {
             val status = defaultIfEmpty(sqlOperation.getStatus, EMPTY)
 
             resultMap +
-              (STATUS -> status)
+              (STATE -> status)
           } else {
             val sqlInstance = SQLDatabaseInstanceService.get(httpTransport, jsonFactory, credential, projectId, instanceId)
             val sqlInstanceSettings = sqlInstance.getSettings

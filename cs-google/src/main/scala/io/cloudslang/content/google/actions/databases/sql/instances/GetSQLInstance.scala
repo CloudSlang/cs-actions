@@ -45,7 +45,7 @@ import scala.collection.JavaConversions._
 
 class GetSQLInstance {
   @Action(name = "Get SQL Instance",
-
+    description = "Retrieves a resource containing information about a database inside a Google Cloud SQL instance.",
     outputs = Array(
       new Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
       new Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
