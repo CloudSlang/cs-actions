@@ -40,6 +40,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class AuthSchemeProviderLookupBuilder {
     private AuthTypes authTypes;
     private String skipPortAtKerberosDatabaseLookup = "true";
@@ -48,6 +50,8 @@ public class AuthSchemeProviderLookupBuilder {
     private String host;
     private String username;
     private String password;
+    private String proxyUsername;
+    private String proxyPassword;
     private List<Header> headers;
 
     public AuthSchemeProviderLookupBuilder setAuthTypes(AuthTypes authTypes) {
@@ -88,6 +92,16 @@ public class AuthSchemeProviderLookupBuilder {
 
     }
 
+    public AuthSchemeProviderLookupBuilder setProxyUsername(String proxyUsername) {
+        this.proxyUsername = proxyUsername;
+        return this;
+    }
+
+    public AuthSchemeProviderLookupBuilder setProxyPassword(String proxyPassword) {
+        this.proxyPassword = proxyPassword;
+        return this;
+
+    }
     public AuthSchemeProviderLookupBuilder setHeaders(List<Header> headers) {
         this.headers = headers;
         return this;
@@ -108,9 +122,16 @@ public class AuthSchemeProviderLookupBuilder {
                     break;
                 case "BASIC":
                     registryBuilder.register(AuthSchemes.BASIC, new BasicSchemeFactory(Charset.forName(Utils.DEFAULT_CHARACTER_SET)));
-                    String value = username + ":" + password;
-                    byte[] encodedValue = Base64.encodeBase64(value.getBytes(StandardCharsets.UTF_8));
-                    headers.add(new BasicHeader("Authorization", "Basic " + new String(encodedValue)));
+                    if(!isEmpty(proxyUsername) && !isEmpty(proxyPassword)){
+                        String value = proxyUsername + ":" + proxyPassword;
+                        byte[] encodedValue = Base64.encodeBase64(value.getBytes(StandardCharsets.UTF_8));
+                        headers.add(new BasicHeader("Proxy-Authorization", "Basic " + new String(encodedValue)));
+                    }
+                    if(!isEmpty(username) && !isEmpty(password)) {
+                        String value = username + ":" + password;
+                        byte[] encodedValue = Base64.encodeBase64(value.getBytes(StandardCharsets.UTF_8));
+                        headers.add(new BasicHeader("Authorization", "Basic " + new String(encodedValue)));
+                    }
                     break;
                 case "DIGEST":
                     registryBuilder.register(AuthSchemes.DIGEST, new DigestSchemeFactory());
