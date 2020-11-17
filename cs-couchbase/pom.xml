@@ -82,7 +82,7 @@
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <cs-http-client.version>0.1.74</cs-http-client.version>
         <cs-commons.version>0.0.5</cs-commons.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
