@@ -47,12 +47,15 @@ object SQLDatabaseInstanceService {
           .setDataDiskSizeGb(dataDiskSizeInGB).setStorageAutoResize(storageAutoResize).
           setAvailabilityType(availabilityType)
           .setMaintenanceWindow(new MaintenanceWindow().setDay(maintenanceWindowDay).setHour(maintenanceWindowHour))
-          .setActivationPolicy(activationPolicy))).execute()
+          .setActivationPolicy(activationPolicy)
+          .setBackupConfiguration(
+            if (databaseVersion.contains("MYSQL")) new BackupConfiguration().setBinaryLogEnabled(true).setEnabled(true)
+            else new BackupConfiguration())
+        )).execute()
     DatabaseController.awaitSuccessOperation(httpTransport, jsonFactory, credential, projectId, operation,
       Some(databaseInstanceId)
-      ,async, timeout, pollingInterval)
+      , async, timeout, pollingInterval)
   }
-
 
 
 }
