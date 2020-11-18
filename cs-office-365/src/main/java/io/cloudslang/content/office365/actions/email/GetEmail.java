@@ -40,9 +40,10 @@ import static io.cloudslang.content.office365.services.EmailServiceImpl.*;
 import static io.cloudslang.content.office365.utils.Constants.FILE_PATH;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.RETURN_CODE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetAttachments.FILE_PATH_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.CLIENT_ID_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.CLIENT_SECRET_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.*;
+import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.PASSWORD_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.*;
 import static io.cloudslang.content.office365.utils.Descriptions.ListMessages.MESSAGE_ID_LIST_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.SendMail.MESSAGE_ID_DESC;
@@ -50,8 +51,9 @@ import static io.cloudslang.content.office365.utils.Descriptions.SendMail.TENANT
 import static io.cloudslang.content.office365.utils.Descriptions.SendMessage.EXCEPTION_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.SendMessage.RETURN_RESULT_DESC;
 import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.CLIENT_ID;
-import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.CLIENT_SECRET;
+import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.*;
+import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.PASSWORD;
+import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.USERNAME;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
@@ -79,6 +81,9 @@ public class GetEmail {
             })
     public Map<String, String> execute(@Param(value = CLIENT_ID, required = true, description = CLIENT_ID_DESC) String clientId,
                                        @Param(value = EMAIL_ADDRESS, description = EMAIL_ADDRESS_DESC) String emailAddress,
+                                       @Param(value = LOGIN_TYPE, description = LOGIN_TYPE_DESC) String loginType,
+                                       @Param(value = USERNAME, description = USERNAME_DESC) String username,
+                                       @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
 
                                        @Param(value = CLIENT_SECRET, encrypted = true, description = CLIENT_SECRET_DESC) String clientSecret,
                                        @Param(value = TENANT_NAME, required = true, description = TENANT_NAME_DESC) String tenant,
@@ -108,7 +113,10 @@ public class GetEmail {
 
         clientId = defaultIfEmpty(clientId, EMPTY);
         clientSecret = defaultIfEmpty(clientSecret, EMPTY);
+        username = defaultIfEmpty(username, EMPTY);
+        password = defaultIfEmpty(password, EMPTY);
         final String loginAuthority = LOGIN_AUTHORITY_PREFIX + tenant + LOGIN_AUTHORITY_SUFFIX;
+        loginType = defaultIfEmpty(loginType, DEFAULT_LOGIN_TYPE);
         folderId = defaultIfEmpty(folderId, EMPTY);
 
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
@@ -139,7 +147,9 @@ public class GetEmail {
 
         try {
             final String authToken = AuthorizationTokenImpl.getToken(AuthorizationTokenInputs.builder()
-                    .loginType(DEFAULT_LOGIN_TYPE)
+                    .loginType(loginType)
+                    .username(username)
+                    .password(password)
                     .clientId(clientId)
                     .clientSecret(clientSecret)
                     .authority(loginAuthority)
