@@ -204,6 +204,8 @@ public class HttpClientService {
                 .setKerberosLoginConfigFile(httpClientInputs.getKerberosLoginConfFile())
                 .setUsername(httpClientInputs.getUsername())
                 .setPassword(httpClientInputs.getPassword())
+                .setProxyUsername(httpClientInputs.getProxyUsername())
+                .setProxyPassword(httpClientInputs.getProxyPassword())
                 .buildAuthSchemeProviderLookup();
         httpClientBuilder.setDefaultAuthSchemeRegistry(authSchemeLookup);
 
