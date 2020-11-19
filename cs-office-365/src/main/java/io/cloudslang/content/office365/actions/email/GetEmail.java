@@ -112,7 +112,6 @@ public class GetEmail {
                                        @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
 
         clientId = defaultIfEmpty(clientId, EMPTY);
-        clientSecret = defaultIfEmpty(clientSecret, EMPTY);
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
         final String loginAuthority = LOGIN_AUTHORITY_PREFIX + tenant + LOGIN_AUTHORITY_SUFFIX;

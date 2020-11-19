@@ -116,7 +116,6 @@ public class SendEmail {
                                        @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
 
         clientId = defaultIfEmpty(clientId, EMPTY);
-        clientSecret = defaultIfEmpty(clientSecret, EMPTY);
         final String loginAuthority = LOGIN_AUTHORITY_PREFIX + tenant + LOGIN_AUTHORITY_SUFFIX;
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
@@ -144,7 +143,7 @@ public class SendEmail {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessages = verifySendEmailInputs(clientId, clientSecret, proxyPort, fromAddress, EMPTY,
+        final List<String> exceptionMessages = verifySendEmailInputs(clientId, proxyPort, fromAddress, EMPTY,
                                                                      trustAllRoots, connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
