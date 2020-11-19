@@ -123,6 +123,7 @@ class CreateSQLInstance {
 
     val validationStream = validateDiskSize(storageCapacityInt, STORAGE_CAPACITY) ++
       validateNonNegativeInteger(preferredMaintenanceWindowDayInt, PREFERRED_MAINTENANCE_WINDOW_DAY) ++
+      validateinstanceId(instanceId) ++
       validateNonNegativeInteger(preferredMaintenanceWindowHourInt, PREFERRED_MAINTENANCE_WINDOW_HOUR) ++
       validateBoolean(storageAutoResizeStr, STORAGE_AUTO_RESIZE) ++
       validateProxyPort(proxyPortInt) ++
@@ -130,6 +131,7 @@ class CreateSQLInstance {
       validateBoolean(asyncStr, ASYNC) ++
       validateNonNegativeLong(timeoutStr, TIMEOUT) ++
       validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
+
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))

@@ -17,9 +17,15 @@
 
 package io.cloudslang.content.google.utils.action
 
+import java.util.regex.Pattern
+
 import io.cloudslang.content.utils.CollectionUtilities.toList
 import io.cloudslang.content.utils.OtherUtilities.isValidIpPort
 import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities}
+import org.apache.commons.lang3.StringUtils
+import io.cloudslang.content.google.utils.action.RegexUtils
+
+import scala.util.matching.Regex
 
 /**
   * Created by sandorr 
@@ -39,9 +45,15 @@ object InputValidator {
   val INVALID_DISK_SIZE = "Invalid diskSize, the size has to be an integer >= 10!"
   val INVALID_BOTH_ASSIGNED = "Both of them cannot be assigned"
   val INVALID_NONE_ASSIGNED = "One of them is required."
+  val INVALID_INSATNCE_ID = "Invalid instanceId use lowercase letters, numbers,or hyphens. Start with a letter"
 
   def validateProxyPort: (String) => Stream[String] = validate(_, InputNames.PROXY_PORT) { value =>
     if (!isValidIpPort(value)) Some(INVALID_PORT) else None
+  }
+
+    val instanceidPattern  = "(^[a-z]$|^[a-z][a-z0-9-]*[a-z0-9]$)".r
+    def validateinstanceId: (String) => Stream[String] = validate(_, InputNames.CreateSQLDatabaseInstanceInputs.INSTANCE_ID) { value =>
+    if (instanceidPattern.pattern.matcher(value).matches()) None else Some(INVALID_INSATNCE_ID)
   }
 
   def validateBoolean: (String, String) => Stream[String] = validate(_, _) { value =>
