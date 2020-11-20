@@ -24,6 +24,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.office365.entities.*;
 import io.cloudslang.content.office365.services.AuthorizationTokenImpl;
 import io.cloudslang.content.utils.NumberUtilities;
+import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -62,6 +63,7 @@ import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.office365.utils.Inputs.GetEmailInputs.*;
 import static io.cloudslang.content.office365.utils.Inputs.ListAttachments.ATTACHMENT_ID;
 import static io.cloudslang.content.office365.utils.Inputs.SendMailInputs.TENANT_NAME;
+import static io.cloudslang.content.office365.utils.InputsValidation.verifyAuthorizationInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
 
@@ -112,7 +114,6 @@ public class GetEmail {
                                        @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
 
         clientId = defaultIfEmpty(clientId, EMPTY);
-        clientSecret = defaultIfEmpty(clientSecret, EMPTY);
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
         final String loginAuthority = LOGIN_AUTHORITY_PREFIX + tenant + LOGIN_AUTHORITY_SUFFIX;
@@ -140,6 +141,11 @@ public class GetEmail {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
+
+        final List<String> exceptionMessages = verifyAuthorizationInputs(loginType, clientId, clientSecret, username, password, proxyPort);
+        if (!exceptionMessages.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+        }
 
         List<String> messageIdList;
         String[] attachmentsList;
