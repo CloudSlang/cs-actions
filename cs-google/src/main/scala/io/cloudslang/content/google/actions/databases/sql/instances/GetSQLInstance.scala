@@ -16,7 +16,6 @@ package io.cloudslang.content.google.actions.databases.sql.instances
 
 import java.util
 
-
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames._
@@ -26,20 +25,17 @@ import io.cloudslang.content.google.utils.Constants.NEW_LINE
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.Descriptions.Common._
 import io.cloudslang.content.google.utils.action.Descriptions.CreateSQLDataBaseInstance._
-
-import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs._
+import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs.{MACHINE_TYPE, ZONE, _}
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateProxyPort}
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
-import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs.MACHINE_TYPE
 import io.cloudslang.content.google.utils.action.Outputs.SQLDatabaseInstance._
-import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils, Utility}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
-import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs.ZONE
 
 import scala.collection.JavaConversions._
 
@@ -120,7 +116,7 @@ class GetSQLInstance {
         (AVAILABILITY_TYPE -> sqlInstanceSettings.getAvailabilityType) +
         (STORAGE_TYPE -> sqlInstanceSettings.getDataDiskType) +
         (STORAGE_CAPACITY -> sqlInstanceSettings.getDataDiskSizeGb.toString) +
-        (STATE -> sqlInstance.getState) +
+        (STATE -> Utility.getInstanceStatus(sqlInstanceSettings.getActivationPolicy)) +
         (MACHINE_TYPE -> sqlInstanceSettings.getTier)
     } catch {
       case e: Throwable => getFailureResultsMap(e)
