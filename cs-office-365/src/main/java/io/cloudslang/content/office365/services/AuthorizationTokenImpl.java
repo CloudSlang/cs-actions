@@ -20,12 +20,12 @@ import com.microsoft.aad.adal4j.AuthenticationResult;
 import com.microsoft.aad.adal4j.ClientCredential;
 import io.cloudslang.content.office365.entities.AuthorizationTokenInputs;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static io.cloudslang.content.office365.utils.Constants.API;
+import static io.cloudslang.content.office365.utils.Constants.EXCEPTION_ACQUIRE_TOKEN_FAILED;
 import static io.cloudslang.content.office365.utils.HttpUtils.getProxy;
 
 public class AuthorizationTokenImpl {
@@ -46,17 +46,27 @@ public class AuthorizationTokenImpl {
         return acquireToken(context, inputs, service);
     }
 
-    @NotNull
     private static AuthenticationResult acquireToken(@NotNull final AuthenticationContext context, @NotNull final AuthorizationTokenInputs inputs, @NotNull ClientCredential credential, @NotNull ExecutorService service) throws Exception {
         final Future<AuthenticationResult> future = context.acquireToken(inputs.getResource(), credential, null);
         service.shutdown();
-        return future.get();
+        try{
+            return future.get();
+        }catch(Exception e){
+            if (e.getMessage().equals("java.lang.NullPointerException"))
+                throw new Exception(EXCEPTION_ACQUIRE_TOKEN_FAILED);
+            else throw new Exception(e.getMessage());
+        }
     }
 
-    @NotNull
     private static AuthenticationResult acquireToken(@NotNull final AuthenticationContext context, @NotNull final AuthorizationTokenInputs inputs, @NotNull ExecutorService service) throws Exception {
         final Future<AuthenticationResult> future = context.acquireToken(inputs.getResource(), inputs.getClientId(), inputs.getUsername(), inputs.getPassword(), null);
         service.shutdown();
-        return future.get();
+        try{
+            return future.get();
+        }catch(Exception e){
+            if (e.getMessage().equals("java.lang.NullPointerException"))
+                throw new Exception(EXCEPTION_ACQUIRE_TOKEN_FAILED);
+            else throw new Exception(e.getMessage());
+        }
     }
 }
