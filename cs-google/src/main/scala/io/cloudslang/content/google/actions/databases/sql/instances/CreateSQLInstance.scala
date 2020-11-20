@@ -181,7 +181,7 @@ class CreateSQLInstance {
               (AVAILABILITY_TYPE -> sqlInstanceSettings.getAvailabilityType) +
               (STORAGE_TYPE -> sqlInstanceSettings.getDataDiskType) +
               (STORAGE_CAPACITY -> sqlInstanceSettings.getDataDiskSizeGb.toString) +
-              (STATE -> sqlInstance.getState) +
+              (STATE -> Utility.getInstanceStatus(activationPolicyStr)) +
               (MACHINE_TYPE -> sqlInstanceSettings.getTier)
           }
         case SQLErrorOperation(error) => getFailureResultsMap(error)
