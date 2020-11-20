@@ -28,24 +28,28 @@ object BucketService {
       .get(bucketName)
       .execute()
 
+  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String): Buckets =
+    StorageService.bucketService(httpTransport, jsonFactory, credential)
+      .list(projectId)
+      .execute()
 
-//  def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, bucketName: String , bucketLocation:String, storageClass: String):
-//  Bucket = StorageService.bucketService(httpTransport, jsonFactory, credential)
-//    .insert(projectId, new Bucket()
-//      .setName(bucketName)
-//      .setLocation(bucketLocation)
-//        .setLocationType()
-//        .setStorageClass(storageClass)
-//        .setAcl()
-//        .setRetentionPolicy()
-//        .setLabels()
-//
-//      .setVersioning(new Bucket.Versioning().setEnabled(true)))
-//    .set("storageClass ",storageClass)
-//    //.setPredefinedAcl()
-//    //.setPredefinedDefaultObjectAcl()
-//    //.setProjection()
-//    .execute()
+  //  def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, bucketName: String , bucketLocation:String, storageClass: String):
+  //  Bucket = StorageService.bucketService(httpTransport, jsonFactory, credential)
+  //    .insert(projectId, new Bucket()
+  //      .setName(bucketName)
+  //      .setLocation(bucketLocation)
+  //        .setLocationType()
+  //        .setStorageClass(storageClass)
+  //        .setAcl()
+  //        .setRetentionPolicy()
+  //        .setLabels()
+  //
+  //      .setVersioning(new Bucket.Versioning().setEnabled(true)))
+  //    .set("storageClass ",storageClass)
+  //    //.setPredefinedAcl()
+  //    //.setPredefinedDefaultObjectAcl()
+  //    //.setProjection()
+  //    .execute()
 
 
   def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String) {

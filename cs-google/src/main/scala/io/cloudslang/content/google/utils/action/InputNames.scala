@@ -125,6 +125,11 @@ object InputNames {
     final val LABELS = "labels"
   }
 
+  object StorageBucketInputs {
+    final val BUCKET_NAME = "bucketName"
+  }
+
+
 
 
 

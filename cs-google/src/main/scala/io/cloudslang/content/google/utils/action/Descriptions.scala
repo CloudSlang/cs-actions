@@ -58,4 +58,10 @@ object Descriptions {
     final val STATE_DESC = "The current serving state of the Cloud SQL instance."
   }
 
+
+  object StorageBucketDesc{
+
+    final val BUCKET_NAME_DESC= "Name of a bucket."
+  }
+
 }

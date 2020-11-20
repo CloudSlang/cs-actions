@@ -23,6 +23,5 @@ import com.google.api.services.storage.Storage
 object StorageService {
   private def storageService(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential): Storage = new Storage(httpTransport, jsonFactory, credential)
   def bucketService: (HttpTransport, JsonFactory, Credential) => Storage#Buckets = storageService(_, _, _).buckets()
-  //def OperationsService: (HttpTransport, JsonFactory, Credential) => Storage#Operations = storageService(_, _, _)
 
 }
