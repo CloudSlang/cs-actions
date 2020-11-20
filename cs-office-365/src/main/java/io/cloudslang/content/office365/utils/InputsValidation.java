@@ -79,7 +79,6 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifySendEmailInputs(@Nullable final String clientId,
-                                                     @Nullable final String clientSecret,
                                                      @NotNull final String proxyPort,
                                                      @Nullable final String userPrincipalName,
                                                      @Nullable final String userId,
@@ -93,7 +92,6 @@ public final class InputsValidation {
         final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trust_all_roots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
 
-        addVerifyNotNullOrEmpty(exceptionMessages, clientSecret, CLIENT_SECRET);
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
         addVerifyNotNullOrEmpty(exceptionMessages, clientId, CLIENT_ID);
 
