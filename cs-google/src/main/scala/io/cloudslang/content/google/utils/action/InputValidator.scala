@@ -14,23 +14,16 @@
  */
 
 
-
 package io.cloudslang.content.google.utils.action
-
-import java.util.regex.Pattern
 
 import io.cloudslang.content.utils.CollectionUtilities.toList
 import io.cloudslang.content.utils.OtherUtilities.isValidIpPort
 import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities}
-import org.apache.commons.lang3.StringUtils
-import io.cloudslang.content.google.utils.action.RegexUtils
-
-import scala.util.matching.Regex
 
 /**
-  * Created by sandorr 
-  * 2/28/2017.
-  */
+ * Created by sandorr
+ * 2/28/2017.
+ */
 object InputValidator {
 
   val INVALID_PORT = "Invalid port value!"
@@ -51,8 +44,9 @@ object InputValidator {
     if (!isValidIpPort(value)) Some(INVALID_PORT) else None
   }
 
-    val instanceidPattern  = "(^[a-z]$|^[a-z][a-z0-9-]*[a-z0-9]$)".r
-    def validateinstanceId: (String) => Stream[String] = validate(_, InputNames.CreateSQLDatabaseInstanceInputs.INSTANCE_ID) { value =>
+  val instanceidPattern = "(^[a-z]$|^[a-z][a-z0-9-]*[a-z0-9]$)".r
+
+  def validateinstanceId: (String) => Stream[String] = validate(_, InputNames.CreateSQLDatabaseInstanceInputs.INSTANCE_ID) { value =>
     if (instanceidPattern.pattern.matcher(value).matches()) None else Some(INVALID_INSATNCE_ID)
   }
 
