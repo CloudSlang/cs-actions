@@ -1,4 +1,4 @@
 package io.cloudslang.content.filesystem.actions;
 
-public class IsDirectory {
+public class GetSizeAction {
 }
