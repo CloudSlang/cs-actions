@@ -32,6 +32,6 @@ public class IsDirectoryService {
         String path = inputs.getSource().trim();
         File file = new File(path);
         validateIsDirectory(file,path);
-        return OutputUtilities.getSuccessResultsMap(String.format(Constants.IS_DIRECTORY_SUCCESS,inputs.getSource().trim()));
+        return OutputUtilities.getSuccessResultsMap(String.format(Constants.IS_DIRECTORY_SUCCESS,path));
     }
 }
