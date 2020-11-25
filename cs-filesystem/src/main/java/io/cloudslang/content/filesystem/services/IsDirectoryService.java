@@ -14,5 +14,22 @@
  */
 package io.cloudslang.content.filesystem.services;
 
+import io.cloudslang.content.filesystem.constants.Constants;
+import io.cloudslang.content.filesystem.entities.IsDirectoryInputs;
+import io.cloudslang.content.utils.OutputUtilities;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.util.Map;
+
+import static io.cloudslang.content.filesystem.utils.Utils.validateIsDirectory;
+
 public class IsDirectoryService {
+
+    public @NotNull Map<String,String> execute (@NotNull IsDirectoryInputs inputs) throws Exception{
+        String path = inputs.getSource().trim();
+        File file = new File(path);
+        validateIsDirectory(file,path);
+        return OutputUtilities.getSuccessResultsMap(String.format(Constants.IS_DIRECTORY_SUCCESS,path));
+    }
 }

@@ -20,4 +20,8 @@ public final class ExceptionMsgs {
     public static final String INVALID_PATH = "File/Folder path must be absolute.";
     public static final String EMPTY_THRESHOLD = "The input threshold can't be null or empty.";
     public static final String INVALID_THRESHOLD = "The value of the threshold input is invalid.";
+    public static final String INVALID_ABSOLUTE_PATH = "An absolute path is required.";
+    public static final String DOES_NOT_EXIST = "'%s' does not exist.";
+    public static final String NOT_A_DIRECTORY = "'%s' is not a directory.";
+
 }
