@@ -20,10 +20,8 @@ import io.cloudslang.content.utils.OutputUtilities;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Map;
 
-import static io.cloudslang.content.filesystem.constants.ExceptionMsgs.*;
 import static io.cloudslang.content.filesystem.utils.Utils.validateIsDirectory;
 
 public class IsDirectoryService {
