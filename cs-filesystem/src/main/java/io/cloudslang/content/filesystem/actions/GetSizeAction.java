@@ -39,7 +39,7 @@ public class GetSizeAction {
     private final GetSizeService service = new GetSizeService();
 
     /**
-     * Compares a files size to a given threshold.
+     * Compares a file's size to a given threshold.
      *
      * @param source           The file to read. It must be an absolute path.
      * @param threshold        The threshold to compare the file size to (in bytes).
