@@ -14,9 +14,10 @@
  */
 package io.cloudslang.content.filesystem.constants;
 
-public class InputNames {
-
-    public static final String SOURCE = "source";
-    public static final String THRESHOLD = "threshold";
-
+public final class ExceptionMsgs {
+    public static final String EMPTY_SOURCE = "The input source can't be null or empty.";
+    public static final String INVALID_SOURCE = "File/Folder does not exist.";
+    public static final String INVALID_PATH = "File/Folder path must be absolute.";
+    public static final String EMPTY_THRESHOLD = "The input threshold can't be null or empty.";
+    public static final String INVALID_THRESHOLD = "The value of the threshold input is invalid.";
 }

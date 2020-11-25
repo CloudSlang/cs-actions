@@ -14,9 +14,10 @@
  */
 package io.cloudslang.content.filesystem.constants;
 
-public class InputNames {
+public class ResultsName {
 
-    public static final String SOURCE = "source";
-    public static final String THRESHOLD = "threshold";
+    public static final String LESS_THAN = "less_than";
+    public static final String EQUAL_TO = "equal_to";
+    public static final String GREATER_THAN = "greater_than";
 
 }
