@@ -28,15 +28,22 @@ import static io.cloudslang.content.database.constants.DBOtherValues.FORWARD_SLA
 import static io.cloudslang.content.database.utils.Constants.COLON;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
 import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
+import static io.cloudslang.content.database.utils.SQLUtils.loadDriver;
 
 /**
  * Created by victor on 13.01.2017.
  */
 public class DB2Database implements SqlDatabase {
 
+    public static final String DRIVER_CLASS = "com.ibm.db2.jcc.DB2Driver";
+
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
-        loadClassForName("com.ibm.db2.jcc.DB2Driver");
+        if (StringUtils.isNotEmpty(sqlInputs.getDriverUrl())) {
+            loadDriver(sqlInputs.getDriverUrl(), DRIVER_CLASS);
+        } else {
+            loadClassForName(DRIVER_CLASS);
+        }
 
         final String host = SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(sqlInputs.getDbServer());
         final StringBuilder connectionSb = new StringBuilder("jdbc:db2://")

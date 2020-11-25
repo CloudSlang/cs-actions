@@ -30,7 +30,6 @@ import io.cloudslang.content.database.constants.DBReturnCodes;
 import io.cloudslang.content.database.services.SQLQueryService;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLSessionResource;
-import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -150,6 +149,7 @@ public class SQLQuery {
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency,
                                        @Param(value = IGNORE_CASE) String ignoreCase,
+                                       @Param(value = DRIVER_URL) String driverUrl,
                                        @Param(value = GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
 
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
@@ -200,6 +200,7 @@ public class SQLQuery {
                 .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
                 .ignoreCase(ignoreCaseBool)
                 .isNetcool(checkIsNetcool(dbType))
+                .driverUrl(driverUrl)
                 .build();
 
 

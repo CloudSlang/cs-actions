@@ -27,15 +27,22 @@ import java.util.List;
 import static io.cloudslang.content.database.constants.DBOtherValues.FORWARD_SLASH;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
 import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
+import static io.cloudslang.content.database.utils.SQLUtils.loadDriver;
 
 /**
  * Created by victor on 13.01.2017.
  */
 public class MySqlDatabase implements SqlDatabase {
 
+    private static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
+
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
-        loadClassForName("com.mysql.jdbc.Driver");
+        if (StringUtils.isNotEmpty(sqlInputs.getDriverUrl())) {
+            loadDriver(sqlInputs.getDriverUrl(), DRIVER_CLASS);
+        } else {
+            loadClassForName(DRIVER_CLASS);
+        }
 
         final String connectionString = getConnectionString(sqlInputs);
 

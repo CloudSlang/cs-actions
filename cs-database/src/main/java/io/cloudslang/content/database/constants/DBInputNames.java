@@ -50,7 +50,7 @@ public class DBInputNames extends InputNames {
     public static final String SCRIPT_FILE_NAME = "scriptFileName";
     public static final String GLOBAL_SESSION_OBJECT = "globalSessionObject";
     public static final String SQL_COMMANDS = "sqlCommands";
-
+    public static final String DRIVER_URL = "driverUrl";
 
     public static final String MS_DELIMITER = "Delimiter";
     public static final String MS_DB_SERVER_NAME = "DBServerName";

@@ -27,7 +27,6 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLScriptService;
 import io.cloudslang.content.database.utils.SQLInputs;
-import io.cloudslang.content.utils.BooleanUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -132,7 +131,8 @@ public class SQLScript {
                                        @Param(value = AUTH_LIBRARY_PATH) String authLibraryPath,
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
-                                       @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
+                                       @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency,
+                                       @Param(value = DRIVER_URL) String driverUrl) {
 
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         username = defaultIfEmpty(username, EMPTY);
@@ -176,6 +176,7 @@ public class SQLScript {
                 .resultSetType(getResultSetType(resultSetType))
                 .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
                 .isNetcool(checkIsNetcool(dbType))
+                .driverUrl(driverUrl)
                 .build();
 
         try {

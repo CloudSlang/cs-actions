@@ -126,7 +126,8 @@ public class SQLCommand {
                                        @Param(value = AUTH_LIBRARY_PATH) String authLibraryPath,
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
-                                       @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
+                                       @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency,
+                                       @Param(value = DRIVER_URL) String driverUrl) {
 
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         username = defaultIfEmpty(username, EMPTY);
@@ -170,6 +171,7 @@ public class SQLCommand {
                     .resultSetType(getResultSetType(resultSetType))
                     .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
                     .isNetcool(checkIsNetcool(dbType))
+                    .driverUrl(driverUrl)
                     .build();
 
             String res = SQLCommandService.executeSqlCommand(sqlInputs);

@@ -19,12 +19,14 @@ package io.cloudslang.content.database.services.databases;
 
 
 import io.cloudslang.content.database.utils.SQLInputs;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
 import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
+import static io.cloudslang.content.database.utils.SQLUtils.loadDriver;
 
 /**
  * Created by victor on 13.01.2017.
@@ -34,7 +36,11 @@ public class CustomDatabase implements SqlDatabase {
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
         try {
-            loadClassForName(sqlInputs.getDbClass());
+            if (StringUtils.isNotEmpty(sqlInputs.getDriverUrl())) {
+                loadDriver(sqlInputs.getDriverUrl(), sqlInputs.getDbClass());
+            } else {
+                loadClassForName(sqlInputs.getDbClass());
+            }
         } catch (final RuntimeException e) {
             throw new RuntimeException("No db class name provided");
         }

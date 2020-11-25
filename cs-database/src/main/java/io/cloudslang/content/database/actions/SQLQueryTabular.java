@@ -130,7 +130,8 @@ public class SQLQueryTabular {
                                        @Param(value = TIMEOUT) String timeout,
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
-                                       @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency) {
+                                       @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency,
+                                       @Param(value = DRIVER_URL) String driverUrl) {
 
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         username = defaultIfEmpty(username, EMPTY);
@@ -174,6 +175,7 @@ public class SQLQueryTabular {
                 .resultSetType(getResultSetTypeForDbType(resultSetType, dbType))
                 .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
                 .isNetcool(checkIsNetcool(dbType))
+                .driverUrl(driverUrl)
                 .build();
         try {
             final String queryResult = SQLQueryTabularService.execSqlQueryTabular(sqlInputs);

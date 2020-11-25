@@ -19,11 +19,18 @@ package io.cloudslang.content.database.utils;
 
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.mchange.v2.sql.SqlUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Paths;
+import java.sql.Driver;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +51,19 @@ public class SQLUtils {
             Class.forName(className);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e.getCause());
+        }
+    }
+
+    public static void loadDriver(@NotNull final String driverJarPath, @NotNull final String driverClassName) {
+        try{
+            URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+            Method addUrl = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+            addUrl.setAccessible(true);
+            addUrl.invoke(classLoader, new URL(driverJarPath));
+            Class driver = classLoader.loadClass(driverClassName);
+            DriverManager.registerDriver(new DriverWrapper((Driver) driver.newInstance()));
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage(), ex.getCause());
         }
     }
 

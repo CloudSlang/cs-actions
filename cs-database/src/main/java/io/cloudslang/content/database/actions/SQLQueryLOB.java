@@ -151,6 +151,7 @@ public class SQLQueryLOB {
                                        @Param(value = DATABASE_POOLING_PROPERTIES) String databasePoolingProperties,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency,
+                                       @Param(value = DRIVER_URL) String driverUrl,
                                        @Param(value = GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         username = defaultIfEmpty(username, EMPTY);
@@ -199,6 +200,7 @@ public class SQLQueryLOB {
                 .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
                 .ignoreCase(true)
                 .isNetcool(checkIsNetcool(dbType))
+                .driverUrl(driverUrl)
                 .build();
 
         try {

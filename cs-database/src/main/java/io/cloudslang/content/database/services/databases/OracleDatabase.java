@@ -19,12 +19,14 @@ package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
 import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
+import static io.cloudslang.content.database.utils.SQLUtils.loadDriver;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
 /**
@@ -32,9 +34,16 @@ import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
  */
 public class OracleDatabase implements SqlDatabase {
 
+    private static final String DRIVER_CLASS = "oracle.jdbc.driver.OracleDriver";
+
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
-        loadClassForName("oracle.jdbc.driver.OracleDriver");
+        if (StringUtils.isNotEmpty(sqlInputs.getDriverUrl())) {
+            loadDriver(sqlInputs.getDriverUrl(), DRIVER_CLASS);
+        } else {
+            loadClassForName(DRIVER_CLASS);
+        }
+
 
         final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
 

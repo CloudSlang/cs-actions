@@ -25,21 +25,34 @@ import java.util.List;
 
 import static io.cloudslang.content.database.constants.DBOtherValues.FORWARD_SLASH;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
+import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
+import static io.cloudslang.content.database.utils.SQLUtils.loadDriver;
 
 /**
  * Created by victor on 13.01.2017.
  */
 public class NetcoolDatabase implements SqlDatabase {
 
+    private static final String JDBC3_DRIVER_CLASS = "com.sybase.jdbc3.jdbc.SybDriver";
+    private static final String JDBC2_DRIVER_CLASS = "com.sybase.jdbc2.jdbc.SybDriver";
+
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
         //Attempt to load jconn3 driver first, then jconn2 driver
         try {
-            Class.forName("com.sybase.jdbc3.jdbc.SybDriver");
+            if (StringUtils.isNotEmpty(sqlInputs.getDriverUrl())) {
+                loadDriver(sqlInputs.getDriverUrl(), JDBC3_DRIVER_CLASS);
+            } else {
+                loadClassForName(JDBC3_DRIVER_CLASS);
+            }
         } catch (Exception e) {
             try {
-                Class.forName("com.sybase.jdbc2.jdbc.SybDriver");
-            } catch (ClassNotFoundException ex) {
+                if (StringUtils.isNotEmpty(sqlInputs.getDriverUrl())) {
+                    loadDriver(sqlInputs.getDriverUrl(), JDBC2_DRIVER_CLASS);
+                } else {
+                    loadClassForName(JDBC2_DRIVER_CLASS);
+                }
+            } catch (Exception ex) {
                 throw new RuntimeException("Could not locate either jconn2.jar or jconn3.jar file in the classpath!");
             }
         }

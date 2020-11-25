@@ -62,7 +62,7 @@ public class SQLQueryLOBTest {
     @Test
     public void execute() throws Exception {
         final Map<String, String> resultMap = new SQLQueryLOB().execute(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
-                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, null);
+                EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, null, null);
         assertThat(resultMap.get(RETURN_CODE), is(FAILURE));
         assertThat(resultMap.get(RETURN_RESULT), is("dbServerName can't be empty\nusername input is empty.\npassword input is empty.\ndatabase input is empty.\ntrustStore or trustStorePassword is mandatory if trustAllRoots is false\ncommand input is empty."));
     }
@@ -81,7 +81,7 @@ public class SQLQueryLOBTest {
 
         when(SQLInputsUtils.getOrDefaultGlobalSessionObj(any(GlobalSessionObject.class))).thenReturn(globalSessionObject);
         final Map<String, String> resultMap = sqlQueryLOB.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, globalSessionObject);
+                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, null, globalSessionObject);
 
         verifyStatic();
         assertThat(resultMap.get(RETURN_CODE), is(NO_MORE));
@@ -104,7 +104,7 @@ public class SQLQueryLOBTest {
 
         when(SQLInputsUtils.getOrDefaultGlobalSessionObj(any(GlobalSessionObject.class))).thenReturn(globalSessionObject);
         final Map<String, String> resultMap = sqlQueryLOB.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, globalSessionObject);
+                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, null, globalSessionObject);
 
         verifyStatic();
         assertThat(resultMap.get(RETURN_CODE), is(SUCCESS));
@@ -121,7 +121,7 @@ public class SQLQueryLOBTest {
         when(SQLQueryLobService.executeSqlQueryLob(any(SQLInputs.class))).thenReturn(true);
 
         final Map<String, String> resultMap = sqlQueryLOB.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, null);
+                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, null, null);
 
         verifyStatic();
         assertThat(resultMap.get(RETURN_CODE), is(DBReturnCodes.NO_MORE));

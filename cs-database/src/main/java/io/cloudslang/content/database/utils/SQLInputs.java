@@ -61,9 +61,10 @@ public class SQLInputs {
     private Integer resultSetType;
     private Integer resultSetConcurrency;
     private List<String> sqlCommands = new ArrayList<>();
+    private String driverUrl;
 
-    @java.beans.ConstructorProperties({"sqlCommand", "dbServer", "dbName", "dbPort", "dbType", "key", "username", "password", "authenticationType", "instance", "ignoreCase", "timeout", "dbUrl", "dbClass", "isNetcool", "lRowsFiles", "lRowsNames", "skip", "strDelim", "strColumns", "lRows", "iUpdateCount", "databasePoolingProperties", "trustStore", "trustStorePassword", "trustAllRoots", "authLibraryPath", "colDelimiter", "rowDelimiter", "resultSetType", "resultSetConcurrency", "sqlCommands"})
-    SQLInputs(String sqlCommand, String dbServer, String dbName, int dbPort, String dbType, String key, String username, String password, String authenticationType, String instance, boolean ignoreCase, int timeout, String dbUrl, String dbClass, boolean isNetcool, List<List<String>> lRowsFiles, List<List<String>> lRowsNames, long skip, String strDelim, String strColumns, List<String> lRows, int iUpdateCount, Properties databasePoolingProperties, String trustStore, String trustStorePassword, boolean trustAllRoots, String authLibraryPath, String colDelimiter, String rowDelimiter, Integer resultSetType, Integer resultSetConcurrency, List<String> sqlCommands) {
+    @java.beans.ConstructorProperties({"sqlCommand", "dbServer", "dbName", "dbPort", "dbType", "key", "username", "password", "authenticationType", "instance", "ignoreCase", "timeout", "dbUrl", "dbClass", "isNetcool", "lRowsFiles", "lRowsNames", "skip", "strDelim", "strColumns", "lRows", "iUpdateCount", "databasePoolingProperties", "trustStore", "trustStorePassword", "trustAllRoots", "authLibraryPath", "colDelimiter", "rowDelimiter", "resultSetType", "resultSetConcurrency", "sqlCommands", "driverUrl"})
+    SQLInputs(String sqlCommand, String dbServer, String dbName, int dbPort, String dbType, String key, String username, String password, String authenticationType, String instance, boolean ignoreCase, int timeout, String dbUrl, String dbClass, boolean isNetcool, List<List<String>> lRowsFiles, List<List<String>> lRowsNames, long skip, String strDelim, String strColumns, List<String> lRows, int iUpdateCount, Properties databasePoolingProperties, String trustStore, String trustStorePassword, boolean trustAllRoots, String authLibraryPath, String colDelimiter, String rowDelimiter, Integer resultSetType, Integer resultSetConcurrency, List<String> sqlCommands, String driverUrl) {
         this.sqlCommand = sqlCommand;
         this.dbServer = dbServer;
         this.dbName = dbName;
@@ -96,6 +97,7 @@ public class SQLInputs {
         this.resultSetType = resultSetType;
         this.resultSetConcurrency = resultSetConcurrency;
         this.sqlCommands = sqlCommands == null ? new ArrayList<String>() : sqlCommands;
+        this.driverUrl = driverUrl;
     }
 
     public static SQLInputsBuilder builder() {
@@ -354,6 +356,12 @@ public class SQLInputs {
         return this.sqlCommands;
     }
 
+
+    public String getDriverUrl() {
+        return driverUrl;
+    }
+
+
     public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof SQLInputs)) return false;
@@ -562,6 +570,7 @@ public class SQLInputs {
         private Integer resultSetType;
         private Integer resultSetConcurrency;
         private List<String> sqlCommands;
+        private String driverUrl;
 
         SQLInputsBuilder() {
         }
@@ -697,8 +706,13 @@ public class SQLInputs {
             return this;
         }
 
+        public SQLInputs.SQLInputsBuilder driverUrl(String driverUrl) {
+            this.driverUrl = driverUrl;
+            return this;
+        }
+
         public SQLInputs build() {
-            return new SQLInputs(sqlCommand, dbServer, dbName, dbPort, dbType, key, username, password, authenticationType, instance, ignoreCase, timeout, dbUrl, dbClass, isNetcool, lRowsFiles, lRowsNames, skip, strDelim, strColumns, lRows, iUpdateCount, databasePoolingProperties, trustStore, trustStorePassword, trustAllRoots, authLibraryPath, colDelimiter, rowDelimiter, resultSetType, resultSetConcurrency, sqlCommands);
+            return new SQLInputs(sqlCommand, dbServer, dbName, dbPort, dbType, key, username, password, authenticationType, instance, ignoreCase, timeout, dbUrl, dbClass, isNetcool, lRowsFiles, lRowsNames, skip, strDelim, strColumns, lRows, iUpdateCount, databasePoolingProperties, trustStore, trustStorePassword, trustAllRoots, authLibraryPath, colDelimiter, rowDelimiter, resultSetType, resultSetConcurrency, sqlCommands, driverUrl);
         }
 
         public String toString() {

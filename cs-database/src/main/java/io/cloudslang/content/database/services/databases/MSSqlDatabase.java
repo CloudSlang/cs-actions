@@ -39,6 +39,7 @@ import static io.cloudslang.content.database.constants.DBInputNames.INSTANCE;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.Constants.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.isValidAuthType;
+import static io.cloudslang.content.database.utils.SQLUtils.loadDriver;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 import static org.apache.commons.lang3.StringUtils.join;
 
@@ -125,7 +126,7 @@ public class MSSqlDatabase implements SqlDatabase {
         supportedJdbcDrivers = Arrays.asList(SQLSERVER_JDBC_DRIVER, JTDS_JDBC_DRIVER);
     }
 
-    private void loadJdbcDriver(String dbClass, final String authenticationType, final String sqlJdbcAuthFilePath) throws ClassNotFoundException {
+    private void loadJdbcDriver(String dbClass, String driverUrl, final String authenticationType, final String sqlJdbcAuthFilePath) throws ClassNotFoundException {
         boolean driverFound = false;
         initializeJdbcDrivers();
         for (String driver : supportedJdbcDrivers) {
@@ -134,7 +135,11 @@ public class MSSqlDatabase implements SqlDatabase {
             }
         }
         if (driverFound) {
-            Class.forName(dbClass);
+            if (StringUtils.isNotEmpty(driverUrl)) {
+                loadDriver(driverUrl, dbClass);
+            } else {
+                Class.forName(dbClass);
+            }
             if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)) {
                 loadWindowsAuthentication(sqlJdbcAuthFilePath);
             }
@@ -158,7 +163,7 @@ public class MSSqlDatabase implements SqlDatabase {
             }
 
 
-            loadJdbcDriver(sqlInputs.getDbClass(), sqlInputs.getAuthenticationType(), sqlInputs.getAuthLibraryPath());
+            loadJdbcDriver(sqlInputs.getDbClass(), sqlInputs.getDriverUrl(), sqlInputs.getAuthenticationType(), sqlInputs.getAuthLibraryPath());
 
             String host;
 
