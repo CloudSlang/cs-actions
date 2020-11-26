@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.filesystem.utils;
 
+import io.cloudslang.content.filesystem.constants.ExceptionMsgs;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -21,12 +23,14 @@ import static io.cloudslang.content.filesystem.constants.ExceptionMsgs.*;
 
 public class Utils {
 
-    public static void validateIsDirectory(File source, String path) throws Exception{
-        if(!source.isAbsolute())
+    public static void validateIsDirectory(File source, String path) throws Exception {
+        if (!source.isAbsolute())
             throw new IllegalArgumentException(INVALID_ABSOLUTE_PATH);
-        if(!source.exists())
-            throw new FileNotFoundException(String.format(DOES_NOT_EXIST,path));
-        if(!source.isDirectory())
-            throw new Exception(String.format(NOT_A_DIRECTORY,path));
+        if (!source.getCanonicalPath().equals(source.getAbsolutePath()))
+            throw new Exception(ExceptionMsgs.DIRECTORY_TRAVERSAL);
+        if (!source.exists())
+            throw new FileNotFoundException(String.format(DOES_NOT_EXIST, path));
+        if (!source.isDirectory())
+            throw new Exception(String.format(NOT_A_DIRECTORY, path));
     }
 }
