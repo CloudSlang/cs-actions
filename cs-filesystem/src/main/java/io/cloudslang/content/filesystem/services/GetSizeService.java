@@ -14,5 +14,26 @@
  */
 package io.cloudslang.content.filesystem.services;
 
+import io.cloudslang.content.filesystem.entities.GetSizeInputs;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 public class GetSizeService {
+
+    public @NotNull Map<String, String> execute(@NotNull GetSizeInputs input) throws Exception {
+        Map<String, String> results = new HashMap<>();
+
+        File f = new File(input.getSource());
+        Long size = f.length();
+        String returnResult = size.toString();
+        results.put("returnResult", returnResult);
+        results.put("size", returnResult);
+
+        return results;
+    }
 }
+
+

@@ -14,5 +14,59 @@
  */
 package io.cloudslang.content.filesystem.entities;
 
+import static io.cloudslang.content.filesystem.utils.InputBuilderUtils.buildSource;
+import static io.cloudslang.content.filesystem.utils.InputBuilderUtils.buildThreshold;
+
 public class GetSizeInputs {
+
+    private String source;
+    private String threshold;
+
+    private GetSizeInputs(Builder builder) {
+        this.source = builder.source;
+        this.threshold = builder.threshold;
+    }
+
+    public GetSizeInputs() {
+    }
+
+
+    public String getSource() {
+        return source;
+    }
+
+
+    public String getThreshold() {
+        return threshold;
+    }
+
+
+    public static class Builder {
+        private String source;
+        private String threshold;
+
+
+        public Builder source(String source) {
+            this.source = source;
+            return this;
+        }
+
+
+        public Builder threshold(String threshold) {
+            this.threshold = threshold;
+            return this;
+        }
+
+
+        public GetSizeInputs build() throws Exception {
+            GetSizeInputs inputs = new GetSizeInputs();
+
+            inputs.source = buildSource(source);
+
+            inputs.threshold = buildThreshold(threshold);
+
+
+            return new GetSizeInputs(this);
+        }
+    }
 }

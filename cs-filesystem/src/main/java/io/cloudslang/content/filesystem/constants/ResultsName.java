@@ -14,10 +14,10 @@
  */
 package io.cloudslang.content.filesystem.constants;
 
-public class Constants {
+public class ResultsName {
 
-    public static final String SIZE = "size";
-    public static final String RETURN_RESULT = "returnResult";
-    public static final String IS_DIRECTORY_SUCCESS = "'%s' is a directory";
+    public static final String LESS_THAN = "less_than";
+    public static final String EQUAL_TO = "equal_to";
+    public static final String GREATER_THAN = "greater_than";
 
 }
