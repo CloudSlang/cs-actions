@@ -21,7 +21,6 @@ object Outputs {
     final val CONNECTION_NAME = "connectionName"
     final val PUBLIC_IP_ADDRESS = "publicIPAddresses"
     final val SELF_LINK = "selfLink"
-    final val STATE = "state"
   }
 
 }
