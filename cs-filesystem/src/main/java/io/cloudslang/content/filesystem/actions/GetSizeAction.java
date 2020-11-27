@@ -88,7 +88,7 @@ public class GetSizeAction {
             result = service.execute(input);
 
             result.put(OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
-            result.put(OutputNames.RETURN_RESULT, OutputNames.RETURN_RESULT);
+            result.put(OutputNames.RETURN_RESULT, result.get(OutputNames.RETURN_RESULT));
             result.put(Constants.SIZE, result.get(Constants.SIZE));
             return result;
         } catch (Exception ex) {
