@@ -28,11 +28,14 @@ public final class InputBuilderUtils {
             throw new Exception(ExceptionMsgs.EMPTY_SOURCE);
         }
         if (!(f.isAbsolute())) {
-            throw new Exception(ExceptionMsgs.INVALID_PATH);
-            }
-        else {
+            throw new Exception(ExceptionMsgs.INVALID_ABSOLUTE_PATH);
+        }
+
+        if (!f.getCanonicalPath().equals(f.getAbsolutePath())) {
+            throw new Exception(ExceptionMsgs.DIRECTORY_TRAVERSAL);
+        } else {
             if (!(f.exists())) {
-                throw new Exception(ExceptionMsgs.INVALID_SOURCE);
+                throw new Exception(String.format(ExceptionMsgs.DOES_NOT_EXIST, source));
             }
         }
         return source;
