@@ -58,4 +58,13 @@ object Descriptions {
     final val SELF_LINK_DESC = "The URI of this resource."
   }
 
+  object StorageBucketDesc{
+    final val GET_BUCKET_OPERATION_DESC = "Retrieves a resource containing information about a bucket inside a Google Cloud Storage."
+    final val BUCKET_NAME_DESC= "Name of a bucket."
+    final val METAGENERATION_MATCH_DESC = "Makes the return of the bucket metadata conditional on whether the bucket's current metageneration matches the given value."
+    final val METAGENERATION_NOT_MATCH_DESC = "Makes the return of the bucket metadata conditional on whether the bucket's current metageneration does not match the given value."
+    final val PROJECTION_DESC = "Set of properties to return. Defaults to noAcl.\n\nAcceptable values are:\n\"full\": Include all properties.\n\"noAcl\": Omit owner, acl and defaultObjectAcl properties."
+
+
+  }
 }
