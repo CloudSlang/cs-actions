@@ -136,4 +136,12 @@ object InputNames {
 
   }
 
+  object StorageBucketInputs {
+    final val GET_BUCKET_OPERATION_NAME = "Get Bucket"
+    final val BUCKET_NAME = "bucketName"
+    final val METAGENERATION_MATCH = "metagenerationMatch"
+    final val METAGENERATION_NOT_MATCH = "metagenerationNotMatch"
+    final val PROJECTION = "projection"
+  }
+
 }
