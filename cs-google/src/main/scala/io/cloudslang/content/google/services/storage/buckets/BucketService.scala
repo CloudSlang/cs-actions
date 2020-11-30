@@ -17,6 +17,8 @@ package io.cloudslang.content.google.services.storage.buckets
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
+import com.google.api.services.storage.model.Bucket.IamConfiguration
+import com.google.api.services.storage.model.Bucket.IamConfiguration.{BucketPolicyOnly, UniformBucketLevelAccess}
 import com.google.api.services.storage.model.{Bucket, Buckets}
 import io.cloudslang.content.google.services.storage.StorageService
 import io.cloudslang.content.utils.NumberUtilities.toLong
@@ -28,15 +30,30 @@ object BucketService {
 
     val request = StorageService.bucketService(httpTransport, jsonFactory, credential).get(bucketName).
       setProjection(projection)
-    if(ifMetagenerationMatch.nonEmpty) {
+    if (ifMetagenerationMatch.nonEmpty) {
       request.setIfMetagenerationMatch(toLong(ifMetagenerationMatch))
     }
-    if(ifMetagenerationNotMatch.nonEmpty) {
+    if (ifMetagenerationNotMatch.nonEmpty) {
       request.setIfMetagenerationMatch(toLong(ifMetagenerationNotMatch))
     }
 
     request.execute()
 
+  }
+
+
+  def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,bucketName: String, location: String
+             , locationType: String, storageClass: String, accessControlType: String,labels: java.util.Map[String, String]): Bucket = {
+
+      val iamConfiguration = new IamConfiguration()
+    if(accessControlType.equalsIgnoreCase("uniform")){
+      iamConfiguration.setBucketPolicyOnly(
+        new BucketPolicyOnly().setEnabled(true)).setUniformBucketLevelAccess(new UniformBucketLevelAccess().setEnabled(true))
+    }
+    StorageService.bucketService(httpTransport, jsonFactory, credential)
+      .insert(projectId, new Bucket().setName(bucketName).setLocation(location).setLocationType(locationType).setStorageClass(
+        storageClass).setLabels(labels).setIamConfiguration(iamConfiguration))
+      .execute()
   }
 
   def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String): Buckets = {
