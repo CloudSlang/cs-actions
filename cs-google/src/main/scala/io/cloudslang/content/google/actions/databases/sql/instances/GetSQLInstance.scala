@@ -22,9 +22,11 @@ import io.cloudslang.content.constants.OutputNames._
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.databases.sql.instances.SQLDatabaseInstanceService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
+import io.cloudslang.content.google.utils.Constants.SQLInstancesConstant.GET_SQL_INSTANCE_OPERATION_NAME
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.Descriptions.Common._
 import io.cloudslang.content.google.utils.action.Descriptions.CreateSQLDataBaseInstance._
+import io.cloudslang.content.google.utils.action.Descriptions.SQLDataBaseInstances.GET_SQL_INSTANCE_OPERATION_DESCRIPTION
 import io.cloudslang.content.google.utils.action.GoogleOutputNames.STATUS
 import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs.{MACHINE_TYPE, ZONE, _}
 import io.cloudslang.content.google.utils.action.InputNames._
@@ -41,8 +43,8 @@ import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 import scala.collection.JavaConversions._
 
 class GetSQLInstance {
-  @Action(name = "Get SQL Instance",
-    description = "Retrieves a resource containing information about a database inside a Google Cloud SQL instance.",
+  @Action(name = GET_SQL_INSTANCE_OPERATION_NAME,
+    description = GET_SQL_INSTANCE_OPERATION_DESCRIPTION,
     outputs = Array(
       new Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
       new Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
