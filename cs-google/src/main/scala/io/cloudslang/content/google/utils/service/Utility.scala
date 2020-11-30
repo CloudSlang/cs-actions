@@ -32,9 +32,10 @@ package io.cloudslang.content.google.utils.service
 
 
 import java.util
-import java.util.{ Map => JMap}
+import java.util.{Map => JMap}
 
 import com.google.gson.Gson
+import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs._
 
 object Utility {
   type JsonToMap = String => JMap[String, String]
@@ -43,4 +44,14 @@ object Utility {
     val jsonObject: Gson = new Gson()
     x => jsonObject.fromJson(x, new util.LinkedHashMap[String, String]().getClass)
   }
+
+  def getInstanceStatus(activationPolicy: String): String = {
+    if (activationPolicy.equalsIgnoreCase(ACTIVATION_POLICY_ALWAYS)) {
+      SQL_INSTANCE_RUNNING
+    } else {
+      SQL_INSTANCE_STOPPED
+    }
+  }
+
+
 }

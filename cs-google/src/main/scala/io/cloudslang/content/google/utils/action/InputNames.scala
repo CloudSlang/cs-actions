@@ -123,14 +123,25 @@ object InputNames {
     final val PREFERRED_MAINTENANCE_WINDOW_HOUR = "preferredMaintenanceWindowHour"
     final val ACTIVATION_POLICY = "activationPolicy"
     final val LABELS = "labels"
+
+    final val ACTIVATION_POLICY_NEVER ="NEVER"
+    final val ACTIVATION_POLICY_ALWAYS ="ALWAYS"
+    final val START_INSTANCE ="START"
+    final val STOP_INSTANCE ="STOP"
+    final val RESTART_INSTANCE ="RESTART"
+    final val MYSQL_CONST = "MYSQL"
+    final val MAX_RESULTS = "maxResults"
+    final val SQL_INSTANCE_RUNNING = "RUNNING"
+    final val SQL_INSTANCE_STOPPED = "STOPPED"
+
   }
 
   object StorageBucketInputs {
+    final val GET_BUCKET_OPERATION_NAME = "Get Bucket"
     final val BUCKET_NAME = "bucketName"
+    final val METAGENERATION_MATCH = "metagenerationMatch"
+    final val METAGENERATION_NOT_MATCH = "metagenerationNotMatch"
+    final val PROJECTION = "projection"
   }
-
-
-
-
 
 }

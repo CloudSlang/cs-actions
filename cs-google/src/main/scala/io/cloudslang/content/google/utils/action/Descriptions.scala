@@ -32,10 +32,11 @@ object Descriptions {
     final val ASYNC_DESC = "Boolean specifying whether the operation to run sync or async.\nValid values: true, false\nDefault: true"
     final val TIMEOUT_DESC = "The time, in seconds, to wait for a response if the async input is set to \"false\". If the value is 0, the operation will wait until zone operation progress is 100.\nValid values: Any positive number including 0.\nDefault: 30"
     final val POLLING_INTERVAL_DESC = "The time, in seconds, to wait before a new request that verifies if the operation finished is executed, if the async input is set to \"false\".\nValid values: Any positive number including 0.\nDefault: 1"
+    final val STATUS_DESC =  " The status of the SQL instance if the async input is false, otherwise the status of the Operation."
   }
 
   object CreateSQLDataBaseInstance {
-    final val INSTANCE_ID_DESC = "Id of the Cloud SQL instance."
+    final val INSTANCE_ID_DESC = "Id of the Cloud SQL instance. Example: instance-1"
     final val INSTANCE_PASSWORD_DESC = "Initial root password. Use only on creation."
     final val ZONE_DESC = "The Compute Engine zone that the instance is currently serving from. This value could be different from the zone that was specified when the instance was created if the instance has failed over to its secondary zone."
     final val REGION_DESC = "The geographical region. Example: us-central1,asia-east1"
@@ -55,13 +56,15 @@ object Descriptions {
     final val PUBLIC_IP_ADDRESS_DESC = "The assigned public IP addresses for the instance."
 
     final val SELF_LINK_DESC = "The URI of this resource."
-    final val STATE_DESC = "The current serving state of the Cloud SQL instance."
   }
-
 
   object StorageBucketDesc{
-
+    final val GET_BUCKET_OPERATION_DESC = "Retrieves a resource containing information about a bucket inside a Google Cloud Storage."
     final val BUCKET_NAME_DESC= "Name of a bucket."
-  }
+    final val METAGENERATION_MATCH_DESC = "Makes the return of the bucket metadata conditional on whether the bucket's current metageneration matches the given value."
+    final val METAGENERATION_NOT_MATCH_DESC = "Makes the return of the bucket metadata conditional on whether the bucket's current metageneration does not match the given value."
+    final val PROJECTION_DESC = "Set of properties to return. Defaults to noAcl.\n\nAcceptable values are:\n\"full\": Include all properties.\n\"noAcl\": Omit owner, acl and defaultObjectAcl properties."
 
+
+  }
 }

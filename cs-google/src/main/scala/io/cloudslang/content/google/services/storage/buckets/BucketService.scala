@@ -19,37 +19,30 @@ import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.services.storage.model.{Bucket, Buckets}
 import io.cloudslang.content.google.services.storage.StorageService
-import com.google.api.services.storage.model.Objects
+import io.cloudslang.content.utils.NumberUtilities.toLong
 
 object BucketService {
 
-  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String): Bucket =
-    StorageService.bucketService(httpTransport, jsonFactory, credential)
-      .get(bucketName)
-      .execute()
+  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String,
+          ifMetagenerationMatch: String, ifMetagenerationNotMatch: String, projection: String): Bucket = {
 
-  def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String): Buckets =
-    StorageService.bucketService(httpTransport, jsonFactory, credential)
-      .list(projectId)
-      .execute()
+    val request = StorageService.bucketService(httpTransport, jsonFactory, credential).get(bucketName).
+      setProjection(projection)
+    if(ifMetagenerationMatch.nonEmpty) {
+      request.setIfMetagenerationMatch(toLong(ifMetagenerationMatch))
+    }
+    if(ifMetagenerationNotMatch.nonEmpty) {
+      request.setIfMetagenerationMatch(toLong(ifMetagenerationNotMatch))
+    }
 
-  //  def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, bucketName: String , bucketLocation:String, storageClass: String):
-  //  Bucket = StorageService.bucketService(httpTransport, jsonFactory, credential)
-  //    .insert(projectId, new Bucket()
-  //      .setName(bucketName)
-  //      .setLocation(bucketLocation)
-  //        .setLocationType()
-  //        .setStorageClass(storageClass)
-  //        .setAcl()
-  //        .setRetentionPolicy()
-  //        .setLabels()
-  //
-  //      .setVersioning(new Bucket.Versioning().setEnabled(true)))
-  //    .set("storageClass ",storageClass)
-  //    //.setPredefinedAcl()
-  //    //.setPredefinedDefaultObjectAcl()
-  //    //.setProjection()
-  //    .execute()
+    request.execute()
+
+  }
+
+  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String): Buckets = {
+    StorageService.bucketService(httpTransport, jsonFactory, credential)
+      .list(projectId).execute()
+  }
 
 
   def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String) {

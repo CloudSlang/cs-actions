@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 Micro Focus, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,15 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.filesystem.constants;
 
-package io.cloudslang.content.google.utils.action
+public class Constants {
 
-object Outputs {
-
-  object SQLDatabaseInstance {
-    final val CONNECTION_NAME = "connectionName"
-    final val PUBLIC_IP_ADDRESS = "publicIPAddresses"
-    final val SELF_LINK = "selfLink"
-  }
+    public static final String SIZE = "size";
+    public static final String IS_DIRECTORY_SUCCESS = "'%s' is a directory";
 
 }

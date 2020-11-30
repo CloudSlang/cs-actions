@@ -56,6 +56,8 @@ import static io.cloudslang.content.office365.utils.Descriptions.SendMessage.RET
 import static io.cloudslang.content.office365.utils.Descriptions.SendMessage.EXCEPTION_DESC;
 import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.*;
+import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.PASSWORD;
+import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.USERNAME;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
@@ -87,6 +89,9 @@ public class SendEmail {
     public Map<String, String> execute(@Param(value = CLIENT_ID, required = true, description = CLIENT_ID_DESC) String clientId,
                                        @Param(value = CLIENT_SECRET, encrypted = true, description = CLIENT_SECRET_DESC) String clientSecret,
                                        @Param(value = TENANT_NAME, required = true, description = TENANT_NAME_DESC) String tenant,
+                                       @Param(value = LOGIN_TYPE, description = LOGIN_TYPE_DESC) String loginType,
+                                       @Param(value = USERNAME, description = USERNAME_DESC) String username,
+                                       @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -111,8 +116,10 @@ public class SendEmail {
                                        @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
 
         clientId = defaultIfEmpty(clientId, EMPTY);
-        clientSecret = defaultIfEmpty(clientSecret, EMPTY);
         final String loginAuthority = LOGIN_AUTHORITY_PREFIX + tenant + LOGIN_AUTHORITY_SUFFIX;
+        username = defaultIfEmpty(username, EMPTY);
+        password = defaultIfEmpty(password, EMPTY);
+        loginType = defaultIfEmpty(loginType, DEFAULT_LOGIN_TYPE);
 
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -136,7 +143,12 @@ public class SendEmail {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessages = verifySendEmailInputs(clientId, clientSecret, proxyPort, fromAddress, EMPTY,
+        List<String> exceptionMessages = verifyAuthorizationInputs(loginType, clientId, clientSecret, username, password, proxyPort);
+        if (!exceptionMessages.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+        }
+
+        exceptionMessages = verifySendEmailInputs(clientId, proxyPort, fromAddress, EMPTY,
                                                                      trustAllRoots, connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
@@ -144,7 +156,9 @@ public class SendEmail {
 
         try {
             final String authToken = AuthorizationTokenImpl.getToken(AuthorizationTokenInputs.builder()
-                    .loginType(DEFAULT_LOGIN_TYPE)
+                    .loginType(loginType)
+                    .username(username)
+                    .password(password)
                     .clientId(clientId)
                     .clientSecret(clientSecret)
                     .authority(loginAuthority)

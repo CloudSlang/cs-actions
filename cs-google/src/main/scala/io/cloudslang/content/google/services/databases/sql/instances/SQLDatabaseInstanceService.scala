@@ -20,6 +20,7 @@ import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.services.sqladmin.model._
 import io.cloudslang.content.google.services.databases._
+import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs.{ACTIVATION_POLICY_ALWAYS, ACTIVATION_POLICY_NEVER, RESTART_INSTANCE, START_INSTANCE}
 
 object SQLDatabaseInstanceService {
 
@@ -50,8 +51,40 @@ object SQLDatabaseInstanceService {
           .setActivationPolicy(activationPolicy)
           .setBackupConfiguration(
             if (databaseVersion.contains("MYSQL")) new BackupConfiguration().setBinaryLogEnabled(true).setEnabled(true)
-            else new BackupConfiguration())
+            else new BackupConfiguration().setEnabled(true))
         )).execute()
+    DatabaseController.awaitSuccessOperation(httpTransport, jsonFactory, credential, projectId, operation,
+      Some(databaseInstanceId)
+      , async, timeout, pollingInterval)
+  }
+
+  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential,
+             projectId: String, databaseInstanceId: String, async: Boolean, timeout: Long,
+             pollingInterval: Long): Operation = {
+    val operation = DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
+      .delete(projectId, databaseInstanceId)
+      .execute()
+    DatabaseController.awaitSuccessOperation(httpTransport, jsonFactory, credential, projectId, operation,
+      Some(databaseInstanceId)
+      , async, timeout, pollingInterval)
+  }
+
+  def instanceOperation(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential,
+                        projectId: String, databaseInstanceId: String, instanceOperation: String, async: Boolean, timeout: Long,
+                        pollingInterval: Long): Operation = {
+    val operation =
+      if (instanceOperation.equalsIgnoreCase(RESTART_INSTANCE)) {
+        DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential).restart(projectId, databaseInstanceId)
+          .execute()
+      } else {
+        DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
+          .patch(projectId, databaseInstanceId, new DatabaseInstance()
+            .setSettings(
+              if (instanceOperation.equalsIgnoreCase(START_INSTANCE)) new Settings().setActivationPolicy(ACTIVATION_POLICY_ALWAYS)
+              else new Settings().setActivationPolicy(ACTIVATION_POLICY_NEVER)
+            )).execute()
+      }
+
     DatabaseController.awaitSuccessOperation(httpTransport, jsonFactory, credential, projectId, operation,
       Some(databaseInstanceId)
       , async, timeout, pollingInterval)
