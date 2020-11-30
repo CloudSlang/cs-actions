@@ -42,17 +42,23 @@ object BucketService {
   }
 
 
-  def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,bucketName: String, location: String
-             , locationType: String, storageClass: String, accessControlType: String,labels: java.util.Map[String, String]): Bucket = {
+  def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, bucketName: String, location: String
+             , locationType: String, storageClass: String, accessControlType: String, labels: java.util.Map[String, String]): Bucket = {
 
-      val iamConfiguration = new IamConfiguration()
-    if(accessControlType.equalsIgnoreCase("uniform")){
-      iamConfiguration.setBucketPolicyOnly(
-        new BucketPolicyOnly().setEnabled(true)).setUniformBucketLevelAccess(new UniformBucketLevelAccess().setEnabled(true))
-    }
+
     StorageService.bucketService(httpTransport, jsonFactory, credential)
       .insert(projectId, new Bucket().setName(bucketName).setLocation(location).setLocationType(locationType).setStorageClass(
-        storageClass).setLabels(labels).setIamConfiguration(iamConfiguration))
+        storageClass).setLabels(labels).setIamConfiguration(getIamConfiguration(accessControlType)))
+      .execute()
+  }
+
+  def update(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, bucketName: String, location: String
+             , locationType: String, storageClass: String, accessControlType: String, labels: java.util.Map[String, String]): Bucket = {
+
+
+    StorageService.bucketService(httpTransport, jsonFactory, credential)
+      .update(projectId, new Bucket().setStorageClass(storageClass).setLabels(labels).setIamConfiguration(
+        getIamConfiguration(accessControlType)))
       .execute()
   }
 
@@ -68,5 +74,14 @@ object BucketService {
       .execute()
   }
 
+  def getIamConfiguration(bucketPolicy: String): IamConfiguration = {
 
+    if (bucketPolicy.equalsIgnoreCase("uniform")) {
+      new IamConfiguration().setBucketPolicyOnly(
+        new BucketPolicyOnly().setEnabled(true)).setUniformBucketLevelAccess(new UniformBucketLevelAccess().setEnabled(true))
+    } else {
+      new IamConfiguration()
+    }
+
+  }
 }
