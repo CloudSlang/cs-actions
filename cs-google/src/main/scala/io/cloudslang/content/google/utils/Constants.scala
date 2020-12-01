@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,8 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 
 package io.cloudslang.content.google.utils
 
@@ -36,4 +34,11 @@ object Constants {
   val ERROR_MESSAGE = "errorMessage"
   val ENCRYPTED_PASSWORD = "encryptedPassword"
 
+  object SQLInstancesConstant {
+    final val CREATE_SQL_INSTANCE_OPERATION_NAME = "Create SQL Instance"
+    final val DELETE_SQL_INSTANCE_OPERATION_NAME = "Delete SQL Instance"
+    final val GET_SQL_INSTANCE_OPERATION_NAME = "Get SQL Instance"
+    final val LIST_SQL_INSTANCES_OPERATION_NAME = "List SQL Instances"
+    final val START_SQL_INSTANCE_OPERATION_NAME = "Start SQL Instance"
+  }
 }

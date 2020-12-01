@@ -23,17 +23,18 @@ import io.cloudslang.content.constants.OutputNames._
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.databases.sql.instances.SQLDatabaseInstanceService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
+import io.cloudslang.content.google.utils.Constants.SQLInstancesConstant.DELETE_SQL_INSTANCE_OPERATION_NAME
 import io.cloudslang.content.google.utils.{SQLErrorOperation, SQLOperationStatus, SQLSuccessOperation}
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.Descriptions.Common._
 import io.cloudslang.content.google.utils.action.Descriptions.CreateSQLDataBaseInstance._
+import io.cloudslang.content.google.utils.action.Descriptions.SQLDataBaseInstances.DELETE_SQL_INSTANCE_OPERATION_DESCRIPTION
 import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs._
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeDouble, validateNonNegativeLong, validateProxyPort}
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.action.GoogleOutputNames.STATUS
-
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
@@ -43,8 +44,8 @@ import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 import scala.collection.JavaConversions._
 
 class DeleteSQLInstance {
-  @Action(name = "Delete SQL Instance",
-    description = "Deletes a Cloud SQL instance.",
+  @Action(name = DELETE_SQL_INSTANCE_OPERATION_NAME,
+    description = DELETE_SQL_INSTANCE_OPERATION_DESCRIPTION,
     outputs = Array(
       new Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
       new Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),

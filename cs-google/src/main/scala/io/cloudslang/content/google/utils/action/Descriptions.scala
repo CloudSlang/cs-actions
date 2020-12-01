@@ -33,6 +33,7 @@ object Descriptions {
     final val TIMEOUT_DESC = "The time, in seconds, to wait for a response if the async input is set to \"false\". If the value is 0, the operation will wait until zone operation progress is 100.\nValid values: Any positive number including 0.\nDefault: 30"
     final val POLLING_INTERVAL_DESC = "The time, in seconds, to wait before a new request that verifies if the operation finished is executed, if the async input is set to \"false\".\nValid values: Any positive number including 0.\nDefault: 1"
     final val STATUS_DESC =  " The status of the SQL instance if the async input is false, otherwise the status of the Operation."
+    final val FILTER_DESC = "A filter expression that filters resources listed in the response. The expression is in the form of field:value. For example, 'instanceType:CLOUD_SQL_INSTANCE'. Fields can be nested as needed as per their JSON representation, such as 'settings.userLabels.auto_start:true'.\n\nMultiple filter queries are space-separated. For example. 'state:RUNNABLE instanceType:CLOUD_SQL_INSTANCE'. By default, each expression is an AND expression. However, you can include AND and OR expressions explicitly"
   }
 
   object CreateSQLDataBaseInstance {
@@ -58,4 +59,21 @@ object Descriptions {
     final val SELF_LINK_DESC = "The URI of this resource."
   }
 
+  object SQLDataBaseInstances {
+    final val CREATE_SQL_INSTANCE_OPERATION_DESCRIPTION = "Creates a resource containing information about a database inside a Google Cloud SQL instance."
+    final val DELETE_SQL_INSTANCE_OPERATION_DESCRIPTION = "Deletes a Cloud SQL instance."
+    final val GET_SQL_INSTANCE_OPERATION_DESCRIPTION = "Retrieves a resource containing information about a database inside a Google Cloud SQL instance."
+    final val LIST_SQL_INSTANCES_OPERATION_DESCRIPTION = "Lists instances under a given project."
+    final val START_SQL_INSTANCE_OPERATION_DESCRIPTION = "Starts a Cloud SQL instance."
+  }
+
+  object StorageBucketDesc{
+    final val GET_BUCKET_OPERATION_DESC = "Retrieves a resource containing information about a bucket inside a Google Cloud Storage."
+    final val BUCKET_NAME_DESC= "Name of a bucket."
+    final val METAGENERATION_MATCH_DESC = "Makes the return of the bucket metadata conditional on whether the bucket's current metageneration matches the given value."
+    final val METAGENERATION_NOT_MATCH_DESC = "Makes the return of the bucket metadata conditional on whether the bucket's current metageneration does not match the given value."
+    final val PROJECTION_DESC = "Set of properties to return. Defaults to noAcl.\n\nAcceptable values are:\n\"full\": Include all properties.\n\"noAcl\": Omit owner, acl and defaultObjectAcl properties."
+
+
+  }
 }

@@ -22,6 +22,8 @@ import com.google.api.services.sqladmin.model._
 import io.cloudslang.content.google.services.databases._
 import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs.{ACTIVATION_POLICY_ALWAYS, ACTIVATION_POLICY_NEVER, RESTART_INSTANCE, START_INSTANCE}
 
+import scala.collection.JavaConversions._
+
 object SQLDatabaseInstanceService {
 
   def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential,
@@ -30,9 +32,24 @@ object SQLDatabaseInstanceService {
       .get(projectId, databaseInstanceId)
       .execute()
 
-  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String):
-  InstancesListResponse = DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
-    .list(projectId).execute()
+  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String,
+           filterOpt: Option[String]): List[DatabaseInstance] = {
+    val databaseInstances = DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
+    val request = databaseInstances.list(project)
+
+    filterOpt.foreach { filter => request.setFilter(filter) }
+
+    var instances: List[DatabaseInstance] = List()
+    var response: InstancesListResponse = null
+    do {
+      response = request.execute()
+      if (response.getItems != null) {
+        instances ++= response.getItems
+        request.setPageToken(response.getNextPageToken)
+      }
+    } while (response.getNextPageToken != null)
+    instances
+  }
 
   def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,
              databaseInstanceId: String, password: String, region: String, zone: String, databaseVersion: String,
@@ -89,6 +106,5 @@ object SQLDatabaseInstanceService {
       Some(databaseInstanceId)
       , async, timeout, pollingInterval)
   }
-
 
 }

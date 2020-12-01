@@ -43,6 +43,7 @@ public class GetSizeAction {
      *
      * @param source           The file to read. It must be an absolute path.
      * @param threshold        The threshold to compare the file size to (in bytes).
+     * @result FAILURE         The operation failed.
      * @result LESS_THAN       File's size is smaller than the threshold.
      * @result EQUAL_TO        File's size is the same as the threshold.
      * @result GREATER_THAN    File's size is the greater than the threshold.
@@ -87,7 +88,7 @@ public class GetSizeAction {
             result = service.execute(input);
 
             result.put(OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
-            result.put(OutputNames.RETURN_RESULT, result.get(Constants.RETURN_RESULT));
+            result.put(OutputNames.RETURN_RESULT, result.get(OutputNames.RETURN_RESULT));
             result.put(Constants.SIZE, result.get(Constants.SIZE));
             return result;
         } catch (Exception ex) {
