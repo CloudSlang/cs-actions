@@ -33,7 +33,7 @@ import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateNonNegativeDouble, validateNonNegativeLong, validateProxyPort}
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
-import io.cloudslang.content.google.utils.action.Outputs.SQLDatabaseInstance._
+import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils, Utility}
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
@@ -49,6 +49,7 @@ class RestartSQLInstance {
       new Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
       new Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
       new Output(value = EXCEPTION, description = EXCEPTION_DESC),
+      new Output(value = ACTIVATION_POLICY, description = ACTIVATION_POLICY_DESC),
       new Output(value = STATUS, description = STATUS_DESC)
     )
     ,
@@ -107,11 +108,19 @@ class RestartSQLInstance {
         proxyPasswordStr)
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
-
-      SQLOperationStatus(SQLDatabaseInstanceService.instanceOperation(httpTransport, jsonFactory, credential, projectId,
-        instanceId, RESTART_INSTANCE, async, timeout, pollingIntervalMilli)) match {
-        case SQLSuccessOperation(sqlOperation) => getSuccessResultsMap(toPretty(prettyPrint, sqlOperation)) + (STATUS -> sqlOperation.getStatus) +
-          (SELF_LINK -> sqlOperation.getSelfLink)
+    SQLOperationStatus(SQLDatabaseInstanceService.instanceOperation(httpTransport, jsonFactory, credential, projectId,
+      instanceId, RESTART_INSTANCE, async, timeout, pollingIntervalMilli)) match {
+      case SQLSuccessOperation(sqlOperation) =>
+        val resultMap = getSuccessResultsMap(toPretty(prettyPrint, sqlOperation))
+        val status = defaultIfEmpty(sqlOperation.getStatus, EMPTY)
+        if (async) {
+          resultMap +
+            (STATUS -> status)
+        } else {
+          getSuccessResultsMap(toPretty(prettyPrint, sqlOperation)) +
+            (STATUS -> Utility.getInstanceStatus(ACTIVATION_POLICY_ALWAYS)) +
+            (ACTIVATION_POLICY -> ACTIVATION_POLICY_ALWAYS)
+        }
 
 
         case SQLErrorOperation(error) => getFailureResultsMap(error)
