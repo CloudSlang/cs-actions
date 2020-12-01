@@ -21,9 +21,11 @@ import com.google.api.client.json.JsonFactory
 import com.google.api.services.sqladmin.SQLAdmin
 
 object DatabaseService {
-  private def sqlDatabaseService(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential):
-  SQLAdmin = new SQLAdmin(httpTransport, jsonFactory, credential)
   def sqlDatabaseInstanceService: (HttpTransport, JsonFactory, Credential) => SQLAdmin#Instances =
     sqlDatabaseService(_, _, _).instances()
+
+  private def sqlDatabaseService(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential):
+  SQLAdmin = new SQLAdmin(httpTransport, jsonFactory, credential)
+
   def OperationsService: (HttpTransport, JsonFactory, Credential) => SQLAdmin#Operations = sqlDatabaseService(_, _, _).operations()
 }

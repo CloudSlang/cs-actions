@@ -13,8 +13,6 @@
  * limitations under the License.
  */
 
-
-
 package io.cloudslang.content.google.utils.action
 
 import io.cloudslang.content.constants.BooleanValues.TRUE
@@ -44,7 +42,6 @@ object DefaultValues {
   final val DEFAULT_INTERFACE = "SCSI"
 
   object CreateSQLDatabaseInstance{
-
     final val DEFAULT_ZONE = "Any"
     final val DEFAULT_STORAGE_TYPE = "PD_SSD"
     final val DEFAULT_STORAGE_CAPACITY = "100"
@@ -54,7 +51,6 @@ object DefaultValues {
     final val DEFAULT_PREFERRED_MAINTENANCE_WINDOW_HOUR = "0"
     final val DEFAULT_ACTIVATION_POLICY = "ALWAYS"
     final val DEFAULT_LABELS = "{}"
-
   }
 
   object StorageBucket{

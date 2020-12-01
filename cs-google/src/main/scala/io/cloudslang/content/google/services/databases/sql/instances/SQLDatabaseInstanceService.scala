@@ -27,10 +27,10 @@ import scala.collection.JavaConversions._
 object SQLDatabaseInstanceService {
 
   def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential,
-          projectId: String, databaseInstanceId: String): DatabaseInstance =
-    DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
-      .get(projectId, databaseInstanceId)
-      .execute()
+          projectId: String, databaseInstanceId: String):
+  DatabaseInstance = DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
+    .get(projectId, databaseInstanceId)
+    .execute()
 
   def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String,
            filterOpt: Option[String]): List[DatabaseInstance] = {
@@ -101,7 +101,31 @@ object SQLDatabaseInstanceService {
               else new Settings().setActivationPolicy(ACTIVATION_POLICY_NEVER)
             )).execute()
       }
+    DatabaseController.awaitSuccessOperation(httpTransport, jsonFactory, credential, projectId, operation,
+      Some(databaseInstanceId)
+      , async, timeout, pollingInterval)
+  }
 
+  def update(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,
+             databaseInstanceId: String, zone: String, settingsVersion: Long, databaseVersion: String, tier: String,
+             dataDiskSizeInGB: Long, storageAutoResize: Boolean, privateNetwork: String, isIPV4Enabled: Boolean, availabilityType: String,
+             isBackupConfigurationEnabled: Boolean, isBinaryLogEnabled: Boolean,
+             maintenanceWindowDay: Int, maintenanceWindowHour: Int, activationPolicy: String,
+             labels: java.util.Map[String, String], async: Boolean, timeout: Long,
+             pollingInterval: Long): Operation = {
+
+    val operation = DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
+      .update(projectId, databaseInstanceId, new DatabaseInstance().setGceZone(zone)
+        .setSettings(new Settings().setSettingsVersion(settingsVersion).setTier(tier).setUserLabels(labels).setDataDiskSizeGb(dataDiskSizeInGB)
+          .setStorageAutoResize(storageAutoResize).setAvailabilityType(availabilityType)
+          .setMaintenanceWindow(new MaintenanceWindow().setDay(maintenanceWindowDay).setHour(maintenanceWindowHour))
+          .setActivationPolicy(activationPolicy)
+          .setBackupConfiguration(
+            if (databaseVersion.contains("MYSQL")) new BackupConfiguration().setBinaryLogEnabled(isBinaryLogEnabled)
+              .setEnabled(isBackupConfigurationEnabled)
+            else new BackupConfiguration().setEnabled(true)).setIpConfiguration(new IpConfiguration().
+          setPrivateNetwork(privateNetwork).setIpv4Enabled(isIPV4Enabled))
+        )).execute()
     DatabaseController.awaitSuccessOperation(httpTransport, jsonFactory, credential, projectId, operation,
       Some(databaseInstanceId)
       , async, timeout, pollingInterval)
