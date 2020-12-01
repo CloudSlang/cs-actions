@@ -65,6 +65,8 @@ object Descriptions {
     final val GET_SQL_INSTANCE_OPERATION_DESCRIPTION = "Retrieves a resource containing information about a database inside a Google Cloud SQL instance."
     final val LIST_SQL_INSTANCES_OPERATION_DESCRIPTION = "Lists instances under a given project."
     final val START_SQL_INSTANCE_OPERATION_DESCRIPTION = "Starts a Cloud SQL instance."
+    final val STOP_SQL_INSTANCE_OPERATION_DESCRIPTION = "Stops a Cloud SQL instance."
+    final val RESTART_SQL_INSTANCE_OPERATION_DESCRIPTION = "Restarts a Cloud SQL instance."
   }
 
   object StorageBucketDesc{
