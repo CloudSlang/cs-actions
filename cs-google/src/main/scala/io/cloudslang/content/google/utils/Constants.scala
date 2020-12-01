@@ -41,5 +41,7 @@ object Constants {
     final val LIST_SQL_INSTANCES_OPERATION_NAME = "List SQL Instances"
     final val START_SQL_INSTANCE_OPERATION_NAME = "Start SQL Instance"
     final val UPDATE_SQL_INSTANCE_OPERATION_NAME = "Update SQL Instance"
+    final val STOP_SQL_INSTANCE_OPERATION_NAME = "Stop SQL Instance"
+    final val RESTART_SQL_INSTANCE_OPERATION_NAME = "Restart SQL Instance"
   }
 }
