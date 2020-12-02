@@ -41,17 +41,18 @@ public final class InputBuilderUtils {
         return source;
     }
 
-
-    public static String buildThreshold(String threshold) throws Exception {
-        if (StringUtils.isEmpty(threshold)) {
+    public static long buildThreshold(String threshold) throws Exception {
+        long thresholdLong;
+        if (StringUtils.isEmpty(threshold))
             throw new Exception(ExceptionMsgs.EMPTY_THRESHOLD);
-        } else {
-            try {
-                Integer.parseInt(threshold);
-            } catch (NumberFormatException ex) {
-                throw new Exception(ExceptionMsgs.INVALID_THRESHOLD);
-            }
-            return threshold;
+        try {
+            thresholdLong = Long.parseLong(threshold);
+            if(thresholdLong < 0)
+                Integer.parseInt("justToThrowException");
+        } catch (NumberFormatException ex) {
+            throw new Exception(ExceptionMsgs.INVALID_THRESHOLD);
         }
+        return thresholdLong;
     }
 }
+
