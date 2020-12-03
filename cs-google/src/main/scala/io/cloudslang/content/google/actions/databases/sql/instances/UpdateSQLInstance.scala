@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.google.actions.databases.sql.instances
 
+import java.util
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.BooleanValues.TRUE
@@ -41,9 +42,7 @@ import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
-
 import scala.collection.JavaConversions._
-import scala.collection.mutable
 
 class UpdateSQLInstance {
 
@@ -75,7 +74,7 @@ class UpdateSQLInstance {
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true, description = ACCESS_TOKEN_DESC) accessToken: String,
               @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) instanceId: String,
               @Param(value = ZONE, description = ZONE_DESC) zone: String,
-              @Param(value = MACHINE_TYPE, required = true, description = MACHINE_TYPE_DESC) machineType: String,
+              @Param(value = MACHINE_TYPE, description = MACHINE_TYPE_DESC) machineType: String,
               @Param(value = STORAGE_CAPACITY, description = STORAGE_CAPACITY_DESC) storageCapacity: String,
               @Param(value = STORAGE_AUTO_RESIZE, description = STORAGE_AUTO_RESIZE_DESC) storageAutoResize: String,
               @Param(value = PRIVATE_NETWORK, description = PRIVATE_NETWORK_DESC) privateNetwork: String,
@@ -92,7 +91,7 @@ class UpdateSQLInstance {
               @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) proxyPort: String,
               @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) proxyUsername: String,
               @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) proxyPassword: String,
-              @Param(value = PRETTY_PRINT, description = PRETTY_PRINT_DESC) prettyPrintInp: String): mutable.Map[String, String] = {
+              @Param(value = PRETTY_PRINT, description = PRETTY_PRINT_DESC) prettyPrintInp: String): util.Map[String, String] = {
 
     val storageCapacityInt = defaultIfEmpty(storageCapacity, DEFAULT_STORAGE_CAPACITY)
     val storageAutoResizeStr = defaultIfEmpty(storageAutoResize, DEFAULT_STORAGE_AUTO_RESIZE)
@@ -178,7 +177,11 @@ class UpdateSQLInstance {
               (STORAGE_CAPACITY -> sqlInstanceSettings.getDataDiskSizeGb.toString) +
               (STATUS -> Utility.getInstanceStatus(sqlInstanceSettings.getActivationPolicy)) +
               (MACHINE_TYPE -> sqlInstanceSettings.getTier) +
-              (LABELS -> sqlInstanceSettings.getUserLabels.toString) +
+              (LABELS -> (if (sqlInstanceSettings.getUserLabels != null) {
+                sqlInstanceSettings.getUserLabels.toString
+              } else {
+                EMPTY
+              })) +
               (SELF_LINK -> sqlInstance.getSelfLink) +
               (ACTIVATION_POLICY -> sqlInstanceSettings.getActivationPolicy)
           }
