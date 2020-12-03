@@ -19,6 +19,7 @@ import io.cloudslang.content.filesystem.constants.ExceptionMsgs;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import static io.cloudslang.content.filesystem.constants.Constants.*;
 import static io.cloudslang.content.filesystem.constants.ExceptionMsgs.*;
 
 public class Utils {
@@ -32,5 +33,17 @@ public class Utils {
             throw new FileNotFoundException(String.format(DOES_NOT_EXIST, path));
         if (!source.isDirectory())
             throw new Exception(String.format(NOT_A_DIRECTORY, path));
+    }
+
+    public static String createReturnResultGetSize(long size, long threshold){
+        String returnResult;
+        if(size == threshold)
+            returnResult = String.format(EQUALS,threshold);
+        else if(size > threshold)
+            returnResult = String.format(GREATER_THAN, threshold);
+        else
+            returnResult = String.format(LESS_THAN,threshold);
+        return returnResult;
+
     }
 }
