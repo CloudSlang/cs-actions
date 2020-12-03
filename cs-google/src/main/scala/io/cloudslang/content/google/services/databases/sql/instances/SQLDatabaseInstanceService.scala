@@ -109,23 +109,43 @@ object SQLDatabaseInstanceService {
   def update(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,
              databaseInstanceId: String, zone: String, settingsVersion: Long, databaseVersion: String, tier: String,
              dataDiskSizeInGB: Long, storageAutoResize: Boolean, privateNetwork: String, isIPV4Enabled: Boolean, availabilityType: String,
-             isBackupConfigurationEnabled: Boolean, isBinaryLogEnabled: Boolean,
-             maintenanceWindowDay: Int, maintenanceWindowHour: Int, activationPolicy: String,
-             labels: java.util.Map[String, String], async: Boolean, timeout: Long,
+             maintenanceWindowDay: Int, maintenanceWindowHour: Int, activationPolicy: String, labels: java.util.Map[String, String],
+             async: Boolean, timeout: Long,
              pollingInterval: Long): Operation = {
 
+    val databaseInstance = new DatabaseInstance()
+    val settings = new Settings().setUserLabels(labels)
+    val maintenanceWindow = new MaintenanceWindow().setDay(maintenanceWindowDay).setHour(maintenanceWindowHour)
+    val ipConfiguration = new IpConfiguration().setIpv4Enabled(isIPV4Enabled)
+
+    if (!zone.isEmpty) {
+      databaseInstance.setGceZone(zone)
+    }
+
+    if (dataDiskSizeInGB != 10 || dataDiskSizeInGB < 10) {
+      settings.setDataDiskSizeGb(dataDiskSizeInGB)
+    }
+    if (!availabilityType.isEmpty) {
+      settings.setAvailabilityType(availabilityType)
+    }
+    if (!activationPolicy.isEmpty) {
+      settings.setActivationPolicy(activationPolicy)
+    }
+
+    if (!privateNetwork.isEmpty) {
+      ipConfiguration.setPrivateNetwork(privateNetwork)
+    }
+
+    settings.setTier(tier).setSettingsVersion(settingsVersion).setStorageAutoResize(storageAutoResize)
+      .setIpConfiguration(ipConfiguration).setMaintenanceWindow(maintenanceWindow).setBackupConfiguration(
+        if (databaseVersion.contains("MYSQL") && availabilityType.contains("REGIONAL")) new BackupConfiguration().setBinaryLogEnabled(true)
+          .setEnabled(true)
+       else new BackupConfiguration().setEnabled(true))
+
+    databaseInstance.setSettings(settings)
+
     val operation = DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
-      .update(projectId, databaseInstanceId, new DatabaseInstance().setGceZone(zone)
-        .setSettings(new Settings().setSettingsVersion(settingsVersion).setTier(tier).setUserLabels(labels).setDataDiskSizeGb(dataDiskSizeInGB)
-          .setStorageAutoResize(storageAutoResize).setAvailabilityType(availabilityType)
-          .setMaintenanceWindow(new MaintenanceWindow().setDay(maintenanceWindowDay).setHour(maintenanceWindowHour))
-          .setActivationPolicy(activationPolicy)
-          .setBackupConfiguration(
-            if (databaseVersion.contains("MYSQL")) new BackupConfiguration().setBinaryLogEnabled(isBinaryLogEnabled)
-              .setEnabled(isBackupConfigurationEnabled)
-            else new BackupConfiguration().setEnabled(true)).setIpConfiguration(new IpConfiguration().
-          setPrivateNetwork(privateNetwork).setIpv4Enabled(isIPV4Enabled))
-        )).execute()
+      .update(projectId, databaseInstanceId, databaseInstance).execute()
     DatabaseController.awaitSuccessOperation(httpTransport, jsonFactory, credential, projectId, operation,
       Some(databaseInstanceId)
       , async, timeout, pollingInterval)

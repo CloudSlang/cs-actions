@@ -22,7 +22,8 @@ import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.databases.sql.instances.SQLDatabaseInstanceService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
 import io.cloudslang.content.google.utils.Constants.SQLInstancesConstant.UPDATE_SQL_INSTANCE_OPERATION_NAME
-import io.cloudslang.content.google.utils.action.DefaultValues.CreateSQLDatabaseInstance._
+import io.cloudslang.content.google.utils.action.DefaultValues.CreateSQLDatabaseInstance.{DEFAULT_LABELS, DEFAULT_PREFERRED_MAINTENANCE_WINDOW_DAY, DEFAULT_PREFERRED_MAINTENANCE_WINDOW_HOUR, DEFAULT_STORAGE_AUTO_RESIZE}
+import io.cloudslang.content.google.utils.action.DefaultValues.UpdateSQLDatabaseInstance.DEFAULT_STORAGE_CAPACITY
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.Descriptions.Common.{RETURN_CODE_DESC, _}
 import io.cloudslang.content.google.utils.action.Descriptions.SQLDataBaseInstances.UPDATE_SQL_INSTANCE_OPERATION_DESCRIPTION
@@ -80,8 +81,6 @@ class UpdateSQLInstance {
               @Param(value = PRIVATE_NETWORK, description = PRIVATE_NETWORK_DESC) privateNetwork: String,
               @Param(value = IS_IPV4_ENABLED, description = IS_IPV4_ENABLED_DESC) isIPV4Enabled: String,
               @Param(value = AVAILABILITY_TYPE, description = AVAILABILITY_TYPE_DESC) availabilityType: String,
-              @Param(value = IS_BACKUP_CONFIGURATION_ENABLED, description = IS_BACKUP_CONFIGURATION_ENABLED_DESC) isBackupConfigurationEnabled: String,
-              @Param(value = IS_BINARY_LOG_ENABLED, description = IS_BINARY_LOG_ENABLED_DESC) isBinaryLogEnabled: String,
               @Param(value = PREFERRED_MAINTENANCE_WINDOW_DAY, description = PREFERRED_MAINTENANCE_WINDOW_DAY_DESC) preferredMaintenanceWindowDay: String,
               @Param(value = PREFERRED_MAINTENANCE_WINDOW_HOUR, description = PREFERRED_MAINTENANCE_WINDOW_HOUR_DESC) preferredMaintenanceWindowHour: String,
               @Param(value = ACTIVATION_POLICY, description = ACTIVATION_POLICY_DESC) activationPolicy: String,
@@ -95,6 +94,11 @@ class UpdateSQLInstance {
               @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) proxyPassword: String,
               @Param(value = PRETTY_PRINT, description = PRETTY_PRINT_DESC) prettyPrintInp: String): mutable.Map[String, String] = {
 
+    val storageCapacityInt = defaultIfEmpty(storageCapacity, DEFAULT_STORAGE_CAPACITY)
+    val storageAutoResizeStr = defaultIfEmpty(storageAutoResize, DEFAULT_STORAGE_AUTO_RESIZE)
+    val preferredMaintenanceWindowDayInt = defaultIfEmpty(preferredMaintenanceWindowDay, DEFAULT_PREFERRED_MAINTENANCE_WINDOW_DAY)
+    val preferredMaintenanceWindowHourInt = defaultIfEmpty(preferredMaintenanceWindowHour, DEFAULT_PREFERRED_MAINTENANCE_WINDOW_HOUR)
+    val isIPV4EnabledStr = defaultIfEmpty(isIPV4Enabled, TRUE)
     val labelsStr = defaultIfEmpty(labels, DEFAULT_LABELS)
     val asyncStr = defaultIfEmpty(asyncInp, TRUE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
@@ -105,31 +109,26 @@ class UpdateSQLInstance {
     val proxyPasswordStr = defaultIfEmpty(proxyPassword, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
-    val validationStream = validateDiskSize(storageCapacity, STORAGE_CAPACITY) ++
-      validateNonNegativeInteger(preferredMaintenanceWindowDay, PREFERRED_MAINTENANCE_WINDOW_DAY) ++
-      validateinstanceId(instanceId) ++
-      validateNonNegativeInteger(preferredMaintenanceWindowHour, PREFERRED_MAINTENANCE_WINDOW_HOUR) ++
-      validateBoolean(storageAutoResize, STORAGE_AUTO_RESIZE) ++
-      validateBoolean(isIPV4Enabled, IS_IPV4_ENABLED) ++
-      validateBoolean(isBackupConfigurationEnabled, IS_BACKUP_CONFIGURATION_ENABLED) ++
-      validateBoolean(isBinaryLogEnabled, IS_BINARY_LOG_ENABLED) ++
-      validateProxyPort(proxyPortInt) ++
-      validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
-      validateBoolean(asyncStr, ASYNC) ++
-      validateNonNegativeLong(timeoutStr, TIMEOUT) ++
-      validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
-
+    val validationStream =
+      validateNonNegativeInteger(preferredMaintenanceWindowDayInt, PREFERRED_MAINTENANCE_WINDOW_DAY) ++
+        validateinstanceId(instanceId) ++
+        validateNonNegativeInteger(preferredMaintenanceWindowHourInt, PREFERRED_MAINTENANCE_WINDOW_HOUR) ++
+        validateBoolean(storageAutoResizeStr, STORAGE_AUTO_RESIZE) ++
+        validateBoolean(isIPV4EnabledStr, IS_IPV4_ENABLED) ++
+        validateProxyPort(proxyPortInt) ++
+        validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
+        validateBoolean(asyncStr, ASYNC) ++
+        validateNonNegativeLong(timeoutStr, TIMEOUT) ++
+        validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
     }
-    val isIPV4EnabledVal = toBoolean(isIPV4Enabled)
-    val isBackupConfigurationEnabledVal = toBoolean(isBackupConfigurationEnabled)
-    val isBinaryLogEnabledVal = toBoolean(isBinaryLogEnabled)
-    val storageCapacityVal = toInteger(storageCapacity)
-    val storageAutoResizeVal = toBoolean(storageAutoResize)
-    val preferredMaintenanceWindowHourVal = toInteger(preferredMaintenanceWindowHour)
-    val preferredMaintenanceWindowDayVal = toInteger(preferredMaintenanceWindowDay)
+    val isIPV4EnabledVal = toBoolean(isIPV4EnabledStr)
+    val storageCapacityVal = toInteger(storageCapacityInt)
+    val storageAutoResizeVal = toBoolean(storageAutoResizeStr)
+    val preferredMaintenanceWindowHourVal = toInteger(preferredMaintenanceWindowHourInt)
+    val preferredMaintenanceWindowDayVal = toInteger(preferredMaintenanceWindowDayInt)
     val proxyPortVal = toInteger(proxyPortInt)
     val prettyPrint = toBoolean(prettyPrintStr)
 
@@ -147,19 +146,19 @@ class UpdateSQLInstance {
       val sqlInstanceSettings = sqlInstance.getSettings
       val settingsVersion = sqlInstanceSettings.getSettingsVersion
       val databaseVersion = sqlInstance.getDatabaseVersion
+      var machineTypeStr = defaultIfEmpty(machineType, EMPTY)
       if (machineType.isEmpty) {
-        val machineType = sqlInstanceSettings.getTier
+        machineTypeStr = sqlInstanceSettings.getTier
       }
+
       SQLOperationStatus(SQLDatabaseInstanceService.update(httpTransport, jsonFactory, credential, projectId,
-        instanceId, zone, settingsVersion, databaseVersion, machineType, storageCapacityVal,
-        storageAutoResizeVal, privateNetwork, isIPV4EnabledVal, availabilityType, isBackupConfigurationEnabledVal,
-        isBinaryLogEnabledVal, preferredMaintenanceWindowDayVal, preferredMaintenanceWindowHourVal,
-        activationPolicy, Utility.jsonToMap(labelsStr), async,
-        timeout, pollingIntervalMilli)) match {
+        instanceId, zone, settingsVersion, databaseVersion, machineTypeStr, storageCapacityVal,
+        storageAutoResizeVal, privateNetwork, isIPV4EnabledVal, availabilityType, preferredMaintenanceWindowDayVal,
+        preferredMaintenanceWindowHourVal,
+        activationPolicy, Utility.jsonToMap(labelsStr), async, timeout, pollingIntervalMilli)) match {
         case SQLSuccessOperation(sqlOperation) =>
           val status = defaultIfEmpty(sqlOperation.getStatus, EMPTY)
           val resultMap = getSuccessResultsMap(toPretty(prettyPrint, sqlOperation)) + (STATUS -> status)
-
           if (async) {
             resultMap +
               (STATUS -> status)
@@ -175,12 +174,12 @@ class UpdateSQLInstance {
               } else {
                 EMPTY
               })) +
-              (INSTANCE_ID -> instanceId) +
               (AVAILABILITY_TYPE -> sqlInstanceSettings.getAvailabilityType) +
               (STORAGE_CAPACITY -> sqlInstanceSettings.getDataDiskSizeGb.toString) +
-              (STATUS -> Utility.getInstanceStatus(activationPolicy)) +
+              (STATUS -> Utility.getInstanceStatus(sqlInstanceSettings.getActivationPolicy)) +
               (MACHINE_TYPE -> sqlInstanceSettings.getTier) +
-              (SELF_LINK -> sqlInstance.getSelfLink)+
+              (LABELS -> sqlInstanceSettings.getUserLabels.toString) +
+              (SELF_LINK -> sqlInstance.getSelfLink) +
               (ACTIVATION_POLICY -> sqlInstanceSettings.getActivationPolicy)
           }
         case SQLErrorOperation(error) => getFailureResultsMap(error)

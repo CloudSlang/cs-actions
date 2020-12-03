@@ -53,6 +53,10 @@ object DefaultValues {
     final val DEFAULT_LABELS = "{}"
   }
 
+  object UpdateSQLDatabaseInstance{
+    final val DEFAULT_STORAGE_CAPACITY = "10"
+  }
+
   object StorageBucket{
     final val DEFAULT_PROJECTION = "noAcl"
   }
