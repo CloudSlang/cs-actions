@@ -27,10 +27,10 @@ import scala.collection.JavaConversions._
 object SQLDatabaseInstanceService {
 
   def get(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential,
-          projectId: String, databaseInstanceId: String): DatabaseInstance =
-    DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
-      .get(projectId, databaseInstanceId)
-      .execute()
+          projectId: String, databaseInstanceId: String):
+  DatabaseInstance = DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
+    .get(projectId, databaseInstanceId)
+    .execute()
 
   def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, project: String,
            filterOpt: Option[String]): List[DatabaseInstance] = {
@@ -101,7 +101,51 @@ object SQLDatabaseInstanceService {
               else new Settings().setActivationPolicy(ACTIVATION_POLICY_NEVER)
             )).execute()
       }
+    DatabaseController.awaitSuccessOperation(httpTransport, jsonFactory, credential, projectId, operation,
+      Some(databaseInstanceId)
+      , async, timeout, pollingInterval)
+  }
 
+  def update(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,
+             databaseInstanceId: String, zone: String, settingsVersion: Long, databaseVersion: String, tier: String,
+             dataDiskSizeInGB: Long, storageAutoResize: Boolean, privateNetwork: String, isIPV4Enabled: Boolean, availabilityType: String,
+             maintenanceWindowDay: Int, maintenanceWindowHour: Int, activationPolicy: String, labels: java.util.Map[String, String],
+             async: Boolean, timeout: Long,
+             pollingInterval: Long): Operation = {
+
+    val databaseInstance = new DatabaseInstance()
+    val settings = new Settings().setUserLabels(labels)
+    val maintenanceWindow = new MaintenanceWindow().setDay(maintenanceWindowDay).setHour(maintenanceWindowHour)
+    val ipConfiguration = new IpConfiguration().setIpv4Enabled(isIPV4Enabled)
+
+    if (!zone.isEmpty) {
+      databaseInstance.setGceZone(zone)
+    }
+
+    if (dataDiskSizeInGB != 10 || dataDiskSizeInGB < 10) {
+      settings.setDataDiskSizeGb(dataDiskSizeInGB)
+    }
+    if (!availabilityType.isEmpty) {
+      settings.setAvailabilityType(availabilityType)
+    }
+    if (!activationPolicy.isEmpty) {
+      settings.setActivationPolicy(activationPolicy)
+    }
+
+    if (!privateNetwork.isEmpty) {
+      ipConfiguration.setPrivateNetwork(privateNetwork)
+    }
+
+    settings.setTier(tier).setSettingsVersion(settingsVersion).setStorageAutoResize(storageAutoResize)
+      .setIpConfiguration(ipConfiguration).setMaintenanceWindow(maintenanceWindow).setBackupConfiguration(
+        if (databaseVersion.contains("MYSQL") && availabilityType.contains("REGIONAL")) new BackupConfiguration().setBinaryLogEnabled(true)
+          .setEnabled(true)
+       else new BackupConfiguration().setEnabled(true))
+
+    databaseInstance.setSettings(settings)
+
+    val operation = DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
+      .update(projectId, databaseInstanceId, databaseInstance).execute()
     DatabaseController.awaitSuccessOperation(httpTransport, jsonFactory, credential, projectId, operation,
       Some(databaseInstanceId)
       , async, timeout, pollingInterval)
