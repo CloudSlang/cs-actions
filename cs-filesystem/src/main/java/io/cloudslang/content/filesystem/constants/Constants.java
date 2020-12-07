@@ -22,5 +22,15 @@ public class Constants {
     public static final String GREATER_THAN = "The file's size is greater than the threshold(%d)";
     public static final String LESS_THAN = "The file's size is less than the threshold(%d)";
 
+    public static final String GET_MODIFIED_DATE = "Get Modified Date";
+    public static final String GET_MODIFIED_DATE_SUCCESS = "The last modified date of '%s' was retrieved successfully";
+    public static final String LESS = "0";
+    public static final String GREATER = "2";
+    public static final String EQUALS_VALUE = "1";
+    public static final String DEFAULT_DATE_FORMAT = "MM/dd/yyyy hh:mm:ss a";
+
+    public static final String GET_CHILDREN = "Get Children";
+    public static final String RETURN_CODE_SUCCESS = "0";
+
 
 }

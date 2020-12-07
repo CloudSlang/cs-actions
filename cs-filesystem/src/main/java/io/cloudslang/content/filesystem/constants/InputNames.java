@@ -18,5 +18,8 @@ public class InputNames {
 
     public static final String SOURCE = "source";
     public static final String THRESHOLD = "threshold";
+    public static final String LOCALE_LANG = "localeLang";
+    public static final String LOCALE_COUNTRY = "localeCountry";
+    public static final String DELIMITER = "delimiter";
 
 }

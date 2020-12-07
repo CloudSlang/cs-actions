@@ -19,5 +19,8 @@ public class ResultsName {
     public static final String LESS_THAN = "less_than";
     public static final String EQUAL_TO = "equal_to";
     public static final String GREATER_THAN = "greater_than";
+    public static final String DATE = "date";
+    public static final String COUNT = "count";
+
 
 }
