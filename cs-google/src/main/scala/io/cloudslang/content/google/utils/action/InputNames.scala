@@ -13,8 +13,6 @@
  * limitations under the License.
  */
 
-
-
 package io.cloudslang.content.google.utils.action
 
 /**
@@ -134,6 +132,27 @@ object InputNames {
     final val SQL_INSTANCE_RUNNING = "RUNNING"
     final val SQL_INSTANCE_STOPPED = "STOPPED"
 
+  }
+
+  object UpdateSQLDatabaseInstanceInputs {
+    final val INSTANCE_ID = "instanceId"
+    final val ZONE = "zone"
+    final val MACHINE_TYPE = "machineType"
+    final val SETTINGS_VERSION = "settingsVersion"
+    final val STORAGE_AUTO_RESIZE = "storageAutoResize"
+    final val STORAGE_CAPACITY = "storageCapacity"
+    final val ACTIVATION_POLICY = "activationPolicy"
+    final val PRIVATE_NETWORK = "privateNetwork"
+    final val IS_IPV4_ENABLED = "isIPV4Enabled"
+    final val AVAILABILITY_TYPE = "availabilityType"
+    final val RETAINED_BACKUPS = "retainedBackups"
+    final val RETENTION_UNIT = "retentionUnit"
+    final val IS_BACKUP_CONFIGURATION_ENABLED = "isBackupConfigurationEnabled"
+    final val IS_BINARY_LOG_ENABLED = "isBinaryLogEnabled"
+    final val TRANSACTION_LOG_RETENTION_DAYS = "transactionLogRetentionDays"
+    final val PREFERRED_MAINTENANCE_WINDOW_DAY = "preferredMaintenanceWindowDay"
+    final val PREFERRED_MAINTENANCE_WINDOW_HOUR = "preferredMaintenanceWindowHour"
+    final val LABELS = "labels"
   }
 
   object StorageBucketInputs {
