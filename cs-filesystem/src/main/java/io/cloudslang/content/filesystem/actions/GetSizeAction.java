@@ -22,7 +22,6 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.filesystem.constants.Constants;
 import io.cloudslang.content.filesystem.constants.InputNames;
 import io.cloudslang.content.filesystem.entities.GetSizeInputs;
 import io.cloudslang.content.filesystem.services.GetSizeService;
@@ -56,7 +55,7 @@ public class GetSizeAction {
 
     @Action(name = "Get Size",
             outputs = {
-                    @Output(io.cloudslang.content.filesystem.constants.Constants.SIZE),
+                    @Output(io.cloudslang.content.filesystem.constants.OutputNames.SIZE),
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
                     @Output(io.cloudslang.content.constants.OutputNames.EXCEPTION)
@@ -89,7 +88,7 @@ public class GetSizeAction {
 
             result.put(OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
             result.put(OutputNames.RETURN_RESULT, result.get(OutputNames.RETURN_RESULT));
-            result.put(Constants.SIZE, result.get(Constants.SIZE));
+            result.put(io.cloudslang.content.filesystem.constants.OutputNames.SIZE, result.get(io.cloudslang.content.filesystem.constants.OutputNames.SIZE));
             return result;
         } catch (Exception ex) {
             return OutputUtilities.getFailureResultsMap(ex);
