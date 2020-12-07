@@ -150,7 +150,7 @@
         </dependency>
         <dependency>
             <groupId>io.spray</groupId>
-            <artifactId>spray-json_2.11</artifactId>
+            <artifactId>spray-json_2.12</artifactId>
             <version>${spray-json.version}</version>
             <exclusions>
                 <exclusion>
