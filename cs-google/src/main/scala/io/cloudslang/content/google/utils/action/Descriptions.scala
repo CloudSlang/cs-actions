@@ -1,4 +1,18 @@
 /*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
  * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -93,6 +107,9 @@ object Descriptions {
     final val METAGENERATION_MATCH_DESC = "Makes the return of the bucket metadata conditional on whether the bucket's current metageneration matches the given value."
     final val METAGENERATION_NOT_MATCH_DESC = "Makes the return of the bucket metadata conditional on whether the bucket's current metageneration does not match the given value."
     final val PROJECTION_DESC = "Set of properties to return. Defaults to noAcl.\n\nAcceptable values are:\n\"full\": Include all properties.\n\"noAcl\": Omit owner, acl and defaultObjectAcl properties."
-
+    final val LIST_BUCKET_OPERATION_DESC = "Retrieves a list of buckets for a given project, ordered in the list lexicographically by name."
+    final val MAXRESULTS_DESC = "Maximum number of buckets to return in a single response. The service will use the smaller of this parameter."
+    final val PREFIX_DESC = "Filter results to buckets whose names begin with this prefix."
+    final val PAGETOKEN_DESC = "The pageToken is an encoded field containing the name of the last item (bucket) in the returned list. In a subsequent request using the pageToken, items that come after the pageToken are shown (up to maxResults)."
   }
 }

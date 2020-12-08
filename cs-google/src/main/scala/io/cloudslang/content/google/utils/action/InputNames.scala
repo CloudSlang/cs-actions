@@ -161,6 +161,10 @@ object InputNames {
     final val METAGENERATION_MATCH = "metagenerationMatch"
     final val METAGENERATION_NOT_MATCH = "metagenerationNotMatch"
     final val PROJECTION = "projection"
+    final val LIST_BUCKET_OPERATION_NAME = "List Bucket"
+    final val MAXRESULTS= "maxResults"
+    final val PREFIX= "prefix"
+    final val PAGETOKEN= "pageToken"
   }
 
 }
