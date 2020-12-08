@@ -26,10 +26,10 @@ import io.cloudslang.content.filesystem.constants.OutputNames;
 import io.cloudslang.content.filesystem.entities.RenameInputs;
 import io.cloudslang.content.filesystem.services.RenameService;
 import io.cloudslang.content.utils.OutputUtilities;
+import static io.cloudslang.content.filesystem.utils.Descriptions.Rename.*;
+import static io.cloudslang.content.filesystem.utils.Descriptions.Common.*;
 
 import java.util.Map;
-
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 
 public class RenameAction {
 
@@ -55,25 +55,20 @@ public class RenameAction {
      */
     @Action(name = "Rename",
             outputs = {
-                    @Output(OutputNames.RENAMED_PATH),
-                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
-                    @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
-                    @Output(io.cloudslang.content.constants.OutputNames.EXCEPTION)
+                    @Output(value = OutputNames.RENAMED_PATH, description = RENAMED_PATH_DESCRIPTION),
+                    @Output(value = OutputNames.RETURN_RESULT, description = RETURN_RESULT_DESCRIPTION),
+                    @Output(value = OutputNames.RETURN_CODE, description = RETURN_CODE_DESCRIPTION),
+                    @Output(value = OutputNames.EXCEPTION, description = EXCEPTION_DESCRIPTION)
             },
             responses = {
-                    @Response(text = ResponseNames.SUCCESS,
-                            field = io.cloudslang.content.constants.OutputNames.RETURN_CODE,
-                            value = ReturnCodes.SUCCESS,
-                            matchType = MatchType.COMPARE_EQUAL),
-                    @Response(text = ResponseNames.FAILURE,
-                            field = RETURN_CODE,
-                            value = ReturnCodes.FAILURE,
-                            matchType = MatchType.COMPARE_EQUAL,
-                            isOnFail = true, isDefault = true)
+                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS,
+                            matchType = MatchType.COMPARE_EQUAL, description = SUCCESS_DESCRIPTION),
+                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE,
+                            matchType = MatchType.COMPARE_EQUAL, isOnFail = true, isDefault = true, description = FAILURE_DESCRIPTION)
             })
-    public Map<String, String> execute(@Param(value = InputNames.SOURCE, required = true) String source,
-                                       @Param(value = InputNames.NEW_NAME, required = true) String newName,
-                                       @Param(value = InputNames.OVERWRITE) String overwrite) {
+    public Map<String, String> execute(@Param(value = InputNames.SOURCE, description = SOURCE_DESCRIPTION, required = true) String source,
+                                       @Param(value = InputNames.NEW_NAME, description = NEW_NAME_DESCRIPTION, required = true) String newName,
+                                       @Param(value = InputNames.OVERWRITE, description = OVERWRITE_DESCRIPTION) String overwrite) {
         try {
             RenameInputs inputs = new RenameInputs.Builder()
                     .source(source)

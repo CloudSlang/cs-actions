@@ -33,8 +33,8 @@ public class RenameService {
 
         Path source = inputs.getSource();
         Path destination = inputs.getSource().resolveSibling(inputs.getNewName());
-        if (Files.exists(destination, LinkOption.NOFOLLOW_LINKS) && inputs.isOverwrite()) {
-            if (Files.isDirectory(destination, LinkOption.NOFOLLOW_LINKS)) {
+        if (Files.exists(destination) && inputs.isOverwrite()) {
+            if (Files.isDirectory(destination)) {
                 FileUtils.deleteDirectory(destination.toFile());
             } else {
                 Files.delete(destination);
