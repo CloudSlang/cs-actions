@@ -14,7 +14,7 @@
  */
 package io.cloudslang.content.filesystem.constants;
 
-public final class OutputNames {
+public final class OutputNames extends io.cloudslang.content.constants.OutputNames {
 
     public static final String RENAMED_PATH = "renamedPath";
     public static final String SIZE = "size";
