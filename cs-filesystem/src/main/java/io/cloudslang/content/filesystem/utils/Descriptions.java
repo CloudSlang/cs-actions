@@ -34,4 +34,12 @@ public class Descriptions {
         public static final String FAILURE_DESCRIPTION = "The operation failed.";
 
     }
+
+    public static class IsDirectory{
+        public static final String SOURCE_DESCRIPTION = "The file/folder to be checked";
+        public static final String RETURN_RESULT_DESCRIPTION = "A success message if source is a directory. " +
+                "Otherwise, it will contain the exception message.";
+        public static final String SUCCESS_DESCRIPTION = "The source input is a directory";
+        public static final String FAILURE_DESCRIPTION = "Source is not a directory or operation failed";
+    }
 }
