@@ -19,11 +19,12 @@ import io.cloudslang.content.filesystem.constants.OutputNames;
 import io.cloudslang.content.filesystem.entities.RenameInputs;
 import io.cloudslang.content.filesystem.utils.ValidationUtils;
 import io.cloudslang.content.utils.OutputUtilities;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.Map;
 
 public class RenameService {
@@ -32,11 +33,14 @@ public class RenameService {
 
         Path source = inputs.getSource();
         Path destination = inputs.getSource().resolveSibling(inputs.getNewName());
-        if (inputs.isOverwrite()) {
-            Files.move(source, destination, StandardCopyOption.REPLACE_EXISTING);
-        } else {
-            Files.move(source, destination);
+        if (Files.exists(destination, LinkOption.NOFOLLOW_LINKS) && inputs.isOverwrite()) {
+            if (Files.isDirectory(destination, LinkOption.NOFOLLOW_LINKS)) {
+                FileUtils.deleteDirectory(destination.toFile());
+            } else {
+                Files.delete(destination);
+            }
         }
+        Files.move(source, destination);
 
         Map<String, String> results = OutputUtilities.getSuccessResultsMap(Constants.RENAME_OPERATION_SUCCEEDED);
         results.put(OutputNames.RENAMED_PATH, destination.toString());
