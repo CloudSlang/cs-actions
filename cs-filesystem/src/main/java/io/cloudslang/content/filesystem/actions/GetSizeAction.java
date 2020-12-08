@@ -49,7 +49,8 @@ public class GetSizeAction {
      * @param threshold The threshold to compare the file size to (in bytes).
      * @return a map with following entries:
      * size: The file's size in bytes.
-     * return_result: The file's size in bytes if the operation succeeded. Otherwise it will contain the message of the exception.
+     * return_result: The result of the comparison between the file's size and the threshold. Otherwise it will contain
+     *                the exception message.
      * return_code: 0 if the operation succeeded, -1 otherwise.
      * exception: The exception's stack trace if the operation failed. Empty otherwise.
      * @result FAILURE         The operation failed.

@@ -25,8 +25,8 @@ public class Descriptions {
         public static final String SOURCE_DESCRIPTION = "The file to read. It must be an absolute path.";
         public static final String THRESHOLD_DESCRIPTION = "The threshold to compare the file size to (in bytes).";
 
-        public static final String GET_SIZE_RETURN_RESULT_DESCRIPTION = "The file's size in bytes if the operation succeeded. " +
-                "Otherwise it will contain the message of the exception.";
+        public static final String GET_SIZE_RETURN_RESULT_DESCRIPTION = "The result of the comparison between the file's size and " +
+                "the threshold. Otherwise it will contain the exception message.";
         public static final String SIZE_DESCRIPTION = "The file's size in bytes.";
         public static final String LESS_THAN_DESCRIPTION = "The file's size is smaller than the threshold.";
         public static final String EQUAL_TO_DESCRIPTION = "The file's size is the same as the threshold.";
