@@ -108,9 +108,10 @@ object Descriptions {
     final val METAGENERATION_NOT_MATCH_DESC = "Makes the return of the bucket metadata conditional on whether the bucket's current metageneration does not match the given value."
     final val PROJECTION_DESC = "Set of properties to return. Defaults to noAcl.\n\nAcceptable values are:\n\"full\": Include all properties.\n\"noAcl\": Omit owner, acl and defaultObjectAcl properties."
     final val LIST_BUCKET_OPERATION_DESC = "Retrieves a list of buckets for a given project, ordered in the list lexicographically by name."
-    final val MAXRESULTS_DESC = "Maximum number of buckets to return in a single response. The service will use the smaller of this parameter."
+    final val MAX_RESULTS_DESC = "Maximum number of buckets to return in a single response. The service will use the smaller of this parameter."
     final val PREFIX_DESC = "Filter results to buckets whose names begin with this prefix."
-    final val PAGETOKEN_DESC = "The pageToken is an encoded field containing the name of the last item (bucket) in the returned list. In a subsequent request using the pageToken, items that come after the pageToken are shown (up to maxResults)."
+    final val PAGE_TOKEN_DESC = "The pageToken is an encoded field containing the name of the last item (bucket) in the returned list. In a subsequent request using the pageToken, items that come after the pageToken are shown (up to maxResults)."
     final val DELETE_BUCKET_OPERATION_DESC = "Permanently deletes an empty bucket."
+    final val DELETE_BUCKET_SUCCESS_DESC = " bucket is deleted successfully "
   }
 }

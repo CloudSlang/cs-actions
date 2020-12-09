@@ -48,11 +48,14 @@ object BucketService {
   }
 
 
-  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String, metagenerationMatch: String, metagenerationNotMatch: String
-            ) {
-    StorageService.bucketService(httpTransport, jsonFactory, credential)
-      .delete(bucketName)
-      .execute()
+  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String,
+             metagenerationMatch: String, metagenerationNotMatch: String): Void = {
+
+    val request = StorageService.bucketService(httpTransport, jsonFactory, credential).delete(bucketName)
+    if (metagenerationMatch.nonEmpty) {
+      request.setIfMetagenerationMatch(toLong(metagenerationMatch))
+    }
+    request.execute()
   }
 
 
