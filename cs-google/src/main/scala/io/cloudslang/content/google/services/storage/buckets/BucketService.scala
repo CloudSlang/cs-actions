@@ -18,6 +18,8 @@ package io.cloudslang.content.google.services.storage.buckets
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
+import com.google.api.services.storage.model.Bucket.IamConfiguration
+import com.google.api.services.storage.model.Bucket.IamConfiguration.{BucketPolicyOnly, UniformBucketLevelAccess}
 import com.google.api.services.storage.model.{Bucket, Buckets}
 import io.cloudslang.content.google.services.storage.StorageService
 import io.cloudslang.content.utils.NumberUtilities.toLong
@@ -39,9 +41,30 @@ object BucketService {
     request.execute()
 
   }
+  
 
-  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, maxResults: String, prefix: String, pageToken: String, projection: String): Buckets = {
+  def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, bucketName: String, location: String
+             , locationType: String, storageClass: String, accessControlType: String, labels: java.util.Map[String, String]): Bucket = {
+
+
     StorageService.bucketService(httpTransport, jsonFactory, credential)
+      .insert(projectId, new Bucket().setName(bucketName).setLocation(location).setLocationType(locationType).setStorageClass(
+        storageClass).setLabels(labels).setIamConfiguration(getIamConfiguration(accessControlType)))
+      .execute()
+  }
+
+  def update(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, bucketName: String, location: String
+             , locationType: String, storageClass: String, accessControlType: String, labels: java.util.Map[String, String]): Bucket = {
+
+
+    StorageService.bucketService(httpTransport, jsonFactory, credential)
+      .update(projectId, new Bucket().setStorageClass(storageClass).setLabels(labels).setIamConfiguration(
+        getIamConfiguration(accessControlType)))
+      .execute()
+  }
+
+def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, maxResults: String, prefix: String, pageToken: String, projection: String): Buckets = {
+      StorageService.bucketService(httpTransport, jsonFactory, credential)
       .list(projectId).setMaxResults(maxResults.toLong).setPrefix(prefix)
       .setPageToken(pageToken).setProjection(projection)
       .execute()
@@ -58,5 +81,14 @@ object BucketService {
     request.execute()
   }
 
+  def getIamConfiguration(bucketPolicy: String): IamConfiguration = {
 
+    if (bucketPolicy.equalsIgnoreCase("uniform")) {
+      new IamConfiguration().setBucketPolicyOnly(
+        new BucketPolicyOnly().setEnabled(true)).setUniformBucketLevelAccess(new UniformBucketLevelAccess().setEnabled(true))
+    } else {
+      new IamConfiguration()
+    }
+
+  }
 }
