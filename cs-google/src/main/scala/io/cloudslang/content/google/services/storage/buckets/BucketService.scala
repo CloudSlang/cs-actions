@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.google.services.storage.buckets
 
+
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
@@ -28,10 +29,10 @@ object BucketService {
 
     val request = StorageService.bucketService(httpTransport, jsonFactory, credential).get(bucketName).
       setProjection(projection)
-    if(ifMetagenerationMatch.nonEmpty) {
+    if (ifMetagenerationMatch.nonEmpty) {
       request.setIfMetagenerationMatch(toLong(ifMetagenerationMatch))
     }
-    if(ifMetagenerationNotMatch.nonEmpty) {
+    if (ifMetagenerationNotMatch.nonEmpty) {
       request.setIfMetagenerationMatch(toLong(ifMetagenerationNotMatch))
     }
 
@@ -39,13 +40,16 @@ object BucketService {
 
   }
 
-  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String): Buckets = {
+  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, maxResults: String, prefix: String, pageToken: String, projection: String): Buckets = {
     StorageService.bucketService(httpTransport, jsonFactory, credential)
-      .list(projectId).execute()
+      .list(projectId).setMaxResults(maxResults.toLong).setPrefix(prefix)
+      .setPageToken(pageToken).setProjection(projection)
+      .execute()
   }
 
 
-  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String) {
+  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String, metagenerationMatch: String, metagenerationNotMatch: String
+            ) {
     StorageService.bucketService(httpTransport, jsonFactory, credential)
       .delete(bucketName)
       .execute()
