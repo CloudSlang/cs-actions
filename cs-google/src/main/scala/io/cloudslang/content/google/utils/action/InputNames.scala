@@ -165,6 +165,7 @@ object InputNames {
     final val MAXRESULTS= "maxResults"
     final val PREFIX= "prefix"
     final val PAGETOKEN= "pageToken"
+    final val DELETE_BUCKET_OPERATION_NAME = "Delete Bucket"
   }
 
 }

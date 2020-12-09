@@ -111,5 +111,6 @@ object Descriptions {
     final val MAXRESULTS_DESC = "Maximum number of buckets to return in a single response. The service will use the smaller of this parameter."
     final val PREFIX_DESC = "Filter results to buckets whose names begin with this prefix."
     final val PAGETOKEN_DESC = "The pageToken is an encoded field containing the name of the last item (bucket) in the returned list. In a subsequent request using the pageToken, items that come after the pageToken are shown (up to maxResults)."
+    final val DELETE_BUCKET_OPERATION_DESC = "Permanently deletes an empty bucket."
   }
 }
