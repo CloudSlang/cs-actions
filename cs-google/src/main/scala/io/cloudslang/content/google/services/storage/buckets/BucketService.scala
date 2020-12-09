@@ -75,9 +75,15 @@ def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Cre
              metagenerationMatch: String, metagenerationNotMatch: String): Void = {
 
     val request = StorageService.bucketService(httpTransport, jsonFactory, credential).delete(bucketName)
+
+    if (metagenerationNotMatch.nonEmpty) {
+      request.setIfMetagenerationNotMatch(toLong(metagenerationNotMatch))
+    }
+
     if (metagenerationMatch.nonEmpty) {
       request.setIfMetagenerationMatch(toLong(metagenerationMatch))
     }
+
     request.execute()
   }
 
