@@ -29,9 +29,8 @@ import io.cloudslang.content.google.utils.action.GoogleOutputNames.STATUS
 import io.cloudslang.content.google.utils.action.InputNames.StorageBucketInputs._
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
-import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateProxyPort}
+import io.cloudslang.content.google.utils.action.InputValidator.validateProxyPort
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
-import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
@@ -62,8 +61,7 @@ class DeleteBucket {
               @Param(value = PROXY_HOST) proxyHost: String,
               @Param(value = PROXY_PORT) proxyPort: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
-              @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String,
-              @Param(value = PRETTY_PRINT) prettyPrintInp: String): util.Map[String, String] = {
+              @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String): util.Map[String, String] = {
 
 
     val metagenerationMatchStr = defaultIfEmpty(metagenerationMatch, EMPTY)
@@ -73,11 +71,9 @@ class DeleteBucket {
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortInt = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT)
     val proxyPasswordStr = defaultIfEmpty(proxyPassword, EMPTY)
-    val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
 
-    val validationStream = validateProxyPort(proxyPortInt) ++
-      validateBoolean(prettyPrintStr, PRETTY_PRINT)
+    val validationStream = validateProxyPort(proxyPortInt)
 
 
     if (validationStream.nonEmpty) {
@@ -85,8 +81,6 @@ class DeleteBucket {
     }
 
     val proxyPortVal = toInteger(proxyPortInt)
-    val prettyPrint = toBoolean(prettyPrintStr)
-
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostStr, proxyPortVal, proxyUsernameOpt,
@@ -95,7 +89,7 @@ class DeleteBucket {
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val deletebucket = BucketService.delete(httpTransport, jsonFactory, credential, bucketName, metagenerationMatchStr, metagenerationNotMatchStr)
-      getSuccessResultsMap(deletebucket.toString)
+      getSuccessResultsMap(bucketName ++ DELETE_BUCKET_SUCCESS_DESC)
     }
     catch {
       case e: Throwable => getFailureResultsMap(e)

@@ -55,9 +55,9 @@ class ListBucket {
   )
   def execute(@Param(value = PROJECT_ID, required = true, encrypted = true, description = PROJECT_ID_DESC) projectId: String,
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true, description = ACCESS_TOKEN_DESC) accessToken: String,
-              @Param(value = MAXRESULTS, description = MAXRESULTS_DESC) maxResults: String,
+              @Param(value = MAX_RESULTS, description = MAX_RESULTS_DESC) maxResults: String,
               @Param(value = PREFIX, description = PREFIX_DESC) prefix: String,
-              @Param(value = PAGETOKEN, description = PAGETOKEN_DESC) pageToken: String,
+              @Param(value = PAGE_TOKEN, description = PAGE_TOKEN_DESC) pageToken: String,
               @Param(value = PROJECTION, description = PROJECTION_DESC) projection: String,
               @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) proxyHost: String,
               @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) proxyPort: String,
