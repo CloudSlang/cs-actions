@@ -20,7 +20,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.filesystem.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.filesystem.constants.Constants;
@@ -61,7 +61,7 @@ public class GetSizeAction {
 
     @Action(name = "Get Size",
             outputs = {
-                    @Output(value = Constants.SIZE, description = SIZE_DESCRIPTION),
+                    @Output(value = OutputNames.SIZE, description = SIZE_DESCRIPTION),
                     @Output(value = OutputNames.RETURN_RESULT, description = GET_SIZE_RETURN_RESULT_DESCRIPTION),
                     @Output(value = OutputNames.RETURN_CODE, description = RETURN_CODE_DESCRIPTION),
                     @Output(value = OutputNames.EXCEPTION, description = EXCEPTION_DESCRIPTION)
@@ -91,7 +91,7 @@ public class GetSizeAction {
 
             result.put(OutputNames.RETURN_CODE, ReturnCodes.SUCCESS);
             result.put(OutputNames.RETURN_RESULT, result.get(OutputNames.RETURN_RESULT));
-            result.put(Constants.SIZE, result.get(Constants.SIZE));
+            result.put(OutputNames.SIZE, result.get(OutputNames.SIZE));
             return result;
         } catch (Exception ex) {
             return OutputUtilities.getFailureResultsMap(ex);
