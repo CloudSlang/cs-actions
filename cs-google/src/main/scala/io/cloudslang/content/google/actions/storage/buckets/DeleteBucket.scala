@@ -53,8 +53,7 @@ class DeleteBucket {
         matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
     )
   )
-  def execute(@Param(value = PROJECT_ID, required = true, encrypted = true, description = PROJECT_ID_DESC) projectId: String,
-              @Param(value = ACCESS_TOKEN, required = true, encrypted = true, description = ACCESS_TOKEN_DESC) accessToken: String,
+  def execute(@Param(value = ACCESS_TOKEN, required = true, encrypted = true, description = ACCESS_TOKEN_DESC) accessToken: String,
               @Param(value = BUCKET_NAME, required = true, description = BUCKET_NAME_DESC) bucketName: String,
               @Param(value = METAGENERATION_MATCH, description = METAGENERATION_MATCH_DESC) metagenerationMatch: String,
               @Param(value = METAGENERATION_NOT_MATCH, description = METAGENERATION_NOT_MATCH_DESC) metagenerationNotMatch: String,
@@ -62,7 +61,6 @@ class DeleteBucket {
               @Param(value = PROXY_PORT) proxyPort: String,
               @Param(value = PROXY_USERNAME) proxyUsername: String,
               @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String): util.Map[String, String] = {
-
 
     val metagenerationMatchStr = defaultIfEmpty(metagenerationMatch, EMPTY)
     val metagenerationNotMatchStr = defaultIfEmpty(metagenerationNotMatch, EMPTY)
