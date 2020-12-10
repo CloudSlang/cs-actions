@@ -35,7 +35,7 @@ public class GetChildrenInputs {
         private String source = EMPTY;
         private String delimiter = EMPTY;
 
-        GetChildrenInputsBuilder(){};
+        GetChildrenInputsBuilder(){}
 
         public GetChildrenInputsBuilder source(final String source) {
             this.source = source;

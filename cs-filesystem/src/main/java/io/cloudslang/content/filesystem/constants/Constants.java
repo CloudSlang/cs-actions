@@ -32,5 +32,7 @@ public class Constants {
     public static final String GET_CHILDREN = "Get Children";
     public static final String RETURN_CODE_SUCCESS = "0";
 
+    public static final String MD5_SUM = "MD5 Sum";
+    public static final String MD5 = "MD5";
 
 }

@@ -21,5 +21,6 @@ public class InputNames {
     public static final String LOCALE_LANG = "localeLang";
     public static final String LOCALE_COUNTRY = "localeCountry";
     public static final String DELIMITER = "delimiter";
+    public static final String COMPARE_TO = "compareTo";
 
 }

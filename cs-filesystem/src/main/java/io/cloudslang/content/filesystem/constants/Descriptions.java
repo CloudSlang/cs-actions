@@ -28,4 +28,15 @@ public class Descriptions {
         public static final String SOURCE_DESCRIPTION = "The directory for which to get the children.";
         public static final String DELIMITER_DESCRIPTION = "A delimiter to put in between each child of the provided directory.";
     }
+
+    public static class MD5Sum {
+
+        public static final String RETURN_CODE_DESCRIPTION = "It is -1 for failure, 1 if the checksum matched the specified checksum " +
+                "and 0 if checksum did not match the specified checksum.";
+        public static final String RETURN_RESULT_DESCRIPTION = "The file's calculated checksum in case of success or an error message in case of failure.";
+        public static final String EXCEPTION_DESCRIPTION = "An error message in case there was an error while calculating the file's checksum.";
+        public static final String CHECKSUM_DESCRIPTION = "The file's calculated checksum.";
+        public static final String SOURCE_DESCRIPTION = "The file for which to create the checksum.";
+        public static final String COMPARE_TO_DESCRIPTION = "A checksum to compare the file's checksum to.";
+    }
 }

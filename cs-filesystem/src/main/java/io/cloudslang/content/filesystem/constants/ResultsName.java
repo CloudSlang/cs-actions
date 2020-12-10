@@ -21,6 +21,6 @@ public class ResultsName {
     public static final String GREATER_THAN = "greater_than";
     public static final String DATE = "date";
     public static final String COUNT = "count";
-
+    public static final String CHECKSUM = "checksum";
 
 }
