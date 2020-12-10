@@ -216,7 +216,7 @@ class UpdateBucket {
         } else {
           EMPTY
         })) +
-        (ACCESS_CONTROL_TYPE -> (if (bucketUpdate.getIamConfiguration.getUniformBucketLevelAccess.getEnabled) {
+        (ACCESS_CONTROL -> (if (bucketUpdate.getIamConfiguration.getUniformBucketLevelAccess.getEnabled) {
           UNIFORM_ACCESS_CONTROL
         } else {
           FINE_GRAINED_ACCESS_CONTROL
