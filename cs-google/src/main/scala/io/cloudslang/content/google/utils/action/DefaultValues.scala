@@ -59,5 +59,9 @@ object DefaultValues {
 
   object StorageBucket{
     final val DEFAULT_PROJECTION = "noAcl"
+    final val DEFAULT_RETENTION_PERIOD_TYPE = "seconds"
+    final val RETENTION_PERIOD_TYPE_DAYS = "days"
+    final val RETENTION_PERIOD_TYPE_MONTHS = "months"
+    final val RETENTION_PERIOD_TYPE_YEARS = "years"
   }
 }

@@ -163,4 +163,22 @@ object InputNames {
     final val PROJECTION = "projection"
   }
 
+  object UpdateStorageBucketInputs {
+
+    final val BUCKET_NAME = "bucketName"
+    final val METAGENERATION_MATCH = "metagenerationMatch"
+    final val METAGENERATION_NOT_MATCH = "metagenerationNotMatch"
+    final val PREDEFINED_ACL = "predefinedAcl"
+    final val PREDEFINED_DEFAULT_OBJECT_ACL = "predefinedDefaultObjectAcl"
+    final val PROJECTION = "projection"
+    final val STORAGE_CLASS = "storageClass"
+    final val LABELS = "labels"
+    final val IS_DEFAULT_EVENT_BASED_HOLD_ENABLED = "isDefaultEventBasedHoldEnabled"
+    final val IS_VERSIONING_ENABLED = "isVersioningEnabled"
+    final val ACCESS_CONTROL_TYPE = "accessControlType"
+    final val RETENTION_PERIOD_TYPE = "retentionPeriodType"
+    final val RETENTION_PERIOD = "retentionPeriod"
+    final val REMOVE_RETENTION_POLICY = "removeRetentionPolicy"
+    final val IS_RETENTION_POLICY_LOCKED = "isRetentionPolicyLocked"
+  }
 }

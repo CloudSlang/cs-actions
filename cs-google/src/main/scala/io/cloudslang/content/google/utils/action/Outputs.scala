@@ -23,4 +23,12 @@ object Outputs {
     final val SELF_LINK = "selfLink"
   }
 
+  object StorageBucketOutputs {
+    final val ACCESS_CONTROL = "accessControl"
+    final val DEFAULT_EVENT_BASED_HOLD_ENABLED = "defaultEventBasedHoldEnabled"
+    final val VERSIONING_ENABLED = "versioningEnabled"
+    final val LOCATION = "location"
+    final val LOCATION_TYPE = "locationType"
+  }
+
 }
