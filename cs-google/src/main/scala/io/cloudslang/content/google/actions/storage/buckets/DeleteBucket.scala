@@ -62,7 +62,6 @@ class DeleteBucket {
               @Param(value = PROXY_USERNAME) proxyUsername: String,
               @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String): util.Map[String, String] = {
 
-
     val metagenerationMatchStr = defaultIfEmpty(metagenerationMatch, EMPTY)
     val metagenerationNotMatchStr = defaultIfEmpty(metagenerationNotMatch, EMPTY)
 
