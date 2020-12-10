@@ -24,16 +24,16 @@ object Descriptions {
     final val PROXY_PORT_DESC = "Proxy server port used to access the provider services. Default: 8080"
     final val PROXY_USERNAME_DESC = "Proxy server user name"
     final val PROXY_PASSWORD_DESC = "Proxy server password associated with the <proxyUsername> input value."
-    final val PRETTY_PRINT_DESC = "Whether to format (pretty print) the resulting json. \nValid values: true or false \nDefault: true"
+    final val PRETTY_PRINT_DESC = "Whether to format (pretty print) the resulting json. Valid values: true or false Default: true"
     final val RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message."
     final val STATUS_CODE_DESC = "The HTTP status code for the request."
     final val RETURN_CODE_DESC = "0 if operation was successfully executed, -1 otherwise."
     final val EXCEPTION_DESC = " The stack trace of the thrown error (if an error occurred)."
-    final val ASYNC_DESC = "Boolean specifying whether the operation to run sync or async.\nValid values: true, false\nDefault: true"
-    final val TIMEOUT_DESC = "The time, in seconds, to wait for a response if the async input is set to \"false\". If the value is 0, the operation will wait until zone operation progress is 100.\nValid values: Any positive number including 0.\nDefault: 30"
-    final val POLLING_INTERVAL_DESC = "The time, in seconds, to wait before a new request that verifies if the operation finished is executed, if the async input is set to \"false\".\nValid values: Any positive number including 0.\nDefault: 1"
+    final val ASYNC_DESC = "Boolean specifying whether the operation to run sync or async.Valid values: true, false Default: true"
+    final val TIMEOUT_DESC = "The time, in seconds, to wait for a response if the async input is set to \"false\". If the value is 0, the operation will wait until zone operation progress is 100.Valid values: Any positive number including 0.Default: 30"
+    final val POLLING_INTERVAL_DESC = "The time, in seconds, to wait before a new request that verifies if the operation finished is executed, if the async input is set to \"false\".Valid values: Any positive number including 0.Default: 1"
     final val STATUS_DESC =  " The status of the SQL instance if the async input is false, otherwise the status of the Operation."
-    final val FILTER_DESC = "A filter expression that filters resources listed in the response. The expression is in the form of field:value. For example, 'instanceType:CLOUD_SQL_INSTANCE'. Fields can be nested as needed as per their JSON representation, such as 'settings.userLabels.auto_start:true'.\n\nMultiple filter queries are space-separated. For example. 'state:RUNNABLE instanceType:CLOUD_SQL_INSTANCE'. By default, each expression is an AND expression. However, you can include AND and OR expressions explicitly"
+    final val FILTER_DESC = "A filter expression that filters resources listed in the response. The expression is in the form of field:value. For example, 'instanceType:CLOUD_SQL_INSTANCE'. Fields can be nested as needed as per their JSON representation, such as 'settings.userLabels.auto_start:true'.Multiple filter queries are space-separated. For example. 'state:RUNNABLE instanceType:CLOUD_SQL_INSTANCE'. By default, each expression is an AND expression. However, you can include AND and OR expressions explicitly"
   }
 
   object SQLDataBaseInstances {
@@ -99,5 +99,30 @@ object Descriptions {
     final val PAGE_TOKEN_DESC = "The pageToken is an encoded field containing the name of the last item (bucket) in the returned list. In a subsequent request using the pageToken, items that come after the pageToken are shown (up to maxResults)."
     final val DELETE_BUCKET_OPERATION_DESC = "Permanently deletes an empty bucket."
     final val DELETE_BUCKET_SUCCESS_DESC = " bucket is deleted successfully "
+
+  }
+  object UpdateStorageBucketDesc {
+    final val UPDATE_BUCKET_OPERATION_DESC = "Updates a bucket. Changes to the bucket are readable immediately after writing, but configuration changes may take time to propagate.";
+
+    final val BUCKET_NAME_DESC= "Name of a bucket."
+    final val METAGENERATION_MATCH_DESC = "Makes the return of the bucket metadata conditional on whether the bucket's current metageneration matches the given value."
+    final val METAGENERATION_NOT_MATCH_DESC = "Makes the return of the bucket metadata conditional on whether the bucket's current metageneration does not match the given value."
+    final val PREDEFINED_ACL_DESC = "Apply a predefined set of access controls to this bucket. Acceptable values are: authenticatedRead,private,projectPrivate,publicRead,publicReadWrite. If iamConfiguration.uniformBucketLevelAccess.enabled is set to true, requests that include this parameter fail with a 400 Bad Request response."
+    final val PREDEFINED_DEFAULT_OBJECT_ACL_DESC = "Apply a predefined set of default object access controls to this bucket. Acceptable values are: authenticatedRead,bucketOwnerFullControl,bucketOwnerRead,private,projectPrivate,publicRead. If iamConfiguration.uniformBucketLevelAccess.enabled is set to true, requests that include this parameter fail with a 400 Bad Request response."
+
+    final val PROJECTION_DESC = "Set of properties to return. Defaults to noAcl. Acceptable values are:'full': Include all properties.'noAcl': Omit owner, acl and defaultObjectAcl properties."
+    final val STORAGE_CLASS_DESC = "The bucket's default storage class, used whenever no storageClass is specified for a newly-created object. Available storage classes are 'STANDARD','NEARLINE','COLDLINE','ARCHIVE'."
+    final val LABELS_DESC = "The user-provided bucket labels, in key/value pairs."
+    final val IS_DEFAULT_EVENT_BASED_HOLD_ENABLED_DESC = "Whether or not to automatically apply an eventBasedHold to new objects added to the bucket."
+    final val IS_VERSIONING_ENABLED_DESC = "While set to true, versioning is fully enabled for this bucket."
+    final val ACCESS_CONTROL_TYPE_DESC = "Whether the bucket uses uniform bucket-level access or fine-grained bucket-level access. If set, access checks only use bucket-level IAM policies or above. Valid values are 'Uniform' and 'Fine-grained'. "
+    final val RETENTION_PERIOD_TYPE_DESC = "The type of period of time. Valid values are 'seconds','days','months','years'. Default: 'seconds' "
+    final val RETENTION_PERIOD_DESC = "The period of time, in seconds, that objects in the bucket must be retained and cannot be deleted, replaced, or made noncurrent. The value must be less than 3,155,760,000 seconds."
+    final val REMOVE_RETENTION_POLICY_DESC = ""
+    final val IS_RETENTION_POLICY_LOCKED_DESC = "While set to true, it will permanently locks the retention policy that is currently applied to the specified bucket."
+
+    final val LOCATION_DESC = "The location of the bucket. Object data for objects in the bucket resides in physical storage within this region."
+    final val LOCATION_TYPE_DESC = "The type of location that the bucket resides in, as determined by the location property."
+    final val SELF_LINK_DESC = "The URI of the bucket."
   }
 }
