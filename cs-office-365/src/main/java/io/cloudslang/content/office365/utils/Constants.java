@@ -19,7 +19,7 @@ public final class Constants {
     public static final String API = "api";
     public static final String NATIVE = "native";
     public static final String NEW_LINE = "\n";
-    public static final String DEFAULT_LOGIN_TYPE = "API";
+    public static final String DEFAULT_LOGIN_TYPE = "Native";
     public static final String DEFAULT_RESOURCE = "https://graph.microsoft.com";
     public static final String DEFAULT_PROXY_PORT = "8080";
     public static final String BOOLEAN_FALSE = "false";

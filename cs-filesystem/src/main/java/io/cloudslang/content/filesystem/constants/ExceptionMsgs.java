@@ -22,5 +22,10 @@ public final class ExceptionMsgs {
     public static final String DIRECTORY_TRAVERSAL = "Directory traversal path is not allowed.";
     public static final String DOES_NOT_EXIST = "'%s' does not exist.";
     public static final String NOT_A_DIRECTORY = "'%s' is not a directory.";
+    public static final String NULL_OR_EMPTY_INPUT = "Value of input '%s' can't be null or empty.";
+    public static final String ILLEGAL_CHARACTERS = "Illegal characters found in value of input '%s'.";
+    public static final String INVALID_VALUE_FOR_INPUT = "Invalid value '%s' for input '%s'.";
 
+    private ExceptionMsgs() {
+    }
 }
