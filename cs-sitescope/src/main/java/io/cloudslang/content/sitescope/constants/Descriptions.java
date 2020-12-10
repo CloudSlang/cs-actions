@@ -1,0 +1,92 @@
+/*
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * (c) Copyright 2020 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.cloudslang.content.sitescope.constants;
+
+public class Descriptions {
+    public static class Common {
+        public static final String HOST_DESC = "Proxy server used to access the Site Scope service.";
+        public static final String PORT_DESC = "Proxy server used to access the Site Scope service.";
+        public static final String PROTOCOL_DESC = "Proxy server used to access the Site Scope service.";
+        public static final String USERNAME_DESC = "Proxy server used to access the Site Scope service.";
+        public static final String PASSWORD_DESC = "Proxy server used to access the Site Scope service.";
+        public static final String PROXY_HOST_DESC = "Proxy server used to access the Site Scope service.";
+        public static final String PROXY_PORT_DESC = "Proxy server port used to access the Site Scope service." +
+                "Default: '8080'";
+        public static final String PROXY_USERNAME_DESC = "Proxy server user name.";
+        public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxy_username input value.";
+        public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL/TSL. " +
+                "A certificate is trusted even if no trusted certification authority issued it.";
+        public static final String X509_DESC = "Specifies the way the server hostname must match a domain name in " +
+                "the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to " +
+                "\"allow_all\" to skip any checking. For the value \"browser_compatible\" the hostname verifier " +
+                "works the same way as Curl and Firefox. The hostname must match either the first CN, or any of " +
+                "the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only " +
+                "difference between \"browser_compatible\" and \"strict\" is that a wildcard (such as \"*.foo.com\") " +
+                "with \"browser_compatible\" matches all subdomains, including \"a.b.foo.com\".";
+        public static final String KEYSTORE_DESC = "The path to the KeyStore file. This file should contain a certificate " +
+                "the client is capable of authenticate with on the Sitescope server.";
+        public static final String KEYSTORE_PASSWORD_DESC = "The password associated with the KeyStore file.";
+        public static final String TRUST_KEYSTORE_DESC = "The path to the Java TrustKeyStore file. This file should contain " +
+                "the Sitescope server certificates.";
+        public static final String TRUST_PASSWORD_DESC = "The password associated with the TrustKeyStore file.";
+        public static final String CONN_MAX_TOTAL_DESC = "The maximum limit of connections in total.";
+        public static final String CONN_MAX_ROUTE_DESC = "The maximum limit of connections on a per route basis.";
+        public static final String KEEP_ALIVE_DESC = "Specifies whether to create a shared connection that will be " +
+                "used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
+                " execution it will close it.";
+        public static final String SOCKET_TIMEOUT_DESC = "The timeout for waiting for data (a maximum period " +
+                "inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' " +
+                "represents an infinite timeout.";
+        public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
+                "in seconds. A timeout value of '0' represents an infinite timeout.";
+        public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
+                "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
+                "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
+                "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
+                "Default value: UTF-8";
+
+        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
+        public static final String EXCEPTION_DESCRIPTION = "The exception's stack trace if the operation failed. Empty otherwise.";
+
+    }
+
+    public static class GetGroupPropertiesAction {
+
+        public static final String FULL_PATH_TO_GROUP_DESC = "A string array specifying the full path to the group. The " +
+                "path starts with the name of the first child under the SiteScope root directory and ends with the name " +
+                "of the group with the elements separated by a delimiter.";
+        public static final String DELIMITER_DESC = "The delimiter used in the path to the group.";
+        public static final String GET_GROUP_PROP_RETURN_RESULT_DESC = "The delimiter used in the path to the group.";
+        public static final String GET_GROUP_PROP_EXCEPTION_DESC = "The delimiter used in the path to the group.";
+        public static final String SUCCESS_DESC = "The specified group properties were successfully retrieved.";
+        public static final String FAILURE_DESC = "The specified group properties could not be retrieved.";
+
+    }
+}
