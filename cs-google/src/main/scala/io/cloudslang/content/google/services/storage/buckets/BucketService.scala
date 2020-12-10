@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.google.services.storage.buckets
 
+
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
@@ -40,7 +41,7 @@ object BucketService {
     request.execute()
 
   }
-
+  
 
   def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, bucketName: String, location: String
              , locationType: String, storageClass: String, accessControlType: String, labels: java.util.Map[String, String]): Bucket = {
@@ -62,16 +63,28 @@ object BucketService {
       .execute()
   }
 
-  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String): Buckets = {
-    StorageService.bucketService(httpTransport, jsonFactory, credential)
-      .list(projectId).execute()
+def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, maxResults: String, prefix: String, pageToken: String, projection: String): Buckets = {
+      StorageService.bucketService(httpTransport, jsonFactory, credential)
+      .list(projectId).setMaxResults(maxResults.toLong).setPrefix(prefix)
+      .setPageToken(pageToken).setProjection(projection)
+      .execute()
   }
 
 
-  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String) {
-    StorageService.bucketService(httpTransport, jsonFactory, credential)
-      .delete(bucketName)
-      .execute()
+  def delete(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String,
+             metagenerationMatch: String, metagenerationNotMatch: String): Void = {
+
+    val request = StorageService.bucketService(httpTransport, jsonFactory, credential).delete(bucketName)
+
+    if (metagenerationNotMatch.nonEmpty) {
+      request.setIfMetagenerationNotMatch(toLong(metagenerationNotMatch))
+    }
+
+    if (metagenerationMatch.nonEmpty) {
+      request.setIfMetagenerationMatch(toLong(metagenerationMatch))
+    }
+
+    request.execute()
   }
 
   def getIamConfiguration(bucketPolicy: String): IamConfiguration = {

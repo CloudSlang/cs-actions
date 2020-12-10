@@ -59,5 +59,6 @@ object DefaultValues {
 
   object StorageBucket{
     final val DEFAULT_PROJECTION = "noAcl"
+    final val DEFAULT_MAXRESULTS = "1000"
   }
 }
