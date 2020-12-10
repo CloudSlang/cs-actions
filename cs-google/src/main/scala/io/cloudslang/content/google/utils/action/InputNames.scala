@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -161,6 +161,11 @@ object InputNames {
     final val METAGENERATION_MATCH = "metagenerationMatch"
     final val METAGENERATION_NOT_MATCH = "metagenerationNotMatch"
     final val PROJECTION = "projection"
+    final val LIST_BUCKET_OPERATION_NAME = "List Bucket"
+    final val MAX_RESULTS= "maxResults"
+    final val PREFIX= "prefix"
+    final val PAGE_TOKEN= "pageToken"
+    final val DELETE_BUCKET_OPERATION_NAME = "Delete Bucket"
   }
 
   object UpdateStorageBucketInputs {
