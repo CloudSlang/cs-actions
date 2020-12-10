@@ -42,6 +42,7 @@ import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
+import scala.collection.JavaConversions._
 
 class UpdateBucket {
   @Action(name = UPDATE_BUCKET_OPERATION_NAME,
@@ -198,13 +199,12 @@ class UpdateBucket {
       } else {
         labelsStr = labels
       }
-
       val bucketUpdate = BucketService.update(httpTransport, jsonFactory, credential, bucketName, metagenerationMatchStr,
         metagenerationNotMatchStr, predefinedAclStr, predefinedDefaultObjectAclStr, projectionStr, storageClassStr,
         toBoolean(isDefaultEventBasedHoldEnabledStr), isVersioningEnabledStr, accessControlTypeStr, retentionPeriodTypeStr,
         retentionPeriodStr, removeRetentionPolicy, jsonToMap(labelsStr))
 
-      getSuccessResultsMap(toPretty(prettyPrint, bucketUpdate) +
+      getSuccessResultsMap(toPretty(prettyPrint, bucketUpdate)) +
         (STORAGE_CLASS -> bucketUpdate.getStorageClass) +
         (RETENTION_PERIOD -> (if (bucketUpdate.containsKey(RETENTION_POLICY)) {
           bucketUpdate.getRetentionPolicy.getRetentionPeriod.toString
@@ -226,9 +226,7 @@ class UpdateBucket {
         (LOCATION -> bucketUpdate.getLocation) +
         (LOCATION_TYPE -> bucketUpdate.getLocationType) +
         (SELF_LINK -> bucketUpdate.getSelfLink)
-      )
-    }
-    catch {
+    } catch {
       case e: Throwable => getFailureResultsMap(e)
     }
   }
