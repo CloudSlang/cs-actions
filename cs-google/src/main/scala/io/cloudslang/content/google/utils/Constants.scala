@@ -54,5 +54,6 @@ object Constants {
     final val FINE_GRAINED_ACCESS_CONTROL = "Fine-grained"
     final val RETENTION_POLICY = "retentionPolicy"
     final val VERSIONING = "versioning"
+    final val LABELS = "labels"
   }
 }

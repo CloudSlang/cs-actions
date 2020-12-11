@@ -15,6 +15,7 @@
 package io.cloudslang.content.google.actions.databases.sql.instances
 
 import java.util
+
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.BooleanValues.TRUE
@@ -23,8 +24,7 @@ import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.databases.sql.instances.SQLDatabaseInstanceService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
 import io.cloudslang.content.google.utils.Constants.SQLInstancesConstant.UPDATE_SQL_INSTANCE_OPERATION_NAME
-import io.cloudslang.content.google.utils.action.DefaultValues.CreateSQLDatabaseInstance.{DEFAULT_LABELS, DEFAULT_PREFERRED_MAINTENANCE_WINDOW_DAY, DEFAULT_PREFERRED_MAINTENANCE_WINDOW_HOUR, DEFAULT_STORAGE_AUTO_RESIZE}
-import io.cloudslang.content.google.utils.action.DefaultValues.UpdateSQLDatabaseInstance.DEFAULT_STORAGE_CAPACITY
+import io.cloudslang.content.google.utils.action.DefaultValues.CreateSQLDatabaseInstance.DEFAULT_LABELS
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.Descriptions.Common.{RETURN_CODE_DESC, _}
 import io.cloudslang.content.google.utils.action.Descriptions.SQLDataBaseInstances.UPDATE_SQL_INSTANCE_OPERATION_DESCRIPTION
@@ -35,13 +35,14 @@ import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.{convertSecondsToMilli, verifyEmpty}
 import io.cloudslang.content.google.utils.action.InputValidator._
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
-import io.cloudslang.content.google.utils.action.Outputs.SQLDatabaseInstance.{PUBLIC_IP_ADDRESS, SELF_LINK}
+import io.cloudslang.content.google.utils.action.Outputs.SQLDatabaseInstance.{PRIVATE_IP_ADDRESS, PUBLIC_IP_ADDRESS, SELF_LINK}
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils, Utility}
 import io.cloudslang.content.google.utils.{SQLErrorOperation, SQLOperationStatus, SQLSuccessOperation}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
+
 import scala.collection.JavaConversions._
 
 class UpdateSQLInstance {
@@ -93,12 +94,6 @@ class UpdateSQLInstance {
               @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) proxyPassword: String,
               @Param(value = PRETTY_PRINT, description = PRETTY_PRINT_DESC) prettyPrintInp: String): util.Map[String, String] = {
 
-    val storageCapacityInt = defaultIfEmpty(storageCapacity, DEFAULT_STORAGE_CAPACITY)
-    val storageAutoResizeStr = defaultIfEmpty(storageAutoResize, DEFAULT_STORAGE_AUTO_RESIZE)
-    val preferredMaintenanceWindowDayInt = defaultIfEmpty(preferredMaintenanceWindowDay, DEFAULT_PREFERRED_MAINTENANCE_WINDOW_DAY)
-    val preferredMaintenanceWindowHourInt = defaultIfEmpty(preferredMaintenanceWindowHour, DEFAULT_PREFERRED_MAINTENANCE_WINDOW_HOUR)
-    val isIPV4EnabledStr = defaultIfEmpty(isIPV4Enabled, TRUE)
-    val labelsStr = defaultIfEmpty(labels, DEFAULT_LABELS)
     val asyncStr = defaultIfEmpty(asyncInp, TRUE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
     val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
@@ -108,26 +103,17 @@ class UpdateSQLInstance {
     val proxyPasswordStr = defaultIfEmpty(proxyPassword, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
 
-    val validationStream =
-      validateNonNegativeInteger(preferredMaintenanceWindowDayInt, PREFERRED_MAINTENANCE_WINDOW_DAY) ++
-        validateinstanceId(instanceId) ++
-        validateNonNegativeInteger(preferredMaintenanceWindowHourInt, PREFERRED_MAINTENANCE_WINDOW_HOUR) ++
-        validateBoolean(storageAutoResizeStr, STORAGE_AUTO_RESIZE) ++
-        validateBoolean(isIPV4EnabledStr, IS_IPV4_ENABLED) ++
-        validateProxyPort(proxyPortInt) ++
-        validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
-        validateBoolean(asyncStr, ASYNC) ++
-        validateNonNegativeLong(timeoutStr, TIMEOUT) ++
-        validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
+    val validationStream = validateinstanceId(instanceId) ++
+      validateProxyPort(proxyPortInt) ++
+      validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
+      validateBoolean(asyncStr, ASYNC) ++
+      validateNonNegativeLong(timeoutStr, TIMEOUT) ++
+      validateNonNegativeDouble(pollingIntervalStr, POLLING_INTERVAL)
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
     }
-    val isIPV4EnabledVal = toBoolean(isIPV4EnabledStr)
-    val storageCapacityVal = toInteger(storageCapacityInt)
-    val storageAutoResizeVal = toBoolean(storageAutoResizeStr)
-    val preferredMaintenanceWindowHourVal = toInteger(preferredMaintenanceWindowHourInt)
-    val preferredMaintenanceWindowDayVal = toInteger(preferredMaintenanceWindowDayInt)
+
     val proxyPortVal = toInteger(proxyPortInt)
     val prettyPrint = toBoolean(prettyPrintStr)
 
@@ -145,16 +131,78 @@ class UpdateSQLInstance {
       val sqlInstanceSettings = sqlInstance.getSettings
       val settingsVersion = sqlInstanceSettings.getSettingsVersion
       val databaseVersion = sqlInstance.getDatabaseVersion
-      var machineTypeStr = defaultIfEmpty(machineType, EMPTY)
+
+      var machineTypeStr = EMPTY
+      var storageCapacityVal = EMPTY
+      var storageAutoResizeVal = EMPTY
+      var preferredMaintenanceWindowDayVal = EMPTY
+      var preferredMaintenanceWindowHourVal = EMPTY
+      var isIPV4EnabledVal = EMPTY
+      var labelsVal = defaultIfEmpty(labels, DEFAULT_LABELS)
+
       if (machineType.isEmpty) {
         machineTypeStr = sqlInstanceSettings.getTier
       }
 
+      if (storageCapacity.isEmpty) {
+        storageCapacityVal = sqlInstanceSettings.getDataDiskSizeGb.toString
+      } else {
+        if (validateDiskSize(storageCapacity, STORAGE_CAPACITY).nonEmpty) {
+          return getFailureResultsMap(validationStream.mkString(NEW_LINE))
+        } else {
+          storageCapacityVal = storageCapacity
+        }
+      }
+
+      if (storageAutoResize.isEmpty) {
+        storageAutoResizeVal = sqlInstanceSettings.getStorageAutoResize.toString
+      } else {
+        if (validateBoolean(storageAutoResize, STORAGE_AUTO_RESIZE).nonEmpty) {
+          return getFailureResultsMap(validationStream.mkString(NEW_LINE))
+        } else {
+          storageAutoResizeVal = storageAutoResize
+        }
+      }
+
+      if (preferredMaintenanceWindowDay.isEmpty) {
+        preferredMaintenanceWindowDayVal = sqlInstanceSettings.getMaintenanceWindow.getDay.toString
+      } else {
+        if (validateNonNegativeInteger(preferredMaintenanceWindowDay, PREFERRED_MAINTENANCE_WINDOW_DAY).nonEmpty) {
+          return getFailureResultsMap(validationStream.mkString(NEW_LINE))
+        } else {
+          preferredMaintenanceWindowDayVal = preferredMaintenanceWindowDay
+        }
+      }
+
+      if (preferredMaintenanceWindowHour.isEmpty) {
+        preferredMaintenanceWindowHourVal = sqlInstanceSettings.getMaintenanceWindow.getHour.toString
+      } else {
+        if (validateNonNegativeInteger(preferredMaintenanceWindowHour, PREFERRED_MAINTENANCE_WINDOW_DAY).nonEmpty) {
+          return getFailureResultsMap(validationStream.mkString(NEW_LINE))
+        } else {
+          preferredMaintenanceWindowHourVal = preferredMaintenanceWindowHour
+        }
+      }
+
+      if (isIPV4Enabled.isEmpty) {
+        isIPV4EnabledVal = sqlInstanceSettings.getIpConfiguration.getIpv4Enabled.toString
+      } else {
+        if (validateBoolean(isIPV4Enabled, IS_IPV4_ENABLED).nonEmpty) {
+          return getFailureResultsMap(validationStream.mkString(NEW_LINE))
+        } else {
+          isIPV4EnabledVal = isIPV4Enabled
+        }
+      }
+
+      if (labels.isEmpty && sqlInstanceSettings.containsKey("userLabels")) {
+        labelsVal = sqlInstanceSettings.getUserLabels.toString
+      }
+
       SQLOperationStatus(SQLDatabaseInstanceService.update(httpTransport, jsonFactory, credential, projectId,
-        instanceId, zone, settingsVersion, databaseVersion, machineTypeStr, storageCapacityVal,
-        storageAutoResizeVal, privateNetwork, isIPV4EnabledVal, availabilityType, preferredMaintenanceWindowDayVal,
-        preferredMaintenanceWindowHourVal,
-        activationPolicy, Utility.jsonToMap(labelsStr), async, timeout, pollingIntervalMilli)) match {
+        instanceId, zone, settingsVersion, databaseVersion, machineTypeStr, toInteger(storageCapacityVal),
+        toBoolean(storageAutoResizeVal), privateNetwork, toBoolean(isIPV4EnabledVal), availabilityType,
+        toInteger(preferredMaintenanceWindowDayVal), toInteger(preferredMaintenanceWindowHourVal),
+        activationPolicy, Utility.jsonToMap(labelsVal), async, timeout, pollingIntervalMilli)) match {
         case SQLSuccessOperation(sqlOperation) =>
           val status = defaultIfEmpty(sqlOperation.getStatus, EMPTY)
           val resultMap = getSuccessResultsMap(toPretty(prettyPrint, sqlOperation)) + (STATUS -> status)
@@ -165,11 +213,34 @@ class UpdateSQLInstance {
             val sqlInstance = SQLDatabaseInstanceService.get(httpTransport, jsonFactory, credential, projectId,
               instanceId)
             val sqlInstanceSettings = sqlInstance.getSettings
+            val ipAddresses = sqlInstance.getIpAddresses
+            var publicIPAddress = EMPTY
+            var privateIPAddress = EMPTY
+
+            if (ipAddresses.size() > 0) {
+              if (ipAddresses.get(0).getType.equals("PRIMARY")) {
+                publicIPAddress = sqlInstance.getIpAddresses.get(0).getIpAddress
+              } else if (ipAddresses.get(0).getType.equals("PRIVATE")) {
+                privateIPAddress = ipAddresses.get(0).getIpAddress
+              }
+            }
+            if (ipAddresses.size() > 1) {
+              if (ipAddresses.get(1).getType.equals("PRIMARY")) {
+                publicIPAddress = sqlInstance.getIpAddresses.get(1).getIpAddress
+              } else if (ipAddresses.get(1).getType.equals("PRIVATE")) {
+                privateIPAddress = ipAddresses.get(1).getIpAddress
+              }
+            }
 
             resultMap +
               (ZONE -> sqlInstance.getGceZone) +
               (PUBLIC_IP_ADDRESS -> (if (sqlInstance.getIpAddresses.size() > 0) {
-                sqlInstance.getIpAddresses.get(0).getIpAddress
+                publicIPAddress
+              } else {
+                EMPTY
+              })) +
+              (PRIVATE_IP_ADDRESS -> (if (sqlInstance.getIpAddresses.size() > 0) {
+                privateIPAddress
               } else {
                 EMPTY
               })) +

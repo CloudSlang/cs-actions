@@ -21,9 +21,9 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.storage.buckets.BucketService
-import io.cloudslang.content.google.utils.Constants.StorageBucketConstants._
+import io.cloudslang.content.google.utils.Constants.StorageBucketConstants.{LABELS, _}
 import io.cloudslang.content.google.utils.Constants.{FALSE, NEW_LINE}
-import io.cloudslang.content.google.utils.action.DefaultValues.StorageBucket.{DEFAULT_PROJECTION, DEFAULT_RETENTION_PERIOD_TYPE}
+import io.cloudslang.content.google.utils.action.DefaultValues.StorageBucket.{DEFAULT_LABELS, DEFAULT_PROJECTION, DEFAULT_RETENTION_PERIOD_TYPE}
 import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.google.utils.action.Descriptions.Common._
 import io.cloudslang.content.google.utils.action.Descriptions.StorageBucketDesc.{BUCKET_NAME_DESC, METAGENERATION_MATCH_DESC, METAGENERATION_NOT_MATCH_DESC, PROJECTION_DESC}
@@ -36,12 +36,12 @@ import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.action.Outputs.SQLDatabaseInstance.SELF_LINK
 import io.cloudslang.content.google.utils.action.Outputs.StorageBucketOutputs._
-import io.cloudslang.content.google.utils.service.Utility.jsonToMap
-import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils}
+import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils, Utility}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
+
 import scala.collection.JavaConversions._
 
 class UpdateBucket {
@@ -121,12 +121,13 @@ class UpdateBucket {
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       var accessControlTypeStr = defaultIfEmpty(accessControlType, EMPTY)
-      var labelsStr = defaultIfEmpty(labels, EMPTY)
+      var labelsStr = defaultIfEmpty(labels, DEFAULT_LABELS)
       var storageClassStr = defaultIfEmpty(storageClass, EMPTY)
       var retentionPeriodStr = defaultIfEmpty(retentionPeriod, EMPTY)
       var retentionPeriodTypeStr = defaultIfEmpty(retentionPeriodType, DEFAULT_RETENTION_PERIOD_TYPE)
       var isDefaultEventBasedHoldEnabledStr = defaultIfEmpty(isDefaultEventBasedHoldEnabled, EMPTY)
       var isVersioningEnabledStr = defaultIfEmpty(isVersioningEnabled, EMPTY)
+      var removeRetentionPolicyStr = EMPTY
 
       val bucketDetails = BucketService.getBucket(httpTransport, jsonFactory, credential, bucketName, projectionStr)
 
@@ -159,9 +160,9 @@ class UpdateBucket {
 
       if (removeRetentionPolicy.isEmpty || removeRetentionPolicy.equalsIgnoreCase(FALSE)) {
         if (retentionPeriod.isEmpty) {
-          (if (bucketDetails.containsKey(RETENTION_POLICY)) {
+          if (bucketDetails.containsKey(RETENTION_POLICY)) {
             retentionPeriodStr = bucketDetails.getRetentionPolicy.getRetentionPeriod.toString
-          })
+          }
         } else {
           val validationStream = validateLong(retentionPeriod, RETENTION_PERIOD)
           if (validationStream.nonEmpty) {
@@ -171,18 +172,15 @@ class UpdateBucket {
           }
         }
       } else {
-        val validationStream = validateBoolean(removeRetentionPolicy, REMOVE_RETENTION_POLICY)
-        if (validationStream.nonEmpty) {
+        if (validateBoolean(removeRetentionPolicy, REMOVE_RETENTION_POLICY).nonEmpty) {
           return getFailureResultsMap(validationStream.mkString(NEW_LINE))
         } else {
-          retentionPeriodStr = retentionPeriod
+          removeRetentionPolicyStr = removeRetentionPolicy
         }
       }
 
-      if (isVersioningEnabled.isEmpty) {
-        (if (bucketDetails.containsKey(VERSIONING)) {
-          isVersioningEnabledStr = bucketDetails.getVersioning.getEnabled.toString
-        })
+      if (isVersioningEnabled.isEmpty && bucketDetails.containsKey(VERSIONING)) {
+        isVersioningEnabledStr = bucketDetails.getVersioning.getEnabled.toString
       } else {
         val validationStream = validateBoolean(isVersioningEnabled, IS_VERSIONING_ENABLED)
         if (validationStream.nonEmpty) {
@@ -193,7 +191,7 @@ class UpdateBucket {
       }
 
       if (labels.isEmpty) {
-        if (bucketDetails.getLabels != null) {
+        if (bucketDetails.containsKey(LABELS)) {
           labelsStr = bucketDetails.getLabels.toString
         }
       } else {
@@ -202,7 +200,7 @@ class UpdateBucket {
       val bucketUpdate = BucketService.update(httpTransport, jsonFactory, credential, bucketName, metagenerationMatchStr,
         metagenerationNotMatchStr, predefinedAclStr, predefinedDefaultObjectAclStr, projectionStr, storageClassStr,
         toBoolean(isDefaultEventBasedHoldEnabledStr), isVersioningEnabledStr, accessControlTypeStr, retentionPeriodTypeStr,
-        retentionPeriodStr, removeRetentionPolicy, jsonToMap(labelsStr))
+        retentionPeriodStr, removeRetentionPolicy, Utility.jsonToMap(labelsStr))
 
       getSuccessResultsMap(toPretty(prettyPrint, bucketUpdate)) +
         (STORAGE_CLASS -> bucketUpdate.getStorageClass) +
@@ -226,7 +224,7 @@ class UpdateBucket {
           bucketUpdate.getVersioning.getEnabled.toString
         } else {
           EMPTY
-        }))+
+        })) +
         (LOCATION -> bucketUpdate.getLocation) +
         (LOCATION_TYPE -> bucketUpdate.getLocationType) +
         (SELF_LINK -> bucketUpdate.getSelfLink)
