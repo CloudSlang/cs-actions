@@ -222,7 +222,11 @@ class UpdateBucket {
           FINE_GRAINED_ACCESS_CONTROL
         })) +
         (DEFAULT_EVENT_BASED_HOLD_ENABLED -> bucketUpdate.getDefaultEventBasedHold.toString) +
-        (VERSIONING_ENABLED -> bucketUpdate.getVersioning.getEnabled.toString) +
+        (VERSIONING_ENABLED -> (if (bucketUpdate.containsKey(VERSIONING)) {
+          bucketUpdate.getVersioning.getEnabled.toString
+        } else {
+          EMPTY
+        }))+
         (LOCATION -> bucketUpdate.getLocation) +
         (LOCATION_TYPE -> bucketUpdate.getLocationType) +
         (SELF_LINK -> bucketUpdate.getSelfLink)
