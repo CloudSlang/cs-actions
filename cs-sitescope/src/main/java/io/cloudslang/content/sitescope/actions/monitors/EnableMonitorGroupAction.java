@@ -27,16 +27,16 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.sitescope.actions;
+package io.cloudslang.content.sitescope.actions.monitors;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.sitescope.entities.GetGroupPropertiesInputs;
+import io.cloudslang.content.sitescope.entities.EnableMonitorGroupInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
-import io.cloudslang.content.sitescope.services.GetGroupPropertiesService;
+import io.cloudslang.content.sitescope.services.EnableMonitorGroupService;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -51,18 +51,19 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.EnableMonitorGroupAction.IDENTIFIER_DESC;
+import static io.cloudslang.content.sitescope.constants.Descriptions.EnableMonitorGroupAction.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.GetGroupPropertiesInputs.DELIMITER;
-import static io.cloudslang.content.sitescope.constants.Inputs.GetGroupPropertiesInputs.FULL_PATH_TO_GROUP;
+import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorGroupInputs.*;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetGroupPropertiesAction {
+public class EnableMonitorGroupAction {
 
-    @Action(name = "Retrieves the properties for a specified group.",
+    @Action(name = ENABLE_MONITOR_GROUP_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = GET_GROUP_PROP_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -79,6 +80,12 @@ public class GetGroupPropertiesAction {
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = FULL_PATH_TO_GROUP, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
+                                       @Param(value = ENABLE, description = ENABLE_DESC) String enable,
+                                       @Param(value = TIME_PERIOD, description = TIME_PERIOD_DESC) String timePeriod,
+                                       @Param(value = FROM_TIME, description = FROM_TIME_DESC) String fromTime,
+                                       @Param(value = TO_TIME, description = TO_TIME_DESC) String toTime,
+                                       @Param(value = DESCRIPTION, description = DESCRIPTION_DESC) String description,
+                                       @Param(value = IDENTIFIER, description = IDENTIFIER_DESC) String identifier,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -96,13 +103,15 @@ public class GetGroupPropertiesAction {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
-//        host = defaultIfEmpty(host, EMPTY);
-//        port = defaultIfEmpty(port, EMPTY);
-//        protocol = defaultIfEmpty(protocol, EMPTY);
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
-//        fullPathToGroup = defaultIfEmpty(proxyHost, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
+        identifier = defaultIfEmpty(identifier, EMPTY);
+        enable = defaultIfEmpty(enable,"true");
+        timePeriod = defaultIfEmpty(timePeriod,ZERO);
+        fromTime = defaultIfEmpty(fromTime, ZERO);
+        toTime = defaultIfEmpty(toTime, ZERO);
+        description = defaultIfEmpty(description, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -127,13 +136,19 @@ public class GetGroupPropertiesAction {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
-        final GetGroupPropertiesService service = new GetGroupPropertiesService();
+        final EnableMonitorGroupService service = new EnableMonitorGroupService();
         Map<String, String> result;
 
         try {
-            GetGroupPropertiesInputs inputs = new GetGroupPropertiesInputs.GetGroupPropertiesInputsBuilder()
+            EnableMonitorGroupInputs inputs = new EnableMonitorGroupInputs.EnableMonitorGroupInputsBuilder()
                     .fullPathToGroup(fullPathToGroup)
                     .delimiter(delimiter)
+                    .identifier(identifier)
+                    .enable(enable)
+                    .timePeriod(timePeriod)
+                    .fromTime(fromTime)
+                    .toTime(toTime)
+                    .description(description)
                     .commonInputs(SiteScopeCommonInputs.builder()
                             .host(host)
                             .port(port)
@@ -159,14 +174,6 @@ public class GetGroupPropertiesAction {
                     .build();
 
             result = service.execute(inputs);
-
-//            final String returnMessage = result.get(RETURN_RESULT);
-//            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-//            final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
-
-//            if (statusCode >= 200 && statusCode < 300) {
-//                addOutput(results, new JsonParser().parse(returnMessage).getAsJsonObject(), ID, MESSAGE_ID);
-//            }
 
             return result;
         } catch (Exception exception) {

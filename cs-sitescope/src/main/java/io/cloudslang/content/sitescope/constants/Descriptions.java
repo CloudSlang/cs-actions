@@ -30,12 +30,19 @@
 package io.cloudslang.content.sitescope.constants;
 
 public class Descriptions {
+
     public static class Common {
+
         public static final String HOST_DESC = "Proxy server used to access the Site Scope service.";
         public static final String PORT_DESC = "Proxy server used to access the Site Scope service.";
         public static final String PROTOCOL_DESC = "Proxy server used to access the Site Scope service.";
         public static final String USERNAME_DESC = "Proxy server used to access the Site Scope service.";
         public static final String PASSWORD_DESC = "Proxy server used to access the Site Scope service.";
+        public static final String FULL_PATH_TO_GROUP_DESC = "A string array specifying the full path to the group. The " +
+                "path starts with the name of the first child under the SiteScope root directory and ends with the name " +
+                "of the group with the elements separated by a delimiter.";
+        public static final String IDENTIFIER_DESC = "Identifier to be written to the audit log.";
+        public static final String DELIMITER_DESC = "The delimiter used in the path to the group.";
         public static final String PROXY_HOST_DESC = "Proxy server used to access the Site Scope service.";
         public static final String PROXY_PORT_DESC = "Proxy server port used to access the Site Scope service." +
                 "Default: '8080'";
@@ -79,14 +86,39 @@ public class Descriptions {
 
     public static class GetGroupPropertiesAction {
 
-        public static final String FULL_PATH_TO_GROUP_DESC = "A string array specifying the full path to the group. The " +
-                "path starts with the name of the first child under the SiteScope root directory and ends with the name " +
-                "of the group with the elements separated by a delimiter.";
-        public static final String DELIMITER_DESC = "The delimiter used in the path to the group.";
+        public static final String GET_GROUP_PROPERTIES_DESC = "Retrieves the properties for a specified group.";
         public static final String GET_GROUP_PROP_RETURN_RESULT_DESC = "The delimiter used in the path to the group.";
         public static final String GET_GROUP_PROP_EXCEPTION_DESC = "The delimiter used in the path to the group.";
         public static final String SUCCESS_DESC = "The specified group properties were successfully retrieved.";
         public static final String FAILURE_DESC = "The specified group properties could not be retrieved.";
 
+    }
+
+    public static class DeleteMonitorGroupAction {
+
+        public static final String DELETE_MONITOR_GROUP_DESC = "Deletes a SiteScope monitor group.";
+        public static final String EXTERNAL_ID_DESC = "External ID of the group.";
+
+    }
+
+    public static class EnableMonitorGroupAction {
+
+        public static final String ENABLE_MONITOR_GROUP_DESC = "Enables or disables a group whether it was disabled indefinitely " +
+                "or for a specified time period. Enabling a group that is already enabled has no effect.";
+        public static final String ENABLE_DESC = "Group is enabled if set to TRUE and group is disabled if set to FALSE" +
+                " or if the string is empty.";
+        public static final String TIME_PERIOD_DESC = "The duration (in seconds) for which the group should be disabled. " +
+                "If set to 0, group is disabled until explicitly enabled. Applicable only for disabling a group.";
+        public static final String FROM_TIME_DESC = "The time difference in milliseconds from the [current time] and the " +
+                "required [start time]. For example, if the current time is 15:00:00 and the required start time is 15:10:00," +
+                " the value that should be sent is [15:10:00] - [15:00:00] = 10*60*1000 (600000 milliseconds). Applicable " +
+                "only for disabling a group.";
+        public static final String TO_TIME_DESC = "The time difference in milliseconds from the [current time] and the" +
+                " required [end time]. For example, if the current time is 15:00:00 and the required end time is 15:30:00, " +
+                "the value that should be sent is [15:30:00] - [15:00:00] = 30*60*1000 (1800000 milliseconds). Applicable " +
+                "only for disabling a group.";
+        public static final String DESCRIPTION_DESC = "Description to be associated with enable/disable operation.";
+        public static final String IDENTIFIER_DESC =  "Identifier to be associated with enable/disable operation and written" +
+                "to audit log. Identifier to be associated with enable/disable operation and written to audit log.";
     }
 }

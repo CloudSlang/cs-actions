@@ -31,7 +31,8 @@ public final class Constants {
     public static final String NEW_LINE = "\n";
     public static final String SITE_SCOPE_DELIMITER = "_sis_path_delimiter_";
 
-    public static final String SITESCOPE_API = "/SiteScope/api/";
-    public static final String GET_GROUP_PROPERTIES_ENDPOINT = "monitors/group/properties?";
+    public static final String SITESCOPE_MONITORS_API = "/SiteScope/api/monitors";
+    public static final String GET_GROUP_PROPERTIES_ENDPOINT = "/group/properties?";
+    public static final String DELETE_MONITOR_GROUP_ENDPOINT = "/monitor";
 
 }

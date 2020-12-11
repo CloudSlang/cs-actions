@@ -14,11 +14,11 @@
  */
 package io.cloudslang.content.sitescope.services;
 
-import org.jetbrains.annotations.NotNull;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.sitescope.entities.GetGroupPropertiesInputs;
+import io.cloudslang.content.sitescope.entities.EnableMonitorGroupInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -27,31 +27,30 @@ import static io.cloudslang.content.httpclient.entities.Constants.CHANGEIT;
 import static io.cloudslang.content.httpclient.entities.Constants.DEFAULT_JAVA_KEYSTORE;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
-import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
 
 
-public class GetGroupPropertiesService {
+public class EnableMonitorGroupService {
 
     public @NotNull
-    Map<String, String> execute(@NotNull GetGroupPropertiesInputs getGroupPropertiesInputs) throws Exception {
+    Map<String, String> execute(@NotNull EnableMonitorGroupInputs enableMonitorGroupInputs) throws Exception {
 
-        String delimiter = getGroupPropertiesInputs.getDelimiter();
-        String fullPath = getGroupPropertiesInputs.getFullPathToGroup();
+        String delimiter = enableMonitorGroupInputs.getDelimiter();
+        String fullPath = enableMonitorGroupInputs.getFullPathToGroup();
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final SiteScopeCommonInputs commonInputs = getGroupPropertiesInputs.getCommonInputs();
+        final SiteScopeCommonInputs commonInputs = enableMonitorGroupInputs.getCommonInputs();
 
         if (!delimiter.isEmpty())
             fullPath = fullPath.replace(delimiter, SITE_SCOPE_DELIMITER);
 
         httpClientInputs.setUrl(commonInputs.getProtocol() + "://" + commonInputs.getHost() + COLON + commonInputs.getPort() +
-                SITESCOPE_MONITORS_API + GET_GROUP_PROPERTIES_ENDPOINT + fullPath);
+                SITESCOPE_MONITORS_API + DELETE_MONITOR_GROUP_ENDPOINT + fullPath);
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setUsername(commonInputs.getUsername());
         httpClientInputs.setPassword(commonInputs.getPassword());
-        httpClientInputs.setMethod(GET);
+        httpClientInputs.setMethod("DELETE");
         httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
         httpClientInputs.setKeystorePassword(CHANGEIT);
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
