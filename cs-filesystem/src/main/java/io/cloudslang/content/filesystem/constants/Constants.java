@@ -34,5 +34,7 @@ public class Constants {
 
     public static final String MD5_SUM = "MD5 Sum";
     public static final String MD5 = "MD5";
+    public static final String EQUALS_VALUE_RETURN_RESULT = "The file's checksum is equal to the compareTo input (%s)";
+    public static final String NOT_EQUAL_VALUE_RETURN_RESULT = "The file's checksum is not equal to the compareTo input (%s)";
 
 }

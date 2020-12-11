@@ -24,32 +24,32 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.filesystem.constants.Constants.RETURN_CODE_SUCCESS;
+import static io.cloudslang.content.filesystem.constants.ExceptionMsgs.NO_CHILDREN;
 import static io.cloudslang.content.filesystem.constants.ResultsName.COUNT;
+import static io.cloudslang.content.filesystem.utils.Utils.validateIsDirectory;
 
 public class GetChildrenService {
 
-    public static Map<String, String> execute(GetChildrenInputs getChildrenInputs) throws IOException {
+    public static Map<String, String> execute(GetChildrenInputs getChildrenInputs) throws Exception {
         Map<String, String> result = new HashMap<>();
 
+        String path = getChildrenInputs.getSource().trim();
+        File f = new File(path);
+        validateIsDirectory(f,path);
+
         File[] children;
-            File f = new java.io.File(getChildrenInputs.getSource());
-            if (!f.exists())
-                throw new RuntimeException(getChildrenInputs.getSource() + ": The specified file or folder does not exist.");
-            else if (!f.isDirectory())
-                throw new RuntimeException(getChildrenInputs.getSource() + ": The specified path is a file, this operation only supports directories.");
-            children = f.listFiles();
-
+        children = f.listFiles();
         if (children == null)
-            throw new RuntimeException("The specified path does not have any children, or it could not be read.");
+            throw new RuntimeException(NO_CHILDREN);
 
-        String paths = "";
-        for (int count = 0; count < children.length; count++) {
-            if (!paths.isEmpty())
-                paths += getChildrenInputs.getDelimiter();
-            paths += children[count].getCanonicalPath();
+        StringBuilder paths = new StringBuilder();
+        for (File child : children) {
+            if (paths.length() > 0)
+                paths.append(getChildrenInputs.getDelimiter());
+            paths.append(child.getCanonicalPath());
         }
         result.put(RETURN_CODE, RETURN_CODE_SUCCESS);
-        result.put(RETURN_RESULT, paths);
+        result.put(RETURN_RESULT, paths.toString());
         result.put(COUNT, String.valueOf(children.length));
 
         return result;

@@ -22,5 +22,6 @@ public final class ExceptionMsgs {
     public static final String DIRECTORY_TRAVERSAL = "Directory traversal path is not allowed.";
     public static final String DOES_NOT_EXIST = "'%s' does not exist.";
     public static final String NOT_A_DIRECTORY = "'%s' is not a directory.";
+    public static final String NO_CHILDREN = "The specified path does not have any children, or it could not be read.";
 
 }

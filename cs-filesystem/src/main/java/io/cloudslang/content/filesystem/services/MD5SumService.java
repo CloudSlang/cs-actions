@@ -58,12 +58,16 @@ public class MD5SumService {
             hash.append(Integer.toHexString((b & 0xFF) | 0x100).toLowerCase().substring(1, 3));
         }
 
-        result.put(RETURN_RESULT, hash.toString());
+
         result.put(CHECKSUM, hash.toString());
-        if (hash.toString().equals(md5SumInputs.getCompareTo()))
+        if (hash.toString().equals(md5SumInputs.getCompareTo())){
             result.put(RETURN_CODE, EQUALS_VALUE);
-        else
+            result.put(RETURN_RESULT, String.format(EQUALS_VALUE_RETURN_RESULT,md5SumInputs.getCompareTo()));
+        }
+        else {
+            result.put(RETURN_RESULT, String.format(NOT_EQUAL_VALUE_RETURN_RESULT,md5SumInputs.getCompareTo()));
             result.put(RETURN_CODE, LESS);
+        }
 
         return result;
 
