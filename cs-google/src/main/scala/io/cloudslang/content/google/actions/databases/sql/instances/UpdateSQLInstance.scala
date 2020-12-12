@@ -55,6 +55,7 @@ class UpdateSQLInstance {
       new Output(value = EXCEPTION, description = EXCEPTION_DESC),
       new Output(value = ZONE, description = ZONE_DESC),
       new Output(value = PUBLIC_IP_ADDRESS, description = PUBLIC_IP_ADDRESS_DESC),
+      new Output(value = PRIVATE_IP_ADDRESS, description = PRIVATE_IP_ADDRESS_DESC),
       new Output(value = AVAILABILITY_TYPE, description = AVAILABILITY_TYPE_DESC),
       new Output(value = STORAGE_CAPACITY, description = STORAGE_CAPACITY_DESC),
       new Output(value = MACHINE_TYPE, description = MACHINE_TYPE_DESC),
