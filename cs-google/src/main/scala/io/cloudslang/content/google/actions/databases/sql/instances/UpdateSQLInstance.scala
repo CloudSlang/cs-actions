@@ -23,7 +23,7 @@ import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETU
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.databases.sql.instances.SQLDatabaseInstanceService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
-import io.cloudslang.content.google.utils.Constants.SQLInstancesConstant.UPDATE_SQL_INSTANCE_OPERATION_NAME
+import io.cloudslang.content.google.utils.Constants.SQLInstancesConstant.{IP_ADDRESS_TYPE_PRIMARY, IP_ADDRESS_TYPE_PRIVATE, UPDATE_SQL_INSTANCE_OPERATION_NAME, USER_LABELS}
 import io.cloudslang.content.google.utils.action.DefaultValues.CreateSQLDatabaseInstance.DEFAULT_LABELS
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.Descriptions.Common.{RETURN_CODE_DESC, _}
@@ -195,8 +195,12 @@ class UpdateSQLInstance {
         }
       }
 
-      if (labels.isEmpty && sqlInstanceSettings.containsKey("userLabels")) {
-        labelsVal = sqlInstanceSettings.getUserLabels.toString
+      if (labels.isEmpty) {
+        if (sqlInstanceSettings.containsKey(USER_LABELS)) {
+          labelsVal = sqlInstanceSettings.getUserLabels.toString
+        }
+      } else {
+        labelsVal = labels
       }
 
       SQLOperationStatus(SQLDatabaseInstanceService.update(httpTransport, jsonFactory, credential, projectId,
@@ -219,16 +223,16 @@ class UpdateSQLInstance {
             var privateIPAddress = EMPTY
 
             if (ipAddresses.size() > 0) {
-              if (ipAddresses.get(0).getType.equals("PRIMARY")) {
+              if (ipAddresses.get(0).getType.equals(IP_ADDRESS_TYPE_PRIMARY)) {
                 publicIPAddress = sqlInstance.getIpAddresses.get(0).getIpAddress
-              } else if (ipAddresses.get(0).getType.equals("PRIVATE")) {
+              } else if (ipAddresses.get(0).getType.equals(IP_ADDRESS_TYPE_PRIVATE)) {
                 privateIPAddress = ipAddresses.get(0).getIpAddress
               }
             }
             if (ipAddresses.size() > 1) {
-              if (ipAddresses.get(1).getType.equals("PRIMARY")) {
+              if (ipAddresses.get(1).getType.equals(IP_ADDRESS_TYPE_PRIMARY)) {
                 publicIPAddress = sqlInstance.getIpAddresses.get(1).getIpAddress
-              } else if (ipAddresses.get(1).getType.equals("PRIVATE")) {
+              } else if (ipAddresses.get(1).getType.equals(IP_ADDRESS_TYPE_PRIVATE)) {
                 privateIPAddress = ipAddresses.get(1).getIpAddress
               }
             }
@@ -249,7 +253,7 @@ class UpdateSQLInstance {
               (STORAGE_CAPACITY -> sqlInstanceSettings.getDataDiskSizeGb.toString) +
               (STATUS -> Utility.getInstanceStatus(sqlInstanceSettings.getActivationPolicy)) +
               (MACHINE_TYPE -> sqlInstanceSettings.getTier) +
-              (LABELS -> (if (sqlInstanceSettings.getUserLabels != null) {
+              (LABELS -> (if (sqlInstanceSettings.containsKey(USER_LABELS)) {
                 sqlInstanceSettings.getUserLabels.toString
               } else {
                 EMPTY

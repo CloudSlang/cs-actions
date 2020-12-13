@@ -97,6 +97,14 @@ class UpdateBucket {
     val predefinedAclStr = defaultIfEmpty(predefinedAcl, EMPTY)
     val predefinedDefaultObjectAclStr = defaultIfEmpty(predefinedDefaultObjectAcl, EMPTY)
     val projectionStr = defaultIfEmpty(projection, DEFAULT_PROJECTION)
+    var accessControlTypeStr = defaultIfEmpty(accessControlType, EMPTY)
+    var labelsStr = defaultIfEmpty(labels, DEFAULT_LABELS)
+    var storageClassStr = defaultIfEmpty(storageClass, EMPTY)
+    var retentionPeriodStr = defaultIfEmpty(retentionPeriod, EMPTY)
+    var retentionPeriodTypeStr = defaultIfEmpty(retentionPeriodType, DEFAULT_RETENTION_PERIOD_TYPE)
+    var isDefaultEventBasedHoldEnabledStr = defaultIfEmpty(isDefaultEventBasedHoldEnabled, EMPTY)
+    var isVersioningEnabledStr = defaultIfEmpty(isVersioningEnabled, EMPTY)
+    var removeRetentionPolicyStr = EMPTY
 
     val proxyHostStr = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
@@ -120,14 +128,6 @@ class UpdateBucket {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      var accessControlTypeStr = defaultIfEmpty(accessControlType, EMPTY)
-      var labelsStr = defaultIfEmpty(labels, DEFAULT_LABELS)
-      var storageClassStr = defaultIfEmpty(storageClass, EMPTY)
-      var retentionPeriodStr = defaultIfEmpty(retentionPeriod, EMPTY)
-      var retentionPeriodTypeStr = defaultIfEmpty(retentionPeriodType, DEFAULT_RETENTION_PERIOD_TYPE)
-      var isDefaultEventBasedHoldEnabledStr = defaultIfEmpty(isDefaultEventBasedHoldEnabled, EMPTY)
-      var isVersioningEnabledStr = defaultIfEmpty(isVersioningEnabled, EMPTY)
-      var removeRetentionPolicyStr = EMPTY
 
       val bucketDetails = BucketService.getBucket(httpTransport, jsonFactory, credential, bucketName, projectionStr)
 
@@ -179,8 +179,10 @@ class UpdateBucket {
         }
       }
 
-      if (isVersioningEnabled.isEmpty && bucketDetails.containsKey(VERSIONING)) {
-        isVersioningEnabledStr = bucketDetails.getVersioning.getEnabled.toString
+      if (isVersioningEnabled.isEmpty) {
+        if (bucketDetails.containsKey(VERSIONING)) {
+          isVersioningEnabledStr = bucketDetails.getVersioning.getEnabled.toString
+        }
       } else {
         val validationStream = validateBoolean(isVersioningEnabled, IS_VERSIONING_ENABLED)
         if (validationStream.nonEmpty) {
@@ -209,10 +211,10 @@ class UpdateBucket {
         } else {
           EMPTY
         })) +
-        (LABELS -> (if (bucketUpdate.getLabels != null) {
+        (LABELS -> (if (bucketDetails.containsKey(LABELS)) {
           bucketUpdate.getLabels.toString
         } else {
-          EMPTY
+          DEFAULT_LABELS
         })) +
         (ACCESS_CONTROL -> (if (bucketUpdate.getIamConfiguration.getUniformBucketLevelAccess.getEnabled) {
           UNIFORM_ACCESS_CONTROL

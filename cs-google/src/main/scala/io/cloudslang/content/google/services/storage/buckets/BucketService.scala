@@ -84,7 +84,7 @@ object BucketService {
     }
 
     val request = StorageService.bucketService(httpTransport, jsonFactory, credential)
-      .update(bucketName, bucket).setProjection(projection)
+      .patch(bucketName, bucket).setProjection(projection)
 
     if (ifMetagenerationMatch.nonEmpty) {
       request.setIfMetagenerationMatch(toLong(ifMetagenerationMatch))
