@@ -14,14 +14,17 @@
  */
 package io.cloudslang.content.filesystem.constants;
 
-public class Constants {
+public final class Constants {
 
     public static final String SIZE = "size";
     public static final String IS_DIRECTORY_SUCCESS = "'%s' is a directory";
     public static final String EQUALS = "The file's size is equal to the threshold(%d)";
     public static final String GREATER_THAN = "The file's size is greater than the threshold(%d)";
     public static final String LESS_THAN = "The file's size is less than the threshold(%d)";
+    public static final String RENAME_OPERATION_SUCCEEDED = "Rename operation succeeded.";
 
+    private Constants() {
+    }
     public static final String GET_MODIFIED_DATE = "Get Modified Date";
     public static final String GET_MODIFIED_DATE_SUCCESS = "The last modified date of '%s' was retrieved successfully";
     public static final String LESS = "0";

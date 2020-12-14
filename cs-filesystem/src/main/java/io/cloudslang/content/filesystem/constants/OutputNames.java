@@ -14,18 +14,12 @@
  */
 package io.cloudslang.content.filesystem.constants;
 
-public final class InputNames {
+public final class OutputNames extends io.cloudslang.content.constants.OutputNames {
 
-    public static final String SOURCE = "source";
-    public static final String THRESHOLD = "threshold";
-    public static final String LOCALE_LANG = "localeLang";
-    public static final String LOCALE_COUNTRY = "localeCountry";
-    public static final String DELIMITER = "delimiter";
-    public static final String COMPARE_TO = "compareTo";
-    public static final String NEW_NAME = "newName";
-    public static final String OVERWRITE = "overwrite";
+    public static final String RENAMED_PATH = "renamedPath";
+    public static final String SIZE = "size";
 
-    private InputNames() {
+
+    private OutputNames() {
     }
-
 }

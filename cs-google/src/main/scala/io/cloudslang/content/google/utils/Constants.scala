@@ -33,6 +33,8 @@ object Constants {
   val EXPIRE_ON = "expireOn"
   val ERROR_MESSAGE = "errorMessage"
   val ENCRYPTED_PASSWORD = "encryptedPassword"
+  val FALSE = "false"
+  val TRUE = "true"
 
   object SQLInstancesConstant {
     final val CREATE_SQL_INSTANCE_OPERATION_NAME = "Create SQL Instance"
@@ -43,5 +45,14 @@ object Constants {
     final val UPDATE_SQL_INSTANCE_OPERATION_NAME = "Update SQL Instance"
     final val STOP_SQL_INSTANCE_OPERATION_NAME = "Stop SQL Instance"
     final val RESTART_SQL_INSTANCE_OPERATION_NAME = "Restart SQL Instance"
+  }
+
+  object StorageBucketConstants {
+    final val UPDATE_BUCKET_OPERATION_NAME = "Update Bucket"
+
+    final val UNIFORM_ACCESS_CONTROL = "Uniform"
+    final val FINE_GRAINED_ACCESS_CONTROL = "Fine-grained"
+    final val RETENTION_POLICY = "retentionPolicy"
+    final val VERSIONING = "versioning"
   }
 }
