@@ -63,7 +63,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class DeleteMonitorGroupAction {
 
-    @Action(name = DELETE_MONITOR_GROUP_DESC,
+    @Action(name = "Delete Monitor Group", description = DELETE_MONITOR_GROUP_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = GET_GROUP_PROP_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),

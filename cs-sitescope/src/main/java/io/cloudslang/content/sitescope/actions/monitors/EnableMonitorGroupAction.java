@@ -63,7 +63,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class EnableMonitorGroupAction {
 
-    @Action(name = ENABLE_MONITOR_GROUP_DESC,
+    @Action(name = "Enable Monitor Group", description = ENABLE_MONITOR_GROUP_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = GET_GROUP_PROP_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),

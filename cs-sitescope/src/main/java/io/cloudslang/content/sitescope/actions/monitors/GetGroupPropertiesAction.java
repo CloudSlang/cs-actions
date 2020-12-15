@@ -60,7 +60,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class GetGroupPropertiesAction {
 
-    @Action(name = GET_GROUP_PROPERTIES_DESC,
+    @Action(name = "Get Group Properties", description = GET_GROUP_PROPERTIES_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = GET_GROUP_PROP_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),

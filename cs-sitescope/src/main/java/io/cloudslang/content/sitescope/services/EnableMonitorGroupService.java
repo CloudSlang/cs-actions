@@ -43,14 +43,14 @@ public class EnableMonitorGroupService {
             fullPath = fullPath.replace(delimiter, SITE_SCOPE_DELIMITER);
 
         httpClientInputs.setUrl(commonInputs.getProtocol() + "://" + commonInputs.getHost() + COLON + commonInputs.getPort() +
-                SITESCOPE_MONITORS_API + DELETE_MONITOR_GROUP_ENDPOINT + fullPath);
+                SITESCOPE_MONITORS_API + ENABLE_MONITOR_GROUP_ENDPOINT);
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setUsername(commonInputs.getUsername());
         httpClientInputs.setPassword(commonInputs.getPassword());
-        httpClientInputs.setMethod("DELETE");
+        httpClientInputs.setMethod("POST");
         httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
         httpClientInputs.setKeystorePassword(CHANGEIT);
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
