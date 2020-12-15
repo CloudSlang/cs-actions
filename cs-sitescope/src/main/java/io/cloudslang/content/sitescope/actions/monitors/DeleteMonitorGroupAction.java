@@ -45,18 +45,16 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.*;
+import static io.cloudslang.content.sitescope.constants.Outputs.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
-import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.DELETE_MONITOR_GROUP_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.EXTERNAL_ID_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.DeleteMonitorGroupInputs.EXTERNAL_ID;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyFullPathToGroup;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -65,13 +63,16 @@ public class DeleteMonitorGroupAction {
 
     @Action(name = "Delete Monitor Group", description = DELETE_MONITOR_GROUP_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = GET_GROUP_PROP_RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = EXCEPTION, description = GET_GROUP_PROP_EXCEPTION_DESC)
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESCRIPTION)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL,
+                            responseType = RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL,
+                            responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = HOST, description = HOST_DESC) String host,
                                        @Param(value = PORT, description = PORT_DESC) String port,
@@ -80,8 +81,8 @@ public class DeleteMonitorGroupAction {
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = FULL_PATH_TO_GROUP, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
-                                       @Param(value = IDENTIFIER, description = IDENTIFIER_DESC) String identifier,
-                                       @Param(value = EXTERNAL_ID, description = EXTERNAL_ID_DESC) String externalId,
+//                                       @Param(value = IDENTIFIER, description = IDENTIFIER_DESC) String identifier,
+//                                       @Param(value = EXTERNAL_ID, description = EXTERNAL_ID_DESC) String externalId,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -101,9 +102,10 @@ public class DeleteMonitorGroupAction {
 
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
+        fullPathToGroup = defaultIfEmpty(fullPathToGroup, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
-        identifier = defaultIfEmpty(identifier, EMPTY);
-        externalId = defaultIfEmpty(externalId, EMPTY);
+//        identifier = defaultIfEmpty(identifier, EMPTY);
+//        externalId = defaultIfEmpty(externalId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -124,6 +126,7 @@ public class DeleteMonitorGroupAction {
 
         final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        exceptionMessage.addAll(verifyFullPathToGroup(fullPathToGroup));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
@@ -135,8 +138,8 @@ public class DeleteMonitorGroupAction {
             DeleteMonitorGroupInputs inputs = new DeleteMonitorGroupInputs.DeleteMonitorGroupInputsBuilder()
                     .fullPathToGroup(fullPathToGroup)
                     .delimiter(delimiter)
-                    .identifier(identifier)
-                    .externalId(externalId)
+//                    .identifier(identifier)
+//                    .externalId(externalId)
                     .commonInputs(SiteScopeCommonInputs.builder()
                             .host(host)
                             .port(port)

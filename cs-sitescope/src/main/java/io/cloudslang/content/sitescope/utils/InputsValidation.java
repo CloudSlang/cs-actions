@@ -29,6 +29,8 @@
 
 package io.cloudslang.content.sitescope.utils;
 
+import io.cloudslang.content.sitescope.constants.Inputs;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import io.cloudslang.content.utils.NumberUtilities;
@@ -43,6 +45,17 @@ import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public final class InputsValidation {
+
+    @NotNull
+    public static List<String> verifyFullPathToGroup(@Nullable final String fullPathToGroup) {
+        final List<String> exceptionMessages = new ArrayList<>();
+
+        if(StringUtils.isEmpty(fullPathToGroup)) {
+            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, Inputs.CommonInputs.FULL_PATH_TO_GROUP));
+        }
+
+        return exceptionMessages;
+    }
 
     @NotNull
     public static List<String> verifyCommonInputs(@Nullable final String proxyPort,

@@ -81,7 +81,7 @@ public class Descriptions {
 
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String EXCEPTION_DESCRIPTION = "The exception's stack trace if the operation failed. Empty otherwise.";
-
+        public static final String STATUS_CODE_DESC = "The status code of the http(s) call. Empty if the http(s) call failed.";
     }
 
     public static class GetGroupPropertiesAction {
@@ -98,7 +98,9 @@ public class Descriptions {
 
         public static final String DELETE_MONITOR_GROUP_DESC = "Deletes a SiteScope monitor group.";
         public static final String EXTERNAL_ID_DESC = "External ID of the group.";
-
+        public static final String RETURN_RESULT_DESC = "A message describing the success or failure of the operation.";
+        public static final String SUCCESS_DESC = "The specified monitor group was successfully deleted.";
+        public static final String FAILURE_DESC = "The specified monitor group could not be deleted.";
     }
 
     public static class EnableMonitorGroupAction {

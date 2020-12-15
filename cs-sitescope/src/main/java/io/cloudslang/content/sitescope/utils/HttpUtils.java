@@ -29,6 +29,12 @@
 
 package io.cloudslang.content.sitescope.utils;
 
+import com.jayway.jsonpath.JsonPath;
+import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.sitescope.constants.ExceptionMsgs;
+import io.cloudslang.content.sitescope.constants.Outputs;
+import io.cloudslang.content.sitescope.constants.SuccessMsgs;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
@@ -37,6 +43,8 @@ import java.net.Authenticator;
 import java.net.InetSocketAddress;
 import java.net.PasswordAuthentication;
 import java.net.Proxy;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.net.Proxy.Type.HTTP;
 
@@ -99,4 +107,29 @@ public class HttpUtils {
         httpClientInputs.setResponseCharacterSet(responseCharacterSet);
     }
 
+    public static Map<String, String> convertToSitescopeResultsMap(@NotNull Map<String, String> httpClientOutputs) throws Exception {
+        Map<String, String> sitescopeOutputs = new HashMap<>();
+        if (httpClientOutputs.containsKey(Outputs.STATUS_CODE)) {
+            if (httpClientOutputs.get(Outputs.STATUS_CODE).equals(String.valueOf(204))) {
+                sitescopeOutputs.put(Outputs.RETURN_RESULT, SuccessMsgs.DELETE_MONITOR_GROUP);
+                sitescopeOutputs.put(Outputs.STATUS_CODE, httpClientOutputs.get(Outputs.STATUS_CODE));
+                sitescopeOutputs.put(Outputs.RETURN_CODE, ReturnCodes.SUCCESS);
+            } else {
+                try {
+                    String errMsg = JsonPath.read(httpClientOutputs.get(Outputs.RETURN_RESULT), "$.message");
+                    sitescopeOutputs.put(Outputs.RETURN_RESULT, errMsg);
+                    sitescopeOutputs.put(Outputs.STATUS_CODE, httpClientOutputs.get(Outputs.STATUS_CODE));
+                    sitescopeOutputs.put(Outputs.RETURN_CODE, ReturnCodes.FAILURE);
+                    sitescopeOutputs.put(Outputs.EXCEPTION, ExceptionUtils.getStackTrace(new Exception(errMsg)));
+                } catch (Exception ex) {
+                    throw new Exception(ExceptionMsgs.EXCEPTION_WHILE_PARSING_RESPONSE);
+                }
+            }
+        } else {
+            sitescopeOutputs.put(Outputs.RETURN_RESULT, httpClientOutputs.get(Outputs.RETURN_RESULT));
+            sitescopeOutputs.put(Outputs.RETURN_CODE, ReturnCodes.FAILURE);
+            sitescopeOutputs.put(Outputs.EXCEPTION, httpClientOutputs.get(Outputs.EXCEPTION));
+        }
+        return sitescopeOutputs;
+    }
 }

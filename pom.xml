@@ -344,6 +344,7 @@
         <module>cs-xml</module>
         <module>cs-hashicorp-terraform</module>
         <module>cs-filesystem</module>
+        <module>cs-sitescope</module>
     </modules>
 
 </project>
