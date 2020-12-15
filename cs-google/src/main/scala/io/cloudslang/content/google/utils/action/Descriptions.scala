@@ -83,7 +83,8 @@ object Descriptions {
     final val PREFERRED_MAINTENANCE_WINDOW_HOUR_DESC = "The best time window for this instance to undergo routine maintenance. Hour of day - 0 to 23. Default: 0"
     final val ACTIVATION_POLICY_DESC = "The activation policy specifies when the instance is activated; it is applicable only when the instance state is RUNNABLE. Valid values: ALWAYS: The instance is on, and remains so even in the absence of connection requests. NEVER: The instance is off; it is not activated, even if a connection request arrives. Default: ALWAYS"
     final val LABELS_DESC = "User-provided labels, represented as a dictionary where each label is a single key value pair. Example: { \"name\": \"wrench\", \"mass\": \"1.3kg\", \"count\": \"3\" }."
-    final val PUBLIC_IP_ADDRESS_DESC = "The assigned public IP addresses for the instance."
+    final val PUBLIC_IP_ADDRESS_DESC = "The assigned public IP address for the instance."
+    final val PRIVATE_IP_ADDRESS_DESC = "The assigned private IP address for the instance."
     final val SELF_LINK_DESC = "The URI of the resource."
   }
 

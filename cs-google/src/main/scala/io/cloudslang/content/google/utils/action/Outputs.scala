@@ -19,7 +19,8 @@ object Outputs {
 
   object SQLDatabaseInstance {
     final val CONNECTION_NAME = "connectionName"
-    final val PUBLIC_IP_ADDRESS = "publicIPAddresses"
+    final val PUBLIC_IP_ADDRESS = "publicIPAddress"
+    final val PRIVATE_IP_ADDRESS = "privateIPAddress"
     final val SELF_LINK = "selfLink"
   }
 
