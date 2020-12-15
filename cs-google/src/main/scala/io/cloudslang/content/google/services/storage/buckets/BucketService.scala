@@ -45,19 +45,58 @@ object BucketService {
 
   }
 
-  def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, bucketName: String, location: String
-             , locationType: String, storageClass: String, accessControlType: String, labels: java.util.Map[String, String]): Bucket = {
 
-    StorageService.bucketService(httpTransport, jsonFactory, credential)
-      .insert(projectId, new Bucket().setName(bucketName).setLocation(location).setLocationType(locationType).setStorageClass(
-        storageClass).setLabels(labels).setIamConfiguration(BucketController.getIamConfiguration(accessControlType)))
-      .execute()
-  }
+  def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, bucketName: String, predefinedAcl: String, predefinedDefaultObjectAcl: String, projection: String,location: String, locationType: String, storageClass: String, accessControlType: String, retentionPeriodType: String, retentionPeriod: String, isVersioningEnabled: String,labels: java.util.Map[String, String],  isDefaultEventBasedHoldEnabled: String, metageneration: String): Bucket = {
 
-  def getBucket(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String,
-                projection: String): Bucket = {
-    StorageService.bucketService(httpTransport, jsonFactory, credential).get(bucketName).
-      setProjection(projection).execute()
+    val createBucket = new Bucket().setName(bucketName).setLabels(labels)
+
+    if (location.nonEmpty) {
+      createBucket.setLocation(location)
+    }
+
+    if (locationType.nonEmpty) {
+      createBucket.setLocationType(locationType)
+    }
+
+    if (storageClass.nonEmpty) {
+      createBucket.setStorageClass(storageClass)
+    }
+
+    if (accessControlType.nonEmpty) {
+      createBucket.setIamConfiguration(getIamConfiguration(accessControlType))
+    }
+
+    if (isVersioningEnabled.nonEmpty) {
+      createBucket.setVersioning(new Versioning().setEnabled(toBoolean(isVersioningEnabled)))
+    }
+
+    if (retentionPeriodType.nonEmpty) {
+      createBucket.setRetentionPolicy(BucketController.getRetentionPolicy(retentionPeriodType, retentionPeriod))
+    }
+    if (retentionPeriod.nonEmpty) {
+      createBucket.setRetentionPolicy(new RetentionPolicy().setRetentionPeriod(toLong(retentionPeriod)))
+    }
+
+    if (isDefaultEventBasedHoldEnabled.nonEmpty) {
+      createBucket.setDefaultEventBasedHold(toBoolean(isDefaultEventBasedHoldEnabled))
+    }
+
+    if (metageneration.nonEmpty) {
+      createBucket.setMetageneration(toLong(metageneration))
+    }
+
+    val request = StorageService.bucketService(httpTransport, jsonFactory, credential).insert(projectId, createBucket)
+
+    if (predefinedAcl.nonEmpty) {
+      request.setPredefinedAcl(predefinedAcl)
+    }
+    if (predefinedDefaultObjectAcl.nonEmpty) {
+      request.setPredefinedDefaultObjectAcl(predefinedDefaultObjectAcl)
+    }
+    if (projection.nonEmpty) {
+      request.setProjection(projection)
+    }
+    request.execute()
   }
 
   def update(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String,

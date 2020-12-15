@@ -49,6 +49,15 @@ object InputValidator {
   def validateinstanceId: (String) => Stream[String] = validate(_, InputNames.CreateSQLDatabaseInstanceInputs.INSTANCE_ID) { value =>
     if (instanceidPattern.pattern.matcher(value).matches()) None else Some(INVALID_INSATNCE_ID)
   }
+  
+    val bucketNamePattern = "(^[a-z0-9][a-z]+[a-z0-9]$)".r
+	
+  def validateBucketName: (String) => Stream[String] = validate(_, InputNames.StorageBucketInputs.BUCKET_NAME) { value =>
+    if (bucketNamePattern.pattern.matcher(value).matches()) None else Some(INVALID_BUCKET_NAME)
+    if (INSTANCE_ID.contains("\\.")==false && (InputNames.CreateSQLDatabaseInstanceInputs.INSTANCE_ID.length >= 3) && (InputNames.CreateSQLDatabaseInstanceInputs.INSTANCE_ID.length <= 63)) None
+    else if (INSTANCE_ID.contains("\\.")==true && (InputNames.CreateSQLDatabaseInstanceInputs.INSTANCE_ID.length >= 3) && (InputNames.CreateSQLDatabaseInstanceInputs.INSTANCE_ID.length <= 222)) None else Some(INVALID_BUCKET_NAME)
+
+  }
 
   def validateBoolean: (String, String) => Stream[String] = validate(_, _) { value =>
     if (!BooleanUtilities.isValid(value)) Some(INVALID_BOOLEAN) else None
