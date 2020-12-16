@@ -73,6 +73,7 @@ public class EnableMonitorGroupAction {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
+
     public Map<String, String> execute(@Param(value = HOST, description = HOST_DESC) String host,
                                        @Param(value = PORT, description = PORT_DESC) String port,
                                        @Param(value = PROTOCOL, description = PROTOCOL_DESC) String protocol,
@@ -107,10 +108,10 @@ public class EnableMonitorGroupAction {
         password = defaultIfEmpty(password, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
         identifier = defaultIfEmpty(identifier, EMPTY);
-        enable = defaultIfEmpty(enable,"true");
-        timePeriod = defaultIfEmpty(timePeriod,ZERO);
-        fromTime = defaultIfEmpty(fromTime, ZERO);
-        toTime = defaultIfEmpty(toTime, ZERO);
+        enable = defaultIfEmpty(enable, BOOLEAN_TRUE);
+        timePeriod = defaultIfEmpty(timePeriod, EMPTY);
+        fromTime = defaultIfEmpty(fromTime, EMPTY);
+        toTime = defaultIfEmpty(toTime, EMPTY);
         description = defaultIfEmpty(description, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -129,15 +130,13 @@ public class EnableMonitorGroupAction {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-
+        final EnableMonitorGroupService service = new EnableMonitorGroupService();
+        Map<String, String> result;
         final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
-
-        final EnableMonitorGroupService service = new EnableMonitorGroupService();
-        Map<String, String> result;
 
         try {
             EnableMonitorGroupInputs inputs = new EnableMonitorGroupInputs.EnableMonitorGroupInputsBuilder()
