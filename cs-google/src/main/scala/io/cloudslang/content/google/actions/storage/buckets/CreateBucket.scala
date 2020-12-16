@@ -126,7 +126,7 @@ class CreateBucket {
       var isDefaultEventBasedHoldEnabledStr = defaultIfEmpty(isDefaultEventBasedHoldEnabled, EMPTY)
       val metagenerationStr = defaultIfEmpty(metageneration, EMPTY)
 
-      val createBucket = BucketService.create(httpTransport, jsonFactory, credential, projectId, bucketName, predefinedAclStr, predefinedDefaultObjectAclStr, projectionStr, locationStr, locationTypeStr, storageClassStr, accessControlTypeStr, retentionPeriodTypeStr, retentionPeriodStr, isVersioningEnabledStr,Utility.jsonToMap(labelsStr),isDefaultEventBasedHoldEnabledStr,metagenerationStr)
+      val createBucket = BucketService.create(httpTransport, jsonFactory, credential, projectId, bucketName, predefinedAclStr,  predefinedDefaultObjectAclStr, projectionStr, locationStr, locationTypeStr, storageClassStr, accessControlTypeStr, retentionPeriodTypeStr, retentionPeriodStr, isVersioningEnabledStr,Utility.jsonToMap(labelsStr),isDefaultEventBasedHoldEnabledStr,metagenerationStr)
 
       getSuccessResultsMap(toPretty(prettyPrint, createBucket)) +
         (LOCATION -> createBucket.getLocation) +
@@ -144,16 +144,20 @@ class CreateBucket {
           EMPTY
         })) +
         (IS_DEFAULT_EVENT_BASED_HOLD_ENABLED -> (if(createBucket.getDefaultEventBasedHold){
-        createBucket.getDefaultEventBasedHold.toString
+          createBucket.getDefaultEventBasedHold.toString
         } else { EMPTY
-         }))+
-          (IS_VERSIONING_ENABLED -> (createBucket.getVersioning.getEnabled).toString) +
-          (ACCESS_CONTROL_TYPE -> (if (createBucket.getIamConfiguration.getUniformBucketLevelAccess.getEnabled) {
-            UNIFORM_ACCESS_CONTROL
-          } else {
-            FINE_GRAINED_ACCESS_CONTROL
-          }))+
-          (SELF_LINK -> createBucket.getSelfLink)
+        }))+
+        (IS_VERSIONING_ENABLED -> (if((isVersioningEnabled.nonEmpty))    {
+          (createBucket.getVersioning.getEnabled).toString
+        } else {
+          EMPTY
+        })) +
+        (ACCESS_CONTROL_TYPE -> (if (createBucket.getIamConfiguration.getUniformBucketLevelAccess.getEnabled) {
+          UNIFORM_ACCESS_CONTROL
+        } else {
+          FINE_GRAINED_ACCESS_CONTROL
+        }))+
+        (SELF_LINK -> createBucket.getSelfLink)
       }
 
      catch {

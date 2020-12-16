@@ -18,13 +18,11 @@ package io.cloudslang.content.google.services.storage.buckets
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
-import com.google.api.services.storage.model.Bucket.{IamConfiguration, RetentionPolicy}
+import com.google.api.services.storage.model.Bucket.{IamConfiguration, RetentionPolicy, Versioning}
 import com.google.api.services.storage.model.Bucket.IamConfiguration.UniformBucketLevelAccess
 import com.google.api.services.storage.model.{Bucket, Buckets}
 import io.cloudslang.content.google.services.storage.StorageService
 import io.cloudslang.content.google.utils.Constants.FALSE
-import io.cloudslang.content.google.utils.Constants.StorageBucketConstants.UNIFORM_ACCESS_CONTROL
-import io.cloudslang.content.google.utils.action.DefaultValues.StorageBucket.{DEFAULT_RETENTION_PERIOD_TYPE, RETENTION_PERIOD_TYPE_DAYS, RETENTION_PERIOD_TYPE_MONTHS, RETENTION_PERIOD_TYPE_YEARS}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toLong
 
@@ -99,6 +97,13 @@ object BucketService {
     request.execute()
   }
 
+
+  def getBucket(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String,
+                projection: String): Bucket = {
+    StorageService.bucketService(httpTransport, jsonFactory, credential).get(bucketName).
+      setProjection(projection).execute()
+  }
+
   def update(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String,
              ifMetagenerationMatch: String, ifMetagenerationNotMatch: String, predefinedAcl: String,
              predefinedDefaultObjectAcl: String, projection: String, storageClass: String,
@@ -160,6 +165,16 @@ def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Cre
     }
 
     request.execute()
+
+  }
+
+  def getIamConfiguration(bucketPolicy: String): IamConfiguration = {
+
+    if (bucketPolicy.equalsIgnoreCase("uniform")) {
+      new IamConfiguration().setUniformBucketLevelAccess(new UniformBucketLevelAccess().setEnabled(true))
+    } else {
+      new IamConfiguration()
+    }
 
   }
 
