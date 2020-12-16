@@ -26,6 +26,7 @@ public final class ExceptionMsgs {
     public static final String NULL_OR_EMPTY_INPUT = "Value of input '%s' can't be null or empty.";
     public static final String ILLEGAL_CHARACTERS = "Illegal characters found in value of input '%s'.";
     public static final String INVALID_VALUE_FOR_INPUT = "Invalid value '%s' for input '%s'.";
+    public static final String WORKS_ONLY_FOR_FILES = "The source input must point to a file.";
 
     private ExceptionMsgs() {
     }
