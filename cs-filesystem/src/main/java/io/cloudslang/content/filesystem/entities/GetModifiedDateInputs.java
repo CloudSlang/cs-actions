@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.filesystem.entities;
 
+import static io.cloudslang.content.filesystem.utils.InputBuilderUtils.buildSource;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class GetModifiedDateInputs {
@@ -93,8 +94,8 @@ public class GetModifiedDateInputs {
             return this;
         }
 
-        public GetModifiedDateInputs build() {
-            return new GetModifiedDateInputs(source, threshold, localeLang, localeCountry);
+        public GetModifiedDateInputs build() throws Exception {
+            return new GetModifiedDateInputs(buildSource(source), threshold, localeLang, localeCountry);
         }
     }
 }

@@ -16,6 +16,7 @@ package io.cloudslang.content.filesystem.services;
 
 import io.cloudslang.content.filesystem.entities.MD5SumInputs;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,6 +28,7 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.filesystem.constants.Constants.*;
+import static io.cloudslang.content.filesystem.constants.ExceptionMsgs.WORKS_ONLY_FOR_FILES;
 import static io.cloudslang.content.filesystem.constants.ResultsName.CHECKSUM;
 
 public class MD5SumService {
@@ -34,6 +36,9 @@ public class MD5SumService {
     public static Map<String, String> execute(MD5SumInputs md5SumInputs) throws NoSuchAlgorithmException, IOException {
 
         Map<String, String> result = new HashMap<>();
+        File f = new File(md5SumInputs.getSource());
+        if(f.isDirectory())
+            throw new IllegalArgumentException(WORKS_ONLY_FOR_FILES);
 
         MessageDigest md5 = MessageDigest.getInstance(MD5);
         FileInputStream fStream = null;
