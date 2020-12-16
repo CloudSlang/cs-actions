@@ -65,6 +65,7 @@ object DefaultValues {
     final val RETENTION_PERIOD_TYPE_MONTHS = "months"
     final val RETENTION_PERIOD_TYPE_YEARS = "years"
     final val DEFAULT_MAXRESULTS = "1000"
+    final val DEFAULT_LABELS = "{}"
 
   }
 }

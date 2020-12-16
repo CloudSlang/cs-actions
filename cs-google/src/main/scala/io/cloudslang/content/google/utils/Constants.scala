@@ -45,6 +45,10 @@ object Constants {
     final val UPDATE_SQL_INSTANCE_OPERATION_NAME = "Update SQL Instance"
     final val STOP_SQL_INSTANCE_OPERATION_NAME = "Stop SQL Instance"
     final val RESTART_SQL_INSTANCE_OPERATION_NAME = "Restart SQL Instance"
+
+    final val IP_ADDRESS_TYPE_PRIVATE = "PRIVATE"
+    final val IP_ADDRESS_TYPE_PRIMARY = "PRIMARY"
+    final val USER_LABELS = "userLabels"
   }
 
   object StorageBucketConstants {
@@ -54,5 +58,6 @@ object Constants {
     final val FINE_GRAINED_ACCESS_CONTROL = "Fine-grained"
     final val RETENTION_POLICY = "retentionPolicy"
     final val VERSIONING = "versioning"
+    final val LABELS = "labels"
   }
 }

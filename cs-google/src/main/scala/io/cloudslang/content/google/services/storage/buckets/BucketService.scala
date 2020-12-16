@@ -14,7 +14,6 @@
  */
 package io.cloudslang.content.google.services.storage.buckets
 
-
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
@@ -25,6 +24,7 @@ import io.cloudslang.content.google.services.storage.StorageService
 import io.cloudslang.content.google.utils.Constants.FALSE
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toLong
+import scala.collection.JavaConversions._
 
 object BucketService {
 
@@ -111,7 +111,11 @@ object BucketService {
              retentionPeriod: String, removeRetentionPolicy: String, labels: java.util.Map[String, String]): Bucket = {
 
     val bucket = new Bucket().setDefaultEventBasedHold(defaultEventBasedHold)
-      .setLabels(labels).setStorageClass(storageClass)
+      .setStorageClass(storageClass)
+
+    if (labels.nonEmpty) {
+      bucket.setLabels(labels)
+    }
 
     if (versioningEnabled.nonEmpty) {
       bucket.setVersioning(new Bucket.Versioning().setEnabled(toBoolean(versioningEnabled)))
@@ -122,11 +126,13 @@ object BucketService {
     }
 
     if (removeRetentionPolicy.isEmpty || removeRetentionPolicy.equalsIgnoreCase(FALSE)) {
-      bucket.setRetentionPolicy(BucketController.getRetentionPolicy(retentionPeriodType, retentionPeriod))
+      if (retentionPeriod.nonEmpty) {
+        bucket.setRetentionPolicy(BucketController.getRetentionPolicy(retentionPeriodType, retentionPeriod))
+      }
     }
 
     val request = StorageService.bucketService(httpTransport, jsonFactory, credential)
-      .update(bucketName, bucket).setProjection(projection)
+      .patch(bucketName, bucket).setProjection(projection)
 
     if (ifMetagenerationMatch.nonEmpty) {
       request.setIfMetagenerationMatch(toLong(ifMetagenerationMatch))
@@ -144,8 +150,8 @@ object BucketService {
 
   }
 
-def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, maxResults: String, prefix: String, pageToken: String, projection: String): Buckets = {
-      StorageService.bucketService(httpTransport, jsonFactory, credential)
+  def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, maxResults: String, prefix: String, pageToken: String, projection: String): Buckets = {
+    StorageService.bucketService(httpTransport, jsonFactory, credential)
       .list(projectId).setMaxResults(maxResults.toLong).setPrefix(prefix)
       .setPageToken(pageToken).setProjection(projection)
       .execute()
@@ -163,7 +169,6 @@ def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Cre
     if (metagenerationMatch.nonEmpty) {
       request.setIfMetagenerationMatch(toLong(metagenerationMatch))
     }
-
     request.execute()
 
   }
