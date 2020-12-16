@@ -17,6 +17,7 @@ package io.cloudslang.content.sitescope.services;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.sitescope.constants.Inputs;
+import io.cloudslang.content.sitescope.constants.SuccessMsgs;
 import io.cloudslang.content.sitescope.entities.DeleteMonitorGroupInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 import io.cloudslang.content.sitescope.utils.HttpUtils;
@@ -30,7 +31,7 @@ import java.util.Map;
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.httpclient.entities.Constants.CHANGEIT;
 import static io.cloudslang.content.httpclient.entities.Constants.DEFAULT_JAVA_KEYSTORE;
-import static io.cloudslang.content.sitescope.constants.Constants.SITE_SCOPE_DELIMITER;
+import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 
 
@@ -53,7 +54,7 @@ public class DeleteMonitorGroupService {
 
         Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
 
-        return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs);
+        return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, SuccessMsgs.DELETE_MONITOR_GROUP);
     }
 
 
@@ -62,6 +63,7 @@ public class DeleteMonitorGroupService {
         urlBuilder.setScheme(inputs.getCommonInputs().getProtocol());
         urlBuilder.setHost(inputs.getCommonInputs().getHost());
         urlBuilder.setPort(Integer.parseInt(inputs.getCommonInputs().getPort()));
+        urlBuilder.setPath(SITESCOPE_MONITORS_API + DELETE_MONITOR_GROUP_ENDPOINT);
         if (StringUtils.isNotEmpty(inputs.getFullPathToGroup())) {
             String fullPathToGroup = inputs.getFullPathToGroup().replace(inputs.getDelimiter(), SITE_SCOPE_DELIMITER);
             urlBuilder.addParameter(Inputs.CommonInputs.FULL_PATH_TO_GROUP, fullPathToGroup);

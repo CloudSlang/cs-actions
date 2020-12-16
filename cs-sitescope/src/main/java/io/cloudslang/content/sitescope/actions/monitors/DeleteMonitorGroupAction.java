@@ -125,7 +125,7 @@ public class DeleteMonitorGroupAction {
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
 
-        final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
+        final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         exceptionMessage.addAll(verifyDeleteMonitorGroupInputs(fullPathToGroup, externalId));
         if (!exceptionMessage.isEmpty()) {

@@ -29,7 +29,6 @@
 
 package io.cloudslang.content.sitescope.utils;
 
-import io.cloudslang.content.sitescope.entities.DeleteMonitorGroupInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,7 +60,8 @@ public final class InputsValidation {
     }
 
     @NotNull
-    public static List<String> verifyCommonInputs(@Nullable final String proxyPort,
+    public static List<String> verifyCommonInputs(@Nullable final String port,
+                                                  @Nullable final String proxyPort,
                                                   @Nullable final String trust_all_roots,
                                                   @Nullable final String connectTimeout,
                                                   @Nullable final String socketTimeout,
@@ -70,7 +70,8 @@ public final class InputsValidation {
                                                   @Nullable final String connectionsMaxTotal) {
 
         final List<String> exceptionMessages = new ArrayList<>();
-        addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
+        addVerifyPort(exceptionMessages, port, PORT);
+        addVerifyPort(exceptionMessages, proxyPort, PROXY_PORT);
         addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
         addVerifyNumber(exceptionMessages, connectTimeout, CONNECT_TIMEOUT);
         addVerifyNumber(exceptionMessages, socketTimeout, SOCKET_TIMEOUT);
@@ -82,11 +83,11 @@ public final class InputsValidation {
     }
 
     @NotNull
-    private static List<String> addVerifyProxy(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+    private static List<String> addVerifyPort(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!isValidIpPort(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_PROXY, PROXY_PORT));
+            exceptions.add(String.format(EXCEPTION_INVALID_PORT, inputName));
         }
         return exceptions;
     }

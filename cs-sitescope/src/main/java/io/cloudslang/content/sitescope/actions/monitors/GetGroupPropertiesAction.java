@@ -115,7 +115,7 @@ public class GetGroupPropertiesAction {
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
 
-        final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
+        final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
