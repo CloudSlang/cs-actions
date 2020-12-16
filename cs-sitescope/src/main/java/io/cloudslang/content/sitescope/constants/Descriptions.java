@@ -33,11 +33,11 @@ public class Descriptions {
 
     public static class Common {
 
-        public static final String HOST_DESC = "Proxy server used to access the Site Scope service.";
-        public static final String PORT_DESC = "Proxy server used to access the Site Scope service.";
-        public static final String PROTOCOL_DESC = "Proxy server used to access the Site Scope service.";
-        public static final String USERNAME_DESC = "Proxy server used to access the Site Scope service.";
-        public static final String PASSWORD_DESC = "Proxy server used to access the Site Scope service.";
+        public static final String HOST_DESC = "The DNS name or IP Address of your SiteScope host.";
+        public static final String PORT_DESC = "The port to connect to your SiteScope host on.";
+        public static final String PROTOCOL_DESC = "The protocol to connect to your SiteScope host with (HTTP or HTTPS).";
+        public static final String USERNAME_DESC = " The username for the SiteScope host.";
+        public static final String PASSWORD_DESC = "The password for the SiteScope user.";
         public static final String FULL_PATH_TO_GROUP_DESC = "A string array specifying the full path to the group. The " +
                 "path starts with the name of the first child under the SiteScope root directory and ends with the name " +
                 "of the group with the elements separated by a delimiter.";

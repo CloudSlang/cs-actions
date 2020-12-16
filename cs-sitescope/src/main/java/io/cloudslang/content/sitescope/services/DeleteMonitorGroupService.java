@@ -14,27 +14,21 @@
  */
 package io.cloudslang.content.sitescope.services;
 
-import com.jayway.jsonpath.JsonPath;
-import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.sitescope.constants.ExceptionMsgs;
 import io.cloudslang.content.sitescope.constants.Inputs;
-import io.cloudslang.content.sitescope.constants.Outputs;
-import io.cloudslang.content.sitescope.constants.SuccessMsgs;
 import io.cloudslang.content.sitescope.entities.DeleteMonitorGroupInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 import io.cloudslang.content.sitescope.utils.HttpUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.httpclient.entities.Constants.CHANGEIT;
 import static io.cloudslang.content.httpclient.entities.Constants.DEFAULT_JAVA_KEYSTORE;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
+import static io.cloudslang.content.sitescope.constants.SuccessMsgs.DELETE_MONITOR_GROUP;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 
 
@@ -61,13 +55,13 @@ public class DeleteMonitorGroupService {
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setUsername(commonInputs.getUsername());
         httpClientInputs.setPassword(commonInputs.getPassword());
-        httpClientInputs.setMethod("DELETE");
+        httpClientInputs.setMethod(DELETE);
         httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
         httpClientInputs.setKeystorePassword(CHANGEIT);
 
         Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
 
-        return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs);
+        return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, DELETE_MONITOR_GROUP);
     }
 }
 

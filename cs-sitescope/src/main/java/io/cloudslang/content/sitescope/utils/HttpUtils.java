@@ -31,13 +31,12 @@ package io.cloudslang.content.sitescope.utils;
 
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.sitescope.constants.ExceptionMsgs;
 import io.cloudslang.content.sitescope.constants.Outputs;
-import io.cloudslang.content.sitescope.constants.SuccessMsgs;
+import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
-import io.cloudslang.content.utils.StringUtilities;
 
 import java.net.Authenticator;
 import java.net.InetSocketAddress;
@@ -107,11 +106,11 @@ public class HttpUtils {
         httpClientInputs.setResponseCharacterSet(responseCharacterSet);
     }
 
-    public static Map<String, String> convertToSitescopeResultsMap(@NotNull Map<String, String> httpClientOutputs) throws Exception {
+    public static Map<String, String> convertToSitescopeResultsMap(@NotNull Map<String, String> httpClientOutputs, String returnResult) throws Exception {
         Map<String, String> sitescopeOutputs = new HashMap<>();
         if (httpClientOutputs.containsKey(Outputs.STATUS_CODE)) {
             if (httpClientOutputs.get(Outputs.STATUS_CODE).equals(String.valueOf(204))) {
-                sitescopeOutputs.put(Outputs.RETURN_RESULT, SuccessMsgs.DELETE_MONITOR_GROUP);
+                sitescopeOutputs.put(Outputs.RETURN_RESULT, returnResult);
                 sitescopeOutputs.put(Outputs.STATUS_CODE, httpClientOutputs.get(Outputs.STATUS_CODE));
                 sitescopeOutputs.put(Outputs.RETURN_CODE, ReturnCodes.SUCCESS);
             } else {

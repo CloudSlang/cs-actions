@@ -18,6 +18,7 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.sitescope.entities.EnableMonitorGroupInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
+import io.cloudslang.content.sitescope.utils.HttpUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,13 +33,14 @@ import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.FULL_PATH_TO_GROUP;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.IDENTIFIER;
 import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorGroupInputs.*;
+import static io.cloudslang.content.sitescope.constants.SuccessMsgs.ENABLE_MONITOR_GROUP;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 
 
 public class EnableMonitorGroupService {
 
     public @NotNull
-    Map<String, String> execute(@NotNull EnableMonitorGroupInputs enableMonitorGroupInputs) throws UnsupportedEncodingException {
+    Map<String, String> execute(@NotNull EnableMonitorGroupInputs enableMonitorGroupInputs) throws Exception {
 
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final SiteScopeCommonInputs commonInputs = enableMonitorGroupInputs.getCommonInputs();
@@ -54,11 +56,14 @@ public class EnableMonitorGroupService {
         httpClientInputs.setMethod(POST);
         httpClientInputs.setContentType(X_WWW_FORM);
         httpClientInputs.setFormParams(populateEnableMonitorGroupFormParams(enableMonitorGroupInputs));
+        httpClientInputs.setFormParamsAreURLEncoded(String.valueOf(false));
         httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
         httpClientInputs.setKeystorePassword(CHANGEIT);
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
 
-        return new HttpClientService().execute(httpClientInputs);
+        Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
+
+        return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, ENABLE_MONITOR_GROUP);
     }
 
     public static String populateEnableMonitorGroupFormParams(EnableMonitorGroupInputs enableMonitorGroupInputs) throws UnsupportedEncodingException {
