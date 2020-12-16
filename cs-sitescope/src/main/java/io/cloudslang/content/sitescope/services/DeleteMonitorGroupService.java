@@ -14,12 +14,21 @@
  */
 package io.cloudslang.content.sitescope.services;
 
+import com.jayway.jsonpath.JsonPath;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.sitescope.constants.ExceptionMsgs;
+import io.cloudslang.content.sitescope.constants.Inputs;
+import io.cloudslang.content.sitescope.constants.Outputs;
+import io.cloudslang.content.sitescope.constants.SuccessMsgs;
 import io.cloudslang.content.sitescope.entities.DeleteMonitorGroupInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
+import io.cloudslang.content.sitescope.utils.HttpUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
@@ -43,7 +52,9 @@ public class DeleteMonitorGroupService {
             fullPath = fullPath.replace(delimiter, SITE_SCOPE_DELIMITER);
 
         httpClientInputs.setUrl(commonInputs.getProtocol() + "://" + commonInputs.getHost() + COLON + commonInputs.getPort() +
-                SITESCOPE_MONITORS_API + DELETE_MONITOR_GROUP_ENDPOINT + fullPath);
+                SITESCOPE_MONITORS_API + DELETE_MONITOR_GROUP_ENDPOINT);
+        httpClientInputs.setQueryParams(Inputs.CommonInputs.FULL_PATH_TO_GROUP + EQUALS + fullPath);
+        httpClientInputs.setQueryParamsAreURLEncoded(String.valueOf(false));
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
@@ -53,9 +64,10 @@ public class DeleteMonitorGroupService {
         httpClientInputs.setMethod("DELETE");
         httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
         httpClientInputs.setKeystorePassword(CHANGEIT);
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
 
-        return new HttpClientService().execute(httpClientInputs);
+        Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
+
+        return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs);
     }
 }
 

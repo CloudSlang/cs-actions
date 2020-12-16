@@ -28,12 +28,13 @@ public final class Constants {
     public static final String DEFAULT_JAVA_TRUST_KEYSTORE = "";
     public static final String DEFAULT_DELIMITER = "\"";
     public static final String COLON = ":";
+    public static final String EQUALS = "=";
     public static final String NEW_LINE = "\n";
     public static final String SITE_SCOPE_DELIMITER = "_sis_path_delimiter_";
 
     public static final String SITESCOPE_MONITORS_API = "/SiteScope/api/monitors";
     public static final String GET_GROUP_PROPERTIES_ENDPOINT = "/group/properties?fullPathToGroup=";
     public static final String ENABLE_MONITOR_GROUP_ENDPOINT = "/group/status";
-    public static final String DELETE_MONITOR_GROUP_ENDPOINT = "/monitor";
+    public static final String DELETE_MONITOR_GROUP_ENDPOINT = "/group";
 
 }
