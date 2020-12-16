@@ -110,45 +110,50 @@ object SQLDatabaseInstanceService {
              databaseInstanceId: String, zone: String, settingsVersion: Long, databaseVersion: String, tier: String,
              dataDiskSizeInGB: Long, storageAutoResize: Boolean, privateNetwork: String, isIPV4Enabled: Boolean, availabilityType: String,
              maintenanceWindowDay: Int, maintenanceWindowHour: Int, activationPolicy: String, labels: java.util.Map[String, String],
-             async: Boolean, timeout: Long,
-             pollingInterval: Long): Operation = {
+             async: Boolean, timeout: Long, pollingInterval: Long): Operation = {
 
     val databaseInstance = new DatabaseInstance()
-    val settings = new Settings().setUserLabels(labels)
+    val settings = new Settings()
     val maintenanceWindow = new MaintenanceWindow().setDay(maintenanceWindowDay).setHour(maintenanceWindowHour)
     val ipConfiguration = new IpConfiguration().setIpv4Enabled(isIPV4Enabled)
 
-    if (!zone.isEmpty) {
+    if (labels.nonEmpty) {
+      settings.setUserLabels(labels)
+    }
+
+    if (zone.nonEmpty) {
       databaseInstance.setGceZone(zone)
     }
 
-    if (dataDiskSizeInGB != 10 || dataDiskSizeInGB < 10) {
+    if (dataDiskSizeInGB != 10 && dataDiskSizeInGB > 10) {
       settings.setDataDiskSizeGb(dataDiskSizeInGB)
     }
-    if (!availabilityType.isEmpty) {
+    if (availabilityType.nonEmpty) {
       settings.setAvailabilityType(availabilityType)
     }
-    if (!activationPolicy.isEmpty) {
+    if (activationPolicy.nonEmpty) {
       settings.setActivationPolicy(activationPolicy)
     }
 
-    if (!privateNetwork.isEmpty) {
-      ipConfiguration.setPrivateNetwork(privateNetwork)
+    if (privateNetwork.nonEmpty) {
+      val privateNetworkStr = "projects/" + projectId + "/global/networks/" + privateNetwork
+      ipConfiguration.setPrivateNetwork(privateNetworkStr)
     }
 
     settings.setTier(tier).setSettingsVersion(settingsVersion).setStorageAutoResize(storageAutoResize)
       .setIpConfiguration(ipConfiguration).setMaintenanceWindow(maintenanceWindow).setBackupConfiguration(
-        if (databaseVersion.contains("MYSQL") && availabilityType.contains("REGIONAL")) new BackupConfiguration().setBinaryLogEnabled(true)
-          .setEnabled(true)
-       else new BackupConfiguration().setEnabled(true))
+      if (databaseVersion.contains("MYSQL") && availabilityType.contains("REGIONAL")) new BackupConfiguration().setBinaryLogEnabled(true)
+        .setEnabled(true)
+      else new BackupConfiguration().setEnabled(true))
 
     databaseInstance.setSettings(settings)
 
     val operation = DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
-      .update(projectId, databaseInstanceId, databaseInstance).execute()
+      .patch(projectId, databaseInstanceId, databaseInstance).execute()
     DatabaseController.awaitSuccessOperation(httpTransport, jsonFactory, credential, projectId, operation,
       Some(databaseInstanceId)
       , async, timeout, pollingInterval)
+
   }
 
 }
