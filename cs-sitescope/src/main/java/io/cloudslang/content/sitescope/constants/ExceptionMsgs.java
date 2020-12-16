@@ -20,5 +20,6 @@ public final class ExceptionMsgs {
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port.";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
+    public static final String EXCEPTION_WHILE_PARSING_RESPONSE = "Error while parsing the server response";
 
 }
