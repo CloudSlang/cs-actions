@@ -51,7 +51,6 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
-import static io.cloudslang.content.sitescope.constants.Descriptions.EnableMonitorGroupAction.IDENTIFIER_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.EnableMonitorGroupAction.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
@@ -76,19 +75,19 @@ public class EnableMonitorGroupAction {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
 
-    public Map<String, String> execute(@Param(value = HOST, description = HOST_DESC) String host,
-                                       @Param(value = PORT, description = PORT_DESC) String port,
-                                       @Param(value = PROTOCOL, description = PROTOCOL_DESC) String protocol,
+    public Map<String, String> execute(@Param(value = HOST, required = true, description = HOST_DESC) String host,
+                                       @Param(value = PORT, required = true, description = PORT_DESC) String port,
+                                       @Param(value = PROTOCOL, required = true, description = PROTOCOL_DESC) String protocol,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
-                                       @Param(value = FULL_PATH_TO_GROUP, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,
+                                       @Param(value = FULL_PATH_TO_GROUP, required = true, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
                                        @Param(value = ENABLE, description = ENABLE_DESC) String enable,
                                        @Param(value = TIME_PERIOD, description = TIME_PERIOD_DESC) String timePeriod,
                                        @Param(value = FROM_TIME, description = FROM_TIME_DESC) String fromTime,
                                        @Param(value = TO_TIME, description = TO_TIME_DESC) String toTime,
                                        @Param(value = DESCRIPTION, description = DESCRIPTION_DESC) String description,
-                                       @Param(value = IDENTIFIER, description = IDENTIFIER_DESC) String identifier,
+                                       @Param(value = IDENTIFIER, description = IDENTIFIER_ENABLE_DESC) String identifier,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -110,7 +109,7 @@ public class EnableMonitorGroupAction {
         password = defaultIfEmpty(password, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
         identifier = defaultIfEmpty(identifier, EMPTY);
-        enable = defaultIfEmpty(enable, BOOLEAN_TRUE);
+        enable = defaultIfEmpty(enable, BOOLEAN_FALSE);
         timePeriod = defaultIfEmpty(timePeriod, EMPTY);
         fromTime = defaultIfEmpty(fromTime, EMPTY);
         toTime = defaultIfEmpty(toTime, EMPTY);

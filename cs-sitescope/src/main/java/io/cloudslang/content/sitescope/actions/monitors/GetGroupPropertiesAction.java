@@ -72,12 +72,12 @@ public class GetGroupPropertiesAction {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = HOST, description = HOST_DESC) String host,
-                                       @Param(value = PORT, description = PORT_DESC) String port,
-                                       @Param(value = PROTOCOL, description = PROTOCOL_DESC) String protocol,
+    public Map<String, String> execute(@Param(value = HOST, required = true, description = HOST_DESC) String host,
+                                       @Param(value = PORT, required = true, description = PORT_DESC) String port,
+                                       @Param(value = PROTOCOL, required = true, description = PROTOCOL_DESC) String protocol,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
-                                       @Param(value = FULL_PATH_TO_GROUP, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,
+                                       @Param(value = FULL_PATH_TO_GROUP, required = true, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
