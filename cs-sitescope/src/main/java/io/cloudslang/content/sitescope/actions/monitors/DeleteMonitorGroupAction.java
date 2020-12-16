@@ -46,6 +46,7 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUA
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.DeleteMonitorGroupInputs.EXTERNAL_ID;
 import static io.cloudslang.content.sitescope.constants.Outputs.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
@@ -54,7 +55,7 @@ import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyFullPathToGroup;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyDeleteMonitorGroupInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -82,7 +83,7 @@ public class DeleteMonitorGroupAction {
                                        @Param(value = FULL_PATH_TO_GROUP, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
 //                                       @Param(value = IDENTIFIER, description = IDENTIFIER_DESC) String identifier,
-//                                       @Param(value = EXTERNAL_ID, description = EXTERNAL_ID_DESC) String externalId,
+                                       @Param(value = EXTERNAL_ID, description = EXTERNAL_ID_DESC) String externalId,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -105,7 +106,7 @@ public class DeleteMonitorGroupAction {
         fullPathToGroup = defaultIfEmpty(fullPathToGroup, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
 //        identifier = defaultIfEmpty(identifier, EMPTY);
-//        externalId = defaultIfEmpty(externalId, EMPTY);
+        externalId = defaultIfEmpty(externalId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -126,7 +127,7 @@ public class DeleteMonitorGroupAction {
 
         final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        exceptionMessage.addAll(verifyFullPathToGroup(fullPathToGroup));
+        exceptionMessage.addAll(verifyDeleteMonitorGroupInputs(fullPathToGroup, externalId));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
@@ -139,7 +140,7 @@ public class DeleteMonitorGroupAction {
                     .fullPathToGroup(fullPathToGroup)
                     .delimiter(delimiter)
 //                    .identifier(identifier)
-//                    .externalId(externalId)
+                    .externalId(externalId)
                     .commonInputs(SiteScopeCommonInputs.builder()
                             .host(host)
                             .port(port)

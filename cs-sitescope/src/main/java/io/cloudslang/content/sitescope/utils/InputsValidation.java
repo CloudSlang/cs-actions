@@ -29,7 +29,7 @@
 
 package io.cloudslang.content.sitescope.utils;
 
-import io.cloudslang.content.sitescope.constants.Inputs;
+import io.cloudslang.content.sitescope.entities.DeleteMonitorGroupInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +40,8 @@ import java.util.List;
 
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.DeleteMonitorGroupInputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -47,11 +49,12 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public final class InputsValidation {
 
     @NotNull
-    public static List<String> verifyFullPathToGroup(@Nullable final String fullPathToGroup) {
+    public static List<String> verifyDeleteMonitorGroupInputs(@Nullable final String fullPathToGroup,
+                                                              @Nullable final String externalId) {
         final List<String> exceptionMessages = new ArrayList<>();
 
-        if(StringUtils.isEmpty(fullPathToGroup)) {
-            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, Inputs.CommonInputs.FULL_PATH_TO_GROUP));
+        if(StringUtils.isEmpty(fullPathToGroup) && StringUtils.isEmpty(externalId)) {
+            exceptionMessages.add(String.format(EXCEPTION_AT_LEAST_ONE_OF_INPUTS, FULL_PATH_TO_GROUP + ", " + EXTERNAL_ID));
         }
 
         return exceptionMessages;

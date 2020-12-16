@@ -33,22 +33,22 @@ public class Descriptions {
 
     public static class Common {
 
-        public static final String HOST_DESC = "Proxy server used to access the Site Scope service.";
-        public static final String PORT_DESC = "Proxy server used to access the Site Scope service.";
-        public static final String PROTOCOL_DESC = "Proxy server used to access the Site Scope service.";
-        public static final String USERNAME_DESC = "Proxy server used to access the Site Scope service.";
-        public static final String PASSWORD_DESC = "Proxy server used to access the Site Scope service.";
+        public static final String HOST_DESC = "The Site Scope service host.";
+        public static final String PORT_DESC = "Port to access the Site Scope service.";
+        public static final String PROTOCOL_DESC = "Protocol used to connect to the Site Scope service.";
+        public static final String USERNAME_DESC = "Username of the Site Scope service.";
+        public static final String PASSWORD_DESC = "Password of the Site Scope service associated with the username input value.";
         public static final String FULL_PATH_TO_GROUP_DESC = "A string array specifying the full path to the group. The " +
                 "path starts with the name of the first child under the SiteScope root directory and ends with the name " +
                 "of the group with the elements separated by a delimiter.";
         public static final String IDENTIFIER_DESC = "Identifier to be written to the audit log.";
         public static final String DELIMITER_DESC = "The delimiter used in the path to the group.";
-        public static final String PROXY_HOST_DESC = "Proxy server used to access the Site Scope service.";
+        public static final String PROXY_HOST_DESC = "Proxy server host used to access the Site Scope service.";
         public static final String PROXY_PORT_DESC = "Proxy server port used to access the Site Scope service." +
                 "Default: '8080'";
         public static final String PROXY_USERNAME_DESC = "Proxy server user name.";
         public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxy_username input value.";
-        public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL/TSL. " +
+        public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL/TLS. " +
                 "A certificate is trusted even if no trusted certification authority issued it.";
         public static final String X509_DESC = "Specifies the way the server hostname must match a domain name in " +
                 "the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to " +
@@ -81,7 +81,7 @@ public class Descriptions {
 
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String EXCEPTION_DESCRIPTION = "The exception's stack trace if the operation failed. Empty otherwise.";
-        public static final String STATUS_CODE_DESC = "The status code of the http(s) call. Empty if the http(s) call failed.";
+        public static final String STATUS_CODE_DESC = "The status code of the http call. Empty if the http call failed.";
     }
 
     public static class GetGroupPropertiesAction {
