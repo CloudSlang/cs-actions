@@ -43,12 +43,12 @@ public class Descriptions {
                 "of the group with the elements separated by a delimiter.";
         public static final String IDENTIFIER_DESC = "Identifier to be written to the audit log.";
         public static final String DELIMITER_DESC = "The delimiter used in the path to the group.";
-        public static final String PROXY_HOST_DESC = "Proxy server used to access the Site Scope service.";
+        public static final String PROXY_HOST_DESC = "Proxy server host used to access the Site Scope service.";
         public static final String PROXY_PORT_DESC = "Proxy server port used to access the Site Scope service." +
                 "Default: '8080'";
         public static final String PROXY_USERNAME_DESC = "Proxy server user name.";
         public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxy_username input value.";
-        public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL/TSL. " +
+        public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL/TLS. " +
                 "A certificate is trusted even if no trusted certification authority issued it." +
                 "Valid values: true, false" +
                 "Default: false";
@@ -90,7 +90,7 @@ public class Descriptions {
 
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String EXCEPTION_DESCRIPTION = "The exception's stack trace if the operation failed. Empty otherwise.";
-        public static final String STATUS_CODE_DESC = "The status code of the http(s) call. Empty if the http(s) call failed.";
+        public static final String STATUS_CODE_DESC = "The status code of the http call. Empty if the http call failed.";
     }
 
     public static class GetGroupPropertiesAction {

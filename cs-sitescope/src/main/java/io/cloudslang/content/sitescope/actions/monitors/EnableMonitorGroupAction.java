@@ -133,7 +133,7 @@ public class EnableMonitorGroupAction {
 
         final EnableMonitorGroupService service = new EnableMonitorGroupService();
         Map<String, String> result;
-        final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
+        final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
