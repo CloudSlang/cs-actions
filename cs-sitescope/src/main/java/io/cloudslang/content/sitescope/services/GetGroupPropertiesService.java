@@ -16,10 +16,13 @@ package io.cloudslang.content.sitescope.services;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.sitescope.constants.Inputs;
 import io.cloudslang.content.sitescope.entities.GetGroupPropertiesInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
+import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URISyntaxException;
 import java.util.Map;
 
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
@@ -35,19 +38,14 @@ public class GetGroupPropertiesService {
     public @NotNull
     Map<String, String> execute(@NotNull GetGroupPropertiesInputs getGroupPropertiesInputs) throws Exception {
 
-        String delimiter = getGroupPropertiesInputs.getDelimiter();
-        String fullPath = getGroupPropertiesInputs.getFullPathToGroup();
+//        String delimiter = getGroupPropertiesInputs.getDelimiter();
+//        String fullPath = getGroupPropertiesInputs.getFullPathToGroup();
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final SiteScopeCommonInputs commonInputs = getGroupPropertiesInputs.getCommonInputs();
 
-        if (!delimiter.isEmpty())
-            fullPath = fullPath.replace(delimiter, SITE_SCOPE_DELIMITER);
-
-        httpClientInputs.setUrl(commonInputs.getProtocol() + "://" + commonInputs.getHost() + COLON + commonInputs.getPort() +
-                SITESCOPE_MONITORS_API + GET_GROUP_PROPERTIES_ENDPOINT + fullPath);
-
+        httpClientInputs.setUrl(getUrl(getGroupPropertiesInputs));
+        httpClientInputs.setQueryParamsAreURLEncoded(String.valueOf(true));
         setCommonHttpInputs(httpClientInputs, commonInputs);
-
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setUsername(commonInputs.getUsername());
         httpClientInputs.setPassword(commonInputs.getPassword());
@@ -57,6 +55,18 @@ public class GetGroupPropertiesService {
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
 
         return new HttpClientService().execute(httpClientInputs);
+    }
+
+    private String getUrl(GetGroupPropertiesInputs inputs) throws URISyntaxException {
+        URIBuilder urlBuilder = new URIBuilder();
+        urlBuilder.setScheme(inputs.getCommonInputs().getProtocol());
+        urlBuilder.setHost(inputs.getCommonInputs().getHost());
+        urlBuilder.setPort(Integer.parseInt(inputs.getCommonInputs().getPort()));
+        urlBuilder.setPath(SITESCOPE_MONITORS_API + GET_GROUP_PROPERTIES_ENDPOINT);
+        String fullPathToGroup = inputs.getFullPathToGroup().replace(inputs.getDelimiter(), SITE_SCOPE_DELIMITER);
+        urlBuilder.addParameter(Inputs.CommonInputs.FULL_PATH_TO_GROUP, fullPathToGroup);
+
+        return urlBuilder.build().toString();
     }
 }
 

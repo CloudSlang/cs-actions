@@ -56,7 +56,7 @@ public class EnableMonitorGroupService {
         httpClientInputs.setMethod(POST);
         httpClientInputs.setContentType(X_WWW_FORM);
         httpClientInputs.setFormParams(populateEnableMonitorGroupFormParams(enableMonitorGroupInputs));
-        httpClientInputs.setFormParamsAreURLEncoded(String.valueOf(false));
+        httpClientInputs.setFormParamsAreURLEncoded(String.valueOf(true));
         httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
         httpClientInputs.setKeystorePassword(CHANGEIT);
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
@@ -98,11 +98,6 @@ public class EnableMonitorGroupService {
               ub.addParameter(k, v);
         }
         String url = ub.toString();
-//        if (url.contains(" "))
-////            url = url.replace(" ","+");
-
-//        url = URLEncoder.encode(url, "UTF-8");
-
 
         return url;
     }

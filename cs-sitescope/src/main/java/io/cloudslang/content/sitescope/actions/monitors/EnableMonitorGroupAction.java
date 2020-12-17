@@ -60,6 +60,7 @@ import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommo
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyEnableMonitorGroupInputs;
 
 public class EnableMonitorGroupAction {
 
@@ -135,6 +136,7 @@ public class EnableMonitorGroupAction {
         Map<String, String> result;
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        exceptionMessage.addAll(verifyEnableMonitorGroupInputs(fullPathToGroup,enable,timePeriod,fromTime,toTime));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }

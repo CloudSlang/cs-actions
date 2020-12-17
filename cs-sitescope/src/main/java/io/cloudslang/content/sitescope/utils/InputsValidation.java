@@ -41,11 +41,43 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeleteMonitorGroupInputs.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorGroupInputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public final class InputsValidation {
+
+    @NotNull
+    public static List<String> verifyGetGroupPropertiesInputs(@Nullable final String fullPathToGroup) {
+        final List<String> exceptionMessages = new ArrayList<>();
+
+        if(StringUtils.isEmpty(fullPathToGroup)) {
+            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY));
+        }
+
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyEnableMonitorGroupInputs(@Nullable final String fullPathToGroup,
+                                                              @Nullable final String enable,
+                                                              @Nullable final String timePeriod,
+                                                              @Nullable final String fromTime,
+                                                              @Nullable final String toTime) {
+        final List<String> exceptionMessages = new ArrayList<>();
+
+        if(StringUtils.isEmpty(fullPathToGroup)) {
+            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY));
+        }
+
+        addVerifyBoolean(exceptionMessages, enable, ENABLE);
+        addVerifyNumber(exceptionMessages, timePeriod, TIME_PERIOD);
+        addVerifyNumber(exceptionMessages, fromTime, FROM_TIME);
+        addVerifyNumber(exceptionMessages, toTime, TO_TIME);
+
+        return exceptionMessages;
+    }
 
     @NotNull
     public static List<String> verifyDeleteMonitorGroupInputs(@Nullable final String fullPathToGroup,
