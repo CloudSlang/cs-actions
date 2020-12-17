@@ -136,7 +136,7 @@ public class EnableMonitorGroupAction {
         Map<String, String> result;
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        exceptionMessage.addAll(verifyEnableMonitorGroupInputs(fullPathToGroup,enable,timePeriod,fromTime,toTime));
+        exceptionMessage.addAll(verifyEnableMonitorGroupInputs(fullPathToGroup, enable));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
