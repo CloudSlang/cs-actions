@@ -96,8 +96,7 @@ public class Descriptions {
     public static class GetGroupPropertiesAction {
 
         public static final String GET_GROUP_PROPERTIES_DESC = "Retrieves the properties for a specified group.";
-        public static final String GET_GROUP_PROP_RETURN_RESULT_DESC = "The delimiter used in the path to the group.";
-        public static final String GET_GROUP_PROP_EXCEPTION_DESC = "The delimiter used in the path to the group.";
+        public static final String GET_GROUP_PROP_RETURN_RESULT_DESC = "The specified group properties were successfully retrieved.";
         public static final String SUCCESS_DESC = "The specified group properties were successfully retrieved.";
         public static final String FAILURE_DESC = "The specified group properties could not be retrieved.";
 

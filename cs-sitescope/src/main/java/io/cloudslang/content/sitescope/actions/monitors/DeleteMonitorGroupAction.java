@@ -82,7 +82,7 @@ public class DeleteMonitorGroupAction {
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = FULL_PATH_TO_GROUP, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
-//                                       @Param(value = IDENTIFIER, description = IDENTIFIER_DESC) String identifier,
+                                       @Param(value = IDENTIFIER, description = IDENTIFIER_DESC) String identifier,
                                        @Param(value = EXTERNAL_ID, description = EXTERNAL_ID_DESC) String externalId,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -105,7 +105,7 @@ public class DeleteMonitorGroupAction {
         password = defaultIfEmpty(password, EMPTY);
         fullPathToGroup = defaultIfEmpty(fullPathToGroup, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
-//        identifier = defaultIfEmpty(identifier, EMPTY);
+        identifier = defaultIfEmpty(identifier, EMPTY);
         externalId = defaultIfEmpty(externalId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -139,7 +139,7 @@ public class DeleteMonitorGroupAction {
             DeleteMonitorGroupInputs inputs = new DeleteMonitorGroupInputs.DeleteMonitorGroupInputsBuilder()
                     .fullPathToGroup(fullPathToGroup)
                     .delimiter(delimiter)
-//                    .identifier(identifier)
+                    .identifier(identifier)
                     .externalId(externalId)
                     .commonInputs(SiteScopeCommonInputs.builder()
                             .host(host)

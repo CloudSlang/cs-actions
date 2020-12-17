@@ -27,8 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
-import static io.cloudslang.content.httpclient.entities.Constants.CHANGEIT;
-import static io.cloudslang.content.httpclient.entities.Constants.DEFAULT_JAVA_KEYSTORE;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.FULL_PATH_TO_GROUP;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.IDENTIFIER;
@@ -57,8 +55,6 @@ public class EnableMonitorGroupService {
         httpClientInputs.setContentType(X_WWW_FORM);
         httpClientInputs.setFormParams(populateEnableMonitorGroupFormParams(enableMonitorGroupInputs));
         httpClientInputs.setFormParamsAreURLEncoded(String.valueOf(true));
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
 
         Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
@@ -80,22 +76,22 @@ public class EnableMonitorGroupService {
         if (!delimiter.isEmpty())
             fullPath = fullPath.replace(delimiter, SITE_SCOPE_DELIMITER);
 
-        Map<String,String> a = new HashMap<>();
-        a.put(FULL_PATH_TO_GROUP, fullPath);
-        a.put(ENABLE, enable);
-        a.put(TIME_PERIOD, timePeriod);
-        a.put(FROM_TIME, fromTime);
-        a.put(TO_TIME, toTime);
-        a.put(DESCRIPTION, description);
-        a.put(IDENTIFIER, identifier);
+        Map<String,String> inputsMap = new HashMap<>();
+        inputsMap.put(FULL_PATH_TO_GROUP, fullPath);
+        inputsMap.put(ENABLE, enable);
+        inputsMap.put(TIME_PERIOD, timePeriod);
+        inputsMap.put(FROM_TIME, fromTime);
+        inputsMap.put(TO_TIME, toTime);
+        inputsMap.put(DESCRIPTION, description);
+        inputsMap.put(IDENTIFIER, identifier);
 
         URIBuilder ub = new URIBuilder();
 
-        for (Map.Entry<String, String> entry : a.entrySet()) {
-            String k = entry.getKey();
-            String v = entry.getValue();
-            if (!v.isEmpty())
-              ub.addParameter(k, v);
+        for (Map.Entry<String, String> entry : inputsMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (!value.isEmpty())
+              ub.addParameter(key, value);
         }
         String url = ub.toString();
 

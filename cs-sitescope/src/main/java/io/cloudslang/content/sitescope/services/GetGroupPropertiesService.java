@@ -26,8 +26,6 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
-import static io.cloudslang.content.httpclient.entities.Constants.CHANGEIT;
-import static io.cloudslang.content.httpclient.entities.Constants.DEFAULT_JAVA_KEYSTORE;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
@@ -38,8 +36,6 @@ public class GetGroupPropertiesService {
     public @NotNull
     Map<String, String> execute(@NotNull GetGroupPropertiesInputs getGroupPropertiesInputs) throws Exception {
 
-//        String delimiter = getGroupPropertiesInputs.getDelimiter();
-//        String fullPath = getGroupPropertiesInputs.getFullPathToGroup();
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final SiteScopeCommonInputs commonInputs = getGroupPropertiesInputs.getCommonInputs();
 
@@ -50,8 +46,6 @@ public class GetGroupPropertiesService {
         httpClientInputs.setUsername(commonInputs.getUsername());
         httpClientInputs.setPassword(commonInputs.getPassword());
         httpClientInputs.setMethod(GET);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
 
         return new HttpClientService().execute(httpClientInputs);

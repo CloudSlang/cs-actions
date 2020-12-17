@@ -69,7 +69,7 @@ public class EnableMonitorGroupAction {
                     @Output(value = RETURN_RESULT, description = GET_GROUP_PROP_RETURN_RESULT_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = EXCEPTION, description = GET_GROUP_PROP_EXCEPTION_DESC)
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESCRIPTION)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
