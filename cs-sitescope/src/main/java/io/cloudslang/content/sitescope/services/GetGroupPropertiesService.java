@@ -19,6 +19,7 @@ import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.sitescope.constants.Inputs;
 import io.cloudslang.content.sitescope.entities.GetGroupPropertiesInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
+import io.cloudslang.content.sitescope.utils.HttpUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,6 +28,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
+import static io.cloudslang.content.sitescope.constants.SuccessMsgs.GET_GROUP_PROPERTIES;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
 
@@ -48,7 +50,9 @@ public class GetGroupPropertiesService {
         httpClientInputs.setMethod(GET);
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
 
-        return new HttpClientService().execute(httpClientInputs);
+        Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
+
+        return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, GET_GROUP_PROPERTIES);
     }
 
     private String getUrl(GetGroupPropertiesInputs inputs) throws URISyntaxException {
