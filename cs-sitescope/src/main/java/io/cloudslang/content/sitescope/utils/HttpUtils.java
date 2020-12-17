@@ -34,9 +34,8 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.sitescope.constants.ExceptionMsgs;
 import io.cloudslang.content.sitescope.constants.Outputs;
-import io.cloudslang.content.sitescope.constants.SuccessMsgs;
-import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.StringUtils;
+import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
 

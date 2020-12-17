@@ -14,11 +14,11 @@
  */
 package io.cloudslang.content.sitescope.services;
 
-import org.jetbrains.annotations.NotNull;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.sitescope.entities.GetGroupPropertiesInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 

@@ -53,6 +53,7 @@ import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
+import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -63,6 +64,7 @@ public class GetGroupPropertiesAction {
     @Action(name = "Get Group Properties", description = GET_GROUP_PROPERTIES_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = GET_GROUP_PROP_RETURN_RESULT_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = GET_GROUP_PROP_EXCEPTION_DESC)
             },
@@ -70,12 +72,12 @@ public class GetGroupPropertiesAction {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = HOST, description = HOST_DESC) String host,
-                                       @Param(value = PORT, description = PORT_DESC) String port,
-                                       @Param(value = PROTOCOL, description = PROTOCOL_DESC) String protocol,
+    public Map<String, String> execute(@Param(value = HOST, required = true, description = HOST_DESC) String host,
+                                       @Param(value = PORT, required = true, description = PORT_DESC) String port,
+                                       @Param(value = PROTOCOL, required = true, description = PROTOCOL_DESC) String protocol,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
-                                       @Param(value = FULL_PATH_TO_GROUP, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,
+                                       @Param(value = FULL_PATH_TO_GROUP, required = true, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,

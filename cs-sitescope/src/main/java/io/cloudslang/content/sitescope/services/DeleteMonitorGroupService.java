@@ -32,6 +32,7 @@ import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.httpclient.entities.Constants.CHANGEIT;
 import static io.cloudslang.content.httpclient.entities.Constants.DEFAULT_JAVA_KEYSTORE;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
+import static io.cloudslang.content.sitescope.constants.SuccessMsgs.DELETE_MONITOR_GROUP;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 
 
@@ -48,7 +49,7 @@ public class DeleteMonitorGroupService {
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setUsername(commonInputs.getUsername());
         httpClientInputs.setPassword(commonInputs.getPassword());
-        httpClientInputs.setMethod("DELETE");
+        httpClientInputs.setMethod(DELETE);
         httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
         httpClientInputs.setKeystorePassword(CHANGEIT);
 

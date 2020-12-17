@@ -33,11 +33,11 @@ public class Descriptions {
 
     public static class Common {
 
-        public static final String HOST_DESC = "The Site Scope service host.";
-        public static final String PORT_DESC = "Port to access the Site Scope service.";
-        public static final String PROTOCOL_DESC = "Protocol used to connect to the Site Scope service.";
-        public static final String USERNAME_DESC = "Username of the Site Scope service.";
-        public static final String PASSWORD_DESC = "Password of the Site Scope service associated with the username input value.";
+        public static final String HOST_DESC = "The DNS name or IP Address of your SiteScope host.";
+        public static final String PORT_DESC = "The port to connect to your SiteScope host on.";
+        public static final String PROTOCOL_DESC = "The protocol to connect to your SiteScope host with (HTTP or HTTPS).";
+        public static final String USERNAME_DESC = " The username for the SiteScope host.";
+        public static final String PASSWORD_DESC = "The password for the SiteScope user.";
         public static final String FULL_PATH_TO_GROUP_DESC = "A string array specifying the full path to the group. The " +
                 "path starts with the name of the first child under the SiteScope root directory and ends with the name " +
                 "of the group with the elements separated by a delimiter.";
@@ -49,7 +49,9 @@ public class Descriptions {
         public static final String PROXY_USERNAME_DESC = "Proxy server user name.";
         public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxy_username input value.";
         public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL/TLS. " +
-                "A certificate is trusted even if no trusted certification authority issued it.";
+                "A certificate is trusted even if no trusted certification authority issued it." +
+                "Valid values: true, false" +
+                "Default: false";
         public static final String X509_DESC = "Specifies the way the server hostname must match a domain name in " +
                 "the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to " +
                 "\"allow_all\" to skip any checking. For the value \"browser_compatible\" the hostname verifier " +
@@ -62,22 +64,29 @@ public class Descriptions {
         public static final String KEYSTORE_PASSWORD_DESC = "The password associated with the KeyStore file.";
         public static final String TRUST_KEYSTORE_DESC = "The path to the Java TrustKeyStore file. This file should contain " +
                 "the Sitescope server certificates.";
-        public static final String TRUST_PASSWORD_DESC = "The password associated with the TrustKeyStore file.";
-        public static final String CONN_MAX_TOTAL_DESC = "The maximum limit of connections in total.";
-        public static final String CONN_MAX_ROUTE_DESC = "The maximum limit of connections on a per route basis.";
+        public static final String TRUST_PASSWORD_DESC = "The password associated with the TrustKeyStore file. If trustAllRoots " +
+                "is false and trustKeystore is empty, trustPassword default will be supplied.\n" +
+                "Default value: changeit";
+        public static final String CONN_MAX_TOTAL_DESC = "The maximum limit of connections in total." +
+                "Default: 20";
+        public static final String CONN_MAX_ROUTE_DESC = "The maximum limit of connections on a per route basis." +
+                "Default: 2";
         public static final String KEEP_ALIVE_DESC = "Specifies whether to create a shared connection that will be " +
                 "used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
-                " execution it will close it.";
+                " execution it will close it." +
+                "Default: false";
         public static final String SOCKET_TIMEOUT_DESC = "The timeout for waiting for data (a maximum period " +
                 "inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' " +
-                "represents an infinite timeout.";
+                "represents an infinite timeout." +
+                "Default: 0";
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
-                "in seconds. A timeout value of '0' represents an infinite timeout.";
+                "in seconds. A timeout value of '0' represents an infinite timeout." +
+                "Default: 0";
         public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
                 "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
                 "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
-                "Default value: UTF-8";
+                "Default: UTF-8";
 
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String EXCEPTION_DESCRIPTION = "The exception's stack trace if the operation failed. Empty otherwise.";
@@ -107,7 +116,7 @@ public class Descriptions {
 
         public static final String ENABLE_MONITOR_GROUP_DESC = "Enables or disables a group whether it was disabled indefinitely " +
                 "or for a specified time period. Enabling a group that is already enabled has no effect.";
-        public static final String ENABLE_DESC = "Group is enabled if set to TRUE and group is disabled if set to FALSE" +
+        public static final String ENABLE_DESC = "Group is enabled if set to true and group is disabled if set to false" +
                 " or if the string is empty.";
         public static final String TIME_PERIOD_DESC = "The duration (in seconds) for which the group should be disabled. " +
                 "If set to 0, group is disabled until explicitly enabled. Applicable only for disabling a group.";
@@ -120,7 +129,7 @@ public class Descriptions {
                 "the value that should be sent is [15:30:00] - [15:00:00] = 30*60*1000 (1800000 milliseconds). Applicable " +
                 "only for disabling a group.";
         public static final String DESCRIPTION_DESC = "Description to be associated with enable/disable operation.";
-        public static final String IDENTIFIER_DESC =  "Identifier to be associated with enable/disable operation and written" +
+        public static final String IDENTIFIER_ENABLE_DESC = "Identifier to be associated with enable/disable operation and written" +
                 "to audit log. Identifier to be associated with enable/disable operation and written to audit log.";
     }
 }
