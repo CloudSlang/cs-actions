@@ -18,6 +18,10 @@ public final class InputNames {
 
     public static final String SOURCE = "source";
     public static final String THRESHOLD = "threshold";
+    public static final String LOCALE_LANG = "localeLang";
+    public static final String LOCALE_COUNTRY = "localeCountry";
+    public static final String DELIMITER = "delimiter";
+    public static final String COMPARE_TO = "compareTo";
     public static final String NEW_NAME = "newName";
     public static final String OVERWRITE = "overwrite";
 
