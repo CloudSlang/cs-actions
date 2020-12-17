@@ -16,15 +16,19 @@ package io.cloudslang.content.sitescope.services;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.sitescope.constants.Inputs;
+import io.cloudslang.content.sitescope.constants.SuccessMsgs;
 import io.cloudslang.content.sitescope.entities.DeleteMonitorGroupInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
+import io.cloudslang.content.sitescope.utils.HttpUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URISyntaxException;
 import java.util.Map;
 
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
-import static io.cloudslang.content.httpclient.entities.Constants.CHANGEIT;
-import static io.cloudslang.content.httpclient.entities.Constants.DEFAULT_JAVA_KEYSTORE;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 
@@ -33,29 +37,36 @@ public class DeleteMonitorGroupService {
 
     public @NotNull
     Map<String, String> execute(@NotNull DeleteMonitorGroupInputs deleteMonitorGroupInputs) throws Exception {
-
-        String delimiter = deleteMonitorGroupInputs.getDelimiter();
-        String fullPath = deleteMonitorGroupInputs.getFullPathToGroup();
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final SiteScopeCommonInputs commonInputs = deleteMonitorGroupInputs.getCommonInputs();
 
-        if (!delimiter.isEmpty())
-            fullPath = fullPath.replace(delimiter, SITE_SCOPE_DELIMITER);
-
-        httpClientInputs.setUrl(commonInputs.getProtocol() + "://" + commonInputs.getHost() + COLON + commonInputs.getPort() +
-                SITESCOPE_MONITORS_API + DELETE_MONITOR_GROUP_ENDPOINT + fullPath);
-
         setCommonHttpInputs(httpClientInputs, commonInputs);
-
+        httpClientInputs.setUrl(getUrl(deleteMonitorGroupInputs));
+        httpClientInputs.setQueryParamsAreURLEncoded(String.valueOf(true));
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setUsername(commonInputs.getUsername());
         httpClientInputs.setPassword(commonInputs.getPassword());
-        httpClientInputs.setMethod("DELETE");
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.setMethod(DELETE);
 
-        return new HttpClientService().execute(httpClientInputs);
+        Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
+
+        return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, SuccessMsgs.DELETE_MONITOR_GROUP);
+    }
+
+
+    private String getUrl(DeleteMonitorGroupInputs inputs) throws URISyntaxException {
+        URIBuilder urlBuilder = new URIBuilder();
+        urlBuilder.setScheme(inputs.getCommonInputs().getProtocol());
+        urlBuilder.setHost(inputs.getCommonInputs().getHost());
+        urlBuilder.setPort(Integer.parseInt(inputs.getCommonInputs().getPort()));
+        urlBuilder.setPath(SITESCOPE_MONITORS_API + DELETE_MONITOR_GROUP_ENDPOINT);
+        if (StringUtils.isNotEmpty(inputs.getFullPathToGroup())) {
+            String fullPathToGroup = inputs.getFullPathToGroup().replace(inputs.getDelimiter(), SITE_SCOPE_DELIMITER);
+            urlBuilder.addParameter(Inputs.CommonInputs.FULL_PATH_TO_GROUP, fullPathToGroup);
+        } else if (StringUtils.isNotEmpty(inputs.getExternalId())) {
+            urlBuilder.addParameter(Inputs.DeleteMonitorGroupInputs.EXTERNAL_ID, inputs.getExternalId());
+        }
+        return urlBuilder.build().toString();
     }
 }
 
