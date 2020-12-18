@@ -133,6 +133,7 @@ public class Descriptions {
         public static final String DESCRIPTION_DESC = "Description to be associated with enable/disable operation.";
         public static final String IDENTIFIER_ENABLE_DESC = "Identifier to be associated with enable/disable operation and written" +
                 "to audit log. Identifier to be associated with enable/disable operation and written to audit log.";
+        public static final String ENABLE_MONITOR_GROUP_RETURN_RESULT_DESC = "The operation completed successfully.";
     }
 
     public static class EnableMonitorAction{

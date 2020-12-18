@@ -66,7 +66,7 @@ public class EnableMonitorGroupAction {
 
     @Action(name = "Enable Monitor Group", description = ENABLE_MONITOR_GROUP_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = GET_GROUP_PROP_RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = ENABLE_MONITOR_GROUP_RETURN_RESULT_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESCRIPTION)
@@ -136,7 +136,7 @@ public class EnableMonitorGroupAction {
         Map<String, String> result;
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        exceptionMessage.addAll(verifyEnableMonitorGroupInputs(fullPathToGroup,enable,timePeriod,fromTime,toTime));
+        exceptionMessage.addAll(verifyEnableMonitorGroupInputs(fullPathToGroup, enable));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
