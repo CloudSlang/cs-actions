@@ -40,7 +40,7 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
 
         if(StringUtils.isEmpty(fullPathToGroup)) {
-            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY));
+            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, FULL_PATH_TO_GROUP));
         }
 
         return exceptionMessages;
@@ -52,7 +52,7 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
 
         if(StringUtils.isEmpty(fullPathToGroup)) {
-            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY));
+            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, FULL_PATH_TO_GROUP));
         }
 
         addVerifyBoolean(exceptionMessages, enable, ENABLE);
