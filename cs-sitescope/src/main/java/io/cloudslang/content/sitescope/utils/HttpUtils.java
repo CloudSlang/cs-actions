@@ -34,8 +34,8 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.sitescope.constants.ExceptionMsgs;
 import io.cloudslang.content.sitescope.constants.Outputs;
-import org.apache.commons.lang3.StringUtils;
 import io.cloudslang.content.utils.StringUtilities;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -118,6 +118,20 @@ public class HttpUtils {
             sitescopeOutputs.put(Outputs.RETURN_RESULT, httpClientOutputs.get(Outputs.RETURN_RESULT));
             sitescopeOutputs.put(Outputs.RETURN_CODE, ReturnCodes.FAILURE);
             sitescopeOutputs.put(Outputs.EXCEPTION, httpClientOutputs.get(Outputs.EXCEPTION));
+            return sitescopeOutputs;
+        }
+
+        if (httpClientOutputs.get(Outputs.STATUS_CODE).equals(String.valueOf(200))) {
+            String errMsg = httpClientOutputs.get("returnResult");
+            if (errMsg.contains("errorMessage")) {
+                sitescopeOutputs.put(Outputs.RETURN_RESULT, httpClientOutputs.get(Outputs.RETURN_RESULT));
+                sitescopeOutputs.put(Outputs.STATUS_CODE, httpClientOutputs.get(Outputs.STATUS_CODE));
+                sitescopeOutputs.put(Outputs.RETURN_CODE, ReturnCodes.FAILURE);
+            } else {
+                sitescopeOutputs.put(Outputs.RETURN_RESULT, httpClientOutputs.get(Outputs.RETURN_RESULT));
+                sitescopeOutputs.put(Outputs.STATUS_CODE, httpClientOutputs.get(Outputs.STATUS_CODE));
+                sitescopeOutputs.put(Outputs.RETURN_CODE, ReturnCodes.SUCCESS);
+            }
             return sitescopeOutputs;
         }
 
