@@ -41,6 +41,9 @@ public class Descriptions {
         public static final String FULL_PATH_TO_GROUP_DESC = "A string array specifying the full path to the group. The " +
                 "path starts with the name of the first child under the SiteScope root directory and ends with the name " +
                 "of the group with the elements separated by a delimiter.";
+        public static final String FULL_PATH_TO_MONITOR_DESC = "A string array specifying the full path to the monitor. The " +
+                "path starts with the name of the first child under the SiteScope root directory and ends with the name " +
+                "of the group with the elements separated by the delimiter.";
         public static final String IDENTIFIER_DESC = "Identifier to be written to the audit log.";
         public static final String DELIMITER_DESC = "The delimiter used in the path to the group.";
         public static final String PROXY_HOST_DESC = "Proxy server host used to access the Site Scope service.";
@@ -130,5 +133,13 @@ public class Descriptions {
         public static final String DESCRIPTION_DESC = "Description to be associated with enable/disable operation.";
         public static final String IDENTIFIER_ENABLE_DESC = "Identifier to be associated with enable/disable operation and written" +
                 "to audit log. Identifier to be associated with enable/disable operation and written to audit log.";
+    }
+
+    public static class EnableMonitorAction{
+
+        public static final String ENABLE_MONITOR_DESC = "Enables or disables a monitor whether it was disabled " +
+                "indefinitely or for a specified time period. Enabling a monitor that is already enabled has no effect.";
+        public static final String MONITOR_ID_DESC = "A string specifying the monitor ID.";
+
     }
 }

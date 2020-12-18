@@ -37,6 +37,7 @@ public final class Inputs extends InputNames {
         public static final String PORT = "port";
         public static final String PROTOCOL = "protocol";
         public static final String FULL_PATH_TO_GROUP = "fullPathToGroup";
+        public static final String FULL_PATH_TO_MONITOR = "fullPathToMonitor";
         public static final String DELIMITER = "delimiter";
         public static final String IDENTIFIER = "identifier";
     }
@@ -53,5 +54,8 @@ public final class Inputs extends InputNames {
         public static final String DESCRIPTION = "description";
     }
 
+    public static class EnableMonitorInputs{
+        public static final String MONITOR_ID = "monitorId";
+    }
 }
 
