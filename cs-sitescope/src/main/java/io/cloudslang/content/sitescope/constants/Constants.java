@@ -37,6 +37,7 @@ public final class Constants {
     public static final String SITESCOPE_MONITORS_API = "/SiteScope/api/monitors";
     public static final String GET_GROUP_PROPERTIES_ENDPOINT = "/group/properties";
     public static final String ENABLE_MONITOR_GROUP_ENDPOINT = "/group/status";
+    public static final String ENABLE_MONITOR_ENDPOINT = "/monitor/status";
     public static final String DELETE_MONITOR_GROUP_ENDPOINT = "/group";
 
 }

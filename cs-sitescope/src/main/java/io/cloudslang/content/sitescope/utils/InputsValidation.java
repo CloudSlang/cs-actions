@@ -25,10 +25,10 @@ import java.util.List;
 
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.FULL_PATH_TO_GROUP;
-import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.PORT;
+import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeleteMonitorGroupInputs.EXTERNAL_ID;
 import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorGroupInputs.ENABLE;
+import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorInputs.MONITOR_ID;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -125,5 +125,16 @@ public final class InputsValidation {
         return exceptions;
     }
 
+    @NotNull
+    public static List<String> verifyEnableMonitorInputs(@Nullable final String fullPathToMonitor,
+                                                         @Nullable final String monitorId) {
+        final List<String> exceptionMessages = new ArrayList<>();
+
+        if (StringUtils.isEmpty(fullPathToMonitor) && StringUtils.isEmpty(monitorId)) {
+            exceptionMessages.add(String.format(EXCEPTION_AT_LEAST_ONE_OF_INPUTS, FULL_PATH_TO_MONITOR + ", " + MONITOR_ID));
+        }
+
+        return exceptionMessages;
+    }
 }
 
