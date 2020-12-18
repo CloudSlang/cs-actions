@@ -17,11 +17,15 @@ package io.cloudslang.content.google.services.storage.buckets
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
+import com.google.api.services.storage.model.Bucket.IamConfiguration.UniformBucketLevelAccess
+import com.google.api.services.storage.model.Bucket.{IamConfiguration, RetentionPolicy, Versioning}
 import com.google.api.services.storage.model.{Bucket, Buckets}
 import io.cloudslang.content.google.services.storage.StorageService
+import io.cloudslang.content.google.services.storage.buckets.BucketService.getIamConfiguration
 import io.cloudslang.content.google.utils.Constants.FALSE
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toLong
+
 import scala.collection.JavaConversions._
 
 object BucketService {
@@ -41,13 +45,58 @@ object BucketService {
 
   }
 
-  def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, bucketName: String, location: String
-             , locationType: String, storageClass: String, accessControlType: String, labels: java.util.Map[String, String]): Bucket = {
+  def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, bucketName: String, predefinedAcl: String, predefinedDefaultObjectAcl: String, projection: String,location: String, locationType: String, storageClass: String, accessControlType: String, retentionPeriodType: String, retentionPeriod: String, isVersioningEnabled: String,labels: java.util.Map[String, String],  isDefaultEventBasedHoldEnabled: String, metageneration: String): Bucket = {
 
-    StorageService.bucketService(httpTransport, jsonFactory, credential)
-      .insert(projectId, new Bucket().setName(bucketName).setLocation(location).setLocationType(locationType).setStorageClass(
-        storageClass).setLabels(labels).setIamConfiguration(BucketController.getIamConfiguration(accessControlType)))
-      .execute()
+    val createBucket = new Bucket().setName(bucketName).setLabels(labels)
+
+    if (location.nonEmpty) {
+      createBucket.setLocation(location)
+    }
+
+    if (locationType.nonEmpty) {
+      createBucket.setLocationType(locationType)
+    }
+
+    if (storageClass.nonEmpty) {
+      createBucket.setStorageClass(storageClass)
+    }
+
+    if (accessControlType.nonEmpty) {
+      createBucket.setIamConfiguration(getIamConfiguration(accessControlType))
+    }
+
+    if (isVersioningEnabled.nonEmpty) {
+      createBucket.setVersioning(new Versioning().setEnabled(toBoolean(isVersioningEnabled)))
+    }
+
+    if (retentionPeriodType.nonEmpty) {
+      createBucket.setRetentionPolicy(BucketController.getRetentionPolicy(retentionPeriodType, retentionPeriod))
+
+    }
+    if (retentionPeriod.nonEmpty) {
+      createBucket.setRetentionPolicy(new RetentionPolicy().setRetentionPeriod(toLong(retentionPeriod)))
+    }
+
+    if (isDefaultEventBasedHoldEnabled.nonEmpty) {
+      createBucket.setDefaultEventBasedHold(toBoolean(isDefaultEventBasedHoldEnabled))
+    }
+
+    if (metageneration.nonEmpty) {
+      createBucket.setMetageneration(toLong(metageneration))
+    }
+
+    val request = StorageService.bucketService(httpTransport, jsonFactory, credential).insert(projectId, createBucket)
+
+    if (predefinedAcl.nonEmpty) {
+      request.setPredefinedAcl(predefinedAcl)
+    }
+    if (predefinedDefaultObjectAcl.nonEmpty) {
+      request.setPredefinedDefaultObjectAcl(predefinedDefaultObjectAcl)
+    }
+    if (projection.nonEmpty) {
+      request.setProjection(projection)
+    }
+    request.execute()
   }
 
   def getBucket(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String,
@@ -122,6 +171,16 @@ object BucketService {
       request.setIfMetagenerationMatch(toLong(metagenerationMatch))
     }
     request.execute()
+
+  }
+
+  def getIamConfiguration(bucketPolicy: String): IamConfiguration = {
+
+    if (bucketPolicy.equalsIgnoreCase("uniform")) {
+      new IamConfiguration().setUniformBucketLevelAccess(new UniformBucketLevelAccess().setEnabled(true))
+    } else {
+      new IamConfiguration()
+    }
 
   }
 

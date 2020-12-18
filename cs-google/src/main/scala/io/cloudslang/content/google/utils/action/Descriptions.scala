@@ -89,6 +89,7 @@ object Descriptions {
   }
 
   object StorageBucketDesc{
+    final val CREATE_BUCKET_OPERATION_DESC = "Creates a bucket inside a Google Cloud Storage."
     final val GET_BUCKET_OPERATION_DESC = "Retrieves a resource containing information about a bucket inside a Google Cloud Storage."
     final val BUCKET_NAME_DESC= "Name of a bucket."
     final val METAGENERATION_MATCH_DESC = "Makes the return of the bucket metadata conditional on whether the bucket's current metageneration matches the given value."
@@ -100,6 +101,19 @@ object Descriptions {
     final val PAGE_TOKEN_DESC = "The pageToken is an encoded field containing the name of the last item (bucket) in the returned list. In a subsequent request using the pageToken, items that come after the pageToken are shown (up to maxResults)."
     final val DELETE_BUCKET_OPERATION_DESC = "Permanently deletes an empty bucket."
     final val DELETE_BUCKET_SUCCESS_DESC = " bucket is deleted successfully "
+    final val PREDEFINED_ACL_DESC = "Applies a predefined set of access controls to this bucket."
+    final val PREDEFINED_DEFAULT_OBJECT_ACL_DESC = "Applies a predefined set of default object access controls to this bucket."
+    final val RETENTION_PERIOD_TYPE_DESC = "The type of period of time. Valid values are 'seconds','days','months','years'. Default: 'seconds' "
+    final val RETENTION_PERIOD_DESC = "The period of time, in seconds, that objects in the bucket must be retained and cannot be deleted, replaced, or made noncurrent. The value must be less than 3,155,760,000 seconds."
+    final val EFFECTIVE_TIME_DESC = "The period of time, in seconds, that objects in the bucket must be retained and cannot be deleted, replaced, or made noncurrent. The value must be less than 3,155,760,000 seconds."
+    final val LOCATION_DESC = "Location where the bucket gets created."
+    final val LOCATION_TYPE_DESC = "Type of Location. Multi-region - highest availability across largest area, Dual-region - high availability and low latency across 2 regions, Region - it gives lowest latency across single region"
+    final val IS_VERSIONING_ENABLED_DESC = "While set to true, versioning is fully enabled for this bucket."
+    final val STORAGE_CLASS_DESC = "The bucket's default storage class, used whenever no storageClass is specified for a newly-created object. Available storage classes are 'STANDARD','NEARLINE','COLDLINE','ARCHIVE'."
+    final val LABELS_DESC = "User-provided labels, represented as a dictionary where each label is a single key value pair. Example: { \"name\": \"wrench\", \"mass\": \"1.3kg\", \"count\": \"3\" }."
+    final val ACCESS_CONTROL_TYPE_DESC = "Whether the bucket uses uniform bucket-level access or fine-grained bucket-level access. If set, access checks only use bucket-level IAM policies or above. Valid values are 'Uniform' and 'Fine-grained'. "
+    final val IS_DEFAULT_EVENT_BASED_HOLD_ENABLED_DESC = "Whether or not to automatically apply an eventBasedHold to new objects added to the bucket."
+    final val METAGENERATION_DESC = "The metadata generation of this bucket."
 
   }
   object UpdateStorageBucketDesc {
