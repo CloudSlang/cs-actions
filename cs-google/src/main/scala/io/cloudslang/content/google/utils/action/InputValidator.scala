@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 Micro Focus, L.P.
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -16,7 +16,6 @@
 
 package io.cloudslang.content.google.utils.action
 
-import io.cloudslang.content.google.utils.action.InputValidator.INVALID_BUCKET_NAME
 import io.cloudslang.content.utils.CollectionUtilities.toList
 import io.cloudslang.content.utils.OtherUtilities.isValidIpPort
 import io.cloudslang.content.utils.{BooleanUtilities, NumberUtilities}
@@ -40,30 +39,15 @@ object InputValidator {
   val INVALID_BOTH_ASSIGNED = "Both of them cannot be assigned"
   val INVALID_NONE_ASSIGNED = "One of them is required."
   val INVALID_INSATNCE_ID = "Invalid instanceId use lowercase letters, numbers,or hyphens. Start with a letter"
-  val INVALID_BUCKET_NAME = "Invalid bucket name. Use a valid bucket name"
 
   def validateProxyPort: (String) => Stream[String] = validate(_, InputNames.PROXY_PORT) { value =>
     if (!isValidIpPort(value)) Some(INVALID_PORT) else None
   }
 
   val instanceidPattern = "(^[a-z]$|^[a-z][a-z0-9-]*[a-z0-9]$)".r
-  val bucketNamePattern = "(^[a-z0-9]$|^[a-z0-9._-]*[a-z0-9]$)".r
-  val ipAddressPattern = "(^\\d{1,3}[.]\\d{1,3}[.]\\d{1,3}[.]\\d{1,3}$)".r
 
   def validateinstanceId: (String) => Stream[String] = validate(_, InputNames.CreateSQLDatabaseInstanceInputs.INSTANCE_ID) { value =>
     if (instanceidPattern.pattern.matcher(value).matches()) None else Some(INVALID_INSATNCE_ID)
-  }
-
-  def validateBucketName: (String) => Stream[String] = validate(_, InputNames.StorageBucketInputs.BUCKET_NAME) { value =>
-    if (bucketNamePattern.pattern.matcher(value).matches())
-      None
-    else
-      Some(INVALID_BUCKET_NAME)
-    if (value.contains(".")==false && (value.length >= 3) && (value.length <= 63)) None
-    else if (value.contains(".")==true && (value.length >= 3) && (value.length <= 222)) None else Some(INVALID_BUCKET_NAME)
-    if (value.startsWith("goog")==true) Some(INVALID_BUCKET_NAME) else None
-    if (ipAddressPattern.pattern.matcher(value).matches()) Some (INVALID_BUCKET_NAME) else None
-    if(value.contains(".")==true && value.indexOf(".")>=63) Some (INVALID_BUCKET_NAME) else None
   }
 
   def validateBoolean: (String, String) => Stream[String] = validate(_, _) { value =>

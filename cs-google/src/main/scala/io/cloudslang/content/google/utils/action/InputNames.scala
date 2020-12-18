@@ -157,7 +157,6 @@ object InputNames {
 
   object StorageBucketInputs {
     final val GET_BUCKET_OPERATION_NAME = "Get Bucket"
-    final val CREATE_BUCKET_OPERATION_NAME = "Create Bucket"
     final val BUCKET_NAME = "bucketName"
     final val METAGENERATION_MATCH = "metagenerationMatch"
     final val METAGENERATION_NOT_MATCH = "metagenerationNotMatch"
@@ -167,17 +166,6 @@ object InputNames {
     final val PREFIX= "prefix"
     final val PAGE_TOKEN= "pageToken"
     final val DELETE_BUCKET_OPERATION_NAME = "Delete Bucket"
-    final val RETENTION_PERIOD = "retentionPeriod"
-    final val STORAGE_CLASS = "storageClass"
-    final val ACCESS_CONTROL_TYPE = "accessControlType"
-    final val IS_DEFAULT_EVENT_BASED_HOLD_ENABLED = "isDefaultEventBasedHoldEnabled"
-    final val LOCATION = "location"
-    final val LOCATION_TYPE = "locationType"
-    final val IS_VERSIONING_ENABLED = "isVersioningEnabled"
-    final val PREDEFINED_ACL = "predefinedAcl"
-    final val PREDEFINED_DEFAULT_OBJECT_ACL = "predefinedDefaultObjectAcl"
-    final val RETENTION_PERIOD_TYPE = "retentionPeriodType"
-    final val METAGENERATION = "metageneration"
   }
 
   object UpdateStorageBucketInputs {
