@@ -13,18 +13,40 @@
 package io.cloudslang.content.joval.http;
 
 import io.cloudslang.content.joval.util.Base64;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.microsoft.security.ntlm.NtlmAuthenticator;
 import org.microsoft.security.ntlm.NtlmAuthenticator.ConnectionType;
 import org.microsoft.security.ntlm.NtlmAuthenticator.NtlmVersion;
 import org.microsoft.security.ntlm.NtlmSession;
 
-import java.io.*;
-import java.net.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.PasswordAuthentication;
+import java.net.ProtocolException;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.Permission;
 import java.security.SignatureException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.StringTokenizer;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * An HttpURLConnection implementation that can negotiate NTLM authentication with an HTTP proxy and/or

@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.entities;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,15 +37,14 @@ public class WSManRequestInputs {
     private String trustKeystore;
     private String trustPassword;
     private String script;
-    private String winrmLocale;
-    private int operationTimeout;
     private String modules;
     private String returnTable;
     private String delimiter;
     private String colDelimiter;
     private String rowDelimiter;
+    private String winrmLocale;
+    private int operationTimeout;
     private final int connectTimeout;
-
 
     public WSManRequestInputs(WSManRequestInputsBuilder builder) {
         this.host = builder.host;
@@ -60,16 +68,14 @@ public class WSManRequestInputs {
         this.trustKeystore = builder.trustKeystore;
         this.trustPassword = builder.trustPassword;
         this.script = builder.script;
-        this.winrmLocale = builder.winrmLocale;
-        this.operationTimeout = builder.operationTimeout;
-        this.connectTimeout = builder.connectTimeout;
+        this.modules = builder.modules;
+        this.returnTable = builder.returnTable;
         this.delimiter = builder.delimiter;
         this.colDelimiter = builder.colDelimiter;
         this.rowDelimiter = builder.rowDelimiter;
         this.winrmLocale = builder.winrmLocale;
         this.operationTimeout = builder.operationTimeout;
-        this.modules = builder.modules;
-        this.returnTable = builder.returnTable;
+        this.connectTimeout = builder.connectTimeout;
     }
 
     public String getHost() {
@@ -210,15 +216,14 @@ public class WSManRequestInputs {
         private String trustKeystore;
         private String trustPassword;
         private String script;
-        private String winrmLocale;
-        private int operationTimeout;
         private String modules;
         private String returnTable;
         private String delimiter;
         private String colDelimiter;
         private String rowDelimiter;
+        private String winrmLocale;
+        private int operationTimeout;
         private int connectTimeout;
-
 
         public WSManRequestInputs build() {
             return new WSManRequestInputs(this);
@@ -321,6 +326,12 @@ public class WSManRequestInputs {
             return this;
         }
 
+        public WSManRequestInputsBuilder withConnectTimeout(String connectTimeout) {
+            connectTimeout = StringUtils.isBlank(connectTimeout) ? InputDefaults.CONNECT_TIMEOUT.getValue() : connectTimeout;
+            this.connectTimeout = Integer.parseInt(connectTimeout);
+            return this;
+        }
+
         public WSManRequestInputsBuilder withAuthType(String authType) {
             authType = StringUtils.isBlank(authType) ? InputDefaults.AUTH_TYPE.getValue() : authType;
             this.authType = authType;
@@ -364,12 +375,6 @@ public class WSManRequestInputs {
 
         public WSManRequestInputsBuilder withRowDelimiter(String rowDelimiter) {
             this.rowDelimiter = StringUtils.isBlank(rowDelimiter) ? InputDefaults.ROW_DELIMITER.getValue() : rowDelimiter;
-            return this;
-        }
-
-        public WSManRequestInputsBuilder withConnectTimeout(String connectTimeout) {
-            connectTimeout = StringUtils.isBlank(connectTimeout) ? InputDefaults.CONNECT_TIMEOUT.getValue() : connectTimeout;
-            this.connectTimeout = Integer.parseInt(connectTimeout);
             return this;
         }
     }

@@ -13,10 +13,20 @@
 package io.cloudslang.content.joval;
 
 import com.microsoft.wsman.fault.WSManFaultType;
-import com.microsoft.wsman.shell.*;
-import io.cloudslang.content.joval.util.Xpress;
+import com.microsoft.wsman.shell.CommandLine;
+import com.microsoft.wsman.shell.CommandResponse;
+import com.microsoft.wsman.shell.CommandStateType;
+import com.microsoft.wsman.shell.DesiredStreamType;
+import com.microsoft.wsman.shell.Receive;
+import com.microsoft.wsman.shell.ReceiveResponse;
+import com.microsoft.wsman.shell.Send;
+import com.microsoft.wsman.shell.SendResponse;
+import com.microsoft.wsman.shell.Signal;
+import com.microsoft.wsman.shell.SignalResponse;
+import com.microsoft.wsman.shell.StreamType;
 import io.cloudslang.content.joval.wsman.FaultException;
 import io.cloudslang.content.joval.wsman.Port;
+import io.cloudslang.content.joval.util.Xpress;
 import io.cloudslang.content.joval.wsman.operation.CommandOperation;
 import io.cloudslang.content.joval.wsman.operation.ReceiveOperation;
 import io.cloudslang.content.joval.wsman.operation.SendOperation;
@@ -29,7 +39,12 @@ import org.w3c.soap.envelope.Fault;
 import javax.security.auth.login.FailedLoginException;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
 /**
  * Simple implementation of a WinRM Shell-based Process.

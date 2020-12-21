@@ -12,7 +12,6 @@ package io.cloudslang.content.entities;
 import jline.ConsoleReader;
 
 import java.io.*;
-import java.io.IOException;
 
 /**
  * Uses a JLine ConsoleReader.

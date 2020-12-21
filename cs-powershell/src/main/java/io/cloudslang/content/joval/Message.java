@@ -10,7 +10,12 @@
 package io.cloudslang.content.joval;// Copyright (C) 2012 jOVAL.org.  All rights reserved.
 // This software is licensed under the AGPL 3.0 license available at http://www.joval.org/agpl_v3.txt
 
-import ch.qos.cal10n.*;
+import ch.qos.cal10n.BaseName;
+import ch.qos.cal10n.IMessageConveyor;
+import ch.qos.cal10n.Locale;
+import ch.qos.cal10n.LocaleData;
+import ch.qos.cal10n.MessageConveyor;
+import ch.qos.cal10n.MessageConveyorException;
 import org.slf4j.cal10n.LocLogger;
 import org.slf4j.cal10n.LocLoggerFactory;
 

@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.utils;
 
 /**
@@ -10,14 +19,14 @@ public class Constants {
         public static final String INPUT_PORT = "port";
         public static final String INPUT_SCRIPT = "script";
         public static final String MAX_ENVELOP_SIZE = "winrmMaxEnvelopSize";
-        public static final String WINRM_LOCALE = "winrmLocale";
-        public static final String PROTOCOL = "protocol";
-        public static final String OPERATION_TIMEOUT = "operationTimeout";
         public static final String MODULES = "modules";
         public static final String RETURN_TABLE = "returnTable";
         public static final String DELIMITER = "delimiter";
         public static final String COL_DELIMITER = "colDelimiter";
         public static final String ROW_DELIMITER = "rowDelimiter";
+        public static final String WINRM_LOCALE = "winrmLocale";
+        public static final String PROTOCOL = "protocol";
+        public static final String OPERATION_TIMEOUT = "operationTimeout";
     }
 
     public static final class OutputNames {

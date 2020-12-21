@@ -49,11 +49,10 @@ package io.cloudslang.content.tests;
  */
 
 import org.ietf.jgss.*;
-
+import java.net.Socket;
+import java.io.IOException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
 
 /**
  * A sample client application that uses JGSS to do mutual authentication

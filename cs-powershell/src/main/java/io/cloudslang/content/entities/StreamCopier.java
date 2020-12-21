@@ -9,8 +9,7 @@
  *******************************************************************************/
 package io.cloudslang.content.entities;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * A simple stream copier that polls the input for available data.

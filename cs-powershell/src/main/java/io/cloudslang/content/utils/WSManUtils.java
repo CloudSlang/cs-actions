@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.utils;
 
 import io.cloudslang.content.entities.EncoderDecoder;
@@ -17,7 +26,12 @@ import java.util.Map;
 import java.util.UUID;
 
 import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
-import static io.cloudslang.content.utils.Constants.Others.*;
+import static io.cloudslang.content.utils.Constants.Others.ENCODED_COMMAND_PARAMETER;
+import static io.cloudslang.content.utils.Constants.Others.IMPORT_MODULE_PARAMETER;
+import static io.cloudslang.content.utils.Constants.Others.NON_INTERACTIVE_PARAMETER;
+import static io.cloudslang.content.utils.Constants.Others.POWERSHELL_SCRIPT_PREFIX;
+import static io.cloudslang.content.utils.Constants.Others.SINGLE_QUOTE;
+import static io.cloudslang.content.utils.Constants.Others.ZERO_SCRIPT_EXIT_CODE;
 import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.utils.Constants.OutputNames.SCRIPT_EXIT_CODE;
 import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAILURE;
@@ -31,7 +45,7 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 public class WSManUtils {
 
     private static final String HEADER_XPATH = "/Envelope/Header";
-    private static final String FAULT_DETAIL_XPATH = "/Envelope/Body/Fault/Detail/WSManFault/Message";
+    private static final String FAULT_DETAIL_XPATH = "/Envelope/Body/Fault/Detail/WSManFault/io.cloudslang.content.joval.Message";
     private static final String FAULT_REASON_XPATH = "/Envelope/Body/Fault/Reason";
     private static final String COMMAND_STATE_XPATH = "/Envelope/Body/ReceiveResponse/CommandState/@State";
     private static final String COUNT_STREAMS_XPATH = "count(//Envelope/Body/ReceiveResponse/Stream)";
@@ -147,6 +161,19 @@ public class WSManUtils {
             escapedModules.add(module);
         }
         return StringUtilities.join(escapedModules, COMMA_DELIMITER);
+    }
+
+
+    /**
+     * Checks the scriptExitCode value of the script execution and fails the operation if exit code is different than zero.
+     * @param resultMap
+     */
+    public static void verifyScriptExecutionStatus(final Map<String, String> resultMap) {
+        if (ZERO_SCRIPT_EXIT_CODE.equals(resultMap.get(SCRIPT_EXIT_CODE))) {
+            resultMap.put(RETURN_CODE, RETURN_CODE_SUCCESS);
+        } else {
+            resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
+        }
     }
 
     public static Pair<String,Integer> fromListToTable(BufferedReader reader, String propDelim, String colDelim, String rowDelim){

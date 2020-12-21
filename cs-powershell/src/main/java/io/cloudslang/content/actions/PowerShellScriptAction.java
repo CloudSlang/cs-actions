@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * (c) Copyright 2016 Hewlett-Packard Development Company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *******************************************************************************/
 package io.cloudslang.content.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -7,30 +16,63 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.entities.WSManRequestInputs;
+import io.cloudslang.content.joval.wsman.operation.CreateOperation;
+import io.cloudslang.content.joval.wsman.operation.IOperation;
 import io.cloudslang.content.services.WSManRemoteShellService;
 import io.cloudslang.content.utils.Constants;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.httpclient.HttpClientInputs.*;
-import static io.cloudslang.content.utils.Constants.InputNames.*;
+import static io.cloudslang.content.httpclient.HttpClientInputs.AUTH_TYPE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KERBEROS_CONFIG_FILE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KERBEROS_LOGIN_CONFIG_FILE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KERBEROS_SKIP_PORT_CHECK;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PASSWORD;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_USERNAME;
+import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.HttpClientInputs.USERNAME;
+import static io.cloudslang.content.httpclient.HttpClientInputs.X509_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.utils.Constants.InputNames.INPUT_HOST;
+import static io.cloudslang.content.utils.Constants.InputNames.INPUT_PORT;
+import static io.cloudslang.content.utils.Constants.InputNames.INPUT_SCRIPT;
+import static io.cloudslang.content.utils.Constants.InputNames.MAX_ENVELOP_SIZE;
+import static io.cloudslang.content.utils.Constants.InputNames.MODULES;
+import static io.cloudslang.content.utils.Constants.InputNames.RETURN_TABLE;
+import static io.cloudslang.content.utils.Constants.InputNames.DELIMITER;
 import static io.cloudslang.content.utils.Constants.InputNames.COL_DELIMITER;
 import static io.cloudslang.content.utils.Constants.InputNames.ROW_DELIMITER;
+import static io.cloudslang.content.utils.Constants.InputNames.OPERATION_TIMEOUT;
+import static io.cloudslang.content.utils.Constants.InputNames.PROTOCOL;
+import static io.cloudslang.content.utils.Constants.InputNames.WINRM_LOCALE;
 import static io.cloudslang.content.utils.Constants.Others.NEGOTIATE;
-import static io.cloudslang.content.utils.Constants.OutputNames.*;
+import static io.cloudslang.content.utils.Constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.utils.Constants.OutputNames.OBJECTS_COUNT;
+import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.utils.Constants.OutputNames.SCRIPT_EXIT_CODE;
+import static io.cloudslang.content.utils.Constants.OutputNames.STDERR;
 import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_FAILURE;
 import static io.cloudslang.content.utils.Constants.ReturnCodes.RETURN_CODE_SUCCESS;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.utils.WSManUtils.verifyScriptExecutionStatus;
 
 /**
  * Created by giloan on 3/26/2016.
  */
 public class PowerShellScriptAction {
-
-    private static final String ZERO_SCRIPT_EXIT_CODE = "0";
 
     /**
      * Executes a PowerShell script on a remote host.
@@ -75,6 +117,9 @@ public class PowerShellScriptAction {
      * @param maxEnvelopeSize      The maximum size of a SOAP packet in bytes for all stream content.
      *                             Default value is '153600'.
      * @param script               The PowerShell script that will be executed on the remote shell.
+     * @param modules              Add modules to the current session. The Import-Module cmdlet is used which adds one or more modules to the current session.
+     *                             The modules that you import must be installed on the local computer or a remote computer.
+     *                             To import a module, use the Name, Assembly, ModuleInfo, MinimumVersion and RequiredVersion parameters to identify the module to import.
      * @param winrmLocale          The WinRM locale to use.
      *                             Default value is 'en-US'.
      * @param operationTimeout     Defines the OperationTimeout value in seconds to indicate that the clients expect a response or a fault within the specified time.
@@ -87,6 +132,7 @@ public class PowerShellScriptAction {
                     @Output(RETURN_RESULT),
                     @Output(STDERR),
                     @Output(SCRIPT_EXIT_CODE),
+                    @Output(OBJECTS_COUNT),
                     @Output(EXCEPTION)
             },
             responses = {
@@ -116,16 +162,15 @@ public class PowerShellScriptAction {
             @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
             @Param(value = MAX_ENVELOP_SIZE) String maxEnvelopeSize,
             @Param(value = INPUT_SCRIPT, required = true) String script,
-            @Param(value = WINRM_LOCALE) String winrmLocale,
-            @Param(value = OPERATION_TIMEOUT) String operationTimeout,
             @Param(value = MODULES) String modules,
             @Param(value = RETURN_TABLE) String returnTable,
             @Param(value = DELIMITER) String delimiter,
             @Param(value = COL_DELIMITER) String colDelimiter,
             @Param(value = ROW_DELIMITER) String rowDelimiter,
+            @Param(value = WINRM_LOCALE) String winrmLocale,
+            @Param(value = OPERATION_TIMEOUT) String operationTimeout,
             @Param(value = CONNECT_TIMEOUT) String connectTimeout
     ) {
-        Map<String, String> resultMap = new HashMap<>();
         try {
             WSManRemoteShellService wsManRemoteShellService = new WSManRemoteShellService();
 
@@ -151,16 +196,17 @@ public class PowerShellScriptAction {
                     .withTrustKeystore(trustKeystore)
                     .withTrustPassword(trustPassword)
                     .withScript(script)
-                    .withWinrmLocale(winrmLocale)
-                    .withOperationTimeout(operationTimeout)
                     .withModules(modules)
                     .withReturnTable(returnTable)
                     .withDelimiter(delimiter)
                     .withColDelimiter(colDelimiter)
                     .withRowDelimiter(rowDelimiter)
+                    .withWinrmLocale(winrmLocale)
+                    .withOperationTimeout(operationTimeout)
                     .withConnectTimeout(connectTimeout)
                     .build();
 
+            Map<String, String> resultMap;
             if (StringUtilities.equalsIgnoreCase(NEGOTIATE, authType)) {
                 resultMap = wsManRemoteShellService.runCommandWithJwsmvAndNtlm(wsManRequestInputs,
                         new URL(wsManRequestInputs.getProtocol(), host, Integer.parseInt(wsManRequestInputs.getPort()), "/WSMAN"),
@@ -169,25 +215,64 @@ public class PowerShellScriptAction {
                 resultMap = wsManRemoteShellService.runCommand(wsManRequestInputs);
             }
             verifyScriptExecutionStatus(resultMap);
-        } catch (NumberFormatException nfe) {
-            resultMap.put(EXCEPTION, ExceptionUtils.getStackTrace(nfe));
-            resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
+            return resultMap;
         } catch (Exception e) {
-            resultMap.put(EXCEPTION, ExceptionUtils.getStackTrace(e));
-            resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
+            return getFailureResultsMap(e);
         }
-        return resultMap;
     }
 
-    /**
-     * Checks the scriptExitCode value of the script execution and fails the operation if exit code is different than zero.
-     * @param resultMap
-     */
-    private void verifyScriptExecutionStatus(Map<String, String> resultMap) {
-        if (ZERO_SCRIPT_EXIT_CODE.equals(resultMap.get(SCRIPT_EXIT_CODE))) {
-            resultMap.put(RETURN_CODE, RETURN_CODE_SUCCESS);
-        } else {
-            resultMap.put(RETURN_CODE, RETURN_CODE_FAILURE);
-        }
+        public static void main(String[] args) throws IOException {
+            PowerShellScriptAction powerShellScriptAction = new PowerShellScriptAction();
+            Map<String, String> map = powerShellScriptAction.execute(
+//                "16.77.9.210",
+                    "16.77.9.170",
+//                    "16.77.58.243",
+//                    "16.77.59.32",
+                    "5985",
+                    "http",
+                    "Administrator",
+                    "B33f34t3r",
+                    "Negotiate", // authType
+//                "",
+//                "",
+//                "kerberos",
+                    "",
+                    "",
+                    "",
+                    "", //proxy inputs
+                    "true",
+                    "allow_all",
+                    "",
+                    "",
+                    "",
+                    "",
+//                "C:\\workspace\\kerberos\\krb5.conf",
+//                "C:\\workspace\\kerberos\\login.conf",
+                    "true",
+                    "",
+                    "",
+                    "",
+                    "Get-Service",
+//                "Set-WinRMNetworkDelayMS 50000",
+//                "c:\\Program Files\\Common Files\\Skype for Business Online2\\Modules\\LyncOnlineConnector",
+//                "c:\\Program Files\\Common Files\\Skype for Business Online2\\Modules\\SkypeOnlineConnector",
+//                    "c:\\Program Files\\Common Files\\Skype for Business Online2\\Modules\\SkypeOnlineConnector,c:\\Program Files\\Common Files\\Skype for Business Online2\\Modules\\LyncOnlineConnector",
+                    "",
+                    "true",
+                    "", //delimiter
+                    "", //colDelimiter
+                    "", //rowDelimiter
+                    "en-US",
+                    "60",
+                    "50"
+            );
+//            System.out.println(map.toString());
+            System.out.println(map.get(RETURN_RESULT));
+
+            List<? super IOperation> list = new ArrayList<IOperation>();
+            List<CreateOperation> list2 = new ArrayList<>();
+            list.add(new CreateOperation(null));
+            list.addAll(list2);
+            System.out.println(list2);
     }
 }

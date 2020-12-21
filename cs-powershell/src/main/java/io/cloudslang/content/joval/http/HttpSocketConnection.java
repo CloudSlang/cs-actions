@@ -15,13 +15,22 @@ package io.cloudslang.content.joval.http;
 import io.cloudslang.content.joval.util.RFC822;
 
 import javax.net.ssl.SSLSocketFactory;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
 import java.net.URL;
 import java.security.Permission;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * An HTTP 1.1 connection implementation that re-uses a single socket connection.  This is useful when a single TCP connection

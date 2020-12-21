@@ -28,7 +28,11 @@ import org.xmlsoap.ws.transfer.AnyXmlOptionalType;
 import org.xmlsoap.ws.transfer.AnyXmlType;
 
 import javax.security.auth.login.FailedLoginException;
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.ws.http.HTTPException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
