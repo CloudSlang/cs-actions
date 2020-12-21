@@ -39,8 +39,6 @@ public class GetChildrenService {
 
         File[] children;
         children = f.listFiles();
-        if (children == null)
-            throw new RuntimeException(NO_CHILDREN);
 
         StringBuilder paths = new StringBuilder();
         for (File child : children) {

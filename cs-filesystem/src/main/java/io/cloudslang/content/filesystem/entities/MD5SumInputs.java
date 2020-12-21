@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.filesystem.entities;
 
+import io.cloudslang.content.filesystem.utils.InputBuilderUtils;
+
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class MD5SumInputs {
@@ -61,8 +63,8 @@ public class MD5SumInputs {
             return this;
         }
 
-        public MD5SumInputs build() {
-            return new MD5SumInputs(source, compareTo);
+        public MD5SumInputs build() throws Exception {
+            return new MD5SumInputs(InputBuilderUtils.buildSource(source), compareTo);
         }
     }
 }

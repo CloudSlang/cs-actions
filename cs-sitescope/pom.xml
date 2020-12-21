@@ -20,8 +20,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.cloudslang.content</groupId>
-    <artifactId>cs-filesystem</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <artifactId>cs-sitescope</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -68,6 +68,7 @@
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <cs-commons.version>0.0.5</cs-commons.version>
         <junit.version>4.13.1</junit.version>
+        <cs-http-client.version>0.1.74</cs-http-client.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -77,6 +78,13 @@
     </properties>
 
     <dependencies>
+        <!--HTTP CLIENT-->
+        <dependency>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-http-client</artifactId>
+            <version>${cs-http-client.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
@@ -86,6 +94,11 @@
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-commons</artifactId>
             <version>${cs-commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.2.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
