@@ -22,10 +22,13 @@ import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.Map;
+
+import static io.cloudslang.content.filesystem.constants.ExceptionMsgs.FILE_ALREADY_EXISTS;
 
 public class RenameService {
     public @NotNull Map<String, String> execute(@NotNull RenameInputs inputs) throws Exception {
@@ -40,7 +43,11 @@ public class RenameService {
                 Files.delete(destination);
             }
         }
-        Files.move(source, destination);
+        try{
+            Files.move(source, destination);
+        }catch(FileAlreadyExistsException ex){
+            throw new FileAlreadyExistsException(String.format(FILE_ALREADY_EXISTS,inputs.getNewName()));
+        }
 
         Map<String, String> results = OutputUtilities.getSuccessResultsMap(Constants.RENAME_OPERATION_SUCCEEDED);
         results.put(OutputNames.RENAMED_PATH, destination.toString());

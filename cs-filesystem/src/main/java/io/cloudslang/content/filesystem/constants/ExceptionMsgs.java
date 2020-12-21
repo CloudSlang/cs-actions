@@ -27,6 +27,7 @@ public final class ExceptionMsgs {
     public static final String ILLEGAL_CHARACTERS = "Illegal characters found in value of input '%s'.";
     public static final String INVALID_VALUE_FOR_INPUT = "Invalid value '%s' for input '%s'.";
     public static final String WORKS_ONLY_FOR_FILES = "The source input must point to a file.";
+    public static final String FILE_ALREADY_EXISTS = "File '%s' already exists.";
 
     private ExceptionMsgs() {
     }
