@@ -37,6 +37,48 @@ import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttp
 
 public class EnableMonitorGroupService {
 
+    public static String populateEnableMonitorGroupFormParams(EnableMonitorGroupInputs enableMonitorGroupInputs) throws UnsupportedEncodingException {
+
+        String delimiter = enableMonitorGroupInputs.getDelimiter();
+        String enable = enableMonitorGroupInputs.getEnable();
+        String fullPath = enableMonitorGroupInputs.getFullPathToGroup();
+        String timePeriod = enableMonitorGroupInputs.getTimePeriod();
+        String fromTime = enableMonitorGroupInputs.getFromTime();
+        String toTime = enableMonitorGroupInputs.getToTime();
+        String description = enableMonitorGroupInputs.getDescription();
+        String identifier = enableMonitorGroupInputs.getIdentifier();
+
+        if (!delimiter.isEmpty())
+            fullPath = fullPath.replace(delimiter, SITE_SCOPE_DELIMITER);
+
+        Map<String, String> inputsMap = new HashMap<>();
+        inputsMap.put(FULL_PATH_TO_GROUP, fullPath);
+        inputsMap.put(ENABLE, enable);
+        inputsMap.put(TIME_PERIOD, timePeriod);
+        inputsMap.put(FROM_TIME, fromTime);
+        inputsMap.put(TO_TIME, toTime);
+        inputsMap.put(DESCRIPTION, description);
+        inputsMap.put(IDENTIFIER, identifier);
+
+        URIBuilder ub = new URIBuilder();
+
+        if (enable.equalsIgnoreCase(BOOLEAN_TRUE)) {
+            inputsMap.remove(TIME_PERIOD);
+            inputsMap.remove(FROM_TIME);
+            inputsMap.remove(TO_TIME);
+        }
+
+        for (Map.Entry<String, String> entry : inputsMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (!value.isEmpty())
+                ub.addParameter(key, value);
+        }
+        String url = ub.toString();
+
+        return url;
+    }
+
     public @NotNull
     Map<String, String> execute(@NotNull EnableMonitorGroupInputs enableMonitorGroupInputs) throws Exception {
 
@@ -60,42 +102,6 @@ public class EnableMonitorGroupService {
         Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
 
         return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, ENABLE_MONITOR_GROUP);
-    }
-
-    public static String populateEnableMonitorGroupFormParams(EnableMonitorGroupInputs enableMonitorGroupInputs) throws UnsupportedEncodingException {
-
-        String delimiter = enableMonitorGroupInputs.getDelimiter();
-        String enable = enableMonitorGroupInputs.getEnable();
-        String fullPath = enableMonitorGroupInputs.getFullPathToGroup();
-        String timePeriod = enableMonitorGroupInputs.getTimePeriod();
-        String fromTime = enableMonitorGroupInputs.getFromTime();
-        String toTime = enableMonitorGroupInputs.getToTime();
-        String description = enableMonitorGroupInputs.getDescription();
-        String identifier = enableMonitorGroupInputs.getIdentifier();
-
-        if (!delimiter.isEmpty())
-            fullPath = fullPath.replace(delimiter, SITE_SCOPE_DELIMITER);
-
-        Map<String,String> inputsMap = new HashMap<>();
-        inputsMap.put(FULL_PATH_TO_GROUP, fullPath);
-        inputsMap.put(ENABLE, enable);
-        inputsMap.put(TIME_PERIOD, timePeriod);
-        inputsMap.put(FROM_TIME, fromTime);
-        inputsMap.put(TO_TIME, toTime);
-        inputsMap.put(DESCRIPTION, description);
-        inputsMap.put(IDENTIFIER, identifier);
-
-        URIBuilder ub = new URIBuilder();
-
-        for (Map.Entry<String, String> entry : inputsMap.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if (!value.isEmpty())
-              ub.addParameter(key, value);
-        }
-        String url = ub.toString();
-
-        return url;
     }
 }
 
