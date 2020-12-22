@@ -22,11 +22,12 @@ import io.cloudslang.content.constants.OutputNames._
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.databases.sql.instances.SQLDatabaseInstanceService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
-import io.cloudslang.content.google.utils.Constants.SQLInstancesConstant.GET_SQL_INSTANCE_OPERATION_NAME
+import io.cloudslang.content.google.utils.Constants.SQLInstancesConstant.{GET_SQL_INSTANCE_OPERATION_NAME, IP_ADDRESS_TYPE_PRIMARY, IP_ADDRESS_TYPE_PRIVATE}
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.Descriptions.Common._
 import io.cloudslang.content.google.utils.action.Descriptions.CreateSQLDataBaseInstance._
 import io.cloudslang.content.google.utils.action.Descriptions.SQLDataBaseInstances.GET_SQL_INSTANCE_OPERATION_DESCRIPTION
+import io.cloudslang.content.google.utils.action.Descriptions.UpdateSQLDataBaseInstance.PRIVATE_IP_ADDRESS_DESC
 import io.cloudslang.content.google.utils.action.GoogleOutputNames.STATUS
 import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs.{MACHINE_TYPE, ZONE, _}
 import io.cloudslang.content.google.utils.action.InputNames._
@@ -54,6 +55,7 @@ class GetSQLInstance {
       new Output(value = DATABASE_VERSION, description = DATABASE_VERSION_DESC),
       new Output(value = ZONE, description = ZONE_DESC),
       new Output(value = PUBLIC_IP_ADDRESS, description = PUBLIC_IP_ADDRESS_DESC),
+      new Output(value = PRIVATE_IP_ADDRESS, description = PRIVATE_IP_ADDRESS_DESC),
       new Output(value = INSTANCE_ID, description = INSTANCE_ID_DESC),
       new Output(value = REGION, description = REGION_DESC),
       new Output(value = SELF_LINK, description = SELF_LINK_DESC),
@@ -81,13 +83,11 @@ class GetSQLInstance {
               @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String,
               @Param(value = PRETTY_PRINT) prettyPrintInp: String): util.Map[String, String] = {
 
-
     val proxyHostStr = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortInt = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT)
     val proxyPasswordStr = defaultIfEmpty(proxyPassword, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
-
 
     val validationStream = validateProxyPort(proxyPortInt) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT)
@@ -108,12 +108,39 @@ class GetSQLInstance {
       val sqlInstance = SQLDatabaseInstanceService.get(httpTransport, jsonFactory, credential, projectId,
         instanceId)
       val sqlInstanceSettings = sqlInstance.getSettings
+      val ipAddresses = sqlInstance.getIpAddresses
+      var publicIPAddress = EMPTY
+      var privateIPAddress = EMPTY
+
+      if (ipAddresses.size() > 0) {
+        if (ipAddresses.get(0).getType.equals(IP_ADDRESS_TYPE_PRIMARY)) {
+          publicIPAddress = sqlInstance.getIpAddresses.get(0).getIpAddress
+        } else if (ipAddresses.get(0).getType.equals(IP_ADDRESS_TYPE_PRIVATE)) {
+          privateIPAddress = ipAddresses.get(0).getIpAddress
+        }
+      }
+      if (ipAddresses.size() > 1) {
+        if (ipAddresses.get(1).getType.equals(IP_ADDRESS_TYPE_PRIMARY)) {
+          publicIPAddress = sqlInstance.getIpAddresses.get(1).getIpAddress
+        } else if (ipAddresses.get(1).getType.equals(IP_ADDRESS_TYPE_PRIVATE)) {
+          privateIPAddress = ipAddresses.get(1).getIpAddress
+        }
+      }
 
       getSuccessResultsMap(toPretty(prettyPrint, sqlInstance)) +
         (CONNECTION_NAME -> sqlInstance.getConnectionName) +
         (DATABASE_VERSION -> sqlInstance.getDatabaseVersion) +
         (ZONE -> sqlInstance.getGceZone) +
-        (PUBLIC_IP_ADDRESS -> (if(sqlInstance.getIpAddresses.size()>0){ sqlInstance.getIpAddresses.get(0).getIpAddress}else{ EMPTY})) +
+        (PUBLIC_IP_ADDRESS -> (if (sqlInstance.getIpAddresses.size() > 0) {
+          publicIPAddress
+        } else {
+          EMPTY
+        })) +
+        (PRIVATE_IP_ADDRESS -> (if (sqlInstance.getIpAddresses.size() > 0) {
+          privateIPAddress
+        } else {
+          EMPTY
+        })) +
         (INSTANCE_ID -> instanceId) +
         (REGION -> sqlInstance.getRegion) +
         (SELF_LINK -> sqlInstance.getSelfLink) +

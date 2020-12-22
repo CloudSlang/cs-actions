@@ -267,5 +267,4 @@ class UpdateSQLInstance {
       case e: Throwable => getFailureResultsMap(e)
     }
   }
-
 }

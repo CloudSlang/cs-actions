@@ -21,7 +21,6 @@ import com.google.api.services.storage.model.Bucket.IamConfiguration.UniformBuck
 import com.google.api.services.storage.model.Bucket.{IamConfiguration, RetentionPolicy, Versioning}
 import com.google.api.services.storage.model.{Bucket, Buckets}
 import io.cloudslang.content.google.services.storage.StorageService
-import io.cloudslang.content.google.services.storage.buckets.BucketService.getIamConfiguration
 import io.cloudslang.content.google.utils.Constants.FALSE
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toLong
@@ -35,6 +34,7 @@ object BucketService {
 
     val request = StorageService.bucketService(httpTransport, jsonFactory, credential).get(bucketName).
       setProjection(projection)
+
     if (ifMetagenerationMatch.nonEmpty) {
       request.setIfMetagenerationMatch(toLong(ifMetagenerationMatch))
     }
@@ -45,47 +45,15 @@ object BucketService {
 
   }
 
-  def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, bucketName: String, predefinedAcl: String, predefinedDefaultObjectAcl: String, projection: String,location: String, locationType: String, storageClass: String, accessControlType: String, retentionPeriodType: String, retentionPeriod: String, isVersioningEnabled: String,labels: java.util.Map[String, String],  isDefaultEventBasedHoldEnabled: String, metageneration: String): Bucket = {
+  def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,
+             bucketName: String, predefinedAcl: String, predefinedDefaultObjectAcl: String, projection: String,
+             location: String, locationType: String, storageClass: String, accessControlType: String,
+             retentionPeriodType: String, retentionPeriod: String, isVersioningEnabled: String,
+             labels: java.util.Map[String, String], isDefaultEventBasedHoldEnabled: String): Bucket = {
 
-    val createBucket = new Bucket().setName(bucketName).setLabels(labels)
-
-    if (location.nonEmpty) {
-      createBucket.setLocation(location)
-    }
-
-    if (locationType.nonEmpty) {
-      createBucket.setLocationType(locationType)
-    }
-
-    if (storageClass.nonEmpty) {
-      createBucket.setStorageClass(storageClass)
-    }
-
-    if (accessControlType.nonEmpty) {
-      createBucket.setIamConfiguration(getIamConfiguration(accessControlType))
-    }
-
-    if (isVersioningEnabled.nonEmpty) {
-      createBucket.setVersioning(new Versioning().setEnabled(toBoolean(isVersioningEnabled)))
-    }
-
-    if (retentionPeriodType.nonEmpty) {
-      createBucket.setRetentionPolicy(BucketController.getRetentionPolicy(retentionPeriodType, retentionPeriod))
-
-    }
-    if (retentionPeriod.nonEmpty) {
-      createBucket.setRetentionPolicy(new RetentionPolicy().setRetentionPeriod(toLong(retentionPeriod)))
-    }
-
-    if (isDefaultEventBasedHoldEnabled.nonEmpty) {
-      createBucket.setDefaultEventBasedHold(toBoolean(isDefaultEventBasedHoldEnabled))
-    }
-
-    if (metageneration.nonEmpty) {
-      createBucket.setMetageneration(toLong(metageneration))
-    }
-
-    val request = StorageService.bucketService(httpTransport, jsonFactory, credential).insert(projectId, createBucket)
+    val request = StorageService.bucketService(httpTransport, jsonFactory, credential)
+      .insert(projectId, BucketController.createBucket(bucketName,location,locationType, storageClass,
+        accessControlType,retentionPeriodType,retentionPeriod,isVersioningEnabled,labels,isDefaultEventBasedHoldEnabled))
 
     if (predefinedAcl.nonEmpty) {
       request.setPredefinedAcl(predefinedAcl)
@@ -108,32 +76,12 @@ object BucketService {
   def update(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, bucketName: String,
              ifMetagenerationMatch: String, ifMetagenerationNotMatch: String, predefinedAcl: String,
              predefinedDefaultObjectAcl: String, projection: String, storageClass: String,
-             defaultEventBasedHold: Boolean, versioningEnabled: String, accessControl: String, retentionPeriodType: String,
+             defaultEventBasedHold: String, versioningEnabled: String, accessControl: String, retentionPeriodType: String,
              retentionPeriod: String, removeRetentionPolicy: String, labels: java.util.Map[String, String]): Bucket = {
 
-    val bucket = new Bucket().setDefaultEventBasedHold(defaultEventBasedHold)
-      .setStorageClass(storageClass)
-
-    if (labels.nonEmpty) {
-      bucket.setLabels(labels)
-    }
-
-    if (versioningEnabled.nonEmpty) {
-      bucket.setVersioning(new Bucket.Versioning().setEnabled(toBoolean(versioningEnabled)))
-    }
-
-    if (accessControl.nonEmpty) {
-      bucket.setIamConfiguration(BucketController.getIamConfiguration(accessControl))
-    }
-
-    if (removeRetentionPolicy.isEmpty || removeRetentionPolicy.equalsIgnoreCase(FALSE)) {
-      if (retentionPeriod.nonEmpty) {
-        bucket.setRetentionPolicy(BucketController.getRetentionPolicy(retentionPeriodType, retentionPeriod))
-      }
-    }
-
     val request = StorageService.bucketService(httpTransport, jsonFactory, credential)
-      .patch(bucketName, bucket).setProjection(projection)
+      .update(bucketName, BucketController.updateBucket(storageClass,defaultEventBasedHold,versioningEnabled
+        ,accessControl,retentionPeriodType,retentionPeriod,removeRetentionPolicy,labels)).setProjection(projection)
 
     if (ifMetagenerationMatch.nonEmpty) {
       request.setIfMetagenerationMatch(toLong(ifMetagenerationMatch))
@@ -148,7 +96,6 @@ object BucketService {
       request.setPredefinedDefaultObjectAcl(predefinedDefaultObjectAcl)
     }
     request.execute()
-
   }
 
   def list(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String, maxResults: String, prefix: String, pageToken: String, projection: String): Buckets = {
@@ -171,17 +118,5 @@ object BucketService {
       request.setIfMetagenerationMatch(toLong(metagenerationMatch))
     }
     request.execute()
-
   }
-
-  def getIamConfiguration(bucketPolicy: String): IamConfiguration = {
-
-    if (bucketPolicy.equalsIgnoreCase("uniform")) {
-      new IamConfiguration().setUniformBucketLevelAccess(new UniformBucketLevelAccess().setEnabled(true))
-    } else {
-      new IamConfiguration()
-    }
-
-  }
-
 }

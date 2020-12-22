@@ -24,7 +24,7 @@ import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.storage.buckets.BucketService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
 import io.cloudslang.content.google.utils.Constants.StorageBucketConstants._
-import io.cloudslang.content.google.utils.action.DefaultValues.StorageBucket.{DEFAULT_LABELS, DEFAULT_PROJECTION, DEFAULT_RETENTION_PERIOD_TYPE}
+import io.cloudslang.content.google.utils.action.DefaultValues.StorageBucket._
 import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.google.utils.action.Descriptions.Common._
 import io.cloudslang.content.google.utils.action.Descriptions.CreateSQLDataBaseInstance.SELF_LINK_DESC
@@ -35,6 +35,7 @@ import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.google.utils.action.InputValidator.validateBucketName
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
 import io.cloudslang.content.google.utils.action.Outputs.SQLDatabaseInstance.SELF_LINK
+import io.cloudslang.content.google.utils.action.Outputs.StorageBucketOutputs.{DEFAULT_EVENT_BASED_HOLD_ENABLED, VERSIONING_ENABLED}
 import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtils, JsonFactoryUtils, Utility}
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toInteger
@@ -54,8 +55,8 @@ class CreateBucket {
       new Output(value = LABELS, description = LABELS_DESC),
       new Output(value = RETENTION_PERIOD, description = RETENTION_PERIOD_DESC),
       new Output(value = ACCESS_CONTROL_TYPE, description = ACCESS_CONTROL_TYPE_DESC),
-      new Output(value = IS_DEFAULT_EVENT_BASED_HOLD_ENABLED, description = IS_DEFAULT_EVENT_BASED_HOLD_ENABLED_DESC),
-      new Output(value = IS_VERSIONING_ENABLED, description = IS_VERSIONING_ENABLED_DESC),
+      new Output(value = DEFAULT_EVENT_BASED_HOLD_ENABLED, description = IS_DEFAULT_EVENT_BASED_HOLD_ENABLED_DESC),
+      new Output(value = VERSIONING_ENABLED, description = IS_VERSIONING_ENABLED_DESC),
       new Output(value = LOCATION, description = LOCATION_DESC),
       new Output(value = LOCATION_TYPE, description = LOCATION_TYPE_DESC),
       new Output(value = SELF_LINK, description = SELF_LINK_DESC)
@@ -79,17 +80,16 @@ class CreateBucket {
               @Param(value = RETENTION_PERIOD, description = RETENTION_PERIOD_DESC) retentionPeriod: String,
               @Param(value = LOCATION, description = LOCATION_DESC) location: String,
               @Param(value = LOCATION_TYPE, description = LOCATION_TYPE_DESC) locationType: String,
-              @Param(value = IS_VERSIONING_ENABLED, description = IS_VERSIONING_ENABLED_DESC) isVersioningEnabled: String,
               @Param(value = STORAGE_CLASS, description = STORAGE_CLASS_DESC) storageClass: String,
               @Param(value = ACCESS_CONTROL_TYPE, description = ACCESS_CONTROL_TYPE_DESC) accessControlType: String,
-              @Param(value = LABELS, description = LABELS_DESC) labels: String,
+              @Param(value = IS_VERSIONING_ENABLED, description = IS_VERSIONING_ENABLED_DESC) isVersioningEnabled: String,
               @Param(value = IS_DEFAULT_EVENT_BASED_HOLD_ENABLED, description = IS_DEFAULT_EVENT_BASED_HOLD_ENABLED_DESC) isDefaultEventBasedHoldEnabled: String,
-              @Param(value = METAGENERATION, description = METAGENERATION_DESC) metageneration: String,
+              @Param(value = LABELS, description = LABELS_DESC) labels: String,
               @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) proxyHost: String,
               @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) proxyPort: String,
               @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) proxyUsername: String,
               @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) proxyPassword: String,
-              @Param(value = PRETTY_PRINT, description = PRETTY_PRINT_DESC) prettyPrintInp: String): util.Map[String, String] = {
+              @Param(value = PRETTY_PRINT, description = PRETTY_PRINT_DESC) prettyPrintInput: String): util.Map[String, String] = {
 
     val predefinedAclStr = defaultIfEmpty(predefinedAcl, EMPTY)
     val predefinedDefaultObjectAclStr = defaultIfEmpty(predefinedDefaultObjectAcl, EMPTY)
@@ -98,8 +98,7 @@ class CreateBucket {
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortInt = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT)
     val proxyPasswordStr = defaultIfEmpty(proxyPassword, EMPTY)
-    val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
-
+    val prettyPrintStr = defaultIfEmpty(prettyPrintInput, DEFAULT_PRETTY_PRINT)
 
     val validationStream = validateBucketName(bucketName)
 
@@ -116,52 +115,53 @@ class CreateBucket {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      var retentionPeriodTypeStr = defaultIfEmpty(retentionPeriodType, DEFAULT_RETENTION_PERIOD_TYPE)
-      var retentionPeriodStr = defaultIfEmpty(retentionPeriod, EMPTY)
-      var locationStr = defaultIfEmpty(location, EMPTY)
-      var locationTypeStr = defaultIfEmpty(locationType, EMPTY)
-      var isVersioningEnabledStr = defaultIfEmpty(isVersioningEnabled, EMPTY)
-      var storageClassStr = defaultIfEmpty(storageClass, EMPTY)
-      var accessControlTypeStr = defaultIfEmpty(accessControlType, EMPTY)
+      val retentionPeriodTypeStr = defaultIfEmpty(retentionPeriodType, DEFAULT_RETENTION_PERIOD_TYPE)
+      val retentionPeriodStr = defaultIfEmpty(retentionPeriod, EMPTY)
+      val locationStr = defaultIfEmpty(location, DEFAULT_LOCATION)
+      val locationTypeStr = defaultIfEmpty(locationType, DEFAULT_LOCATION_TYPE)
+      val isVersioningEnabledStr = defaultIfEmpty(isVersioningEnabled, EMPTY)
+      val storageClassStr = defaultIfEmpty(storageClass, DEFAULT_STORAGE_CLASS)
+      val accessControlTypeStr = defaultIfEmpty(accessControlType, FINE_GRAINED_ACCESS_CONTROL)
       val labelsStr = defaultIfEmpty(labels, DEFAULT_LABELS)
-      var isDefaultEventBasedHoldEnabledStr = defaultIfEmpty(isDefaultEventBasedHoldEnabled, EMPTY)
-      val metagenerationStr = defaultIfEmpty(metageneration, EMPTY)
+      val isDefaultEventBasedHoldEnabledStr = defaultIfEmpty(isDefaultEventBasedHoldEnabled, EMPTY)
 
-      val createBucket = BucketService.create(httpTransport, jsonFactory, credential, projectId, bucketName, predefinedAclStr, predefinedDefaultObjectAclStr, projectionStr, locationStr, locationTypeStr, storageClassStr, accessControlTypeStr, retentionPeriodTypeStr, retentionPeriodStr, isVersioningEnabledStr,Utility.jsonToMap(labelsStr),isDefaultEventBasedHoldEnabledStr,metagenerationStr)
+      val createBucket = BucketService.create(httpTransport, jsonFactory, credential, projectId, bucketName,
+        predefinedAclStr, predefinedDefaultObjectAclStr, projectionStr, locationStr, locationTypeStr,
+        storageClassStr, accessControlTypeStr, retentionPeriodTypeStr, retentionPeriodStr, isVersioningEnabledStr,
+        Utility.jsonToMap(labelsStr), isDefaultEventBasedHoldEnabledStr)
 
       getSuccessResultsMap(toPretty(prettyPrint, createBucket)) +
         (LOCATION -> createBucket.getLocation) +
         (LOCATION_TYPE -> createBucket.getLocationType) +
-        (BUCKET_NAME -> createBucket.getId) +
+        (BUCKET_NAME -> createBucket.getName) +
         (STORAGE_CLASS -> createBucket.getStorageClass) +
         (RETENTION_PERIOD -> (if (createBucket.containsKey(RETENTION_POLICY)) {
           createBucket.getRetentionPolicy.getRetentionPeriod.toString
         } else {
           EMPTY
         })) +
-        (LABELS -> (if (createBucket.getLabels != null) {
+        (LABELS -> (if (createBucket.containsKey(LABELS)) {
           createBucket.getLabels.toString
+        } else {
+          DEFAULT_LABELS
+        })) +
+        (DEFAULT_EVENT_BASED_HOLD_ENABLED -> (if (createBucket.containsKey(DEFAULT_EVENT_BASED_HOLD_KEY)) {
+          createBucket.getDefaultEventBasedHold.toString
         } else {
           EMPTY
         })) +
-        (IS_DEFAULT_EVENT_BASED_HOLD_ENABLED -> (if(createBucket.getDefaultEventBasedHold){
-        createBucket.getDefaultEventBasedHold.toString
-        } else { EMPTY
-         }))+
-          (IS_VERSIONING_ENABLED -> (if((isVersioningEnabled.nonEmpty))    {
-            (createBucket.getVersioning.getEnabled).toString
-          } else {
-            EMPTY
-          })) +
-          (ACCESS_CONTROL_TYPE -> (if (createBucket.getIamConfiguration.getUniformBucketLevelAccess.getEnabled) {
-            UNIFORM_ACCESS_CONTROL
-          } else {
-            FINE_GRAINED_ACCESS_CONTROL
-          }))+
-          (SELF_LINK -> createBucket.getSelfLink)
-      }
-
-     catch {
+        (VERSIONING_ENABLED -> (if (createBucket.containsKey(VERSIONING)) {
+          createBucket.getVersioning.getEnabled.toString
+        } else {
+          EMPTY
+        })) +
+        (ACCESS_CONTROL_TYPE -> (if (createBucket.getIamConfiguration.getUniformBucketLevelAccess.getEnabled) {
+          UNIFORM_ACCESS_CONTROL
+        } else {
+          FINE_GRAINED_ACCESS_CONTROL
+        })) +
+        (SELF_LINK -> createBucket.getSelfLink)
+    } catch {
       case e: Throwable => getFailureResultsMap(e)
     }
   }

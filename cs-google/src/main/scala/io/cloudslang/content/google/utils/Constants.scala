@@ -16,8 +16,8 @@
 package io.cloudslang.content.google.utils
 
 /**
-  * Created by victor on 28.02.2017.
-  */
+ * Created by victor on 28.02.2017.
+ */
 object Constants {
   val COMMA = ","
   val NEW_LINE = "\n"
@@ -53,11 +53,16 @@ object Constants {
 
   object StorageBucketConstants {
     final val UPDATE_BUCKET_OPERATION_NAME = "Update Bucket"
+    final val GET_BUCKET_OPERATION_NAME = "Get Bucket"
+    final val CREATE_BUCKET_OPERATION_NAME = "Create Bucket"
+    final val LIST_BUCKET_OPERATION_NAME = "List Bucket"
+    final val DELETE_BUCKET_OPERATION_NAME = "Delete Bucket"
 
     final val UNIFORM_ACCESS_CONTROL = "Uniform"
     final val FINE_GRAINED_ACCESS_CONTROL = "Fine-grained"
     final val RETENTION_POLICY = "retentionPolicy"
     final val VERSIONING = "versioning"
+    final val DEFAULT_EVENT_BASED_HOLD_KEY = "defaultEventBasedHold"
     final val LABELS = "labels"
   }
 }

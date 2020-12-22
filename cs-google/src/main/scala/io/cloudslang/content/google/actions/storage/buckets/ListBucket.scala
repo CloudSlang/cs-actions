@@ -22,7 +22,8 @@ import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETU
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.storage.buckets.BucketService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
-import io.cloudslang.content.google.utils.action.DefaultValues.StorageBucket.{DEFAULT_MAXRESULTS, DEFAULT_PROJECTION}
+import io.cloudslang.content.google.utils.Constants.StorageBucketConstants.LIST_BUCKET_OPERATION_NAME
+import io.cloudslang.content.google.utils.action.DefaultValues.StorageBucket.{DEFAULT_MAX_RESULTS, DEFAULT_PROJECTION}
 import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.google.utils.action.Descriptions.Common._
 import io.cloudslang.content.google.utils.action.Descriptions.StorageBucketDesc._
@@ -63,18 +64,17 @@ class ListBucket {
               @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) proxyPort: String,
               @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) proxyUsername: String,
               @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) proxyPassword: String,
-              @Param(value = PRETTY_PRINT, description = PRETTY_PRINT_DESC) prettyPrintInp: String): util.Map[String, String] = {
+              @Param(value = PRETTY_PRINT, description = PRETTY_PRINT_DESC) prettyPrintInput: String): util.Map[String, String] = {
 
     val proxyHostStr = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val projectionStr = defaultIfEmpty(projection, DEFAULT_PROJECTION)
     val pageTokenStr = defaultIfEmpty(pageToken, DEFAULT_PROJECTION)
-    val maxresultsInt = defaultIfEmpty(maxResults, DEFAULT_MAXRESULTS)
+    val maxresultsInt = defaultIfEmpty(maxResults, DEFAULT_MAX_RESULTS)
     val prefixStr = defaultIfEmpty(prefix, EMPTY)
     val proxyPortInt = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT)
     val proxyPasswordStr = defaultIfEmpty(proxyPassword, EMPTY)
-    val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
-
+    val prettyPrintStr = defaultIfEmpty(prettyPrintInput, DEFAULT_PRETTY_PRINT)
 
     val validationStream = validateProxyPort(proxyPortInt) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT)
@@ -92,10 +92,11 @@ class ListBucket {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
+      val listBucketDetails = BucketService.list(httpTransport, jsonFactory, credential, projectId, maxresultsInt,
+        prefixStr, pageTokenStr, projectionStr)
 
-      val listbucketDetails = BucketService.list(httpTransport, jsonFactory, credential, projectId, maxresultsInt, prefixStr, pageTokenStr, projectionStr)
+      getSuccessResultsMap(toPretty(prettyPrint, listBucketDetails))
 
-      getSuccessResultsMap(toPretty(prettyPrint, listbucketDetails))
     } catch {
       case e: Throwable => getFailureResultsMap(e)
     }
