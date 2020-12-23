@@ -124,7 +124,6 @@ class RestartSQLInstance {
             (ACTIVATION_POLICY -> ACTIVATION_POLICY_ALWAYS)
         }
 
-
         case SQLErrorOperation(error) => getFailureResultsMap(error)
       }
     } catch {

@@ -17,12 +17,87 @@ package io.cloudslang.content.google.services.storage.buckets
 
 import com.google.api.services.storage.model.Bucket
 import com.google.api.services.storage.model.Bucket.IamConfiguration.UniformBucketLevelAccess
-import com.google.api.services.storage.model.Bucket.{IamConfiguration, RetentionPolicy}
+import com.google.api.services.storage.model.Bucket.{IamConfiguration, RetentionPolicy, Versioning}
+import io.cloudslang.content.google.utils.Constants.FALSE
 import io.cloudslang.content.google.utils.Constants.StorageBucketConstants.UNIFORM_ACCESS_CONTROL
 import io.cloudslang.content.google.utils.action.DefaultValues.StorageBucket.{RETENTION_PERIOD_TYPE_DAYS, RETENTION_PERIOD_TYPE_MONTHS, RETENTION_PERIOD_TYPE_YEARS}
+import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toLong
 
+import scala.collection.JavaConversions._
+
 object BucketController {
+
+  def updateBucket(storageClass: String, defaultEventBasedHold: String, versioningEnabled: String,
+                   accessControl: String, retentionPeriodType: String, retentionPeriod: String,
+                   removeRetentionPolicy: String, labels: java.util.Map[String, String]): Bucket = {
+
+    val bucket = new Bucket().setStorageClass(storageClass)
+
+    if (defaultEventBasedHold.nonEmpty) {
+      bucket.setDefaultEventBasedHold(toBoolean(defaultEventBasedHold))
+    }
+
+    if (labels.nonEmpty) {
+      bucket.setLabels(labels)
+    }
+
+    if (versioningEnabled.nonEmpty) {
+      bucket.setVersioning(new Bucket.Versioning().setEnabled(toBoolean(versioningEnabled)))
+    }
+
+    if (accessControl.nonEmpty) {
+      bucket.setIamConfiguration(BucketController.getIamConfiguration(accessControl))
+    }
+
+    if (removeRetentionPolicy.isEmpty || removeRetentionPolicy.equalsIgnoreCase(FALSE)) {
+      if (retentionPeriod.nonEmpty) {
+        bucket.setRetentionPolicy(BucketController.getRetentionPolicy(retentionPeriodType, retentionPeriod))
+      }
+    }
+    bucket
+  }
+
+  def createBucket(bucketName: String, location: String, locationType: String, storageClass: String,
+                   accessControlType: String, retentionPeriodType: String, retentionPeriod: String,
+                   isVersioningEnabled: String, labels: java.util.Map[String, String],
+                   isDefaultEventBasedHoldEnabled: String): Bucket = {
+
+    val createBucket = new Bucket().setName(bucketName)
+
+    if (labels.nonEmpty) {
+      createBucket.setLabels(labels)
+    }
+
+    if (location.nonEmpty) {
+      createBucket.setLocation(location)
+    }
+
+    if (locationType.nonEmpty) {
+      createBucket.setLocationType(locationType)
+    }
+
+    if (storageClass.nonEmpty) {
+      createBucket.setStorageClass(storageClass)
+    }
+
+    if (accessControlType.nonEmpty) {
+      createBucket.setIamConfiguration(BucketController.getIamConfiguration(accessControlType))
+    }
+
+    if (isVersioningEnabled.nonEmpty) {
+      createBucket.setVersioning(new Versioning().setEnabled(toBoolean(isVersioningEnabled)))
+    }
+
+    if (retentionPeriod.nonEmpty) {
+      createBucket.setRetentionPolicy(BucketController.getRetentionPolicy(retentionPeriodType, retentionPeriod))
+    }
+
+    if (isDefaultEventBasedHoldEnabled.nonEmpty) {
+      createBucket.setDefaultEventBasedHold(toBoolean(isDefaultEventBasedHoldEnabled))
+    }
+    createBucket
+  }
 
   def getIamConfiguration(bucketPolicy: String): IamConfiguration = {
     new IamConfiguration().setUniformBucketLevelAccess(

@@ -74,18 +74,15 @@ class DeleteSQLInstance {
               @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String,
               @Param(value = PRETTY_PRINT) prettyPrintInp: String): util.Map[String, String] = {
 
-
     val asyncStr = defaultIfEmpty(asyncInp, TRUE)
     val timeoutStr = defaultIfEmpty(timeoutInp, DEFAULT_SYNC_TIMEOUT)
     val pollingIntervalStr = defaultIfEmpty(pollingIntervalInp, DEFAULT_POLLING_INTERVAL)
-
 
     val proxyHostStr = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortInt = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT)
     val proxyPasswordStr = defaultIfEmpty(proxyPassword, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
-
 
     val validationStream = validateProxyPort(proxyPortInt) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT) ++
@@ -116,7 +113,6 @@ class DeleteSQLInstance {
 
           getSuccessResultsMap(toPretty(prettyPrint, sqlOperation)) +
             (STATUS -> status)
-
 
         case SQLErrorOperation(error) => getFailureResultsMap(error)
       }

@@ -22,6 +22,7 @@ import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETU
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.storage.buckets.BucketService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
+import io.cloudslang.content.google.utils.Constants.StorageBucketConstants.DELETE_BUCKET_OPERATION_NAME
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.Descriptions.Common._
 import io.cloudslang.content.google.utils.action.Descriptions.StorageBucketDesc._
@@ -34,7 +35,6 @@ import io.cloudslang.content.google.utils.service.{GoogleAuth, HttpTransportUtil
 import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
-
 
 class DeleteBucket {
   @Action(name = DELETE_BUCKET_OPERATION_NAME,
@@ -57,10 +57,10 @@ class DeleteBucket {
               @Param(value = BUCKET_NAME, required = true, description = BUCKET_NAME_DESC) bucketName: String,
               @Param(value = METAGENERATION_MATCH, description = METAGENERATION_MATCH_DESC) metagenerationMatch: String,
               @Param(value = METAGENERATION_NOT_MATCH, description = METAGENERATION_NOT_MATCH_DESC) metagenerationNotMatch: String,
-              @Param(value = PROXY_HOST) proxyHost: String,
-              @Param(value = PROXY_PORT) proxyPort: String,
-              @Param(value = PROXY_USERNAME) proxyUsername: String,
-              @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String): util.Map[String, String] = {
+              @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) proxyHost: String,
+              @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) proxyPort: String,
+              @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) proxyUsername: String,
+              @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) proxyPassword: String): util.Map[String, String] = {
 
     val metagenerationMatchStr = defaultIfEmpty(metagenerationMatch, EMPTY)
     val metagenerationNotMatchStr = defaultIfEmpty(metagenerationNotMatch, EMPTY)
@@ -70,9 +70,7 @@ class DeleteBucket {
     val proxyPortInt = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT)
     val proxyPasswordStr = defaultIfEmpty(proxyPassword, EMPTY)
 
-
     val validationStream = validateProxyPort(proxyPortInt)
-
 
     if (validationStream.nonEmpty) {
       return getFailureResultsMap(validationStream.mkString(NEW_LINE))
@@ -86,18 +84,11 @@ class DeleteBucket {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-      val deletebucket = BucketService.delete(httpTransport, jsonFactory, credential, bucketName, metagenerationMatchStr, metagenerationNotMatchStr)
+      BucketService.delete(httpTransport, jsonFactory, credential, bucketName, metagenerationMatchStr, metagenerationNotMatchStr)
       getSuccessResultsMap(bucketName ++ DELETE_BUCKET_SUCCESS_DESC)
-    }
-    catch {
-      case e: Throwable => getFailureResultsMap(e)
 
+    } catch {
+      case e: Throwable => getFailureResultsMap(e)
     }
   }
-
-
 }
-
-
-
-

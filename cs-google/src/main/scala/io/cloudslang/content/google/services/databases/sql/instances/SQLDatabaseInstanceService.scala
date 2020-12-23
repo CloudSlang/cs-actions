@@ -54,9 +54,16 @@ object SQLDatabaseInstanceService {
   def create(httpTransport: HttpTransport, jsonFactory: JsonFactory, credential: Credential, projectId: String,
              databaseInstanceId: String, password: String, region: String, zone: String, databaseVersion: String,
              tier: String, dataDiskType: String, dataDiskSizeInGB: Long,
-             storageAutoResize: Boolean, availabilityType: String, maintenanceWindowDay: Int, maintenanceWindowHour: Int
+             storageAutoResize: Boolean,privateNetwork: String, isIPV4Enabled: Boolean, availabilityType: String, maintenanceWindowDay: Int, maintenanceWindowHour: Int
              , activationPolicy: String, labels: java.util.Map[String, String], async: Boolean, timeout: Long,
              pollingInterval: Long): Operation = {
+
+    val ipConfiguration = new IpConfiguration().setIpv4Enabled(isIPV4Enabled)
+
+    if (privateNetwork.nonEmpty) {
+      val privateNetworkStr = "projects/" + projectId + "/global/networks/" + privateNetwork
+      ipConfiguration.setPrivateNetwork(privateNetworkStr)
+    }
 
     val operation = DatabaseService.sqlDatabaseInstanceService(httpTransport, jsonFactory, credential)
       .insert(projectId, new DatabaseInstance().setProject(projectId).setName(databaseInstanceId).setRegion(region).
@@ -65,11 +72,12 @@ object SQLDatabaseInstanceService {
           .setDataDiskSizeGb(dataDiskSizeInGB).setStorageAutoResize(storageAutoResize).
           setAvailabilityType(availabilityType)
           .setMaintenanceWindow(new MaintenanceWindow().setDay(maintenanceWindowDay).setHour(maintenanceWindowHour))
-          .setActivationPolicy(activationPolicy)
+          .setActivationPolicy(activationPolicy).setIpConfiguration(ipConfiguration)
           .setBackupConfiguration(
             if (databaseVersion.contains("MYSQL")) new BackupConfiguration().setBinaryLogEnabled(true).setEnabled(true)
             else new BackupConfiguration().setEnabled(true))
         )).execute()
+
     DatabaseController.awaitSuccessOperation(httpTransport, jsonFactory, credential, projectId, operation,
       Some(databaseInstanceId)
       , async, timeout, pollingInterval)
@@ -155,5 +163,4 @@ object SQLDatabaseInstanceService {
       , async, timeout, pollingInterval)
 
   }
-
 }

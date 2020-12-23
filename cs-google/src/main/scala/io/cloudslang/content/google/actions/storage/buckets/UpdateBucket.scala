@@ -21,7 +21,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.storage.buckets.BucketService
-import io.cloudslang.content.google.utils.Constants.StorageBucketConstants.{LABELS, _}
+import io.cloudslang.content.google.utils.Constants.StorageBucketConstants._
 import io.cloudslang.content.google.utils.Constants.{FALSE, NEW_LINE}
 import io.cloudslang.content.google.utils.action.DefaultValues.StorageBucket.{DEFAULT_LABELS, DEFAULT_PROJECTION, DEFAULT_RETENTION_PERIOD_TYPE}
 import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
@@ -29,7 +29,7 @@ import io.cloudslang.content.google.utils.action.Descriptions.Common._
 import io.cloudslang.content.google.utils.action.Descriptions.StorageBucketDesc.{BUCKET_NAME_DESC, METAGENERATION_MATCH_DESC, METAGENERATION_NOT_MATCH_DESC, PROJECTION_DESC}
 import io.cloudslang.content.google.utils.action.Descriptions.UpdateStorageBucketDesc._
 import io.cloudslang.content.google.utils.action.InputNames.StorageBucketInputs.{BUCKET_NAME, METAGENERATION_MATCH, METAGENERATION_NOT_MATCH, PROJECTION}
-import io.cloudslang.content.google.utils.action.InputNames.UpdateStorageBucketInputs._
+import io.cloudslang.content.google.utils.action.InputNames.UpdateStorageBucketInputs.{LABELS, _}
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateLong, validateProxyPort}
@@ -97,14 +97,6 @@ class UpdateBucket {
     val predefinedAclStr = defaultIfEmpty(predefinedAcl, EMPTY)
     val predefinedDefaultObjectAclStr = defaultIfEmpty(predefinedDefaultObjectAcl, EMPTY)
     val projectionStr = defaultIfEmpty(projection, DEFAULT_PROJECTION)
-    var accessControlTypeStr = defaultIfEmpty(accessControlType, EMPTY)
-    var labelsStr = defaultIfEmpty(labels, DEFAULT_LABELS)
-    var storageClassStr = defaultIfEmpty(storageClass, EMPTY)
-    var retentionPeriodStr = defaultIfEmpty(retentionPeriod, EMPTY)
-    var retentionPeriodTypeStr = defaultIfEmpty(retentionPeriodType, DEFAULT_RETENTION_PERIOD_TYPE)
-    var isDefaultEventBasedHoldEnabledStr = defaultIfEmpty(isDefaultEventBasedHoldEnabled, EMPTY)
-    var isVersioningEnabledStr = defaultIfEmpty(isVersioningEnabled, EMPTY)
-    var removeRetentionPolicyStr = EMPTY
 
     val proxyHostStr = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
@@ -128,8 +120,16 @@ class UpdateBucket {
       val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
-
       val bucketDetails = BucketService.getBucket(httpTransport, jsonFactory, credential, bucketName, projectionStr)
+
+      var accessControlTypeStr = defaultIfEmpty(accessControlType, EMPTY)
+      var labelsStr = defaultIfEmpty(labels, DEFAULT_LABELS)
+      var storageClassStr = defaultIfEmpty(storageClass, EMPTY)
+      var retentionPeriodStr = defaultIfEmpty(retentionPeriod, EMPTY)
+      val retentionPeriodTypeStr = defaultIfEmpty(retentionPeriodType, DEFAULT_RETENTION_PERIOD_TYPE)
+      var isDefaultEventBasedHoldEnabledStr = defaultIfEmpty(isDefaultEventBasedHoldEnabled, EMPTY)
+      var isVersioningEnabledStr = defaultIfEmpty(isVersioningEnabled, EMPTY)
+      var removeRetentionPolicyStr = EMPTY
 
       if (storageClass.isEmpty) {
         storageClassStr = bucketDetails.getStorageClass
@@ -138,7 +138,9 @@ class UpdateBucket {
       }
 
       if (isDefaultEventBasedHoldEnabled.isEmpty) {
-        isDefaultEventBasedHoldEnabledStr = bucketDetails.getDefaultEventBasedHold.toString
+        if (bucketDetails.containsKey(DEFAULT_EVENT_BASED_HOLD_ENABLED)) {
+          isDefaultEventBasedHoldEnabledStr = bucketDetails.getDefaultEventBasedHold.toString
+        }
       } else {
         val validationStream = validateBoolean(isDefaultEventBasedHoldEnabled, IS_DEFAULT_EVENT_BASED_HOLD_ENABLED)
         if (validationStream.nonEmpty) {
@@ -199,9 +201,10 @@ class UpdateBucket {
       } else {
         labelsStr = labels
       }
+
       val bucketUpdate = BucketService.update(httpTransport, jsonFactory, credential, bucketName, metagenerationMatchStr,
         metagenerationNotMatchStr, predefinedAclStr, predefinedDefaultObjectAclStr, projectionStr, storageClassStr,
-        toBoolean(isDefaultEventBasedHoldEnabledStr), isVersioningEnabledStr, accessControlTypeStr, retentionPeriodTypeStr,
+        isDefaultEventBasedHoldEnabledStr, isVersioningEnabledStr, accessControlTypeStr, retentionPeriodTypeStr,
         retentionPeriodStr, removeRetentionPolicy, Utility.jsonToMap(labelsStr))
 
       getSuccessResultsMap(toPretty(prettyPrint, bucketUpdate)) +
@@ -211,7 +214,7 @@ class UpdateBucket {
         } else {
           EMPTY
         })) +
-        (LABELS -> (if (bucketDetails.containsKey(LABELS)) {
+        (LABELS -> (if (bucketUpdate.containsKey(LABELS)) {
           bucketUpdate.getLabels.toString
         } else {
           DEFAULT_LABELS
@@ -221,7 +224,11 @@ class UpdateBucket {
         } else {
           FINE_GRAINED_ACCESS_CONTROL
         })) +
-        (DEFAULT_EVENT_BASED_HOLD_ENABLED -> bucketUpdate.getDefaultEventBasedHold.toString) +
+        (DEFAULT_EVENT_BASED_HOLD_ENABLED -> (if (bucketUpdate.containsKey(DEFAULT_EVENT_BASED_HOLD_KEY)) {
+          bucketUpdate.getDefaultEventBasedHold.toString
+        } else {
+          EMPTY
+        })) +
         (VERSIONING_ENABLED -> (if (bucketUpdate.containsKey(VERSIONING)) {
           bucketUpdate.getVersioning.getEnabled.toString
         } else {
@@ -230,6 +237,7 @@ class UpdateBucket {
         (LOCATION -> bucketUpdate.getLocation) +
         (LOCATION_TYPE -> bucketUpdate.getLocationType) +
         (SELF_LINK -> bucketUpdate.getSelfLink)
+
     } catch {
       case e: Throwable => getFailureResultsMap(e)
     }

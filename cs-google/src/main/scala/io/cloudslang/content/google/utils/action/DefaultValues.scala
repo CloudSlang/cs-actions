@@ -19,8 +19,8 @@ import io.cloudslang.content.constants.BooleanValues.TRUE
 import io.cloudslang.content.google.utils.Constants.COMMA
 
 /**
-  * Created by victor on 28.02.2017.
-  */
+ * Created by victor on 28.02.2017.
+ */
 object DefaultValues {
   final val DEFAULT_CONSOLE_PORT = "1"
   final val DEFAULT_START_INDEX = "0"
@@ -63,7 +63,10 @@ object DefaultValues {
     final val RETENTION_PERIOD_TYPE_DAYS = "days"
     final val RETENTION_PERIOD_TYPE_MONTHS = "months"
     final val RETENTION_PERIOD_TYPE_YEARS = "years"
-    final val DEFAULT_MAXRESULTS = "1000"
+    final val DEFAULT_MAX_RESULTS = "1000"
+    final val DEFAULT_LOCATION = "US"
+    final val DEFAULT_LOCATION_TYPE = "multi-region"
+    final val DEFAULT_STORAGE_CLASS = "STANDARD"
     final val DEFAULT_LABELS = "{}"
 
   }

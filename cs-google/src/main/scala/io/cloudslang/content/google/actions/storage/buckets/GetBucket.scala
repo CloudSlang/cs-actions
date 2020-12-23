@@ -22,13 +22,14 @@ import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETU
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.storage.buckets.BucketService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
-import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
+import io.cloudslang.content.google.utils.Constants.StorageBucketConstants.GET_BUCKET_OPERATION_NAME
 import io.cloudslang.content.google.utils.action.DefaultValues.StorageBucket.DEFAULT_PROJECTION
+import io.cloudslang.content.google.utils.action.DefaultValues.{DEFAULT_PRETTY_PRINT, DEFAULT_PROXY_PORT}
 import io.cloudslang.content.google.utils.action.Descriptions.Common._
 import io.cloudslang.content.google.utils.action.Descriptions.CreateSQLDataBaseInstance.SELF_LINK_DESC
 import io.cloudslang.content.google.utils.action.Descriptions.StorageBucketDesc._
-import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputNames.StorageBucketInputs._
+import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
 import io.cloudslang.content.google.utils.action.InputValidator.{validateBoolean, validateProxyPort}
 import io.cloudslang.content.google.utils.action.OutputUtils.toPretty
@@ -68,7 +69,7 @@ class GetBucket {
               @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) proxyPort: String,
               @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) proxyUsername: String,
               @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) proxyPassword: String,
-              @Param(value = PRETTY_PRINT, description = PRETTY_PRINT_DESC) prettyPrintInp: String): util.Map[String, String] = {
+              @Param(value = PRETTY_PRINT, description = PRETTY_PRINT_DESC) prettyPrintInput: String): util.Map[String, String] = {
 
     val metagenerationMatchStr = defaultIfEmpty(metagenerationMatch, EMPTY)
     val metagenerationNotMatchStr = defaultIfEmpty(metagenerationNotMatch, EMPTY)
@@ -78,8 +79,7 @@ class GetBucket {
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortInt = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT)
     val proxyPasswordStr = defaultIfEmpty(proxyPassword, EMPTY)
-    val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
-
+    val prettyPrintStr = defaultIfEmpty(prettyPrintInput, DEFAULT_PRETTY_PRINT)
 
     val validationStream = validateProxyPort(proxyPortInt) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT)
@@ -99,7 +99,6 @@ class GetBucket {
 
       val bucketDetails = BucketService.get(httpTransport, jsonFactory, credential, bucketName, metagenerationMatchStr,
         metagenerationNotMatchStr, projectionStr)
-
 
       getSuccessResultsMap(toPretty(prettyPrint, bucketDetails)) +
         (SELF_LINK -> bucketDetails.getSelfLink)

@@ -16,8 +16,8 @@
 package io.cloudslang.content.google.utils.action
 
 /**
-  * Created by victor on 28.02.2017.
-  */
+ * Created by victor on 28.02.2017.
+ */
 object InputNames {
   final val PROJECT_ID = "projectId"
   final val JSON_TOKEN = "jsonToken"
@@ -156,17 +156,13 @@ object InputNames {
   }
 
   object StorageBucketInputs {
-    final val GET_BUCKET_OPERATION_NAME = "Get Bucket"
-    final val CREATE_BUCKET_OPERATION_NAME = "Create Bucket"
     final val BUCKET_NAME = "bucketName"
     final val METAGENERATION_MATCH = "metagenerationMatch"
     final val METAGENERATION_NOT_MATCH = "metagenerationNotMatch"
     final val PROJECTION = "projection"
-    final val LIST_BUCKET_OPERATION_NAME = "List Bucket"
     final val MAX_RESULTS= "maxResults"
     final val PREFIX= "prefix"
     final val PAGE_TOKEN= "pageToken"
-    final val DELETE_BUCKET_OPERATION_NAME = "Delete Bucket"
     final val RETENTION_PERIOD = "retentionPeriod"
     final val STORAGE_CLASS = "storageClass"
     final val ACCESS_CONTROL_TYPE = "accessControlType"
@@ -181,7 +177,6 @@ object InputNames {
   }
 
   object UpdateStorageBucketInputs {
-
     final val BUCKET_NAME = "bucketName"
     final val METAGENERATION_MATCH = "metagenerationMatch"
     final val METAGENERATION_NOT_MATCH = "metagenerationNotMatch"
