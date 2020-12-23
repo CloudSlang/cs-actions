@@ -24,7 +24,7 @@ import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.databases.sql.instances.SQLDatabaseInstanceService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
 import io.cloudslang.content.google.utils.Constants.SQLInstancesConstant.{IP_ADDRESS_TYPE_PRIMARY, IP_ADDRESS_TYPE_PRIVATE, UPDATE_SQL_INSTANCE_OPERATION_NAME, USER_LABELS}
-import io.cloudslang.content.google.utils.action.DefaultValues.CreateSQLDatabaseInstance.DEFAULT_LABELS
+import io.cloudslang.content.google.utils.action.DefaultValues.CreateSQLDatabaseInstance.{DEFAULT_ACTIVATION_POLICY, DEFAULT_LABELS}
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.Descriptions.Common.{RETURN_CODE_DESC, _}
 import io.cloudslang.content.google.utils.action.Descriptions.SQLDataBaseInstances.UPDATE_SQL_INSTANCE_OPERATION_DESCRIPTION
@@ -139,10 +139,17 @@ class UpdateSQLInstance {
       var preferredMaintenanceWindowDayVal = EMPTY
       var preferredMaintenanceWindowHourVal = EMPTY
       var isIPV4EnabledVal = EMPTY
+      var activationPolicyStr = EMPTY
       var labelsVal = defaultIfEmpty(labels, DEFAULT_LABELS)
 
       if (machineType.isEmpty) {
         machineTypeStr = sqlInstanceSettings.getTier
+      }
+
+      if (activationPolicy.isEmpty){
+        activationPolicyStr = sqlInstanceSettings.getActivationPolicy
+      } else {
+        activationPolicyStr = activationPolicy
       }
 
       if (storageCapacity.isEmpty) {
@@ -207,7 +214,7 @@ class UpdateSQLInstance {
         instanceId, zone, settingsVersion, databaseVersion, machineTypeStr, toInteger(storageCapacityVal),
         toBoolean(storageAutoResizeVal), privateNetwork, toBoolean(isIPV4EnabledVal), availabilityType,
         toInteger(preferredMaintenanceWindowDayVal), toInteger(preferredMaintenanceWindowHourVal),
-        activationPolicy, Utility.jsonToMap(labelsVal), async, timeout, pollingIntervalMilli)) match {
+        activationPolicyStr, Utility.jsonToMap(labelsVal), async, timeout, pollingIntervalMilli)) match {
         case SQLSuccessOperation(sqlOperation) =>
           val status = defaultIfEmpty(sqlOperation.getStatus, EMPTY)
           val resultMap = getSuccessResultsMap(toPretty(prettyPrint, sqlOperation)) + (STATUS -> status)
