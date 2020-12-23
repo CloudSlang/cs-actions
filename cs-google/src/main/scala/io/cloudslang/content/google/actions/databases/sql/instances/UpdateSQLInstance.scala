@@ -144,6 +144,8 @@ class UpdateSQLInstance {
 
       if (machineType.isEmpty) {
         machineTypeStr = sqlInstanceSettings.getTier
+      } else {
+        machineTypeStr = machineType
       }
 
       if (activationPolicy.isEmpty){
