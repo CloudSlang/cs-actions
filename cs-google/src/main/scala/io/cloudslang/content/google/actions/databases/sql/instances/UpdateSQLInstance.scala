@@ -24,7 +24,7 @@ import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.databases.sql.instances.SQLDatabaseInstanceService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
 import io.cloudslang.content.google.utils.Constants.SQLInstancesConstant.{IP_ADDRESS_TYPE_PRIMARY, IP_ADDRESS_TYPE_PRIVATE, UPDATE_SQL_INSTANCE_OPERATION_NAME, USER_LABELS}
-import io.cloudslang.content.google.utils.action.DefaultValues.CreateSQLDatabaseInstance.{DEFAULT_ACTIVATION_POLICY, DEFAULT_LABELS}
+import io.cloudslang.content.google.utils.action.DefaultValues.CreateSQLDatabaseInstance.DEFAULT_LABELS
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.Descriptions.Common.{RETURN_CODE_DESC, _}
 import io.cloudslang.content.google.utils.action.Descriptions.SQLDataBaseInstances.UPDATE_SQL_INSTANCE_OPERATION_DESCRIPTION
@@ -144,9 +144,11 @@ class UpdateSQLInstance {
 
       if (machineType.isEmpty) {
         machineTypeStr = sqlInstanceSettings.getTier
+      } else {
+        machineTypeStr = machineType
       }
 
-      if (activationPolicy.isEmpty){
+      if (activationPolicy.isEmpty) {
         activationPolicyStr = sqlInstanceSettings.getActivationPolicy
       } else {
         activationPolicyStr = activationPolicy
