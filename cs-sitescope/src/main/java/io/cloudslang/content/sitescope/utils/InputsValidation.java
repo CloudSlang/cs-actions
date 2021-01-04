@@ -136,5 +136,18 @@ public final class InputsValidation {
 
         return exceptionMessages;
     }
+
+    @NotNull
+    //to be modified
+    public static List<String> verifyDeployTemplateInputs(@Nullable final String pathToTemplate,
+                                                         @Nullable final String pathToTargetGroup) {
+        final List<String> exceptionMessages = new ArrayList<>();
+
+        if (StringUtils.isEmpty(pathToTemplate) && StringUtils.isEmpty(pathToTargetGroup)) {
+            exceptionMessages.add(String.format(EXCEPTION_AT_LEAST_ONE_OF_INPUTS, FULL_PATH_TO_MONITOR + ", " + MONITOR_ID));
+        }
+
+        return exceptionMessages;
+    }
 }
 
