@@ -17,6 +17,7 @@ package io.cloudslang.content.sitescope.constants;
 public final class Constants {
 
     public static final String BOOLEAN_FALSE = "false";
+    public static final String BOOLEAN_TRUE = "true";
     public static final String STRICT = "strict";
     public static final String CHANGEIT = "changeit";
     public static final String DEFAULT_PROXY_PORT = "8080";

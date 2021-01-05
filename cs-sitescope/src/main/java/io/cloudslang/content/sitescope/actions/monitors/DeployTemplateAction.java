@@ -80,9 +80,9 @@ public class DeployTemplateAction {
         password = defaultIfEmpty(password, EMPTY);
         pathToTemplate = defaultIfEmpty(pathToTemplate,EMPTY);
         pathToTargetGroup = defaultIfEmpty(pathToTargetGroup,EMPTY);
-        connectToServer = defaultIfEmpty(connectToServer,EMPTY);
+        connectToServer = defaultIfEmpty(connectToServer,BOOLEAN_TRUE);
         customParameters = defaultIfEmpty(customParameters,EMPTY);
-        testRemotes = defaultIfEmpty(testRemotes,EMPTY);
+        testRemotes = defaultIfEmpty(testRemotes,BOOLEAN_FALSE);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -103,7 +103,7 @@ public class DeployTemplateAction {
 
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        exceptionMessage.addAll(verifyDeployTemplateInputs(pathToTemplate,pathToTargetGroup));
+        exceptionMessage.addAll(verifyDeployTemplateInputs(pathToTemplate,pathToTargetGroup,connectToServer,testRemotes));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }

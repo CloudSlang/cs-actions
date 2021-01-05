@@ -27,6 +27,7 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeleteMonitorGroupInputs.EXTERNAL_ID;
+import static io.cloudslang.content.sitescope.constants.Inputs.DeployTemplate.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorGroupInputs.ENABLE;
 import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorInputs.MONITOR_ID;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
@@ -138,14 +139,18 @@ public final class InputsValidation {
     }
 
     @NotNull
-    //to be modified
     public static List<String> verifyDeployTemplateInputs(@Nullable final String pathToTemplate,
-                                                         @Nullable final String pathToTargetGroup) {
+                                                          @Nullable final String pathToTargetGroup,
+                                                          @Nullable final String connectToServer,
+                                                          @Nullable final String testRemotes) {
         final List<String> exceptionMessages = new ArrayList<>();
 
-        if (StringUtils.isEmpty(pathToTemplate) && StringUtils.isEmpty(pathToTargetGroup)) {
-            exceptionMessages.add(String.format(EXCEPTION_AT_LEAST_ONE_OF_INPUTS, FULL_PATH_TO_MONITOR + ", " + MONITOR_ID));
-        }
+        if (isEmpty(pathToTemplate))
+            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY,PATH_TO_TEMPLATE));
+        if(isEmpty(pathToTargetGroup))
+            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY,PATH_TO_TARGET_GROUP));
+        addVerifyBoolean(exceptionMessages,connectToServer,CONNECT_TO_SERVER);
+        addVerifyBoolean(exceptionMessages, testRemotes,TEST_REMOTES);
 
         return exceptionMessages;
     }
