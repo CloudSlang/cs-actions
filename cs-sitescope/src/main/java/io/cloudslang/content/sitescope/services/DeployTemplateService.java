@@ -33,12 +33,15 @@ public class DeployTemplateService {
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
+        httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setUsername(commonInputs.getUsername());
         httpClientInputs.setPassword(commonInputs.getPassword());
         httpClientInputs.setMethod(POST);
         httpClientInputs.setContentType(X_WWW_FORM);
         httpClientInputs.setFormParams(populateDeployTemplateFormParams(deployTemplateInputs));
         httpClientInputs.setFormParamsAreURLEncoded(String.valueOf(true));
+//        httpClientInputs.setBody("pathToTemplate:TestNG_sis_path_delimiter_Test_Template\n" +
+//                "pathToTargetGroup:Template_Group");
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
 
         Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
@@ -60,11 +63,12 @@ public class DeployTemplateService {
         }
 
         Map<String, String> inputsMap = new HashMap<>();
-        inputsMap.put(PATH_TO_TEMPLATE, pathToTemplate);
         inputsMap.put(PATH_TO_TARGET_GROUP, pathToTargetGroup);
         inputsMap.put(CONNECT_TO_SERVER, connectToServer);
         inputsMap.put(TEST_REMOTES, testRemotes);
-        inputsMap.put(CUSTOM_PARAMETERS, customParameters);
+      //  inputsMap.put(CUSTOM_PARAMETERS, customParameters);
+        inputsMap.put(PATH_TO_TEMPLATE, pathToTemplate);
+
 
         URIBuilder ub = new URIBuilder();
 
