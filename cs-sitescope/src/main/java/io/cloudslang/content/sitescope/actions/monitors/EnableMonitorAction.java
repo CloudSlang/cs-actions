@@ -46,6 +46,7 @@ import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPro
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorGroupInputs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorInputs.MONITOR_ID;
+import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyEnableMonitorInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -57,6 +58,7 @@ public class EnableMonitorAction {
     @Action(name = "Enable Monitor", description = ENABLE_MONITOR_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESCRIPTION)
             },
@@ -126,7 +128,7 @@ public class EnableMonitorAction {
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
 
-        exceptionMessage.addAll(verifyEnableMonitorInputs(fullPathToMonitor, monitorId));
+        exceptionMessage.addAll(verifyEnableMonitorInputs(fullPathToMonitor, monitorId, enable));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
