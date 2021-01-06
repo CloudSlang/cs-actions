@@ -40,8 +40,6 @@ public class DeployTemplateService {
         httpClientInputs.setContentType(X_WWW_FORM);
         httpClientInputs.setFormParams(populateDeployTemplateFormParams(deployTemplateInputs));
         httpClientInputs.setFormParamsAreURLEncoded(String.valueOf(true));
-//        httpClientInputs.setBody("pathToTemplate:TestNG_sis_path_delimiter_Test_Template\n" +
-//                "pathToTargetGroup:Template_Group");
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
 
         Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
@@ -51,34 +49,23 @@ public class DeployTemplateService {
 
     public static String populateDeployTemplateFormParams(DeployTemplateInputs deployTemplateInputs){
         String delimiter = deployTemplateInputs.getDelimiter();
-        String pathToTemplate = deployTemplateInputs.getPathToTemplate();
-        String pathToTargetGroup = deployTemplateInputs.getPathToTargetGroup();
+        String pathToTemplate = deployTemplateInputs.getPathToTemplate().replace(delimiter,SITE_SCOPE_DELIMITER);;
+        String pathToTargetGroup = deployTemplateInputs.getPathToTargetGroup().replace(delimiter,SITE_SCOPE_DELIMITER);
         String connectToServer = deployTemplateInputs.getConnectToServer();
         String testRemotes = deployTemplateInputs.getTestRemotes();
         String customParameters = deployTemplateInputs.getCustomParameters();
 
-        if(!delimiter.isEmpty()){
-            pathToTemplate = pathToTemplate.replace(delimiter,SITE_SCOPE_DELIMITER);
-            pathToTargetGroup = pathToTargetGroup.replace(delimiter,SITE_SCOPE_DELIMITER);
-        }
+        StringBuilder formParams = new StringBuilder();
+        appendParams(formParams,PATH_TO_TARGET_GROUP, pathToTargetGroup);
+        appendParams(formParams,CONNECT_TO_SERVER, connectToServer);
+        appendParams(formParams,TEST_REMOTES, testRemotes);
+        appendParams(formParams,PATH_TO_TEMPLATE, pathToTemplate);
+        appendParams(formParams,CUSTOM_PARAMETERS, customParameters);
 
-        Map<String, String> inputsMap = new HashMap<>();
-        inputsMap.put(PATH_TO_TARGET_GROUP, pathToTargetGroup);
-        inputsMap.put(CONNECT_TO_SERVER, connectToServer);
-        inputsMap.put(TEST_REMOTES, testRemotes);
-      //  inputsMap.put(CUSTOM_PARAMETERS, customParameters);
-        inputsMap.put(PATH_TO_TEMPLATE, pathToTemplate);
+        return formParams.toString().replace(" ","%20").substring(1);
+    }
 
-
-        URIBuilder ub = new URIBuilder();
-
-        for (Map.Entry<String, String> entry : inputsMap.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if (!value.isEmpty())
-                ub.addParameter(key, value);
-        }
-
-        return ub.toString();
+    public static void appendParams(StringBuilder formParams,String key, String value){
+        formParams.append("&").append(key).append("=").append(value);
     }
 }
