@@ -18,8 +18,10 @@ import java.util.Map;
 
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
+import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.EXCEPTION_INVALID_CUSTOM_PARAM;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeployTemplate.*;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class DeployTemplateService {
 
@@ -47,7 +49,7 @@ public class DeployTemplateService {
         return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, SuccessMsgs.DEPLOY_TEMPLATE);
     }
 
-    public static String populateDeployTemplateFormParams(DeployTemplateInputs deployTemplateInputs){
+    public static String populateDeployTemplateFormParams(DeployTemplateInputs deployTemplateInputs) throws Exception {
         String delimiter = deployTemplateInputs.getDelimiter();
         String pathToTemplate = deployTemplateInputs.getPathToTemplate().replace(delimiter,SITE_SCOPE_DELIMITER);;
         String pathToTargetGroup = deployTemplateInputs.getPathToTargetGroup().replace(delimiter,SITE_SCOPE_DELIMITER);
@@ -55,17 +57,34 @@ public class DeployTemplateService {
         String testRemotes = deployTemplateInputs.getTestRemotes();
         String customParameters = deployTemplateInputs.getCustomParameters();
 
-        StringBuilder formParams = new StringBuilder();
-        appendParams(formParams,PATH_TO_TARGET_GROUP, pathToTargetGroup);
-        appendParams(formParams,CONNECT_TO_SERVER, connectToServer);
-        appendParams(formParams,TEST_REMOTES, testRemotes);
-        appendParams(formParams,PATH_TO_TEMPLATE, pathToTemplate);
-        appendParams(formParams,CUSTOM_PARAMETERS, customParameters);
+        Map<String,String> inputsMap = new HashMap<>();
+        inputsMap.put(PATH_TO_TARGET_GROUP, pathToTargetGroup);
+        inputsMap.put(CONNECT_TO_SERVER, connectToServer);
+        inputsMap.put(TEST_REMOTES, testRemotes);
+        inputsMap.put(PATH_TO_TEMPLATE, pathToTemplate);
+        if(!customParameters.trim().isEmpty())
+            addCustomParametersToForm(inputsMap,customParameters);
 
-        return formParams.toString().replace(" ","%20").substring(1);
+        URIBuilder ub = new URIBuilder();
+
+        for (Map.Entry<String, String> entry : inputsMap.entrySet()) {
+                ub.addParameter(entry.getKey(), entry.getValue());
+        }
+
+        return ub.toString().substring(1);  // this is used to eliminate "?" from the beginning of the string
     }
 
-    public static void appendParams(StringBuilder formParams,String key, String value){
-        formParams.append("&").append(key).append("=").append(value);
+    public static void addCustomParametersToForm(Map<String,String> inputsMap, String customParameters) throws Exception {
+        String[] tokenArray = customParameters.split("&");
+        int size = inputsMap.size();
+        for(String token : tokenArray){
+            String[] pairs = token.split("=",2);
+            if(pairs.length==2)
+                if(!pairs[0].isEmpty())
+                    inputsMap.put(pairs[0],pairs[1]);
+        }
+        if(size+tokenArray.length != inputsMap.size())  // if one of the pairs failed to be added then throw exception
+            throw new Exception(EXCEPTION_INVALID_CUSTOM_PARAM);
     }
+
 }
