@@ -73,6 +73,17 @@ public final class InputsValidation {
     }
 
     @NotNull
+    public static List<String> verifyDeleteMonitorInputs(@Nullable final String fullPathToMonitor) {
+        final List<String> exceptionMessages = new ArrayList<>();
+
+        if(StringUtils.isEmpty(fullPathToMonitor)) {
+            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, FULL_PATH_TO_MONITOR));
+        }
+
+        return exceptionMessages;
+    }
+
+    @NotNull
     public static List<String> verifyCommonInputs(@Nullable final String port,
                                                   @Nullable final String proxyPort,
                                                   @Nullable final String trustAllRoots,

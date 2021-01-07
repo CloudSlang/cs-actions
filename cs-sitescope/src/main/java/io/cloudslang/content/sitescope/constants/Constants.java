@@ -39,5 +39,6 @@ public final class Constants {
     public static final String ENABLE_MONITOR_GROUP_ENDPOINT = "/group/status";
     public static final String ENABLE_MONITOR_ENDPOINT = "/monitor/status";
     public static final String DELETE_MONITOR_GROUP_ENDPOINT = "/group";
+    public static final String DELETE_MONITOR_ENDPOINT = "/monitor";
 
 }

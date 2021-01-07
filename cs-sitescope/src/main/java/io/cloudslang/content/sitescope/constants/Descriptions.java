@@ -143,4 +143,12 @@ public class Descriptions {
         public static final String MONITOR_ID_DESC = "A string specifying the monitor ID.";
 
     }
+
+    public static class DeleteMonitorAction {
+
+        public static final String DELETE_MONITOR_DESC = "Deletes a SiteScope monitor.";
+        public static final String RETURN_RESULT_DESC = "A message describing the success or failure of the operation.";
+        public static final String SUCCESS_DESC = "The specified monitor was successfully deleted.";
+        public static final String FAILURE_DESC = "The specified monitor could not be deleted.";
+    }
 }
