@@ -12,16 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sitescope.actions.monitors;
+package io.cloudslang.content.sitescope.actions.templates;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.sitescope.entities.DeployTemplateInputs;
+import io.cloudslang.content.sitescope.entities.RedeployTemplateInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
-import io.cloudslang.content.sitescope.services.DeployTemplateService;
+import io.cloudslang.content.sitescope.services.RedeployTemplateService;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -37,20 +37,27 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.RETURN_RESULT_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.DeployTemplateAction.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.FAILURE_DESC;
+import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.SUCCESS_DESC;
+import static io.cloudslang.content.sitescope.constants.Descriptions.RedeployTemplateAction.PROPERTIES_DESC;
+import static io.cloudslang.content.sitescope.constants.Descriptions.RedeployTemplateAction.REDEPLOY_TEMPLATE_DESC;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.DeployTemplate.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.RedeployTemplate.FULL_PATH_TO_TEMPLATE;
+import static io.cloudslang.content.sitescope.constants.Inputs.RedeployTemplate.PROPERTIES;
+import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyDeployTemplateInputs;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyRedeployTemplateInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DeployTemplateAction {
+public class RedeployTemplateAction {
 
-    @Action(name = "Deploy Template", description = DEPLOY_TEMPLATE_DESC,
+
+    @Action(name = "Redeploy Template", description = REDEPLOY_TEMPLATE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESCRIPTION)
             },
@@ -58,17 +65,15 @@ public class DeployTemplateAction {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = HOST, description = HOST_DESC) String host,
-                                       @Param(value = PORT, description = PORT_DESC) String port,
-                                       @Param(value = PROTOCOL, description = PROTOCOL_DESC) String protocol,
+    public Map<String, String> execute(@Param(value = HOST, required = true, description = HOST_DESC) String host,
+                                       @Param(value = PORT, required = true, description = PORT_DESC) String port,
+                                       @Param(value = PROTOCOL, required = true, description = PROTOCOL_DESC) String protocol,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
+                                       @Param(value = FULL_PATH_TO_TEMPLATE, description = FULL_PATH_TO_TEMPLATE_DESC) String fullPathToTemplate,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
-                                       @Param(value = PATH_TO_TEMPLATE, description = PATH_TO_TEMPLATE_DESC) String pathToTemplate,
-                                       @Param(value = PATH_TO_TARGET_GROUP, description = PATH_TO_TARGET_GROUP_DESC) String pathToTargetGroup,
-                                       @Param(value = CONNECT_TO_SERVER, description = CONNECT_TO_SERVER_DESC) String connectToServer,
-                                       @Param(value = TEST_REMOTES, description = TEST_REMOTES_DESC) String testRemotes,
-                                       @Param(value = CUSTOM_PARAMETERS, description = CUSTOM_PARAMETERS_DESC) String customParameters,
+                                       @Param(value = PROPERTIES, description = PROPERTIES_DESC) String properties,
+                                       @Param(value = IDENTIFIER, description = IDENTIFIER_DESC) String identifier,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -84,16 +89,13 @@ public class DeployTemplateAction {
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet
-    ) {
+                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
+
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
-        pathToTemplate = defaultIfEmpty(pathToTemplate, EMPTY);
-        pathToTargetGroup = defaultIfEmpty(pathToTargetGroup, EMPTY);
-        connectToServer = defaultIfEmpty(connectToServer, BOOLEAN_TRUE);
-        customParameters = defaultIfEmpty(customParameters, EMPTY);
-        testRemotes = defaultIfEmpty(testRemotes, BOOLEAN_FALSE);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
+        identifier = defaultIfEmpty(identifier, EMPTY);
+        properties = defaultIfEmpty(properties, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -111,24 +113,22 @@ public class DeployTemplateAction {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
+        final RedeployTemplateService service = new RedeployTemplateService();
+        Map<String, String> result;
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        exceptionMessage.addAll(verifyDeployTemplateInputs(pathToTemplate, pathToTargetGroup, connectToServer, testRemotes));
+
+        exceptionMessage.addAll(verifyRedeployTemplateInputs(fullPathToTemplate));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
-        final DeployTemplateService service = new DeployTemplateService();
-        Map<String, String> result;
-
         try {
-            DeployTemplateInputs inputs = new DeployTemplateInputs.DeployTemplateInputsBuilder()
-                    .pathToTemplate(pathToTemplate)
-                    .pathToTargetGroup(pathToTargetGroup)
+            RedeployTemplateInputs inputs = new RedeployTemplateInputs.RedeployTemplateInputsBuilder()
+                    .fullPathToTemplate(fullPathToTemplate)
                     .delimiter(delimiter)
-                    .connectToServer(connectToServer)
-                    .testRemotes(testRemotes)
-                    .customParameters(customParameters)
+                    .identifier(identifier)
+                    .properties(properties)
                     .commonInputs(SiteScopeCommonInputs.builder()
                             .host(host)
                             .port(port)
@@ -152,10 +152,12 @@ public class DeployTemplateAction {
                             .trustPassword(trustPassword)
                             .build())
                     .build();
+
             result = service.execute(inputs);
+
             return result;
-        } catch (Exception ex) {
-            return getFailureResultsMap(ex);
+        } catch (Exception exception) {
+            return getFailureResultsMap(exception);
         }
     }
 }

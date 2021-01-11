@@ -23,5 +23,6 @@ public final class ExceptionMsgs {
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
     public static final String EXCEPTION_WHILE_PARSING_RESPONSE = "Error while parsing the server response";
     public static final String EXCEPTION_INVALID_CUSTOM_PARAM = "The provided customParameters are invalid.";
+    public static final String EXCEPTION_INVALID_PARAM = "The provided parameters are invalid.";
 
 }
