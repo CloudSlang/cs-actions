@@ -128,12 +128,15 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyEnableMonitorInputs(@Nullable final String fullPathToMonitor,
-                                                         @Nullable final String monitorId) {
+                                                         @Nullable final String monitorId,
+                                                         @Nullable final String enable) {
         final List<String> exceptionMessages = new ArrayList<>();
 
         if (StringUtils.isEmpty(fullPathToMonitor) && StringUtils.isEmpty(monitorId)) {
             exceptionMessages.add(String.format(EXCEPTION_AT_LEAST_ONE_OF_INPUTS, FULL_PATH_TO_MONITOR + ", " + MONITOR_ID));
         }
+
+        addVerifyBoolean(exceptionMessages, enable, ENABLE);
 
         return exceptionMessages;
     }
