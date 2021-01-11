@@ -1,17 +1,29 @@
+/*
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.sitescope.actions.monitors;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.sitescope.entities.DeployTemplateInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 import io.cloudslang.content.sitescope.services.DeployTemplateService;
 import io.cloudslang.content.utils.StringUtilities;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,16 +34,14 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
-import static io.cloudslang.content.sitescope.constants.Constants.UTF8;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
-import static io.cloudslang.content.sitescope.constants.Descriptions.Common.RESPONSE_CHARACTER_SET_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.RETURN_RESULT_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.DeployTemplateAction.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeployTemplate.*;
-import static io.cloudslang.content.sitescope.utils.InputsValidation.*;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyDeployTemplateInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -78,11 +88,11 @@ public class DeployTemplateAction {
     ) {
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
-        pathToTemplate = defaultIfEmpty(pathToTemplate,EMPTY);
-        pathToTargetGroup = defaultIfEmpty(pathToTargetGroup,EMPTY);
-        connectToServer = defaultIfEmpty(connectToServer,BOOLEAN_TRUE);
-        customParameters = defaultIfEmpty(customParameters,EMPTY);
-        testRemotes = defaultIfEmpty(testRemotes,BOOLEAN_FALSE);
+        pathToTemplate = defaultIfEmpty(pathToTemplate, EMPTY);
+        pathToTargetGroup = defaultIfEmpty(pathToTargetGroup, EMPTY);
+        connectToServer = defaultIfEmpty(connectToServer, BOOLEAN_TRUE);
+        customParameters = defaultIfEmpty(customParameters, EMPTY);
+        testRemotes = defaultIfEmpty(testRemotes, BOOLEAN_FALSE);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -103,7 +113,7 @@ public class DeployTemplateAction {
 
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        exceptionMessage.addAll(verifyDeployTemplateInputs(pathToTemplate,pathToTargetGroup,connectToServer,testRemotes));
+        exceptionMessage.addAll(verifyDeployTemplateInputs(pathToTemplate, pathToTargetGroup, connectToServer, testRemotes));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
@@ -111,7 +121,7 @@ public class DeployTemplateAction {
         final DeployTemplateService service = new DeployTemplateService();
         Map<String, String> result;
 
-        try{
+        try {
             DeployTemplateInputs inputs = new DeployTemplateInputs.DeployTemplateInputsBuilder()
                     .pathToTemplate(pathToTemplate)
                     .pathToTargetGroup(pathToTargetGroup)
@@ -144,7 +154,7 @@ public class DeployTemplateAction {
                     .build();
             result = service.execute(inputs);
             return result;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return getFailureResultsMap(ex);
         }
     }

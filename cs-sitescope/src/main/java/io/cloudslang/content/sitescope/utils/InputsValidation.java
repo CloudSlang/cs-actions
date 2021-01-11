@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 Micro Focus, L.P.
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -40,7 +40,7 @@ public final class InputsValidation {
     public static List<String> verifyGetGroupPropertiesInputs(@Nullable final String fullPathToGroup) {
         final List<String> exceptionMessages = new ArrayList<>();
 
-        if(StringUtils.isEmpty(fullPathToGroup)) {
+        if (StringUtils.isEmpty(fullPathToGroup)) {
             exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, FULL_PATH_TO_GROUP));
         }
 
@@ -52,7 +52,7 @@ public final class InputsValidation {
                                                               @Nullable final String enable) {
         final List<String> exceptionMessages = new ArrayList<>();
 
-        if(StringUtils.isEmpty(fullPathToGroup)) {
+        if (StringUtils.isEmpty(fullPathToGroup)) {
             exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, FULL_PATH_TO_GROUP));
         }
 
@@ -66,7 +66,7 @@ public final class InputsValidation {
                                                               @Nullable final String externalId) {
         final List<String> exceptionMessages = new ArrayList<>();
 
-        if(StringUtils.isEmpty(fullPathToGroup) && StringUtils.isEmpty(externalId)) {
+        if (StringUtils.isEmpty(fullPathToGroup) && StringUtils.isEmpty(externalId)) {
             exceptionMessages.add(String.format(EXCEPTION_AT_LEAST_ONE_OF_INPUTS, FULL_PATH_TO_GROUP + ", " + EXTERNAL_ID));
         }
 
@@ -146,11 +146,11 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
 
         if (isEmpty(pathToTemplate))
-            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY,PATH_TO_TEMPLATE));
-        if(isEmpty(pathToTargetGroup))
-            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY,PATH_TO_TARGET_GROUP));
-        addVerifyBoolean(exceptionMessages,connectToServer,CONNECT_TO_SERVER);
-        addVerifyBoolean(exceptionMessages, testRemotes,TEST_REMOTES);
+            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, PATH_TO_TEMPLATE));
+        if (isEmpty(pathToTargetGroup))
+            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, PATH_TO_TARGET_GROUP));
+        addVerifyBoolean(exceptionMessages, connectToServer, CONNECT_TO_SERVER);
+        addVerifyBoolean(exceptionMessages, testRemotes, TEST_REMOTES);
 
         return exceptionMessages;
     }
