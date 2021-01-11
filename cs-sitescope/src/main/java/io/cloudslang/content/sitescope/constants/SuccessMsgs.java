@@ -20,6 +20,7 @@ public final class SuccessMsgs {
     public static final String ENABLE_MONITOR_GROUP = "The operation was completed successfully.";
     public static final String ENABLE_MONITOR = "The operation was completed successfully.";
     public static final String GET_GROUP_PROPERTIES = "The operation was completed successfully.";
+    public static final String DEPLOY_TEMPLATE = "Template was successufully deployed.";
 
     private SuccessMsgs() {
 

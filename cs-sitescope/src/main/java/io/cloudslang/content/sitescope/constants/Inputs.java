@@ -57,5 +57,14 @@ public final class Inputs extends InputNames {
     public static class EnableMonitorInputs{
         public static final String MONITOR_ID = "monitorId";
     }
+
+    public static class DeployTemplate{
+        public static final String PATH_TO_TEMPLATE = "pathToTemplate";
+        public static final String PATH_TO_TARGET_GROUP = "pathToTargetGroup";
+        public static final String CONNECT_TO_SERVER = "connectToServer";
+        public static final String TEST_REMOTES = "testRemotes";
+        public static final String CUSTOM_PARAMETERS = "customParameters";
+
+    }
 }
 
