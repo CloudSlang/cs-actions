@@ -66,5 +66,11 @@ public final class Inputs extends InputNames {
         public static final String CUSTOM_PARAMETERS = "customParameters";
 
     }
+
+    public static class RedeployTemplate{
+        public static final String FULL_PATH_TO_TEMPLATE = "fullPathToTemplate";
+        public static final String PROPERTIES = "properties";
+
+    }
 }
 
