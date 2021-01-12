@@ -23,7 +23,6 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteRemoteServer.*;
-import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.GET_GROUP_PROP_RETURN_RESULT_DESC;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeleteRemoteServerInputs.PLATFORM;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeleteRemoteServerInputs.REMOTE_NAME;
