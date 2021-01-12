@@ -70,7 +70,12 @@ public final class Inputs extends InputNames {
     public static class RedeployTemplate{
         public static final String FULL_PATH_TO_TEMPLATE = "fullPathToTemplate";
         public static final String PROPERTIES = "properties";
+    }
 
+    public static class GetMonitorsDeployedAt{
+        public static final String TARGET_SERVER = "targetServer";
+        public static final String COL_DELIMITER = "colDelimiter";
+        public static final String ROW_DELIMITER = "rowDelimiter";
     }
 }
 

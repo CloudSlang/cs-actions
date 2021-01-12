@@ -22,6 +22,7 @@ public final class SuccessMsgs {
     public static final String GET_GROUP_PROPERTIES = "The operation was completed successfully.";
     public static final String DEPLOY_TEMPLATE = "Template was successfully deployed.";
     public static final String REDEPLOY_TEMPLATE = "Template was successfully redeployed.";
+    public static final String GET_MONITORS_DEPLOYED_AT = "Successfully got monitors: %s";
 
     private SuccessMsgs() {
 
