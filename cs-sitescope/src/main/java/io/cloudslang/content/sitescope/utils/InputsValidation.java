@@ -97,6 +97,21 @@ public final class InputsValidation {
     }
 
     @NotNull
+    public static List<String> verifyDeleteRemoteServerInputs(@NotNull final String platform,
+                                                              @Nullable final String remoteName) {
+        final List<String> exceptionMessages = new ArrayList<>();
+
+        if (StringUtils.isEmpty(remoteName)) {
+            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY,remoteName));
+        }
+        if (!platform.equalsIgnoreCase("windows")) {
+            if(!platform.equalsIgnoreCase("unix"))
+              exceptionMessages.add(String.format(EXCEPTION_INVALID_PLATFORM,platform));
+        }
+        return exceptionMessages;
+    }
+
+    @NotNull
     private static List<String> addVerifyPort(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));

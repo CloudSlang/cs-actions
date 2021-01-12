@@ -66,5 +66,9 @@ public final class Inputs extends InputNames {
         public static final String CUSTOM_PARAMETERS = "customParameters";
 
     }
+    public static class DeleteRemoteServerInputs {
+        public static final String PLATFORM = "platform";
+        public static final String REMOTE_NAME = "remoteName";
+    }
 }
 

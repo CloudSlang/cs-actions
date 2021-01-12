@@ -21,6 +21,7 @@ public final class Constants {
     public static final String STRICT = "strict";
     public static final String CHANGEIT = "changeit";
     public static final String DEFAULT_PROXY_PORT = "8080";
+    public static final String DEFAULT_PLATFORM = "Windows";
     public static final String ZERO = "0";
     public static final String UTF8 = "UTF-8";
     public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
@@ -37,10 +38,13 @@ public final class Constants {
 
     public static final String SITESCOPE_MONITORS_API = "/SiteScope/api/monitors";
     public static final String SITESCOPE_TEMPLATES_API = "/SiteScope/api/templates";
+    public static final String SITESCOPE_ADMIN_API = "/SiteScope/api/admin";
     public static final String GET_GROUP_PROPERTIES_ENDPOINT = "/group/properties";
     public static final String ENABLE_MONITOR_GROUP_ENDPOINT = "/group/status";
     public static final String ENABLE_MONITOR_ENDPOINT = "/monitor/status";
     public static final String DELETE_MONITOR_GROUP_ENDPOINT = "/group";
     public static final String DEPLOY_TEMPLATE_ENDPOINT = "/templateDeployment";
+    public static final String DELETE_REMOTE_SERVER_ENDPOINT = "/remote";
+
 
 }
