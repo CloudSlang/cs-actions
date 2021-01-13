@@ -162,6 +162,15 @@ public class Descriptions {
         public static final String FAILURE_DESC = "The specified template could not be deployed.";
     }
 
+    public static class DeleteRemoteServer{
+        public static final String DELETE_REMOTE_SERVER_DESC = "This operation deletes a SiteScope remote server.";
+        public static final String PLATFORM_DESC = "The type of the platform. Specify \"Windows\" for Windows remote servers or \"UNIX\" for Unix remote servers. Default value: Windows";
+        public static final String REMOTE_NAME_DESC = "Name of the remote server to be deleted.";
+        public static final String DELETE_REMOTE_SERVER_RETURN_RESULT_DESC = "The specified remote server was successfully deleted.";
+        public static final String SUCCESS_DESC = "The specified remote server was successfully deleted.";
+        public static final String FAILURE_DESC = "The specified remote server could not be deleted.";
+    }
+
     public static class RedeployTemplateAction{
         public static final String REDEPLOY_TEMPLATE_DESC = "This operation updates the variables of a previously deployed " +
                 "SiteScope template";
