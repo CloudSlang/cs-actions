@@ -17,6 +17,7 @@ package io.cloudslang.content.sitescope.constants;
 public final class Constants {
 
     public static final String BOOLEAN_FALSE = "false";
+    public static final String BOOLEAN_TRUE = "true";
     public static final String STRICT = "strict";
     public static final String CHANGEIT = "changeit";
     public static final String DEFAULT_PROXY_PORT = "8080";
@@ -35,10 +36,12 @@ public final class Constants {
     public static final String X_WWW_FORM = "application/x-www-form-urlencoded";
 
     public static final String SITESCOPE_MONITORS_API = "/SiteScope/api/monitors";
+    public static final String SITESCOPE_TEMPLATES_API = "/SiteScope/api/templates";
     public static final String GET_GROUP_PROPERTIES_ENDPOINT = "/group/properties";
     public static final String ENABLE_MONITOR_GROUP_ENDPOINT = "/group/status";
     public static final String ENABLE_MONITOR_ENDPOINT = "/monitor/status";
     public static final String DELETE_MONITOR_GROUP_ENDPOINT = "/group";
     public static final String DELETE_MONITOR_ENDPOINT = "/monitor";
+    public static final String DEPLOY_TEMPLATE_ENDPOINT = "/templateDeployment";
 
 }

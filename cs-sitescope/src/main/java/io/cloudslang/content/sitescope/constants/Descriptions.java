@@ -141,7 +141,22 @@ public class Descriptions {
         public static final String ENABLE_MONITOR_DESC = "Enables or disables a monitor whether it was disabled " +
                 "indefinitely or for a specified time period. Enabling a monitor that is already enabled has no effect.";
         public static final String MONITOR_ID_DESC = "A string specifying the monitor ID.";
+    }
 
+    public static class DeployTemplateAction{
+        public static final String DEPLOY_TEMPLATE_DESC = "This operation deploys a SiteScope template to a destination path.";
+        public static final String PATH_TO_TEMPLATE_DESC = "A string array specifying the full path to the template name to deploy." +
+                " The path starts with the name of the first child under the SiteScope root directory and ends with the name of the template." +
+                " The elements of the path are separated by the delimiter";
+        public static final String PATH_TO_TARGET_GROUP_DESC = "A string array specifying the full path to the group where the template is to be deployed." +
+                " If the last element in the path does not exist, the function creates it and deploys the template under the new path element." +
+                " The elements of the path are separated by the delimiter.";
+        public static final String CONNECT_TO_SERVER_DESC = "Set it to \"true\" to verify monitor measurements against the remote server during deployment. " +
+                "If set to \"false\" monitor measurements are not verified against the remote server.";
+        public static final String TEST_REMOTES_DESC = "Set it \"true\" to run the test on deployed remote server.";
+        public static final String CUSTOM_PARAMETERS_DESC = "All other parameters required for the deployment as specified by the template being deployed.";
+        public static final String SUCCESS_DESC = "The specified template was successfully deployed.";
+        public static final String FAILURE_DESC = "The specified template could not be deployed.";
     }
 
     public static class DeleteMonitorAction {
