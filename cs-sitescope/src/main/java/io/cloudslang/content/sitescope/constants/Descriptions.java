@@ -43,7 +43,10 @@ public class Descriptions {
                 "of the group with the elements separated by a delimiter.";
         public static final String FULL_PATH_TO_MONITOR_DESC = "A string array specifying the full path to the monitor. The " +
                 "path starts with the name of the first child under the SiteScope root directory and ends with the name " +
-                "of the group with the elements separated by the delimiter.";
+                "of the monitor with the elements separated by the delimiter.";
+        public static final String FULL_PATH_TO_TEMPLATE_DESC = "A string array specifying the full path to the template. The " +
+                "path starts with the name of the first child under the SiteScope root directory and ends with the name " +
+                "of the template with the elements separated by the delimiter.";
         public static final String IDENTIFIER_DESC = "Identifier to be written to the audit log.";
         public static final String DELIMITER_DESC = "The delimiter used in the path to the group.";
         public static final String PROXY_HOST_DESC = "Proxy server host used to access the Site Scope service.";
@@ -166,5 +169,11 @@ public class Descriptions {
         public static final String DELETE_REMOTE_SERVER_RETURN_RESULT_DESC = "The specified remote server was successfully deleted.";
         public static final String SUCCESS_DESC = "The specified remote server was successfully deleted.";
         public static final String FAILURE_DESC = "The specified remote server could not be deleted.";
+    }
+
+    public static class RedeployTemplateAction{
+        public static final String REDEPLOY_TEMPLATE_DESC = "This operation updates the variables of a previously deployed " +
+                "SiteScope template";
+        public static final String PROPERTIES_DESC = "Contains the properties to be updated.";
     }
 }

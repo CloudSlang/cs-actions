@@ -30,6 +30,7 @@ import static io.cloudslang.content.sitescope.constants.Inputs.DeleteMonitorGrou
 import static io.cloudslang.content.sitescope.constants.Inputs.DeployTemplate.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorGroupInputs.ENABLE;
 import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorInputs.MONITOR_ID;
+import static io.cloudslang.content.sitescope.constants.Inputs.RedeployTemplate.FULL_PATH_TO_TEMPLATE;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -169,6 +170,15 @@ public final class InputsValidation {
             exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, PATH_TO_TARGET_GROUP));
         addVerifyBoolean(exceptionMessages, connectToServer, CONNECT_TO_SERVER);
         addVerifyBoolean(exceptionMessages, testRemotes, TEST_REMOTES);
+
+        return exceptionMessages;
+    }
+    @NotNull
+    public static List<String> verifyRedeployTemplateInputs(@Nullable final String fullPathToTemplate) {
+        final List<String> exceptionMessages = new ArrayList<>();
+
+        if (isEmpty(fullPathToTemplate))
+            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, FULL_PATH_TO_TEMPLATE));
 
         return exceptionMessages;
     }

@@ -70,5 +70,11 @@ public final class Inputs extends InputNames {
         public static final String PLATFORM = "platform";
         public static final String REMOTE_NAME = "remoteName";
     }
+
+    public static class RedeployTemplate{
+        public static final String FULL_PATH_TO_TEMPLATE = "fullPathToTemplate";
+        public static final String PROPERTIES = "properties";
+
+    }
 }
 

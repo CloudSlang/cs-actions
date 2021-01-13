@@ -45,6 +45,6 @@ public final class Constants {
     public static final String DELETE_MONITOR_GROUP_ENDPOINT = "/group";
     public static final String DEPLOY_TEMPLATE_ENDPOINT = "/templateDeployment";
     public static final String DELETE_REMOTE_SERVER_ENDPOINT = "/remote";
-
+    public static final String REDEPLOY_TEMPLATE_ENDPOINT = "/template";
 
 }
