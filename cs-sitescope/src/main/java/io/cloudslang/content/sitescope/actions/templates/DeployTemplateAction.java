@@ -40,6 +40,7 @@ import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonit
 import static io.cloudslang.content.sitescope.constants.Descriptions.DeployTemplateAction.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeployTemplate.*;
+import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyDeployTemplateInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -51,6 +52,7 @@ public class DeployTemplateAction {
     @Action(name = "Deploy Template", description = DEPLOY_TEMPLATE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESCRIPTION)
             },

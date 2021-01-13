@@ -35,6 +35,7 @@ import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.DELIMITER;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeployTemplate.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.GetMonitorsDeployedAt.*;
+import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
@@ -44,6 +45,7 @@ public class GetMonitorsDeployedAt {
     @Action(name = "Get Monitors Deployed At", description = GET_MONITORS_DEPLOYED_AT_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESCRIPTION)
             },
