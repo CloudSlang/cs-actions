@@ -19,9 +19,9 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.sitescope.entities.RedeployTemplateInputs;
+import io.cloudslang.content.sitescope.entities.UpdateTemplateInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
-import io.cloudslang.content.sitescope.services.RedeployTemplateService;
+import io.cloudslang.content.sitescope.services.UpdateTemplateService;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -39,22 +39,22 @@ import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.RETURN_RESULT_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.FAILURE_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.SUCCESS_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.RedeployTemplateAction.PROPERTIES_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.RedeployTemplateAction.REDEPLOY_TEMPLATE_DESC;
+import static io.cloudslang.content.sitescope.constants.Descriptions.UpdateTemplateAction.PROPERTIES_DESC;
+import static io.cloudslang.content.sitescope.constants.Descriptions.UpdateTemplateAction.UPDATE_TEMPLATE_DESC;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.RedeployTemplate.FULL_PATH_TO_TEMPLATE;
-import static io.cloudslang.content.sitescope.constants.Inputs.RedeployTemplate.PROPERTIES;
+import static io.cloudslang.content.sitescope.constants.Inputs.UpdateTemplate.FULL_PATH_TO_TEMPLATE;
+import static io.cloudslang.content.sitescope.constants.Inputs.UpdateTemplate.PROPERTIES;
 import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyRedeployTemplateInputs;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyUpdateTemplateInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class RedeployTemplateAction {
+public class UpdateTemplateAction {
 
 
-    @Action(name = "Redeploy Template", description = REDEPLOY_TEMPLATE_DESC,
+    @Action(name = "Update Template", description = UPDATE_TEMPLATE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
@@ -113,18 +113,18 @@ public class RedeployTemplateAction {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final RedeployTemplateService service = new RedeployTemplateService();
+        final UpdateTemplateService service = new UpdateTemplateService();
         Map<String, String> result;
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
 
-        exceptionMessage.addAll(verifyRedeployTemplateInputs(fullPathToTemplate));
+        exceptionMessage.addAll(verifyUpdateTemplateInputs(fullPathToTemplate));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
         try {
-            RedeployTemplateInputs inputs = new RedeployTemplateInputs.RedeployTemplateInputsBuilder()
+            UpdateTemplateInputs inputs = new UpdateTemplateInputs.UpdateTemplateInputsBuilder()
                     .fullPathToTemplate(fullPathToTemplate)
                     .delimiter(delimiter)
                     .identifier(identifier)

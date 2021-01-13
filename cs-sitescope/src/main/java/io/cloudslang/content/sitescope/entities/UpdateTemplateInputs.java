@@ -18,15 +18,15 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class RedeployTemplateInputs {
+public class UpdateTemplateInputs {
     private String fullPathToTemplate;
     private String properties;
     private String delimiter;
     private String identifier;
     private SiteScopeCommonInputs commonInputs;
 
-    private RedeployTemplateInputs(String fullPathToTemplate, String properties, String delimiter, String identifier,
-                                   SiteScopeCommonInputs commonInputs) {
+    private UpdateTemplateInputs(String fullPathToTemplate, String properties, String delimiter, String identifier,
+                                 SiteScopeCommonInputs commonInputs) {
         this.fullPathToTemplate = fullPathToTemplate;
         this.properties = properties;
         this.delimiter = delimiter;
@@ -35,8 +35,8 @@ public class RedeployTemplateInputs {
     }
 
     @NotNull
-    public static RedeployTemplateInputsBuilder builder() {
-        return new RedeployTemplateInputsBuilder();
+    public static UpdateTemplateInputs.UpdateTemplateInputsBuilder builder() {
+        return new UpdateTemplateInputsBuilder();
     }
 
     @NotNull
@@ -65,50 +65,50 @@ public class RedeployTemplateInputs {
     }
 
 
-    public static class RedeployTemplateInputsBuilder {
+    public static class UpdateTemplateInputsBuilder {
         private String fullPathToTemplate = EMPTY;
         private String properties = EMPTY;
         private String delimiter = EMPTY;
         private String identifier = EMPTY;
         private SiteScopeCommonInputs commonInputs;
 
-        public RedeployTemplateInputsBuilder() {
+        public UpdateTemplateInputsBuilder() {
 
         }
 
         @NotNull
-        public RedeployTemplateInputsBuilder fullPathToTemplate(@NotNull final String fullPathToTemplate) {
+        public UpdateTemplateInputs.UpdateTemplateInputsBuilder fullPathToTemplate(@NotNull final String fullPathToTemplate) {
             this.fullPathToTemplate = fullPathToTemplate;
             return this;
         }
 
 
         @NotNull
-        public RedeployTemplateInputsBuilder properties(@NotNull final String properties) {
+        public UpdateTemplateInputs.UpdateTemplateInputsBuilder properties(@NotNull final String properties) {
             this.properties = properties;
             return this;
         }
 
         @NotNull
-        public RedeployTemplateInputsBuilder delimiter(@NotNull final String delimiter) {
+        public UpdateTemplateInputs.UpdateTemplateInputsBuilder delimiter(@NotNull final String delimiter) {
             this.delimiter = delimiter;
             return this;
         }
 
         @NotNull
-        public RedeployTemplateInputsBuilder identifier(@NotNull final String identifier) {
+        public UpdateTemplateInputs.UpdateTemplateInputsBuilder identifier(@NotNull final String identifier) {
             this.identifier = identifier;
             return this;
         }
 
         @NotNull
-        public RedeployTemplateInputsBuilder commonInputs(@NotNull final SiteScopeCommonInputs commonInputs) {
+        public UpdateTemplateInputs.UpdateTemplateInputsBuilder commonInputs(@NotNull final SiteScopeCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
-        public RedeployTemplateInputs build() {
-            return new RedeployTemplateInputs(fullPathToTemplate, properties, delimiter, identifier, commonInputs);
+        public UpdateTemplateInputs build() {
+            return new UpdateTemplateInputs(fullPathToTemplate, properties, delimiter, identifier, commonInputs);
         }
     }
 }

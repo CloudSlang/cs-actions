@@ -34,9 +34,9 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.sitescope.entities.EnableMonitorGroupInputs;
+import io.cloudslang.content.sitescope.entities.ChangeMonitorGroupStatusInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
-import io.cloudslang.content.sitescope.services.EnableMonitorGroupService;
+import io.cloudslang.content.sitescope.services.ChangeMonitorGroupStatusService;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -51,22 +51,22 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
-import static io.cloudslang.content.sitescope.constants.Descriptions.EnableMonitorGroupAction.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.ChangeMonitorGroupStatusAction.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorGroupInputs.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.*;
 import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyEnableMonitorGroupInputs;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyChangeMonitorGroupStatusInputs;
 
-public class EnableMonitorGroupAction {
+public class ChangeMonitorGroupStatusAction {
 
-    @Action(name = "Enable Monitor Group", description = ENABLE_MONITOR_GROUP_DESC,
+    @Action(name = "Change Monitor Group Status", description = CHANGE_MONITOR_GROUP_STATUS_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = ENABLE_MONITOR_GROUP_RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = CHANGE_MONITOR_GROUP_STATUS_RETURN_RESULT_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESCRIPTION)
@@ -132,17 +132,17 @@ public class EnableMonitorGroupAction {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final EnableMonitorGroupService service = new EnableMonitorGroupService();
+        final ChangeMonitorGroupStatusService service = new ChangeMonitorGroupStatusService();
         Map<String, String> result;
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        exceptionMessage.addAll(verifyEnableMonitorGroupInputs(fullPathToGroup, enable));
+        exceptionMessage.addAll(verifyChangeMonitorGroupStatusInputs(fullPathToGroup, enable));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
         try {
-            EnableMonitorGroupInputs inputs = new EnableMonitorGroupInputs.EnableMonitorGroupInputsBuilder()
+            ChangeMonitorGroupStatusInputs inputs = new ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder()
                     .fullPathToGroup(fullPathToGroup)
                     .delimiter(delimiter)
                     .identifier(identifier)
