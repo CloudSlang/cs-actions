@@ -114,6 +114,16 @@ public class Descriptions {
         public static final String FAILURE_DESC = "The specified monitor group could not be deleted.";
     }
 
+    public static class RunMonitorAction {
+
+        public static final String RUN_MONITOR_DESC = "Runs the monitor.";
+        public static final String TIMEOUT_DESC = "Runs the monitor.";
+        public static final String MONITOR_ID_DESC = "External ID of the group.";
+        public static final String RETURN_RESULT_DESC = "A message describing the success or failure of the operation.";
+        public static final String SUCCESS_DESC = "The specified monitor group was successfully deleted.";
+        public static final String FAILURE_DESC = "The specified monitor group could not be deleted.";
+    }
+
     public static class EnableMonitorGroupAction {
 
         public static final String ENABLE_MONITOR_GROUP_DESC = "Enables or disables a group whether it was disabled indefinitely " +

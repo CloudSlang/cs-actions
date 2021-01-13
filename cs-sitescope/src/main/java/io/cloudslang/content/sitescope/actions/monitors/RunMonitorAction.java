@@ -4,14 +4,12 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.sitescope.entities.DeployTemplateInputs;
+import io.cloudslang.content.sitescope.entities.RunMonitorInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
-import io.cloudslang.content.sitescope.services.DeployTemplateService;
+import io.cloudslang.content.sitescope.services.RunMonitorService;
 import io.cloudslang.content.utils.StringUtilities;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,23 +20,21 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
-import static io.cloudslang.content.sitescope.constants.Constants.UTF8;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
-import static io.cloudslang.content.sitescope.constants.Descriptions.Common.RESPONSE_CHARACTER_SET_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.RETURN_RESULT_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.DeployTemplateAction.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.RunMonitorAction.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.DeployTemplate.*;
-import static io.cloudslang.content.sitescope.utils.InputsValidation.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.RunMonitor.MONITOR_ID;
+import static io.cloudslang.content.sitescope.constants.Inputs.RunMonitor.TIMEOUT_RUN_MONITOR;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyRunMonitorInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DeployTemplateAction {
+public class RunMonitorAction {
 
-    @Action(name = "Deploy Template", description = DEPLOY_TEMPLATE_DESC,
+    @Action(name = "Run Monitor", description = RUN_MONITOR_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -54,11 +50,10 @@ public class DeployTemplateAction {
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
-                                       @Param(value = PATH_TO_TEMPLATE, description = PATH_TO_TEMPLATE_DESC) String pathToTemplate,
-                                       @Param(value = PATH_TO_TARGET_GROUP, description = PATH_TO_TARGET_GROUP_DESC) String pathToTargetGroup,
-                                       @Param(value = CONNECT_TO_SERVER, description = CONNECT_TO_SERVER_DESC) String connectToServer,
-                                       @Param(value = TEST_REMOTES, description = TEST_REMOTES_DESC) String testRemotes,
-                                       @Param(value = CUSTOM_PARAMETERS, description = CUSTOM_PARAMETERS_DESC) String customParameters,
+                                       @Param(value = FULL_PATH_TO_MONITOR, description = FULL_PATH_TO_MONITOR_DESC) String fullPathToMonitor,
+                                       @Param(value = TIMEOUT_RUN_MONITOR, description = TIMEOUT_DESC) String timeOut,
+                                       @Param(value = MONITOR_ID, description = MONITOR_ID_DESC) String monitorId,
+                                       @Param(value = IDENTIFIER, description = IDENTIFIER_DESC) String identifier,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -78,11 +73,10 @@ public class DeployTemplateAction {
     ) {
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
-        pathToTemplate = defaultIfEmpty(pathToTemplate,EMPTY);
-        pathToTargetGroup = defaultIfEmpty(pathToTargetGroup,EMPTY);
-        connectToServer = defaultIfEmpty(connectToServer,BOOLEAN_TRUE);
-        customParameters = defaultIfEmpty(customParameters,EMPTY);
-        testRemotes = defaultIfEmpty(testRemotes,BOOLEAN_FALSE);
+        fullPathToMonitor = defaultIfEmpty(fullPathToMonitor, EMPTY);
+        timeOut = defaultIfEmpty(timeOut, EMPTY);
+        monitorId = defaultIfEmpty(monitorId, EMPTY);
+        identifier = defaultIfEmpty(identifier, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -103,22 +97,20 @@ public class DeployTemplateAction {
 
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        exceptionMessage.addAll(verifyDeployTemplateInputs(pathToTemplate,pathToTargetGroup,connectToServer,testRemotes));
+        exceptionMessage.addAll(verifyRunMonitorInputs(fullPathToMonitor, monitorId));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
-        final DeployTemplateService service = new DeployTemplateService();
+        final RunMonitorService service = new RunMonitorService();
         Map<String, String> result;
 
-        try{
-            DeployTemplateInputs inputs = new DeployTemplateInputs.DeployTemplateInputsBuilder()
-                    .pathToTemplate(pathToTemplate)
-                    .pathToTargetGroup(pathToTargetGroup)
+        try {
+            RunMonitorInputs inputs = new RunMonitorInputs.RunMonitorInputsBuilder()
+                    .fullPathToMonitor(fullPathToMonitor)
                     .delimiter(delimiter)
-                    .connectToServer(connectToServer)
-                    .testRemotes(testRemotes)
-                    .customParameters(customParameters)
+                    .identifier(identifier)
+                    .timeOut(timeOut)
                     .commonInputs(SiteScopeCommonInputs.builder()
                             .host(host)
                             .port(port)
@@ -144,7 +136,7 @@ public class DeployTemplateAction {
                     .build();
             result = service.execute(inputs);
             return result;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return getFailureResultsMap(ex);
         }
     }
