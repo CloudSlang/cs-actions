@@ -28,9 +28,9 @@ import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeleteMonitorGroupInputs.EXTERNAL_ID;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeployTemplate.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorGroupInputs.ENABLE;
+import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.ENABLE;
 import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorInputs.MONITOR_ID;
-import static io.cloudslang.content.sitescope.constants.Inputs.RedeployTemplate.FULL_PATH_TO_TEMPLATE;
+import static io.cloudslang.content.sitescope.constants.Inputs.UpdateTemplate.FULL_PATH_TO_TEMPLATE;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -49,8 +49,8 @@ public final class InputsValidation {
     }
 
     @NotNull
-    public static List<String> verifyEnableMonitorGroupInputs(@Nullable final String fullPathToGroup,
-                                                              @Nullable final String enable) {
+    public static List<String> verifyChangeMonitorGroupStatusInputs(@Nullable final String fullPathToGroup,
+                                                                    @Nullable final String enable) {
         final List<String> exceptionMessages = new ArrayList<>();
 
         if (StringUtils.isEmpty(fullPathToGroup)) {
@@ -174,7 +174,7 @@ public final class InputsValidation {
         return exceptionMessages;
     }
     @NotNull
-    public static List<String> verifyRedeployTemplateInputs(@Nullable final String fullPathToTemplate) {
+    public static List<String> verifyUpdateTemplateInputs(@Nullable final String fullPathToTemplate) {
         final List<String> exceptionMessages = new ArrayList<>();
 
         if (isEmpty(fullPathToTemplate))

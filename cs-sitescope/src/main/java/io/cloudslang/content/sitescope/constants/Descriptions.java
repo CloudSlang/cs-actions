@@ -117,9 +117,9 @@ public class Descriptions {
         public static final String FAILURE_DESC = "The specified monitor group could not be deleted.";
     }
 
-    public static class EnableMonitorGroupAction {
+    public static class ChangeMonitorGroupStatusAction {
 
-        public static final String ENABLE_MONITOR_GROUP_DESC = "Enables or disables a group whether it was disabled indefinitely " +
+        public static final String CHANGE_MONITOR_GROUP_STATUS_DESC = "Enables or disables a group whether it was disabled indefinitely " +
                 "or for a specified time period. Enabling a group that is already enabled has no effect.";
         public static final String ENABLE_DESC = "Group is enabled if set to true and group is disabled if set to false" +
                 " or if the string is empty.";
@@ -136,7 +136,7 @@ public class Descriptions {
         public static final String DESCRIPTION_DESC = "Description to be associated with enable/disable operation.";
         public static final String IDENTIFIER_ENABLE_DESC = "Identifier to be associated with enable/disable operation and written" +
                 "to audit log. Identifier to be associated with enable/disable operation and written to audit log.";
-        public static final String ENABLE_MONITOR_GROUP_RETURN_RESULT_DESC = "The operation completed successfully.";
+        public static final String CHANGE_MONITOR_GROUP_STATUS_RETURN_RESULT_DESC = "The operation completed successfully.";
     }
 
     public static class EnableMonitorAction{
@@ -171,8 +171,8 @@ public class Descriptions {
         public static final String FAILURE_DESC = "The specified remote server could not be deleted.";
     }
 
-    public static class RedeployTemplateAction{
-        public static final String REDEPLOY_TEMPLATE_DESC = "This operation updates the variables of a previously deployed " +
+    public static class UpdateTemplateAction {
+        public static final String UPDATE_TEMPLATE_DESC = "This operation updates the variables of a previously deployed " +
                 "SiteScope template";
         public static final String PROPERTIES_DESC = "Contains the properties to be updated.";
     }

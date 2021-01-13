@@ -30,7 +30,7 @@ import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.FULL_PATH_TO_MONITOR;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.IDENTIFIER;
-import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorGroupInputs.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorInputs.MONITOR_ID;
 import static io.cloudslang.content.sitescope.constants.SuccessMsgs.ENABLE_MONITOR;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
