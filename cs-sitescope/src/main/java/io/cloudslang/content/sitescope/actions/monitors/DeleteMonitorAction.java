@@ -20,9 +20,9 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.sitescope.entities.ChangeMonitorGroupStatusInputs;
+import io.cloudslang.content.sitescope.entities.DeleteMonitorInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
-import io.cloudslang.content.sitescope.services.ChangeMonitorGroupStatusService;
+import io.cloudslang.content.sitescope.services.DeleteMonitorService;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -31,50 +31,42 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
-import static io.cloudslang.content.sitescope.constants.Descriptions.ChangeMonitorGroupStatusAction.*;
-import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorAction.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.*;
-import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
+import static io.cloudslang.content.sitescope.constants.Outputs.*;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyDeleteMonitorInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyChangeMonitorGroupStatusInputs;
 
-public class ChangeMonitorGroupStatusAction {
+public class DeleteMonitorAction {
 
-    @Action(name = "Change Monitor Group Status", description = CHANGE_MONITOR_GROUP_STATUS_DESC,
+    @Action(name = "Delete Monitor", description = DELETE_MONITOR_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = CHANGE_MONITOR_GROUP_STATUS_RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESCRIPTION)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL,
+                            responseType = RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL,
+                            responseType = ERROR, description = FAILURE_DESC)
             })
-
-    public Map<String, String> execute(@Param(value = HOST, required = true, description = HOST_DESC) String host,
-                                       @Param(value = PORT, required = true, description = PORT_DESC) String port,
-                                       @Param(value = PROTOCOL, required = true, description = PROTOCOL_DESC) String protocol,
+    public Map<String, String> execute(@Param(value = HOST, description = HOST_DESC) String host,
+                                       @Param(value = PORT, description = PORT_DESC) String port,
+                                       @Param(value = PROTOCOL, description = PROTOCOL_DESC) String protocol,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
-                                       @Param(value = FULL_PATH_TO_GROUP, required = true, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,
+                                       @Param(value = FULL_PATH_TO_MONITOR, description = FULL_PATH_TO_MONITOR_DESC) String fullPathToMonitor,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
-                                       @Param(value = ENABLE, description = ENABLE_DESC) String enable,
-                                       @Param(value = TIME_PERIOD, description = TIME_PERIOD_DESC) String timePeriod,
-                                       @Param(value = FROM_TIME, description = FROM_TIME_DESC) String fromTime,
-                                       @Param(value = TO_TIME, description = TO_TIME_DESC) String toTime,
-                                       @Param(value = DESCRIPTION, description = DESCRIPTION_DESC) String description,
-                                       @Param(value = IDENTIFIER, description = IDENTIFIER_ENABLE_DESC) String identifier,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -94,13 +86,8 @@ public class ChangeMonitorGroupStatusAction {
 
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
+        fullPathToMonitor = defaultIfEmpty(fullPathToMonitor, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
-        identifier = defaultIfEmpty(identifier, EMPTY);
-        enable = defaultIfEmpty(enable, BOOLEAN_FALSE);
-        timePeriod = defaultIfEmpty(timePeriod, EMPTY);
-        fromTime = defaultIfEmpty(fromTime, EMPTY);
-        toTime = defaultIfEmpty(toTime, EMPTY);
-        description = defaultIfEmpty(description, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -118,25 +105,21 @@ public class ChangeMonitorGroupStatusAction {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final ChangeMonitorGroupStatusService service = new ChangeMonitorGroupStatusService();
-        Map<String, String> result;
+
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        exceptionMessage.addAll(verifyChangeMonitorGroupStatusInputs(fullPathToGroup, enable));
+        exceptionMessage.addAll(verifyDeleteMonitorInputs(fullPathToMonitor));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
+        final DeleteMonitorService service = new DeleteMonitorService();
+        Map<String, String> result;
+
         try {
-            ChangeMonitorGroupStatusInputs inputs = new ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder()
-                    .fullPathToGroup(fullPathToGroup)
+            DeleteMonitorInputs inputs = new DeleteMonitorInputs.DeleteMonitorInputsBuilder()
+                    .fullPathToMonitor(fullPathToMonitor)
                     .delimiter(delimiter)
-                    .identifier(identifier)
-                    .enable(enable)
-                    .timePeriod(timePeriod)
-                    .fromTime(fromTime)
-                    .toTime(toTime)
-                    .description(description)
                     .commonInputs(SiteScopeCommonInputs.builder()
                             .host(host)
                             .port(port)

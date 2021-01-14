@@ -176,4 +176,21 @@ public class Descriptions {
                 "SiteScope template";
         public static final String PROPERTIES_DESC = "Contains the properties to be updated.";
     }
+
+    public static class DeleteMonitorAction {
+
+        public static final String DELETE_MONITOR_DESC = "Deletes a SiteScope monitor.";
+        public static final String RETURN_RESULT_DESC = "A message describing the success or failure of the operation.";
+        public static final String SUCCESS_DESC = "The specified monitor was successfully deleted.";
+        public static final String FAILURE_DESC = "The specified monitor could not be deleted.";
+    }
+
+    public static class RunMonitorAction {
+
+        public static final String RUN_MONITOR_DESC = "Runs a SiteScope monitor. The monitor must be deployed before invoking this method.";
+        public static final String RETURN_RESULT_DESC = "A HashMap representation of the status of the run and the status message as it would appear on the UI.";
+        public static final String TIMEOUT_DESC = " Timeout value in milliseconds.";
+        public static final String SUCCESS_DESC = "The specified monitor was run successfully.";
+        public static final String FAILURE_DESC = "The specified monitor could not be run.";
+    }
 }
