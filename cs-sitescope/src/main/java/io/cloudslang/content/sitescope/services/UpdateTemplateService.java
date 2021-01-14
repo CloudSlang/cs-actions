@@ -17,7 +17,7 @@ package io.cloudslang.content.sitescope.services;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.sitescope.constants.SuccessMsgs;
-import io.cloudslang.content.sitescope.entities.RedeployTemplateInputs;
+import io.cloudslang.content.sitescope.entities.UpdateTemplateInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 import io.cloudslang.content.sitescope.utils.HttpUtils;
 import org.apache.http.client.utils.URIBuilder;
@@ -29,18 +29,18 @@ import java.util.Map;
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.EXCEPTION_INVALID_PARAM;
-import static io.cloudslang.content.sitescope.constants.Inputs.RedeployTemplate.FULL_PATH_TO_TEMPLATE;
+import static io.cloudslang.content.sitescope.constants.Inputs.UpdateTemplate.FULL_PATH_TO_TEMPLATE;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 
-public class RedeployTemplateService {
+public class UpdateTemplateService {
 
     public @NotNull
-    Map<String, String> execute(@NotNull RedeployTemplateInputs redeployTemplateInputs) throws Exception {
+    Map<String, String> execute(@NotNull UpdateTemplateInputs updateTemplateInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final SiteScopeCommonInputs commonInputs = redeployTemplateInputs.getCommonInputs();
+        final SiteScopeCommonInputs commonInputs = updateTemplateInputs.getCommonInputs();
 
         httpClientInputs.setUrl(commonInputs.getProtocol() + "://" + commonInputs.getHost() + COLON + commonInputs.getPort() +
-                SITESCOPE_TEMPLATES_API + REDEPLOY_TEMPLATE_ENDPOINT);
+                SITESCOPE_TEMPLATES_API + UPDATE_TEMPLATE_ENDPOINT);
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
@@ -49,19 +49,19 @@ public class RedeployTemplateService {
         httpClientInputs.setPassword(commonInputs.getPassword());
         httpClientInputs.setMethod(POST);
         httpClientInputs.setContentType(X_WWW_FORM);
-        httpClientInputs.setFormParams(populateRedeployTemplateFormParams(redeployTemplateInputs));
+        httpClientInputs.setFormParams(populateUpdateTemplateFormParams(updateTemplateInputs));
         httpClientInputs.setFormParamsAreURLEncoded(String.valueOf(true));
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
 
         Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
 
-        return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, SuccessMsgs.REDEPLOY_TEMPLATE);
+        return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, SuccessMsgs.UPDATE_TEMPLATE);
     }
 
-    private static String populateRedeployTemplateFormParams(RedeployTemplateInputs redeployTemplateInputs) throws Exception {
-        String delimiter = redeployTemplateInputs.getDelimiter();
-        String fullPathToTemplate = redeployTemplateInputs.getFullPathToTemplate().replace(delimiter, SITE_SCOPE_DELIMITER);
-        String property = redeployTemplateInputs.getProperties();
+    private static String populateUpdateTemplateFormParams(UpdateTemplateInputs updateTemplateInputs) throws Exception {
+        String delimiter = updateTemplateInputs.getDelimiter();
+        String fullPathToTemplate = updateTemplateInputs.getFullPathToTemplate().replace(delimiter, SITE_SCOPE_DELIMITER);
+        String property = updateTemplateInputs.getProperties();
 
         Map<String, String> inputsMap = new HashMap<>();
         inputsMap.put(FULL_PATH_TO_TEMPLATE, fullPathToTemplate);

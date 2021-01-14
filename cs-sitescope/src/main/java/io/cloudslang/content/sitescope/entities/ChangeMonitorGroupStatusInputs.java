@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class EnableMonitorGroupInputs {
+public class ChangeMonitorGroupStatusInputs {
     private String fullPathToGroup;
     private String delimiter;
     private String enable;
@@ -29,9 +29,9 @@ public class EnableMonitorGroupInputs {
     private String identifier;
     private SiteScopeCommonInputs commonInputs;
 
-    private EnableMonitorGroupInputs(String fullPathToGroup, String delimiter, String identifier, String enable,
-                                     String timePeriod, String fromTime, String toTime, String description,
-                                     SiteScopeCommonInputs commonInputs) {
+    private ChangeMonitorGroupStatusInputs(String fullPathToGroup, String delimiter, String identifier, String enable,
+                                           String timePeriod, String fromTime, String toTime, String description,
+                                           SiteScopeCommonInputs commonInputs) {
         this.fullPathToGroup = fullPathToGroup;
         this.delimiter = delimiter;
         this.identifier = identifier;
@@ -44,8 +44,8 @@ public class EnableMonitorGroupInputs {
     }
 
     @NotNull
-    public static EnableMonitorGroupInputsBuilder builder() {
-        return new EnableMonitorGroupInputsBuilder();
+    public static ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder builder() {
+        return new ChangeMonitorGroupStatusInputsBuilder();
     }
 
     @NotNull
@@ -85,7 +85,7 @@ public class EnableMonitorGroupInputs {
         return this.commonInputs;
     }
 
-    public static class EnableMonitorGroupInputsBuilder {
+    public static class ChangeMonitorGroupStatusInputsBuilder {
         private String fullPathToGroup = EMPTY;
         private String delimiter = EMPTY;
         private String identifier = EMPTY;
@@ -96,66 +96,66 @@ public class EnableMonitorGroupInputs {
         private String description = EMPTY;
         private SiteScopeCommonInputs commonInputs;
 
-        public EnableMonitorGroupInputsBuilder() {
+        public ChangeMonitorGroupStatusInputsBuilder() {
 
         }
 
         @NotNull
-        public EnableMonitorGroupInputs.EnableMonitorGroupInputsBuilder fullPathToGroup(@NotNull final String fullPathToGroup) {
+        public ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder fullPathToGroup(@NotNull final String fullPathToGroup) {
             this.fullPathToGroup = fullPathToGroup;
             return this;
         }
 
         @NotNull
-        public EnableMonitorGroupInputs.EnableMonitorGroupInputsBuilder delimiter(@NotNull final String delimiter) {
+        public ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder delimiter(@NotNull final String delimiter) {
             this.delimiter = delimiter;
             return this;
         }
 
         @NotNull
-        public EnableMonitorGroupInputs.EnableMonitorGroupInputsBuilder identifier(@NotNull final String identifier) {
+        public ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder identifier(@NotNull final String identifier) {
             this.identifier = identifier;
             return this;
         }
 
         @NotNull
-        public EnableMonitorGroupInputs.EnableMonitorGroupInputsBuilder enable(@NotNull final String enable) {
+        public ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder enable(@NotNull final String enable) {
             this.enable = enable;
             return this;
         }
 
         @NotNull
-        public EnableMonitorGroupInputs.EnableMonitorGroupInputsBuilder timePeriod(@NotNull final String timePeriod) {
+        public ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder timePeriod(@NotNull final String timePeriod) {
             this.timePeriod = timePeriod;
             return this;
         }
 
         @NotNull
-        public EnableMonitorGroupInputs.EnableMonitorGroupInputsBuilder fromTime(@NotNull final String fromTime) {
+        public ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder fromTime(@NotNull final String fromTime) {
             this.fromTime = fromTime;
             return this;
         }
 
         @NotNull
-        public EnableMonitorGroupInputs.EnableMonitorGroupInputsBuilder toTime(@NotNull final String toTime) {
+        public ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder toTime(@NotNull final String toTime) {
             this.toTime = toTime;
             return this;
         }
 
         @NotNull
-        public EnableMonitorGroupInputs.EnableMonitorGroupInputsBuilder description(@NotNull final String description) {
+        public ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder description(@NotNull final String description) {
             this.description = description;
             return this;
         }
 
         @NotNull
-        public EnableMonitorGroupInputs.EnableMonitorGroupInputsBuilder commonInputs(@NotNull final SiteScopeCommonInputs commonInputs) {
+        public ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder commonInputs(@NotNull final SiteScopeCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
-        public EnableMonitorGroupInputs build() {
-            return new EnableMonitorGroupInputs(fullPathToGroup, delimiter, identifier, enable, timePeriod, fromTime,
+        public ChangeMonitorGroupStatusInputs build() {
+            return new ChangeMonitorGroupStatusInputs(fullPathToGroup, delimiter, identifier, enable, timePeriod, fromTime,
                     toTime, description, commonInputs);
         }
     }

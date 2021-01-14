@@ -12,17 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package io.cloudslang.content.sitescope.actions.monitors;
+package io.cloudslang.content.sitescope.actions.templates;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.sitescope.entities.EnableMonitorInputs;
+import io.cloudslang.content.sitescope.entities.UpdateTemplateInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
-import io.cloudslang.content.sitescope.services.EnableMonitorService;
+import io.cloudslang.content.sitescope.services.UpdateTemplateService;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -36,26 +35,26 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
-import static io.cloudslang.content.sitescope.constants.Descriptions.ChangeMonitorGroupStatusAction.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.RETURN_RESULT_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.EnableMonitorAction.ENABLE_MONITOR_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.EnableMonitorAction.MONITOR_ID_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.FAILURE_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.SUCCESS_DESC;
-import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.UpdateTemplateAction.PROPERTIES_DESC;
+import static io.cloudslang.content.sitescope.constants.Descriptions.UpdateTemplateAction.UPDATE_TEMPLATE_DESC;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorInputs.MONITOR_ID;
+import static io.cloudslang.content.sitescope.constants.Inputs.UpdateTemplate.FULL_PATH_TO_TEMPLATE;
+import static io.cloudslang.content.sitescope.constants.Inputs.UpdateTemplate.PROPERTIES;
 import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyEnableMonitorInputs;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyUpdateTemplateInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class EnableMonitorAction {
+public class UpdateTemplateAction {
 
-    @Action(name = "Enable Monitor", description = ENABLE_MONITOR_DESC,
+
+    @Action(name = "Update Template", description = UPDATE_TEMPLATE_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
@@ -71,15 +70,10 @@ public class EnableMonitorAction {
                                        @Param(value = PROTOCOL, required = true, description = PROTOCOL_DESC) String protocol,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
-                                       @Param(value = FULL_PATH_TO_MONITOR, description = FULL_PATH_TO_MONITOR_DESC) String fullPathToMonitor,
-                                       @Param(value = MONITOR_ID, description = MONITOR_ID_DESC) String monitorId,
+                                       @Param(value = FULL_PATH_TO_TEMPLATE, description = FULL_PATH_TO_TEMPLATE_DESC) String fullPathToTemplate,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
-                                       @Param(value = ENABLE, description = ENABLE_DESC) String enable,
-                                       @Param(value = TIME_PERIOD, description = TIME_PERIOD_DESC) String timePeriod,
-                                       @Param(value = FROM_TIME, description = FROM_TIME_DESC) String fromTime,
-                                       @Param(value = TO_TIME, description = TO_TIME_DESC) String toTime,
-                                       @Param(value = DESCRIPTION, description = DESCRIPTION_DESC) String description,
-                                       @Param(value = IDENTIFIER, description = IDENTIFIER_ENABLE_DESC) String identifier,
+                                       @Param(value = PROPERTIES, description = PROPERTIES_DESC) String properties,
+                                       @Param(value = IDENTIFIER, description = IDENTIFIER_DESC) String identifier,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -101,11 +95,7 @@ public class EnableMonitorAction {
         password = defaultIfEmpty(password, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
         identifier = defaultIfEmpty(identifier, EMPTY);
-        enable = defaultIfEmpty(enable, BOOLEAN_FALSE);
-        timePeriod = defaultIfEmpty(timePeriod, EMPTY);
-        fromTime = defaultIfEmpty(fromTime, EMPTY);
-        toTime = defaultIfEmpty(toTime, EMPTY);
-        description = defaultIfEmpty(description, EMPTY);
+        properties = defaultIfEmpty(properties, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -123,27 +113,22 @@ public class EnableMonitorAction {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final EnableMonitorService service = new EnableMonitorService();
+        final UpdateTemplateService service = new UpdateTemplateService();
         Map<String, String> result;
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
 
-        exceptionMessage.addAll(verifyEnableMonitorInputs(fullPathToMonitor, monitorId, enable));
+        exceptionMessage.addAll(verifyUpdateTemplateInputs(fullPathToTemplate));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
         try {
-            EnableMonitorInputs inputs = new EnableMonitorInputs.EnableMonitorInputsBuilder()
-                    .fullPathToMonitor(fullPathToMonitor)
-                    .monitorId(monitorId)
+            UpdateTemplateInputs inputs = new UpdateTemplateInputs.UpdateTemplateInputsBuilder()
+                    .fullPathToTemplate(fullPathToTemplate)
                     .delimiter(delimiter)
                     .identifier(identifier)
-                    .enable(enable)
-                    .timePeriod(timePeriod)
-                    .fromTime(fromTime)
-                    .toTime(toTime)
-                    .description(description)
+                    .properties(properties)
                     .commonInputs(SiteScopeCommonInputs.builder()
                             .host(host)
                             .port(port)

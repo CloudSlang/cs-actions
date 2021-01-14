@@ -39,14 +39,16 @@ public final class Constants {
 
     public static final String SITESCOPE_MONITORS_API = "/SiteScope/api/monitors";
     public static final String SITESCOPE_TEMPLATES_API = "/SiteScope/api/templates";
+    public static final String SITESCOPE_RUN_MONITOR_API = "/SiteScope/api/monitors/monitor/run";
     public static final String SITESCOPE_ADMIN_API = "/SiteScope/api/admin";
     public static final String GET_GROUP_PROPERTIES_ENDPOINT = "/group/properties";
     public static final String ENABLE_MONITOR_GROUP_ENDPOINT = "/group/status";
     public static final String ENABLE_MONITOR_ENDPOINT = "/monitor/status";
     public static final String DELETE_MONITOR_GROUP_ENDPOINT = "/group";
+    public static final String DELETE_MONITOR_ENDPOINT = "/monitor";
     public static final String DEPLOY_TEMPLATE_ENDPOINT = "/templateDeployment";
     public static final String DELETE_REMOTE_SERVER_ENDPOINT = "/remote";
-    public static final String REDEPLOY_TEMPLATE_ENDPOINT = "/template";
+    public static final String UPDATE_TEMPLATE_ENDPOINT = "/template";
     public static final String GET_FULL_CONFIGURATION_SNAPSHOT = "/config/snapshot";
 
     public static class GetMonitorsDeployedAt{
