@@ -16,7 +16,7 @@ package io.cloudslang.content.sitescope.services;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.sitescope.entities.EnableMonitorGroupInputs;
+import io.cloudslang.content.sitescope.entities.ChangeMonitorGroupStatusInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 import io.cloudslang.content.sitescope.utils.HttpUtils;
 import org.apache.http.client.utils.URIBuilder;
@@ -30,18 +30,18 @@ import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.FULL_PATH_TO_GROUP;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.IDENTIFIER;
-import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorGroupInputs.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.*;
 import static io.cloudslang.content.sitescope.constants.SuccessMsgs.ENABLE_MONITOR_GROUP;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 
 
-public class EnableMonitorGroupService {
+public class ChangeMonitorGroupStatusService {
 
     public @NotNull
-    Map<String, String> execute(@NotNull EnableMonitorGroupInputs enableMonitorGroupInputs) throws Exception {
+    Map<String, String> execute(@NotNull ChangeMonitorGroupStatusInputs changeMonitorGroupStatusInputs) throws Exception {
 
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final SiteScopeCommonInputs commonInputs = enableMonitorGroupInputs.getCommonInputs();
+        final SiteScopeCommonInputs commonInputs = changeMonitorGroupStatusInputs.getCommonInputs();
 
         httpClientInputs.setUrl(commonInputs.getProtocol() + "://" + commonInputs.getHost() + COLON + commonInputs.getPort() +
                 SITESCOPE_MONITORS_API + ENABLE_MONITOR_GROUP_ENDPOINT);
@@ -53,7 +53,7 @@ public class EnableMonitorGroupService {
         httpClientInputs.setPassword(commonInputs.getPassword());
         httpClientInputs.setMethod(POST);
         httpClientInputs.setContentType(X_WWW_FORM);
-        httpClientInputs.setFormParams(populateEnableMonitorGroupFormParams(enableMonitorGroupInputs));
+        httpClientInputs.setFormParams(populateChangeMonitorGroupStatusFormParams(changeMonitorGroupStatusInputs));
         httpClientInputs.setFormParamsAreURLEncoded(String.valueOf(true));
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
 
@@ -62,16 +62,16 @@ public class EnableMonitorGroupService {
         return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, ENABLE_MONITOR_GROUP);
     }
 
-    public static String populateEnableMonitorGroupFormParams(EnableMonitorGroupInputs enableMonitorGroupInputs) throws UnsupportedEncodingException {
+    public static String populateChangeMonitorGroupStatusFormParams(ChangeMonitorGroupStatusInputs changeMonitorGroupStatusInputs) throws UnsupportedEncodingException {
 
-        String delimiter = enableMonitorGroupInputs.getDelimiter();
-        String enable = enableMonitorGroupInputs.getEnable();
-        String fullPath = enableMonitorGroupInputs.getFullPathToGroup();
-        String timePeriod = enableMonitorGroupInputs.getTimePeriod();
-        String fromTime = enableMonitorGroupInputs.getFromTime();
-        String toTime = enableMonitorGroupInputs.getToTime();
-        String description = enableMonitorGroupInputs.getDescription();
-        String identifier = enableMonitorGroupInputs.getIdentifier();
+        String delimiter = changeMonitorGroupStatusInputs.getDelimiter();
+        String enable = changeMonitorGroupStatusInputs.getEnable();
+        String fullPath = changeMonitorGroupStatusInputs.getFullPathToGroup();
+        String timePeriod = changeMonitorGroupStatusInputs.getTimePeriod();
+        String fromTime = changeMonitorGroupStatusInputs.getFromTime();
+        String toTime = changeMonitorGroupStatusInputs.getToTime();
+        String description = changeMonitorGroupStatusInputs.getDescription();
+        String identifier = changeMonitorGroupStatusInputs.getIdentifier();
 
         if (!delimiter.isEmpty())
             fullPath = fullPath.replace(delimiter, SITE_SCOPE_DELIMITER);

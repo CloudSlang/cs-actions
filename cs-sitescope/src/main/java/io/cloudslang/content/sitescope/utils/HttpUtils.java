@@ -142,6 +142,20 @@ public class HttpUtils {
             return sitescopeOutputs;
         }
 
+        if (httpClientOutputs.get(Outputs.STATUS_CODE).equals(String.valueOf(400))) {
+            sitescopeOutputs.put(Outputs.RETURN_RESULT, httpClientOutputs.get(Outputs.RETURN_RESULT));
+            sitescopeOutputs.put(Outputs.STATUS_CODE, httpClientOutputs.get(Outputs.STATUS_CODE));
+            sitescopeOutputs.put(Outputs.RETURN_CODE, ReturnCodes.FAILURE);
+            return sitescopeOutputs;
+        }
+
+        if (httpClientOutputs.get(Outputs.STATUS_CODE).equals(String.valueOf(500))) {
+            sitescopeOutputs.put(Outputs.RETURN_RESULT, httpClientOutputs.get(Outputs.RETURN_RESULT));
+            sitescopeOutputs.put(Outputs.STATUS_CODE, httpClientOutputs.get(Outputs.STATUS_CODE));
+            sitescopeOutputs.put(Outputs.RETURN_CODE, ReturnCodes.FAILURE);
+            return sitescopeOutputs;
+        }
+
         if (StringUtils.isEmpty(httpClientOutputs.get(Outputs.RETURN_RESULT))) {
             String errMsg = httpClientOutputs.get("reasonPhrase");
             sitescopeOutputs.put(Outputs.RETURN_RESULT, errMsg);

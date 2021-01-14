@@ -43,7 +43,10 @@ public class Descriptions {
                 "of the group with the elements separated by a delimiter.";
         public static final String FULL_PATH_TO_MONITOR_DESC = "A string array specifying the full path to the monitor. The " +
                 "path starts with the name of the first child under the SiteScope root directory and ends with the name " +
-                "of the group with the elements separated by the delimiter.";
+                "of the monitor with the elements separated by the delimiter.";
+        public static final String FULL_PATH_TO_TEMPLATE_DESC = "A string array specifying the full path to the template. The " +
+                "path starts with the name of the first child under the SiteScope root directory and ends with the name " +
+                "of the template with the elements separated by the delimiter.";
         public static final String IDENTIFIER_DESC = "Identifier to be written to the audit log.";
         public static final String DELIMITER_DESC = "The delimiter used in the path to the group.";
         public static final String PROXY_HOST_DESC = "Proxy server host used to access the Site Scope service.";
@@ -114,19 +117,9 @@ public class Descriptions {
         public static final String FAILURE_DESC = "The specified monitor group could not be deleted.";
     }
 
-    public static class RunMonitorAction {
+    public static class ChangeMonitorGroupStatusAction {
 
-        public static final String RUN_MONITOR_DESC = "Runs the monitor.";
-        public static final String TIMEOUT_DESC = "Runs the monitor.";
-        public static final String MONITOR_ID_DESC = "External ID of the group.";
-        public static final String RETURN_RESULT_DESC = "A message describing the success or failure of the operation.";
-        public static final String SUCCESS_DESC = "The specified monitor group was successfully deleted.";
-        public static final String FAILURE_DESC = "The specified monitor group could not be deleted.";
-    }
-
-    public static class EnableMonitorGroupAction {
-
-        public static final String ENABLE_MONITOR_GROUP_DESC = "Enables or disables a group whether it was disabled indefinitely " +
+        public static final String CHANGE_MONITOR_GROUP_STATUS_DESC = "Enables or disables a group whether it was disabled indefinitely " +
                 "or for a specified time period. Enabling a group that is already enabled has no effect.";
         public static final String ENABLE_DESC = "Group is enabled if set to true and group is disabled if set to false" +
                 " or if the string is empty.";
@@ -143,7 +136,7 @@ public class Descriptions {
         public static final String DESCRIPTION_DESC = "Description to be associated with enable/disable operation.";
         public static final String IDENTIFIER_ENABLE_DESC = "Identifier to be associated with enable/disable operation and written" +
                 "to audit log. Identifier to be associated with enable/disable operation and written to audit log.";
-        public static final String ENABLE_MONITOR_GROUP_RETURN_RESULT_DESC = "The operation completed successfully.";
+        public static final String CHANGE_MONITOR_GROUP_STATUS_RETURN_RESULT_DESC = "The operation completed successfully.";
     }
 
     public static class EnableMonitorAction{
@@ -167,6 +160,21 @@ public class Descriptions {
         public static final String CUSTOM_PARAMETERS_DESC = "All other parameters required for the deployment as specified by the template being deployed.";
         public static final String SUCCESS_DESC = "The specified template was successfully deployed.";
         public static final String FAILURE_DESC = "The specified template could not be deployed.";
+    }
+
+    public static class DeleteRemoteServer{
+        public static final String DELETE_REMOTE_SERVER_DESC = "This operation deletes a SiteScope remote server.";
+        public static final String PLATFORM_DESC = "The type of the platform. Specify \"Windows\" for Windows remote servers or \"UNIX\" for Unix remote servers. Default value: Windows";
+        public static final String REMOTE_NAME_DESC = "Name of the remote server to be deleted.";
+        public static final String DELETE_REMOTE_SERVER_RETURN_RESULT_DESC = "The specified remote server was successfully deleted.";
+        public static final String SUCCESS_DESC = "The specified remote server was successfully deleted.";
+        public static final String FAILURE_DESC = "The specified remote server could not be deleted.";
+    }
+
+    public static class UpdateTemplateAction {
+        public static final String UPDATE_TEMPLATE_DESC = "This operation updates the variables of a previously deployed " +
+                "SiteScope template";
+        public static final String PROPERTIES_DESC = "Contains the properties to be updated.";
     }
 
     public static class DeleteMonitorAction {
