@@ -40,6 +40,7 @@ public final class Inputs extends InputNames {
         public static final String FULL_PATH_TO_MONITOR = "fullPathToMonitor";
         public static final String DELIMITER = "delimiter";
         public static final String IDENTIFIER = "identifier";
+        public static final String FETCH_FULL_CONFIG = "fetchFullConfig";
     }
 
     public static class DeleteMonitorGroupInputs {
@@ -74,7 +75,12 @@ public final class Inputs extends InputNames {
     public static class UpdateTemplate {
         public static final String FULL_PATH_TO_TEMPLATE = "fullPathToTemplate";
         public static final String PROPERTIES = "properties";
+    }
 
+    public static class GetMonitorsDeployedAt{
+        public static final String TARGET_SERVER = "targetServer";
+        public static final String COL_DELIMITER = "colDelimiter";
+        public static final String ROW_DELIMITER = "rowDelimiter";
     }
 
 

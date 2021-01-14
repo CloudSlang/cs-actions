@@ -24,6 +24,8 @@ public final class SuccessMsgs {
     public static final String DEPLOY_TEMPLATE = "Template was successufully deployed.";
     public static final String DELETE_REMOTE_SERVER = "The specified remote server was successfully deleted.";
     public static final String UPDATE_TEMPLATE = "Template was successfully updated.";
+    public static final String GET_MONITORS_DEPLOYED_AT = "Successfully got monitors: %s";
+    public static final String NO_SERVER_FOUND = "No server found.";
 
     private SuccessMsgs() {
 

@@ -12,16 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sitescope.actions.templates;
+package io.cloudslang.content.sitescope.actions.monitors;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.sitescope.entities.DeployTemplateInputs;
+import io.cloudslang.content.sitescope.entities.GetMonitorsDeployedAtInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
-import io.cloudslang.content.sitescope.services.DeployTemplateService;
+import io.cloudslang.content.sitescope.services.GetMonitorsDeployedAtService;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -34,22 +34,29 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
+import static io.cloudslang.content.sitescope.constants.Constants.UTF8;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.Common.RESPONSE_CHARACTER_SET_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.RETURN_RESULT_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.DeployTemplateAction.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.GetMonitorsDeployedAt.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.GetMonitorsDeployedAt.FAILURE_DESC;
+import static io.cloudslang.content.sitescope.constants.Descriptions.GetMonitorsDeployedAt.SUCCESS_DESC;
+import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.EXCEPTION_NULL_EMPTY;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.DELIMITER;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeployTemplate.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.GetMonitorsDeployedAt.*;
 import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyDeployTemplateInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
-public class DeployTemplateAction {
+public class GetMonitorsDeployedAt {
 
-    @Action(name = "Deploy Template", description = DEPLOY_TEMPLATE_DESC,
+    @Action(name = "Get Monitors Deployed At", description = GET_MONITORS_DEPLOYED_AT_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
@@ -65,12 +72,9 @@ public class DeployTemplateAction {
                                        @Param(value = PROTOCOL, description = PROTOCOL_DESC) String protocol,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
-                                       @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
-                                       @Param(value = PATH_TO_TEMPLATE, description = PATH_TO_TEMPLATE_DESC) String pathToTemplate,
-                                       @Param(value = PATH_TO_TARGET_GROUP, description = PATH_TO_TARGET_GROUP_DESC) String pathToTargetGroup,
-                                       @Param(value = CONNECT_TO_SERVER, description = CONNECT_TO_SERVER_DESC) String connectToServer,
-                                       @Param(value = TEST_REMOTES, description = TEST_REMOTES_DESC) String testRemotes,
-                                       @Param(value = CUSTOM_PARAMETERS, description = CUSTOM_PARAMETERS_DESC) String customParameters,
+                                       @Param(value = TARGET_SERVER, description = TARGET_SERVER_DESC) String targetServer,
+                                       @Param(value = COL_DELIMITER, description = COL_DELIMITER_DESC) String colDelimiter,
+                                       @Param(value = ROW_DELIMITER, description = ROW_DELIMITER_DESC) String rowDelimiter,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -90,12 +94,9 @@ public class DeployTemplateAction {
     ) {
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
-        pathToTemplate = defaultIfEmpty(pathToTemplate, EMPTY);
-        pathToTargetGroup = defaultIfEmpty(pathToTargetGroup, EMPTY);
-        connectToServer = defaultIfEmpty(connectToServer, BOOLEAN_TRUE);
-        customParameters = defaultIfEmpty(customParameters, EMPTY);
-        testRemotes = defaultIfEmpty(testRemotes, BOOLEAN_FALSE);
-        delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
+        targetServer = defaultIfEmpty(targetServer, EMPTY);
+        colDelimiter = defaultIfEmpty(colDelimiter, COMMA);
+        rowDelimiter = defaultIfEmpty(rowDelimiter, NEW_LINE);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -115,22 +116,21 @@ public class DeployTemplateAction {
 
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        exceptionMessage.addAll(verifyDeployTemplateInputs(pathToTemplate, pathToTargetGroup, connectToServer, testRemotes));
+        if(isEmpty(targetServer))
+            exceptionMessage.add(String.format(EXCEPTION_NULL_EMPTY, TARGET_SERVER));
+
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
-        final DeployTemplateService service = new DeployTemplateService();
+        final GetMonitorsDeployedAtService service = new GetMonitorsDeployedAtService();
         Map<String, String> result;
 
-        try {
-            DeployTemplateInputs inputs = new DeployTemplateInputs.DeployTemplateInputsBuilder()
-                    .pathToTemplate(pathToTemplate)
-                    .pathToTargetGroup(pathToTargetGroup)
-                    .delimiter(delimiter)
-                    .connectToServer(connectToServer)
-                    .testRemotes(testRemotes)
-                    .customParameters(customParameters)
+        try{
+            GetMonitorsDeployedAtInputs inputs = new GetMonitorsDeployedAtInputs.GetMonitorsDeployedAtInputsBuilder()
+                    .targetServer(targetServer)
+                    .colDelimiter(colDelimiter)
+                    .rowDelimiter(rowDelimiter)
                     .commonInputs(SiteScopeCommonInputs.builder()
                             .host(host)
                             .port(port)
@@ -156,8 +156,10 @@ public class DeployTemplateAction {
                     .build();
             result = service.execute(inputs);
             return result;
-        } catch (Exception ex) {
+        }catch (Exception ex){
             return getFailureResultsMap(ex);
         }
+
     }
 }
+
