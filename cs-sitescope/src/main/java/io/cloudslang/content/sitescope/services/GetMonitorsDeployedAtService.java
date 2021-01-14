@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.sitescope.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,13 +30,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Constants.GetMonitorsDeployedAt.*;
-import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.EXCEPTION_NO_SERVER_FOUND;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.FETCH_FULL_CONFIG;
+import static io.cloudslang.content.sitescope.constants.SuccessMsgs.NO_SERVER_FOUND;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
 
@@ -43,17 +60,21 @@ public class GetMonitorsDeployedAtService {
             String fullConfiguration = fullConfigurationHttpOutputs.get(Outputs.RETURN_RESULT);
             remoteServers = getRemoteServers(fullConfiguration, getMonitorsDeployedAtInputs.getTargetServer());
             if (remoteServers.isEmpty())
-                throw new Exception(EXCEPTION_NO_SERVER_FOUND);
+                return populateSuccessMap(NO_SERVER_FOUND, statusCode);
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode root = objectMapper.readTree(fullConfiguration);
             StringBuilder result = new StringBuilder();
             processNode(root, result, getMonitorsDeployedAtInputs.getRowDelimiter(), new StringBuilder());
-            Map<String,String> resultMap = OutputUtilities.getSuccessResultsMap(result.toString());
-            resultMap.put(Outputs.STATUS_CODE,String.valueOf(statusCode));
-            return resultMap;
+            return populateSuccessMap(result.toString(), statusCode);
         } else {
             return HttpUtils.convertToSitescopeResultsMap(fullConfigurationHttpOutputs, SuccessMsgs.GET_MONITORS_DEPLOYED_AT);
         }
+    }
+
+    private Map<String, String> populateSuccessMap(String result, int statusCode) {
+        Map<String, String> resultMap = OutputUtilities.getSuccessResultsMap(result);
+        resultMap.put(Outputs.STATUS_CODE, String.valueOf(statusCode));
+        return resultMap;
     }
 
     private StringBuilder processNode(JsonNode node, StringBuilder resultBuilder, String delimiter, StringBuilder currentPath) {
@@ -67,7 +88,7 @@ public class GetMonitorsDeployedAtService {
             Iterator<Map.Entry<String, JsonNode>> iterator = monitorSnapshotChildren.fields();
             while (iterator.hasNext()) {
                 Map.Entry<String, JsonNode> monitor = iterator.next();
-                verifyMonitor(monitor, resultBuilder,currentPath.toString());
+                verifyMonitor(monitor, resultBuilder, currentPath.toString());
             }
         }
         if (node.has(GROUP_CHILDREN)) {
@@ -92,7 +113,7 @@ public class GetMonitorsDeployedAtService {
                     String isEnabled = monitor.getValue().path(ENTITY_PROPERTIES).get(ENABLED).asText();
                     String monitorName = monitor.getValue().path(ENTITY_PROPERTIES).get(NAME).asText();
                     String status;
-                    if(isEnabled.equalsIgnoreCase(BOOLEAN_TRUE))
+                    if (isEnabled.equalsIgnoreCase(BOOLEAN_TRUE))
                         status = ENABLED.substring(1);
                     else
                         status = DISABLED;
@@ -103,68 +124,68 @@ public class GetMonitorsDeployedAtService {
         }
     }
 
-        public Map<String, String> getFullConfigurationSnapshot (GetMonitorsDeployedAtInputs getMonitorsDeployedAtInputs) throws
-        Exception {
-            final HttpClientInputs httpClientInputs = new HttpClientInputs();
-            final SiteScopeCommonInputs commonInputs = getMonitorsDeployedAtInputs.getCommonInputs();
+    public Map<String, String> getFullConfigurationSnapshot(GetMonitorsDeployedAtInputs getMonitorsDeployedAtInputs) throws
+            Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final SiteScopeCommonInputs commonInputs = getMonitorsDeployedAtInputs.getCommonInputs();
 
-            setCommonHttpInputs(httpClientInputs, commonInputs);
-            httpClientInputs.setAuthType(BASIC);
-            httpClientInputs.setUsername(commonInputs.getUsername());
-            httpClientInputs.setPassword(commonInputs.getPassword());
-            httpClientInputs.setUrl(getUrl(getMonitorsDeployedAtInputs));
-            httpClientInputs.setQueryParamsAreURLEncoded(String.valueOf(true));
-            httpClientInputs.setMethod(GET);
-            return new HttpClientService().execute(httpClientInputs);
-        }
+        setCommonHttpInputs(httpClientInputs, commonInputs);
+        httpClientInputs.setAuthType(BASIC);
+        httpClientInputs.setUsername(commonInputs.getUsername());
+        httpClientInputs.setPassword(commonInputs.getPassword());
+        httpClientInputs.setUrl(getUrl(getMonitorsDeployedAtInputs));
+        httpClientInputs.setQueryParamsAreURLEncoded(String.valueOf(true));
+        httpClientInputs.setMethod(GET);
+        return new HttpClientService().execute(httpClientInputs);
+    }
 
-        private String getUrl (GetMonitorsDeployedAtInputs inputs) throws URISyntaxException {
-            URIBuilder urlBuilder = new URIBuilder();
-            urlBuilder.setScheme(inputs.getCommonInputs().getProtocol());
-            urlBuilder.setHost(inputs.getCommonInputs().getHost());
-            urlBuilder.setPort(Integer.parseInt(inputs.getCommonInputs().getPort()));
-            urlBuilder.setPath(SITESCOPE_ADMIN_API + GET_FULL_CONFIGURATION_SNAPSHOT);
-            urlBuilder.addParameter(FETCH_FULL_CONFIG, BOOLEAN_TRUE);
-            return urlBuilder.build().toString();
-        }
+    private String getUrl(GetMonitorsDeployedAtInputs inputs) throws URISyntaxException {
+        URIBuilder urlBuilder = new URIBuilder();
+        urlBuilder.setScheme(inputs.getCommonInputs().getProtocol());
+        urlBuilder.setHost(inputs.getCommonInputs().getHost());
+        urlBuilder.setPort(Integer.parseInt(inputs.getCommonInputs().getPort()));
+        urlBuilder.setPath(SITESCOPE_ADMIN_API + GET_FULL_CONFIGURATION_SNAPSHOT);
+        urlBuilder.addParameter(FETCH_FULL_CONFIG, BOOLEAN_TRUE);
+        return urlBuilder.build().toString();
+    }
 
 
-        private List<RemoteServer> getRemoteServers (String config, String targetServer) throws IOException {
-            List<RemoteServer> remoteServersList = new LinkedList<>();
+    private List<RemoteServer> getRemoteServers(String config, String targetServer) throws IOException {
+        List<RemoteServer> remoteServersList = new LinkedList<>();
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode root = objectMapper.readTree(config);
-            JsonNode preferenceSnapShotNode = root.path(PREFERENCE_SNAPSHOT);
-            if (preferenceSnapShotNode.isObject()) {
-                Iterator<Map.Entry<String, JsonNode>> prefSnapshotIterator = preferenceSnapShotNode.fields();
-                while (prefSnapshotIterator.hasNext()) {
-                    Map.Entry<String, JsonNode> fields = prefSnapshotIterator.next();
-                    String key = fields.getKey();
-                    if (key.startsWith(SNAPSHOT_REMOTE) && key.endsWith(SNAPSHOT_CHILDREN)) {
-                        searchTargetServer(fields.getValue(), targetServer, remoteServersList);
-                    }
-                }
-            }
-            return remoteServersList;
-        }
-
-        public static void searchTargetServer (JsonNode remoteSnapshotChildren, String
-        targetServer, List < RemoteServer > remoteServersList){
-            Iterator<Map.Entry<String, JsonNode>> remoteSnapshotChildrenIterator = remoteSnapshotChildren.fields();
-            while (remoteSnapshotChildrenIterator.hasNext()) {
-                Map.Entry<String, JsonNode> remoteServers = remoteSnapshotChildrenIterator.next();
-                if (remoteServers.getValue().path(ENTITY_PROPERTIES).get(HOST).asText().equalsIgnoreCase(targetServer)
-                 || remoteServers.getValue().path(ENTITY_PROPERTIES).get(NAME).asText().equalsIgnoreCase(targetServer)) {
-                    addRemoteServerToList(remoteServersList, remoteServers.getValue());
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode root = objectMapper.readTree(config);
+        JsonNode preferenceSnapShotNode = root.path(PREFERENCE_SNAPSHOT);
+        if (preferenceSnapShotNode.isObject()) {
+            Iterator<Map.Entry<String, JsonNode>> prefSnapshotIterator = preferenceSnapShotNode.fields();
+            while (prefSnapshotIterator.hasNext()) {
+                Map.Entry<String, JsonNode> fields = prefSnapshotIterator.next();
+                String key = fields.getKey();
+                if (key.startsWith(SNAPSHOT_REMOTE) && key.endsWith(SNAPSHOT_CHILDREN)) {
+                    searchTargetServer(fields.getValue(), targetServer, remoteServersList);
                 }
             }
         }
+        return remoteServersList;
+    }
 
-        public static void addRemoteServerToList (List < RemoteServer > remoteServerList, JsonNode remoteServersNode){
-            JsonNode entitySnapshotProperties = remoteServersNode.path(ENTITY_PROPERTIES);
-            remoteServerList.add(new RemoteServer(entitySnapshotProperties.get(ID).asText(),
-                    entitySnapshotProperties.get(OS).asText(),
-                    entitySnapshotProperties.get(NAME).asText(),
-                    entitySnapshotProperties.get(HOST).asText()));
+    public static void searchTargetServer(JsonNode remoteSnapshotChildren,
+                                          String targetServer, List<RemoteServer> remoteServersList) {
+        Iterator<Map.Entry<String, JsonNode>> remoteSnapshotChildrenIterator = remoteSnapshotChildren.fields();
+        while (remoteSnapshotChildrenIterator.hasNext()) {
+            Map.Entry<String, JsonNode> remoteServers = remoteSnapshotChildrenIterator.next();
+            if (remoteServers.getValue().path(ENTITY_PROPERTIES).get(HOST).asText().equalsIgnoreCase(targetServer)
+                    || remoteServers.getValue().path(ENTITY_PROPERTIES).get(NAME).asText().equalsIgnoreCase(targetServer)) {
+                addRemoteServerToList(remoteServersList, remoteServers.getValue());
+            }
         }
     }
+
+    public static void addRemoteServerToList(List<RemoteServer> remoteServerList, JsonNode remoteServersNode) {
+        JsonNode entitySnapshotProperties = remoteServersNode.path(ENTITY_PROPERTIES);
+        remoteServerList.add(new RemoteServer(entitySnapshotProperties.get(ID).asText(),
+                entitySnapshotProperties.get(OS).asText(),
+                entitySnapshotProperties.get(NAME).asText(),
+                entitySnapshotProperties.get(HOST).asText()));
+    }
+}
