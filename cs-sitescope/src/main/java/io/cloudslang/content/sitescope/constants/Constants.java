@@ -47,5 +47,24 @@ public final class Constants {
     public static final String DEPLOY_TEMPLATE_ENDPOINT = "/templateDeployment";
     public static final String DELETE_REMOTE_SERVER_ENDPOINT = "/remote";
     public static final String REDEPLOY_TEMPLATE_ENDPOINT = "/template";
+    public static final String GET_FULL_CONFIGURATION_SNAPSHOT = "/config/snapshot";
+
+    public static class GetMonitorsDeployedAt{
+        public static final String PREFERENCE_SNAPSHOT = "snapshot_preferenceSnapShot";
+        public static final String ENTITY_PROPERTIES = "entitySnapshot_properties";
+        public static final String MONITOR_CHILDREN = "snapshot_monitorSnapshotChildren";
+        public static final String GROUP_CHILDREN = "snapshot_groupSnapshotChildren";
+        public static final String NAME = "_name";
+        public static final String REMOTE_ID = "_remoteID";
+        public static final String ENABLED = "_enabled";
+        public static final String DISABLED = "disabled";
+        public static final String HOST = "_host";
+        public static final String ID = "_id";
+        public static final String OS = "_os";
+        public static final String SNAPSHOT_REMOTE = "snapshot_remote";
+        public static final String SNAPSHOT_CHILDREN = "SnapshotChildren";
+        public static final String REMOTE = "Remote";
+        public static final String INSTANCE_PREFERENCES = "InstancePreferences_";
+    }
 
 }

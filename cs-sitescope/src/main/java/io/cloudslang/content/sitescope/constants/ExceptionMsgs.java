@@ -25,5 +25,6 @@ public final class ExceptionMsgs {
     public static final String EXCEPTION_INVALID_CUSTOM_PARAM = "The provided customParameters are invalid.";
     public static final String EXCEPTION_INVALID_PLATFORM = "The %s is not a valid platform. The valid platforms are: Windows, Unix.";
     public static final String EXCEPTION_INVALID_PARAM = "The provided parameters are invalid.";
+    public static final String EXCEPTION_NO_SERVER_FOUND = "No server found.";
 
 }

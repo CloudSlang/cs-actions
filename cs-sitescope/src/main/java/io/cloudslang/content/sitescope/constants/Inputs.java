@@ -40,6 +40,7 @@ public final class Inputs extends InputNames {
         public static final String FULL_PATH_TO_MONITOR = "fullPathToMonitor";
         public static final String DELIMITER = "delimiter";
         public static final String IDENTIFIER = "identifier";
+        public static final String FETCH_FULL_CONFIG = "fetchFullConfig";
     }
 
     public static class DeleteMonitorGroupInputs {
