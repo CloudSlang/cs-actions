@@ -12,17 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package io.cloudslang.content.sitescope.actions.monitors;
+package io.cloudslang.content.sitescope.actions.servers;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.sitescope.entities.EnableMonitorInputs;
+import io.cloudslang.content.sitescope.entities.DeleteRemoteServerInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
-import io.cloudslang.content.sitescope.services.EnableMonitorService;
+import io.cloudslang.content.sitescope.services.DeleteRemoteServerService;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -36,28 +35,22 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
-import static io.cloudslang.content.sitescope.constants.Descriptions.ChangeMonitorGroupStatusAction.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
-import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.RETURN_RESULT_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.EnableMonitorAction.ENABLE_MONITOR_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.EnableMonitorAction.MONITOR_ID_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.FAILURE_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.SUCCESS_DESC;
-import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteRemoteServer.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorInputs.MONITOR_ID;
+import static io.cloudslang.content.sitescope.constants.Inputs.DeleteRemoteServerInputs.PLATFORM;
+import static io.cloudslang.content.sitescope.constants.Inputs.DeleteRemoteServerInputs.REMOTE_NAME;
 import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyEnableMonitorInputs;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyDeleteRemoteServerInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class EnableMonitorAction {
-
-    @Action(name = "Enable Monitor", description = ENABLE_MONITOR_DESC,
+public class DeleteRemoteServerAction {
+    @Action(name = "Delete Remote Server", description = DELETE_REMOTE_SERVER_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = DELETE_REMOTE_SERVER_RETURN_RESULT_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESCRIPTION)
@@ -71,15 +64,8 @@ public class EnableMonitorAction {
                                        @Param(value = PROTOCOL, required = true, description = PROTOCOL_DESC) String protocol,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
-                                       @Param(value = FULL_PATH_TO_MONITOR, description = FULL_PATH_TO_MONITOR_DESC) String fullPathToMonitor,
-                                       @Param(value = MONITOR_ID, description = MONITOR_ID_DESC) String monitorId,
-                                       @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
-                                       @Param(value = ENABLE, description = ENABLE_DESC) String enable,
-                                       @Param(value = TIME_PERIOD, description = TIME_PERIOD_DESC) String timePeriod,
-                                       @Param(value = FROM_TIME, description = FROM_TIME_DESC) String fromTime,
-                                       @Param(value = TO_TIME, description = TO_TIME_DESC) String toTime,
-                                       @Param(value = DESCRIPTION, description = DESCRIPTION_DESC) String description,
-                                       @Param(value = IDENTIFIER, description = IDENTIFIER_ENABLE_DESC) String identifier,
+                                       @Param(value = PLATFORM, description = PLATFORM_DESC) String platform,
+                                       @Param(value = REMOTE_NAME, required = true, description = REMOTE_NAME_DESC) String remoteName,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -99,13 +85,7 @@ public class EnableMonitorAction {
 
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
-        delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
-        identifier = defaultIfEmpty(identifier, EMPTY);
-        enable = defaultIfEmpty(enable, BOOLEAN_FALSE);
-        timePeriod = defaultIfEmpty(timePeriod, EMPTY);
-        fromTime = defaultIfEmpty(fromTime, EMPTY);
-        toTime = defaultIfEmpty(toTime, EMPTY);
-        description = defaultIfEmpty(description, EMPTY);
+        platform = defaultIfEmpty(platform, DEFAULT_PLATFORM);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -123,27 +103,21 @@ public class EnableMonitorAction {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final EnableMonitorService service = new EnableMonitorService();
-        Map<String, String> result;
+
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-
-        exceptionMessage.addAll(verifyEnableMonitorInputs(fullPathToMonitor, monitorId, enable));
+        exceptionMessage.addAll(verifyDeleteRemoteServerInputs(platform, remoteName));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
+        final DeleteRemoteServerService service = new DeleteRemoteServerService();
+        Map<String, String> result;
+
         try {
-            EnableMonitorInputs inputs = new EnableMonitorInputs.EnableMonitorInputsBuilder()
-                    .fullPathToMonitor(fullPathToMonitor)
-                    .monitorId(monitorId)
-                    .delimiter(delimiter)
-                    .identifier(identifier)
-                    .enable(enable)
-                    .timePeriod(timePeriod)
-                    .fromTime(fromTime)
-                    .toTime(toTime)
-                    .description(description)
+            DeleteRemoteServerInputs inputs = new DeleteRemoteServerInputs.DeleteRemoteServerInputsBuilder()
+                    .platform(platform)
+                    .remoteName(remoteName)
                     .commonInputs(SiteScopeCommonInputs.builder()
                             .host(host)
                             .port(port)

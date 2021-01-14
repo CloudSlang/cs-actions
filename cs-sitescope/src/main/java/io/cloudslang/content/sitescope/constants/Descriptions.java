@@ -117,9 +117,9 @@ public class Descriptions {
         public static final String FAILURE_DESC = "The specified monitor group could not be deleted.";
     }
 
-    public static class EnableMonitorGroupAction {
+    public static class ChangeMonitorGroupStatusAction {
 
-        public static final String ENABLE_MONITOR_GROUP_DESC = "Enables or disables a group whether it was disabled indefinitely " +
+        public static final String CHANGE_MONITOR_GROUP_STATUS_DESC = "Enables or disables a group whether it was disabled indefinitely " +
                 "or for a specified time period. Enabling a group that is already enabled has no effect.";
         public static final String ENABLE_DESC = "Group is enabled if set to true and group is disabled if set to false" +
                 " or if the string is empty.";
@@ -136,7 +136,7 @@ public class Descriptions {
         public static final String DESCRIPTION_DESC = "Description to be associated with enable/disable operation.";
         public static final String IDENTIFIER_ENABLE_DESC = "Identifier to be associated with enable/disable operation and written" +
                 "to audit log. Identifier to be associated with enable/disable operation and written to audit log.";
-        public static final String ENABLE_MONITOR_GROUP_RETURN_RESULT_DESC = "The operation completed successfully.";
+        public static final String CHANGE_MONITOR_GROUP_STATUS_RETURN_RESULT_DESC = "The operation completed successfully.";
     }
 
     public static class EnableMonitorAction{
@@ -162,9 +162,35 @@ public class Descriptions {
         public static final String FAILURE_DESC = "The specified template could not be deployed.";
     }
 
-    public static class RedeployTemplateAction{
-        public static final String REDEPLOY_TEMPLATE_DESC = "This operation updates the variables of a previously deployed " +
+    public static class DeleteRemoteServer{
+        public static final String DELETE_REMOTE_SERVER_DESC = "This operation deletes a SiteScope remote server.";
+        public static final String PLATFORM_DESC = "The type of the platform. Specify \"Windows\" for Windows remote servers or \"UNIX\" for Unix remote servers. Default value: Windows";
+        public static final String REMOTE_NAME_DESC = "Name of the remote server to be deleted.";
+        public static final String DELETE_REMOTE_SERVER_RETURN_RESULT_DESC = "The specified remote server was successfully deleted.";
+        public static final String SUCCESS_DESC = "The specified remote server was successfully deleted.";
+        public static final String FAILURE_DESC = "The specified remote server could not be deleted.";
+    }
+
+    public static class UpdateTemplateAction {
+        public static final String UPDATE_TEMPLATE_DESC = "This operation updates the variables of a previously deployed " +
                 "SiteScope template";
         public static final String PROPERTIES_DESC = "Contains the properties to be updated.";
+    }
+
+    public static class DeleteMonitorAction {
+
+        public static final String DELETE_MONITOR_DESC = "Deletes a SiteScope monitor.";
+        public static final String RETURN_RESULT_DESC = "A message describing the success or failure of the operation.";
+        public static final String SUCCESS_DESC = "The specified monitor was successfully deleted.";
+        public static final String FAILURE_DESC = "The specified monitor could not be deleted.";
+    }
+
+    public static class RunMonitorAction {
+
+        public static final String RUN_MONITOR_DESC = "Runs a SiteScope monitor. The monitor must be deployed before invoking this method.";
+        public static final String RETURN_RESULT_DESC = "A HashMap representation of the status of the run and the status message as it would appear on the UI.";
+        public static final String TIMEOUT_DESC = " Timeout value in milliseconds.";
+        public static final String SUCCESS_DESC = "The specified monitor was run successfully.";
+        public static final String FAILURE_DESC = "The specified monitor could not be run.";
     }
 }

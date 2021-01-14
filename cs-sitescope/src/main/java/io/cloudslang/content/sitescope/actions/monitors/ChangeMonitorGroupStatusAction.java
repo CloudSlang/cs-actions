@@ -12,16 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sitescope.actions.templates;
+
+package io.cloudslang.content.sitescope.actions.monitors;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.sitescope.entities.RedeployTemplateInputs;
+import io.cloudslang.content.sitescope.entities.ChangeMonitorGroupStatusInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
-import io.cloudslang.content.sitescope.services.RedeployTemplateService;
+import io.cloudslang.content.sitescope.services.ChangeMonitorGroupStatusService;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -36,27 +37,22 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
-import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.RETURN_RESULT_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.FAILURE_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.SUCCESS_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.RedeployTemplateAction.PROPERTIES_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.RedeployTemplateAction.REDEPLOY_TEMPLATE_DESC;
+import static io.cloudslang.content.sitescope.constants.Descriptions.ChangeMonitorGroupStatusAction.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.RedeployTemplate.FULL_PATH_TO_TEMPLATE;
-import static io.cloudslang.content.sitescope.constants.Inputs.RedeployTemplate.PROPERTIES;
+import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.*;
 import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyRedeployTemplateInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyChangeMonitorGroupStatusInputs;
 
-public class RedeployTemplateAction {
+public class ChangeMonitorGroupStatusAction {
 
-
-    @Action(name = "Redeploy Template", description = REDEPLOY_TEMPLATE_DESC,
+    @Action(name = "Change Monitor Group Status", description = CHANGE_MONITOR_GROUP_STATUS_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = CHANGE_MONITOR_GROUP_STATUS_RETURN_RESULT_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESCRIPTION)
@@ -65,15 +61,20 @@ public class RedeployTemplateAction {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
+
     public Map<String, String> execute(@Param(value = HOST, required = true, description = HOST_DESC) String host,
                                        @Param(value = PORT, required = true, description = PORT_DESC) String port,
                                        @Param(value = PROTOCOL, required = true, description = PROTOCOL_DESC) String protocol,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
-                                       @Param(value = FULL_PATH_TO_TEMPLATE, description = FULL_PATH_TO_TEMPLATE_DESC) String fullPathToTemplate,
+                                       @Param(value = FULL_PATH_TO_GROUP, required = true, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
-                                       @Param(value = PROPERTIES, description = PROPERTIES_DESC) String properties,
-                                       @Param(value = IDENTIFIER, description = IDENTIFIER_DESC) String identifier,
+                                       @Param(value = ENABLE, description = ENABLE_DESC) String enable,
+                                       @Param(value = TIME_PERIOD, description = TIME_PERIOD_DESC) String timePeriod,
+                                       @Param(value = FROM_TIME, description = FROM_TIME_DESC) String fromTime,
+                                       @Param(value = TO_TIME, description = TO_TIME_DESC) String toTime,
+                                       @Param(value = DESCRIPTION, description = DESCRIPTION_DESC) String description,
+                                       @Param(value = IDENTIFIER, description = IDENTIFIER_ENABLE_DESC) String identifier,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -95,7 +96,11 @@ public class RedeployTemplateAction {
         password = defaultIfEmpty(password, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
         identifier = defaultIfEmpty(identifier, EMPTY);
-        properties = defaultIfEmpty(properties, EMPTY);
+        enable = defaultIfEmpty(enable, BOOLEAN_FALSE);
+        timePeriod = defaultIfEmpty(timePeriod, EMPTY);
+        fromTime = defaultIfEmpty(fromTime, EMPTY);
+        toTime = defaultIfEmpty(toTime, EMPTY);
+        description = defaultIfEmpty(description, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -113,22 +118,25 @@ public class RedeployTemplateAction {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final RedeployTemplateService service = new RedeployTemplateService();
+        final ChangeMonitorGroupStatusService service = new ChangeMonitorGroupStatusService();
         Map<String, String> result;
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-
-        exceptionMessage.addAll(verifyRedeployTemplateInputs(fullPathToTemplate));
+        exceptionMessage.addAll(verifyChangeMonitorGroupStatusInputs(fullPathToGroup, enable));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
         try {
-            RedeployTemplateInputs inputs = new RedeployTemplateInputs.RedeployTemplateInputsBuilder()
-                    .fullPathToTemplate(fullPathToTemplate)
+            ChangeMonitorGroupStatusInputs inputs = new ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder()
+                    .fullPathToGroup(fullPathToGroup)
                     .delimiter(delimiter)
                     .identifier(identifier)
-                    .properties(properties)
+                    .enable(enable)
+                    .timePeriod(timePeriod)
+                    .fromTime(fromTime)
+                    .toTime(toTime)
+                    .description(description)
                     .commonInputs(SiteScopeCommonInputs.builder()
                             .host(host)
                             .port(port)

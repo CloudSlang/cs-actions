@@ -46,7 +46,7 @@ public final class Inputs extends InputNames {
         public static final String EXTERNAL_ID = "externalId";
     }
 
-    public static class EnableMonitorGroupInputs {
+    public static class ChangeMonitorGroupStatusInputs {
         public static final String ENABLE = "enable";
         public static final String TIME_PERIOD = "timePeriod";
         public static final String FROM_TIME = "fromTime";
@@ -54,11 +54,11 @@ public final class Inputs extends InputNames {
         public static final String DESCRIPTION = "description";
     }
 
-    public static class EnableMonitorInputs{
+    public static class EnableMonitorInputs {
         public static final String MONITOR_ID = "monitorId";
     }
 
-    public static class DeployTemplate{
+    public static class DeployTemplate {
         public static final String PATH_TO_TEMPLATE = "pathToTemplate";
         public static final String PATH_TO_TARGET_GROUP = "pathToTargetGroup";
         public static final String CONNECT_TO_SERVER = "connectToServer";
@@ -66,10 +66,22 @@ public final class Inputs extends InputNames {
         public static final String CUSTOM_PARAMETERS = "customParameters";
 
     }
+    public static class DeleteRemoteServerInputs {
+        public static final String PLATFORM = "platform";
+        public static final String REMOTE_NAME = "remoteName";
+    }
 
-    public static class RedeployTemplate{
+    public static class UpdateTemplate {
         public static final String FULL_PATH_TO_TEMPLATE = "fullPathToTemplate";
         public static final String PROPERTIES = "properties";
+
+    }
+
+
+        public static class RunMonitor {
+        public static final String MONITOR_ID = "monitorId";
+        public static final String TIMEOUT_RUN_MONITOR = "timeOut";
+
 
     }
 }
