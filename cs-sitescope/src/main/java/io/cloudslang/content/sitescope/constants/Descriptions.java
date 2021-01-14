@@ -184,4 +184,13 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The specified monitor was successfully deleted.";
         public static final String FAILURE_DESC = "The specified monitor could not be deleted.";
     }
+
+    public static class RunMonitorAction {
+
+        public static final String RUN_MONITOR_DESC = "Runs a SiteScope monitor. The monitor must be deployed before invoking this method.";
+        public static final String RETURN_RESULT_DESC = "A HashMap representation of the status of the run and the status message as it would appear on the UI.";
+        public static final String TIMEOUT_DESC = " Timeout value in milliseconds.";
+        public static final String SUCCESS_DESC = "The specified monitor was run successfully.";
+        public static final String FAILURE_DESC = "The specified monitor could not be run.";
+    }
 }

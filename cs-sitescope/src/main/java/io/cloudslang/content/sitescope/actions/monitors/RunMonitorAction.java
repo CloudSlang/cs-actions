@@ -36,6 +36,7 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.EnableMonitorAction.MONITOR_ID_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.RunMonitorAction.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.RunMonitor.MONITOR_ID;
