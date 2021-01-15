@@ -27,7 +27,6 @@ import io.cloudslang.content.sitescope.utils.RemoteServer;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
-import sun.management.snmp.jvmmib.EnumJvmMemPoolType;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -44,7 +43,6 @@ import static io.cloudslang.content.sitescope.constants.SuccessMsgs.NO_MONITORS_
 import static io.cloudslang.content.sitescope.constants.SuccessMsgs.NO_SERVER_FOUND;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 
 public class GetMonitorsDeployedAtService {
