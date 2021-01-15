@@ -61,7 +61,7 @@ public class GetMonitorsDeployedAtService {
             String fullConfiguration = fullConfigurationHttpOutputs.get(Outputs.RETURN_RESULT);
             remoteServers = getRemoteServers(fullConfiguration, getMonitorsDeployedAtInputs.getTargetServer());
             if (remoteServers.isEmpty())
-                return populateSuccessMap(NO_SERVER_FOUND, statusCode);
+                throw new Exception(NO_SERVER_FOUND);
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode root = objectMapper.readTree(fullConfiguration);
             StringBuilder result = new StringBuilder();
