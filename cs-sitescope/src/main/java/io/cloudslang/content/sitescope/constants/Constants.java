@@ -67,6 +67,12 @@ public final class Constants {
         public static final String SNAPSHOT_CHILDREN = "SnapshotChildren";
         public static final String REMOTE = "Remote";
         public static final String INSTANCE_PREFERENCES = "InstancePreferences_";
+
+        public static final String MULTIPLE_SERVERS = "multiple servers";
+
+    }
+    public static class ReturnCodes{
+        public static final String MULTIPLE_SERVERS = "1";
     }
 
 }

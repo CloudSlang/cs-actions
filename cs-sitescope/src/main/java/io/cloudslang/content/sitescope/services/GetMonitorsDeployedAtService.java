@@ -16,8 +16,10 @@ package io.cloudslang.content.sitescope.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.sitescope.constants.Constants;
 import io.cloudslang.content.sitescope.constants.Outputs;
 import io.cloudslang.content.sitescope.constants.SuccessMsgs;
 import io.cloudslang.content.sitescope.entities.GetMonitorsDeployedAtInputs;
@@ -30,19 +32,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Constants.GetMonitorsDeployedAt.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.FETCH_FULL_CONFIG;
-import static io.cloudslang.content.sitescope.constants.SuccessMsgs.NO_MONITORS_DEPLOYED;
-import static io.cloudslang.content.sitescope.constants.SuccessMsgs.NO_SERVER_FOUND;
+import static io.cloudslang.content.sitescope.constants.SuccessMsgs.*;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 
 public class GetMonitorsDeployedAtService {
@@ -53,6 +53,7 @@ public class GetMonitorsDeployedAtService {
 
     public @NotNull Map<String, String> execute(@NotNull GetMonitorsDeployedAtInputs getMonitorsDeployedAtInputs) throws Exception {
 
+        Map<String,String> resultMap;
         colDelimiter = getMonitorsDeployedAtInputs.getColDelimiter();
         rowDelimiter = getMonitorsDeployedAtInputs.getRowDelimiter();
         Map<String, String> fullConfigurationHttpOutputs = getFullConfigurationSnapshot(getMonitorsDeployedAtInputs);
@@ -60,24 +61,39 @@ public class GetMonitorsDeployedAtService {
         if (statusCode == 200) {
             String fullConfiguration = fullConfigurationHttpOutputs.get(Outputs.RETURN_RESULT);
             remoteServers = getRemoteServers(fullConfiguration, getMonitorsDeployedAtInputs.getTargetServer());
-            if (remoteServers.isEmpty())
-                throw new Exception(NO_SERVER_FOUND);
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode root = objectMapper.readTree(fullConfiguration);
             StringBuilder result = new StringBuilder();
-            processNode(root, result, getMonitorsDeployedAtInputs.getRowDelimiter(), new StringBuilder());
-            if(result.length()==0)
-                result.append(NO_MONITORS_DEPLOYED);
-            return populateSuccessMap(result.toString(), statusCode);
+
+            if(remoteServers.size() == 1) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode root = objectMapper.readTree(fullConfiguration);
+                processNode(root, result, getMonitorsDeployedAtInputs.getRowDelimiter(), new StringBuilder());
+                if (result.length() == 0)
+                    result.append(NO_MONITORS_DEPLOYED);
+                else
+                    result.insert(0,GET_MONITORS_DEPLOYED_AT + rowDelimiter);
+                resultMap = populateResultMap(result.toString(),ReturnCodes.SUCCESS, statusCode);
+            }else if(remoteServers.size() > 1){
+                StringBuilder servers = new StringBuilder();
+                for(RemoteServer rs : remoteServers)
+                    servers.append(rs.getName()).append(colDelimiter);
+                result.append(String.format(MULTIPLE_SERVERS_MESSAGE,servers.substring(0,servers.length()-colDelimiter.length())));
+                resultMap =  populateResultMap(result.toString(),Constants.ReturnCodes.MULTIPLE_SERVERS,statusCode);
+            }else{
+                resultMap = populateResultMap(NO_SERVER_FOUND,ReturnCodes.FAILURE,200);
+            }
+        return  resultMap;
         } else {
             return HttpUtils.convertToSitescopeResultsMap(fullConfigurationHttpOutputs, SuccessMsgs.GET_MONITORS_DEPLOYED_AT);
         }
     }
 
-    private Map<String, String> populateSuccessMap(String result, int statusCode) {
-        Map<String, String> resultMap = OutputUtilities.getSuccessResultsMap(result);
-        resultMap.put(Outputs.STATUS_CODE, String.valueOf(statusCode));
-        return resultMap;
+    private Map<String,String> populateResultMap(String result, String returnCode, int statusCode){
+        Map<String, String> results = new HashMap();
+        results.put(RETURN_RESULT, result);
+        results.put(RETURN_CODE, returnCode);
+        results.put(Outputs.STATUS_CODE, String.valueOf(statusCode));
+        results.put(EXCEPTION,EMPTY);
+        return results;
     }
 
     private StringBuilder processNode(JsonNode node, StringBuilder resultBuilder, String delimiter, StringBuilder currentPath) {
@@ -174,10 +190,16 @@ public class GetMonitorsDeployedAtService {
 
     public static void searchTargetServer(JsonNode remoteSnapshotChildren,
                                           String targetServer, List<RemoteServer> remoteServersList) {
+
+        String serverHostShort = "";
+        if (targetServer.startsWith("\\\\")) {
+            serverHostShort = targetServer.substring(2);
+        }
         Iterator<Map.Entry<String, JsonNode>> remoteSnapshotChildrenIterator = remoteSnapshotChildren.fields();
         while (remoteSnapshotChildrenIterator.hasNext()) {
             Map.Entry<String, JsonNode> remoteServers = remoteSnapshotChildrenIterator.next();
             if (remoteServers.getValue().path(ENTITY_PROPERTIES).get(HOST).asText().equalsIgnoreCase(targetServer)
+                    || remoteServers.getValue().path(ENTITY_PROPERTIES).get(HOST).asText().equalsIgnoreCase(serverHostShort)
                     || remoteServers.getValue().path(ENTITY_PROPERTIES).get(NAME).asText().equalsIgnoreCase(targetServer)) {
                 addRemoteServerToList(remoteServersList, remoteServers.getValue());
             }

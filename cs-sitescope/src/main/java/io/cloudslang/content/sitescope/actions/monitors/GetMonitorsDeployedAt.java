@@ -19,6 +19,7 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.sitescope.constants.Constants;
 import io.cloudslang.content.sitescope.entities.GetMonitorsDeployedAtInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 import io.cloudslang.content.sitescope.services.GetMonitorsDeployedAtService;
@@ -36,6 +37,7 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
+import static io.cloudslang.content.sitescope.constants.Constants.GetMonitorsDeployedAt.MULTIPLE_SERVERS;
 import static io.cloudslang.content.sitescope.constants.Constants.UTF8;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.RESPONSE_CHARACTER_SET_DESC;
@@ -65,7 +67,8 @@ public class GetMonitorsDeployedAt {
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC),
+                    @Response(text = MULTIPLE_SERVERS, field = RETURN_CODE, value = Constants.ReturnCodes.MULTIPLE_SERVERS, matchType = COMPARE_EQUAL, responseType = ERROR, description = MULTIPLE_SERVERS_DESC)
             })
     public Map<String, String> execute(@Param(value = HOST, description = HOST_DESC) String host,
                                        @Param(value = PORT, description = PORT_DESC) String port,
