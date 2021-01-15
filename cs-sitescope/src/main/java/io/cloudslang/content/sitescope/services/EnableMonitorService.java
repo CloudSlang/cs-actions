@@ -65,34 +65,27 @@ public class EnableMonitorService {
     private static String populateEnableMonitorFormParams(EnableMonitorInputs enableMonitorInputs) throws UnsupportedEncodingException {
 
         String delimiter = enableMonitorInputs.getDelimiter();
-        String enable = enableMonitorInputs.getEnable();
         String fullPath = enableMonitorInputs.getFullPathToMonitor();
-        String monitorId = enableMonitorInputs.getMonitorId();
-        String timePeriod = enableMonitorInputs.getTimePeriod();
-        String fromTime = enableMonitorInputs.getFromTime();
-        String toTime = enableMonitorInputs.getToTime();
-        String description = enableMonitorInputs.getDescription();
-        String identifier = enableMonitorInputs.getIdentifier();
 
         if (!delimiter.isEmpty())
             fullPath = fullPath.replace(delimiter, SITE_SCOPE_DELIMITER);
 
         Map<String, String> inputsMap = new HashMap<>();
         inputsMap.put(FULL_PATH_TO_MONITOR, fullPath);
-        inputsMap.put(MONITOR_ID, monitorId);
-        inputsMap.put(ENABLE, enable);
-        inputsMap.put(TIME_PERIOD, timePeriod);
-        inputsMap.put(FROM_TIME, fromTime);
-        inputsMap.put(TO_TIME, toTime);
-        inputsMap.put(DESCRIPTION, description);
-        inputsMap.put(IDENTIFIER, identifier);
+        inputsMap.put(MONITOR_ID, enableMonitorInputs.getMonitorId());
+        inputsMap.put(ENABLE, enableMonitorInputs.getEnable());
+        inputsMap.put(TIME_PERIOD, enableMonitorInputs.getTimePeriod());
+        inputsMap.put(FROM_TIME, enableMonitorInputs.getFromTime());
+        inputsMap.put(TO_TIME, enableMonitorInputs.getToTime());
+        inputsMap.put(DESCRIPTION, enableMonitorInputs.getDescription());
+        inputsMap.put(IDENTIFIER, enableMonitorInputs.getIdentifier());
 
         URIBuilder ub = new URIBuilder();
 
         for (Map.Entry<String, String> entry : inputsMap.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            if (!value.isEmpty())
+            if ((value!=null) && !value.isEmpty())
                 ub.addParameter(key, value);
         }
 
