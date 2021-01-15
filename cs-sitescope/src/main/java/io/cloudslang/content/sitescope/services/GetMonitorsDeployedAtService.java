@@ -68,7 +68,7 @@ public class GetMonitorsDeployedAtService {
                 JsonNode root = objectMapper.readTree(fullConfiguration);
                 processNode(root, result, getMonitorsDeployedAtInputs.getRowDelimiter(), new StringBuilder());
                 if (result.length() == 0)
-                    result.append(NO_MONITORS_DEPLOYED);
+                    result.append(String.format(NO_MONITORS_DEPLOYED,remoteServers.get(0).getName()));
                 else
                     result.insert(0,GET_MONITORS_DEPLOYED_AT + rowDelimiter);
                 resultMap = populateResultMap(result.toString(),ReturnCodes.SUCCESS, statusCode);
@@ -79,7 +79,7 @@ public class GetMonitorsDeployedAtService {
                 result.append(String.format(MULTIPLE_SERVERS_MESSAGE,servers.substring(0,servers.length()-colDelimiter.length())));
                 resultMap =  populateResultMap(result.toString(),Constants.ReturnCodes.MULTIPLE_SERVERS,statusCode);
             }else{
-                resultMap = populateResultMap(NO_SERVER_FOUND,ReturnCodes.FAILURE,200);
+                resultMap = populateResultMap(NO_SERVER_FOUND,ReturnCodes.SUCCESS,200);
             }
         return  resultMap;
         } else {

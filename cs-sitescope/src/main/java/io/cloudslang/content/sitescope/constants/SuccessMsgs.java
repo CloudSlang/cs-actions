@@ -26,8 +26,8 @@ public final class SuccessMsgs {
     public static final String UPDATE_TEMPLATE = "Template was successfully updated.";
     public static final String GET_MONITORS_DEPLOYED_AT = "Successfully got monitors: ";
     public static final String NO_SERVER_FOUND = "No server found.";
-    public static final String NO_MONITORS_DEPLOYED = "No monitors deployed on the given targetServer.";
-    public static final String MULTIPLE_SERVERS_MESSAGE = "Multiple remote server found: %s";
+    public static final String NO_MONITORS_DEPLOYED = "There are no monitors deployed at the server: %s";
+    public static final String MULTIPLE_SERVERS_MESSAGE = "Multiple remote servers found: %s";
 
     private SuccessMsgs() {
 
