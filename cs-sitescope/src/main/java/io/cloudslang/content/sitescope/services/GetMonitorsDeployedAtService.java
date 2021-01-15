@@ -39,6 +39,7 @@ import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Constants.GetMonitorsDeployedAt.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.FETCH_FULL_CONFIG;
+import static io.cloudslang.content.sitescope.constants.SuccessMsgs.NO_MONITORS_DEPLOYED;
 import static io.cloudslang.content.sitescope.constants.SuccessMsgs.NO_SERVER_FOUND;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
@@ -60,11 +61,13 @@ public class GetMonitorsDeployedAtService {
             String fullConfiguration = fullConfigurationHttpOutputs.get(Outputs.RETURN_RESULT);
             remoteServers = getRemoteServers(fullConfiguration, getMonitorsDeployedAtInputs.getTargetServer());
             if (remoteServers.isEmpty())
-                return populateSuccessMap(NO_SERVER_FOUND, statusCode);
+                throw new Exception(NO_SERVER_FOUND);
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode root = objectMapper.readTree(fullConfiguration);
             StringBuilder result = new StringBuilder();
             processNode(root, result, getMonitorsDeployedAtInputs.getRowDelimiter(), new StringBuilder());
+            if(result.length()==0)
+                result.append(NO_MONITORS_DEPLOYED);
             return populateSuccessMap(result.toString(), statusCode);
         } else {
             return HttpUtils.convertToSitescopeResultsMap(fullConfigurationHttpOutputs, SuccessMsgs.GET_MONITORS_DEPLOYED_AT);
