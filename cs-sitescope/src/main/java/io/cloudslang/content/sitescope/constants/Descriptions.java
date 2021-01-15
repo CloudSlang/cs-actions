@@ -198,11 +198,13 @@ public class Descriptions {
         public static final String GET_MONITORS_DEPLOYED_AT_DESC = "Returns a list with the monitors that have been deployed on the given server.";
         public static final String SUCCESS_DESC = "Monitors were successfully retrieved.";
         public static final String FAILURE_DESC = "The monitors could not be retrieved.";
+        public static final String MULTIPLE_SERVERS_DESC = "The operation executed successfully but multiple servers were found.";
         public static final String TARGET_SERVER_DESC = "The target server for which to get the deployed monitors." +
                 " The value can be an IP address, host name, FQDN or a string that represents the name of the remote server as it is displayed in the SiteScope web UI. " +
                 "The value must match exactly the name of the remote server. " +
                 "If the input contains any backslashes (\"\\\"), each of them need to be properly escaped by another backslash (\"\\\\\").";
         public static final String COL_DELIMITER_DESC ="The column delimiter for the monitor results.";
         public static final String ROW_DELIMITER_DESC = "The row delimiter for the monitor results.";
+
     }
 }
