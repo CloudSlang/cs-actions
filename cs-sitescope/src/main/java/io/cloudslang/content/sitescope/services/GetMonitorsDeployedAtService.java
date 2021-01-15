@@ -27,6 +27,7 @@ import io.cloudslang.content.sitescope.utils.RemoteServer;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
+import sun.management.snmp.jvmmib.EnumJvmMemPoolType;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -39,9 +40,11 @@ import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Constants.GetMonitorsDeployedAt.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.FETCH_FULL_CONFIG;
+import static io.cloudslang.content.sitescope.constants.SuccessMsgs.NO_MONITORS_DEPLOYED;
 import static io.cloudslang.content.sitescope.constants.SuccessMsgs.NO_SERVER_FOUND;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 
 public class GetMonitorsDeployedAtService {
@@ -65,6 +68,8 @@ public class GetMonitorsDeployedAtService {
             JsonNode root = objectMapper.readTree(fullConfiguration);
             StringBuilder result = new StringBuilder();
             processNode(root, result, getMonitorsDeployedAtInputs.getRowDelimiter(), new StringBuilder());
+            if(result.length()==0)
+                result.append(NO_MONITORS_DEPLOYED);
             return populateSuccessMap(result.toString(), statusCode);
         } else {
             return HttpUtils.convertToSitescopeResultsMap(fullConfigurationHttpOutputs, SuccessMsgs.GET_MONITORS_DEPLOYED_AT);
