@@ -89,6 +89,6 @@ public class EnableMonitorService {
                 ub.addParameter(key, value);
         }
 
-        return ub.toString();
+        return ub.toString().substring(1);
     }
 }
