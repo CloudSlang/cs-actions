@@ -18,12 +18,12 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class EnableMonitorInputs {
+public class ChangeMonitorStatusInputs {
 
     private String fullPathToMonitor;
     private String monitorId;
     private String delimiter;
-    private String enable;
+    private String status;
     private String timePeriod;
     private String fromTime;
     private String toTime;
@@ -31,14 +31,14 @@ public class EnableMonitorInputs {
     private String identifier;
     private SiteScopeCommonInputs commonInputs;
 
-    private EnableMonitorInputs(String fullPathToMonitor, String monitorId, String delimiter, String identifier, String enable,
-                                String timePeriod, String fromTime, String toTime, String description,
-                                SiteScopeCommonInputs commonInputs) {
+    private ChangeMonitorStatusInputs(String fullPathToMonitor, String monitorId, String delimiter, String identifier,
+                                      String status, String timePeriod, String fromTime, String toTime, String description,
+                                      SiteScopeCommonInputs commonInputs) {
         this.fullPathToMonitor = fullPathToMonitor;
         this.monitorId = monitorId;
         this.delimiter = delimiter;
         this.identifier = identifier;
-        this.enable = enable;
+        this.status = status;
         this.timePeriod = timePeriod;
         this.fromTime = fromTime;
         this.toTime = toTime;
@@ -47,8 +47,8 @@ public class EnableMonitorInputs {
     }
 
     @NotNull
-    public static EnableMonitorInputsBuilder builder() {
-        return new EnableMonitorInputsBuilder();
+    public static ChangeMonitorStatusInputsBuilder builder() {
+        return new ChangeMonitorStatusInputsBuilder();
     }
 
     @NotNull
@@ -72,8 +72,8 @@ public class EnableMonitorInputs {
     }
 
     @NotNull
-    public String getEnable() {
-        return enable;
+    public String getStatus() {
+        return status;
     }
 
     @NotNull
@@ -101,84 +101,84 @@ public class EnableMonitorInputs {
         return this.commonInputs;
     }
 
-    public static class EnableMonitorInputsBuilder {
+    public static class ChangeMonitorStatusInputsBuilder {
         private String fullPathToMonitor = EMPTY;
         private String monitorId = EMPTY;
         private String delimiter = EMPTY;
         private String identifier = EMPTY;
-        private String enable = EMPTY;
+        private String status = EMPTY;
         private String timePeriod = EMPTY;
         private String fromTime = EMPTY;
         private String toTime = EMPTY;
         private String description = EMPTY;
         private SiteScopeCommonInputs commonInputs;
 
-        public EnableMonitorInputsBuilder() {
+        public ChangeMonitorStatusInputsBuilder() {
 
         }
 
         @NotNull
-        public EnableMonitorInputsBuilder fullPathToMonitor(@NotNull final String fullPathToMonitor) {
+        public ChangeMonitorStatusInputsBuilder fullPathToMonitor(@NotNull final String fullPathToMonitor) {
             this.fullPathToMonitor = fullPathToMonitor;
             return this;
         }
 
         @NotNull
-        public EnableMonitorInputsBuilder monitorId(@NotNull final String monitorId) {
+        public ChangeMonitorStatusInputsBuilder monitorId(@NotNull final String monitorId) {
             this.monitorId = monitorId;
             return this;
         }
 
         @NotNull
-        public EnableMonitorInputsBuilder delimiter(@NotNull final String delimiter) {
+        public ChangeMonitorStatusInputsBuilder delimiter(@NotNull final String delimiter) {
             this.delimiter = delimiter;
             return this;
         }
 
         @NotNull
-        public EnableMonitorInputsBuilder identifier(@NotNull final String identifier) {
+        public ChangeMonitorStatusInputsBuilder identifier(@NotNull final String identifier) {
             this.identifier = identifier;
             return this;
         }
 
         @NotNull
-        public EnableMonitorInputsBuilder enable(@NotNull final String enable) {
-            this.enable = enable;
+        public ChangeMonitorStatusInputsBuilder status(@NotNull final String status) {
+            this.status = status;
             return this;
         }
 
         @NotNull
-        public EnableMonitorInputsBuilder timePeriod(@NotNull final String timePeriod) {
+        public ChangeMonitorStatusInputsBuilder timePeriod(@NotNull final String timePeriod) {
             this.timePeriod = timePeriod;
             return this;
         }
 
         @NotNull
-        public EnableMonitorInputsBuilder fromTime(@NotNull final String fromTime) {
+        public ChangeMonitorStatusInputsBuilder fromTime(@NotNull final String fromTime) {
             this.fromTime = fromTime;
             return this;
         }
 
         @NotNull
-        public EnableMonitorInputsBuilder toTime(@NotNull final String toTime) {
+        public ChangeMonitorStatusInputsBuilder toTime(@NotNull final String toTime) {
             this.toTime = toTime;
             return this;
         }
 
         @NotNull
-        public EnableMonitorInputsBuilder description(@NotNull final String description) {
+        public ChangeMonitorStatusInputsBuilder description(@NotNull final String description) {
             this.description = description;
             return this;
         }
 
         @NotNull
-        public EnableMonitorInputsBuilder commonInputs(@NotNull final SiteScopeCommonInputs commonInputs) {
+        public ChangeMonitorStatusInputsBuilder commonInputs(@NotNull final SiteScopeCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
-        public EnableMonitorInputs build() {
-            return new EnableMonitorInputs(fullPathToMonitor, monitorId, delimiter, identifier, enable, timePeriod, fromTime,
+        public ChangeMonitorStatusInputs build() {
+            return new ChangeMonitorStatusInputs(fullPathToMonitor, monitorId, delimiter, identifier, status, timePeriod, fromTime,
                     toTime, description, commonInputs);
         }
     }

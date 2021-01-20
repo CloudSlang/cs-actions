@@ -20,6 +20,7 @@ public final class ExceptionMsgs {
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     public static final String EXCEPTION_INVALID_PORT = "The %s is not a valid port.";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
+    public static final String EXCEPTION_INVALID_STATUS = "The %s for %s input is not a valid value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
     public static final String EXCEPTION_WHILE_PARSING_RESPONSE = "Error while parsing the server response";
     public static final String EXCEPTION_INVALID_CUSTOM_PARAM = "The provided customParameters are invalid.";

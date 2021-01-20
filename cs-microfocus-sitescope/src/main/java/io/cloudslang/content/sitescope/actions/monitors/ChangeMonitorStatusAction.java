@@ -20,9 +20,9 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.sitescope.entities.EnableMonitorInputs;
+import io.cloudslang.content.sitescope.entities.ChangeMonitorStatusInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
-import io.cloudslang.content.sitescope.services.EnableMonitorService;
+import io.cloudslang.content.sitescope.services.ChangeMonitorStatusService;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -37,35 +37,36 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.ChangeMonitorGroupStatusAction.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.ChangeMonitorStatusAction.CHANGE_MONITOR_STATUS_DESC;
+import static io.cloudslang.content.sitescope.constants.Descriptions.ChangeMonitorStatusAction.MONITOR_ID_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.RETURN_RESULT_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.EnableMonitorAction.ENABLE_MONITOR_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.EnableMonitorAction.MONITOR_ID_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.FAILURE_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.GetGroupPropertiesAction.SUCCESS_DESC;
 import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorStatusInputs.MONITOR_ID;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorInputs.MONITOR_ID;
 import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
+import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyChangeMonitorStatusInputs;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyEnableMonitorInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class EnableMonitorAction {
+public class ChangeMonitorStatusAction {
 
-    @Action(name = "Enable Monitor", description = ENABLE_MONITOR_DESC,
-            outputs = {
-                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = EXCEPTION, description = EXCEPTION_DESCRIPTION)
-            },
-            responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
-            })
+    @Action(name = "Change Monitor Status", description = CHANGE_MONITOR_STATUS_DESC,
+
+    outputs = {
+        @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+        @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
+        @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
+        @Output(value = EXCEPTION, description = EXCEPTION_DESCRIPTION)
+    },
+    responses = {
+        @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
+        @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
+    })
     public Map<String, String> execute(@Param(value = HOST, required = true, description = HOST_DESC) String host,
                                        @Param(value = PORT, required = true, description = PORT_DESC) String port,
                                        @Param(value = PROTOCOL, required = true, description = PROTOCOL_DESC) String protocol,
@@ -74,7 +75,7 @@ public class EnableMonitorAction {
                                        @Param(value = FULL_PATH_TO_MONITOR, description = FULL_PATH_TO_MONITOR_DESC) String fullPathToMonitor,
                                        @Param(value = MONITOR_ID, description = MONITOR_ID_DESC) String monitorId,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
-                                       @Param(value = ENABLE, description = ENABLE_DESC) String enable,
+                                       @Param(value = STATUS, description = STATUS_DESC) String status,
                                        @Param(value = TIME_PERIOD, description = TIME_PERIOD_DESC) String timePeriod,
                                        @Param(value = FROM_TIME, description = FROM_TIME_DESC) String fromTime,
                                        @Param(value = TO_TIME, description = TO_TIME_DESC) String toTime,
@@ -101,7 +102,7 @@ public class EnableMonitorAction {
         password = defaultIfEmpty(password, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
         identifier = defaultIfEmpty(identifier, EMPTY);
-        enable = defaultIfEmpty(enable, BOOLEAN_FALSE);
+        status = defaultIfEmpty(status, BOOLEAN_FALSE);
         timePeriod = defaultIfEmpty(timePeriod, EMPTY);
         fromTime = defaultIfEmpty(fromTime, EMPTY);
         toTime = defaultIfEmpty(toTime, EMPTY);
@@ -123,23 +124,23 @@ public class EnableMonitorAction {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final EnableMonitorService service = new EnableMonitorService();
+        final ChangeMonitorStatusService service = new ChangeMonitorStatusService();
         Map<String, String> result;
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
 
-        exceptionMessage.addAll(verifyEnableMonitorInputs(fullPathToMonitor, monitorId, enable));
+        exceptionMessage.addAll(verifyChangeMonitorStatusInputs(fullPathToMonitor, monitorId, status));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
 
         try {
-            EnableMonitorInputs inputs = new EnableMonitorInputs.EnableMonitorInputsBuilder()
+            ChangeMonitorStatusInputs inputs = new ChangeMonitorStatusInputs.ChangeMonitorStatusInputsBuilder()
                     .fullPathToMonitor(fullPathToMonitor)
                     .monitorId(monitorId)
                     .delimiter(delimiter)
                     .identifier(identifier)
-                    .enable(enable)
+                    .status(status)
                     .timePeriod(timePeriod)
                     .fromTime(fromTime)
                     .toTime(toTime)

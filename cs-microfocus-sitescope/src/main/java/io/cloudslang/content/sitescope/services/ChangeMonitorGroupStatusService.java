@@ -65,7 +65,7 @@ public class ChangeMonitorGroupStatusService {
     public static String populateChangeMonitorGroupStatusFormParams(ChangeMonitorGroupStatusInputs changeMonitorGroupStatusInputs) throws UnsupportedEncodingException {
 
         String delimiter = changeMonitorGroupStatusInputs.getDelimiter();
-        String enable = changeMonitorGroupStatusInputs.getEnable();
+        String status = changeMonitorGroupStatusInputs.getStatus();
         String fullPath = changeMonitorGroupStatusInputs.getFullPathToGroup();
         String timePeriod = changeMonitorGroupStatusInputs.getTimePeriod();
         String fromTime = changeMonitorGroupStatusInputs.getFromTime();
@@ -78,7 +78,7 @@ public class ChangeMonitorGroupStatusService {
 
         Map<String,String> inputsMap = new HashMap<>();
         inputsMap.put(FULL_PATH_TO_GROUP, fullPath);
-        inputsMap.put(ENABLE, enable);
+        inputsMap.put(STATUS, status);
         inputsMap.put(TIME_PERIOD, timePeriod);
         inputsMap.put(FROM_TIME, fromTime);
         inputsMap.put(TO_TIME, toTime);
