@@ -69,7 +69,7 @@ public class ChangeMonitorGroupStatusAction {
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = FULL_PATH_TO_GROUP, required = true, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
-                                       @Param(value = ENABLE, description = ENABLE_DESC) String enable,
+                                       @Param(value = STATUS, description = STATUS_DESC) String status,
                                        @Param(value = TIME_PERIOD, description = TIME_PERIOD_DESC) String timePeriod,
                                        @Param(value = FROM_TIME, description = FROM_TIME_DESC) String fromTime,
                                        @Param(value = TO_TIME, description = TO_TIME_DESC) String toTime,
@@ -96,7 +96,7 @@ public class ChangeMonitorGroupStatusAction {
         password = defaultIfEmpty(password, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
         identifier = defaultIfEmpty(identifier, EMPTY);
-        enable = defaultIfEmpty(enable, BOOLEAN_FALSE);
+        status = defaultIfEmpty(status, EMPTY);
         timePeriod = defaultIfEmpty(timePeriod, EMPTY);
         fromTime = defaultIfEmpty(fromTime, EMPTY);
         toTime = defaultIfEmpty(toTime, EMPTY);
@@ -122,7 +122,7 @@ public class ChangeMonitorGroupStatusAction {
         Map<String, String> result;
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        exceptionMessage.addAll(verifyChangeMonitorGroupStatusInputs(fullPathToGroup, enable));
+        exceptionMessage.addAll(verifyChangeMonitorGroupStatusInputs(fullPathToGroup, status));
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
@@ -132,7 +132,7 @@ public class ChangeMonitorGroupStatusAction {
                     .fullPathToGroup(fullPathToGroup)
                     .delimiter(delimiter)
                     .identifier(identifier)
-                    .enable(enable)
+                    .status(status)
                     .timePeriod(timePeriod)
                     .fromTime(fromTime)
                     .toTime(toTime)

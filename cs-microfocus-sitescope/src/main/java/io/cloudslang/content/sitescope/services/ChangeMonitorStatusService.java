@@ -16,7 +16,7 @@ package io.cloudslang.content.sitescope.services;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.sitescope.entities.EnableMonitorInputs;
+import io.cloudslang.content.sitescope.entities.ChangeMonitorStatusInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 import io.cloudslang.content.sitescope.utils.HttpUtils;
 import org.apache.http.client.utils.URIBuilder;
@@ -28,20 +28,50 @@ import java.util.Map;
 
 import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorStatusInputs.MONITOR_ID;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.FULL_PATH_TO_MONITOR;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.IDENTIFIER;
 import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorInputs.MONITOR_ID;
-import static io.cloudslang.content.sitescope.constants.SuccessMsgs.ENABLE_MONITOR;
+import static io.cloudslang.content.sitescope.constants.SuccessMsgs.CHANGE_MONITOR_STATUS;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 
-public class EnableMonitorService {
+public class ChangeMonitorStatusService {
+
+    private static String populateChangeMonitorStatusFormParams(ChangeMonitorStatusInputs changeMonitorStatusInputs) throws UnsupportedEncodingException {
+
+        String delimiter = changeMonitorStatusInputs.getDelimiter();
+        String fullPath = changeMonitorStatusInputs.getFullPathToMonitor();
+
+        if (!delimiter.isEmpty())
+            fullPath = fullPath.replace(delimiter, SITE_SCOPE_DELIMITER);
+
+        Map<String, String> inputsMap = new HashMap<>();
+        inputsMap.put(FULL_PATH_TO_MONITOR, fullPath);
+        inputsMap.put(MONITOR_ID, changeMonitorStatusInputs.getMonitorId());
+        inputsMap.put(STATUS, changeMonitorStatusInputs.getStatus());
+        inputsMap.put(TIME_PERIOD, changeMonitorStatusInputs.getTimePeriod());
+        inputsMap.put(FROM_TIME, changeMonitorStatusInputs.getFromTime());
+        inputsMap.put(TO_TIME, changeMonitorStatusInputs.getToTime());
+        inputsMap.put(DESCRIPTION, changeMonitorStatusInputs.getDescription());
+        inputsMap.put(IDENTIFIER, changeMonitorStatusInputs.getIdentifier());
+
+        URIBuilder ub = new URIBuilder();
+
+        for (Map.Entry<String, String> entry : inputsMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if ((value != null) && !value.isEmpty())
+                ub.addParameter(key, value);
+        }
+
+        return ub.toString();
+    }
 
     public @NotNull
-    Map<String, String> execute(@NotNull EnableMonitorInputs enableMonitorInputs) throws Exception {
+    Map<String, String> execute(@NotNull ChangeMonitorStatusInputs changeMonitorStatusInputs) throws Exception {
 
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        final SiteScopeCommonInputs commonInputs = enableMonitorInputs.getCommonInputs();
+        final SiteScopeCommonInputs commonInputs = changeMonitorStatusInputs.getCommonInputs();
 
         httpClientInputs.setUrl(commonInputs.getProtocol() + "://" + commonInputs.getHost() + COLON + commonInputs.getPort() +
                 SITESCOPE_MONITORS_API + ENABLE_MONITOR_ENDPOINT);
@@ -53,42 +83,12 @@ public class EnableMonitorService {
         httpClientInputs.setPassword(commonInputs.getPassword());
         httpClientInputs.setMethod(POST);
         httpClientInputs.setContentType(X_WWW_FORM);
-        httpClientInputs.setFormParams(populateEnableMonitorFormParams(enableMonitorInputs));
+        httpClientInputs.setFormParams(populateChangeMonitorStatusFormParams(changeMonitorStatusInputs));
         httpClientInputs.setFormParamsAreURLEncoded(String.valueOf(true));
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
 
         Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
 
-        return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, ENABLE_MONITOR);
-    }
-
-    private static String populateEnableMonitorFormParams(EnableMonitorInputs enableMonitorInputs) throws UnsupportedEncodingException {
-
-        String delimiter = enableMonitorInputs.getDelimiter();
-        String fullPath = enableMonitorInputs.getFullPathToMonitor();
-
-        if (!delimiter.isEmpty())
-            fullPath = fullPath.replace(delimiter, SITE_SCOPE_DELIMITER);
-
-        Map<String, String> inputsMap = new HashMap<>();
-        inputsMap.put(FULL_PATH_TO_MONITOR, fullPath);
-        inputsMap.put(MONITOR_ID, enableMonitorInputs.getMonitorId());
-        inputsMap.put(ENABLE, enableMonitorInputs.getEnable());
-        inputsMap.put(TIME_PERIOD, enableMonitorInputs.getTimePeriod());
-        inputsMap.put(FROM_TIME, enableMonitorInputs.getFromTime());
-        inputsMap.put(TO_TIME, enableMonitorInputs.getToTime());
-        inputsMap.put(DESCRIPTION, enableMonitorInputs.getDescription());
-        inputsMap.put(IDENTIFIER, enableMonitorInputs.getIdentifier());
-
-        URIBuilder ub = new URIBuilder();
-
-        for (Map.Entry<String, String> entry : inputsMap.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if ((value!=null) && !value.isEmpty())
-                ub.addParameter(key, value);
-        }
-
-        return ub.toString();
+        return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, CHANGE_MONITOR_STATUS);
     }
 }

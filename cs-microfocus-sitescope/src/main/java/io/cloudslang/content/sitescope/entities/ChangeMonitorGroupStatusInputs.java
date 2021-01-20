@@ -21,7 +21,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class ChangeMonitorGroupStatusInputs {
     private String fullPathToGroup;
     private String delimiter;
-    private String enable;
+    private String status;
     private String timePeriod;
     private String fromTime;
     private String toTime;
@@ -29,13 +29,13 @@ public class ChangeMonitorGroupStatusInputs {
     private String identifier;
     private SiteScopeCommonInputs commonInputs;
 
-    private ChangeMonitorGroupStatusInputs(String fullPathToGroup, String delimiter, String identifier, String enable,
+    private ChangeMonitorGroupStatusInputs(String fullPathToGroup, String delimiter, String identifier, String status,
                                            String timePeriod, String fromTime, String toTime, String description,
                                            SiteScopeCommonInputs commonInputs) {
         this.fullPathToGroup = fullPathToGroup;
         this.delimiter = delimiter;
         this.identifier = identifier;
-        this.enable = enable;
+        this.status = status;
         this.timePeriod = timePeriod;
         this.fromTime = fromTime;
         this.toTime = toTime;
@@ -64,8 +64,8 @@ public class ChangeMonitorGroupStatusInputs {
     }
 
     @NotNull
-    public String getEnable() {
-        return enable;
+    public String getStatus() {
+        return status;
     }
 
     @NotNull
@@ -89,7 +89,7 @@ public class ChangeMonitorGroupStatusInputs {
         private String fullPathToGroup = EMPTY;
         private String delimiter = EMPTY;
         private String identifier = EMPTY;
-        private String enable = EMPTY;
+        private String status = EMPTY;
         private String timePeriod = EMPTY;
         private String fromTime = EMPTY;
         private String toTime = EMPTY;
@@ -119,8 +119,8 @@ public class ChangeMonitorGroupStatusInputs {
         }
 
         @NotNull
-        public ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder enable(@NotNull final String enable) {
-            this.enable = enable;
+        public ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder status(@NotNull final String status) {
+            this.status = status;
             return this;
         }
 
@@ -155,7 +155,7 @@ public class ChangeMonitorGroupStatusInputs {
         }
 
         public ChangeMonitorGroupStatusInputs build() {
-            return new ChangeMonitorGroupStatusInputs(fullPathToGroup, delimiter, identifier, enable, timePeriod, fromTime,
+            return new ChangeMonitorGroupStatusInputs(fullPathToGroup, delimiter, identifier, status, timePeriod, fromTime,
                     toTime, description, commonInputs);
         }
     }

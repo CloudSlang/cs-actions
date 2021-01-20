@@ -35,12 +35,12 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
+import static io.cloudslang.content.sitescope.constants.Descriptions.ChangeMonitorStatusAction.MONITOR_ID_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
-import static io.cloudslang.content.sitescope.constants.Descriptions.EnableMonitorAction.MONITOR_ID_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.RunMonitorAction.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.RunMonitor.EXECUTION_TIMEOUT;
 import static io.cloudslang.content.sitescope.constants.Inputs.RunMonitor.MONITOR_ID;
-import static io.cloudslang.content.sitescope.constants.Inputs.RunMonitor.TIMEOUT_RUN_MONITOR;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyRunMonitorInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -66,7 +66,7 @@ public class RunMonitorAction {
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
                                        @Param(value = FULL_PATH_TO_MONITOR, description = FULL_PATH_TO_MONITOR_DESC) String fullPathToMonitor,
-                                       @Param(value = TIMEOUT_RUN_MONITOR, description = TIMEOUT_DESC) String timeOut,
+                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
                                        @Param(value = MONITOR_ID, description = MONITOR_ID_DESC) String monitorId,
                                        @Param(value = IDENTIFIER, description = IDENTIFIER_DESC) String identifier,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
@@ -89,7 +89,7 @@ public class RunMonitorAction {
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
         fullPathToMonitor = defaultIfEmpty(fullPathToMonitor, EMPTY);
-        timeOut = defaultIfEmpty(timeOut, EMPTY);
+        executionTimeout = defaultIfEmpty(executionTimeout, EMPTY);
         monitorId = defaultIfEmpty(monitorId, EMPTY);
         identifier = defaultIfEmpty(identifier, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
@@ -125,7 +125,9 @@ public class RunMonitorAction {
                     .fullPathToMonitor(fullPathToMonitor)
                     .delimiter(delimiter)
                     .identifier(identifier)
-                    .timeOut(timeOut)
+                    .executionTimeout(executionTimeout)
+                    .identifier(identifier)
+                    .monitorId(monitorId)
                     .commonInputs(SiteScopeCommonInputs.builder()
                             .host(host)
                             .port(port)

@@ -121,7 +121,7 @@ public class Descriptions {
 
         public static final String CHANGE_MONITOR_GROUP_STATUS_DESC = "Enables or disables a group whether it was disabled indefinitely " +
                 "or for a specified time period. Enabling a group that is already enabled has no effect.";
-        public static final String ENABLE_DESC = "Group is enabled if set to true and group is disabled if set to false" +
+        public static final String STATUS_DESC = "Group is enabled if set to true and group is disabled if set to false" +
                 " or if the string is empty.";
         public static final String TIME_PERIOD_DESC = "The duration (in seconds) for which the group should be disabled. " +
                 "If set to 0, group is disabled until explicitly enabled. Applicable only for disabling a group.";
@@ -139,9 +139,9 @@ public class Descriptions {
         public static final String CHANGE_MONITOR_GROUP_STATUS_RETURN_RESULT_DESC = "The operation completed successfully.";
     }
 
-    public static class EnableMonitorAction{
+    public static class ChangeMonitorStatusAction{
 
-        public static final String ENABLE_MONITOR_DESC = "Enables or disables a monitor whether it was disabled " +
+        public static final String CHANGE_MONITOR_STATUS_DESC = "Enables or disables a monitor whether it was disabled " +
                 "indefinitely or for a specified time period. Enabling a monitor that is already enabled has no effect.";
         public static final String MONITOR_ID_DESC = "A string specifying the monitor ID.";
     }
@@ -189,7 +189,7 @@ public class Descriptions {
 
         public static final String RUN_MONITOR_DESC = "Runs a SiteScope monitor. The monitor must be deployed before invoking this method.";
         public static final String RETURN_RESULT_DESC = "A HashMap representation of the status of the run and the status message as it would appear on the UI.";
-        public static final String TIMEOUT_DESC = " Timeout value in milliseconds.";
+        public static final String EXECUTION_TIMEOUT_DESC = " Timeout value in milliseconds.";
         public static final String SUCCESS_DESC = "The specified monitor was run successfully.";
         public static final String FAILURE_DESC = "The specified monitor could not be run.";
     }

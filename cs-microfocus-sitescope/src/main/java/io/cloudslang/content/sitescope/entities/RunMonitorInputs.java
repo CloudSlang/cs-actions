@@ -23,17 +23,17 @@ public class RunMonitorInputs {
     private String fullPathToMonitor;
     private String monitorId;
     private String delimiter;
-    private String timeOut;
+    private String executionTimeout;
     private String identifier;
     private SiteScopeCommonInputs commonInputs;
 
     private RunMonitorInputs(String fullPathToMonitor, String monitorId, String delimiter, String identifier,
-                             String timeOut, SiteScopeCommonInputs commonInputs) {
+                             String executionTimeout, SiteScopeCommonInputs commonInputs) {
         this.fullPathToMonitor = fullPathToMonitor;
         this.monitorId = monitorId;
         this.delimiter = delimiter;
         this.identifier = identifier;
-        this.timeOut = timeOut;
+        this.executionTimeout = executionTimeout;
         this.commonInputs = commonInputs;
     }
 
@@ -63,8 +63,8 @@ public class RunMonitorInputs {
     }
 
     @NotNull
-    public String getTimeOut() {
-        return timeOut;
+    public String getExecutionTimeout() {
+        return executionTimeout;
     }
 
     @NotNull
@@ -77,7 +77,7 @@ public class RunMonitorInputs {
         private String monitorId = EMPTY;
         private String delimiter = EMPTY;
         private String identifier = EMPTY;
-        private String timeOut = EMPTY;
+        private String executionTimeout = EMPTY;
         private SiteScopeCommonInputs commonInputs;
 
         public RunMonitorInputsBuilder() {
@@ -109,8 +109,8 @@ public class RunMonitorInputs {
         }
 
         @NotNull
-        public RunMonitorInputsBuilder timeOut(@NotNull final String timeOut) {
-            this.timeOut = timeOut;
+        public RunMonitorInputsBuilder executionTimeout(@NotNull final String executionTimeout) {
+            this.executionTimeout = executionTimeout;
             return this;
         }
 
@@ -121,7 +121,7 @@ public class RunMonitorInputs {
         }
 
         public RunMonitorInputs build() {
-            return new RunMonitorInputs(fullPathToMonitor, monitorId, delimiter, identifier, timeOut, commonInputs);
+            return new RunMonitorInputs(fullPathToMonitor, monitorId, delimiter, identifier, executionTimeout, commonInputs);
         }
     }
 }

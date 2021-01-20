@@ -48,14 +48,14 @@ public final class Inputs extends InputNames {
     }
 
     public static class ChangeMonitorGroupStatusInputs {
-        public static final String ENABLE = "enable";
+        public static final String STATUS = "status";
         public static final String TIME_PERIOD = "timePeriod";
         public static final String FROM_TIME = "fromTime";
         public static final String TO_TIME = "toTime";
         public static final String DESCRIPTION = "description";
     }
 
-    public static class EnableMonitorInputs {
+    public static class ChangeMonitorStatusInputs {
         public static final String MONITOR_ID = "monitorId";
     }
 
@@ -86,7 +86,7 @@ public final class Inputs extends InputNames {
 
         public static class RunMonitor {
         public static final String MONITOR_ID = "monitorId";
-        public static final String TIMEOUT_RUN_MONITOR = "timeOut";
+        public static final String EXECUTION_TIMEOUT = "executionTimeout";
 
 
     }

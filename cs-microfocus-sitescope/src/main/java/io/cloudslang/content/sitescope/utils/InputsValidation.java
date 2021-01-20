@@ -12,20 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package io.cloudslang.content.sitescope.utils;
 
@@ -39,17 +25,18 @@ import java.util.List;
 
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.STATUS;
+import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorStatusInputs.MONITOR_ID;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeleteMonitorGroupInputs.EXTERNAL_ID;
 import static io.cloudslang.content.sitescope.constants.Inputs.DeployTemplate.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.ENABLE;
-import static io.cloudslang.content.sitescope.constants.Inputs.EnableMonitorInputs.MONITOR_ID;
 import static io.cloudslang.content.sitescope.constants.Inputs.UpdateTemplate.FULL_PATH_TO_TEMPLATE;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public final class InputsValidation {
+
 
     @NotNull
     public static List<String> verifyGetGroupPropertiesInputs(@Nullable final String fullPathToGroup) {
@@ -64,14 +51,14 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyChangeMonitorGroupStatusInputs(@Nullable final String fullPathToGroup,
-                                                                    @Nullable final String enable) {
+                                                                    @Nullable final String status) {
         final List<String> exceptionMessages = new ArrayList<>();
 
         if (StringUtils.isEmpty(fullPathToGroup)) {
             exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, FULL_PATH_TO_GROUP));
         }
 
-        addVerifyBoolean(exceptionMessages, enable, ENABLE);
+        addVerifyStatus(exceptionMessages, status, STATUS);
 
         return exceptionMessages;
     }
@@ -92,7 +79,7 @@ public final class InputsValidation {
     public static List<String> verifyDeleteMonitorInputs(@Nullable final String fullPathToMonitor) {
         final List<String> exceptionMessages = new ArrayList<>();
 
-        if(StringUtils.isEmpty(fullPathToMonitor)) {
+        if (StringUtils.isEmpty(fullPathToMonitor)) {
             exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, FULL_PATH_TO_MONITOR));
         }
 
@@ -128,11 +115,11 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
 
         if (StringUtils.isEmpty(remoteName)) {
-            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY,remoteName));
+            exceptionMessages.add(String.format(EXCEPTION_NULL_EMPTY, remoteName));
         }
         if (!platform.equalsIgnoreCase("windows")) {
-            if(!platform.equalsIgnoreCase("unix"))
-              exceptionMessages.add(String.format(EXCEPTION_INVALID_PLATFORM,platform));
+            if (!platform.equalsIgnoreCase("unix"))
+                exceptionMessages.add(String.format(EXCEPTION_INVALID_PLATFORM, platform));
         }
         return exceptionMessages;
     }
@@ -158,6 +145,19 @@ public final class InputsValidation {
     }
 
     @NotNull
+    private static List<String> addVerifyStatus(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+
+        String inputStrip = input.replaceAll("\\s+","");
+        if (isEmpty(input)) {
+            System.out.print(String.format(EXCEPTION_NULL_EMPTY, inputName));
+        }
+        else if (!inputStrip.toLowerCase().matches("enabled|disabled")) {
+            System.out.print(String.format(EXCEPTION_INVALID_STATUS, input, inputName));
+        }
+        return exceptions;
+    }
+
+    @NotNull
     private static List<String> addVerifyNumber(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
@@ -168,16 +168,16 @@ public final class InputsValidation {
     }
 
     @NotNull
-    public static List<String> verifyEnableMonitorInputs(@Nullable final String fullPathToMonitor,
-                                                         @Nullable final String monitorId,
-                                                         @Nullable final String enable) {
+    public static List<String> verifyChangeMonitorStatusInputs(@Nullable final String fullPathToMonitor,
+                                                               @Nullable final String monitorId,
+                                                               @Nullable final String status) {
         final List<String> exceptionMessages = new ArrayList<>();
 
         if (StringUtils.isEmpty(fullPathToMonitor) && StringUtils.isEmpty(monitorId)) {
             exceptionMessages.add(String.format(EXCEPTION_AT_LEAST_ONE_OF_INPUTS, FULL_PATH_TO_MONITOR + ", " + MONITOR_ID));
         }
 
-        addVerifyBoolean(exceptionMessages, enable, ENABLE);
+        addVerifyStatus(exceptionMessages, status, STATUS);
 
         return exceptionMessages;
     }
@@ -198,6 +198,7 @@ public final class InputsValidation {
 
         return exceptionMessages;
     }
+
     @NotNull
     public static List<String> verifyUpdateTemplateInputs(@Nullable final String fullPathToTemplate) {
         final List<String> exceptionMessages = new ArrayList<>();
@@ -210,7 +211,7 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyRunMonitorInputs(@Nullable final String fullPathToMonitor,
-                                                         @Nullable final String monitorId) {
+                                                      @Nullable final String monitorId) {
         final List<String> exceptionMessages = new ArrayList<>();
 
         if (StringUtils.isEmpty(fullPathToMonitor) && StringUtils.isEmpty(monitorId))
@@ -219,4 +220,3 @@ public final class InputsValidation {
         return exceptionMessages;
     }
 }
-
