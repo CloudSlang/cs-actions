@@ -339,7 +339,7 @@
         <module>cs-postgres</module>
         <module>cs-powershell</module>
         <module>cs-rft</module>
-        <module>cs-sitescope</module>
+        <module>cs-microfocus-sitescope</module>
         <module>cs-ssh</module>
         <module>cs-tesseract</module>
         <module>cs-utilities</module>
