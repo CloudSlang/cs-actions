@@ -16,6 +16,11 @@ package io.cloudslang.content.sitescope.entities;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
+import static io.cloudslang.content.sitescope.constants.Constants.BOOLEAN_FALSE;
+import static io.cloudslang.content.sitescope.constants.Constants.BOOLEAN_TRUE;
+import static io.cloudslang.content.sitescope.constants.Constants.DISABLED;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class ChangeMonitorGroupStatusInputs {
@@ -120,7 +125,10 @@ public class ChangeMonitorGroupStatusInputs {
 
         @NotNull
         public ChangeMonitorGroupStatusInputs.ChangeMonitorGroupStatusInputsBuilder status(@NotNull final String status) {
-            this.status = status;
+            if(Objects.equals(status.replaceAll("\\s+","").toLowerCase(),DISABLED))
+                this.status = BOOLEAN_FALSE;
+            else
+                this.status = BOOLEAN_TRUE;
             return this;
         }
 

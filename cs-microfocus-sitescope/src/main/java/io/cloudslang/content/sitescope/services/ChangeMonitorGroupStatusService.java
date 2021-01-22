@@ -78,7 +78,7 @@ public class ChangeMonitorGroupStatusService {
 
         Map<String,String> inputsMap = new HashMap<>();
         inputsMap.put(FULL_PATH_TO_GROUP, fullPath);
-        inputsMap.put(STATUS, status);
+        inputsMap.put(ENABLE, status);
         inputsMap.put(TIME_PERIOD, timePeriod);
         inputsMap.put(FROM_TIME, fromTime);
         inputsMap.put(TO_TIME, toTime);
