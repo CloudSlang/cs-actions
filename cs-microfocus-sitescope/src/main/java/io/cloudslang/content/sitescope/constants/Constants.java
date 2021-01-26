@@ -18,7 +18,6 @@ public final class Constants {
 
     public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
-    public static final String DISABLED = "disabled";
     public static final String STRICT = "strict";
     public static final String CHANGEIT = "changeit";
     public static final String DEFAULT_PROXY_PORT = "8080";
@@ -51,6 +50,7 @@ public final class Constants {
     public static final String DELETE_REMOTE_SERVER_ENDPOINT = "/remote";
     public static final String UPDATE_TEMPLATE_ENDPOINT = "/template";
     public static final String GET_FULL_CONFIGURATION_SNAPSHOT = "/config/snapshot";
+    public static final String DISABLED = "disabled";
 
     public static class GetMonitorsDeployedAt{
         public static final String PREFERENCE_SNAPSHOT = "snapshot_preferenceSnapShot";
@@ -60,7 +60,7 @@ public final class Constants {
         public static final String NAME = "_name";
         public static final String REMOTE_ID = "_remoteID";
         public static final String ENABLED = "_enabled";
-        public static final String DISABLED = "disabled";
+//        public static final String DISABLED = "disabled";
         public static final String HOST = "_host";
         public static final String ID = "_id";
         public static final String OS = "_os";
