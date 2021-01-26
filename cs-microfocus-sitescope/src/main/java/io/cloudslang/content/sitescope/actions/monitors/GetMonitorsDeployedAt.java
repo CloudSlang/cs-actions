@@ -38,18 +38,14 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Constants.GetMonitorsDeployedAt.MULTIPLE_SERVERS;
-import static io.cloudslang.content.sitescope.constants.Constants.UTF8;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.RESPONSE_CHARACTER_SET_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteMonitorGroupAction.RETURN_RESULT_DESC;
-import static io.cloudslang.content.sitescope.constants.Descriptions.DeployTemplateAction.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.GetMonitorsDeployedAt.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.GetMonitorsDeployedAt.FAILURE_DESC;
 import static io.cloudslang.content.sitescope.constants.Descriptions.GetMonitorsDeployedAt.SUCCESS_DESC;
 import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.EXCEPTION_NULL_EMPTY;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.DELIMITER;
-import static io.cloudslang.content.sitescope.constants.Inputs.DeployTemplate.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.GetMonitorsDeployedAt.*;
 import static io.cloudslang.content.sitescope.constants.Outputs.STATUS_CODE;
 import static io.cloudslang.content.sitescope.utils.InputsValidation.verifyCommonInputs;
@@ -119,7 +115,7 @@ public class GetMonitorsDeployedAt {
 
         final List<String> exceptionMessage = verifyCommonInputs(port, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        if(isEmpty(targetServer))
+        if (isEmpty(targetServer))
             exceptionMessage.add(String.format(EXCEPTION_NULL_EMPTY, TARGET_SERVER));
 
         if (!exceptionMessage.isEmpty()) {
@@ -129,7 +125,7 @@ public class GetMonitorsDeployedAt {
         final GetMonitorsDeployedAtService service = new GetMonitorsDeployedAtService();
         Map<String, String> result;
 
-        try{
+        try {
             GetMonitorsDeployedAtInputs inputs = new GetMonitorsDeployedAtInputs.GetMonitorsDeployedAtInputsBuilder()
                     .targetServer(targetServer)
                     .colDelimiter(colDelimiter)
@@ -159,7 +155,7 @@ public class GetMonitorsDeployedAt {
                     .build();
             result = service.execute(inputs);
             return result;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return getFailureResultsMap(ex);
         }
 

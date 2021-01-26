@@ -147,12 +147,11 @@ public final class InputsValidation {
     @NotNull
     private static List<String> addVerifyStatus(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
 
-        String inputStrip = input.replaceAll("\\s+","");
         if (isEmpty(input)) {
-            System.out.print(String.format(EXCEPTION_NULL_EMPTY, inputName));
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         }
-        else if (!inputStrip.toLowerCase().matches("enabled|disabled")) {
-            System.out.print(String.format(EXCEPTION_INVALID_STATUS, input, inputName));
+        else if (!input.replaceAll("\\s+","").toLowerCase().matches("enabled|disabled")) {
+            exceptions.add(String.format(EXCEPTION_INVALID_STATUS, input, inputName));
         }
         return exceptions;
     }

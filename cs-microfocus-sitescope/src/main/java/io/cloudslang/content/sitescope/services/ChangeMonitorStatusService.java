@@ -48,7 +48,7 @@ public class ChangeMonitorStatusService {
         Map<String, String> inputsMap = new HashMap<>();
         inputsMap.put(FULL_PATH_TO_MONITOR, fullPath);
         inputsMap.put(MONITOR_ID, changeMonitorStatusInputs.getMonitorId());
-        inputsMap.put(STATUS, changeMonitorStatusInputs.getStatus());
+        inputsMap.put(ENABLE, changeMonitorStatusInputs.getStatus());
         inputsMap.put(TIME_PERIOD, changeMonitorStatusInputs.getTimePeriod());
         inputsMap.put(FROM_TIME, changeMonitorStatusInputs.getFromTime());
         inputsMap.put(TO_TIME, changeMonitorStatusInputs.getToTime());

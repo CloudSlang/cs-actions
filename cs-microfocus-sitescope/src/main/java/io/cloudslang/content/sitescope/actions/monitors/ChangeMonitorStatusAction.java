@@ -102,7 +102,7 @@ public class ChangeMonitorStatusAction {
         password = defaultIfEmpty(password, EMPTY);
         delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
         identifier = defaultIfEmpty(identifier, EMPTY);
-        status = defaultIfEmpty(status, BOOLEAN_FALSE);
+        status = defaultIfEmpty(status, DISABLED);
         timePeriod = defaultIfEmpty(timePeriod, EMPTY);
         fromTime = defaultIfEmpty(fromTime, EMPTY);
         toTime = defaultIfEmpty(toTime, EMPTY);
