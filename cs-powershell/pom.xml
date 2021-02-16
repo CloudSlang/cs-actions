@@ -4,7 +4,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-powershell</artifactId>
-    <version>0.11.22-SNAPSHOT</version>
+    <version>0.50.50-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A WinRM client for executing PowerShell Commands.</description>

@@ -13,7 +13,7 @@
 package io.cloudslang.content.joval.http;
 
 import io.cloudslang.content.joval.util.Base64;
-import org.apache.log4j.Logger;
+import io.cloudslang.content.utils.Logger;
 import org.microsoft.security.ntlm.NtlmAuthenticator;
 import org.microsoft.security.ntlm.NtlmAuthenticator.ConnectionType;
 import org.microsoft.security.ntlm.NtlmAuthenticator.NtlmVersion;
@@ -43,7 +43,7 @@ public class NtlmHttpURLConnection extends AbstractConnection {
     private static ConnectionType CO = ConnectionType.connectionOriented;
     private static long MAX_KEEPALIVE = 120000L; // 2 minutes
 
-    private Logger logger = Logger.getLogger(this.getClass());
+    private final Logger logger = Logger.getLogger(NtlmHttpURLConnection.class);
 
 
 //    ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -182,13 +182,13 @@ public class NtlmHttpURLConnection extends AbstractConnection {
                 setRequestProperty("Content-Type", ctBuff.toString());
 
                 ByteArrayOutputStream temp = new ByteArrayOutputStream();
-                temp.write("--Encrypted Boundary\r\n".getBytes("US-ASCII"));
-                temp.write("Content-Type: application/HTTP-SPNEGO-session-encrypted\r\n".getBytes("US-ASCII"));
-                temp.write(sb.toString().getBytes("US-ASCII"));
-                temp.write("--Encrypted Boundary\r\n".getBytes("US-ASCII"));
-                temp.write("Content-Type: application/octet-stream\r\n".getBytes("US-ASCII"));
+                temp.write("--Encrypted Boundary\r\n".getBytes(StandardCharsets.US_ASCII));
+                temp.write("Content-Type: application/HTTP-SPNEGO-session-encrypted\r\n".getBytes(StandardCharsets.US_ASCII));
+                temp.write(sb.toString().getBytes(StandardCharsets.US_ASCII));
+                temp.write("--Encrypted Boundary\r\n".getBytes(StandardCharsets.US_ASCII));
+                temp.write("Content-Type: application/octet-stream\r\n".getBytes(StandardCharsets.US_ASCII));
                 temp.write(session.seal(cachedOutput.toByteArray()));
-                temp.write("--Encrypted Boundary--\r\n".getBytes("US-ASCII"));
+                temp.write("--Encrypted Boundary--\r\n".getBytes(StandardCharsets.US_ASCII));
                 cachedOutput = temp;
             }
             setFixedLengthStreamingMode(cachedOutput.size());
@@ -587,9 +587,10 @@ public class NtlmHttpURLConnection extends AbstractConnection {
             if(pair == null){
                 throw new NullPointerException("Content type header is null");
             }
-            logger.debug("|"+pair.toString()+"|");
+            logger.log("Before evaluation->" + pair.toString()+"|");
 
             if (pair.key().trim().equalsIgnoreCase(CONTENT_TYPE) && pair.value().trim().equalsIgnoreCase(APPLICATION_OCTET_STREAM)) {
+                logger.log("Successful evaluation.");
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 byte[] buff = new byte[512];
                 int len = 0;
@@ -608,7 +609,7 @@ public class NtlmHttpURLConnection extends AbstractConnection {
                 }
                 return session.unseal(Arrays.copyOfRange(data, 0, offset));
             } else {
-                logger.debug("|"+pair.toString()+"|");
+                logger.log("Before Unexpected line exception->"+pair.toString()+"|");
                 throw new IOException("Unexpected line: " + pair.toString());
             }
         } else {
