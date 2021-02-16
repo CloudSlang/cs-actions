@@ -47,5 +47,7 @@ public class Constants {
         public static final String SINGLE_QUOTE = "'";
         public static final String ZERO_SCRIPT_EXIT_CODE = "0";
         public static final String NEGOTIATE = "Negotiate";
+        public static final String CONTENT_TYPE = "Content-Type";
+        public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
     }
 }
