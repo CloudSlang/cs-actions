@@ -14,7 +14,6 @@
  */
 
 
-
 package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.Address;
@@ -24,8 +23,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static io.cloudslang.content.database.constants.DBOtherValues.FORWARD_SLASH;
-import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
+import static io.cloudslang.content.database.constants.DBOtherValues.*;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getMySqlDbUrls;
 import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
 
 /**
@@ -39,7 +38,7 @@ public class MySqlDatabase implements SqlDatabase {
 
         final String connectionString = getConnectionString(sqlInputs);
 
-        final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
+        final List<String> dbUrls = getMySqlDbUrls(sqlInputs.getDbUrl());
         dbUrls.add(connectionString);
 
         return dbUrls;
@@ -57,6 +56,11 @@ public class MySqlDatabase implements SqlDatabase {
             connectionSb.append(FORWARD_SLASH)
                     .append(sqlInputs.getDbName());
         }
+        /* Used to avoid java.sql.SQLException: Value '0000-00-00 00:00:00' can not be represented as java.sql.Timestamp
+         This behavior is specific for MySql databases
+         null will be returned when '0000-00-00 00:00:00' is retrieved from database              */
+        connectionSb.append(QUESTION_MARK).append(ZERO_DATE_TIME_CONVERT_TO_NULL);
+
         return connectionSb.toString();
     }
 }
