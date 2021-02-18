@@ -108,6 +108,30 @@ public class SQLInputsUtils {
         return dbUrls;
     }
 
+
+
+    /* This method was created to avoid java.sql.SQLException: Value '0000-00-00 00:00:00' can not be represented as java.sql.Timestamp
+          when using dbUrl input with a MySql database
+     zeroDateTimeBehavior=convertToNull is added to url query if a value for it does not already exists
+     null will be returned when '0000-00-00 00:00:00' is retrieved from database
+     */
+    @NotNull
+    public static List<String> getMySqlDbUrls(final String dbUrl) {
+        final List<String> dbUrls = new ArrayList<>();
+        if (isNoneEmpty(dbUrl)) {
+            StringBuilder dbUrlSb = new StringBuilder(dbUrl);
+            if(dbUrl.contains(QUESTION_MARK)){
+                if(!dbUrl.contains(ZERO_DATE_TIME_BEHAVIOR)){
+                    dbUrlSb.append(AMPERSAND).append(ZERO_DATE_TIME_CONVERT_TO_NULL);
+                }
+            }else{
+                dbUrlSb.append(QUESTION_MARK).append(ZERO_DATE_TIME_CONVERT_TO_NULL);
+            }
+            dbUrls.add(dbUrlSb.toString());
+        }
+        return dbUrls;
+    }
+
     @NotNull
     public static Properties getOrDefaultDBPoolingProperties(final String dbPoolingProperties, final String defaultVal) {
         final Properties databasePoolingProperties = new Properties();

@@ -68,4 +68,9 @@ public class DBOtherValues {
     public static final String KEY_CLOB_NAMES = "%s - CLOBNames";
     public static final String KEY_SKIP = "%s - Skip";
 
+    public static final String QUESTION_MARK = "?";
+    public static final String AMPERSAND ="&";
+    public static final String ZERO_DATE_TIME_BEHAVIOR = "zeroDateTimeBehavior=";
+    public static final String ZERO_DATE_TIME_CONVERT_TO_NULL = "zeroDateTimeBehavior=convertToNull";
+
 }
