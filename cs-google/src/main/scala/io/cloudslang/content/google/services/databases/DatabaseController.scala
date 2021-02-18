@@ -51,7 +51,6 @@ object DatabaseController {
             operation.getName)
         }
       }
-
         .filter(_.getStatus == "DONE")
         .head
     }

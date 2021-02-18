@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,13 +13,11 @@
  * limitations under the License.
  */
 
-
-
 package io.cloudslang.content.google.utils.action
 
 /**
-  * Created by victor on 28.02.2017.
-  */
+ * Created by victor on 28.02.2017.
+ */
 object InputNames {
   final val PROJECT_ID = "projectId"
   final val JSON_TOKEN = "jsonToken"
@@ -136,4 +134,63 @@ object InputNames {
 
   }
 
+  object UpdateSQLDatabaseInstanceInputs {
+    final val INSTANCE_ID = "instanceId"
+    final val ZONE = "zone"
+    final val MACHINE_TYPE = "machineType"
+    final val SETTINGS_VERSION = "settingsVersion"
+    final val STORAGE_AUTO_RESIZE = "storageAutoResize"
+    final val STORAGE_CAPACITY = "storageCapacity"
+    final val ACTIVATION_POLICY = "activationPolicy"
+    final val PRIVATE_NETWORK = "privateNetwork"
+    final val IS_IPV4_ENABLED = "isIPV4Enabled"
+    final val AVAILABILITY_TYPE = "availabilityType"
+    final val RETAINED_BACKUPS = "retainedBackups"
+    final val RETENTION_UNIT = "retentionUnit"
+    final val IS_BACKUP_CONFIGURATION_ENABLED = "isBackupConfigurationEnabled"
+    final val IS_BINARY_LOG_ENABLED = "isBinaryLogEnabled"
+    final val TRANSACTION_LOG_RETENTION_DAYS = "transactionLogRetentionDays"
+    final val PREFERRED_MAINTENANCE_WINDOW_DAY = "preferredMaintenanceWindowDay"
+    final val PREFERRED_MAINTENANCE_WINDOW_HOUR = "preferredMaintenanceWindowHour"
+    final val LABELS = "labels"
+  }
+
+  object StorageBucketInputs {
+    final val BUCKET_NAME = "bucketName"
+    final val METAGENERATION_MATCH = "metagenerationMatch"
+    final val METAGENERATION_NOT_MATCH = "metagenerationNotMatch"
+    final val PROJECTION = "projection"
+    final val MAX_RESULTS= "maxResults"
+    final val PREFIX= "prefix"
+    final val PAGE_TOKEN= "pageToken"
+    final val RETENTION_PERIOD = "retentionPeriod"
+    final val STORAGE_CLASS = "storageClass"
+    final val ACCESS_CONTROL_TYPE = "accessControlType"
+    final val IS_DEFAULT_EVENT_BASED_HOLD_ENABLED = "isDefaultEventBasedHoldEnabled"
+    final val LOCATION = "location"
+    final val LOCATION_TYPE = "locationType"
+    final val IS_VERSIONING_ENABLED = "isVersioningEnabled"
+    final val PREDEFINED_ACL = "predefinedAcl"
+    final val PREDEFINED_DEFAULT_OBJECT_ACL = "predefinedDefaultObjectAcl"
+    final val RETENTION_PERIOD_TYPE = "retentionPeriodType"
+    final val METAGENERATION = "metageneration"
+  }
+
+  object UpdateStorageBucketInputs {
+    final val BUCKET_NAME = "bucketName"
+    final val METAGENERATION_MATCH = "metagenerationMatch"
+    final val METAGENERATION_NOT_MATCH = "metagenerationNotMatch"
+    final val PREDEFINED_ACL = "predefinedAcl"
+    final val PREDEFINED_DEFAULT_OBJECT_ACL = "predefinedDefaultObjectAcl"
+    final val PROJECTION = "projection"
+    final val STORAGE_CLASS = "storageClass"
+    final val LABELS = "labels"
+    final val IS_DEFAULT_EVENT_BASED_HOLD_ENABLED = "isDefaultEventBasedHoldEnabled"
+    final val IS_VERSIONING_ENABLED = "isVersioningEnabled"
+    final val ACCESS_CONTROL_TYPE = "accessControlType"
+    final val RETENTION_PERIOD_TYPE = "retentionPeriodType"
+    final val RETENTION_PERIOD = "retentionPeriod"
+    final val REMOVE_RETENTION_POLICY = "removeRetentionPolicy"
+    final val IS_RETENTION_POLICY_LOCKED = "isRetentionPolicyLocked"
+  }
 }

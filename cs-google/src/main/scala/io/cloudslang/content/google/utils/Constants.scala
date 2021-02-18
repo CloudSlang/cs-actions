@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,13 +13,11 @@
  * limitations under the License.
  */
 
-
-
 package io.cloudslang.content.google.utils
 
 /**
-  * Created by victor on 28.02.2017.
-  */
+ * Created by victor on 28.02.2017.
+ */
 object Constants {
   val COMMA = ","
   val NEW_LINE = "\n"
@@ -35,5 +33,36 @@ object Constants {
   val EXPIRE_ON = "expireOn"
   val ERROR_MESSAGE = "errorMessage"
   val ENCRYPTED_PASSWORD = "encryptedPassword"
+  val FALSE = "false"
+  val TRUE = "true"
 
+  object SQLInstancesConstant {
+    final val CREATE_SQL_INSTANCE_OPERATION_NAME = "Create SQL Instance"
+    final val DELETE_SQL_INSTANCE_OPERATION_NAME = "Delete SQL Instance"
+    final val GET_SQL_INSTANCE_OPERATION_NAME = "Get SQL Instance"
+    final val LIST_SQL_INSTANCES_OPERATION_NAME = "List SQL Instances"
+    final val START_SQL_INSTANCE_OPERATION_NAME = "Start SQL Instance"
+    final val UPDATE_SQL_INSTANCE_OPERATION_NAME = "Update SQL Instance"
+    final val STOP_SQL_INSTANCE_OPERATION_NAME = "Stop SQL Instance"
+    final val RESTART_SQL_INSTANCE_OPERATION_NAME = "Restart SQL Instance"
+
+    final val IP_ADDRESS_TYPE_PRIVATE = "PRIVATE"
+    final val IP_ADDRESS_TYPE_PRIMARY = "PRIMARY"
+    final val USER_LABELS = "userLabels"
+  }
+
+  object StorageBucketConstants {
+    final val UPDATE_BUCKET_OPERATION_NAME = "Update Bucket"
+    final val GET_BUCKET_OPERATION_NAME = "Get Bucket"
+    final val CREATE_BUCKET_OPERATION_NAME = "Create Bucket"
+    final val LIST_BUCKET_OPERATION_NAME = "List Bucket"
+    final val DELETE_BUCKET_OPERATION_NAME = "Delete Bucket"
+
+    final val UNIFORM_ACCESS_CONTROL = "Uniform"
+    final val FINE_GRAINED_ACCESS_CONTROL = "Fine-grained"
+    final val RETENTION_POLICY = "retentionPolicy"
+    final val VERSIONING = "versioning"
+    final val DEFAULT_EVENT_BASED_HOLD_KEY = "defaultEventBasedHold"
+    final val LABELS = "labels"
+  }
 }

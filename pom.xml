@@ -322,7 +322,9 @@
         <module>cs-date-time</module>
         <module>cs-dropbox</module>
         <module>cs-excel</module>
+        <module>cs-filesystem</module>
         <module>cs-google</module>
+        <module>cs-hashicorp-terraform</module>
         <module>cs-http-client</module>
         <module>cs-json</module>
         <module>cs-ldap</module>  
@@ -337,12 +339,12 @@
         <module>cs-postgres</module>
         <module>cs-powershell</module>
         <module>cs-rft</module>
+        <module>cs-microfocus-sitescope</module>
         <module>cs-ssh</module>
         <module>cs-tesseract</module>
         <module>cs-utilities</module>
         <module>cs-vmware</module>
         <module>cs-xml</module>
-        <module>cs-hashicorp-terraform</module>
     </modules>
 
 </project>

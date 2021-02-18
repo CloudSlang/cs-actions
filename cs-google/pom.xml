@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-google</artifactId>
-    <version>0.4.5-SNAPSHOT</version>
+    <version>0.4.6-SNAPSHOT</version>
 
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
@@ -88,6 +88,7 @@
         <!--Dependencies versions-->
         <google-api-services-compute.version>v1-rev160-1.23.0</google-api-services-compute.version>
         <google-api-services-sqladmin.version>v1beta4-rev76-1.25.0</google-api-services-sqladmin.version>
+        <google-api-services-storage.version>v1-rev171-1.25.0</google-api-services-storage.version>
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <scala-library.version>2.12.12</scala-library.version>
         <bouncycastle.version>1.64</bouncycastle.version>
@@ -121,6 +122,11 @@
             <artifactId>google-api-services-sqladmin</artifactId>
             <version>${google-api-services-sqladmin.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-storage</artifactId>
+            <version>${google-api-services-storage.version}</version>
+        </dependency>
         <!-- Utils -->
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
@@ -144,7 +150,7 @@
         </dependency>
         <dependency>
             <groupId>io.spray</groupId>
-            <artifactId>spray-json_2.11</artifactId>
+            <artifactId>spray-json_2.12</artifactId>
             <version>${spray-json.version}</version>
             <exclusions>
                 <exclusion>

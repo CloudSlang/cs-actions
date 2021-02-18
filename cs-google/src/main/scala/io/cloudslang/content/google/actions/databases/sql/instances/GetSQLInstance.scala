@@ -22,9 +22,13 @@ import io.cloudslang.content.constants.OutputNames._
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.databases.sql.instances.SQLDatabaseInstanceService
 import io.cloudslang.content.google.utils.Constants.NEW_LINE
+import io.cloudslang.content.google.utils.Constants.SQLInstancesConstant.{GET_SQL_INSTANCE_OPERATION_NAME, IP_ADDRESS_TYPE_PRIMARY, IP_ADDRESS_TYPE_PRIVATE}
 import io.cloudslang.content.google.utils.action.DefaultValues._
 import io.cloudslang.content.google.utils.action.Descriptions.Common._
 import io.cloudslang.content.google.utils.action.Descriptions.CreateSQLDataBaseInstance._
+import io.cloudslang.content.google.utils.action.Descriptions.SQLDataBaseInstances.GET_SQL_INSTANCE_OPERATION_DESCRIPTION
+import io.cloudslang.content.google.utils.action.Descriptions.UpdateSQLDataBaseInstance.PRIVATE_IP_ADDRESS_DESC
+import io.cloudslang.content.google.utils.action.GoogleOutputNames.STATUS
 import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs.{MACHINE_TYPE, ZONE, _}
 import io.cloudslang.content.google.utils.action.InputNames._
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
@@ -40,8 +44,8 @@ import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 import scala.collection.JavaConversions._
 
 class GetSQLInstance {
-  @Action(name = "Get SQL Instance",
-    description = "Retrieves a resource containing information about a database inside a Google Cloud SQL instance.",
+  @Action(name = GET_SQL_INSTANCE_OPERATION_NAME,
+    description = GET_SQL_INSTANCE_OPERATION_DESCRIPTION,
     outputs = Array(
       new Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
       new Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
@@ -51,14 +55,16 @@ class GetSQLInstance {
       new Output(value = DATABASE_VERSION, description = DATABASE_VERSION_DESC),
       new Output(value = ZONE, description = ZONE_DESC),
       new Output(value = PUBLIC_IP_ADDRESS, description = PUBLIC_IP_ADDRESS_DESC),
+      new Output(value = PRIVATE_IP_ADDRESS, description = PRIVATE_IP_ADDRESS_DESC),
       new Output(value = INSTANCE_ID, description = INSTANCE_ID_DESC),
       new Output(value = REGION, description = REGION_DESC),
       new Output(value = SELF_LINK, description = SELF_LINK_DESC),
       new Output(value = AVAILABILITY_TYPE, description = AVAILABILITY_TYPE_DESC),
       new Output(value = STORAGE_TYPE, description = STORAGE_TYPE_DESC),
       new Output(value = STORAGE_CAPACITY, description = STORAGE_CAPACITY_DESC),
-      new Output(value = STATE, description = STATE_DESC),
-      new Output(value = MACHINE_TYPE, description = MACHINE_TYPE_DESC)
+      new Output(value = STATUS, description = STATUS_DESC),
+      new Output(value = MACHINE_TYPE, description = MACHINE_TYPE_DESC),
+      new Output(value = ACTIVATION_POLICY, description = ACTIVATION_POLICY_DESC)
     )
     ,
     responses = Array(
@@ -68,7 +74,7 @@ class GetSQLInstance {
         matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
     )
   )
-  def execute(@Param(value = PROJECT_ID, required = true, description = PROJECT_ID_DESC) projectId: String,
+  def execute(@Param(value = PROJECT_ID, required = true, encrypted = true, description = PROJECT_ID_DESC) projectId: String,
               @Param(value = ACCESS_TOKEN, required = true, encrypted = true, description = ACCESS_TOKEN_DESC) accessToken: String,
               @Param(value = INSTANCE_ID, required = true, description = INSTANCE_ID_DESC) instanceId: String,
               @Param(value = PROXY_HOST) proxyHost: String,
@@ -77,13 +83,11 @@ class GetSQLInstance {
               @Param(value = PROXY_PASSWORD, encrypted = true) proxyPassword: String,
               @Param(value = PRETTY_PRINT) prettyPrintInp: String): util.Map[String, String] = {
 
-
     val proxyHostStr = verifyEmpty(proxyHost)
     val proxyUsernameOpt = verifyEmpty(proxyUsername)
     val proxyPortInt = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT)
     val proxyPasswordStr = defaultIfEmpty(proxyPassword, EMPTY)
     val prettyPrintStr = defaultIfEmpty(prettyPrintInp, DEFAULT_PRETTY_PRINT)
-
 
     val validationStream = validateProxyPort(proxyPortInt) ++
       validateBoolean(prettyPrintStr, PRETTY_PRINT)
@@ -104,20 +108,48 @@ class GetSQLInstance {
       val sqlInstance = SQLDatabaseInstanceService.get(httpTransport, jsonFactory, credential, projectId,
         instanceId)
       val sqlInstanceSettings = sqlInstance.getSettings
+      val ipAddresses = sqlInstance.getIpAddresses
+      var publicIPAddress = EMPTY
+      var privateIPAddress = EMPTY
+
+      if (ipAddresses.size() > 0) {
+        if (ipAddresses.get(0).getType.equals(IP_ADDRESS_TYPE_PRIMARY)) {
+          publicIPAddress = sqlInstance.getIpAddresses.get(0).getIpAddress
+        } else if (ipAddresses.get(0).getType.equals(IP_ADDRESS_TYPE_PRIVATE)) {
+          privateIPAddress = ipAddresses.get(0).getIpAddress
+        }
+      }
+      if (ipAddresses.size() > 1) {
+        if (ipAddresses.get(1).getType.equals(IP_ADDRESS_TYPE_PRIMARY)) {
+          publicIPAddress = sqlInstance.getIpAddresses.get(1).getIpAddress
+        } else if (ipAddresses.get(1).getType.equals(IP_ADDRESS_TYPE_PRIVATE)) {
+          privateIPAddress = ipAddresses.get(1).getIpAddress
+        }
+      }
 
       getSuccessResultsMap(toPretty(prettyPrint, sqlInstance)) +
         (CONNECTION_NAME -> sqlInstance.getConnectionName) +
         (DATABASE_VERSION -> sqlInstance.getDatabaseVersion) +
         (ZONE -> sqlInstance.getGceZone) +
-        (PUBLIC_IP_ADDRESS -> sqlInstance.getIpAddresses.get(0).getIpAddress) +
+        (PUBLIC_IP_ADDRESS -> (if (sqlInstance.getIpAddresses.size() > 0) {
+          publicIPAddress
+        } else {
+          EMPTY
+        })) +
+        (PRIVATE_IP_ADDRESS -> (if (sqlInstance.getIpAddresses.size() > 0) {
+          privateIPAddress
+        } else {
+          EMPTY
+        })) +
         (INSTANCE_ID -> instanceId) +
         (REGION -> sqlInstance.getRegion) +
         (SELF_LINK -> sqlInstance.getSelfLink) +
         (AVAILABILITY_TYPE -> sqlInstanceSettings.getAvailabilityType) +
         (STORAGE_TYPE -> sqlInstanceSettings.getDataDiskType) +
         (STORAGE_CAPACITY -> sqlInstanceSettings.getDataDiskSizeGb.toString) +
-        (STATE -> Utility.getInstanceStatus(sqlInstanceSettings.getActivationPolicy)) +
-        (MACHINE_TYPE -> sqlInstanceSettings.getTier)
+        (STATUS -> Utility.getInstanceStatus(sqlInstanceSettings.getActivationPolicy)) +
+        (MACHINE_TYPE -> sqlInstanceSettings.getTier) +
+        (ACTIVATION_POLICY -> sqlInstanceSettings.getActivationPolicy)
     } catch {
       case e: Throwable => getFailureResultsMap(e)
     }

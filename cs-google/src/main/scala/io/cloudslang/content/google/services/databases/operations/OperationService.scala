@@ -1,4 +1,3 @@
-
 /*
  * (c) Copyright 2020 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
