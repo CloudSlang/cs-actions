@@ -107,10 +107,6 @@ public class GetCellService {
                         if (cellString.indexOf("?/?") > 1 && cell.getCellType() == CellType.NUMERIC) {
                             result.append(cell.getNumericCellValue());
                         }
-                        //Fix for QCIM1293510
-                        else if (DateUtil.isCellDateFormatted(cell)) {
-                            result.append(cellString);
-                        }
 
                         //Formula
                         else if (cell.getCellType() == CellType.FORMULA) {
@@ -137,8 +133,8 @@ public class GetCellService {
                         }
                         //string
                         else {
-                            //Fix for QCIM1D248808
-                            if (!cell.toString().isEmpty() && isNumericCell(cell)) {
+                            //Fix for QCIM1D248808 and Fix for QCIM1293510
+                            if (!cell.toString().isEmpty() && isNumericCell(cell) && !DateUtil.isCellDateFormatted(cell)) {
                                 double aCellValue = cell.getNumericCellValue();
                                 cellString = Double.toString(aCellValue);
                             }
