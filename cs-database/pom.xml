@@ -200,13 +200,13 @@
             <groupId>com.ibm.db2</groupId>
             <artifactId>db2jcc</artifactId>
             <version>8.1</version>
-            <scope>provided</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.ibm.db2</groupId>
             <artifactId>db2jcc_license_cu</artifactId>
             <version>8.1</version>
-            <scope>provided</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.ibm.db2.jcc</groupId>
