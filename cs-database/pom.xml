@@ -200,13 +200,19 @@
             <groupId>com.ibm.db2</groupId>
             <artifactId>db2jcc</artifactId>
             <version>8.1</version>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.ibm.db2</groupId>
             <artifactId>db2jcc_license_cu</artifactId>
             <version>8.1</version>
-            <scope>test</scope>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.db2.jcc</groupId>
+            <artifactId>db2jcc</artifactId>
+            <version>db2jcc4</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
