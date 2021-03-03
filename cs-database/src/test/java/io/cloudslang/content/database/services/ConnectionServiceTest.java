@@ -163,7 +163,7 @@ public class ConnectionServiceTest {
         sqlInputs.setDbPort(30);
         sqlInputs.setDbServer("localhost");
         sqlInputs.setDbName("dbName");
-        assertConnection(sqlInputs, 1, "jdbc:mysql://localhost:30/dbName", null);
+        assertConnection(sqlInputs, 1, "jdbc:mysql://localhost:30/dbName?zeroDateTimeBehavior=convertToNull", null);
     }
 
 }
