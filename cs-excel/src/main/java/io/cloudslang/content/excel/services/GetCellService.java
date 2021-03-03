@@ -16,14 +16,7 @@
 package io.cloudslang.content.excel.services;
 
 import io.cloudslang.content.excel.entities.GetCellInputs;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.CellValue;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -31,11 +24,7 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.excel.services.ExcelServiceImpl.getExcelDoc;
-import static io.cloudslang.content.excel.services.ExcelServiceImpl.getLastColumnIndex;
-import static io.cloudslang.content.excel.services.ExcelServiceImpl.getWorksheet;
-import static io.cloudslang.content.excel.services.ExcelServiceImpl.processIndex;
-import static io.cloudslang.content.excel.services.ExcelServiceImpl.validateIndex;
+import static io.cloudslang.content.excel.services.ExcelServiceImpl.*;
 import static io.cloudslang.content.excel.utils.Constants.YES;
 import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.COLUMNS_COUNT;
 import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.HEADER;
@@ -144,8 +133,8 @@ public class GetCellService {
                         }
                         //string
                         else {
-                            //Fix for QCIM1D248808
-                            if (!cell.toString().isEmpty() && isNumericCell(cell)) {
+                            //Fix for QCIM1D248808 and Fix for QCIM1293510
+                            if (!cell.toString().isEmpty() && isNumericCell(cell) && !DateUtil.isCellDateFormatted(cell)) {
                                 double aCellValue = cell.getNumericCellValue();
                                 cellString = Double.toString(aCellValue);
                             }
@@ -186,7 +175,7 @@ public class GetCellService {
         StringBuilder result = new StringBuilder();
         int headerIndex = firstRowIndex - 1;
         final Row headerRow = worksheet.getRow(headerIndex);
-        if(headerRow == null)
+        if (headerRow == null)
             return EMPTY;
         for (int cIndex : columnIndex) {
             final Cell cell = headerRow.getCell(cIndex);
