@@ -575,7 +575,10 @@ public class NtlmHttpURLConnection extends AbstractConnection {
 		}
 	    }
 	    pair = readKVP(in);
-	    if ("Content-Type".equalsIgnoreCase(pair.key()) && "application/octet-stream".equals(pair.value())) {
+	    if (pair == null) {
+	        throw new NullPointerException("Content type header is null");
+        }
+	    if ("Content-Type".equalsIgnoreCase(pair.key().trim()) && "application/octet-stream".equals(pair.value())) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		byte[] buff = new byte[512];
 		int len = 0;
