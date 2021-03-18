@@ -26,6 +26,8 @@ import java.security.SignatureException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static io.cloudslang.content.utils.Constants.Others.*;
+
 /**
  * An HttpURLConnection implementation that can negotiate NTLM authentication with an HTTP proxy and/or
  * destination HTTP server, even when using streaming modes.
@@ -578,7 +580,7 @@ public class NtlmHttpURLConnection extends AbstractConnection {
 	    if (pair == null) {
 	        throw new NullPointerException("Content type header is null");
         }
-	    if ("Content-Type".equalsIgnoreCase(pair.key().trim()) && "application/octet-stream".equals(pair.value())) {
+	    if ((pair.key().trim()).equalsIgnoreCase(CONTENT_TYPE) && "application/octet-stream".equals(pair.value())) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		byte[] buff = new byte[512];
 		int len = 0;
