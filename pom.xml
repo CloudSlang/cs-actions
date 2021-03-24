@@ -344,6 +344,7 @@
         <module>cs-tesseract</module>
         <module>cs-utilities</module>
         <module>cs-vmware</module>
+        <module>cs-winrm4j</module>
         <module>cs-xml</module>
     </modules>
 
