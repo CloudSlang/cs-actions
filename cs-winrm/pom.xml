@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.cloudslang.content</groupId>
-    <artifactId>cs-winrm4j</artifactId>
+    <artifactId>cs-winrm</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
@@ -54,15 +54,6 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <developers>
-        <developer>
-            <name>George Giloan</name>
-            <email>giloan@hpe.com</email>
-            <organization>Hewlett Packard Enterprise</organization>
-            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
-        </developer>
-    </developers>
-
     <properties>
         <!--Maven versions-->
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
@@ -87,58 +78,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.hp.score.sdk</groupId>
-            <artifactId>score-content-sdk</artifactId>
-            <version>${score-content-sdk.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cloudslang.content</groupId>
-            <artifactId>cs-http-client</artifactId>
-            <version>${cs-http-client.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cloudslang.content</groupId>
-            <artifactId>cs-commons</artifactId>
-            <version>${cs-commons.version}</version>
-        </dependency>
-        <!--Test dependencies-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-core</artifactId>
-            <version>1.6.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>1.6.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-reflect</artifactId>
-            <version>1.6.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>1.6.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>io.cloudsoft.windows</groupId>
             <artifactId>winrm4j</artifactId>
             <version>0.11.0</version>
@@ -147,6 +86,12 @@
             <groupId>com.mchange</groupId>
             <artifactId>mchange-commons-java</artifactId>
             <version>0.2.19</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.11</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

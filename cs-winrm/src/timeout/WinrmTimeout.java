@@ -31,12 +31,12 @@ public class WinrmTimeout {
         if (result > userTimeout) {
 
             context.shutdown();
-            Thread.currentThread().stop();
+            //Thread.currentThread().stop();
+            Thread.currentThread().interrupt();
+            System.out.println("Is Thread interrupted ? " + Thread.currentThread().isInterrupted());
 
-            //Thread.currentThread().interrupt();
-            //System.out.println("Is Thread interrupted ?" + Thread.currentThread().isInterrupted());
+            throw new RuntimeException("timeout exception");
 
-            throw new RuntimeException("timeout");
         } else
             context.shutdown();
 
