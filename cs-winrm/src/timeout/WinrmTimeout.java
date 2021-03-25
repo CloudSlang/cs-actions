@@ -10,7 +10,24 @@ public class WinrmTimeout {
 
     public static void main(String[] args) throws InterruptedException {
 
+
+
         WinRmClientContext context = WinRmClientContext.newInstance();
+
+        System.setProperty("https.proxyHost", "web-proxy.eu.softwaregrp.net");
+        System.setProperty("https.proxyPort", "8080");
+        System.setProperty("http.proxyHost", "web-proxy.eu.softwaregrp.net");
+        System.setProperty("http.proxyPort", "8080");
+
+
+        try {
+
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null,null,null);
+            sslContext.createSSLEngine();
+            SSLContext.setDefault(sslContext);
+
+            X509HostnameVerifier x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
 
         final WinRmTool tool = WinRmTool.Builder.builder("ps7-win.ros.swinfra.net", "Administrator", "B33f34t3r")
                 .authenticationScheme(AuthSchemes.NTLM)
