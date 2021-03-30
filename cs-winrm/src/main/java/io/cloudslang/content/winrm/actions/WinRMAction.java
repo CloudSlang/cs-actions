@@ -24,8 +24,6 @@ import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.winrm.entities.WinRMInputs;
 import io.cloudslang.content.winrm.service.WinRMService;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -103,7 +101,7 @@ public class WinRMAction {
         useSSL = defaultIfEmpty(useSSL, BOOLEAN_FALSE);
         requestNewKerberosToken = defaultIfEmpty(requestNewKerberosToken, BOOLEAN_TRUE);
 
-        final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, useSSL, requestNewKerberosToken, authType, x509HostnameVerifier);
+        final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, useSSL, requestNewKerberosToken, authType, x509HostnameVerifier, trustKeystore, keystore);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -130,9 +128,9 @@ public class WinRMAction {
                 .operationTimeout(NumberUtilities.toInteger(operationTimeout))
                 .requestNewKerberosToken(requestNewKerberosToken)
                 .build();
-        try{
+        try {
             return WinRMService.execute(winRMInputs);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
     }

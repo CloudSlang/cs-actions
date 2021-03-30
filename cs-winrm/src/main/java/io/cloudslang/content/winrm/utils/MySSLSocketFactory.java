@@ -165,7 +165,7 @@ public class MySSLSocketFactory extends SSLSocketFactory {
         //validate SSL certificates sent by the server
         boolean useTrustCert = !isNull(trustKeystore) && !trustAllRoots;
 
-        String javaKeystore = System.getProperty("java.home") + "jre/lib/security/cacerts";
+        String javaKeystore = System.getProperty("java.home") + "lib/security/cacerts";
         if (!useClientCert) {
             boolean storeExists = new File(javaKeystore).exists();
             keystore = (storeExists) ? javaKeystore : null;

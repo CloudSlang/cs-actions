@@ -40,7 +40,7 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The PowerShell script was executed successfully and the 'scriptExitCode' value is 0.";
         public static final String FAILURE_DESC = "The script could not be executed or the value of the 'scriptExitCode' is different than 0.";
 
-        public static final String RETURN_RESULT_DESC = "The result of the script execution written on the stdout stream of the opened shell.";
+        public static final String RETURN_RESULT_DESC = "The result of the script execution written on the stdout stream of the opened shell in case of success or failure.";
         public static final String SCRIPT_EXIT_CODE_DESC = "The exit code returned by the powershell script execution.";
         public static final String STDERR_DESC = "The error messages and other warnings written on the stderr stream.";
         public static final String STDOUT_DESC = "The result of the script execution written on the stdout stream of the opened shell.";

@@ -4,6 +4,7 @@ import io.cloudslang.content.utils.NumberUtilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,9 @@ public class InputsValidation {
                                                  @Nullable final String useSSL,
                                                  @Nullable final String requestNewKerberosToken,
                                                  @Nullable final String authType,
-                                                 @Nullable final String x509HostnameVerifier) {
+                                                 @Nullable final String x509HostnameVerifier,
+                                                 @NotNull final String trustKeystore,
+                                                 @NotNull final String keystore) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
@@ -32,6 +35,8 @@ public class InputsValidation {
         addVerifyNumber(exceptionMessages, operationTimeout, OPERATION_TIMEOUT);
         addVerifyAuthType(exceptionMessages, authType, AUTH_TYPE);
         addVerifyx509HostnameVerifier(exceptionMessages, x509HostnameVerifier, X509_HOSTNAME_VERIFIER);
+        addVerifyFile(exceptionMessages, trustKeystore, TRUST_KEYSTORE);
+        addVerifyFile(exceptionMessages, keystore, KEYSTORE);
         return exceptionMessages;
     }
 
@@ -41,6 +46,18 @@ public class InputsValidation {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         }
         return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyFile(@NotNull List<String> exceptions, @NotNull final String filePath, @NotNull final String inputName) {
+        if (!isValidFile(filePath)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_PATH, filePath, inputName));
+        }
+        return exceptions;
+    }
+
+    private static boolean isValidFile(@NotNull final String filePath) {
+        return new File(filePath).exists();
     }
 
     @NotNull

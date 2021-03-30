@@ -12,6 +12,7 @@ public final class Constants {
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String CHANGE_IT = "changeit";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
+    public static final String EXCEPTION_INVALID_PATH = "%s for %s is an invalid certificate path.";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
     public static final String EXCEPTION_INVALID_AUTH_TYPE = "The %s for %s input is not a valid authType value. The valid values are: 'Basic','NTLM','Kerberos'.";
