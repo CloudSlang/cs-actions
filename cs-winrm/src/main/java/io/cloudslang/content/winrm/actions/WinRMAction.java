@@ -24,6 +24,7 @@ import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.winrm.entities.WinRMInputs;
 import io.cloudslang.content.winrm.service.WinRMService;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,8 +132,8 @@ public class WinRMAction {
                 .build();
         try{
             return WinRMService.execute(winRMInputs);
-        }catch (Exception e){
-            return getFailureResultsMap(e.getMessage());
+        }catch (Exception exception){
+            return getFailureResultsMap(exception);
         }
     }
 }

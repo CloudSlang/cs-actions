@@ -30,15 +30,11 @@ public class WinRMService {
                 .context(context)
                 .authenticationScheme(authScheme(winRMInputs.getAuthType()))
                 .port(Integer.parseInt(winRMInputs.getPort()))
-                .useHttps(useHttps(winRMInputs))
-                .requestNewKerberosTicket(Boolean.parseBoolean(winRMInputs.getRequestNewKerberosToken()))
-                .useHttps(useHttps);
+                .useHttps(useHttps)
+                .disableCertificateChecks(Boolean.parseBoolean(winRMInputs.getTrustAllRoots()));
 
-        if (winRMInputs.getAuthType().equalsIgnoreCase("kerberos")) {
+        if (winRMInputs.getAuthType().equalsIgnoreCase("kerberos"))
             builder.requestNewKerberosTicket(Boolean.parseBoolean(winRMInputs.getRequestNewKerberosToken()));
-        }
-
-        builder.disableCertificateChecks(Boolean.parseBoolean(winRMInputs.getTrustAllRoots()));
 
         if (!Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
             try {
@@ -48,15 +44,12 @@ public class WinRMService {
                 MySSLSocketFactory.setTrustKeystore(winRMInputs.getTrustKeystore());
                 MySSLSocketFactory.setTrustPassword(winRMInputs.getTrustPassword());
 
-                MySSLSocketFactory socketFactory = new MySSLSocketFactory();
-
-                builder.sslSocketFactory(socketFactory);
+                builder.sslSocketFactory(new MySSLSocketFactory());
                 builder.hostnameVerifier(x509HostnameVerifier(winRMInputs.getX509HostnameVerifier()));
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception exception) {
+                return getFailureResultsMap(exception);
             }
         }
-
 
         WinRmTool tool = builder.build();
 
@@ -71,9 +64,9 @@ public class WinRMService {
             context.shutdown();
             Thread.currentThread().interrupt();
             return getFailureResultsMap("Operation timed out.");
-        } else
+        } else {
             context.shutdown();
-
+        }
 
         Map<String, String> results;
         if (res.getStatusCode() == 0) {
@@ -83,9 +76,7 @@ public class WinRMService {
             results = getFailureResultsMap(res.getStdErr());
             results.put(STDERR, res.getStdErr());
         }
-
         results.put(SCRIPT_EXIT_CODE, String.valueOf(res.getStatusCode()));
-
         return results;
     }
 
@@ -148,5 +139,4 @@ public class WinRMService {
         }
         return x509HostnameVerifier;
     }
-
 }
