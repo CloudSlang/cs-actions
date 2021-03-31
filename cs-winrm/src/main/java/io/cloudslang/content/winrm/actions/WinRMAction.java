@@ -23,6 +23,7 @@ import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.winrm.entities.WinRMInputs;
 import io.cloudslang.content.winrm.service.WinRMService;
+import io.cloudslang.content.winrm.utils.Inputs;
 
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.winrm.utils.Constants.*;
 import static io.cloudslang.content.winrm.utils.Descriptions.WinRM.*;
 import static io.cloudslang.content.winrm.utils.Inputs.WinRMInputs.*;
+import static io.cloudslang.content.winrm.utils.Inputs.WinRMInputs.WORKING_DIRECTORY;
 import static io.cloudslang.content.winrm.utils.InputsValidation.verifyWinRMInputs;
 import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.SCRIPT_EXIT_CODE;
 import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.STDOUT;
@@ -78,7 +80,8 @@ public class WinRMAction {
             @Param(value = KEYSTORE_PASSWORD, description = KEYSTORE_PASSWORD_DESC, encrypted = true) String keystorePassword,
             @Param(value = OPERATION_TIMEOUT, description = OPERATION_TIMEOUT_DESC) String operationTimeout,
             @Param(value = USE_SSL, description = USE_SLL_DESC) String useSSL,
-            @Param(value = REQUEST_NEW_KERBEROS_TOKEN, description = REQUEST_NEW_KERBEROS_TOKEN_DESC) String requestNewKerberosToken
+            @Param(value = REQUEST_NEW_KERBEROS_TOKEN, description = REQUEST_NEW_KERBEROS_TOKEN_DESC) String requestNewKerberosToken,
+            @Param(value = WORKING_DIRECTORY, description = WORKING_DIRECTORY_DESC) String workingDirectory
     ) {
         host = defaultIfEmpty(host, EMPTY);
         script = defaultIfEmpty(script, EMPTY);
@@ -100,6 +103,7 @@ public class WinRMAction {
         operationTimeout = defaultIfEmpty(operationTimeout, DEFAULT_TIMEOUT);
         useSSL = defaultIfEmpty(useSSL, BOOLEAN_FALSE);
         requestNewKerberosToken = defaultIfEmpty(requestNewKerberosToken, BOOLEAN_TRUE);
+        workingDirectory = defaultIfEmpty(workingDirectory,EMPTY);
 
         final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, useSSL, requestNewKerberosToken, authType, x509HostnameVerifier, trustKeystore, keystore);
         if (!exceptionMessages.isEmpty()) {
@@ -127,6 +131,7 @@ public class WinRMAction {
                 .useSSL(useSSL)
                 .operationTimeout(NumberUtilities.toInteger(operationTimeout))
                 .requestNewKerberosToken(requestNewKerberosToken)
+                .workingDirectory(workingDirectory)
                 .build();
         try {
             return WinRMService.execute(winRMInputs);

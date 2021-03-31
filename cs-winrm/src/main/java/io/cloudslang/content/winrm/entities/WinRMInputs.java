@@ -37,6 +37,7 @@ public class WinRMInputs {
     private final String keystorePassword;
     private final int operationTimeout;
     private final String requestNewKerberosToken;
+    private final String workingDirectory;
 
 
     @ConstructorProperties({"host", "port", "protocol", "username", "password", "script", "authType", "proxyHost",
@@ -45,7 +46,7 @@ public class WinRMInputs {
     private WinRMInputs(String host, String port, String protocol, String username, String password, String script,
                         String authType, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword,
                         String useSSL, String trustAllRoots, String x509HostnameVerifier, String trustKeystore, String trustPassword,
-                        String keystore, String keystorePassword, int operationTimeout, String requestNewKerberosToken) {
+                        String keystore, String keystorePassword, int operationTimeout, String requestNewKerberosToken, String workingDirectory) {
         this.host = host;
         this.port = port;
         this.script = script;
@@ -66,6 +67,7 @@ public class WinRMInputs {
         this.keystorePassword = keystorePassword;
         this.operationTimeout = operationTimeout;
         this.requestNewKerberosToken = requestNewKerberosToken;
+        this.workingDirectory = workingDirectory;
     }
 
     public String getHost() {
@@ -146,6 +148,8 @@ public class WinRMInputs {
 
     public String getRequestNewKerberosToken(){return requestNewKerberosToken; }
 
+    public String getWorkingDirectory(){return workingDirectory; }
+
     public static class WinRMBuilder {
         private String host;
         private String port;
@@ -167,6 +171,7 @@ public class WinRMInputs {
         private String keystorePassword;
         private String requestNewKerberosToken;
         private int operationTimeout;
+        private String workingDirectory;
 
        public WinRMBuilder() {
         }
@@ -174,7 +179,7 @@ public class WinRMInputs {
         public WinRMInputs build() {
             return new WinRMInputs(host, port, protocol, username, password, script, authType, proxyHost, proxyPort,
                     proxyUsername, proxyPassword, useSSL, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
-                    keystore, keystorePassword, operationTimeout, requestNewKerberosToken);
+                    keystore, keystorePassword, operationTimeout, requestNewKerberosToken, workingDirectory);
         }
 
         public WinRMBuilder host(String host) {
@@ -275,6 +280,11 @@ public class WinRMInputs {
         public WinRMBuilder requestNewKerberosToken(String requestNewKerberosToken) {
             this.requestNewKerberosToken = requestNewKerberosToken;
             return this;
+        }
+
+        public WinRMBuilder workingDirectory(String workingDirectory){
+           this.workingDirectory = workingDirectory;
+           return this;
         }
     }
 }

@@ -38,5 +38,6 @@ public class Inputs extends InputNames {
         public static final String KEYSTORE_PASSWORD = "keystorePassword";
         public static final String OPERATION_TIMEOUT = "operationTimeout";
         public static final String REQUEST_NEW_KERBEROS_TOKEN = "requestNewKerberosToken";
+        public static final String WORKING_DIRECTORY = "workingDirectory";
     }
 }

@@ -33,6 +33,8 @@ public class WinRMService {
                 .useHttps(useHttps)
                 .disableCertificateChecks(Boolean.parseBoolean(winRMInputs.getTrustAllRoots()));
 
+        if(!winRMInputs.getWorkingDirectory().isEmpty())
+            builder.workingDirectory(winRMInputs.getWorkingDirectory());
         if (winRMInputs.getAuthType().equalsIgnoreCase("kerberos"))
             builder.requestNewKerberosTicket(Boolean.parseBoolean(winRMInputs.getRequestNewKerberosToken()));
 

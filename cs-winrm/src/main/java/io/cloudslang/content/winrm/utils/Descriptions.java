@@ -36,6 +36,7 @@ public class Descriptions {
         public static final String SCRIPT_DESC = "The PowerShell script that will be executed on the remote shell. Check the notes section for security implications of using this input.";
         public static final String USE_SLL_DESC = " If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS) protocol to establish a connection to the remote computer. By default, the operation tries to establish a secure connection over TLSv1.2.";
         public static final String REQUEST_NEW_KERBEROS_TOKEN_DESC = "";
+        public static final String WORKING_DIRECTORY_DESC = "";
 
         public static final String SUCCESS_DESC = "The PowerShell script was executed successfully and the 'scriptExitCode' value is 0.";
         public static final String FAILURE_DESC = "The script could not be executed or the value of the 'scriptExitCode' is different than 0.";
