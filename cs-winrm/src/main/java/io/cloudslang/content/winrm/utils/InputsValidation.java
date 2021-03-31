@@ -25,7 +25,8 @@ public class InputsValidation {
                                                  @Nullable final String authType,
                                                  @Nullable final String x509HostnameVerifier,
                                                  @NotNull final String trustKeystore,
-                                                 @NotNull final String keystore) {
+                                                 @NotNull final String keystore,
+                                                 @NotNull final String port) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
@@ -37,6 +38,7 @@ public class InputsValidation {
         addVerifyx509HostnameVerifier(exceptionMessages, x509HostnameVerifier, X509_HOSTNAME_VERIFIER);
         addVerifyFile(exceptionMessages, trustKeystore, TRUST_KEYSTORE);
         addVerifyFile(exceptionMessages, keystore, KEYSTORE);
+        addVerifyPort(exceptionMessages, port, PORT);
         return exceptionMessages;
     }
 
@@ -65,7 +67,7 @@ public class InputsValidation {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!isValidIpPort(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_PROXY, PROXY_PORT));
+            exceptions.add(String.format(EXCEPTION_INVALID_PROXY, input, PROXY_PORT));
         }
         return exceptions;
     }
@@ -111,4 +113,15 @@ public class InputsValidation {
             exceptions.add(String.format(EXCEPTION_INVALID_HOSTNAME_VERIFIER, input, inputName));
         return exceptions;
     }
+
+    @NotNull
+    private static List<String> addVerifyPort(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+
+        if (!NumberUtilities.isValidInt(input)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_PORT, input, inputName));
+        } else if (Integer.parseInt(input) != 5985 && Integer.parseInt(input) != 5986)
+            exceptions.add(String.format(EXCEPTION_INVALID_PORT, input, inputName));
+        return exceptions;
+    }
+
 }

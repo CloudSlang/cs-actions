@@ -24,7 +24,9 @@ import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.winrm.entities.WinRMInputs;
 import io.cloudslang.content.winrm.service.WinRMService;
 import io.cloudslang.content.winrm.utils.Inputs;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -105,7 +107,7 @@ public class WinRMAction {
         requestNewKerberosToken = defaultIfEmpty(requestNewKerberosToken, BOOLEAN_TRUE);
         workingDirectory = defaultIfEmpty(workingDirectory,EMPTY);
 
-        final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, useSSL, requestNewKerberosToken, authType, x509HostnameVerifier, trustKeystore, keystore);
+        final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, useSSL, requestNewKerberosToken, authType, x509HostnameVerifier, trustKeystore, keystore, port);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -136,7 +138,11 @@ public class WinRMAction {
         try {
             return WinRMService.execute(winRMInputs);
         } catch (Exception exception) {
-            return getFailureResultsMap(exception);
+            Map<String, String> results = new HashMap();
+            results.put("returnCode", "-1");
+            results.put("returnResult",ExceptionUtils.getRootCause(exception).toString());
+            results.put("exception", ExceptionUtils.getStackTrace(exception));
+            return results;
         }
     }
 }

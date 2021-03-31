@@ -15,7 +15,8 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_PATH = "%s for %s input is not a valid path.";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
+    public static final String EXCEPTION_INVALID_PORT = "The %s for %s input is not a valid port. The valid ports are: '5985' for http and '5986' for https.";
     public static final String EXCEPTION_INVALID_AUTH_TYPE = "The %s for %s input is not a valid authType value. The valid values are: 'Basic','NTLM','Kerberos'.";
     public static final String EXCEPTION_INVALID_HOSTNAME_VERIFIER = "The %s for %s input is not a valid x509HostnameVerifier value. The valid values are: 'strict','browser_compatible','allow_all'.";
-    public static final String EXCEPTION_INVALID_PROXY = "%s is not a valid proxy.";
+    public static final String EXCEPTION_INVALID_PROXY = "%s for input %s is not a valid proxy port.";
 }
