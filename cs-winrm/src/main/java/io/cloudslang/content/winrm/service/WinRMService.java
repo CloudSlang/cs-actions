@@ -1,7 +1,6 @@
 package io.cloudslang.content.winrm.service;
 
 import io.cloudslang.content.winrm.entities.WinRMInputs;
-import io.cloudslang.content.winrm.utils.MySSLSocketFactory;
 import io.cloudsoft.winrm4j.client.WinRmClientContext;
 import io.cloudsoft.winrm4j.winrm.WinRmTool;
 import io.cloudsoft.winrm4j.winrm.WinRmToolResponse;
@@ -14,6 +13,8 @@ import javax.net.ssl.*;
 import java.io.FileInputStream;
 import java.security.KeyStore;
 import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.STDERR;
@@ -36,14 +37,13 @@ public class WinRMService {
                 .useHttps(useHttps)
                 .disableCertificateChecks(Boolean.parseBoolean(winRMInputs.getTrustAllRoots()));
 
-        if(!winRMInputs.getWorkingDirectory().isEmpty())
+        if (!winRMInputs.getWorkingDirectory().isEmpty())
             builder.workingDirectory(winRMInputs.getWorkingDirectory());
         if (winRMInputs.getAuthType().equalsIgnoreCase("kerberos"))
             builder.requestNewKerberosTicket(Boolean.parseBoolean(winRMInputs.getRequestNewKerberosToken()));
 
         if (!Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
             try {
-
                 System.setProperty("javax.net.ssl.keyStore", winRMInputs.getKeystore());
                 System.setProperty("javax.net.ssl.keyStorePassword", winRMInputs.getKeystorePassword());
                 System.setProperty("javax.net.ssl.trustStore", winRMInputs.getTrustKeystore());
@@ -77,11 +77,21 @@ public class WinRMService {
             } catch (Exception exception) {
                 return getFailureResultsMap(exception);
             }
+        } else {
+            try {
+                SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+
+                sslContext.init(null, new TrustManager[]{getTrustAllRoots()}, new SecureRandom());
+                builder.sslContext(sslContext);
+
+            } catch (Exception exception) {
+                return getFailureResultsMap(exception);
+            }
         }
 
         WinRmTool tool = builder.build();
 
-        long userTimeout = winRMInputs.getOperationTimeout();
+        long userTimeout = winRMInputs.getOperationTimeout() * 1000L;
         StopWatch watch = new StopWatch();
         watch.start();
         WinRmToolResponse res = tool.executePs(winRMInputs.getScript());
@@ -166,6 +176,20 @@ public class WinRMService {
                 break;
         }
         return x509HostnameVerifier;
+    }
+
+    private static TrustManager getTrustAllRoots(){
+        return new X509TrustManager() {
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            }
+
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            }
+
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+        };
     }
 
 }
