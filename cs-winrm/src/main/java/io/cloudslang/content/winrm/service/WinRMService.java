@@ -10,7 +10,10 @@ import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 
-import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.*;
+import java.io.FileInputStream;
+import java.security.KeyStore;
+import java.security.SecureRandom;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.STDERR;
@@ -40,13 +43,36 @@ public class WinRMService {
 
         if (!Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
             try {
-                MySSLSocketFactory.setTrustAllRoots(Boolean.parseBoolean(winRMInputs.getTrustAllRoots()));
-                MySSLSocketFactory.setKeystore(winRMInputs.getKeystore());
-                MySSLSocketFactory.setKeystorePassword(winRMInputs.getKeystorePassword());
-                MySSLSocketFactory.setTrustKeystore(winRMInputs.getTrustKeystore());
-                MySSLSocketFactory.setTrustPassword(winRMInputs.getTrustPassword());
 
-                builder.sslSocketFactory(new MySSLSocketFactory());
+                System.setProperty("javax.net.ssl.keyStore", winRMInputs.getKeystore());
+                System.setProperty("javax.net.ssl.keyStorePassword", winRMInputs.getKeystorePassword());
+                System.setProperty("javax.net.ssl.trustStore", winRMInputs.getTrustKeystore());
+                System.setProperty("javax.net.ssl.trustStorePassword", winRMInputs.getTrustPassword());
+
+                KeyStore keyStore = KeyStore.getInstance("JKS");
+                keyStore.load(new FileInputStream(winRMInputs.getKeystore()), "changeit".toCharArray());
+                // Create key manager
+                KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+                keyManagerFactory.init(keyStore, "changeit".toCharArray());
+                KeyManager[] km = keyManagerFactory.getKeyManagers();
+                // Create trust manager
+                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+                trustManagerFactory.init(keyStore);
+                TrustManager[] tm = trustManagerFactory.getTrustManagers();
+                // Initialize SSLContext
+                SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+                sslContext.init(km, tm, new SecureRandom());
+
+
+//                MySSLSocketFactory.setTrustAllRoots(Boolean.parseBoolean(winRMInputs.getTrustAllRoots()));
+//                MySSLSocketFactory.setKeystore(winRMInputs.getKeystore());
+//                MySSLSocketFactory.setKeystorePassword(winRMInputs.getKeystorePassword());
+//                MySSLSocketFactory.setTrustKeystore(winRMInputs.getTrustKeystore());
+//                MySSLSocketFactory.setTrustPassword(winRMInputs.getTrustPassword());
+
+                //builder.sslSocketFactory(new MySSLSocketFactory());
+
+                builder.sslContext(sslContext);
                 builder.hostnameVerifier(x509HostnameVerifier(winRMInputs.getX509HostnameVerifier()));
             } catch (Exception exception) {
                 return getFailureResultsMap(exception);
@@ -141,4 +167,5 @@ public class WinRMService {
         }
         return x509HostnameVerifier;
     }
+
 }
