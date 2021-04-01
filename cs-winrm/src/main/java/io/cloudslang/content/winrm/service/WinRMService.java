@@ -40,7 +40,7 @@ public class WinRMService {
         if (!winRMInputs.getWorkingDirectory().isEmpty())
             builder.workingDirectory(winRMInputs.getWorkingDirectory());
         if (winRMInputs.getAuthType().equalsIgnoreCase("kerberos"))
-            builder.requestNewKerberosTicket(Boolean.parseBoolean(winRMInputs.getRequestNewKerberosToken()));
+            builder.requestNewKerberosTicket(Boolean.parseBoolean(winRMInputs.getRequestNewKerberosTicket()));
 
         if (!Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
             try {
@@ -60,17 +60,9 @@ public class WinRMService {
                 trustManagerFactory.init(keyStore);
                 TrustManager[] tm = trustManagerFactory.getTrustManagers();
                 // Initialize SSLContext
-                SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+                SSLContext sslContext = SSLContext.getInstance(tlsVersion(winRMInputs.getTlsVersion()));
                 sslContext.init(km, tm, new SecureRandom());
-
-
-//                MySSLSocketFactory.setTrustAllRoots(Boolean.parseBoolean(winRMInputs.getTrustAllRoots()));
-//                MySSLSocketFactory.setKeystore(winRMInputs.getKeystore());
-//                MySSLSocketFactory.setKeystorePassword(winRMInputs.getKeystorePassword());
-//                MySSLSocketFactory.setTrustKeystore(winRMInputs.getTrustKeystore());
-//                MySSLSocketFactory.setTrustPassword(winRMInputs.getTrustPassword());
-
-                //builder.sslSocketFactory(new MySSLSocketFactory());
+                SSLEngine sslEngine = sslContext.createSSLEngine();
 
                 builder.sslContext(sslContext);
                 builder.hostnameVerifier(x509HostnameVerifier(winRMInputs.getX509HostnameVerifier()));
@@ -79,9 +71,10 @@ public class WinRMService {
             }
         } else {
             try {
-                SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-
+                SSLContext sslContext = SSLContext.getInstance(tlsVersion(winRMInputs.getTlsVersion()));
                 sslContext.init(null, new TrustManager[]{getTrustAllRoots()}, new SecureRandom());
+                SSLEngine sslEngine = sslContext.createSSLEngine();
+
                 builder.sslContext(sslContext);
 
             } catch (Exception exception) {
@@ -124,7 +117,7 @@ public class WinRMService {
             useHttps = true;
             if (!winRMInputs.getProxyHost().isEmpty()) {
                 System.setProperty("https.proxyHost", winRMInputs.getProxyHost());
-                System.setProperty("https.proxyPort", "8080");
+                System.setProperty("https.proxyPort", winRMInputs.getProxyPort());
             }
             if (!winRMInputs.getProxyUsername().isEmpty()) {
                 System.setProperty("https.proxyUser", winRMInputs.getProxyUsername());
@@ -133,7 +126,7 @@ public class WinRMService {
         } else if (winRMInputs.getProtocol().equalsIgnoreCase("http")) {
             if (!winRMInputs.getProxyHost().isEmpty()) {
                 System.setProperty("http.proxyHost", winRMInputs.getProxyHost());
-                System.setProperty("http.proxyPort", "8080");
+                System.setProperty("http.proxyPort", winRMInputs.getProxyPort());
             }
             if (!winRMInputs.getProxyUsername().isEmpty()) {
                 System.setProperty("http.proxyUser", winRMInputs.getProxyUsername());
@@ -157,6 +150,28 @@ public class WinRMService {
                 break;
         }
         return authType;
+    }
+
+    private static String tlsVersion(String tlsVersion){
+        String tls_version = tlsVersion;
+        switch (tlsVersion.toLowerCase()) {
+            case "sslv3":
+                tls_version = "SSLv3";
+                break;
+            case "tlsv1":
+                tls_version = "TLSv1";
+                break;
+            case "tlsv1.1":
+                tls_version = "TLSv1.1";
+                break;
+            case "tlsv1.2":
+                tls_version = "TLSv1.2";
+                break;
+            case "tlsv1.3":
+                tls_version = "TLSv1.3";
+                break;
+        }
+        return tls_version;
     }
 
     private static HostnameVerifier x509HostnameVerifier(String hostnameVerifier) {

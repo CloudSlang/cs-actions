@@ -29,7 +29,7 @@ public class Inputs extends InputNames {
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME ="proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
-        public static final String USE_SSL = "useSSL";
+        public static final String TLS_VERSION = "tlsVersion";
         public static final String TRUST_ALL_ROOTS = "trustAllRoots";
         public static final String X509_HOSTNAME_VERIFIER = "x509HostnameVerifier";
         public static final String TRUST_KEYSTORE = "trustKeystore";
@@ -37,7 +37,7 @@ public class Inputs extends InputNames {
         public static final String KEYSTORE = "keystore";
         public static final String KEYSTORE_PASSWORD = "keystorePassword";
         public static final String OPERATION_TIMEOUT = "operationTimeout";
-        public static final String REQUEST_NEW_KERBEROS_TOKEN = "requestNewKerberosToken";
+        public static final String REQUEST_NEW_KERBEROS_TICKET = "requestNewKerberosTicket";
         public static final String WORKING_DIRECTORY = "workingDirectory";
     }
 }

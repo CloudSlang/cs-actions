@@ -7,10 +7,10 @@ public class Descriptions {
         public static final String PROTOCOL_DESC = "Specifies what protocol is used to execute commands on the remote host. Valid values: http, https\nDefault value: https";
         public static final String USERNAME_DESC = "The username to use when connecting to the host.";
         public static final String PASSWORD_DESC = "The password to use when connecting to the host.";
-        public static final String AUTH_TYPE_DESC = "The type of authentication used by this operation when trying to execute the request on the target WinRM service. The supported authentication types are: Basic, NTLM and Kerberos.\nDefault value: Basic";
+        public static final String AUTH_TYPE_DESC = "The type of authentication used by this operation when trying to execute the request on the target WinRM service. The supported authentication types are: Basic, NTLM and Kerberos.\nDefault value: NTLM";
         public static final String PROXY_HOST_DESC = "The proxy server used to access the host.";
         public static final String PROXY_PORT_DESC = "The proxy server port.\n Default value:8080";
-        public static final String PROXY_USERNAME_DESC = "The user name used when connecting to the proxy.";
+        public static final String PROXY_USERNAME_DESC = "The username used when connecting to the proxy.";
         public static final String PROXY_PASSWORD_DESC = "The proxy server password associated with the proxyUsername input value.";
         public static final String TRUST_ALL_ROOTS_DESC = " Specifies whether to enable weak security over SSL/TSL. A certificate is trusted even if no trusted certification authority issued it.\nValid values: true, false\nDefault value: false";
         public static final String X509_HOSTNAME_VERIFIER_DESC = "Specifies the way the server hostname must match a domain name" +
@@ -34,14 +34,14 @@ public class Descriptions {
         public static final String KEYSTORE_PASSWORD_DESC= "The password associated with the KeyStore file. If trustAllRoots is false and keystore is empty, keystorePassword default will be supplied.\nDefault value: change it";
         public static final String OPERATION_TIMEOUT_DESC = "Defines the OperationTimeout value in seconds to indicate that the clients expect a response or a fault within the specified time.";
         public static final String SCRIPT_DESC = "The PowerShell script that will be executed on the remote shell. Check the notes section for security implications of using this input.";
-        public static final String USE_SLL_DESC = " If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS) protocol to establish a connection to the remote computer. By default, the operation tries to establish a secure connection over TLSv1.2.";
-        public static final String REQUEST_NEW_KERBEROS_TOKEN_DESC = "";
-        public static final String WORKING_DIRECTORY_DESC = "";
+        public static final String TLS_VERSION_DESC = "The version of TLS to use. By default, the operation tries to establish a secure connection over TLSv1.2.\n Valid values: SSLv3, TLSv1, TLSv1.1, TLSv1.2, TLSv1.3.\nDefault value: TLSv1.2";
+        public static final String REQUEST_NEW_KERBEROS_TICKET_DESC = "Allows you to request a new ticket to the target computer specified by the service principal name (SPN).\nValid values: true, false.\nDefault value: true";
+        public static final String WORKING_DIRECTORY_DESC = "The path of the directory where to be executed the PowerShell script.";
 
         public static final String SUCCESS_DESC = "The PowerShell script was executed successfully and the 'scriptExitCode' value is 0.";
-        public static final String FAILURE_DESC = "The script could not be executed or the value of the 'scriptExitCode' is different than 0.";
+        public static final String FAILURE_DESC = "The PowerShell script could not be executed or the value of the 'scriptExitCode' is different than 0.";
 
-        public static final String RETURN_RESULT_DESC = "The result of the script execution written on the stdout stream of the opened shell in case of success or failure.";
+        public static final String RETURN_RESULT_DESC = "The result of the script execution written on the stdout stream of the opened shell in case of success or the error from stderr in case of failure.";
         public static final String SCRIPT_EXIT_CODE_DESC = "The exit code returned by the powershell script execution.";
         public static final String STDERR_DESC = "The error messages and other warnings written on the stderr stream.";
         public static final String STDOUT_DESC = "The result of the script execution written on the stdout stream of the opened shell.";

@@ -23,7 +23,6 @@ import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 import io.cloudslang.content.winrm.entities.WinRMInputs;
 import io.cloudslang.content.winrm.service.WinRMService;
-import io.cloudslang.content.winrm.utils.Inputs;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.HashMap;
@@ -40,7 +39,7 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.winrm.utils.Constants.*;
 import static io.cloudslang.content.winrm.utils.Descriptions.WinRM.*;
 import static io.cloudslang.content.winrm.utils.Inputs.WinRMInputs.*;
-import static io.cloudslang.content.winrm.utils.Inputs.WinRMInputs.WORKING_DIRECTORY;
+import static io.cloudslang.content.winrm.utils.Inputs.WinRMInputs.TLS_VERSION;
 import static io.cloudslang.content.winrm.utils.InputsValidation.verifyWinRMInputs;
 import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.SCRIPT_EXIT_CODE;
 import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.STDOUT;
@@ -81,17 +80,17 @@ public class WinRMAction {
             @Param(value = KEYSTORE, description = KEYSTORE_DESC) String keystore,
             @Param(value = KEYSTORE_PASSWORD, description = KEYSTORE_PASSWORD_DESC, encrypted = true) String keystorePassword,
             @Param(value = OPERATION_TIMEOUT, description = OPERATION_TIMEOUT_DESC) String operationTimeout,
-            @Param(value = USE_SSL, description = USE_SLL_DESC) String useSSL,
-            @Param(value = REQUEST_NEW_KERBEROS_TOKEN, description = REQUEST_NEW_KERBEROS_TOKEN_DESC) String requestNewKerberosToken,
+            @Param(value = TLS_VERSION, description = TLS_VERSION_DESC) String tlsVersion,
+            @Param(value = REQUEST_NEW_KERBEROS_TICKET, description = REQUEST_NEW_KERBEROS_TICKET_DESC) String requestNewKerberosToken,
             @Param(value = WORKING_DIRECTORY, description = WORKING_DIRECTORY_DESC) String workingDirectory
     ) {
         host = defaultIfEmpty(host, EMPTY);
         script = defaultIfEmpty(script, EMPTY);
-        port = defaultIfEmpty(port, EMPTY);
+        port = defaultIfEmpty(port, DEFAULT_PORT);
         protocol = defaultIfEmpty(protocol, HTTPS);
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
-        authType = defaultIfEmpty(authType, BASIC);
+        authType = defaultIfEmpty(authType, NTLM);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -103,11 +102,11 @@ public class WinRMAction {
         keystore = defaultIfEmpty(keystore, DEFAULT_JAVA_KEYSTORE);
         keystorePassword = defaultIfEmpty(keystorePassword, CHANGE_IT);
         operationTimeout = defaultIfEmpty(operationTimeout, DEFAULT_TIMEOUT);
-        useSSL = defaultIfEmpty(useSSL, BOOLEAN_FALSE);
+        tlsVersion = defaultIfEmpty(tlsVersion, TLSv12);
         requestNewKerberosToken = defaultIfEmpty(requestNewKerberosToken, BOOLEAN_TRUE);
-        workingDirectory = defaultIfEmpty(workingDirectory,EMPTY);
+        workingDirectory = defaultIfEmpty(workingDirectory, EMPTY);
 
-        final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, useSSL, requestNewKerberosToken, authType, x509HostnameVerifier, trustKeystore, keystore, port);
+        final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, requestNewKerberosToken, authType, x509HostnameVerifier, trustKeystore, keystore, port, tlsVersion);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -130,7 +129,7 @@ public class WinRMAction {
                 .keystorePassword(keystorePassword)
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword)
-                .useSSL(useSSL)
+                .tlsVersion(tlsVersion)
                 .operationTimeout(NumberUtilities.toInteger(operationTimeout))
                 .requestNewKerberosToken(requestNewKerberosToken)
                 .workingDirectory(workingDirectory)
@@ -140,7 +139,7 @@ public class WinRMAction {
         } catch (Exception exception) {
             Map<String, String> results = new HashMap();
             results.put("returnCode", "-1");
-            results.put("returnResult",ExceptionUtils.getRootCause(exception).toString());
+            results.put("returnResult", ExceptionUtils.getRootCause(exception).toString());
             results.put("exception", ExceptionUtils.getStackTrace(exception));
             return results;
         }

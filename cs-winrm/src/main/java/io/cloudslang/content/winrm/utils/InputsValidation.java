@@ -20,25 +20,25 @@ public class InputsValidation {
     public static List<String> verifyWinRMInputs(@Nullable final String proxyPort,
                                                  @Nullable final String trust_all_roots,
                                                  @Nullable final String operationTimeout,
-                                                 @Nullable final String useSSL,
                                                  @Nullable final String requestNewKerberosToken,
-                                                 @Nullable final String authType,
-                                                 @Nullable final String x509HostnameVerifier,
+                                                 @NotNull final String authType,
+                                                 @NotNull final String x509HostnameVerifier,
                                                  @NotNull final String trustKeystore,
                                                  @NotNull final String keystore,
-                                                 @NotNull final String port) {
+                                                 @NotNull final String port,
+                                                 @NotNull final String tlsVersion) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
         addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
-        addVerifyBoolean(exceptionMessages, useSSL, USE_SSL);
-        addVerifyBoolean(exceptionMessages, requestNewKerberosToken, REQUEST_NEW_KERBEROS_TOKEN);
+        addVerifyBoolean(exceptionMessages, requestNewKerberosToken, REQUEST_NEW_KERBEROS_TICKET);
         addVerifyNumber(exceptionMessages, operationTimeout, OPERATION_TIMEOUT);
         addVerifyAuthType(exceptionMessages, authType, AUTH_TYPE);
         addVerifyx509HostnameVerifier(exceptionMessages, x509HostnameVerifier, X509_HOSTNAME_VERIFIER);
         addVerifyFile(exceptionMessages, trustKeystore, TRUST_KEYSTORE);
         addVerifyFile(exceptionMessages, keystore, KEYSTORE);
         addVerifyPort(exceptionMessages, port, PORT);
+        addVerifyTlsVersion(exceptionMessages, tlsVersion, TLS_VERSION);
         return exceptionMessages;
     }
 
@@ -93,34 +93,46 @@ public class InputsValidation {
     }
 
     @NotNull
-    private static List<String> addVerifyAuthType(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+    private static List<String> addVerifyAuthType(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
         List<String> authTypes = new ArrayList<>();
-        authTypes.add("Basic");
-        authTypes.add("NTLM");
-        authTypes.add("Kerberos");
-        if (!authTypes.contains(input))
+        authTypes.add("basic");
+        authTypes.add("ntlm");
+        authTypes.add("kerberos");
+        if (!authTypes.contains(input.toLowerCase()))
             exceptions.add(String.format(EXCEPTION_INVALID_AUTH_TYPE, input, inputName));
         return exceptions;
     }
 
     @NotNull
-    private static List<String> addVerifyx509HostnameVerifier(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+    private static List<String> addVerifyx509HostnameVerifier(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
         List<String> x509HostnameVerifiers = new ArrayList<>();
         x509HostnameVerifiers.add("strict");
         x509HostnameVerifiers.add("allow_all");
         x509HostnameVerifiers.add("browser_compatible");
-        if (!x509HostnameVerifiers.contains(input))
+        if (!x509HostnameVerifiers.contains(input.toLowerCase()))
             exceptions.add(String.format(EXCEPTION_INVALID_HOSTNAME_VERIFIER, input, inputName));
         return exceptions;
     }
 
     @NotNull
     private static List<String> addVerifyPort(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+        if (!isValidIpPort(input)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_PORT, input, inputName));
+        }
+        return exceptions;
+    }
 
-        if (!NumberUtilities.isValidInt(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_PORT, input, inputName));
-        } else if (Integer.parseInt(input) != 5985 && Integer.parseInt(input) != 5986)
-            exceptions.add(String.format(EXCEPTION_INVALID_PORT, input, inputName));
+    @NotNull
+    private static List<String> addVerifyTlsVersion(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+        List<String> tlsVersions = new ArrayList<>();
+        tlsVersions.add("sslv3");
+        tlsVersions.add("tlsv1");
+        tlsVersions.add("tlsv1.1");
+        tlsVersions.add("tlsv1.2");
+        tlsVersions.add("tlsv1.3");
+
+        if (!tlsVersions.contains(input.toLowerCase()))
+            exceptions.add(String.format(EXCEPTION_INVALID_TLS_VERSION, input, inputName));
         return exceptions;
     }
 
