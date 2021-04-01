@@ -26,7 +26,8 @@ public class InputsValidation {
                                                  @NotNull final String trustKeystore,
                                                  @NotNull final String keystore,
                                                  @NotNull final String port,
-                                                 @NotNull final String tlsVersion) {
+                                                 @NotNull final String tlsVersion,
+                                                 @NotNull final String protocol) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
@@ -39,6 +40,7 @@ public class InputsValidation {
         addVerifyFile(exceptionMessages, keystore, KEYSTORE);
         addVerifyPort(exceptionMessages, port, PORT);
         addVerifyTlsVersion(exceptionMessages, tlsVersion, TLS_VERSION);
+        addVerifyProtocol(exceptionMessages, protocol, PROTOCOL);
         return exceptionMessages;
     }
 
@@ -135,5 +137,16 @@ public class InputsValidation {
             exceptions.add(String.format(EXCEPTION_INVALID_TLS_VERSION, input, inputName));
         return exceptions;
     }
+    @NotNull
+    private static List<String> addVerifyProtocol(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+        List<String> protocols = new ArrayList<>();
+        protocols.add("http");
+        protocols.add("https");
+
+        if (!protocols.contains(input.toLowerCase()))
+            exceptions.add(String.format(EXCEPTION_INVALID_PROTOCOL, input, inputName));
+        return exceptions;
+    }
+
 
 }

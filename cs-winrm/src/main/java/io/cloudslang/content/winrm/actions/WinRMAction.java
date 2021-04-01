@@ -106,7 +106,7 @@ public class WinRMAction {
         requestNewKerberosToken = defaultIfEmpty(requestNewKerberosToken, BOOLEAN_TRUE);
         workingDirectory = defaultIfEmpty(workingDirectory, EMPTY);
 
-        final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, requestNewKerberosToken, authType, x509HostnameVerifier, trustKeystore, keystore, port, tlsVersion);
+        final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, requestNewKerberosToken, authType, x509HostnameVerifier, trustKeystore, keystore, port, tlsVersion, protocol);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
