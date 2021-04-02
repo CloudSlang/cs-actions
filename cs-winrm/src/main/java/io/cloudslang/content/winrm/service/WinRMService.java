@@ -50,10 +50,10 @@ public class WinRMService {
                 System.setProperty("javax.net.ssl.trustStorePassword", winRMInputs.getTrustPassword());
 
                 KeyStore keyStore = KeyStore.getInstance("JKS");
-                keyStore.load(new FileInputStream(winRMInputs.getKeystore()), "changeit".toCharArray());
+                keyStore.load(new FileInputStream(winRMInputs.getKeystore()), winRMInputs.getKeystorePassword().toCharArray());
                 // Create key manager
                 KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
-                keyManagerFactory.init(keyStore, "changeit".toCharArray());
+                keyManagerFactory.init(keyStore, winRMInputs.getKeystorePassword().toCharArray());
                 KeyManager[] km = keyManagerFactory.getKeyManagers();
                 // Create trust manager
                 TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
@@ -62,7 +62,7 @@ public class WinRMService {
                 // Initialize SSLContext
                 SSLContext sslContext = SSLContext.getInstance(tlsVersion(winRMInputs.getTlsVersion()));
                 sslContext.init(km, tm, new SecureRandom());
-                SSLEngine sslEngine = sslContext.createSSLEngine();
+                sslContext.createSSLEngine();
 
                 builder.sslContext(sslContext);
                 builder.hostnameVerifier(x509HostnameVerifier(winRMInputs.getX509HostnameVerifier()));
@@ -73,7 +73,7 @@ public class WinRMService {
             try {
                 SSLContext sslContext = SSLContext.getInstance(tlsVersion(winRMInputs.getTlsVersion()));
                 sslContext.init(null, new TrustManager[]{getTrustAllRoots()}, new SecureRandom());
-                SSLEngine sslEngine = sslContext.createSSLEngine();
+                sslContext.createSSLEngine();
 
                 builder.sslContext(sslContext);
 

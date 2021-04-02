@@ -46,6 +46,5 @@ public class Descriptions {
         public static final String STDERR_DESC = "The error messages and other warnings written on the stderr stream.";
         public static final String STDOUT_DESC = "The result of the script execution written on the stdout stream of the opened shell.";
         public static final String EXCEPTION_DESC = " In case of failure response, this result contains the java stack trace of the runtime exception or fault details that the remote server generated throughout its communication with the client.";
-
     }
 }
