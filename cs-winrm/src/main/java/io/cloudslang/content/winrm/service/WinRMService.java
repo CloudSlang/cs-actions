@@ -169,9 +169,6 @@ public class WinRMService {
     private static String tlsVersion(String tlsVersion){
         String tls_version = tlsVersion;
         switch (tlsVersion.toLowerCase()) {
-            case "sslv3":
-                tls_version = "SSLv3";
-                break;
             case "tlsv1":
                 tls_version = "TLSv1";
                 break;

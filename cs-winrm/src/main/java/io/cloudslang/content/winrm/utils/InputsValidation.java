@@ -141,7 +141,6 @@ public class InputsValidation {
     @NotNull
     private static List<String> addVerifyTlsVersion(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
         List<String> tlsVersions = new ArrayList<>();
-        tlsVersions.add("sslv3");
         tlsVersions.add("tlsv1");
         tlsVersions.add("tlsv1.1");
         tlsVersions.add("tlsv1.2");
