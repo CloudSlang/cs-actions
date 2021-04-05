@@ -47,7 +47,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class WinRMAction {
-    @Action(name = "WinRM Action",
+    @Action(name = "WinRM Command",
             outputs = {
                     @Output(value = RETURN_CODE, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
