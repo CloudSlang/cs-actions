@@ -93,7 +93,7 @@ public class SendMailService {
             } else {
                 props.put(String.format(PropNames.MAIL_STARTTLS_ENABLE, input.getProtocol()), String.valueOf(false));
             }
-            if (input.getTimeout() < 0) {
+            if (input.getTimeout() > 0) {
                 props.put(String.format(PropNames.MAIL_TIMEOUT, input.getProtocol()), input.getTimeout());
             }
             if (StringUtils.isNotEmpty(input.getProxyHost())) {
