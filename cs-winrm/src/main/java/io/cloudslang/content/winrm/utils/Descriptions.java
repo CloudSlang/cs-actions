@@ -34,7 +34,7 @@ public class Descriptions {
         public static final String KEYSTORE_PASSWORD_DESC= "The password associated with the KeyStore file. If trustAllRoots is false and keystore is empty, keystorePassword default will be supplied.\nDefault value: change it";
         public static final String OPERATION_TIMEOUT_DESC = "Defines the OperationTimeout value in seconds to indicate that the clients expect a response or a fault within the specified time.";
         public static final String SCRIPT_DESC = "The PowerShell script that will be executed on the remote shell. Check the notes section for security implications of using this input.";
-        public static final String TLS_VERSION_DESC = "The version of TLS to use. By default, the operation tries to establish a secure connection over TLSv1.2.\n Valid values: SSLv3, TLSv1, TLSv1.1, TLSv1.2, TLSv1.3.\nDefault value: TLSv1.2";
+        public static final String TLS_VERSION_DESC = "The version of TLS to use. By default, the operation tries to establish a secure connection over TLSv1.2.\n Valid values: TLSv1, TLSv1.1, TLSv1.2, TLSv1.3.\nDefault value: TLSv1.2";
         public static final String REQUEST_NEW_KERBEROS_TICKET_DESC = "Allows you to request a new ticket to the target computer specified by the service principal name (SPN).\nValid values: true, false.\nDefault value: true";
         public static final String WORKING_DIRECTORY_DESC = "The path of the directory where to be executed the PowerShell script.";
 
