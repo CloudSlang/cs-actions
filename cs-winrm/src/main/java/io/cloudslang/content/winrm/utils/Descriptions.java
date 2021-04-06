@@ -51,6 +51,9 @@ public class Descriptions {
         public static final String TLS_VERSION_DESC = "The version of TLS to use. By default, the operation tries to establish a secure connection over TLSv1.2.\n Valid values: TLSv1, TLSv1.1, TLSv1.2, TLSv1.3.\nDefault value: TLSv1.2";
         public static final String REQUEST_NEW_KERBEROS_TICKET_DESC = "Allows you to request a new ticket to the target computer specified by the service principal name (SPN).\nValid values: true, false.\nDefault value: true";
         public static final String WORKING_DIRECTORY_DESC = "The path of the directory where to be executed the PowerShell script.";
+        public static final String CONFIGURATION_NAME_DESC = "The name of the PSSessionConfiguration to use. This can be used to target specific versions of PowerShell if the PSSessionConfiguration is properly configured on the target. By default, after PSRemoting is enabled on the target, the configuration name for PowerShell v5 or lower is 'microsoft.powershell', for PowerShell v6 is 'PowerShell.6', for PowerShell v7 is 'PowerShell.7'. Additional configurations can be created by the user on the target machines.\n" +
+                "Valid values: any PSConfiguration that exists on the host.\n" +
+                "Examples: 'microsoft.powershell', 'PowerShell.6', 'PowerShell.7'";
 
         public static final String SUCCESS_DESC = "The PowerShell script was executed successfully and the 'scriptExitCode' value is 0.";
         public static final String FAILURE_DESC = "The PowerShell script could not be executed or the value of the 'scriptExitCode' is different than 0.";

@@ -82,7 +82,8 @@ public class WinRMAction {
             @Param(value = OPERATION_TIMEOUT, description = OPERATION_TIMEOUT_DESC) String operationTimeout,
             @Param(value = TLS_VERSION, description = TLS_VERSION_DESC) String tlsVersion,
             @Param(value = REQUEST_NEW_KERBEROS_TICKET, description = REQUEST_NEW_KERBEROS_TICKET_DESC) String requestNewKerberosToken,
-            @Param(value = WORKING_DIRECTORY, description = WORKING_DIRECTORY_DESC) String workingDirectory
+            @Param(value = WORKING_DIRECTORY, description = WORKING_DIRECTORY_DESC) String workingDirectory,
+            @Param(value = CONFIGURATION_NAME, description = CONFIGURATION_NAME_DESC) String configurationName
     ) {
         host = defaultIfEmpty(host, EMPTY);
         script = defaultIfEmpty(script, EMPTY);
@@ -105,6 +106,7 @@ public class WinRMAction {
         tlsVersion = defaultIfEmpty(tlsVersion, TLSv12);
         requestNewKerberosToken = defaultIfEmpty(requestNewKerberosToken, BOOLEAN_TRUE);
         workingDirectory = defaultIfEmpty(workingDirectory, EMPTY);
+        configurationName = defaultIfEmpty(configurationName, EMPTY);
 
         final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, requestNewKerberosToken, authType, x509HostnameVerifier, trustKeystore, keystore, port, tlsVersion, protocol);
         if (!exceptionMessages.isEmpty()) {
@@ -133,6 +135,7 @@ public class WinRMAction {
                 .operationTimeout(NumberUtilities.toInteger(operationTimeout))
                 .requestNewKerberosToken(requestNewKerberosToken)
                 .workingDirectory(workingDirectory)
+                .configurationName(configurationName)
                 .build();
         try {
             return WinRMService.execute(winRMInputs);

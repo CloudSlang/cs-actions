@@ -24,7 +24,10 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 
 import javax.net.ssl.*;
+import javax.xml.bind.DatatypeConverter;
 import java.io.FileInputStream;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -101,7 +104,11 @@ public class WinRMService {
         long userTimeout = winRMInputs.getOperationTimeout() * 1000L;
         StopWatch watch = new StopWatch();
         watch.start();
-        WinRmToolResponse res = tool.executePs(winRMInputs.getScript());
+        WinRmToolResponse res;
+        if (winRMInputs.getConfigurationName().isEmpty())
+            res = tool.executePs(winRMInputs.getScript());
+        else
+            res = tool.executeCommand(compilePs(winRMInputs.getScript(), winRMInputs.getConfigurationName()), new StringWriter(), new StringWriter());
         watch.stop();
 
         long result = watch.getTime();
@@ -166,7 +173,7 @@ public class WinRMService {
         return authType;
     }
 
-    private static String tlsVersion(String tlsVersion){
+    private static String tlsVersion(String tlsVersion) {
         String tls_version = tlsVersion;
         switch (tlsVersion.toLowerCase()) {
             case "tlsv1":
@@ -204,7 +211,7 @@ public class WinRMService {
         return x509HostnameVerifier;
     }
 
-    private static TrustManager getTrustAllRoots(){
+    private static TrustManager getTrustAllRoots() {
         return new X509TrustManager() {
             public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
             }
@@ -216,6 +223,12 @@ public class WinRMService {
                 return null;
             }
         };
+    }
+
+    private static String compilePs(String psScript, String configurationName) {
+        byte[] cmd = psScript.getBytes(StandardCharsets.UTF_16LE);
+        String arg = DatatypeConverter.printBase64Binary(cmd);
+        return "powershell -ConfigurationName " + configurationName + " -encodedcommand " + arg;
     }
 
 }
