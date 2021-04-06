@@ -49,7 +49,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class WinRMAction {
     @Action(name = "WinRM Command",
             outputs = {
-                    @Output(value = RETURN_CODE, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = STDERR, description = STDERR_DESC),
                     @Output(value = SCRIPT_EXIT_CODE, description = SCRIPT_EXIT_CODE_DESC),
