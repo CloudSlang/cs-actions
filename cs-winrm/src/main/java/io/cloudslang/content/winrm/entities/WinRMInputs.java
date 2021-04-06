@@ -38,11 +38,12 @@ public class WinRMInputs {
     private final int operationTimeout;
     private final String requestNewKerberosTicket;
     private final String workingDirectory;
+    private final String configurationName;
 
     private WinRMInputs(String host, String port, String protocol, String username, String password, String script,
                         String authType, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword,
                         String tlsVersion, String trustAllRoots, String x509HostnameVerifier, String trustKeystore, String trustPassword,
-                        String keystore, String keystorePassword, int operationTimeout, String requestNewKerberosTicket, String workingDirectory) {
+                        String keystore, String keystorePassword, int operationTimeout, String requestNewKerberosTicket, String workingDirectory, String configurationName) {
         this.host = host;
         this.port = port;
         this.script = script;
@@ -64,6 +65,7 @@ public class WinRMInputs {
         this.operationTimeout = operationTimeout;
         this.requestNewKerberosTicket = requestNewKerberosTicket;
         this.workingDirectory = workingDirectory;
+        this.configurationName = configurationName;
     }
 
     public String getHost() {
@@ -144,6 +146,8 @@ public class WinRMInputs {
 
     public String getWorkingDirectory() { return workingDirectory; }
 
+    public String getConfigurationName(){ return configurationName; }
+
     public static class WinRMBuilder {
         private String host;
         private String port;
@@ -166,6 +170,7 @@ public class WinRMInputs {
         private String requestNewKerberosTicket;
         private int operationTimeout;
         private String workingDirectory;
+        private String configurationName;
 
         public WinRMBuilder() {
         }
@@ -173,7 +178,7 @@ public class WinRMInputs {
         public WinRMInputs build() {
             return new WinRMInputs(host, port, protocol, username, password, script, authType, proxyHost, proxyPort,
                     proxyUsername, proxyPassword, tlsVersion, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
-                    keystore, keystorePassword, operationTimeout, requestNewKerberosTicket, workingDirectory);
+                    keystore, keystorePassword, operationTimeout, requestNewKerberosTicket, workingDirectory, configurationName);
         }
 
         public WinRMBuilder host(String host) {
@@ -278,6 +283,11 @@ public class WinRMInputs {
 
         public WinRMBuilder workingDirectory(String workingDirectory) {
             this.workingDirectory = workingDirectory;
+            return this;
+        }
+
+        public WinRMBuilder configurationName(String configurationName){
+            this.configurationName = configurationName;
             return this;
         }
     }
