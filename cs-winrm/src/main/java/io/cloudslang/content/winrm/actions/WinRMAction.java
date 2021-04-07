@@ -146,7 +146,11 @@ public class WinRMAction {
         } catch (Exception exception) {
             Map<String, String> results = new HashMap();
             results.put("returnCode", "-1");
-            results.put("returnResult", ExceptionUtils.getRootCause(exception).toString());
+            try{
+                results.put("returnResult", ExceptionUtils.getRootCause(exception).toString());
+            }catch (NullPointerException e){
+                results.put("returnResult", exception.getMessage());
+            }
             results.put("exception", ExceptionUtils.getStackTrace(exception));
             return results;
         }
