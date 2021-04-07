@@ -83,7 +83,8 @@ public class WinRMAction {
             @Param(value = TLS_VERSION, description = TLS_VERSION_DESC) String tlsVersion,
             @Param(value = REQUEST_NEW_KERBEROS_TICKET, description = REQUEST_NEW_KERBEROS_TICKET_DESC) String requestNewKerberosToken,
             @Param(value = WORKING_DIRECTORY, description = WORKING_DIRECTORY_DESC) String workingDirectory,
-            @Param(value = CONFIGURATION_NAME, description = CONFIGURATION_NAME_DESC) String configurationName
+            @Param(value = CONFIGURATION_NAME, description = CONFIGURATION_NAME_DESC) String configurationName,
+            @Param(value = COMMAND_TYPE, description = COMMAND_TYPE_DESC) String commandType
     ) {
         host = defaultIfEmpty(host, EMPTY);
         script = defaultIfEmpty(script, EMPTY);
@@ -107,8 +108,10 @@ public class WinRMAction {
         requestNewKerberosToken = defaultIfEmpty(requestNewKerberosToken, BOOLEAN_TRUE);
         workingDirectory = defaultIfEmpty(workingDirectory, EMPTY);
         configurationName = defaultIfEmpty(configurationName, EMPTY);
+        commandType = defaultIfEmpty(commandType, DEFAULT_COMMAND_TYPE);
 
-        final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, requestNewKerberosToken, authType, x509HostnameVerifier, trustKeystore, keystore, port, tlsVersion, protocol);
+        final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, requestNewKerberosToken,
+                authType, x509HostnameVerifier, trustKeystore, keystore, port, tlsVersion, protocol, commandType);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -136,6 +139,7 @@ public class WinRMAction {
                 .requestNewKerberosToken(requestNewKerberosToken)
                 .workingDirectory(workingDirectory)
                 .configurationName(configurationName)
+                .commandType(commandType)
                 .build();
         try {
             return WinRMService.execute(winRMInputs);
