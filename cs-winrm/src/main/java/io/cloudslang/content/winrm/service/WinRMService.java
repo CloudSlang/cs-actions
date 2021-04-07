@@ -37,6 +37,7 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.STDERR;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static io.cloudslang.content.winrm.utils.Constants.*;
 import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.SCRIPT_EXIT_CODE;
 import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.STDOUT;
 
@@ -56,7 +57,7 @@ public class WinRMService {
 
         if (!winRMInputs.getWorkingDirectory().isEmpty())
             builder.workingDirectory(winRMInputs.getWorkingDirectory());
-        if (winRMInputs.getAuthType().equalsIgnoreCase("kerberos"))
+        if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS))
             builder.requestNewKerberosTicket(Boolean.parseBoolean(winRMInputs.getRequestNewKerberosTicket()));
 
         if (!Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
@@ -105,17 +106,21 @@ public class WinRMService {
         StopWatch watch = new StopWatch();
         watch.start();
         WinRmToolResponse res;
-        if (winRMInputs.getConfigurationName().isEmpty())
-            res = tool.executePs(winRMInputs.getScript());
-        else
-            res = tool.executeCommand(compilePs(winRMInputs.getScript(), winRMInputs.getConfigurationName()), new StringWriter(), new StringWriter());
+        if (winRMInputs.getCommandType().equalsIgnoreCase(CMD))
+            res = tool.executeCommand(winRMInputs.getScript());
+        else {
+            if (winRMInputs.getConfigurationName().isEmpty())
+                res = tool.executePs(winRMInputs.getScript());
+            else
+                res = tool.executeCommand(compilePs(winRMInputs.getScript(), winRMInputs.getConfigurationName()), new StringWriter(), new StringWriter());
+        }
         watch.stop();
 
         long result = watch.getTime();
         if (result > userTimeout) {
             context.shutdown();
             Thread.currentThread().interrupt();
-            return getFailureResultsMap("Operation timed out.");
+            return getFailureResultsMap(EXCEPTION_TIMED_OUT);
         } else {
             context.shutdown();
         }
@@ -134,7 +139,7 @@ public class WinRMService {
 
     private static boolean useHttps(WinRMInputs winRMInputs) {
         boolean useHttps = false;
-        if (winRMInputs.getProtocol().equalsIgnoreCase("https")) {
+        if (winRMInputs.getProtocol().equalsIgnoreCase(HTTPS)) {
             useHttps = true;
             if (!winRMInputs.getProxyHost().isEmpty()) {
                 System.setProperty("https.proxyHost", winRMInputs.getProxyHost());
@@ -144,7 +149,7 @@ public class WinRMService {
                 System.setProperty("https.proxyUser", winRMInputs.getProxyUsername());
                 System.setProperty("https.proxyPassword", winRMInputs.getProxyPassword());
             }
-        } else if (winRMInputs.getProtocol().equalsIgnoreCase("http")) {
+        } else if (winRMInputs.getProtocol().equalsIgnoreCase(HTTP)) {
             if (!winRMInputs.getProxyHost().isEmpty()) {
                 System.setProperty("http.proxyHost", winRMInputs.getProxyHost());
                 System.setProperty("http.proxyPort", winRMInputs.getProxyPort());
