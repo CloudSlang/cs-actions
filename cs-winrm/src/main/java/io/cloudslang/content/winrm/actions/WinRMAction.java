@@ -41,8 +41,7 @@ import static io.cloudslang.content.winrm.utils.Descriptions.WinRM.*;
 import static io.cloudslang.content.winrm.utils.Inputs.WinRMInputs.*;
 import static io.cloudslang.content.winrm.utils.Inputs.WinRMInputs.TLS_VERSION;
 import static io.cloudslang.content.winrm.utils.InputsValidation.verifyWinRMInputs;
-import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.SCRIPT_EXIT_CODE;
-import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.STDOUT;
+import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -52,7 +51,7 @@ public class WinRMAction {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = STDERR, description = STDERR_DESC),
-                    @Output(value = SCRIPT_EXIT_CODE, description = SCRIPT_EXIT_CODE_DESC),
+                    @Output(value = COMMAND_EXIT_CODE, description = COMMAND_EXIT_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STDOUT, description = STDOUT_DESC)
             },
@@ -63,7 +62,7 @@ public class WinRMAction {
     )
     public Map<String, String> execute(
             @Param(value = HOST, description = HOST_DESC, required = true) String host,
-            @Param(value = SCRIPT, description = SCRIPT_DESC, required = true) String script,
+            @Param(value = COMMAND, description = COMMAND_DESC, required = true) String command,
             @Param(value = PORT, description = PORT_DESC) String port,
             @Param(value = PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = USERNAME, description = USERNAME_DESC) String username,
@@ -87,7 +86,7 @@ public class WinRMAction {
             @Param(value = COMMAND_TYPE, description = COMMAND_TYPE_DESC) String commandType
     ) {
         host = defaultIfEmpty(host, EMPTY);
-        script = defaultIfEmpty(script, EMPTY);
+        command = defaultIfEmpty(command, EMPTY);
         port = defaultIfEmpty(port, DEFAULT_PORT);
         protocol = defaultIfEmpty(protocol, HTTPS);
         username = defaultIfEmpty(username, EMPTY);
@@ -123,7 +122,7 @@ public class WinRMAction {
                 .username(username)
                 .password(password)
                 .authType(authType)
-                .script(script)
+                .command(command)
                 .proxyHost(proxyHost)
                 .proxyPort(proxyPort)
                 .proxyUsername(proxyUsername)

@@ -23,7 +23,7 @@ public class Inputs extends InputNames {
         public static final String PROTOCOL = "protocol";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
-        public static final String SCRIPT = "script";
+        public static final String COMMAND = "command";
         public static final String AUTH_TYPE = "authType";
         public static final String PROXY_HOST ="proxyHost";
         public static final String PROXY_PORT = "proxyPort";

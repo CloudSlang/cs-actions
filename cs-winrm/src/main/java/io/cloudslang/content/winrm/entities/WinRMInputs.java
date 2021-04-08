@@ -14,15 +14,13 @@
  */
 package io.cloudslang.content.winrm.entities;
 
-import java.beans.ConstructorProperties;
-
 public class WinRMInputs {
     private final String host;
     private final String port;
     private final String protocol;
     private final String username;
     private final String password;
-    private final String script;
+    private final String command;
     private final String authType;
     private final String proxyHost;
     private final String proxyPort;
@@ -41,13 +39,13 @@ public class WinRMInputs {
     private final String configurationName;
     private final String commandType;
 
-    private WinRMInputs(String host, String port, String protocol, String username, String password, String script,
+    private WinRMInputs(String host, String port, String protocol, String username, String password, String command,
                         String authType, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword,
                         String tlsVersion, String trustAllRoots, String x509HostnameVerifier, String trustKeystore, String trustPassword,
                         String keystore, String keystorePassword, int operationTimeout, String requestNewKerberosTicket, String workingDirectory, String configurationName, String commandType) {
         this.host = host;
         this.port = port;
-        this.script = script;
+        this.command = command;
         this.protocol = protocol;
         this.username = username;
         this.password = password;
@@ -90,8 +88,8 @@ public class WinRMInputs {
         return password;
     }
 
-    public String getScript() {
-        return script;
+    public String getCommand() {
+        return command;
     }
 
     public String getAuthType() {
@@ -158,7 +156,7 @@ public class WinRMInputs {
         private String protocol;
         private String username;
         private String password;
-        private String script;
+        private String command;
         private String authType;
         private String proxyHost;
         private String proxyPort;
@@ -181,7 +179,7 @@ public class WinRMInputs {
         }
 
         public WinRMInputs build() {
-            return new WinRMInputs(host, port, protocol, username, password, script, authType, proxyHost, proxyPort,
+            return new WinRMInputs(host, port, protocol, username, password, command, authType, proxyHost, proxyPort,
                     proxyUsername, proxyPassword, tlsVersion, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
                     keystore, keystorePassword, operationTimeout, requestNewKerberosTicket, workingDirectory, configurationName, commandType);
         }
@@ -211,8 +209,8 @@ public class WinRMInputs {
             return this;
         }
 
-        public WinRMBuilder script(String script) {
-            this.script = script;
+        public WinRMBuilder command(String command) {
+            this.command = command;
             return this;
         }
 
