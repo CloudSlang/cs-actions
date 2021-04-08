@@ -38,7 +38,7 @@ import static io.cloudslang.content.constants.OutputNames.STDERR;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static io.cloudslang.content.winrm.utils.Constants.*;
-import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.SCRIPT_EXIT_CODE;
+import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.COMMAND_EXIT_CODE;
 import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.STDOUT;
 
 public class WinRMService {
@@ -107,12 +107,12 @@ public class WinRMService {
         watch.start();
         WinRmToolResponse res;
         if (winRMInputs.getCommandType().equalsIgnoreCase(CMD))
-            res = tool.executeCommand(winRMInputs.getScript());
+            res = tool.executeCommand(winRMInputs.getCommand());
         else {
             if (winRMInputs.getConfigurationName().isEmpty())
-                res = tool.executePs(winRMInputs.getScript());
+                res = tool.executePs(winRMInputs.getCommand());
             else
-                res = tool.executeCommand(compilePs(winRMInputs.getScript(), winRMInputs.getConfigurationName()), new StringWriter(), new StringWriter());
+                res = tool.executeCommand(compilePs(winRMInputs.getCommand(), winRMInputs.getConfigurationName()), new StringWriter(), new StringWriter());
         }
         watch.stop();
 
@@ -133,7 +133,7 @@ public class WinRMService {
             results = getFailureResultsMap(res.getStdErr());
             results.put(STDERR, res.getStdErr());
         }
-        results.put(SCRIPT_EXIT_CODE, String.valueOf(res.getStatusCode()));
+        results.put(COMMAND_EXIT_CODE, String.valueOf(res.getStatusCode()));
         return results;
     }
 
