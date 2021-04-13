@@ -20,7 +20,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-winrm</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1-test</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A WinRM client for executing PowerShell Commands.</description>
