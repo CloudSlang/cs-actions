@@ -45,11 +45,9 @@ public class WinRMService {
 
     public static Map<String, String> execute(WinRMInputs winRMInputs) {
 
-        WinRmClientContext context = WinRmClientContext.newInstance();
         boolean useHttps = useHttps(winRMInputs);
 
         WinRmTool.Builder builder = WinRmTool.Builder.builder(winRMInputs.getHost(), winRMInputs.getUsername(), winRMInputs.getPassword())
-                .context(context)
                 .authenticationScheme(authScheme(winRMInputs.getAuthType()))
                 .port(Integer.parseInt(winRMInputs.getPort()))
                 .useHttps(useHttps)
@@ -100,29 +98,31 @@ public class WinRMService {
             }
         }
 
-        WinRmTool tool = builder.build();
-
         long userTimeout = winRMInputs.getOperationTimeout() * 1000L;
         StopWatch watch = new StopWatch();
-        watch.start();
         WinRmToolResponse res;
-        if (winRMInputs.getCommandType().equalsIgnoreCase(CMD))
-            res = tool.executeCommand(winRMInputs.getCommand());
-        else {
-            if (winRMInputs.getConfigurationName().isEmpty())
-                res = tool.executePs(winRMInputs.getCommand());
-            else
-                res = tool.executeCommand(compilePs(winRMInputs.getCommand(), winRMInputs.getConfigurationName()), new StringWriter(), new StringWriter());
-        }
-        watch.stop();
-
-        long result = watch.getTime();
-        if (result > userTimeout) {
-            context.shutdown();
-            Thread.currentThread().interrupt();
-            return getFailureResultsMap(EXCEPTION_TIMED_OUT);
-        } else {
-            context.shutdown();
+        WinRmClientContext context = null;
+        try {
+            context = WinRmClientContext.newInstance();
+            WinRmTool tool = builder.context(context).build();
+            watch.start();
+            if (winRMInputs.getCommandType().equalsIgnoreCase(CMD))
+                res = tool.executeCommand(winRMInputs.getCommand());
+            else {
+                if (winRMInputs.getConfigurationName().isEmpty())
+                    res = tool.executePs(winRMInputs.getCommand());
+                else
+                    res = tool.executeCommand(compilePs(winRMInputs.getCommand(), winRMInputs.getConfigurationName()), new StringWriter(), new StringWriter());
+            }
+            watch.stop();
+            long result = watch.getTime();
+            if (result > userTimeout) {
+                Thread.currentThread().interrupt();
+                return getFailureResultsMap(EXCEPTION_TIMED_OUT);
+            }
+        } finally {
+            if (context != null)
+                context.shutdown();
         }
 
         Map<String, String> results;
