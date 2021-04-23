@@ -71,11 +71,8 @@ public class Descriptions {
                 "will be used. If responseCharacterSet is empty and the charset from the HTTP response Content-Type " +
                 "header is empty, the default value will be used. You should not use this for method=HEAD or OPTIONS." +
                 "Default: 'UTF-8'";
-        public static final String AUTH_TOKEN_DESC = "The authorization token for terraform.";
-        public static final String ORGANIZATION_NAME_DESC = "The name of the organization.";
-        public static final String TERRAFORM_VERSION_DESC = "The version of Terraform to use for this workspace. " +
-                "Upon creating a workspace,the latest version is selected unless otherwise specified (e.g. \"0.11.1\")." +
-                "Default: '0.12.1'";
+        public static final String AUTH_TOKEN_DESC = "The authorization token for azure.";
+
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in milliseconds) to allow the client " +
                 "to complete the execution of an API call. A value of '0' disables this feature." +
@@ -83,9 +80,7 @@ public class Descriptions {
         public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
                 "Default: 'false'";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
-        public static final String PAGE_NUMBER_DESC = "Optional. If omitted, the endpoint will return the first page.";
-        public static final String PAGE_SIZE_DESC = "Optional. If omitted, the endpoint will return 20 items per page. " +
-                "The maximum page size is 150.";
+
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
         public static final String FAILURE_DESC = "There was an error while executing the request.";
         public static final String SUCCESS_DESC = "The request was successfully executed.";

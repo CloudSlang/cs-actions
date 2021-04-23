@@ -19,6 +19,9 @@ package io.cloudslang.content.azure.utils;
 import io.cloudslang.content.azure.entities.AuthorizationTokenUsingWebAPIInputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -179,7 +182,7 @@ public class HttpUtils {
     public static Map<String, String> getFailureResults(@NotNull String inputName, @NotNull Integer statusCode, @NotNull String throwable) {
         Map<String, String> results = new HashMap();
         results.put("returnCode", "-1");
-        results.put("statusCode", statusCode.toString());
+        results.put("statusCode",statusCode.toString());
         if (statusCode.equals(404)) {
             results.put("returnResult", inputName + " not found, or user unauthorized to perform action");
             results.put("exception ", "status : " + statusCode + ", Title :  " + inputName + " not found, or user unauthorized to perform action");
@@ -188,5 +191,13 @@ public class HttpUtils {
             results.put("exception", throwable);
         }
         return results;
+    }
+
+    @NotNull
+    public static Object getTokenValue(@NotNull String results) throws ParseException {
+
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = (JSONObject) parser.parse(results);
+        return jsonObject.get("access_token");
     }
 }

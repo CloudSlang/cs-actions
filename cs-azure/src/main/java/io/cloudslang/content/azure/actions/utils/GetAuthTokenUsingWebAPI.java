@@ -8,30 +8,28 @@ import io.cloudslang.content.azure.entities.AuthorizationTokenUsingWebAPIInputs;
 import io.cloudslang.content.azure.services.AuthenticationTokenUsingWebAPIImpl;
 import io.cloudslang.content.constants.ReturnCodes;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-
-import static io.cloudslang.content.azure.utils.AuthorizationInputNames.CLIENT_ID;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_HOST;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PASSWORD;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PORT;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_USERNAME;
-import static io.cloudslang.content.azure.utils.AuthorizationInputNames.RESOURCE;
+import static io.cloudslang.content.azure.utils.AuthorizationInputNames.*;
 import static io.cloudslang.content.azure.utils.Constants.Common.*;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_RESOURCE;
 import static io.cloudslang.content.azure.utils.Descriptions.Common.*;
-import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.azure.utils.HttpUtils.*;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.CLIENT_SECRET;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.TENANT_ID;
 import static io.cloudslang.content.azure.utils.Outputs.CommonOutputs.AUTH_TOKEN;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -39,14 +37,14 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class GetAuthTokenUsingWebAPI {
     @Action(name = "Get the authorization token for Azure",
             outputs = {
-                    @Output(RETURN_RESULT),
-                    @Output(AUTH_TOKEN),
-                    @Output(RETURN_CODE),
-                    @Output(EXCEPTION)
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC),
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = TENANT_ID, required = true, description = TENANT_ID_DESC) String tenantId,
                                        @Param(value = CLIENT_ID, required = true, description = CLIENT_ID_DESC) String clientId,
@@ -70,13 +68,10 @@ public class GetAuthTokenUsingWebAPI {
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
-        byte[] bytes = clientSecret.getBytes(StandardCharsets.UTF_8);
-
-        String clientSecretEncode = new String(bytes, StandardCharsets.UTF_8);
         try {
-            return AuthenticationTokenUsingWebAPIImpl.getAuthToken(AuthorizationTokenUsingWebAPIInputs.builder()
+            final Map<String, String> result = AuthenticationTokenUsingWebAPIImpl.getAuthToken(AuthorizationTokenUsingWebAPIInputs.builder()
                     .tenantId(tenantId)
-                    .clientSecret(clientSecretEncode)
+                    .clientSecret(clientSecret)
                     .clientId(clientId)
                     .resource(resource)
                     .proxyPort(proxyPort)
@@ -88,8 +83,18 @@ public class GetAuthTokenUsingWebAPI {
                     .trustKeystore(trustKeystore)
                     .trustPassword(trustPassword)
                     .build());
+            final String returnMessage = result.get(RETURN_RESULT);
+            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            if (statusCode == 200) {
 
-//            return getSuccessResultsMap(result.getAccessTokenType() + SPACE + result.getAccessToken());
+                results.put(AUTH_TOKEN, BEARER + getTokenValue(returnMessage));
+
+            } else {
+                return getFailureResults(tenantId, statusCode, returnMessage);
+            }
+
+            return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

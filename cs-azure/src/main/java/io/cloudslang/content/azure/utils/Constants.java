@@ -73,7 +73,6 @@ public final class Constants {
         public static final String BEARER = "Bearer ";
         public static final String AZURE_HOST = "management.azure.com";
         public static final String STREAM_API_VERSION = "2016-03-01";
-        public static final String ORGANIZATION_PATH = "/organizations/";
         public static final String PATH_SEPARATOR = "/";
         public static final String AND = "&";
         public static final String QUERY = "?";
