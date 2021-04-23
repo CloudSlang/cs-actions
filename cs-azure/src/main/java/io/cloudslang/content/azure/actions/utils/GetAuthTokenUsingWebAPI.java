@@ -85,7 +85,7 @@ public class GetAuthTokenUsingWebAPI {
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
             if (statusCode == 200) {
 
                 results.put(AUTH_TOKEN, BEARER + getTokenValue(returnMessage));
