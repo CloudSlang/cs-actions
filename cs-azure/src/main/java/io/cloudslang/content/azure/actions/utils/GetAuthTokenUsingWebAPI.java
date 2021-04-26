@@ -35,7 +35,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class GetAuthTokenUsingWebAPI {
-    @Action(name = "Get the authorization token for Azure",
+    @Action(name = "Get the authorization token for Azure using Web API.",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
