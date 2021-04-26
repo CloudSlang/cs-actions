@@ -50,7 +50,7 @@ public class MySqlDatabaseTest {
         sqlInputs.setDbPort(DB_PORT);
 //        sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = mySqlDatabase.setUp(sqlInputs);
-        assertEquals("jdbc:mysql://dbServer:30", dbUrls.get(0));
+        assertEquals("jdbc:mysql://dbServer:30?zeroDateTimeBehavior=convertToNull", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
 
@@ -76,7 +76,7 @@ public class MySqlDatabaseTest {
         sqlInputs.setDbPort(DB_PORT);
 //        sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = mySqlDatabase.setUp(sqlInputs);
-        assertEquals("jdbc:mysql://dbServer:30/dbName", dbUrls.get(0));
+        assertEquals("jdbc:mysql://dbServer:30/dbName?zeroDateTimeBehavior=convertToNull", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
 
@@ -89,7 +89,7 @@ public class MySqlDatabaseTest {
         sqlInputs.setDbPort(DB_PORT);
 //        sqlInputs.setDbUrls(new ArrayList<String>());
         final List<String> dbUrls = mySqlDatabase.setUp(sqlInputs);
-        assertEquals("jdbc:mysql://2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net:30/dbName", dbUrls.get(0));
+        assertEquals("jdbc:mysql://2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net:30/dbName?zeroDateTimeBehavior=convertToNull", dbUrls.get(0));
         assertEquals(1, dbUrls.size());
     }
 }
