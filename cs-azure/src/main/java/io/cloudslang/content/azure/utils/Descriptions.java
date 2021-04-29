@@ -1,17 +1,4 @@
-/*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 /*
  * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
@@ -100,6 +87,35 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The request was successfully executed.";
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
     }
+    public static class CreateStreamingJob {
+        public static final String JOB_NAME_DESC = "The name of the streaming job.";
+        public static final String RESOURCE_GROUP_NAME_DESC = "The name of the resource group that contains the resource. " +
+                "You can obtain this value from the Azure Resource Manager API or the portal.";
+        public static final String SUBSCRIPTION_ID_DESC = "GUID which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.";
+        public static final String API_VERSION_DESC = "Client Api Version.";
+        public static final String SKU_NAME_DESC = "The name of the SKU. Describes the SKU of the streaming job." +
+                                                    "Default: Standard";;
+        public static final String EVENTS_OUT_OF_ORDER_POLICY_DESC = "Indicates the policy to apply to events that arrive out of order in the input event stream." +
+                                                                "Valid Values: Drop,Adjust" +
+                                                                "Default: Drop";
+        public static final String OUTPUT_ERROR_POLICY_DESC = "Indicates the policy to apply to events that arrive at the output" +
+                " and cannot be written to the external storage due to being malformed (missing column values, column values of wrong type or size)." +
+                 "Valid Values: Drop,Adjust" +
+                 "Default: Drop";
+        public static final String EVENTS_OUT_OF_ORDER_MAX_DELAY_IN_SECONDS_DESC = "The maximum tolerable delay in seconds where " +
+                "out-of-order events can be adjusted to be back in order." +
+                "Default: 5";
+        public static final String EVENTS_LATE_ARRIVAL_MAX_DELAY_IN_SECONDS_DESC = "The maximum tolerable delay in seconds where events " +
+                "arriving late could be included. Supported range is -1 to 1814399 (20.23:59:59 days) and -1 is " +
+                "used to specify wait indefinitely. If the property is absent, it is interpreted to have a value of -1."+
+                "Default: 16";
+        public static final String DATA_LOCALE_DESC = "The data locale of the stream analytics job. Value should be the name of a supported ." +
+                "Default: en-US";
+        public static final String COMPATIBILITY_LEVEL_DESC = "Controls certain runtime behaviors of the streaming job." +
+                "Default: 1.0";
+        public static final String LOCATION_DESC = "Resource location.";
+        public static final String TAGS_DESC = "Resource tags.";
 
+    }
 
 }
