@@ -1,18 +1,4 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/*
  * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -26,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 
 package io.cloudslang.content.azure.utils;
@@ -55,7 +40,11 @@ public final class Constants {
 
     public static final String STORAGE_AUTH_ENDPOINT = "DefaultEndpointsProtocol=https;AccountName=%s;AccountKey=%s";
 
-
+    public static final String SUBSCRIPTION_PATH = "/subscriptions/";
+    public static final String RESOURCE_GROUPS_PATH = "/resourcegroups/";
+    public static final String STREAM_ANALYTICS_PATH = "/providers/Microsoft.StreamAnalytics/";
+    public static final String STREAMING_JOBS_PATH = "streamingjobs/";
+    public static final String API_VERSION_PATH = "api-version=";
 
     public static class Common {
         public static final String API = "/api";
@@ -74,6 +63,7 @@ public final class Constants {
         public static final String ANONYMOUS = "anonymous";
         public static final String GET = "GET";
         public static final String POST = "POST";
+        public static final String PUT = "PUT";
         public static final String PATCH = "PATCH";
         public static final String DELETE = "DELETE";
         public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
@@ -84,6 +74,7 @@ public final class Constants {
         public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
         public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
         public static final String AUTHORIZATION = "Authorization:";
+        public static final String CONTENT_TYPE = "application/json";
         public static final String BEARER = "Bearer ";
         public static final String AZURE_HOST = "management.azure.com";
         public static final String STREAM_API_VERSION = "2016-03-01";

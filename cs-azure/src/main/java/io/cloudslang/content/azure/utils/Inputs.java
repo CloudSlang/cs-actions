@@ -1,17 +1,4 @@
-/*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 /*
  * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
@@ -38,7 +25,21 @@ public class Inputs extends InputNames {
         public static final String TENANT_ID = "tenantId";
         public static final String CLIENT_SECRET = "clientSecret";
     }
-
+    public static class CreateStreamingJobInputs {
+        public static final String JOB_NAME = "jobName";
+        public static final String RESOURCE_GROUP_NAME = "resourceGroupName";
+        public static final String SUBSCRIPTION_ID = "subscriptionId";
+        public static final String API_VERSION = "apiVersion";
+        public static final String SKU_NAME = "skuName";;
+        public static final String EVENTS_OUT_OF_ORDER_POLICY = "eventsOutOfOrderPolicy";
+        public static final String OUTPUT_ERROR_POLICY = "outputErrorPolicy";
+        public static final String EVENTS_OUT_OF_ORDER_MAX_DELAY_IN_SECONDS = "eventsOutOfOrderMaxDelayInSeconds";
+        public static final String EVENTS_LATE_ARRIVAL_MAX_DELAY_IN_SECONDS = "eventsLateArrivalMaxDelayInSeconds";
+        public static final String DATA_LOCALE = "dataLocale";
+        public static final String COMPATIBILITY_LEVEL = "compatibilityLevel";
+        public static final String LOCATION = "location";
+        public static final String TAGS = "tags";
+    }
 
 
 }
