@@ -54,7 +54,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateStreamingJob {
-    @Action(name = "Creates a streaming job.",
+    @Action(name = CREATE_STREAMING_JOB_OPERATION_NAME,
+            description = CREATE_STREAMING_JOB_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
