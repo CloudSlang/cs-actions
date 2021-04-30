@@ -44,7 +44,7 @@ public final class Constants {
     public static final String RESOURCE_GROUPS_PATH = "/resourcegroups/";
     public static final String STREAM_ANALYTICS_PATH = "/providers/Microsoft.StreamAnalytics/";
     public static final String STREAMING_JOBS_PATH = "streamingjobs/";
-    public static final String API_VERSION_PATH = "api-version=";
+
 
     public static class Common {
         public static final String API = "/api";
@@ -100,5 +100,19 @@ public final class Constants {
                 "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256," +
                 "TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256";
 
+    }
+
+    public static class CreateStreamingJobConstants {
+
+        public static final String DEFAULT_EVENTS_OUT_OF_ORDER_POLICY = "Adjust";
+        public static final String DEFAULT_OUTPUT_ERROR_POLICY = "Stop";
+        public static final String DEFAULT_EVENTS_OUT_OF_ORDER_MAX_DELAY_IN_SECONDS = "0";
+        public static final String DEFAULT_EVENTS_LATE_ARRIVAL_MAX_DELAY_IN_SECONDS = "5";
+        public static final String DEFAULT_DATA_LOCALE = "en-US";
+        public static final String DEFAULT_COMPATIBILITY_LEVEL = "1.0";
+        public static final String DEFAULT_SKU_NAME = "Standard";
+        public static final String PROVISIONING_STATE_JSON_PATH = "$.properties.provisioningState";
+        public static final String JOB_ID_JSON_PATH = "$.properties.jobId";
+        public static final String JOB_STATE_JSON_PATH = "$.properties.jobState";
     }
 }
