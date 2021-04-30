@@ -80,7 +80,7 @@ public class Descriptions {
                 "Default: '60000'";
         public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
                 "Default: 'false'";
-        public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for Azure API request.";
 
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
         public static final String FAILURE_DESC = "There was an error while executing the request.";
