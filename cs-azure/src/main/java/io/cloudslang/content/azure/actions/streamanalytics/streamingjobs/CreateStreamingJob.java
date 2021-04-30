@@ -54,7 +54,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateStreamingJob {
-    @Action(name = "Creates a streaming job.",
+    @Action(name = CREATE_STREAMING_JOB_OPERATION_NAME,
+            description = CREATE_STREAMING_JOB_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
@@ -70,7 +71,7 @@ public class CreateStreamingJob {
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = SUBSCRIPTION_ID, required = true, description = SUBSCRIPTION_ID_DESC) String subscriptionId,
                                        @Param(value = LOCATION, required = true, description = LOCATION_DESC) String location,
-                                       @Param(value = RESOURCE_GROUP_NAME, required = true, encrypted = true, description = RESOURCE_GROUP_NAME_DESC) String resourceGroupName,
+                                       @Param(value = RESOURCE_GROUP_NAME, required = true, description = RESOURCE_GROUP_NAME_DESC) String resourceGroupName,
                                        @Param(value = JOB_NAME, required = true, description = JOB_NAME_DESC) String jobName,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = SKU_NAME, description = SKU_NAME_DESC) String skuName,

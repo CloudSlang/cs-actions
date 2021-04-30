@@ -36,7 +36,9 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.*;
 import static io.cloudslang.content.azure.utils.Constants.Common.*;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_RESOURCE;
+import static io.cloudslang.content.azure.utils.Constants.GetAuthTokenUsingWebAPIConstants.GET_AUTH_TOKEN_USING_WEB_API_OPERATION_NAME;
 import static io.cloudslang.content.azure.utils.Descriptions.Common.*;
+import static io.cloudslang.content.azure.utils.Descriptions.GetAuthTokenUsingWebAPIConstants.GET_AUTH_TOKEN_USING_WEB_API_OPERATION_DESC;
 import static io.cloudslang.content.azure.utils.HttpUtils.*;
 import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.CLIENT_SECRET;
 import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.TENANT_ID;
@@ -50,7 +52,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class GetAuthTokenUsingWebAPI {
-    @Action(name = "Get the authorization token for Azure using Web API.",
+    @Action(name = GET_AUTH_TOKEN_USING_WEB_API_OPERATION_NAME,
+            description = GET_AUTH_TOKEN_USING_WEB_API_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),

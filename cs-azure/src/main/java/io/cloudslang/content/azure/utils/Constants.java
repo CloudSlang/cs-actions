@@ -103,7 +103,7 @@ public final class Constants {
     }
 
     public static class CreateStreamingJobConstants {
-
+        public static final String CREATE_STREAMING_JOB_OPERATION_NAME = "Create Streaming Job";
         public static final String DEFAULT_EVENTS_OUT_OF_ORDER_POLICY = "Adjust";
         public static final String DEFAULT_OUTPUT_ERROR_POLICY = "Stop";
         public static final String DEFAULT_EVENTS_OUT_OF_ORDER_MAX_DELAY_IN_SECONDS = "0";
@@ -114,5 +114,10 @@ public final class Constants {
         public static final String PROVISIONING_STATE_JSON_PATH = "$.properties.provisioningState";
         public static final String JOB_ID_JSON_PATH = "$.properties.jobId";
         public static final String JOB_STATE_JSON_PATH = "$.properties.jobState";
+    }
+    public static class GetAuthTokenUsingWebAPIConstants {
+        public static final String GET_AUTH_TOKEN_USING_WEB_API_OPERATION_NAME = "Get Auth Token Using Web API";
+
+
     }
 }
