@@ -80,7 +80,7 @@ public class Descriptions {
                 "Default: '60000'";
         public static final String ASYNC_DESC = "Whether to run the operation is async mode." +
                 "Default: 'false'";
-        public static final String STATUS_CODE_DESC = "The HTTP status code for Terraform API request.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for Azure API request.";
 
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
         public static final String FAILURE_DESC = "There was an error while executing the request.";
@@ -93,7 +93,8 @@ public class Descriptions {
         public static final String RESOURCE_GROUP_NAME_DESC = "The name of the resource group that contains the resource. " +
                 "You can obtain this value from the Azure Resource Manager API or the portal.";
         public static final String SUBSCRIPTION_ID_DESC = "GUID which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.";
-        public static final String API_VERSION_DESC = "Client Api Version.";
+        public static final String API_VERSION_DESC = "Client Api Version." +
+                "Default: 2016-03-01";
         public static final String SKU_NAME_DESC = "The name of the SKU. Describes the SKU of the streaming job." +
                 "Default: Standard";
         ;
@@ -117,7 +118,7 @@ public class Descriptions {
                 "Default: 1.0";
         public static final String LOCATION_DESC = "Resource location.";
         public static final String TAGS_DESC = "Resource tags." +
-                "{\"key1\": \"value1\"}";
+                "Example: {\"key1\": \"value1\"}";
         public static final String PROVISIONING_STATE_DESC = "Describes the provisioning status of the streaming job.";
         public static final String JOB_ID_DESC = "A GUID uniquely identifying the streaming job. This GUID is generated upon creation of the streaming job.";
         public static final String JOB_STATE_DESC = "Describes the state of the streaming job.";
