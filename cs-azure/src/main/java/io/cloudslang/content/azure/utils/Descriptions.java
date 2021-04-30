@@ -87,8 +87,13 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The request was successfully executed.";
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
     }
+    public static class GetAuthTokenUsingWebAPIConstants {
+        public static final String GET_AUTH_TOKEN_USING_WEB_API_OPERATION_DESC = "Get the authorization token for Azure using Web API.";
 
+
+    }
     public static class CreateStreamingJob {
+        public static final String CREATE_STREAMING_JOB_OPERATION_DESC = "Creates a streaming job.";
         public static final String JOB_NAME_DESC = "The name of the streaming job.";
         public static final String RESOURCE_GROUP_NAME_DESC = "The name of the resource group that contains the resource. " +
                 "You can obtain this value from the Azure Resource Manager API or the portal.";
