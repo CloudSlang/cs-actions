@@ -118,7 +118,7 @@ public class Descriptions {
                 "Default: 1.0";
         public static final String LOCATION_DESC = "Resource location.";
         public static final String TAGS_DESC = "Resource tags." +
-                "{\"key1\": \"value1\"}";
+                "Example: {\"key1\": \"value1\"}";
         public static final String PROVISIONING_STATE_DESC = "Describes the provisioning status of the streaming job.";
         public static final String JOB_ID_DESC = "A GUID uniquely identifying the streaming job. This GUID is generated upon creation of the streaming job.";
         public static final String JOB_STATE_DESC = "Describes the state of the streaming job.";
