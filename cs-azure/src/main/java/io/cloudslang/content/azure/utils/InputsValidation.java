@@ -17,6 +17,7 @@
 
 package io.cloudslang.content.azure.utils;
 
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
@@ -32,12 +33,14 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PASSWORD
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PRIMARY_OR_SECONDARY_KEY;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PORT;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.USERNAME;
-import static io.cloudslang.content.azure.utils.Constants.EXCEPTION_INVALID_PROXY;
-import static io.cloudslang.content.azure.utils.Constants.EXCEPTION_NULL_EMPTY;
+import static io.cloudslang.content.azure.utils.Constants.*;
 import static io.cloudslang.content.azure.utils.StorageInputNames.BLOB_NAME;
 import static io.cloudslang.content.azure.utils.StorageInputNames.CONTAINER_NAME;
 import static io.cloudslang.content.azure.utils.StorageInputNames.TIMEOUT;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created by victor on 28.09.2016.
@@ -52,6 +55,29 @@ public final class InputsValidation {
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
         return exceptionMessages;
     }
+
+
+    @NotNull
+    public static List<String> verifyCommonInputs(@Nullable final String proxyPort,
+                                                  @Nullable final String trust_all_roots) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyProxy(exceptionMessages, proxyPort, HttpClientInputs.PROXY_PORT);
+        addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
+        return exceptionMessages;
+    }
+
+    @NotNull
+    private static List<String> addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input,
+                                                 @NotNull final String inputName) {
+        if (isEmpty(input)) {
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+        } else if (!isValid(input)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_BOOLEAN, input, inputName));
+        }
+        return exceptions;
+    }
+
 
     @NotNull
     public static List<String> verifyStorageInputs(@Nullable final String accountName, @Nullable final String key, @Nullable final String containerName, @Nullable final String proxyPort, @Nullable final String timeout) {
