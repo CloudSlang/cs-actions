@@ -24,21 +24,20 @@ public class Inputs extends InputNames {
         public static final String AUTH_TOKEN = "authToken";
         public static final String TENANT_ID = "tenantId";
         public static final String CLIENT_SECRET = "clientSecret";
-    }
-    public static class CreateStreamingJobInputs {
         public static final String JOB_NAME = "jobName";
         public static final String RESOURCE_GROUP_NAME = "resourceGroupName";
-        public static final String SUBSCRIPTION_ID = "subscriptionId";
+        public static final String ACCOUNT_NAME = "accountName";
+        public static final String ACCOUNT_KEY = "accountKey";
+
         public static final String API_VERSION = "apiVersion";
-        public static final String SKU_NAME = "skuName";;
-        public static final String EVENTS_OUT_OF_ORDER_POLICY = "eventsOutOfOrderPolicy";
-        public static final String OUTPUT_ERROR_POLICY = "outputErrorPolicy";
-        public static final String EVENTS_OUT_OF_ORDER_MAX_DELAY_IN_SECONDS = "eventsOutOfOrderMaxDelayInSeconds";
-        public static final String EVENTS_LATE_ARRIVAL_MAX_DELAY_IN_SECONDS = "eventsLateArrivalMaxDelayInSeconds";
-        public static final String DATA_LOCALE = "dataLocale";
-        public static final String COMPATIBILITY_LEVEL = "compatibilityLevel";
-        public static final String LOCATION = "location";
-        public static final String TAGS = "tags";
+        public static final String SUBSCRIPTION_ID = "subscriptionId";
+    }
+    public static class CreateStreamingJobInputs {
+        public static final String OUTPUT_NAME = "outputName";
+        public static final String INPUT_NAME = "inputtName";
+        public static final String SOURCE_TYPE = "sourceType";
+
+
     }
 
 

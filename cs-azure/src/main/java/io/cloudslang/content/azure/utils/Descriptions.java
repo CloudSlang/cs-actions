@@ -116,6 +116,12 @@ public class Descriptions {
         public static final String LOCATION_DESC = "Resource location.";
         public static final String TAGS_DESC = "Resource tags.";
 
+        public static final String OUTPUT_NAME_DESC = "The name of the output.";
+        public static final String INPUT_NAME_DESC = "The name of the input.";
+        public static final String ACCOUNT_NAME_DESC = "Name of account to created for the blob Storage";
+        public static final String ACCOUNT_KEY_DESC = "Access keys to authenticate your applications when making requests to this Azure storage account.";
+        public static final String SOURCE_TYPE_DESC = "Type of source . Excepted values are Reference and Stream. Default: Reference ";
+
     }
 
 }
