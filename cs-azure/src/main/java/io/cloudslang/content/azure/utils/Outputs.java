@@ -30,5 +30,15 @@ public class Outputs extends OutputNames {
 
     }
 
+    public static class CreateStreamingOutputJobOutputs {
+        public static final String OUTPUT_NAME = "outputName";
+
+    }
+
+    public static class CreateStreamingInputJobOutputs {
+        public static final String INPUT_NAME = "inputName";
+
+    }
+
 }
 

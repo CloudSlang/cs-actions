@@ -18,6 +18,7 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
+import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.azure.entities.AzureCommonInputs;
 import io.cloudslang.content.azure.entities.CreateStreamingInputJobInputs;
 import io.cloudslang.content.azure.services.StreamingInputJobImpl;
@@ -54,11 +55,12 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_P
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.INPUT_NAME;
+
 import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.SUBSCRIPTION_ID;
 import static io.cloudslang.content.azure.utils.Descriptions.Common.SUBSCRIPTION_ID_DESC;
 import static io.cloudslang.content.azure.utils.Constants.CreateStreamingInputJobConstants.*;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingInputJob.*;
+import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingInputJobOutputs.INPUT_NAME;
 
 
 public class GetInput {
@@ -68,6 +70,7 @@ public class GetInput {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = INPUT_NAME, description = INPUT_NAME_DESC),
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
@@ -132,7 +135,7 @@ public class GetInput {
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode == 200) {
-
+                results.put(INPUT_NAME, (String) JsonPath.read(returnMessage, INPUT_NAME_PATH));
             } else {
                 return getFailureResults(subscriptionId, statusCode, returnMessage);
             }
