@@ -74,9 +74,7 @@ public class CreateStreamingOutputJobInputs {
         private  String accountKey = EMPTY;
 
 
-        CreateStreamingOutputJobInputsBuilder()
-        {
-
+        CreateStreamingOutputJobInputsBuilder() {
         }
 
         @NotNull

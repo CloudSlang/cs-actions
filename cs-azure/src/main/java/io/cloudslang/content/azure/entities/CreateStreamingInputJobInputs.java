@@ -83,9 +83,7 @@ public class CreateStreamingInputJobInputs {
         private String sourceType= EMPTY;
 
 
-        CreateStreamingInputJobInputsBuilder()
-        {
-
+        CreateStreamingInputJobInputsBuilder() {
         }
 
         @NotNull
