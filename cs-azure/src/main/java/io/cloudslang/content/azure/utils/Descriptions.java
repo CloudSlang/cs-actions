@@ -94,6 +94,8 @@ public class Descriptions {
     }
     public static class CreateStreamingJob {
         public static final String CREATE_STREAMING_JOB_OPERATION_DESC = "Creates a streaming job.";
+        public static final String CREATE_STREAMING_INPUT_JOB_OPERATION_DESC = "Creates a inputs for streaming job.";
+        public static final String CREATE_STREAMING_OUTPUT_JOB_OPERATION_DESC = "Creates a outputs for streaming job.";
         public static final String JOB_NAME_DESC = "The name of the streaming job.";
         public static final String RESOURCE_GROUP_NAME_DESC = "The name of the resource group that contains the resource. " +
                 "You can obtain this value from the Azure Resource Manager API or the portal.";

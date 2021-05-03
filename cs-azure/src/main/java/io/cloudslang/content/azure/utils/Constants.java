@@ -124,6 +124,8 @@ public final class Constants {
 
     public static class CreateStreamingJobConstants {
         public static final String CREATE_STREAMING_JOB_OPERATION_NAME = "Create Streaming Job";
+        public static final String CREATE_STREAMING_INPUT_JOB_OPERATION_NAME = "Create Input Job";
+        public static final String CREATE_STREAMING_OUTPUT_JOB_OPERATION_NAME = "Create Output Job";
         public static final String DEFAULT_SOURCE_TYPE = "Reference";
         public static final String DEFAULT_EVENTS_OUT_OF_ORDER_POLICY = "Adjust";
         public static final String DEFAULT_OUTPUT_ERROR_POLICY = "Stop";
