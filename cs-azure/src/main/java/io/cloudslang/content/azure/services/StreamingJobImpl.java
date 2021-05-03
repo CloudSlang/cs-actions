@@ -138,12 +138,14 @@ public class StreamingJobImpl {
         sku.setName(inputs.getSkuName());
         properties.setCompatibilityLevel(inputs.getCompatibilityLevel());
         properties.setDataLocale(inputs.getDataLocale());
-        properties.setEventsLateArrivalMaxDelayInSeconds(Integer.parseInt(inputs.getEventsOutOfOrderMaxDelayInSeconds()));
+        properties.setEventsLateArrivalMaxDelayInSeconds(Integer.parseInt(inputs.getEventsLateArrivalMaxDelayInSeconds()));
         properties.setEventsOutOfOrderMaxDelayInSeconds(Integer.parseInt(inputs.getEventsOutOfOrderMaxDelayInSeconds()));
         properties.setEventsOutOfOrderPolicy(inputs.getEventsOutOfOrderPolicy());
         properties.setOutputErrorPolicy(inputs.getOutputErrorPolicy());
         properties.setSku(sku);
-        createStreamingJobRequestBody.setTags(stringToJSON(jsonParser, inputs.getTags()));
+        if (!isEmpty(inputs.getTags())) {
+            createStreamingJobRequestBody.setTags(stringToJSON(jsonParser, inputs.getTags()));
+        }
         createStreamingJobRequestBody.setProperties(properties);
         ObjectMapper createInstanceMapper = new ObjectMapper();
         return createInstanceMapper.writeValueAsString(createStreamingJobRequestBody);

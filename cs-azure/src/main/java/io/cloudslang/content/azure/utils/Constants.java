@@ -49,6 +49,8 @@ public final class Constants {
     public static final String INPUTS_JOBS_PATH = "/inputs/";
     public static final String API_VERSION_PATH = "api-version=";
 
+
+
     public static class Common {
         public static final String API = "/api";
         public static final String API_VERSION = "/v2";
@@ -114,9 +116,29 @@ public final class Constants {
                 "TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256";
 
     }
-    public static class CreateStreamingJobConstants {
 
+
+
+        
+
+
+    public static class CreateStreamingJobConstants {
+        public static final String CREATE_STREAMING_JOB_OPERATION_NAME = "Create Streaming Job";
         public static final String DEFAULT_SOURCE_TYPE = "Reference";
+        public static final String DEFAULT_EVENTS_OUT_OF_ORDER_POLICY = "Adjust";
+        public static final String DEFAULT_OUTPUT_ERROR_POLICY = "Stop";
+        public static final String DEFAULT_EVENTS_OUT_OF_ORDER_MAX_DELAY_IN_SECONDS = "0";
+        public static final String DEFAULT_EVENTS_LATE_ARRIVAL_MAX_DELAY_IN_SECONDS = "5";
+        public static final String DEFAULT_DATA_LOCALE = "en-US";
+        public static final String DEFAULT_COMPATIBILITY_LEVEL = "1.0";
+        public static final String DEFAULT_SKU_NAME = "Standard";
+        public static final String PROVISIONING_STATE_JSON_PATH = "$.properties.provisioningState";
+        public static final String JOB_ID_JSON_PATH = "$.properties.jobId";
+        public static final String JOB_STATE_JSON_PATH = "$.properties.jobState";
+    }
+    public static class GetAuthTokenUsingWebAPIConstants {
+        public static final String GET_AUTH_TOKEN_USING_WEB_API_OPERATION_NAME = "Get Auth Token Using Web API";
+
 
     }
 }
