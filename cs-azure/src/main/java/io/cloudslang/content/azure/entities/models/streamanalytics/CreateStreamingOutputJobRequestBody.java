@@ -22,6 +22,8 @@ import org.json.simple.JSONArray;
 public class CreateStreamingOutputJobRequestBody {
 
 
+    Properties properties;
+
     public Properties getProperties() {
         return properties;
     }
@@ -29,12 +31,6 @@ public class CreateStreamingOutputJobRequestBody {
     public void setProperties(Properties properties) {
         this.properties = properties;
     }
-
-    Properties properties;
-
-
-
-
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public static class Properties {
@@ -64,7 +60,7 @@ public class CreateStreamingOutputJobRequestBody {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public static class Serialization {
         public String type;
-
+        SerializationProperties properties;
 
         public SerializationProperties getProperties() {
             return properties;
@@ -74,7 +70,6 @@ public class CreateStreamingOutputJobRequestBody {
             this.properties = properties;
         }
 
-        SerializationProperties properties;
         public String getType() {
             return type;
         }
@@ -84,8 +79,12 @@ public class CreateStreamingOutputJobRequestBody {
         }
 
     }
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public static class SerializationProperties {
+        public String fieldDelimiter;
+        public String encoding;
+
         public String getFieldDelimiter() {
             return fieldDelimiter;
         }
@@ -102,16 +101,14 @@ public class CreateStreamingOutputJobRequestBody {
             this.encoding = encoding;
         }
 
-        public String fieldDelimiter;
-        public String encoding;
-
     }
-
 
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public static class Datasource {
         public String type;
+        //@JsonProperty("properties")
+        SubProperties properties;
 
         public SubProperties getProperties() {
             return properties;
@@ -120,10 +117,6 @@ public class CreateStreamingOutputJobRequestBody {
         public void setProperties(SubProperties properties) {
             this.properties = properties;
         }
-
-        //@JsonProperty("properties")
-        SubProperties properties;
-
 
         public String getType() {
             return type;
@@ -135,9 +128,10 @@ public class CreateStreamingOutputJobRequestBody {
 
         @JsonInclude(JsonInclude.Include.NON_EMPTY)
         public static class SubProperties {
+            public String container;
+            public String pathPattern;
             @JsonProperty("storageAccounts")
             JSONArray strogeaccounts;
-            public String container;
 
             public String getContainer() {
                 return container;
@@ -155,8 +149,6 @@ public class CreateStreamingOutputJobRequestBody {
                 this.pathPattern = pathPattern;
             }
 
-            public String pathPattern;
-
             public JSONArray getStrogeaccounts() {
                 return strogeaccounts;
             }
@@ -166,10 +158,10 @@ public class CreateStreamingOutputJobRequestBody {
             }
 
 
-
             @JsonInclude(JsonInclude.Include.NON_EMPTY)
-            public static class StorageAccounts{
+            public static class StorageAccounts {
                 public String accountName;
+                public String accountKey;
 
                 public String getAccountName() {
                     return accountName;
@@ -187,16 +179,11 @@ public class CreateStreamingOutputJobRequestBody {
                     this.accountKey = accountKey;
                 }
 
-                public String accountKey;
-
 
             }
 
 
         }
-
-
-
 
 
     }

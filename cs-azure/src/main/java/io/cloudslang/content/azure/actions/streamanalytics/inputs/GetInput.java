@@ -32,35 +32,30 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PASSWORD;
-import static io.cloudslang.content.azure.utils.Constants.Common.*;
-import static io.cloudslang.content.azure.utils.Constants.Common.DEFAULT_API_VERSION;
-import static io.cloudslang.content.azure.utils.Descriptions.Common.*;
-import static io.cloudslang.content.azure.utils.Descriptions.Common.TRUST_PASSWORD_DESC;
-import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.*;
-import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.SOURCE_TYPE_DESC;
-import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
-import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_HOST;
+import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PASSWORD;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PORT;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_USERNAME;
+import static io.cloudslang.content.azure.utils.Constants.Common.*;
+import static io.cloudslang.content.azure.utils.Constants.CreateStreamingInputJobConstants.*;
+import static io.cloudslang.content.azure.utils.Descriptions.Common.SUBSCRIPTION_ID_DESC;
+import static io.cloudslang.content.azure.utils.Descriptions.Common.*;
+import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingInputJob.CREATE_STREAMING_INPUT_JOB_OPERATION_DESC;
+import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.*;
+import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
+import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.SOURCE_TYPE;
+import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.SUBSCRIPTION_ID;
 import static io.cloudslang.content.azure.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingInputJobOutputs.INPUT_NAME;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.SUBSCRIPTION_ID;
-import static io.cloudslang.content.azure.utils.Descriptions.Common.SUBSCRIPTION_ID_DESC;
-import static io.cloudslang.content.azure.utils.Constants.CreateStreamingInputJobConstants.*;
-import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingInputJob.*;
-import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingInputJobOutputs.INPUT_NAME;
 
 
 public class GetInput {
@@ -83,7 +78,7 @@ public class GetInput {
                                        @Param(value = SUBSCRIPTION_ID, required = true, description = SUBSCRIPTION_ID_DESC) String subscriptionId,
                                        @Param(value = ACCOUNT_NAME, required = true, description = ACCOUNT_NAME_DESC) String accountName,
                                        @Param(value = ACCOUNT_KEY, required = true, description = ACCOUNT_KEY_DESC) String accountKey,
-                                       @Param(value = SOURCE_TYPE,  description =SOURCE_TYPE_DESC) String sourceType,
+                                       @Param(value = SOURCE_TYPE, description = SOURCE_TYPE_DESC) String sourceType,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -124,12 +119,12 @@ public class GetInput {
                             .x509HostnameVerifier(x509HostnameVerifier)
                             .trustKeystore(trustKeystore)
                             .trustPassword(trustPassword).build())
-                            .jobName(jobName)
-                            .inputName(inputName)
-                            .accountName(accountName)
-                            .accountKey(accountKey)
-                            .sourceType(sourceType)
-                            .build());
+                    .jobName(jobName)
+                    .inputName(inputName)
+                    .accountName(accountName)
+                    .accountKey(accountKey)
+                    .sourceType(sourceType)
+                    .build());
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));

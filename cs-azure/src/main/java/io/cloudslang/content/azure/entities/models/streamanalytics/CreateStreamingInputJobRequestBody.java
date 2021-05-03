@@ -32,6 +32,11 @@ public class CreateStreamingInputJobRequestBody {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public static class Properties {
 
+        @JsonProperty("type")
+        public String sourceType;
+        CreateStreamingInputJobRequestBody.Datasource datasource;
+        CreateStreamingInputJobRequestBody.Serialization serialization;
+
         public String getSourceType() {
             return sourceType;
         }
@@ -39,13 +44,6 @@ public class CreateStreamingInputJobRequestBody {
         public void setSourceType(String sourceType) {
             this.sourceType = sourceType;
         }
-
-        @JsonProperty("type")
-        public String sourceType;
-
-
-        CreateStreamingInputJobRequestBody.Datasource datasource;
-        CreateStreamingInputJobRequestBody.Serialization serialization;
 
         public CreateStreamingInputJobRequestBody.Datasource getDatasource() {
             return datasource;

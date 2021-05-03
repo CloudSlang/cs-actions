@@ -26,9 +26,8 @@ import org.json.simple.JSONArray;
 
 import java.util.Map;
 
-import static io.cloudslang.content.azure.utils.Constants.*;
 import static io.cloudslang.content.azure.utils.Constants.Common.*;
-import static io.cloudslang.content.azure.utils.Constants.INPUTS_JOBS_PATH;
+import static io.cloudslang.content.azure.utils.Constants.*;
 import static io.cloudslang.content.azure.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.azure.utils.HttpUtils.setAPIVersion;
 
@@ -102,7 +101,6 @@ public class StreamingOutputJobImpl {
         return createInstanceMapper.writeValueAsString(createStreamingOutputJobRequestBody);
 
     }
-
 
 
 }

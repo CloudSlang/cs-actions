@@ -37,15 +37,19 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PA
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PORT;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_USERNAME;
 import static io.cloudslang.content.azure.utils.Constants.Common.*;
+import static io.cloudslang.content.azure.utils.Constants.CreateStreamingOutputJobConstants.CREATE_STREAMING_OUTPUT_JOB_OPERATION_NAME;
+import static io.cloudslang.content.azure.utils.Constants.CreateStreamingOutputJobConstants.OUTPUT_NAME_PATH;
+import static io.cloudslang.content.azure.utils.Descriptions.Common.SUBSCRIPTION_ID_DESC;
 import static io.cloudslang.content.azure.utils.Descriptions.Common.*;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.*;
-import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.ACCOUNT_KEY_DESC;
+import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingOutputJob.CREATE_STREAMING_OUTPUT_JOB_OPERATION_DESC;
 import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.ACCOUNT_NAME;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.*;
+import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.API_VERSION;
+import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.SUBSCRIPTION_ID;
 import static io.cloudslang.content.azure.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingOutputJobOutputs.OUTPUT_NAME;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
@@ -53,17 +57,10 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.RESOURCE_GROUP_NAME;
-import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.JOB_NAME;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.API_VERSION;
-import static io.cloudslang.content.azure.utils.Descriptions.Common.SUBSCRIPTION_ID_DESC;
-import static io.cloudslang.content.azure.utils.Constants.CreateStreamingOutputJobConstants.*;
-import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingOutputJob.*;
-import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingOutputJobOutputs.OUTPUT_NAME;
 
 public class GetOutput {
 
-    @Action(name =CREATE_STREAMING_OUTPUT_JOB_OPERATION_NAME,
+    @Action(name = CREATE_STREAMING_OUTPUT_JOB_OPERATION_NAME,
             description = CREATE_STREAMING_OUTPUT_JOB_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
@@ -121,11 +118,11 @@ public class GetOutput {
                             .x509HostnameVerifier(x509HostnameVerifier)
                             .trustKeystore(trustKeystore)
                             .trustPassword(trustPassword).build())
-                            .jobName(jobName)
-                            .outputName(outputName)
-                            .accountName(accountName)
-                            .accountKey(accountKey)
-                            .build());
+                    .jobName(jobName)
+                    .outputName(outputName)
+                    .accountName(accountName)
+                    .accountKey(accountKey)
+                    .build());
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
