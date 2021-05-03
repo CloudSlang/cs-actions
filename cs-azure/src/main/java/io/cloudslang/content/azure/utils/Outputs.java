@@ -28,13 +28,7 @@ public class Outputs extends OutputNames {
         public static final String JOB_STATE = "jobState";
 
     }
-
-    public static class CreateStreamingJobOutputs {
-        public static final String PROVISIONING_STATE = "provisioningState";
-        public static final String JOB_ID = "jobId";
-        public static final String JOB_STATE = "jobState";
-
-    }
+    
 
 }
 
