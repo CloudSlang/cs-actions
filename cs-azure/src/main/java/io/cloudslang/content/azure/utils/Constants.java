@@ -149,4 +149,11 @@ public final class Constants {
         public static final String START_STREAMING_JOB_PATH = "/start";
 
     }
+
+    public static class CreateTransformationsConstants {
+        public static final String TRANSFORMATION_JOBS_PATH = " /transformations/";
+        public static final String CREATE_TRANSFORMATION_OPERATION_NAME = "Create Streaming Job";
+        public static final String DEFAULT_STREAMING_UNITS = "6";
+        public static final String TRANSFORMATION_ID_JSON_PATH = "$.id";
+    }
 }

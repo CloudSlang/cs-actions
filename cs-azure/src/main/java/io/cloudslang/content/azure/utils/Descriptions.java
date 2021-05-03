@@ -158,4 +158,13 @@ public class Descriptions {
         public static final String CREATE_STREAMING_OUTPUT_JOB_OPERATION_DESC = "Creates a Output for streaming job.";
     }
 
+    public static class CreateTransformationsInputs {
+        public static final String CREATE_TRANSFORMATION_OPERATION_DESC = "Creates a transformation or replaces an already existing transformation under an existing streaming job.";
+        public static final String TRANSFORMATION_NAME_DESC = "The name of the transformation.";
+        public static final String QUERY_DESC = "Specifies the query that will be run in the streaming job. You can learn more about the Stream Analytics Query Language (SAQL) " +
+                "here:https://msdn.microsoft.com/library/azure/dn834998 . Required on PUT (CreateOrReplace) requests.";
+        public static final String STREAMING_UNITS_DESC = "Specifies the number of streaming units that the streaming job uses.";
+        public static final String TRANSFORMATION_ID_DESC = "Transformation Resource Id.";
+    }
+
 }
