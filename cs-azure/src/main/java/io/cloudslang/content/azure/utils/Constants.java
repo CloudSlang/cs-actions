@@ -34,6 +34,7 @@ public final class Constants {
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s is not a valid number";
+    public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
 
     public static final String PROXY_HTTP_USER = "http.proxyUser";
     public static final String PROXY_HTTP_PASSWORD = "http.proxyPassword";
@@ -44,12 +45,21 @@ public final class Constants {
     public static final String RESOURCE_GROUPS_PATH = "/resourcegroups/";
     public static final String STREAM_ANALYTICS_PATH = "/providers/Microsoft.StreamAnalytics/";
     public static final String STREAMING_JOBS_PATH = "streamingjobs/";
+    public static final String OUTPUTS_JOBS_PATH = "/outputs/";
+    public static final String INPUTS_JOBS_PATH = "/inputs/";
 
 
     public static class Common {
+        public static final String SET_TYPE = "Microsoft.Storage/Blob";
+        public static final String CONTAINER = "state";
+        public static final String PATH_PATTERN = "{date}/{time}";
+        public static final String TYPE ="Csv";
+        public static final String ENCODING ="UTF8";
+        public static final String FIELD_DELIMETER =",";
         public static final String API = "/api";
         public static final String API_VERSION = "/v2";
         public static final String NEW_LINE = "\n";
+        public static final String DEFAULT_API_VERSION = "2016-03-01";
         public static final String DEFAULT_PROXY_PORT = "8080";
         public static final String BOOLEAN_FALSE = "false";
         public static final String BOOLEAN_TRUE = "true";
@@ -114,7 +124,20 @@ public final class Constants {
         public static final String PROVISIONING_STATE_JSON_PATH = "$.properties.provisioningState";
         public static final String JOB_ID_JSON_PATH = "$.properties.jobId";
         public static final String JOB_STATE_JSON_PATH = "$.properties.jobState";
+
     }
+
+    public static class CreateStreamingOutputJobConstants {
+        public static final String CREATE_STREAMING_OUTPUT_JOB_OPERATION_NAME = "Create Output for Streaming Job";
+        public static final String OUTPUT_NAME_PATH = "$.name";
+    }
+
+    public static class CreateStreamingInputJobConstants {
+        public static final String CREATE_STREAMING_INPUT_JOB_OPERATION_NAME = "Create Input for Streaming Job";
+        public static final String DEFAULT_SOURCE_TYPE = "Reference";
+        public static final String INPUT_NAME_PATH = "$.name";
+    }
+
     public static class GetAuthTokenUsingWebAPIConstants {
         public static final String GET_AUTH_TOKEN_USING_WEB_API_OPERATION_NAME = "Get Auth Token Using Web API";
 
