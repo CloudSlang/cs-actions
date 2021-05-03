@@ -125,8 +125,6 @@ public class Descriptions {
                 "Default: 1.0";
         public static final String LOCATION_DESC = "Resource location.";
 
-        public static final String TAGS_DESC = "Resource tags.";
-
         public static final String OUTPUT_NAME_DESC = "The name of the output.";
         public static final String INPUT_NAME_DESC = "The name of the input.";
         public static final String ACCOUNT_NAME_DESC = "Name of account to created for the blob Storage";

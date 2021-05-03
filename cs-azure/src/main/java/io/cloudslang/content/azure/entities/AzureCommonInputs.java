@@ -26,6 +26,7 @@ public class AzureCommonInputs {
     private final String subscriptionId;
     private final String apiVersion;
     private final String location;
+    private final String jobName;
     private final String proxyHost;
     private final String proxyPort;
     private final String proxyUsername;
@@ -35,13 +36,14 @@ public class AzureCommonInputs {
     private final String trustKeystore;
     private final String trustPassword;
 
-    @java.beans.ConstructorProperties({"authToken", "resourceGroupName", "subscriptionId", "apiVersion", "location", "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword"})
-    public AzureCommonInputs(String authToken, String resourceGroupName, String subscriptionId, String apiVersion, String location, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier, String trustKeystore, String trustPassword) {
+    @java.beans.ConstructorProperties({"authToken", "resourceGroupName", "subscriptionId", "apiVersion", "location", "jobName", "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword"})
+    public AzureCommonInputs(String authToken, String resourceGroupName, String subscriptionId, String apiVersion, String location, String jobName,String proxyHost, String proxyPort, String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier, String trustKeystore, String trustPassword) {
         this.authToken = authToken;
         this.resourceGroupName = resourceGroupName;
         this.subscriptionId = subscriptionId;
         this.apiVersion = apiVersion;
         this.location = location;
+        this.jobName = jobName;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
         this.proxyUsername = proxyUsername;
@@ -80,6 +82,11 @@ public class AzureCommonInputs {
     @NotNull
     public String getLocation() {
         return location;
+    }
+
+    @NotNull
+    public String getJobName() {
+        return jobName;
     }
 
     @NotNull
@@ -129,6 +136,7 @@ public class AzureCommonInputs {
         private String subscriptionId = EMPTY;
         private String apiVersion = EMPTY;
         private String location = EMPTY;
+        private String jobName = EMPTY;
         private String proxyHost = EMPTY;
         private String proxyPort = EMPTY;
         private String proxyUsername = EMPTY;
@@ -168,6 +176,12 @@ public class AzureCommonInputs {
         @NotNull
         public AzureCommonInputsBuilder location(@NotNull final String location) {
             this.location = location;
+            return this;
+        }
+
+        @NotNull
+        public AzureCommonInputsBuilder jobName(@NotNull final String jobName) {
+            this.jobName = jobName;
             return this;
         }
 
@@ -220,7 +234,7 @@ public class AzureCommonInputs {
         }
 
         public AzureCommonInputs build() {
-            return new AzureCommonInputs(authToken, resourceGroupName, subscriptionId, apiVersion, location, proxyHost, proxyPort, proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword);
+            return new AzureCommonInputs(authToken, resourceGroupName, subscriptionId, apiVersion, location, jobName, proxyHost, proxyPort, proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword);
         }
     }
 }

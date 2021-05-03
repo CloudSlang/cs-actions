@@ -22,7 +22,6 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class CreateStreamingJobInputs {
 
 
-    private final String jobName;
     private final String skuName;
     private final String eventsOutOfOrderPolicy;
     private final String outputErrorPolicy;
@@ -34,10 +33,10 @@ public class CreateStreamingJobInputs {
     private final String tags;
     private final AzureCommonInputs azureCommonInputs;
 
-    @java.beans.ConstructorProperties({"jobName", "skuName", "eventsOutOfOrderPolicy", "outputErrorPolicy", "eventsOutOfOrderMaxDelayInSeconds", "eventsLateArrivalMaxDelayInSeconds", "dataLocale", "compatibilityLevel", "location", "tags", "azureCommonInputs"})
-    public CreateStreamingJobInputs(String jobName, String skuName, String eventsOutOfOrderPolicy, String outputErrorPolicy, String eventsOutOfOrderMaxDelayInSeconds, String eventsLateArrivalMaxDelayInSeconds, String dataLocale, String compatibilityLevel, String location, String tags, AzureCommonInputs azureCommonInputs) {
+    @java.beans.ConstructorProperties({"skuName", "eventsOutOfOrderPolicy", "outputErrorPolicy", "eventsOutOfOrderMaxDelayInSeconds", "eventsLateArrivalMaxDelayInSeconds", "dataLocale", "compatibilityLevel", "location", "tags", "azureCommonInputs"})
+    public CreateStreamingJobInputs(String skuName, String eventsOutOfOrderPolicy, String outputErrorPolicy, String eventsOutOfOrderMaxDelayInSeconds, String eventsLateArrivalMaxDelayInSeconds, String dataLocale, String compatibilityLevel, String location, String tags, AzureCommonInputs azureCommonInputs) {
 
-        this.jobName = jobName;
+
         this.skuName = skuName;
         this.eventsOutOfOrderPolicy = eventsOutOfOrderPolicy;
         this.outputErrorPolicy = outputErrorPolicy;
@@ -57,10 +56,7 @@ public class CreateStreamingJobInputs {
 
 
 
-    @NotNull
-    public String getJobName() {
-        return jobName;
-    }
+
 
     @NotNull
     public String getSkuName() {
@@ -114,7 +110,6 @@ public class CreateStreamingJobInputs {
 
     public static final class CreateStreamingJobInputsBuilder {
 
-        private String jobName = EMPTY;
         private String skuName = EMPTY;
         private String eventsOutOfOrderPolicy = EMPTY;
         private String outputErrorPolicy = EMPTY;
@@ -131,11 +126,6 @@ public class CreateStreamingJobInputs {
 
 
 
-        @NotNull
-        public CreateStreamingJobInputsBuilder jobName(@NotNull final String jobName) {
-            this.jobName = jobName;
-            return this;
-        }
 
         @NotNull
         public CreateStreamingJobInputsBuilder skuName(@NotNull final String skuName) {
@@ -198,7 +188,7 @@ public class CreateStreamingJobInputs {
         }
 
         public CreateStreamingJobInputs build() {
-            return new CreateStreamingJobInputs(jobName, skuName, eventsOutOfOrderPolicy, outputErrorPolicy, eventsOutOfOrderMaxDelayInSeconds, eventsLateArrivalMaxDelayInSeconds, dataLocale, compatibilityLevel, location, tags, azureCommonInputs);
+            return new CreateStreamingJobInputs(skuName, eventsOutOfOrderPolicy, outputErrorPolicy, eventsOutOfOrderMaxDelayInSeconds, eventsLateArrivalMaxDelayInSeconds, dataLocale, compatibilityLevel, location, tags, azureCommonInputs);
         }
     }
 }

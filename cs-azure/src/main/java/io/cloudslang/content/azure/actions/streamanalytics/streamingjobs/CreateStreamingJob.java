@@ -22,6 +22,7 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.azure.entities.AzureCommonInputs;
 import io.cloudslang.content.azure.entities.CreateStreamingJobInputs;
 import io.cloudslang.content.azure.services.StreamingJobImpl;
+import io.cloudslang.content.azure.utils.Inputs;
 import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
@@ -41,8 +42,9 @@ import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.*;
 import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.API_VERSION;
 import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.*;
+import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.TAGS;
+import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.API_VERSION;
 import static io.cloudslang.content.azure.utils.Outputs.CommonOutputs.AUTH_TOKEN;
 import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingJobOutputs.*;
 import static io.cloudslang.content.constants.OutputNames.*;
@@ -113,10 +115,10 @@ public class CreateStreamingJob {
         try {
             final Map<String, String> result = StreamingJobImpl.createStreamingJob(CreateStreamingJobInputs.builder().
                     azureCommonInputs(AzureCommonInputs.builder().apiVersion(apiVersion).authToken(authToken).
-                            location(location).resourceGroupName(resourceGroupName).subscriptionId(subscriptionId).proxyPort(proxyPort)
+                            location(location).resourceGroupName(resourceGroupName).subscriptionId(subscriptionId).jobName(jobName).proxyPort(proxyPort)
                             .proxyHost(proxyHost).proxyUsername(proxyUsername).proxyPassword(proxyPassword).trustAllRoots(trustAllRoots)
                             .x509HostnameVerifier(x509HostnameVerifier).trustKeystore(trustKeystore).trustPassword(trustPassword).build())
-                    .jobName(jobName).compatibilityLevel(compatibilityLevel).dataLocale(dataLocale)
+                    .compatibilityLevel(compatibilityLevel).dataLocale(dataLocale)
                     .eventsLateArrivalMaxDelayInSeconds(eventsLateArrivalMaxDelayInSeconds)
                     .eventsOutOfOrderMaxDelayInSeconds(eventsOutOfOrderMaxDelayInSeconds)
                     .location(location).outputErrorPolicy(outputErrorPolicy).skuName(skuName).tags(tags).eventsOutOfOrderPolicy(eventsOutOfOrderPolicy).build());
