@@ -129,4 +129,16 @@ public class Descriptions {
         public static final String JOB_STATE_DESC = "Describes the state of the streaming job.";
     }
 
+    public static class StartStreamingJob {
+
+        public static final String START_STREAMING_JOB_OPERATION_DESC = "Starts a streaming job. Once a job is started it will start processing input events and produce output.";
+        public static final String OUTPUT_START_MODE_DESC = "Value may be JobStartTime, CustomTime, or LastOutputEventTime to indicate whether the starting " +
+                "point of the output event stream should start whenever the job is started, start at a custom user time stamp specified via the " +
+                "outputStartTime property, or start from the last event output time." +
+                 "Valid Values: CustomTime, JobStartTime, LastOutputEventTime" +
+                "Default: JobStartTime";
+        public static final String OUTPUT_START_TIME_DESC = "Value is either an ISO-8601 formatted time stamp that indicates the starting point of the " +
+                "output event stream, or null to indicate that the output event stream will start whenever the streaming job is started. This property must " +
+                "have a value if outputStartMode is set to CustomTime.";
+    }
 }

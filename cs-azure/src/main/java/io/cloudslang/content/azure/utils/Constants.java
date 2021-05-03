@@ -118,6 +118,12 @@ public final class Constants {
     public static class GetAuthTokenUsingWebAPIConstants {
         public static final String GET_AUTH_TOKEN_USING_WEB_API_OPERATION_NAME = "Get Auth Token Using Web API";
 
+    }
+
+    public static class StartStreamingJobConstants {
+        public static final String START_STREAMING_JOB_OPERATION_NAME = "Start Streaming Job";
+        public static final String DEFAULT_OUTPUT_START_MODE = "JobStartTime";
+        public static final String START_STREAMING_JOB_PATH = "/start";
 
     }
 }

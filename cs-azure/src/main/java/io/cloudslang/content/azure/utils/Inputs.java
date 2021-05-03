@@ -40,6 +40,9 @@ public class Inputs extends InputNames {
         public static final String LOCATION = "location";
         public static final String TAGS = "tags";
     }
-
+    public static class StartStreamingJobInputs {
+        public static final String OUTPUT_START_MODE = "outputStartMode";
+        public static final String OUTPUT_START_TIME = "outputStartTime";
+    }
 
 }
