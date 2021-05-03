@@ -37,11 +37,11 @@ import static io.cloudslang.content.azure.utils.Constants.Common.*;
 import static io.cloudslang.content.azure.utils.Constants.CreateStreamingJobConstants.CREATE_STREAMING_JOB_OPERATION_NAME;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.azure.utils.Constants.StartStreamingJobConstants.DEFAULT_OUTPUT_START_MODE;
+import static io.cloudslang.content.azure.utils.Constants.StartStreamingJobConstants.START_STREAMING_JOB_OPERATION_NAME;
 import static io.cloudslang.content.azure.utils.Descriptions.Common.SUBSCRIPTION_ID_DESC;
 import static io.cloudslang.content.azure.utils.Descriptions.Common.*;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.*;
-import static io.cloudslang.content.azure.utils.Descriptions.StartStreamingJob.OUTPUT_START_MODE_DESC;
-import static io.cloudslang.content.azure.utils.Descriptions.StartStreamingJob.OUTPUT_START_TIME_DESC;
+import static io.cloudslang.content.azure.utils.Descriptions.StartStreamingJob.*;
 import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.*;
 import static io.cloudslang.content.azure.utils.Inputs.StartStreamingJobInputs.OUTPUT_START_MODE;
 import static io.cloudslang.content.azure.utils.Inputs.StartStreamingJobInputs.OUTPUT_START_TIME;
@@ -56,8 +56,8 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class StartStreamingJob {
 
-    @Action(name = CREATE_STREAMING_JOB_OPERATION_NAME,
-            description = CREATE_STREAMING_JOB_OPERATION_DESC,
+    @Action(name = START_STREAMING_JOB_OPERATION_NAME,
+            description = START_STREAMING_JOB_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
