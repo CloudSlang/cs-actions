@@ -17,7 +17,9 @@ package io.cloudslang.content.azure.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.azure.entities.CreateStreamingJobInputs;
+import io.cloudslang.content.azure.entities.StartStreamingJobInputs;
 import io.cloudslang.content.azure.entities.models.streamanalytics.CreateStreamingJobRequestBody;
+import io.cloudslang.content.azure.entities.models.streamanalytics.StartStreamingJobRequestBody;
 import io.cloudslang.content.azure.utils.HttpUtils;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
@@ -31,6 +33,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.azure.utils.Constants.Common.*;
 import static io.cloudslang.content.azure.utils.Constants.*;
+import static io.cloudslang.content.azure.utils.Constants.StartStreamingJobConstants.START_STREAMING_JOB_PATH;
 import static io.cloudslang.content.azure.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.azure.utils.HttpUtils.setAPIVersion;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -42,27 +45,50 @@ public class StreamingJobImpl {
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(getCreateStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
-                inputs.getJobName(), inputs.getAzureCommonInputs().getApiVersion()));
+                inputs.getAzureCommonInputs().getJobName()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(PUT);
         httpClientInputs.setContentType(CONTENT_TYPE);
         httpClientInputs.setHeaders(getAuthHeaders(inputs.getAzureCommonInputs().getAuthToken()));
         HttpUtils.setCommonHttpInputs(httpClientInputs, inputs.getAzureCommonInputs());
-        httpClientInputs.setQueryParams(setAPIVersion());
+        httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
         httpClientInputs.setBody(createStreamingJobRequestBody(inputs));
         return new HttpClientService().execute(httpClientInputs);
     }
 
     @NotNull
-    private static String getCreateStreamingJobUrl(String subscriptionId, String resourceGroupName, String jobName, String apiVersion) throws Exception {
+    public static Map<String, String> startStreamingJob(@NotNull final StartStreamingJobInputs inputs)
+            throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        httpClientInputs.setUrl(getStartStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
+                inputs.getAzureCommonInputs().getJobName()));
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(POST);
+        httpClientInputs.setContentType(CONTENT_TYPE);
+        httpClientInputs.setHeaders(getAuthHeaders(inputs.getAzureCommonInputs().getAuthToken()));
+        HttpUtils.setCommonHttpInputs(httpClientInputs, inputs.getAzureCommonInputs());
+        httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
+        httpClientInputs.setBody(StartStreamingJobRequestBody(inputs));
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    private static String getCreateStreamingJobUrl(String subscriptionId, String resourceGroupName, String jobName) throws Exception {
         final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath(createStreamingJobPath(subscriptionId, resourceGroupName, jobName, apiVersion));
+        uriBuilder.setPath(getStreamURLPath(subscriptionId, resourceGroupName, jobName).toString());
         return uriBuilder.build().toURL().toString();
     }
 
     @NotNull
-    private static String createStreamingJobPath(String subscriptionId, String resourceGroupName, String jobName, String apiVersion) {
-        StringBuilder pathString = new StringBuilder()
+    private static String getStartStreamingJobUrl(String subscriptionId, String resourceGroupName, String jobName) throws Exception {
+        final URIBuilder uriBuilder = new URIBuilder();
+        uriBuilder.setPath(startStreamingJobPath(subscriptionId, resourceGroupName, jobName));
+        return uriBuilder.build().toURL().toString();
+    }
+
+
+    private static StringBuilder getStreamURLPath(String subscriptionId, String resourceGroupName, String jobName) {
+        return new StringBuilder()
                 .append(DEFAULT_RESOURCE)
                 .append(SUBSCRIPTION_PATH)
                 .append(subscriptionId)
@@ -71,7 +97,11 @@ public class StreamingJobImpl {
                 .append(STREAM_ANALYTICS_PATH)
                 .append(STREAMING_JOBS_PATH)
                 .append(jobName);
-        return pathString.toString();
+    }
+
+    @NotNull
+    private static String startStreamingJobPath(String subscriptionId, String resourceGroupName, String jobName) {
+        return getStreamURLPath(subscriptionId, resourceGroupName, jobName).append(START_STREAMING_JOB_PATH).toString();
     }
 
     private static String createStreamingJobRequestBody(@NotNull final CreateStreamingJobInputs inputs) throws Exception {
@@ -95,6 +125,16 @@ public class StreamingJobImpl {
         ObjectMapper createInstanceMapper = new ObjectMapper();
         return createInstanceMapper.writeValueAsString(createStreamingJobRequestBody);
 
+    }
+
+    private static String StartStreamingJobRequestBody(@NotNull final StartStreamingJobInputs inputs) throws Exception {
+        StartStreamingJobRequestBody startStreamingJobRequestBody = new StartStreamingJobRequestBody();
+        startStreamingJobRequestBody.setOutputStartMode(inputs.getOutputStartMode());
+        if (!isEmpty(inputs.getOutputStartTime())) {
+            startStreamingJobRequestBody.setOutputStartTime(inputs.getOutputStartTime());
+        }
+        ObjectMapper createInstanceMapper = new ObjectMapper();
+        return createInstanceMapper.writeValueAsString(startStreamingJobRequestBody);
     }
 
     private static JSONObject stringToJSON(JSONParser jsonParser, String property) throws ParseException {

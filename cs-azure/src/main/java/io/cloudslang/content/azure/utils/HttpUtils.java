@@ -155,11 +155,11 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static String setAPIVersion() {
+    public static String setAPIVersion(String apiVersion) {
         final StringBuilder queryParams = new StringBuilder()
 //                .append(QUERY)
                 .append("api-version=")
-                .append(STREAM_API_VERSION);
+                .append(apiVersion);
         return queryParams.toString();
     }
 
