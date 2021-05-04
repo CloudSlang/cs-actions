@@ -46,17 +46,29 @@ public class WinRMService {
     public static Map<String, String> execute(WinRMInputs winRMInputs) {
 
         boolean useHttps = useHttps(winRMInputs);
+        WinRmTool.Builder builder;
 
-        WinRmTool.Builder builder = WinRmTool.Builder.builder(winRMInputs.getHost(), winRMInputs.getUsername(), winRMInputs.getPassword())
-                .authenticationScheme(authScheme(winRMInputs.getAuthType()))
+        if (winRMInputs.getDomain().isEmpty())
+            builder = WinRmTool.Builder.builder(winRMInputs.getHost(), winRMInputs.getUsername(), winRMInputs.getPassword());
+        else
+            builder = WinRmTool.Builder.builder(winRMInputs.getHost(), winRMInputs.getDomain(), winRMInputs.getUsername(), winRMInputs.getPassword());
+        builder.authenticationScheme(authScheme(winRMInputs.getAuthType()))
                 .port(Integer.parseInt(winRMInputs.getPort()))
                 .useHttps(useHttps)
                 .disableCertificateChecks(Boolean.parseBoolean(winRMInputs.getTrustAllRoots()));
 
         if (!winRMInputs.getWorkingDirectory().isEmpty())
             builder.workingDirectory(winRMInputs.getWorkingDirectory());
-        if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS))
+
+        if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS)) {
+            if(!winRMInputs.getUseSubjectCredsOnly().isEmpty())
+                System.setProperty("javax.security.auth.useSubjectCredsOnly", winRMInputs.getUseSubjectCredsOnly());
+            if (!winRMInputs.getKerberosConfFile().isEmpty())
+                System.setProperty("java.security.auth.login.config", winRMInputs.getKerberosConfFile());
+            if (!winRMInputs.getKerberosLoginConfFile().isEmpty())
+                System.setProperty("java.security.krb5.conf", winRMInputs.getKerberosLoginConfFile());
             builder.requestNewKerberosTicket(Boolean.parseBoolean(winRMInputs.getRequestNewKerberosTicket()));
+        }
 
         if (!Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
             try {

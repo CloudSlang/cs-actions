@@ -83,7 +83,12 @@ public class WinRMAction {
             @Param(value = REQUEST_NEW_KERBEROS_TICKET, description = REQUEST_NEW_KERBEROS_TICKET_DESC) String requestNewKerberosToken,
             @Param(value = WORKING_DIRECTORY, description = WORKING_DIRECTORY_DESC) String workingDirectory,
             @Param(value = CONFIGURATION_NAME, description = CONFIGURATION_NAME_DESC) String configurationName,
-            @Param(value = COMMAND_TYPE, description = COMMAND_TYPE_DESC) String commandType
+            @Param(value = COMMAND_TYPE, description = COMMAND_TYPE_DESC) String commandType,
+            @Param(value = KERBEROS_CONF_FILE) String kerberosConfFile,
+            @Param(value = KERBEROS_LOGIN_CONF_FILE) String kerberosLoginConfFile,
+            @Param(value = DOMAIN) String domain,
+            @Param(value = USE_SUBJECT_CREDS_ONLY) String useSubjectCredsOnly
+
     ) {
         host = defaultIfEmpty(host, EMPTY);
         command = defaultIfEmpty(command, EMPTY);
@@ -108,6 +113,10 @@ public class WinRMAction {
         workingDirectory = defaultIfEmpty(workingDirectory, EMPTY);
         configurationName = defaultIfEmpty(configurationName, EMPTY);
         commandType = defaultIfEmpty(commandType, DEFAULT_COMMAND_TYPE);
+        kerberosConfFile = defaultIfEmpty(kerberosConfFile, EMPTY);
+        kerberosLoginConfFile = defaultIfEmpty(kerberosLoginConfFile, EMPTY);
+        domain = defaultIfEmpty(domain, EMPTY);
+        useSubjectCredsOnly = defaultIfEmpty(useSubjectCredsOnly, EMPTY);
 
         final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, requestNewKerberosToken,
                 authType, x509HostnameVerifier, trustKeystore, keystore, port, tlsVersion, protocol, commandType);
@@ -139,6 +148,10 @@ public class WinRMAction {
                 .workingDirectory(workingDirectory)
                 .configurationName(configurationName)
                 .commandType(commandType)
+                .domain(domain)
+                .kerberosConfFile(kerberosConfFile)
+                .kerberosLoginConfFile(kerberosLoginConfFile)
+                .useSubjectCredsOnly(useSubjectCredsOnly)
                 .build();
         try {
             return WinRMService.execute(winRMInputs);
