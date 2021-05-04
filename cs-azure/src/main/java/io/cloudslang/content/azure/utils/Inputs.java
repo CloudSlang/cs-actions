@@ -1,4 +1,3 @@
-
 /*
  * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
@@ -28,12 +27,11 @@ public class Inputs extends InputNames {
         public static final String RESOURCE_GROUP_NAME = "resourceGroupName";
         public static final String ACCOUNT_NAME = "accountName";
         public static final String ACCOUNT_KEY = "accountKey";
+        public static final String API_VERSION = "apiVersion";
+        public static final String SUBSCRIPTION_ID = "subscriptionId";
     }
     public static class CreateStreamingJobInputs {
         public static final String JOB_NAME = "jobName";
-        public static final String RESOURCE_GROUP_NAME = "resourceGroupName";
-        public static final String SUBSCRIPTION_ID = "subscriptionId";
-        public static final String API_VERSION = "apiVersion";
         public static final String SKU_NAME = "skuName";;
         public static final String EVENTS_OUT_OF_ORDER_POLICY = "eventsOutOfOrderPolicy";
         public static final String OUTPUT_ERROR_POLICY = "outputErrorPolicy";
@@ -43,17 +41,29 @@ public class Inputs extends InputNames {
         public static final String COMPATIBILITY_LEVEL = "compatibilityLevel";
         public static final String LOCATION = "location";
         public static final String TAGS = "tags";
-        public static final String OUTPUT_NAME = "outputName";
-        public static final String INPUT_NAME = "inputtName";
-        public static final String SOURCE_TYPE = "sourceType";
+
     }
     public static class StartStreamingJobInputs {
         public static final String OUTPUT_START_MODE = "outputStartMode";
         public static final String OUTPUT_START_TIME = "outputStartTime";
     }
+
     public static class CreateTransformationsInputs {
         public static final String TRANSFORMATION_NAME = "transformationName";
         public static final String TRANSFORMATION_QUERY = "query";
         public static final String STREAMING_UNITS = "streamingUnits";
     }
+
+
+    public static class CreateStreamingInputsJob{
+        public static final String INPUT_NAME = "streamJobInputName";
+        public static final String SOURCE_TYPE = "sourceType";
+    }
+
+    public static class CreateStreamingOutputJob{
+        public static final String OUTPUT_NAME = "streamJobOutputName";
+    }
+
+
+
 }

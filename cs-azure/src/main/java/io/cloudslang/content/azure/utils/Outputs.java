@@ -31,12 +31,12 @@ public class Outputs extends OutputNames {
     }
 
     public static class CreateStreamingOutputJobOutputs {
-        public static final String OUTPUT_NAME = "outputName";
+        public static final String STREAM_JOB_OUTPUT_NAME = "streamJobOutputName";
 
     }
 
     public static class CreateStreamingInputJobOutputs {
-        public static final String INPUT_NAME = "inputName";
+        public static final String STREAM_JOB_INPUT_NAME = "streamJobInputName";
 
     }
 

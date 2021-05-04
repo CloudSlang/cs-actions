@@ -1,4 +1,3 @@
-
 /*
  * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
@@ -127,8 +126,7 @@ public class Descriptions {
         public static final String PROVISIONING_STATE_DESC = "Describes the provisioning status of the streaming job.";
         public static final String JOB_ID_DESC = "A GUID uniquely identifying the streaming job. This GUID is generated upon creation of the streaming job.";
         public static final String JOB_STATE_DESC = "Describes the state of the streaming job.";
-        public static final String OUTPUT_NAME_DESC = "The name of the output.";
-        public static final String INPUT_NAME_DESC = "The name of the input.";
+
         public static final String ACCOUNT_NAME_DESC = "Name of account to created for the blob Storage";
         public static final String ACCOUNT_KEY_DESC = "Access keys to authenticate your applications when making requests to this Azure storage account.";
         public static final String SOURCE_TYPE_DESC = "Type of source . Excepted values are Reference and Stream. Default: Reference ";
@@ -151,11 +149,21 @@ public class Descriptions {
 
     public static class CreateStreamingInputJob {
         public static final String CREATE_STREAMING_INPUT_JOB_OPERATION_DESC = "Creates a Input for streaming job.";
+        public static final String STREAM_JOB_INPUT_NAME_DESC = "The name of the input.";
+        public static final String SUBSCRIPTION_ID_DESC = "GUID which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.";
+        public static final String INPUT_NAME_DESC = "The name of the input.";
+        public static final String API_VERSION_DESC = "Client Api Version." +
+                "Default: 2016-03-01";
     }
 
 
     public static class CreateStreamingOutputJob {
         public static final String CREATE_STREAMING_OUTPUT_JOB_OPERATION_DESC = "Creates a Output for streaming job.";
+        public static final String STREAM_JOB_OUTPUT_NAME_DESC = "The name of the output.";
+        public static final String SUBSCRIPTION_ID_DESC = "GUID which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.";
+        public static final String OUTPUT_NAME_DESC = "The name of the output.";
+        public static final String API_VERSION_DESC = "Client Api Version." +
+                "Default: 2016-03-01";
     }
 
     public static class CreateTransformationsInputs {

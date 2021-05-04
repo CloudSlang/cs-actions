@@ -129,13 +129,13 @@ public final class Constants {
 
     public static class CreateStreamingOutputJobConstants {
         public static final String CREATE_STREAMING_OUTPUT_JOB_OPERATION_NAME = "Create Output for Streaming Job";
-        public static final String OUTPUT_NAME_PATH = "$.name";
+        public static final String STREAM_JOB_OUTPUT_NAME_PATH = "$.name";
     }
 
     public static class CreateStreamingInputJobConstants {
         public static final String CREATE_STREAMING_INPUT_JOB_OPERATION_NAME = "Create Input for Streaming Job";
         public static final String DEFAULT_SOURCE_TYPE = "Reference";
-        public static final String INPUT_NAME_PATH = "$.name";
+        public static final String STREAM_JOB_INPUT_NAME_PATH = "$.name";
     }
 
     public static class GetAuthTokenUsingWebAPIConstants {
