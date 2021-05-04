@@ -41,7 +41,7 @@ import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.*;
 import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.API_VERSION;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.*;
 import static io.cloudslang.content.azure.utils.Outputs.CommonOutputs.AUTH_TOKEN;
 import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingJobOutputs.*;
@@ -52,6 +52,8 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.SUBSCRIPTION_ID;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.RESOURCE_GROUP_NAME;
 
 public class CreateStreamingJob {
     @Action(name = CREATE_STREAMING_JOB_OPERATION_NAME,

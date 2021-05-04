@@ -34,7 +34,6 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PO
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_USERNAME;
 import static io.cloudslang.content.azure.utils.Constants.Common.API_VERSION;
 import static io.cloudslang.content.azure.utils.Constants.Common.*;
-import static io.cloudslang.content.azure.utils.Constants.CreateStreamingJobConstants.CREATE_STREAMING_JOB_OPERATION_NAME;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.azure.utils.Constants.StartStreamingJobConstants.DEFAULT_OUTPUT_START_MODE;
 import static io.cloudslang.content.azure.utils.Constants.StartStreamingJobConstants.START_STREAMING_JOB_OPERATION_NAME;
@@ -53,6 +52,8 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.SUBSCRIPTION_ID;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.RESOURCE_GROUP_NAME;
 
 public class StartStreamingJob {
 
