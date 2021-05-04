@@ -1,4 +1,18 @@
 /*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
  * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -23,7 +37,6 @@ import io.cloudslang.content.azure.entities.AzureCommonInputs;
 import io.cloudslang.content.azure.entities.CreateStreamingInputJobInputs;
 import io.cloudslang.content.azure.services.StreamingInputJobImpl;
 import io.cloudslang.content.azure.utils.Constants;
-import io.cloudslang.content.azure.utils.Descriptions;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -46,7 +59,6 @@ import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.
 import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingInputsJob.SUBSCRIPTION_ID;
 import static io.cloudslang.content.azure.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingInputsJob.*;
 import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingInputJobOutputs.STREAM_JOB_INPUT_NAME;
@@ -59,7 +71,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingInputJob.SUBSCRIPTION_ID_DESC;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingInputJob.INPUT_NAME_DESC;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingInputsJob.API_VERSION;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingInputJob.API_VERSION_DESC;
 
 

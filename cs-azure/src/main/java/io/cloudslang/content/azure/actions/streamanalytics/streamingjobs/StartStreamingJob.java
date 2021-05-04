@@ -1,4 +1,18 @@
 /*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
  * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -34,7 +48,6 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PO
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_USERNAME;
 import static io.cloudslang.content.azure.utils.Constants.Common.API_VERSION;
 import static io.cloudslang.content.azure.utils.Constants.Common.*;
-import static io.cloudslang.content.azure.utils.Constants.CreateStreamingJobConstants.CREATE_STREAMING_JOB_OPERATION_NAME;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.azure.utils.Constants.StartStreamingJobConstants.DEFAULT_OUTPUT_START_MODE;
 import static io.cloudslang.content.azure.utils.Constants.StartStreamingJobConstants.START_STREAMING_JOB_OPERATION_NAME;
@@ -53,6 +66,8 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.SUBSCRIPTION_ID;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.RESOURCE_GROUP_NAME;
 
 public class StartStreamingJob {
 
