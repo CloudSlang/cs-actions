@@ -50,7 +50,7 @@ public class Inputs extends InputNames {
     }
 
     public static class CreateStreamingInputsJob{
-        public static final String INPUT_NAME = "inputtName";
+        public static final String INPUT_NAME = "streamJobInputName";
         public static final String SOURCE_TYPE = "sourceType";
         public static final String API_VERSION = "apiVersion";
         public static final String SUBSCRIPTION_ID = "subscriptionId";
@@ -58,7 +58,7 @@ public class Inputs extends InputNames {
     }
 
     public static class CreateStreamingOutputJob{
-        public static final String OUTPUT_NAME = "outputName";
+        public static final String OUTPUT_NAME = "streamJobOutputName";
         public static final String API_VERSION = "apiVersion";
         public static final String SUBSCRIPTION_ID = "subscriptionId";
 
