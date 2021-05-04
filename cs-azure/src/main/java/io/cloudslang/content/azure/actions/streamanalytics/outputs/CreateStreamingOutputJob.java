@@ -52,18 +52,18 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PO
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_USERNAME;
 import static io.cloudslang.content.azure.utils.Constants.Common.*;
 import static io.cloudslang.content.azure.utils.Constants.CreateStreamingOutputJobConstants.CREATE_STREAMING_OUTPUT_JOB_OPERATION_NAME;
-import static io.cloudslang.content.azure.utils.Constants.CreateStreamingOutputJobConstants.OUTPUT_NAME_PATH;
-import static io.cloudslang.content.azure.utils.Descriptions.Common.SUBSCRIPTION_ID_DESC;
+import static io.cloudslang.content.azure.utils.Constants.CreateStreamingOutputJobConstants.STREAM_JOB_OUTPUT_NAME_PATH;
 import static io.cloudslang.content.azure.utils.Descriptions.Common.*;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.*;
-import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingOutputJob.CREATE_STREAMING_OUTPUT_JOB_OPERATION_DESC;
+import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingOutputJob.API_VERSION_DESC;
+import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingOutputJob.SUBSCRIPTION_ID_DESC;
+import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingOutputJob.*;
 import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.API_VERSION;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.SUBSCRIPTION_ID;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.azure.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingOutputJobOutputs.OUTPUT_NAME;
+import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingOutputJobOutputs.STREAM_JOB_OUTPUT_NAME;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
@@ -71,8 +71,9 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingOutputJob.OUTPUT_NAME;
 
-public class GetOutput {
+public class CreateStreamingOutputJob {
 
     @Action(name = CREATE_STREAMING_OUTPUT_JOB_OPERATION_NAME,
             description = CREATE_STREAMING_OUTPUT_JOB_OPERATION_DESC,
@@ -80,7 +81,7 @@ public class GetOutput {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = OUTPUT_NAME, description = OUTPUT_NAME_DESC),
+                    @Output(value = STREAM_JOB_OUTPUT_NAME, description = STREAM_JOB_OUTPUT_NAME_DESC),
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
@@ -142,7 +143,7 @@ public class GetOutput {
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode == 200) {
-                results.put(OUTPUT_NAME, (String) JsonPath.read(returnMessage, OUTPUT_NAME_PATH));
+                results.put(STREAM_JOB_OUTPUT_NAME, (String) JsonPath.read(returnMessage, STREAM_JOB_OUTPUT_NAME_PATH));
             } else {
                 return getFailureResults(subscriptionId, statusCode, returnMessage);
             }
