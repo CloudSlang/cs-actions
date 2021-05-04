@@ -40,7 +40,7 @@ import static io.cloudslang.content.azure.utils.Descriptions.Common.SUBSCRIPTION
 import static io.cloudslang.content.azure.utils.Descriptions.Common.*;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.*;
 import static io.cloudslang.content.azure.utils.Descriptions.StartStreamingJob.*;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.API_VERSION;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.*;
 import static io.cloudslang.content.azure.utils.Inputs.StartStreamingJobInputs.OUTPUT_START_MODE;
 import static io.cloudslang.content.azure.utils.Inputs.StartStreamingJobInputs.OUTPUT_START_TIME;

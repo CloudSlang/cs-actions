@@ -38,7 +38,9 @@ import static io.cloudslang.content.azure.utils.Descriptions.Common.SUBSCRIPTION
 import static io.cloudslang.content.azure.utils.Descriptions.Common.*;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.*;
 import static io.cloudslang.content.azure.utils.Descriptions.StopStreamingJob.STOP_STREAMING_JOB_OPERATION_DESC;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.API_VERSION;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.RESOURCE_GROUP_NAME;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.SUBSCRIPTION_ID;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.*;
 import static io.cloudslang.content.azure.utils.Outputs.CommonOutputs.AUTH_TOKEN;
 import static io.cloudslang.content.constants.OutputNames.*;
