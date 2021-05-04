@@ -32,9 +32,7 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_HO
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PASSWORD;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PORT;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_USERNAME;
-import static io.cloudslang.content.azure.utils.Constants.Common.API_VERSION;
 import static io.cloudslang.content.azure.utils.Constants.Common.*;
-import static io.cloudslang.content.azure.utils.Constants.CreateStreamingJobConstants.CREATE_STREAMING_JOB_OPERATION_NAME;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.azure.utils.Constants.StartStreamingJobConstants.DEFAULT_OUTPUT_START_MODE;
 import static io.cloudslang.content.azure.utils.Constants.StartStreamingJobConstants.START_STREAMING_JOB_OPERATION_NAME;
@@ -42,6 +40,7 @@ import static io.cloudslang.content.azure.utils.Descriptions.Common.SUBSCRIPTION
 import static io.cloudslang.content.azure.utils.Descriptions.Common.*;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.*;
 import static io.cloudslang.content.azure.utils.Descriptions.StartStreamingJob.*;
+import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.API_VERSION;
 import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.*;
 import static io.cloudslang.content.azure.utils.Inputs.StartStreamingJobInputs.OUTPUT_START_MODE;
 import static io.cloudslang.content.azure.utils.Inputs.StartStreamingJobInputs.OUTPUT_START_TIME;
