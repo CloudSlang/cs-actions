@@ -51,5 +51,8 @@ public class Inputs extends InputNames {
         public static final String OUTPUT_START_MODE = "outputStartMode";
         public static final String OUTPUT_START_TIME = "outputStartTime";
     }
+    public static class GetStreamingJobInputs {
+        public static final String EXPAND = "expand";
 
+    }
 }

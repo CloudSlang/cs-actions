@@ -164,6 +164,18 @@ public class HttpUtils {
     }
 
     @NotNull
+    public static String setAPIVersion(String apiVersion, String expand) {
+        final StringBuilder queryParams = new StringBuilder()
+//                .append(QUERY)
+                .append("api-version=")
+                .append(apiVersion)
+                .append(AND)
+                .append("$expand")
+                .append(expand);
+        return queryParams.toString();
+    }
+
+    @NotNull
     public static String setAuthenticationBody(String clientId, String clientSecret, String resource) {
         final StringBuilder authTokenBody = new StringBuilder()
                 .append("grant_type=client_credentials")

@@ -109,6 +109,7 @@ public final class Constants {
                 "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384," +
                 "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256," +
                 "TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256";
+        public static final String EMPTY_JSON = "{}";
 
     }
 
@@ -148,5 +149,14 @@ public final class Constants {
         public static final String DEFAULT_OUTPUT_START_MODE = "JobStartTime";
         public static final String START_STREAMING_JOB_PATH = "/start";
 
+    }
+
+    public static class StopStreamingJobConstants {
+        public static final String STOP_STREAMING_JOB_OPERATION_NAME = "Stop Streaming Job";
+        public static final String STOP_STREAMING_JOB_PATH = "/stop";
+    }
+
+    public static class GetStreamingJobConstants {
+        public static final String GET_STREAMING_JOB_OPERATION_NAME = "Get Streaming Job";
     }
 }
