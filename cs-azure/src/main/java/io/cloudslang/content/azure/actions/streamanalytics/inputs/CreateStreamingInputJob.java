@@ -1,4 +1,18 @@
 /*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
  * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -23,6 +37,7 @@ import io.cloudslang.content.azure.entities.AzureCommonInputs;
 import io.cloudslang.content.azure.entities.CreateStreamingInputJobInputs;
 import io.cloudslang.content.azure.services.StreamingInputJobImpl;
 import io.cloudslang.content.azure.utils.Constants;
+import io.cloudslang.content.azure.utils.Descriptions;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -38,17 +53,17 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PO
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_USERNAME;
 import static io.cloudslang.content.azure.utils.Constants.Common.*;
 import static io.cloudslang.content.azure.utils.Constants.CreateStreamingInputJobConstants.*;
-import static io.cloudslang.content.azure.utils.Descriptions.Common.SUBSCRIPTION_ID_DESC;
 import static io.cloudslang.content.azure.utils.Descriptions.Common.*;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingInputJob.CREATE_STREAMING_INPUT_JOB_OPERATION_DESC;
+import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingInputJob.STREAM_JOB_INPUT_NAME_DESC;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.*;
 import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.SOURCE_TYPE;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.SUBSCRIPTION_ID;
+import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingInputsJob.SUBSCRIPTION_ID;
 import static io.cloudslang.content.azure.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingInputJobOutputs.INPUT_NAME;
+import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingInputsJob.*;
+import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingInputJobOutputs.STREAM_JOB_INPUT_NAME;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
@@ -56,16 +71,20 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingInputJob.SUBSCRIPTION_ID_DESC;
+import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingInputJob.INPUT_NAME_DESC;
+import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingInputsJob.API_VERSION;
+import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingInputJob.API_VERSION_DESC;
 
 
-public class GetInput {
+public class CreateStreamingInputJob {
     @Action(name = CREATE_STREAMING_INPUT_JOB_OPERATION_NAME,
             description = CREATE_STREAMING_INPUT_JOB_OPERATION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = INPUT_NAME, description = INPUT_NAME_DESC),
+                    @Output(value = STREAM_JOB_INPUT_NAME, description = STREAM_JOB_INPUT_NAME_DESC),
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED),
@@ -130,7 +149,7 @@ public class GetInput {
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
             if (statusCode == 200) {
-                results.put(INPUT_NAME, (String) JsonPath.read(returnMessage, INPUT_NAME_PATH));
+                results.put(STREAM_JOB_INPUT_NAME, (String) JsonPath.read(returnMessage, STREAM_JOB_INPUT_NAME_PATH));
             } else {
                 return getFailureResults(subscriptionId, statusCode, returnMessage);
             }
