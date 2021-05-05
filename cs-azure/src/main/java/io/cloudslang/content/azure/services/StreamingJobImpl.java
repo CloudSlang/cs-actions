@@ -16,7 +16,9 @@ package io.cloudslang.content.azure.services;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cloudslang.content.azure.entities.AzureCommonInputs;
 import io.cloudslang.content.azure.entities.CreateStreamingJobInputs;
+import io.cloudslang.content.azure.entities.GetStreamingJobInputs;
 import io.cloudslang.content.azure.entities.StartStreamingJobInputs;
 import io.cloudslang.content.azure.entities.models.streamanalytics.CreateStreamingJobRequestBody;
 import io.cloudslang.content.azure.entities.models.streamanalytics.StartStreamingJobRequestBody;
@@ -34,6 +36,7 @@ import java.util.Map;
 import static io.cloudslang.content.azure.utils.Constants.Common.*;
 import static io.cloudslang.content.azure.utils.Constants.*;
 import static io.cloudslang.content.azure.utils.Constants.StartStreamingJobConstants.START_STREAMING_JOB_PATH;
+import static io.cloudslang.content.azure.utils.Constants.StopStreamingJobConstants.STOP_STREAMING_JOB_PATH;
 import static io.cloudslang.content.azure.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.azure.utils.HttpUtils.setAPIVersion;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -73,6 +76,44 @@ public class StreamingJobImpl {
     }
 
     @NotNull
+    public static Map<String, String> stopStreamingJob(@NotNull final AzureCommonInputs inputs)
+            throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        httpClientInputs.setUrl(getStopStreamingJobUrl(inputs.getSubscriptionId(), inputs.getResourceGroupName(),
+                inputs.getJobName()));
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(POST);
+        httpClientInputs.setContentType(CONTENT_TYPE);
+        httpClientInputs.setHeaders(getAuthHeaders(inputs.getAuthToken()));
+        HttpUtils.setCommonHttpInputs(httpClientInputs, inputs);
+        httpClientInputs.setBody(EMPTY_JSON);
+        httpClientInputs.setQueryParams(setAPIVersion(inputs.getApiVersion()));
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static Map<String, String> getStreamingJob(@NotNull final GetStreamingJobInputs inputs)
+            throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        httpClientInputs.setUrl(getCreateStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
+                inputs.getAzureCommonInputs().getJobName()));
+        httpClientInputs.setAuthType(ANONYMOUS);
+        httpClientInputs.setMethod(GET);
+        httpClientInputs.setContentType(CONTENT_TYPE);
+        httpClientInputs.setHeaders(getAuthHeaders(inputs.getAzureCommonInputs().getAuthToken()));
+        HttpUtils.setCommonHttpInputs(httpClientInputs, inputs.getAzureCommonInputs());
+        if (!isEmpty(inputs.getExpand())) {
+            httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion(), inputs.getExpand()));
+        } else {
+            httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
+        }
+
+
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
     private static String getCreateStreamingJobUrl(String subscriptionId, String resourceGroupName, String jobName) throws Exception {
         final URIBuilder uriBuilder = new URIBuilder();
         uriBuilder.setPath(getStreamURLPath(subscriptionId, resourceGroupName, jobName).toString());
@@ -86,6 +127,13 @@ public class StreamingJobImpl {
         return uriBuilder.build().toURL().toString();
     }
 
+
+    @NotNull
+    private static String getStopStreamingJobUrl(String subscriptionId, String resourceGroupName, String jobName) throws Exception {
+        final URIBuilder uriBuilder = new URIBuilder();
+        uriBuilder.setPath(stopStreamingJobPath(subscriptionId, resourceGroupName, jobName));
+        return uriBuilder.build().toURL().toString();
+    }
 
     private static StringBuilder getStreamURLPath(String subscriptionId, String resourceGroupName, String jobName) {
         return new StringBuilder()
@@ -102,6 +150,12 @@ public class StreamingJobImpl {
     @NotNull
     private static String startStreamingJobPath(String subscriptionId, String resourceGroupName, String jobName) {
         return getStreamURLPath(subscriptionId, resourceGroupName, jobName).append(START_STREAMING_JOB_PATH).toString();
+    }
+
+
+    @NotNull
+    private static String stopStreamingJobPath(String subscriptionId, String resourceGroupName, String jobName) {
+        return getStreamURLPath(subscriptionId, resourceGroupName, jobName).append(STOP_STREAMING_JOB_PATH).toString();
     }
 
     private static String createStreamingJobRequestBody(@NotNull final CreateStreamingJobInputs inputs) throws Exception {

@@ -17,8 +17,8 @@ package io.cloudslang.content.azure.utils;
 
 public class Descriptions {
     public static class Common {
-        public static final String PROXY_HOST_DESC = "Proxy server used to access the Terraform service.";
-        public static final String PROXY_PORT_DESC = "Proxy server port used to access the Terraform service." +
+        public static final String PROXY_HOST_DESC = "Proxy server used to access the Azure service.";
+        public static final String PROXY_PORT_DESC = "Proxy server port used to access the Azure service." +
                 "Default: '8080'";
         public static final String PROXY_USERNAME_DESC = "Proxy server user name.";
         public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxy_username " +
@@ -146,12 +146,25 @@ public class Descriptions {
                 "have a value if outputStartMode is set to CustomTime.";
     }
 
+    public static class StopStreamingJob {
+
+        public static final String STOP_STREAMING_JOB_OPERATION_DESC = "Stops a running streaming job. This will cause a running streaming job to stop processing " +
+                "input events and producing output.";
+    }
+
+    public static class GetStreamingJob {
+
+        public static final String GET_STREAMING_JOB_OPERATION_DESC = "Gets details about the specified streaming job.";
+        public static final String EXPAND_DESC = "The $expand OData query parameter. This is a comma-separated list of additional " +
+                "streaming job properties to include in the response, beyond the default set returned when this parameter " +
+                "is absent. The default set is all streaming job properties other than 'inputs', 'transformation', 'outputs', and 'functions'." +
+                "Example: inputs,outputs,transformation,functions";
+    }
 
     public static class CreateStreamingInputJob {
         public static final String CREATE_STREAMING_INPUT_JOB_OPERATION_DESC = "Creates a Input for streaming job.";
         public static final String STREAM_JOB_INPUT_NAME_DESC = "The name of the input.";
         public static final String SUBSCRIPTION_ID_DESC = "GUID which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.";
-        public static final String INPUT_NAME_DESC = "The name of the input.";
         public static final String API_VERSION_DESC = "Client Api Version." +
                 "Default: 2016-03-01";
     }
@@ -161,9 +174,9 @@ public class Descriptions {
         public static final String CREATE_STREAMING_OUTPUT_JOB_OPERATION_DESC = "Creates a Output for streaming job.";
         public static final String STREAM_JOB_OUTPUT_NAME_DESC = "The name of the output.";
         public static final String SUBSCRIPTION_ID_DESC = "GUID which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.";
-        public static final String OUTPUT_NAME_DESC = "The name of the output.";
         public static final String API_VERSION_DESC = "Client Api Version." +
                 "Default: 2016-03-01";
     }
+
 
 }
