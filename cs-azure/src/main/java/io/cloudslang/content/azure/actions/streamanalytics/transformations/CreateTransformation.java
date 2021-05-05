@@ -42,8 +42,10 @@ import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.
 import static io.cloudslang.content.azure.utils.Descriptions.CreateTransformationsInputs.*;
 import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.API_VERSION;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.API_VERSION;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.*;
+import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.JOB_NAME;
 import static io.cloudslang.content.azure.utils.Inputs.CreateTransformationsInputs.*;
 import static io.cloudslang.content.azure.utils.Outputs.CommonOutputs.AUTH_TOKEN;
 import static io.cloudslang.content.azure.utils.Outputs.CreateTransformationOutputs.TRANSFORMATION_ID;
