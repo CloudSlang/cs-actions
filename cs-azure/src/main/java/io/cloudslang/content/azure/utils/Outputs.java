@@ -41,7 +41,7 @@ public class Outputs extends OutputNames {
     }
 
     public static class CreateTransformationOutputs {
-        public static final String TRANSFORMATION_ID = "TransformationId";
+        public static final String TRANSFORMATION_ID = "transformationId";
     }
 }
 

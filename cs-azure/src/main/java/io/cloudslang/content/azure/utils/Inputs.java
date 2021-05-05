@@ -48,13 +48,6 @@ public class Inputs extends InputNames {
         public static final String OUTPUT_START_TIME = "outputStartTime";
     }
 
-    public static class CreateTransformationsInputs {
-        public static final String TRANSFORMATION_NAME = "transformationName";
-        public static final String TRANSFORMATION_QUERY = "query";
-        public static final String STREAMING_UNITS = "streamingUnits";
-    }
-
-
     public static class CreateStreamingInputsJob{
         public static final String STREAM_JOB_INPUT_NAME = "streamJobInputName";
         public static final String SOURCE_TYPE = "sourceType";
@@ -69,4 +62,9 @@ public class Inputs extends InputNames {
 
     }
 
+    public static class CreateTransformationsInputs {
+        public static final String TRANSFORMATION_NAME = "transformationName";
+        public static final String TRANSFORMATION_QUERY = "query";
+        public static final String STREAMING_UNITS = "streamingUnits";
+    }
 }

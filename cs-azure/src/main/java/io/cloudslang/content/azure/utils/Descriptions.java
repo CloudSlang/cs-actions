@@ -139,7 +139,7 @@ public class Descriptions {
         public static final String OUTPUT_START_MODE_DESC = "Value may be JobStartTime, CustomTime, or LastOutputEventTime to indicate whether the starting " +
                 "point of the output event stream should start whenever the job is started, start at a custom user time stamp specified via the " +
                 "outputStartTime property, or start from the last event output time." +
-                 "Valid Values: CustomTime, JobStartTime, LastOutputEventTime" +
+                "Valid Values: CustomTime, JobStartTime, LastOutputEventTime" +
                 "Default: JobStartTime";
         public static final String OUTPUT_START_TIME_DESC = "Value is either an ISO-8601 formatted time stamp that indicates the starting point of the " +
                 "output event stream, or null to indicate that the output event stream will start whenever the streaming job is started. This property must " +
@@ -178,16 +178,14 @@ public class Descriptions {
                 "Default: 2016-03-01";
     }
 
-
     public static class CreateTransformationsInputs {
         public static final String CREATE_TRANSFORMATION_OPERATION_DESC = "Creates a transformation or replaces an already existing transformation under an existing streaming job.";
         public static final String TRANSFORMATION_NAME_DESC = "The name of the transformation.";
         public static final String QUERY_DESC = "Specifies the query that will be run in the streaming job. You can learn more about the Stream Analytics Query Language (SAQL) " +
                 "here:https://msdn.microsoft.com/library/azure/dn834998 . Required on PUT (CreateOrReplace) requests.";
-        public static final String STREAMING_UNITS_DESC = "Specifies the number of streaming units that the streaming job uses.";
+        public static final String STREAMING_UNITS_DESC = "Specifies the number of streaming units that the streaming job uses." +
+                "Default: 1";
         public static final String TRANSFORMATION_ID_DESC = "Transformation Resource Id.";
     }
-
-
 
 }

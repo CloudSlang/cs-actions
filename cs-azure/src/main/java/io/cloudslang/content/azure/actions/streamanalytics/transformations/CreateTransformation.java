@@ -42,10 +42,10 @@ import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.
 import static io.cloudslang.content.azure.utils.Descriptions.CreateTransformationsInputs.*;
 import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.RESOURCE_GROUP_NAME;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.SUBSCRIPTION_ID;
 import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.API_VERSION;
-import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.*;
-import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingJobInputs.JOB_NAME;
 import static io.cloudslang.content.azure.utils.Inputs.CreateTransformationsInputs.*;
 import static io.cloudslang.content.azure.utils.Outputs.CommonOutputs.AUTH_TOKEN;
 import static io.cloudslang.content.azure.utils.Outputs.CreateTransformationOutputs.TRANSFORMATION_ID;
@@ -112,12 +112,8 @@ public class CreateTransformation {
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
-            if (statusCode == 200) {
-
-
+            if (statusCode >= 200 && statusCode < 300) {
                 results.put(TRANSFORMATION_ID, (String) JsonPath.read(returnMessage, TRANSFORMATION_ID_JSON_PATH));
-
-
             } else {
                 return getFailureResults(subscriptionId, statusCode, returnMessage);
             }
