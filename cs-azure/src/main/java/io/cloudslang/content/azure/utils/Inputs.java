@@ -56,14 +56,17 @@ public class Inputs extends InputNames {
 
 
     public static class CreateStreamingInputsJob{
-        public static final String INPUT_NAME = "streamJobInputName";
+        public static final String STREAM_JOB_INPUT_NAME = "streamJobInputName";
         public static final String SOURCE_TYPE = "sourceType";
     }
 
     public static class CreateStreamingOutputJob{
-        public static final String OUTPUT_NAME = "streamJobOutputName";
+        public static final String STREAM_JOB_OUTPUT_NAME = "streamJobOutputName";
     }
 
+    public static class GetStreamingJobInputs {
+        public static final String EXPAND = "expand";
 
+    }
 
 }

@@ -109,6 +109,7 @@ public final class Constants {
                 "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384," +
                 "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256," +
                 "TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256";
+        public static final String EMPTY_JSON = "{}";
 
     }
 
@@ -128,12 +129,12 @@ public final class Constants {
     }
 
     public static class CreateStreamingOutputJobConstants {
-        public static final String CREATE_STREAMING_OUTPUT_JOB_OPERATION_NAME = "Create Output for Streaming Job";
+        public static final String CREATE_STREAMING_OUTPUT_JOB_OPERATION_NAME = "Create Streaming Job Output";
         public static final String STREAM_JOB_OUTPUT_NAME_PATH = "$.name";
     }
 
     public static class CreateStreamingInputJobConstants {
-        public static final String CREATE_STREAMING_INPUT_JOB_OPERATION_NAME = "Create Input for Streaming Job";
+        public static final String CREATE_STREAMING_INPUT_JOB_OPERATION_NAME = "Create Streaming Job Input" ;
         public static final String DEFAULT_SOURCE_TYPE = "Reference";
         public static final String STREAM_JOB_INPUT_NAME_PATH = "$.name";
     }
@@ -155,5 +156,14 @@ public final class Constants {
         public static final String CREATE_TRANSFORMATION_OPERATION_NAME = "Create Streaming Job";
         public static final String DEFAULT_STREAMING_UNITS = "6";
         public static final String TRANSFORMATION_ID_JSON_PATH = "$.id";
+      
+    public static class StopStreamingJobConstants {
+        public static final String STOP_STREAMING_JOB_OPERATION_NAME = "Stop Streaming Job";
+        public static final String STOP_STREAMING_JOB_PATH = "/stop";
+    }
+
+    public static class GetStreamingJobConstants {
+        public static final String GET_STREAMING_JOB_OPERATION_NAME = "Get Streaming Job";
+
     }
 }
