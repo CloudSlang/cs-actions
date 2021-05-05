@@ -127,7 +127,7 @@ public class CreateStreamingJobOutput {
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
             final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
-            if (statusCode == 200) {
+            if (statusCode >= 200 && statusCode < 300) {
                 results.put(STREAM_JOB_OUTPUT_NAME, (String) JsonPath.read(returnMessage, STREAM_JOB_OUTPUT_NAME_PATH));
             } else {
                 return getFailureResults(subscriptionId, statusCode, returnMessage);
