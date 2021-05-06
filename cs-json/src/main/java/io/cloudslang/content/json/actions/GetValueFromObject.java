@@ -44,6 +44,7 @@ import static io.cloudslang.content.json.utils.JsonUtils.populateResult;
 public class GetValueFromObject {
 
     private static final String ESCAPED_SLASH = "\\";
+    String[] keys = new String[0];
 
 
     /**
@@ -97,7 +98,7 @@ public class GetValueFromObject {
         int startIndex = 0;
         final JsonNode valueFromObject;
         try {
-            valueFromObject = getObject(jsonRoot, key.split(ESCAPED_SLASH + "."), startIndex);
+            valueFromObject = getObject(jsonRoot, key, startIndex);
         } catch (Exception exception) {
             return populateResult(returnResult, exception);
         }
@@ -110,7 +111,13 @@ public class GetValueFromObject {
     }
 
 
-    private JsonNode getObject(JsonNode jsonObject, String[] keys, int startIndex) throws Exception {
+    private JsonNode getObject(JsonNode jsonObject, String key, int startIndex) throws Exception {
+
+        if (key.contains("[") && key.contains("]"))
+            keys = key.split(ESCAPED_SLASH + ".");
+        else
+            return getValue(jsonObject, key);
+
         if (startIndex >= keys.length) {
             return jsonObject;
         }
@@ -128,7 +135,7 @@ public class GetValueFromObject {
                 } else {
                     return valueFromKey;
                 }
-                return getObject(newJsonObject, keys, ++startIndex);
+                return getObject(newJsonObject, key, ++startIndex);
             }
         } else {
             throw new Exception("The key does not exist in JavaScript object!");
