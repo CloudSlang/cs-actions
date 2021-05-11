@@ -79,6 +79,7 @@ public class CreateStreamingJobOutput {
                                        @Param(value = SUBSCRIPTION_ID, required = true, description = SUBSCRIPTION_ID_DESC) String subscriptionId,
                                        @Param(value = ACCOUNT_NAME, required = true, description = ACCOUNT_NAME_DESC) String accountName,
                                        @Param(value = ACCOUNT_KEY, required = true, description = ACCOUNT_KEY_DESC) String accountKey,
+                                       @Param(value = CONTAINER_NAME, required = true, description = CONTAINER_NAME_DESC) String containerName,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -122,6 +123,7 @@ public class CreateStreamingJobOutput {
                     .outputName(streamJobOutputName)
                     .accountName(accountName)
                     .accountKey(accountKey)
+                    .containerName(containerName)
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);

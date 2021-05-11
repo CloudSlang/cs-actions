@@ -26,20 +26,24 @@ public class CreateStreamingOutputJobInputs {
     private final String accountName;
     private final AzureCommonInputs azureCommonInputs;
     private final String accountKey;
+    private final String containerName;
 
-    @java.beans.ConstructorProperties({"jobName", "outputName", "accountName", "azureCommonInputs", "accountKey"})
-    public CreateStreamingOutputJobInputs(String jobName, String outputName, String accountName, AzureCommonInputs azureCommonInputs, String accountKey) {
+    @java.beans.ConstructorProperties({"jobName", "outputName", "accountName", "azureCommonInputs", "accountKey", "containerName"})
+    public CreateStreamingOutputJobInputs(String jobName, String outputName, String accountName, AzureCommonInputs azureCommonInputs, String accountKey, String containerName) {
         this.jobName = jobName;
         this.outputName = outputName;
         this.accountName = accountName;
         this.azureCommonInputs = azureCommonInputs;
         this.accountKey = accountKey;
+        this.containerName = containerName;
     }
 
     @NotNull
     public static CreateStreamingOutputJobInputs.CreateStreamingOutputJobInputsBuilder builder() {
         return new CreateStreamingOutputJobInputs.CreateStreamingOutputJobInputsBuilder();
     }
+
+    public String getContainerName() { return containerName; }
 
     public String getAccountKey() {
         return accountKey;
@@ -68,6 +72,7 @@ public class CreateStreamingOutputJobInputs {
         private String accountName = EMPTY;
         private AzureCommonInputs azureCommonInputs;
         private String accountKey = EMPTY;
+        private String containerName = EMPTY;
 
 
         CreateStreamingOutputJobInputsBuilder() {
@@ -76,6 +81,13 @@ public class CreateStreamingOutputJobInputs {
         @NotNull
         public CreateStreamingOutputJobInputsBuilder jobName(@NotNull final String jobName) {
             this.jobName = jobName;
+            return this;
+
+        }
+
+        @NotNull
+        public CreateStreamingOutputJobInputsBuilder containerName(@NotNull final String containerName) {
+            this.containerName = containerName;
             return this;
 
         }
@@ -110,7 +122,7 @@ public class CreateStreamingOutputJobInputs {
 
         public CreateStreamingOutputJobInputs build() {
 
-            return new CreateStreamingOutputJobInputs(jobName, outputName, accountName, azureCommonInputs, accountKey);
+            return new CreateStreamingOutputJobInputs(jobName, outputName, accountName, azureCommonInputs, accountKey, containerName);
         }
     }
 

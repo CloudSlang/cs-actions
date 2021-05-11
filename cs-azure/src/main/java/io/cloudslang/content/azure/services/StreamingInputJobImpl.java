@@ -91,7 +91,7 @@ public class StreamingInputJobImpl {
         json.add(storage);
         subproperties.setStrogeaccounts(json);
         datasource.setProperties(subproperties);
-        subproperties.setContainer(CONTAINER);
+        subproperties.setContainer(inputs.getContainerName());
         subproperties.setPathPattern(PATH_PATTERN);
         serializationprop.setFieldDelimiter(FIELD_DELIMETER);
         serializationprop.setEncoding(ENCODING);
