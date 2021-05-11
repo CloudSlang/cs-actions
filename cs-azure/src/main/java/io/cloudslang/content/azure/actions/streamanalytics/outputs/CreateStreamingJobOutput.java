@@ -19,6 +19,8 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.jayway.jsonpath.JsonPath;
+import io.cloudslang.content.azure.actions.storage.CreateContainer;
+import io.cloudslang.content.azure.actions.storage.ListContainers;
 import io.cloudslang.content.azure.entities.AzureCommonInputs;
 import io.cloudslang.content.azure.entities.CreateStreamingOutputJobInputs;
 import io.cloudslang.content.azure.services.StreamingOutputJobImpl;
@@ -46,8 +48,8 @@ import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingOutp
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingOutputJob.*;
 import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.API_VERSION;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.azure.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingOutputJobOutputs.STREAM_JOB_OUTPUT_NAME;
 import static io.cloudslang.content.constants.OutputNames.*;
@@ -131,6 +133,10 @@ public class CreateStreamingJobOutput {
 
             if (statusCode >= 200 && statusCode < 300) {
                 results.put(STREAM_JOB_OUTPUT_NAME, (String) JsonPath.read(returnMessage, STREAM_JOB_OUTPUT_NAME_PATH));
+                Map<String, String> list = new ListContainers().execute(accountName, accountKey, proxyHost, proxyPort, proxyUsername, proxyPassword, CONNECT_TIMEOUT_CONST);
+                if (!list.containsKey(containerName)) {
+                    Map<String, String> listcontain = new CreateContainer().execute(accountName, accountKey, containerName, proxyHost, proxyPort, proxyUsername, proxyPassword, CONNECT_TIMEOUT_CONST);
+                }
             } else {
                 return getFailureResults(subscriptionId, statusCode, returnMessage);
             }
