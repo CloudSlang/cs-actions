@@ -127,10 +127,10 @@ public class Descriptions {
         public static final String JOB_ID_DESC = "A GUID uniquely identifying the streaming job. This GUID is generated upon creation of the streaming job.";
         public static final String JOB_STATE_DESC = "Describes the state of the streaming job.";
 
-        public static final String ACCOUNT_NAME_DESC = "Name of account to created for the blob Storage";
+        public static final String ACCOUNT_NAME_DESC = "Provide the existing storage account name";
         public static final String ACCOUNT_KEY_DESC = "Access keys to authenticate your applications when making requests to this Azure storage account.";
         public static final String SOURCE_TYPE_DESC = "Type of source . Excepted values are Reference and Stream. Default: Reference ";
-        public static final String CONTAINER_NAME_DESC = "Creates a new container under the specified account";
+        public static final String CONTAINER_NAME_DESC = "Provide a existing container name";
 
     }
 
