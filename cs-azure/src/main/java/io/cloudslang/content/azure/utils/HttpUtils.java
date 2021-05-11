@@ -132,6 +132,8 @@ public class HttpUtils {
         httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
         httpClientInputs.setTrustKeystore(trustKeystore);
         httpClientInputs.setTrustPassword(trustPassword);
+        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.setKeystorePassword(CHANGEIT);
     }
 
 
