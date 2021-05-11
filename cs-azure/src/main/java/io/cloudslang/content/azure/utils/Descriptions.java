@@ -144,7 +144,7 @@ public class Descriptions {
         public static final String ACCOUNT_NAME_DESC = "Provide the existing storage account name.";
         public static final String ACCOUNT_KEY_DESC = "Access keys to authenticate your applications when making requests to this Azure storage account.";
         public static final String SOURCE_TYPE_DESC = "Type of source . Excepted values are Reference and Stream. Default: Reference ";
-        public static final String CONTAINER_NAME_DESC = "Provide a existing container name.";
+        public static final String CONTAINER_NAME_DESC = "creates a new container under the specified account if not exists.";
 
     }
 
