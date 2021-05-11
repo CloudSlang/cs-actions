@@ -29,6 +29,7 @@ public class Inputs extends InputNames {
         public static final String ACCOUNT_KEY = "accountKey";
         public static final String API_VERSION = "apiVersion";
         public static final String SUBSCRIPTION_ID = "subscriptionId";
+        public static final String CONTAINER_NAME = "containerName";
     }
     public static class CreateStreamingJobInputs {
         public static final String JOB_NAME = "jobName";
@@ -46,6 +47,7 @@ public class Inputs extends InputNames {
     public static class StartStreamingJobInputs {
         public static final String OUTPUT_START_MODE = "outputStartMode";
         public static final String OUTPUT_START_TIME = "outputStartTime";
+
     }
 
     public static class CreateStreamingInputsJob{
