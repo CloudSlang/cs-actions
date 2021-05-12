@@ -81,7 +81,7 @@ public class TransformationImpl {
 
 
         properties.setQuery(inputs.getQuery());
-        properties.setStreamingUnits(inputs.getStreamingUnits());
+        properties.setStreamingUnits(Integer.parseInt(inputs.getStreamingUnits()));
 
         createTransformationRequestBody.setProperties(properties);
         ObjectMapper createInstanceMapper = new ObjectMapper();

@@ -31,7 +31,7 @@ public class CreateTransformationRequestBody {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public static class Properties {
         public String query;
-        public String streamingUnits;
+        public int streamingUnits;
 
         public String getQuery() {
             return query;
@@ -41,11 +41,11 @@ public class CreateTransformationRequestBody {
             this.query = query;
         }
 
-        public String getStreamingUnits() {
+        public int getStreamingUnits() {
             return streamingUnits;
         }
 
-        public void setStreamingUnits(String streamingUnits) {
+        public void setStreamingUnits(int streamingUnits) {
             this.streamingUnits = streamingUnits;
         }
     }
