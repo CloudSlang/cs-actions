@@ -137,8 +137,26 @@ public class CreateStreamingInputJobRequestBody {
         public static class SubProperties {
             public String container;
             public String pathPattern;
+            public String dateFormat;
+            public String timeFormat;
             @JsonProperty("storageAccounts")
             JSONArray strogeaccounts;
+
+            public String getDateFormat() {
+                return dateFormat;
+            }
+
+            public void setDateFormat(String dateFormat) {
+                this.dateFormat = dateFormat;
+            }
+
+            public String getTimeFormat() {
+                return timeFormat;
+            }
+
+            public void setTimeFormat(String timeFormat) {
+                this.timeFormat = timeFormat;
+            }
 
             public String getContainer() {
                 return container;
