@@ -25,6 +25,7 @@ import io.cloudslang.content.azure.entities.AzureCommonInputs;
 import io.cloudslang.content.azure.entities.CreateStreamingInputJobInputs;
 import io.cloudslang.content.azure.services.StreamingInputJobImpl;
 import io.cloudslang.content.azure.utils.Constants;
+import io.cloudslang.content.azure.utils.Inputs;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -34,6 +35,7 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.PATH_PATTERN;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_HOST;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PASSWORD;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PORT;
@@ -83,6 +85,7 @@ public class CreateStreamingJobInput {
                                        @Param(value = ACCOUNT_KEY, required = true, description = ACCOUNT_KEY_DESC) String accountKey,
                                        @Param(value = CONTAINER_NAME, required = true, description = CONTAINER_NAME_DESC) String containerName,
                                        @Param(value = SOURCE_TYPE, description = SOURCE_TYPE_DESC) String sourceType,
+                                       @Param(value = PATH_PATTERN, description = PATH_PATTERN_DESC) String pathPattern,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -95,13 +98,14 @@ public class CreateStreamingJobInput {
         apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
         sourceType = defaultIfEmpty(sourceType, DEFAULT_SOURCE_TYPE);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
-        proxyPort = defaultIfEmpty(proxyPort, Constants.DEFAULT_PROXY_PORT);
+        proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
+        pathPattern = defaultIfEmpty(pathPattern,DEFAULT_PATH_PATTERN);
 
         final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots);
         if (!exceptionMessage.isEmpty()) {
@@ -129,6 +133,7 @@ public class CreateStreamingJobInput {
                     .accountKey(accountKey)
                     .sourceType(sourceType)
                     .containerName(containerName)
+                    .pathPattern(pathPattern)
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);

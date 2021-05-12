@@ -30,6 +30,7 @@ public class Inputs extends InputNames {
         public static final String API_VERSION = "apiVersion";
         public static final String SUBSCRIPTION_ID = "subscriptionId";
         public static final String CONTAINER_NAME = "containerName";
+        public static final String PATH_PATTERN = "pathPattern";
     }
     public static class CreateStreamingJobInputs {
         public static final String JOB_NAME = "jobName";

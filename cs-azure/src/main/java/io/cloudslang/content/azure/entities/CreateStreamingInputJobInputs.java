@@ -26,9 +26,10 @@ public class CreateStreamingInputJobInputs {
     private final String accountKey;
     private final String sourceType;
     private final String containerName;
+    private final String pathPattern;
 
-    @java.beans.ConstructorProperties({"jobName", "inputName", "accountName", "azureCommonInputs", "accountKey", "sourceType", "containerName"})
-    public CreateStreamingInputJobInputs(String jobName, String inputName, String accountName, AzureCommonInputs azureCommonInputs, String accountKey, String sourceType, String containerName) {
+    @java.beans.ConstructorProperties({"jobName", "inputName", "accountName", "azureCommonInputs", "accountKey", "sourceType", "containerName","pathPattern"})
+    public CreateStreamingInputJobInputs(String jobName, String inputName, String accountName, AzureCommonInputs azureCommonInputs, String accountKey, String sourceType, String containerName,String pathPattern) {
         this.jobName = jobName;
         this.inputName = inputName;
         this.accountName = accountName;
@@ -36,6 +37,7 @@ public class CreateStreamingInputJobInputs {
         this.accountKey = accountKey;
         this.sourceType = sourceType;
         this.containerName = containerName;
+        this.pathPattern = pathPattern;
     }
 
     @NotNull
@@ -44,6 +46,8 @@ public class CreateStreamingInputJobInputs {
     }
 
     public String getContainerName() { return containerName; }
+
+    public String getPathPattern() { return pathPattern; }
 
     public String getInputName() {
         return inputName;
@@ -78,6 +82,7 @@ public class CreateStreamingInputJobInputs {
         private String accountKey = EMPTY;
         private String sourceType = EMPTY;
         private String containerName = EMPTY;
+        private String pathPattern = EMPTY;
 
 
         CreateStreamingInputJobInputsBuilder() {
@@ -110,6 +115,13 @@ public class CreateStreamingInputJobInputs {
         }
 
         @NotNull
+        public CreateStreamingInputJobInputs.CreateStreamingInputJobInputsBuilder pathPattern(@NotNull final String pathPattern) {
+            this.pathPattern = pathPattern;
+            return this;
+
+        }
+
+        @NotNull
         public CreateStreamingInputJobInputs.CreateStreamingInputJobInputsBuilder accountName(@NotNull final String accountName) {
             this.accountName = accountName;
             return this;
@@ -132,7 +144,7 @@ public class CreateStreamingInputJobInputs {
 
         public CreateStreamingInputJobInputs build() {
 
-            return new CreateStreamingInputJobInputs(jobName, inputName, accountName, azureCommonInputs, accountKey, sourceType,containerName);
+            return new CreateStreamingInputJobInputs(jobName, inputName, accountName, azureCommonInputs, accountKey, sourceType,containerName,pathPattern);
         }
     }
 }

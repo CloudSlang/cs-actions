@@ -28,14 +28,21 @@ public class CreateStreamingOutputJobInputs {
     private final String accountKey;
     private final String containerName;
 
-    @java.beans.ConstructorProperties({"jobName", "outputName", "accountName", "azureCommonInputs", "accountKey", "containerName"})
-    public CreateStreamingOutputJobInputs(String jobName, String outputName, String accountName, AzureCommonInputs azureCommonInputs, String accountKey, String containerName) {
+    public String getPathPattern() {
+        return pathPattern;
+    }
+
+    private final String pathPattern;
+
+    @java.beans.ConstructorProperties({"jobName", "outputName", "accountName", "azureCommonInputs", "accountKey", "containerName", "pathPattern"})
+    public CreateStreamingOutputJobInputs(String jobName, String outputName, String accountName, AzureCommonInputs azureCommonInputs, String accountKey, String containerName, String pathPattern) {
         this.jobName = jobName;
         this.outputName = outputName;
         this.accountName = accountName;
         this.azureCommonInputs = azureCommonInputs;
         this.accountKey = accountKey;
         this.containerName = containerName;
+        this.pathPattern = pathPattern;
     }
 
     @NotNull
@@ -73,6 +80,7 @@ public class CreateStreamingOutputJobInputs {
         private AzureCommonInputs azureCommonInputs;
         private String accountKey = EMPTY;
         private String containerName = EMPTY;
+        private String pathPattern = EMPTY;
 
 
         CreateStreamingOutputJobInputsBuilder() {
@@ -81,6 +89,13 @@ public class CreateStreamingOutputJobInputs {
         @NotNull
         public CreateStreamingOutputJobInputsBuilder jobName(@NotNull final String jobName) {
             this.jobName = jobName;
+            return this;
+
+        }
+
+        @NotNull
+        public CreateStreamingOutputJobInputsBuilder pathPattern(@NotNull final String pathPattern) {
+            this.pathPattern = pathPattern;
             return this;
 
         }
@@ -122,7 +137,7 @@ public class CreateStreamingOutputJobInputs {
 
         public CreateStreamingOutputJobInputs build() {
 
-            return new CreateStreamingOutputJobInputs(jobName, outputName, accountName, azureCommonInputs, accountKey, containerName);
+            return new CreateStreamingOutputJobInputs(jobName, outputName, accountName, azureCommonInputs, accountKey, containerName,pathPattern);
         }
     }
 

@@ -52,7 +52,7 @@ public final class Constants {
     public static class Common {
         public static final String SET_TYPE = "Microsoft.Storage/Blob";
         public static final String CONTAINER = "state";
-        public static final String PATH_PATTERN = "{date}/{time}";
+        public static final String DEFAULT_PATH_PATTERN = "{date}/{time}";
         public static final String TYPE ="Csv";
         public static final String ENCODING ="UTF8";
         public static final String FIELD_DELIMETER =",";
@@ -60,6 +60,8 @@ public final class Constants {
         public static final String API_VERSION = "/v2";
         public static final String NEW_LINE = "\n";
         public static final String DEFAULT_API_VERSION = "2016-03-01";
+        public static final String DEFAULT_DATE_FORMAT = "yyyy/MM/dd";
+        public static final String DEFAULT_TIME_FORMAT = "HH";
         public static final String DEFAULT_PROXY_PORT = "8080";
         public static final String BOOLEAN_FALSE = "false";
         public static final String BOOLEAN_TRUE = "true";

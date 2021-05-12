@@ -46,6 +46,7 @@ public class StreamingInputJobImpl {
         HttpUtils.setCommonHttpInputs(httpClientInputs, createStreamingInputJobInputs.getAzureCommonInputs());
         httpClientInputs.setQueryParams(setAPIVersion(createStreamingInputJobInputs.getAzureCommonInputs().getApiVersion()));
         httpClientInputs.setBody(createStreamingInputJobRequestBody(createStreamingInputJobInputs));
+        System.out.println("hello Json: "+ createStreamingInputJobRequestBody(createStreamingInputJobInputs));
         return new HttpClientService().execute(httpClientInputs);
 
     }
@@ -92,7 +93,9 @@ public class StreamingInputJobImpl {
         subproperties.setStrogeaccounts(json);
         datasource.setProperties(subproperties);
         subproperties.setContainer(inputs.getContainerName());
-        subproperties.setPathPattern(PATH_PATTERN);
+        subproperties.setDateFormat(DEFAULT_DATE_FORMAT);
+        subproperties.setTimeFormat(DEFAULT_TIME_FORMAT);
+        subproperties.setPathPattern(inputs.getPathPattern());
         serializationprop.setFieldDelimiter(FIELD_DELIMETER);
         serializationprop.setEncoding(ENCODING);
         serialization.setType(TYPE);
