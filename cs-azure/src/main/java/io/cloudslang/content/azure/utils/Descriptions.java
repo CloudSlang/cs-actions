@@ -100,11 +100,13 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The request was successfully executed.";
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
     }
+
     public static class GetAuthTokenUsingWebAPIConstants {
         public static final String GET_AUTH_TOKEN_USING_WEB_API_OPERATION_DESC = "Get the authorization token for Azure using Web API.";
 
 
     }
+
     public static class CreateStreamingJob {
         public static final String CREATE_STREAMING_JOB_OPERATION_DESC = "Creates a streaming job.";
         public static final String JOB_NAME_DESC = "The name of the streaming job.";
@@ -115,7 +117,6 @@ public class Descriptions {
                 "Default: 2016-03-01";
         public static final String SKU_NAME_DESC = "The name of the SKU. Describes the SKU of the streaming job." +
                 "Default: Standard";
-        ;
         public static final String EVENTS_OUT_OF_ORDER_POLICY_DESC = "Indicates the policy to apply to events that arrive out of order in the input event stream." +
                 "Valid Values: Drop,Adjust" +
                 "Default: Adjust";
@@ -144,7 +145,6 @@ public class Descriptions {
         public static final String ACCOUNT_NAME_DESC = "Provide the existing storage account name.";
         public static final String ACCOUNT_KEY_DESC = "Access keys to authenticate your applications when making requests to this Azure storage account.";
         public static final String SOURCE_TYPE_DESC = "Type of source . Excepted values are Reference and Stream. Default: Reference ";
-        public static final String CONTAINER_NAME_DESC = "creates a new container under the specified account if not exists.";
 
     }
 
@@ -182,6 +182,8 @@ public class Descriptions {
         public static final String SUBSCRIPTION_ID_DESC = "GUID which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.";
         public static final String API_VERSION_DESC = "Client Api Version." +
                 "Default: 2016-03-01";
+        public static final String CONTAINER_NAME_STREAM_INPUT_DESC = "creates a new container under the specified account if not exists.";
+
     }
 
 
@@ -191,6 +193,7 @@ public class Descriptions {
         public static final String SUBSCRIPTION_ID_DESC = "GUID which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.";
         public static final String API_VERSION_DESC = "Client Api Version." +
                 "Default: 2016-03-01";
+        public static final String CONTAINER_NAME_STREAM_OUTPUT_DESC = "creates a new container under the specified account if not exists.";
     }
 
     public static class CreateTransformationsInputs {

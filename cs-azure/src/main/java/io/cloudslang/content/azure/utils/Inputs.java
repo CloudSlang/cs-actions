@@ -29,11 +29,11 @@ public class Inputs extends InputNames {
         public static final String ACCOUNT_KEY = "accountKey";
         public static final String API_VERSION = "apiVersion";
         public static final String SUBSCRIPTION_ID = "subscriptionId";
-        public static final String CONTAINER_NAME = "containerName";
     }
+
     public static class CreateStreamingJobInputs {
         public static final String JOB_NAME = "jobName";
-        public static final String SKU_NAME = "skuName";;
+        public static final String SKU_NAME = "skuName";
         public static final String EVENTS_OUT_OF_ORDER_POLICY = "eventsOutOfOrderPolicy";
         public static final String OUTPUT_ERROR_POLICY = "outputErrorPolicy";
         public static final String EVENTS_OUT_OF_ORDER_MAX_DELAY_IN_SECONDS = "eventsOutOfOrderMaxDelayInSeconds";
@@ -44,19 +44,19 @@ public class Inputs extends InputNames {
         public static final String TAGS = "tags";
 
     }
+
     public static class StartStreamingJobInputs {
         public static final String OUTPUT_START_MODE = "outputStartMode";
         public static final String OUTPUT_START_TIME = "outputStartTime";
 
     }
 
-    public static class CreateStreamingInputsJob{
-        public static final String STREAM_JOB_INPUT_NAME = "streamJobInputName";
-        public static final String SOURCE_TYPE = "sourceType";
+    public static class CreateStreamingInputsJob {
+        public static final String CONTAINER_NAME_STREAM_INPUT = "containerNameStreamInput";
     }
 
-    public static class CreateStreamingOutputJob{
-        public static final String STREAM_JOB_OUTPUT_NAME = "streamJobOutputName";
+    public static class CreateStreamingOutputJob {
+        public static final String CONTAINER_NAME_STREAM_OUTPUT = "containerNameStreamOutput";
     }
 
     public static class GetStreamingJobInputs {

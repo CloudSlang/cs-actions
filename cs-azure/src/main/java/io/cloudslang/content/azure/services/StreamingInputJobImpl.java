@@ -27,6 +27,7 @@ import org.json.simple.JSONArray;
 import java.util.Map;
 
 import static io.cloudslang.content.azure.utils.Constants.Common.*;
+import static io.cloudslang.content.azure.utils.Constants.CreateStreamingInputJobConstants.DEFAULT_SOURCE_TYPE;
 import static io.cloudslang.content.azure.utils.Constants.*;
 import static io.cloudslang.content.azure.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.azure.utils.HttpUtils.setAPIVersion;
@@ -46,7 +47,6 @@ public class StreamingInputJobImpl {
         HttpUtils.setCommonHttpInputs(httpClientInputs, createStreamingInputJobInputs.getAzureCommonInputs());
         httpClientInputs.setQueryParams(setAPIVersion(createStreamingInputJobInputs.getAzureCommonInputs().getApiVersion()));
         httpClientInputs.setBody(createStreamingInputJobRequestBody(createStreamingInputJobInputs));
-        System.out.println("hello Json: "+ createStreamingInputJobRequestBody(createStreamingInputJobInputs));
         return new HttpClientService().execute(httpClientInputs);
 
     }
@@ -83,7 +83,7 @@ public class StreamingInputJobImpl {
         CreateStreamingInputJobRequestBody.SerializationProperties serializationprop = new CreateStreamingInputJobRequestBody.SerializationProperties();
         CreateStreamingInputJobRequestBody.Datasource.SubProperties.StorageAccounts storage = new CreateStreamingInputJobRequestBody.Datasource.SubProperties.StorageAccounts();
         CreateStreamingInputJobRequestBody.Datasource.SubProperties subproperties = new CreateStreamingInputJobRequestBody.Datasource.SubProperties();
-        properties.setSourceType(inputs.getSourceType());
+        properties.setSourceType(DEFAULT_SOURCE_TYPE);
         datasource.setType(SET_TYPE);
         properties.setDatasource(datasource);
         storage.setAccountName(inputs.getAccountName());

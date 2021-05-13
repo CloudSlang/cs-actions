@@ -50,6 +50,7 @@ import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
 import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.API_VERSION;
 import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.azure.utils.Inputs.CreateStreamingOutputJob.CONTAINER_NAME_STREAM_OUTPUT;
 import static io.cloudslang.content.azure.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.azure.utils.Outputs.CreateStreamingOutputJobOutputs.STREAM_JOB_OUTPUT_NAME;
 import static io.cloudslang.content.constants.OutputNames.*;
@@ -81,7 +82,7 @@ public class CreateStreamingJobOutput {
                                        @Param(value = SUBSCRIPTION_ID, required = true, description = SUBSCRIPTION_ID_DESC) String subscriptionId,
                                        @Param(value = ACCOUNT_NAME, required = true, description = ACCOUNT_NAME_DESC) String accountName,
                                        @Param(value = ACCOUNT_KEY, required = true, description = ACCOUNT_KEY_DESC) String accountKey,
-                                       @Param(value = CONTAINER_NAME, required = true, description = CONTAINER_NAME_DESC) String containerName,
+                                       @Param(value = CONTAINER_NAME_STREAM_OUTPUT, required = true, description = CONTAINER_NAME_STREAM_OUTPUT_DESC) String containerNameStreamOutput,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -125,7 +126,7 @@ public class CreateStreamingJobOutput {
                     .outputName(streamJobOutputName)
                     .accountName(accountName)
                     .accountKey(accountKey)
-                    .containerName(containerName)
+                    .containerName(containerNameStreamOutput)
                     .build());
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
@@ -134,8 +135,8 @@ public class CreateStreamingJobOutput {
             if (statusCode >= 200 && statusCode < 300) {
                 results.put(STREAM_JOB_OUTPUT_NAME, (String) JsonPath.read(returnMessage, STREAM_JOB_OUTPUT_NAME_PATH));
                 Map<String, String> list = new ListContainers().execute(accountName, accountKey, proxyHost, proxyPort, proxyUsername, proxyPassword, CONNECT_TIMEOUT_CONST);
-                if (!list.containsKey(containerName)) {
-                    Map<String, String> listcontain = new CreateContainer().execute(accountName, accountKey, containerName, proxyHost, proxyPort, proxyUsername, proxyPassword, CONNECT_TIMEOUT_CONST);
+                if (!list.containsKey(containerNameStreamOutput)) {
+                    Map<String, String> listcontain = new CreateContainer().execute(accountName, accountKey, containerNameStreamOutput, proxyHost, proxyPort, proxyUsername, proxyPassword, CONNECT_TIMEOUT_CONST);
                 }
             } else {
                 return getFailureResults(subscriptionId, statusCode, returnMessage);
