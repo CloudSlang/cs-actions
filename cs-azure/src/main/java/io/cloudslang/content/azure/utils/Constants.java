@@ -167,4 +167,22 @@ public final class Constants {
         public static final String DEFAULT_STREAMING_UNITS = "1";
         public static final String TRANSFORMATION_ID_JSON_PATH = "$.id";
     }
+
+    public static class CounterConstants{
+        public static final String RESULT_STRING="resultString";
+        public static final String INCREMENT_BY_DEFAULT_VALUE="1";
+        public static final String RESULT="result";
+        public static final String HASMORE="has more";
+        public static final String NOMORE="no more";
+        public static final String FAILURE="failure";
+        public static final String EXCEPTION="exception";
+        public static final String COUNTER_OPERATION_NAME="Counter";
+        public static final String TO="to";
+        public static final String FROM="from";
+        public static final String INCREMENT_BY="incrementBy";
+        public static final String SESSION_COUNTER="sessionCounter";
+        public static final String RESET="reset";
+
+
+    }
 }
