@@ -51,8 +51,7 @@ public final class Constants {
 
     public static class Common {
         public static final String SET_TYPE = "Microsoft.Storage/Blob";
-        public static final String CONTAINER = "state";
-        public static final String PATH_PATTERN = "{date}/{time}";
+        public static final String PATH_PATTERN = " ";
         public static final String TYPE ="Csv";
         public static final String ENCODING ="UTF8";
         public static final String FIELD_DELIMETER =",";
@@ -60,6 +59,8 @@ public final class Constants {
         public static final String API_VERSION = "/v2";
         public static final String NEW_LINE = "\n";
         public static final String DEFAULT_API_VERSION = "2016-03-01";
+        public static final String DEFAULT_DATE_FORMAT = "yyyy/MM/dd";
+        public static final String DEFAULT_TIME_FORMAT = "HH";
         public static final String DEFAULT_PROXY_PORT = "8080";
         public static final String BOOLEAN_FALSE = "false";
         public static final String BOOLEAN_TRUE = "true";
@@ -135,7 +136,7 @@ public final class Constants {
 
     public static class CreateStreamingInputJobConstants {
         public static final String CREATE_STREAMING_INPUT_JOB_OPERATION_NAME = "Create Streaming Job Input" ;
-        public static final String DEFAULT_SOURCE_TYPE = "Reference";
+        public static final String DEFAULT_SOURCE_TYPE = "Stream";
         public static final String STREAM_JOB_INPUT_NAME_PATH = "$.name";
     }
 
@@ -161,9 +162,27 @@ public final class Constants {
     }
 
     public static class CreateTransformationsConstants {
-        public static final String TRANSFORMATION_JOBS_PATH = " /transformations/";
+        public static final String TRANSFORMATION_JOBS_PATH = "/transformations/";
         public static final String CREATE_TRANSFORMATION_OPERATION_NAME = "Create Transformation";
         public static final String DEFAULT_STREAMING_UNITS = "1";
         public static final String TRANSFORMATION_ID_JSON_PATH = "$.id";
+    }
+
+    public static class CounterConstants{
+        public static final String RESULT_STRING="resultString";
+        public static final String INCREMENT_BY_DEFAULT_VALUE="1";
+        public static final String RESULT="result";
+        public static final String HASMORE="has more";
+        public static final String NOMORE="no more";
+        public static final String FAILURE="failure";
+        public static final String EXCEPTION="exception";
+        public static final String COUNTER_OPERATION_NAME="Counter";
+        public static final String TO="to";
+        public static final String FROM="from";
+        public static final String INCREMENT_BY="incrementBy";
+        public static final String SESSION_COUNTER="sessionCounter";
+        public static final String RESET="reset";
+
+
     }
 }

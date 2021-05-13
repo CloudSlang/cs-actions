@@ -79,7 +79,7 @@ public class GetStreamingJob {
                                        @Param(value = SUBSCRIPTION_ID, required = true, description = SUBSCRIPTION_ID_DESC) String subscriptionId,
                                        @Param(value = RESOURCE_GROUP_NAME, required = true, description = RESOURCE_GROUP_NAME_DESC) String resourceGroupName,
                                        @Param(value = JOB_NAME, required = true, description = JOB_NAME_DESC) String jobName,
-                                       @Param(value = EXPAND, required = true, description = EXPAND_DESC) String expand,
+                                       @Param(value = EXPAND, description = EXPAND_DESC) String expand,
                                        @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
