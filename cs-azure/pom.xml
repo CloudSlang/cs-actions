@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-azure</artifactId>
-    <version>0.0.12-SNAPSHOT</version>
+    <version>0.0.13-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -48,6 +48,12 @@
             <email>victor.ursan@hpe.com</email>
             <organization>Hewlett Packard Enterprise</organization>
             <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+        <developer>
+            <name>Rajesh Kalyankar</name>
+            <email>rajesh.kum.kalyankar@microfocus.com</email>
+            <organization>Micro Focus</organization>
+            <organizationUrl>https://www.microfocus.com/about/</organizationUrl>
         </developer>
     </developers>
 
@@ -77,6 +83,7 @@
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <cs-commons.version>0.0.5</cs-commons.version>
         <junit.version>4.13.1</junit.version>
+        <cs-http-client.version>0.1.77</cs-http-client.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -105,6 +112,44 @@
             <groupId>com.microsoft.azure</groupId>
             <artifactId>adal4j</artifactId>
             <version>1.6.6</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.minidev</groupId>
+                    <artifactId>json-smart</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcpkix-jdk15on</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.jcraft</groupId>
+                    <artifactId>jsch.agentproxy</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.opensaml</groupId>
+                    <artifactId>opensaml-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.opensaml</groupId>
+                    <artifactId> opensaml-saml-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.cryptomator</groupId>
+                    <artifactId>siv-mode</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.opensaml</groupId>
+                    <artifactId>opensaml-saml-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.crypto.tink</groupId>
+                    <artifactId>tink</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.microsoft.azure</groupId>
@@ -115,6 +160,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.20</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-http-client</artifactId>
+            <version>${cs-http-client.version}</version>
         </dependency>
 
         <!-- Testing dependencies -->
@@ -141,6 +191,35 @@
             <artifactId>powermock-api-mockito</artifactId>
             <version>1.6.5</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.9.10</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.9.10</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.10.7</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

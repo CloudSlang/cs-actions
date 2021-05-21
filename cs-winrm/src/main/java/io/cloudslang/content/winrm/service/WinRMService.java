@@ -24,7 +24,10 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 
 import javax.net.ssl.*;
+import javax.xml.bind.DatatypeConverter;
 import java.io.FileInputStream;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -34,18 +37,17 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.STDERR;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
-import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.SCRIPT_EXIT_CODE;
+import static io.cloudslang.content.winrm.utils.Constants.*;
+import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.COMMAND_EXIT_CODE;
 import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.STDOUT;
 
 public class WinRMService {
 
     public static Map<String, String> execute(WinRMInputs winRMInputs) {
 
-        WinRmClientContext context = WinRmClientContext.newInstance();
         boolean useHttps = useHttps(winRMInputs);
 
         WinRmTool.Builder builder = WinRmTool.Builder.builder(winRMInputs.getHost(), winRMInputs.getUsername(), winRMInputs.getPassword())
-                .context(context)
                 .authenticationScheme(authScheme(winRMInputs.getAuthType()))
                 .port(Integer.parseInt(winRMInputs.getPort()))
                 .useHttps(useHttps)
@@ -53,7 +55,7 @@ public class WinRMService {
 
         if (!winRMInputs.getWorkingDirectory().isEmpty())
             builder.workingDirectory(winRMInputs.getWorkingDirectory());
-        if (winRMInputs.getAuthType().equalsIgnoreCase("kerberos"))
+        if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS))
             builder.requestNewKerberosTicket(Boolean.parseBoolean(winRMInputs.getRequestNewKerberosTicket()));
 
         if (!Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
@@ -96,21 +98,31 @@ public class WinRMService {
             }
         }
 
-        WinRmTool tool = builder.build();
-
         long userTimeout = winRMInputs.getOperationTimeout() * 1000L;
         StopWatch watch = new StopWatch();
-        watch.start();
-        WinRmToolResponse res = tool.executePs(winRMInputs.getScript());
-        watch.stop();
-
-        long result = watch.getTime();
-        if (result > userTimeout) {
-            context.shutdown();
-            Thread.currentThread().interrupt();
-            return getFailureResultsMap("Operation timed out.");
-        } else {
-            context.shutdown();
+        WinRmToolResponse res;
+        WinRmClientContext context = null;
+        try {
+            context = WinRmClientContext.newInstance();
+            WinRmTool tool = builder.context(context).build();
+            watch.start();
+            if (winRMInputs.getCommandType().equalsIgnoreCase(CMD))
+                res = tool.executeCommand(winRMInputs.getCommand());
+            else {
+                if (winRMInputs.getConfigurationName().isEmpty())
+                    res = tool.executePs(winRMInputs.getCommand());
+                else
+                    res = tool.executeCommand(compilePs(winRMInputs.getCommand(), winRMInputs.getConfigurationName()), new StringWriter(), new StringWriter());
+            }
+            watch.stop();
+            long result = watch.getTime();
+            if (result > userTimeout) {
+                Thread.currentThread().interrupt();
+                return getFailureResultsMap(EXCEPTION_TIMED_OUT);
+            }
+        } finally {
+            if (context != null)
+                context.shutdown();
         }
 
         Map<String, String> results;
@@ -121,13 +133,13 @@ public class WinRMService {
             results = getFailureResultsMap(res.getStdErr());
             results.put(STDERR, res.getStdErr());
         }
-        results.put(SCRIPT_EXIT_CODE, String.valueOf(res.getStatusCode()));
+        results.put(COMMAND_EXIT_CODE, String.valueOf(res.getStatusCode()));
         return results;
     }
 
     private static boolean useHttps(WinRMInputs winRMInputs) {
         boolean useHttps = false;
-        if (winRMInputs.getProtocol().equalsIgnoreCase("https")) {
+        if (winRMInputs.getProtocol().equalsIgnoreCase(HTTPS)) {
             useHttps = true;
             if (!winRMInputs.getProxyHost().isEmpty()) {
                 System.setProperty("https.proxyHost", winRMInputs.getProxyHost());
@@ -137,7 +149,7 @@ public class WinRMService {
                 System.setProperty("https.proxyUser", winRMInputs.getProxyUsername());
                 System.setProperty("https.proxyPassword", winRMInputs.getProxyPassword());
             }
-        } else if (winRMInputs.getProtocol().equalsIgnoreCase("http")) {
+        } else if (winRMInputs.getProtocol().equalsIgnoreCase(HTTP)) {
             if (!winRMInputs.getProxyHost().isEmpty()) {
                 System.setProperty("http.proxyHost", winRMInputs.getProxyHost());
                 System.setProperty("http.proxyPort", winRMInputs.getProxyPort());
@@ -166,7 +178,7 @@ public class WinRMService {
         return authType;
     }
 
-    private static String tlsVersion(String tlsVersion){
+    private static String tlsVersion(String tlsVersion) {
         String tls_version = tlsVersion;
         switch (tlsVersion.toLowerCase()) {
             case "tlsv1":
@@ -204,7 +216,7 @@ public class WinRMService {
         return x509HostnameVerifier;
     }
 
-    private static TrustManager getTrustAllRoots(){
+    private static TrustManager getTrustAllRoots() {
         return new X509TrustManager() {
             public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
             }
@@ -216,6 +228,12 @@ public class WinRMService {
                 return null;
             }
         };
+    }
+
+    private static String compilePs(String psScript, String configurationName) {
+        byte[] cmd = psScript.getBytes(StandardCharsets.UTF_16LE);
+        String arg = DatatypeConverter.printBase64Binary(cmd);
+        return "powershell -ConfigurationName " + configurationName + " -encodedcommand " + arg;
     }
 
 }

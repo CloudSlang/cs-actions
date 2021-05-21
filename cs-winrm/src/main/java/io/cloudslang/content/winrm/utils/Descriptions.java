@@ -47,16 +47,23 @@ public class Descriptions {
                 " If the protocol (specified by the 'url') is not 'https' or if trustAllRoots is 'true' this input is ignored.\n Default value: <OO_Home>/java/lib/security/cacerts\nFormat: Java KeyStore (JKS)";
         public static final String KEYSTORE_PASSWORD_DESC= "The password associated with the KeyStore file. If trustAllRoots is false and keystore is empty, keystorePassword default will be supplied.\nDefault value: change it";
         public static final String OPERATION_TIMEOUT_DESC = "Defines the OperationTimeout value in seconds to indicate that the clients expect a response or a fault within the specified time.";
-        public static final String SCRIPT_DESC = "The PowerShell script that will be executed on the remote shell. Check the notes section for security implications of using this input.";
-        public static final String TLS_VERSION_DESC = "The version of TLS to use. By default, the operation tries to establish a secure connection over TLSv1.2.\n Valid values: TLSv1, TLSv1.1, TLSv1.2, TLSv1.3.\nDefault value: TLSv1.2";
+        public static final String COMMAND_DESC = "The PowerShell script that will be executed on the remote shell. Check the notes section for security implications of using this input.";
+        public static final String TLS_VERSION_DESC = "The version of TLS to use. By default, the operation tries to establish a secure connection over TLSv1.2.\n Valid values: TLSv1, TLSv1.1, TLSv1.2, TLSv1.3.\nDefault value: TLSv1.2\n\"This capability is provided “as is”, please see product documentation for further security considerations regarding TLS versions and ciphers. In order to connect successfully to the target\n" +
+                "host, it should accept the specified TLS version. If this is not the case, it is the\n" +
+                "user's responsibility to configure the host accordingly.\"";
         public static final String REQUEST_NEW_KERBEROS_TICKET_DESC = "Allows you to request a new ticket to the target computer specified by the service principal name (SPN).\nValid values: true, false.\nDefault value: true";
         public static final String WORKING_DIRECTORY_DESC = "The path of the directory where to be executed the PowerShell script.";
+        public static final String CONFIGURATION_NAME_DESC = "The name of the PSSessionConfiguration to use. This can be used to target specific versions of PowerShell if the PSSessionConfiguration is properly configured on the target. By default, after PSRemoting is enabled on the target, the configuration name for PowerShell v5 or lower is 'microsoft.powershell', for PowerShell v6 is 'PowerShell.6', for PowerShell v7 is 'PowerShell.7'. Additional configurations can be created by the user on the target machines.\n" +
+                "Valid values: any PSConfiguration that exists on the host. This input will be ignored if command type is 'cmd'.\n" +
+                "Examples: 'microsoft.powershell', 'PowerShell.6', 'PowerShell.7'";
+        public static final String COMMAND_TYPE_DESC = "The command type to be executed. Valid values: cmd, powershell. Default value: cmd";
 
         public static final String SUCCESS_DESC = "The PowerShell script was executed successfully and the 'scriptExitCode' value is 0.";
         public static final String FAILURE_DESC = "The PowerShell script could not be executed or the value of the 'scriptExitCode' is different than 0.";
 
+        public static final String RETURN_CODE_DESC = " The returnCode of the operation: 0 for success, -1 for failure.";
         public static final String RETURN_RESULT_DESC = "The result of the script execution written on the stdout stream of the opened shell in case of success or the error from stderr in case of failure.";
-        public static final String SCRIPT_EXIT_CODE_DESC = "The exit code returned by the powershell script execution.";
+        public static final String COMMAND_EXIT_CODE_DESC = "The exit code returned by the powershell script execution.";
         public static final String STDERR_DESC = "The error messages and other warnings written on the stderr stream.";
         public static final String STDOUT_DESC = "The result of the script execution written on the stdout stream of the opened shell.";
         public static final String EXCEPTION_DESC = " In case of failure response, this result contains the java stack trace of the runtime exception or fault details that the remote server generated throughout its communication with the client.";
