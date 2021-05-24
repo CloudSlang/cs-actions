@@ -21,6 +21,7 @@ import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,12 +30,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import static io.cloudslang.content.excel.services.ExcelServiceImpl.getFileFormat;
-import static io.cloudslang.content.excel.utils.Constants.BAD_CREATE_EXCEL_FILE_MSG;
-import static io.cloudslang.content.excel.utils.Constants.BAD_EXCEL_FILE_MSG;
-import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_EMPTY_FILE_NAME;
-import static io.cloudslang.content.excel.utils.Constants.EXCEPTION_WORKSHEET_NAME_EMPTY;
-import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLS;
-import static io.cloudslang.content.excel.utils.Constants.FORMAT_XLSX;
+import static io.cloudslang.content.excel.utils.Constants.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 
 public class CreateExcelFileService {
@@ -114,6 +110,8 @@ public class CreateExcelFileService {
                 return new XSSFWorkbook();
             else if (format.equalsIgnoreCase(FORMAT_XLS))
                 return new HSSFWorkbook();
+            else if (format.equalsIgnoreCase(FORMAT_XLSM))
+                return new SXSSFWorkbook();
         }
         return null;
     }
