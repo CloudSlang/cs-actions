@@ -36,4 +36,5 @@ public final class InputNames {
     public static final String USER_DN = "userDN";
     public static final String GROUP_COMMON_NAME = "groupCommonName";
     public static final String GROUP_TYPE = "groupType";
+    public static final String GROUP_DN = "groupDN";
 }

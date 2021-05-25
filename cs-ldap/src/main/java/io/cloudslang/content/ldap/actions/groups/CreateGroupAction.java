@@ -72,10 +72,11 @@ public class CreateGroupAction {
      * @param escapeChars      Add this input and set it to true if you want the operation to escape the special AD characters:
      *                         '#','=','"','<','>',',','+',';','\','"''.
      * @return - a map containing the output of the operation. Keys present in the map are:
-     * returnResult - A message with the cn name of the user in case of success or the error in case of failure.
+     * returnResult - A message with the distinguished name of the newly created group in case of success or the error message
+     *              in case of failure.
      * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
      * exception - The exception message if the operation fails.
-     * userDN - The distinguished name of the newly created user
+     * groupDN - The distinguished name of the newly created group.
      */
 
     @Action(name = "Create Group",

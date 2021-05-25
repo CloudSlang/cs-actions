@@ -45,7 +45,12 @@ public class ResetUserPasswordAction {
      *                         The prefix length is optional.
      * @param userDN           Distinguished name of the user whose password you want to change.
      *                         Example: CN=User, OU=OUTest1, DC=battleground, DC=ad).
-     * @param userPassword     The new password (must meet complexity requirements specified in notes section).
+     * @param userPassword     The new password. It must meet the following requirements:
+     *                         - is at least six characters long
+     *                         - contains characters from at least three of the following five categories: English uppercase
+     *                         characters ('A' - 'Z'), English lowercase characters ('a' - 'z'), base 10 digits ('0' - '9'),
+     *                         non-alphanumeric (For example: '!', '$', '#', or '%'), unicode characters
+     *                         - does not contain three or more characters from the user's account name
      * @param username         User to connect to Active Directory as.
      * @param password         Password to connect to Active Directory as.
      * @param useSSL           If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS)

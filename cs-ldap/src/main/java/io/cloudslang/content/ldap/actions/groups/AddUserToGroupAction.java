@@ -24,16 +24,16 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.InputNames;
 import io.cloudslang.content.ldap.constants.OutputNames;
-import io.cloudslang.content.ldap.entities.DeleteGroupInput;
-import io.cloudslang.content.ldap.services.groups.DeleteGroupService;
+import io.cloudslang.content.ldap.entities.AddUserToGroupInput;
+import io.cloudslang.content.ldap.services.groups.AddUserToGroupService;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
-public class DeleteGroupAction {
+public class AddUserToGroupAction {
 
     /**
-     * This operation deletes a group from Active Directory.
+     * This operation adds a user to a group in Active Directory.
      *
      * @param host             The IP or host name of the domain controller. The port number can be mentioned as well, along
      *                         with the host (hostNameOrIP:PortNumber).
@@ -43,9 +43,8 @@ public class DeleteGroupAction {
      *                         IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
      *                         a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
      *                         The prefix length is optional.
-     * @param OU               The Organizational Unit DN or Common Name DN to add the user to.
-     *                         Example: OU=OUTest1,DC=battleground,DC=ad
-     * @param groupCommonName  The CN, the full name of the new group.
+     * @param groupDN          The DN (distinguished name) of the group.
+     * @param userDN           The DN (distinguished name) of the user to add.
      * @param username         User to connect to Active Directory as.
      * @param password         Password to connect to Active Directory as.
      * @param useSSL           If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS)
@@ -63,20 +62,16 @@ public class DeleteGroupAction {
      * @param trustKeystore    The location of the TrustStore file.
      *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
      * @param trustPassword    The password associated with the TrustStore file.
-     * @param escapeChars      Add this input and set it to true if you want the operation to escape the special AD characters:
-     *                         '#','=','"','<','>',',','+',';','\','"''.
      * @return - a map containing the output of the operation. Keys present in the map are:
-     * returnResult - A message with the distinguished name of the deleted group in case of success or the error message
-     *              in case of failure.
+     * returnResult - A message with the added user's DN and the group in which it was added DN in case of success or the
+     *              error in case of failure.
      * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
      * exception - The exception message if the operation fails.
-     * groupDN - The distinguished name of the deleted group.
      */
 
-    @Action(name = "Delete Group",
+    @Action(name = "Add User To Group",
             outputs = {
                     @Output(OutputNames.RETURN_RESULT),
-                    @Output(OutputNames.RESULT_GROUP_DN),
                     @Output(OutputNames.RETURN_CODE),
                     @Output(OutputNames.EXCEPTION)
             },
@@ -88,8 +83,8 @@ public class DeleteGroupAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.OU, required = true) String OU,
-            @Param(value = InputNames.GROUP_COMMON_NAME, required = true) String groupCommonName,
+            @Param(value = InputNames.GROUP_DN, required = true) String groupDN,
+            @Param(value = InputNames.USER_DN, required = true) String userDN,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD) String password,
             @Param(value = InputNames.USE_SSL) String useSSL,
@@ -97,12 +92,11 @@ public class DeleteGroupAction {
             @Param(value = InputNames.KEYSTORE) String keyStore,
             @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword,
-            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
-        DeleteGroupInput.Builder inputBuilder = new DeleteGroupInput.Builder()
+            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword){
+        AddUserToGroupInput.Builder inputBuilder = new AddUserToGroupInput.Builder()
                 .host(host)
-                .OU(OU)
-                .groupCommonName(groupCommonName)
+                .groupDN(groupDN)
+                .userDN(userDN)
                 .username(username)
                 .password(password)
                 .useSSL(useSSL)
@@ -110,10 +104,9 @@ public class DeleteGroupAction {
                 .keyStore(keyStore)
                 .keyStorePassword(keyStorePassword)
                 .trustKeystore(trustKeystore)
-                .trustPassword(trustPassword)
-                .escapeChars(escapeChars);
+                .trustPassword(trustPassword);
         try {
-            return new DeleteGroupService().execute(inputBuilder.build());
+            return new AddUserToGroupService().execute(inputBuilder.build());
         } catch (Exception e) {
             return ResultUtils.fromException(e);
         }

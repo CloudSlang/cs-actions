@@ -12,25 +12,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.ldap.utils;
+package io.cloudslang.content.ldap.entities;
 
-import javax.net.ssl.X509TrustManager;
-import java.security.cert.X509Certificate;
+public interface AddUsrToGroupInput {
 
-/**
- * Used to connect to LDAP using SSL
- *
- */
-public class DummyTrustManager implements X509TrustManager {
-    public void checkClientTrusted(X509Certificate[] cert, String authType) {
-        return;
-    }
+    String getHost();
 
-    public void checkServerTrusted(X509Certificate[] cert, String authType) {
-        return;
-    }
+    String getUsername();
 
-    public X509Certificate[] getAcceptedIssuers() {
-        return new X509Certificate[0];
-    }
+    String getPassword();
+
+    String getGroupDN();
+
+    String getUserDN();
+
+    Boolean getUseSSL();
+
+    Boolean getTrustAllRoots();
+
+    String getKeyStore();
+
+    String getKeyStorePassword();
+
+    String getTrustKeystore();
+
+    String getTrustPassword();
 }

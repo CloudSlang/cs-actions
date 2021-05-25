@@ -15,18 +15,12 @@
 package io.cloudslang.content.ldap.constants;
 
 public final class Constants {
-    public static final String FILE = "file:";
-    public static final String HTTP = "http";
-    public static final int ONE_SECOND = 1000;
-    public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
 
-    public static final String BOUNCY_CASTLE_PROVIDER = "BC";
-    public static final String PKCS_KEYSTORE_TYPE = "PKCS12";
-    public static final String ENCRYPTED_CONTENT_TYPE = "application/pkcs7-mime; name=\"smime.p7m\"; " +
-            "smime-type=enveloped-data";
-    public static final String ENCRYPT_RECID = "The encryption recId is: ";
+    public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String SSL = "SSL";
     public static final String DEFAULT_PASSWORD_FOR_STORE = "changeit";
     public static final String SSL_SOCKET_FACTORY = "javax.net.ssl.SSLSocketFactory";
-    public static final String SECURE_SUFFIX = "s";
+    public static final String HOST = ".host";
+    public static final String JAVA_HOME = "java.home";
+
 }

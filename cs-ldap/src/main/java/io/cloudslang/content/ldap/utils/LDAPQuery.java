@@ -32,6 +32,7 @@ public class LDAPQuery {
     private static final char[] specialCharsArray = new char[]{'#', ',', '+', '<', '>', ';', '=', '/'};
     public String specialChars = "#=<>,+;\"/";
     public String splitChar = ",";
+    public String SIMPLE = "simple";
     private boolean bUseSecureAuth = true;
 
     public DirContext MakeLDAPConnection(String host, String username, String password) throws NamingException {
@@ -40,7 +41,7 @@ public class LDAPQuery {
         Hashtable<String, String> env = new Hashtable<String, String>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, "ldap://" + resolvedHost);
-        env.put(Context.SECURITY_AUTHENTICATION, "simple");
+        env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
         env.put(Context.REFERRAL, "follow");
@@ -55,7 +56,7 @@ public class LDAPQuery {
         Hashtable<String, String> env = new Hashtable<String, String>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, "ldap://" + resolvedHost);
-        env.put(Context.SECURITY_AUTHENTICATION, "simple");
+        env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
         env.put(Context.REFERRAL, referral);
@@ -69,7 +70,7 @@ public class LDAPQuery {
         Hashtable<String, String> env = new Hashtable<String, String>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, "ldap://" + resolvedHost + "/" + dN);
-        env.put(Context.SECURITY_AUTHENTICATION, "simple");
+        env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
         DirContext ctx = new InitialDirContext(env);
@@ -83,7 +84,7 @@ public class LDAPQuery {
         Hashtable<String, String> env = new Hashtable<>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, "ldaps://" + address.getHostAndPortForURI());
-        env.put(Context.SECURITY_AUTHENTICATION, "simple");
+        env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
         env.put(Context.REFERRAL, "ignore");
@@ -108,7 +109,7 @@ public class LDAPQuery {
         Hashtable<String, String> env = new Hashtable<>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, "ldaps://" + address.getHostAndPortForURI());
-        env.put(Context.SECURITY_AUTHENTICATION, "simple");
+        env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
         env.put(Context.REFERRAL, "ignore");

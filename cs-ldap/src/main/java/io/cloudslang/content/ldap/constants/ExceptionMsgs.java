@@ -15,22 +15,9 @@
 package io.cloudslang.content.ldap.constants;
 
 public final class ExceptionMsgs {
-    public static final String UNRECOGNIZED_SSL_MESSAGE = "Unrecognized SSL message";
-    public static final String UNRECOGNIZED_SSL_MESSAGE_PLAINTEXT_CONNECTION = "Unrecognized SSL message, plaintext " +
-            "connection?";
-    public static final String HOST_NOT_SPECIFIED = "The required host input is not specified!";
-    public static final String OU_NOT_SPECIFIED = "The required OU input is not specified!";
-    public static final String USER_DN_NOT_SPECIFIED = "The required userDN input is not specified!";
-    public static final String CN_NOT_SPECIFIED = "The required computerCommonName input is not specified!";
-    public static final String USERNAME_NOT_SPECIFIED = "The username input is not specified!";
-    public static final String USER_PASSWORD_NOT_SPECIFIED = "The required userPassword input is not specified!";
-    public static final String ROOTDN_NOT_SPECIFIED = "The required rootDN input is not specified!";
-    public static final String COMPDN_NOT_SPECIFIED = "The required computerDN input is not specified!";
-    public static final String NEWOUDN_NOT_SPECIFIED = "The required newOUDN input is not specified!";
-    public static final String GROUP_CN_NOT_SPECIFIED = "The required groupCommonName input is not specified!";
-    public static final String SAMACCOUNTNAME_NOT_SPECIFIED = "The required sAMAccountName input is not specified!";
 
-    public static final String TIMEOUT_MUST_BE_POSITIVE = "timeout value must be a positive number";
-    public static final String INVALID_PORT_NUMBER = "Invalid port number";
-    public static final String PORT_NOT_SPECIFIED = "The required 'port' input is not specified";
+    public static final String REQUIRED_INPUT_NOT_SPECIFIED = "The required %s input is not specified!";
+    public static final String INPUT_NOT_SPECIFIED = "The %s input is not specified!";
+    public static final String EXCEPTION_INVALID_BOOLEAN = "The value of %s input is not a valid boolean value.";
+
 }
