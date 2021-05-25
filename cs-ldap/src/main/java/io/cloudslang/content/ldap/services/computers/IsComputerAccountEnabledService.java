@@ -12,32 +12,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.ldap.services;
+package io.cloudslang.content.ldap.services.computers;
 
-import io.cloudslang.content.ldap.entities.ResetCompAccountInput;
+import io.cloudslang.content.ldap.entities.IsComputerAccountEnabledInput;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
 import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import javax.naming.NamingException;
-import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
-import javax.naming.directory.ModificationItem;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.ldap.constants.OutputNames.RESULT_COMPUTER_DN;
 import static io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLCharacters;
 
-public class ResetComputerAccountService {
+public class IsComputerAccountEnabledService {
 
-    public Map<String, String> execute(ResetCompAccountInput input) {
+    public Map<String, String> execute(IsComputerAccountEnabledInput input) {
 
         Map<String, String> results = ResultUtils.createNewEmptyMap();
-        ClassLoader loaderOrig = Thread.currentThread().getContextClassLoader();
 
         try {
             LDAPQuery ldap = new LDAPQuery();
+            String OU = input.getOU();
+            String compCN = input.getComputerCommonName();
             DirContext ctx;
 
             if (input.getUseSSL()) {
@@ -52,25 +53,20 @@ public class ResetComputerAccountService {
                 ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
             }
 
-            String compDN = input.getComputerDN();
-            String nameComp = compDN.substring(3, compDN.indexOf(","));
-            String value = "\"" + nameComp + "$\"";
-
-            byte _bytes[] = value.getBytes("UTF-16LE");//("Unicode");
-
-            // Specify the changes to make
-            ModificationItem[] mods = new ModificationItem[1];
-            mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
-                    new BasicAttribute("unicodePwd", _bytes));
-            // Perform requested modifications on named object
-            ctx.modifyAttributes(compDN, mods);
+            String compDN = "CN=" + compCN + "," + OU;
+            Attributes attrs = ctx.getAttributes(compDN, new String[]{"userAccountControl"});
+            Attribute attr = attrs.get("userAccountControl");
+            int val = Integer.parseInt((String) attr.get(0));
+            if ((val | 0x002) == val) {
+                results.put(RETURN_RESULT, "Computer account is disabled.");
+                results.put(RETURN_CODE, "-1");
+            } else {
+                results.put(RETURN_RESULT, "Computer account is enabled.");
+                results.put(RETURN_CODE, "0");
+            }
             ctx.close();
+            results.put(RESULT_COMPUTER_DN, compDN);
 
-            results.put(RETURN_RESULT, "The computer account has been reseted.");
-            results.put(RETURN_CODE, "0");
-
-        } catch (UnsupportedEncodingException e) {
-            System.out.println("Problem encoding password: " + e);
         } catch (NamingException e) {
             Exception exception = MySSLSocketFactory.getException();
             if (exception == null)
@@ -79,8 +75,6 @@ public class ResetComputerAccountService {
             results.put(RETURN_RESULT, replaceInvalidXMLCharacters(exception.getMessage()));
             results.put(RETURN_CODE, "-1");
         }
-
-        Thread.currentThread().setContextClassLoader(loaderOrig);
         return results;
     }
 }

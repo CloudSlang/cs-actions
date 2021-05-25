@@ -12,31 +12,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.ldap.services;
+package io.cloudslang.content.ldap.services.computers;
 
-import io.cloudslang.content.ldap.entities.MoveComputerAccountToOUInput;
+import io.cloudslang.content.ldap.entities.GetComputerAccountOUInput;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
 import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
-import javax.naming.directory.ModificationItem;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.ldap.constants.OutputNames.RESULT_OU_DN;
 import static io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLCharacters;
 
-public class MoveComputerAccountToOUService {
+public class GetComputerAccountOUService {
 
-    public Map<String, String> execute(MoveComputerAccountToOUInput input) {
+    public Map<String, String> execute(GetComputerAccountOUInput input) {
 
         Map<String, String> results = ResultUtils.createNewEmptyMap();
 
         try {
             LDAPQuery ldap = new LDAPQuery();
-            String OU = input.getNewOUDN();
+            String compCN = input.getComputerCommonName();
             DirContext ctx;
 
             if (input.getUseSSL()) {
@@ -50,20 +52,25 @@ public class MoveComputerAccountToOUService {
             } else {
                 ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
             }
+//         Specify the ids of the attributes to return
+            String[] attrIDs = {"ou"};
 
-            String nameComp = input.getComputerDN().substring(3, input.getComputerDN().indexOf(","));
-            String newCompDN = "CN=" + nameComp + "," + OU;
-            ctx.rename(input.getComputerDN(), newCompDN);
-            // Specify the changes to make
-            ModificationItem[] mods = new ModificationItem[1];
-            mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
-                    new BasicAttribute("ou", OU));
-            // Perform requested modifications on named object
-            ctx.modifyAttributes(newCompDN, mods);
+            SearchControls ctls = new SearchControls();
+            ctls.setReturningAttributes(attrIDs);
+            ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+            NamingEnumeration<?> result = ctx.search(input.getRootDN(), "cn=" + compCN, ctls);
+            if (result.hasMore()) {
+                String ouDN = ((SearchResult) result.next()).getAttributes().get("ou").get(0).toString();
+                String name = ouDN.substring(0, ouDN.indexOf(","));
+                results.put(RETURN_RESULT, name);
+                results.put(RESULT_OU_DN, ouDN);
+                results.put(RETURN_CODE, "0");
+            } else {
+                results.put(RETURN_RESULT, "LDAP object doesn't exist");
+                results.put(RETURN_CODE, "-1");
+            }
             ctx.close();
-
-            results.put(RETURN_RESULT, newCompDN);
-            results.put(RETURN_CODE, "0");
 
         } catch (NamingException e) {
             Exception exception = MySSLSocketFactory.getException();

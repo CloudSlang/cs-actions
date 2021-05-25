@@ -18,6 +18,7 @@ public final class OutputNames {
     public static final String RESULT_COMPUTER_DN = "computerDN";
     public static final String RESULT_OU_DN = "OU";
     public static final String RESULT_USER_DN = "userDN";
+    public static final String RESULT_GROUP_DN = "groupDN";
 
     public static final String RETURN_RESULT = "returnResult";
     public static final String RETURN_CODE = "returnCode";

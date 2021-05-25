@@ -12,26 +12,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.ldap.services;
+package io.cloudslang.content.ldap.services.computers;
 
-import io.cloudslang.content.ldap.entities.IsComputerAccountEnabledInput;
+import io.cloudslang.content.ldap.entities.EnableComputerAccountInput;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
 import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.DirContext;
+import javax.naming.directory.*;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.ldap.constants.OutputNames.RESULT_COMPUTER_DN;
 import static io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLCharacters;
 
-public class IsComputerAccountEnabledService {
+public class EnableComputerAccountService {
 
-    public Map<String, String> execute(IsComputerAccountEnabledInput input) {
+    public Map<String, String> execute(EnableComputerAccountInput input) {
 
         Map<String, String> results = ResultUtils.createNewEmptyMap();
 
@@ -56,12 +54,21 @@ public class IsComputerAccountEnabledService {
             String compDN = "CN=" + compCN + "," + OU;
             Attributes attrs = ctx.getAttributes(compDN, new String[]{"userAccountControl"});
             Attribute attr = attrs.get("userAccountControl");
-            int val = Integer.parseInt((String) attr.get(0));
-            if ((val | 0x002) == val) {
-                results.put(RETURN_RESULT, "Computer account is disabled.");
-                results.put(RETURN_CODE, "-1");
+            int valOld = Integer.parseInt((String) attr.get(0));
+            System.out.println("old userAccountControl=" + valOld);
+            if ((valOld | 0x002) == valOld) {
+                //enable computer account
+                int valNew = valOld - 0x0002;
+                System.out.println("new userAccountControl=" + valNew);
+                //Specify the changes to make
+                ModificationItem[] mods = new ModificationItem[1];
+                mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+                        new BasicAttribute("userAccountControl", Integer.toString(valNew)));
+                ctx.modifyAttributes(compDN, mods);
+                results.put(RETURN_RESULT, "Computer account has been enabled.");
+                results.put(RETURN_CODE, "0");
             } else {
-                results.put(RETURN_RESULT, "Computer account is enabled.");
+                results.put(RETURN_RESULT, "Computer account is not disabled.");
                 results.put(RETURN_CODE, "0");
             }
             ctx.close();

@@ -26,7 +26,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.ldap.actions;
+package io.cloudslang.content.ldap.actions.computers;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -39,7 +39,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.InputNames;
 import io.cloudslang.content.ldap.constants.OutputNames;
 import io.cloudslang.content.ldap.entities.DeleteComputerAccountInput;
-import io.cloudslang.content.ldap.services.DeleteComputerAccountService;
+import io.cloudslang.content.ldap.services.computers.DeleteComputerAccountService;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;

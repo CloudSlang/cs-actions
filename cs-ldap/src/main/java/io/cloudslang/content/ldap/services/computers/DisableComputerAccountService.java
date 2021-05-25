@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.ldap.services;
+package io.cloudslang.content.ldap.services.computers;
 
 import io.cloudslang.content.ldap.entities.DisableComputerAccountInput;
 import io.cloudslang.content.ldap.utils.LDAPQuery;

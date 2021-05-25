@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.ldap.actions;
+package io.cloudslang.content.ldap.actions.groups;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -24,19 +24,18 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.InputNames;
 import io.cloudslang.content.ldap.constants.OutputNames;
-import io.cloudslang.content.ldap.entities.CreateUserInput;
-import io.cloudslang.content.ldap.entities.ResetUserPasswordInput;
-import io.cloudslang.content.ldap.services.UserService;
+import io.cloudslang.content.ldap.entities.DeleteGroupInput;
+import io.cloudslang.content.ldap.services.groups.DeleteGroupService;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
-public class ResetUserPasswordAction {
+public class DeleteGroupAction {
 
     /**
-     * This operation creates a new user in Active Directory.
+     * This operation deletes a group in Active Directory.
      *
-     * @param host             - The IP or host name of the domain controller. The port number can be mentioned as well, along
+     * @param host             The IP or host name of the domain controller. The port number can be mentioned as well, along
      *                         with the host (hostNameOrIP:PortNumber).
      *                         Examples: test.example.com,  test.example.com:636, <IPv4Address>, <IPv6Address>,
      *                         [<IPv6Address>]:<PortNumber> etc.
@@ -44,35 +43,39 @@ public class ResetUserPasswordAction {
      *                         IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
      *                         a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
      *                         The prefix length is optional.
-     * @param userDN           - Distinguished name of the user whose password you want to change.
-     *                         Example: CN=User, OU=OUTest1, DC=battleground, DC=ad).
-     * @param userPassword     - The new password (must meet complexity requirements specified in notes section).
-     * @param username         - User to connect to Active Directory as.
-     * @param password         - Password to connect to Active Directory as.
-     * @param useSSL           - If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS)
+     * @param OU               The Organizational Unit DN or Common Name DN to add the user to.
+     *                         Example: OU=OUTest1,DC=battleground,DC=ad
+     * @param groupCommonName  The CN, the full name of the new group.
+     * @param username         User to connect to Active Directory as.
+     * @param password         Password to connect to Active Directory as.
+     * @param useSSL           If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS)
      *                         protocol to establish a connection to the remote computer. By default, the operation tries to
      *                         establish a secure connection over TLSv1.2. Default port for SSL/TLS is 636.
      *                         Default value: false
      *                         values: true, false.
-     * @param trustAllRoots    - Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
+     * @param trustAllRoots    Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
      *                         no trusted certification authority issued it.
      *                         Default value: true.
      *                         Valid values: true, false.
-     * @param keyStore         - The location of the KeyStore file.
+     * @param keyStore         The location of the KeyStore file.
      *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
-     * @param keyStorePassword - The password associated with the KeyStore file.
-     * @param trustKeystore    - The location of the TrustStore file.
+     * @param keyStorePassword The password associated with the KeyStore file.
+     * @param trustKeystore    The location of the TrustStore file.
      *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
-     * @param trustPassword    - The password associated with the TrustStore file.
+     * @param trustPassword    The password associated with the TrustStore file.
+     * @param escapeChars      Add this input and set it to true if you want the operation to escape the special AD characters:
+     *                         '#','=','"','<','>',',','+',';','\','"''.
      * @return - a map containing the output of the operation. Keys present in the map are:
-     * returnResult - The message 'Password Changed' in case of success or the error in case of failure..
-     * returnCode - the return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
-     * exception - the exception message if the operation fails.
+     * returnResult - A message with the cn name of the user in case of success or the error in case of failure.
+     * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
+     * exception - The exception message if the operation fails.
+     * userDN - The distinguished name of the newly created user
      */
 
-    @Action(name = "Reset User Password",
+    @Action(name = "Delete Group",
             outputs = {
                     @Output(OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.RESULT_GROUP_DN),
                     @Output(OutputNames.RETURN_CODE),
                     @Output(OutputNames.EXCEPTION)
             },
@@ -84,8 +87,8 @@ public class ResetUserPasswordAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.USER_DN, required = true) String userDN,
-            @Param(value = InputNames.USER_PASSWORD, required = true) String userPassword,
+            @Param(value = InputNames.OU, required = true) String OU,
+            @Param(value = InputNames.GROUP_COMMON_NAME, required = true) String groupCommonName,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD) String password,
             @Param(value = InputNames.USE_SSL) String useSSL,
@@ -93,12 +96,12 @@ public class ResetUserPasswordAction {
             @Param(value = InputNames.KEYSTORE) String keyStore,
             @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword){
-
-        ResetUserPasswordInput.Builder inputBuilder = new ResetUserPasswordInput.Builder()
+            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword,
+            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
+        DeleteGroupInput.Builder inputBuilder = new DeleteGroupInput.Builder()
                 .host(host)
-                .userDN(userDN)
-                .userPassword(userPassword)
+                .OU(OU)
+                .groupCommonName(groupCommonName)
                 .username(username)
                 .password(password)
                 .useSSL(useSSL)
@@ -106,12 +109,12 @@ public class ResetUserPasswordAction {
                 .keyStore(keyStore)
                 .keyStorePassword(keyStorePassword)
                 .trustKeystore(trustKeystore)
-                .trustPassword(trustPassword);
+                .trustPassword(trustPassword)
+                .escapeChars(escapeChars);
         try {
-            return new UserService().resetUserPassword(inputBuilder.build());
+            return new DeleteGroupService().execute(inputBuilder.build());
         } catch (Exception e) {
             return ResultUtils.fromException(e);
         }
     }
 }
-

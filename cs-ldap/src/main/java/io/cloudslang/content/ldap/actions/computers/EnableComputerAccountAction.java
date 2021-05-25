@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.ldap.actions;
+package io.cloudslang.content.ldap.actions.computers;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -24,18 +24,19 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.InputNames;
 import io.cloudslang.content.ldap.constants.OutputNames;
-import io.cloudslang.content.ldap.entities.GetComputerAccountOUInput;
-import io.cloudslang.content.ldap.services.GetComputerAccountOUService;
+import io.cloudslang.content.ldap.entities.EnableComputerAccountInput;
+import io.cloudslang.content.ldap.services.computers.EnableComputerAccountService;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
-public class GetComputerAccountOUAction {
+public class EnableComputerAccountAction {
     /**
-     * Gets the name of the OU a computer account is in, in Active Directory.
+     * Enables a computer account in Active Directory.
      *
      * @param host               The domain controller to connect to.
-     * @param rootDN             The distinguished name of the root element whose subtree you want to search in.
+     * @param OU                 The Organizational Unit DN or Common Name DN to add the computer to.
+     *                           (i.e. OU=OUTest1,DC=battleground,DC=ad)
      * @param computerCommonName The name of the computer (its CN).
      * @param username           The user to connect to AD as.
      * @param password           The password to connect to AD as.
@@ -59,12 +60,12 @@ public class GetComputerAccountOUAction {
      * returnResult - The return result of the operation.
      * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
      * exception - The exception message if the operation goes to failure.
-     * OU - OU's distinguished name.
+     * computerDN - The distinguished name of the computer account that was enabled.
      */
-    @Action(name = "Get Computer Account OU",
+    @Action(name = "Enable Computer Account",
             outputs = {
                     @Output(OutputNames.RETURN_RESULT),
-                    @Output(OutputNames.RESULT_OU_DN),
+                    @Output(OutputNames.RESULT_COMPUTER_DN),
                     @Output(OutputNames.RETURN_CODE),
                     @Output(OutputNames.EXCEPTION)
             },
@@ -78,7 +79,7 @@ public class GetComputerAccountOUAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.ROOT_DN, required = true) String rootDN,
+            @Param(value = InputNames.OU, required = true) String OU,
             @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true) String computerCommonName,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD) String password,
@@ -88,9 +89,9 @@ public class GetComputerAccountOUAction {
             @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD) String trustPassword) {
-        GetComputerAccountOUInput.Builder inputBuilder = new GetComputerAccountOUInput.Builder()
+        EnableComputerAccountInput.Builder inputBuilder = new EnableComputerAccountInput.Builder()
                 .host(host)
-                .rootDN(rootDN)
+                .OU(OU)
                 .computerCommonName(computerCommonName)
                 .username(username)
                 .password(password)
@@ -101,7 +102,7 @@ public class GetComputerAccountOUAction {
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword);
         try {
-            return new GetComputerAccountOUService().execute(inputBuilder.build());
+            return new EnableComputerAccountService().execute(inputBuilder.build());
         } catch (Exception e) {
             return ResultUtils.fromException(e);
         }

@@ -131,4 +131,20 @@ public final class InputBuilderUtils {
         }
         return userPassword.trim();
     }
+
+    public static String buildGroupCommonName(String groupCommonName, boolean mandatory) throws Exception {
+        if (isEmpty(groupCommonName) && mandatory) {
+            throw new Exception(ExceptionMsgs.GROUP_CN_NOT_SPECIFIED);
+        }
+        return groupCommonName.trim();
+
+    }
+
+    public static String buildSAMAccountNameRequired(String sAMAccountName, boolean mandatory) throws Exception {
+        if (isEmpty(sAMAccountName) && mandatory) {
+            throw new Exception(ExceptionMsgs.SAMACCOUNTNAME_NOT_SPECIFIED);
+        }
+        return sAMAccountName.trim();
+
+    }
 }

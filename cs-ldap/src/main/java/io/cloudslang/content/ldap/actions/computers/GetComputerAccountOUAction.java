@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.ldap.actions;
+package io.cloudslang.content.ldap.actions.computers;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -24,49 +24,47 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.InputNames;
 import io.cloudslang.content.ldap.constants.OutputNames;
-import io.cloudslang.content.ldap.entities.DisableComputerAccountInput;
-import io.cloudslang.content.ldap.services.DisableComputerAccountService;
+import io.cloudslang.content.ldap.entities.GetComputerAccountOUInput;
+import io.cloudslang.content.ldap.services.computers.GetComputerAccountOUService;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
-public class DisableComputerAccountAction {
+public class GetComputerAccountOUAction {
     /**
-     * Disables a computer account in Active Directory.
+     * Gets the name of the OU a computer account is in, in Active Directory.
      *
-     * @param host                       The domain controller to connect to.
-     * @param OU                         The Organizational Unit DN or Common Name DN to add the computer to.
-     *                                   (i.e. OU=OUTest1,DC=battleground,DC=ad)
-     * @param computerCommonName         The name of the computer (its CN).
-     * @param username                   The user to connect to AD as.
-     * @param password                   The password to connect to AD as.
-     * @param useSSL                     If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer
-     *                                   Security (TLS) protocol to establish a connection to the remote computer. By default,
-     *                                   the operation tries to establish a secure connection over TLSv1.2. Default port
-     *                                   for SSL/TLS is 636.
-     *                                   Valid values: true, false.
-     *                                   Default value: false.
-     * @param trustAllRoots              Specifies whether to enable weak security over SSL. A SSL certificate is trusted
-     *                                   even if no trusted certification authority issued it.
-     *                                   Valid values: true, false.
-     *                                   Default value: true.
-     * @param keyStore                   The location of the KeyStore file.
-     *                                   Example: %JAVA_HOME%/jre/lib/security/cacerts.
-     * @param keyStorePassword           The password associated with the KeyStore file.
-     * @param trustKeystore              The location of the TrustStore file.
-     *                                   Example: %JAVA_HOME%/jre/lib/security/cacerts.
-     * @param trustPassword              The password associated with the TrustStore file.
-     *
+     * @param host               The domain controller to connect to.
+     * @param rootDN             The distinguished name of the root element whose subtree you want to search in.
+     * @param computerCommonName The name of the computer (its CN).
+     * @param username           The user to connect to AD as.
+     * @param password           The password to connect to AD as.
+     * @param useSSL             If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer
+     *                           Security (TLS) protocol to establish a connection to the remote computer. By default,
+     *                           the operation tries to establish a secure connection over TLSv1.2. Default port
+     *                           for SSL/TLS is 636.
+     *                           Valid values: true, false.
+     *                           Default value: false.
+     * @param trustAllRoots      Specifies whether to enable weak security over SSL. A SSL certificate is trusted
+     *                           even if no trusted certification authority issued it.
+     *                           Valid values: true, false.
+     *                           Default value: true.
+     * @param keyStore           The location of the KeyStore file.
+     *                           Example: %JAVA_HOME%/jre/lib/security/cacerts.
+     * @param keyStorePassword   The password associated with the KeyStore file.
+     * @param trustKeystore      The location of the TrustStore file.
+     *                           Example: %JAVA_HOME%/jre/lib/security/cacerts.
+     * @param trustPassword      The password associated with the TrustStore file.
      * @return a map containing the output of the operations. Keys present in the map are:
      * returnResult - The return result of the operation.
      * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
      * exception - The exception message if the operation goes to failure.
-     * computerDN - The distinguished name of the computer account that was disabled.
+     * OU - OU's distinguished name.
      */
-    @Action(name = "Disable Computer Account",
+    @Action(name = "Get Computer Account OU",
             outputs = {
                     @Output(OutputNames.RETURN_RESULT),
-                    @Output(OutputNames.RESULT_COMPUTER_DN),
+                    @Output(OutputNames.RESULT_OU_DN),
                     @Output(OutputNames.RETURN_CODE),
                     @Output(OutputNames.EXCEPTION)
             },
@@ -80,7 +78,7 @@ public class DisableComputerAccountAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.OU, required = true) String OU,
+            @Param(value = InputNames.ROOT_DN, required = true) String rootDN,
             @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true) String computerCommonName,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD) String password,
@@ -89,10 +87,10 @@ public class DisableComputerAccountAction {
             @Param(value = InputNames.KEYSTORE) String keyStore,
             @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword){
-        DisableComputerAccountInput.Builder inputBuilder = new DisableComputerAccountInput.Builder()
+            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword) {
+        GetComputerAccountOUInput.Builder inputBuilder = new GetComputerAccountOUInput.Builder()
                 .host(host)
-                .OU(OU)
+                .rootDN(rootDN)
                 .computerCommonName(computerCommonName)
                 .username(username)
                 .password(password)
@@ -103,7 +101,7 @@ public class DisableComputerAccountAction {
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword);
         try {
-            return new DisableComputerAccountService().execute(inputBuilder.build());
+            return new GetComputerAccountOUService().execute(inputBuilder.build());
         } catch (Exception e) {
             return ResultUtils.fromException(e);
         }

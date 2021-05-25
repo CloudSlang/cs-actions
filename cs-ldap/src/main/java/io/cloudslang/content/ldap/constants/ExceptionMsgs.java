@@ -27,6 +27,8 @@ public final class ExceptionMsgs {
     public static final String ROOTDN_NOT_SPECIFIED = "The required rootDN input is not specified!";
     public static final String COMPDN_NOT_SPECIFIED = "The required computerDN input is not specified!";
     public static final String NEWOUDN_NOT_SPECIFIED = "The required newOUDN input is not specified!";
+    public static final String GROUP_CN_NOT_SPECIFIED = "The required groupCommonName input is not specified!";
+    public static final String SAMACCOUNTNAME_NOT_SPECIFIED = "The required sAMAccountName input is not specified!";
 
     public static final String TIMEOUT_MUST_BE_POSITIVE = "timeout value must be a positive number";
     public static final String INVALID_PORT_NUMBER = "Invalid port number";

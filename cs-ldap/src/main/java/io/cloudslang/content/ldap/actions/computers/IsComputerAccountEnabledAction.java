@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.ldap.actions;
+package io.cloudslang.content.ldap.actions.computers;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -24,47 +24,48 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.InputNames;
 import io.cloudslang.content.ldap.constants.OutputNames;
-import io.cloudslang.content.ldap.entities.MoveComputerAccountToOUInput;
-import io.cloudslang.content.ldap.services.MoveComputerAccountToOUService;
+import io.cloudslang.content.ldap.entities.IsComputerAccountEnabledInput;
+import io.cloudslang.content.ldap.services.computers.IsComputerAccountEnabledService;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
-public class MoveComputerAccountToOUAction {
+public class IsComputerAccountEnabledAction {
     /**
-     * Moves a computer account in a new OU in Active Directory.
+     * Enables a computer account in Active Directory.
      *
-     * @param host             The domain controller to connect to.
-     * @param computerDN       The distinguished name of the computer account we want to move.
-     *                         Example: CN=computer_name,OU=OldContainer,DC=example,DC=com
-     * @param newOUDN          The Organizational Unit that the computer account will be moved to.
-     *                         Example: OU(or CN)=NewContainer,DC=example,DC=com
-     * @param username         The user to connect to AD as.
-     * @param password         The password to connect to AD as.
-     * @param useSSL           If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer
-     *                         Security (TLS) protocol to establish a connection to the remote computer. By default,
-     *                         the operation tries to establish a secure connection over TLSv1.2. Default port
-     *                         for SSL/TLS is 636.
-     *                         Valid values: true, false.
-     *                         Default value: false.
-     * @param trustAllRoots    Specifies whether to enable weak security over SSL. A SSL certificate is trusted
-     *                         even if no trusted certification authority issued it.
-     *                         Valid values: true, false.
-     *                         Default value: true.
-     * @param keyStore         The location of the KeyStore file.
-     *                         Example: %JAVA_HOME%/jre/lib/security/cacerts.
-     * @param keyStorePassword The password associated with the KeyStore file.
-     * @param trustKeystore    The location of the TrustStore file.
-     *                         Example: %JAVA_HOME%/jre/lib/security/cacerts.
-     * @param trustPassword    The password associated with the TrustStore file.
+     * @param host               The domain controller to connect to.
+     * @param OU                 The Organizational Unit DN or Common Name DN to add the computer to.
+     *                           (i.e. OU=OUTest1,DC=battleground,DC=ad)
+     * @param computerCommonName The name of the computer (its CN).
+     * @param username           The user to connect to AD as.
+     * @param password           The password to connect to AD as.
+     * @param useSSL             If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer
+     *                           Security (TLS) protocol to establish a connection to the remote computer. By default,
+     *                           the operation tries to establish a secure connection over TLSv1.2. Default port
+     *                           for SSL/TLS is 636.
+     *                           Valid values: true, false.
+     *                           Default value: false.
+     * @param trustAllRoots      Specifies whether to enable weak security over SSL. A SSL certificate is trusted
+     *                           even if no trusted certification authority issued it.
+     *                           Valid values: true, false.
+     *                           Default value: true.
+     * @param keyStore           The location of the KeyStore file.
+     *                           Example: %JAVA_HOME%/jre/lib/security/cacerts.
+     * @param keyStorePassword   The password associated with the KeyStore file.
+     * @param trustKeystore      The location of the TrustStore file.
+     *                           Example: %JAVA_HOME%/jre/lib/security/cacerts.
+     * @param trustPassword      The password associated with the TrustStore file.
      * @return a map containing the output of the operations. Keys present in the map are:
-     * returnResult - The new distinguished name (DN) of the computer account, after it was moved to the new OU.
+     * returnResult - The return result of the operation.
      * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
      * exception - The exception message if the operation goes to failure.
+     * computerDN - The distinguished name of the computer account that was enabled.
      */
-    @Action(name = "Create Computer Account",
+    @Action(name = "Is Computer Account Enabled",
             outputs = {
                     @Output(OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.RESULT_COMPUTER_DN),
                     @Output(OutputNames.RETURN_CODE),
                     @Output(OutputNames.EXCEPTION)
             },
@@ -78,8 +79,8 @@ public class MoveComputerAccountToOUAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.COMPUTER_DN, required = true) String computerDN,
-            @Param(value = InputNames.NEW_OUDN, required = true) String newOUDN,
+            @Param(value = InputNames.OU, required = true) String OU,
+            @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true) String computerCommonName,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD) String password,
             @Param(value = InputNames.USE_SSL) String useSSL,
@@ -88,10 +89,10 @@ public class MoveComputerAccountToOUAction {
             @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD) String trustPassword) {
-        MoveComputerAccountToOUInput.Builder inputBuilder = new MoveComputerAccountToOUInput.Builder()
+        IsComputerAccountEnabledInput.Builder inputBuilder = new IsComputerAccountEnabledInput.Builder()
                 .host(host)
-                .computerDN(computerDN)
-                .newOUDN(newOUDN)
+                .OU(OU)
+                .computerCommonName(computerCommonName)
                 .username(username)
                 .password(password)
                 .useSSL(useSSL)
@@ -101,7 +102,7 @@ public class MoveComputerAccountToOUAction {
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword);
         try {
-            return new MoveComputerAccountToOUService().execute(inputBuilder.build());
+            return new IsComputerAccountEnabledService().execute(inputBuilder.build());
         } catch (Exception e) {
             return ResultUtils.fromException(e);
         }
