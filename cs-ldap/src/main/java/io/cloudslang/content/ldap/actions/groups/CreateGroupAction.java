@@ -58,7 +58,7 @@ public class CreateGroupAction {
      *                         protocol to establish a connection to the remote computer. By default, the operation tries to
      *                         establish a secure connection over TLSv1.2. Default port for SSL/TLS is 636.
      *                         Default value: false
-     *                         values: true, false.
+     *                         Valid values: true, false.
      * @param trustAllRoots    Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
      *                         no trusted certification authority issued it.
      *                         Default value: true.
@@ -99,13 +99,13 @@ public class CreateGroupAction {
             @Param(value = InputNames.GROUP_TYPE) String groupType,
             @Param(value = InputNames.SAM_ACCOUNT_NAME, required = true) String sAMAccountName,
             @Param(value = InputNames.USERNAME) String username,
-            @Param(value = InputNames.PASSWORD) String password,
+            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
             @Param(value = InputNames.USE_SSL) String useSSL,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.KEYSTORE) String keyStore,
-            @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
+            @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword,
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
             @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
         CreateGroupInput.Builder inputBuilder = new CreateGroupInput.Builder()
                 .host(host)

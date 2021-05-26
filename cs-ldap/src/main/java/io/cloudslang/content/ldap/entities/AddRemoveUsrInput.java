@@ -14,7 +14,7 @@
  */
 package io.cloudslang.content.ldap.entities;
 
-public interface AddUsrToGroupInput {
+public interface AddRemoveUsrInput {
 
     String getHost();
 

@@ -22,5 +22,16 @@ public final class Constants {
     public static final String SSL_SOCKET_FACTORY = "javax.net.ssl.SSLSocketFactory";
     public static final String HOST = ".host";
     public static final String JAVA_HOME = "java.home";
+    public static final String AD_COMMOM_NAME = "cn=";
+    public static final String AD_GIVEN_NAME = "givenName";
+    public static final String AD_SURNAME = "sn";
+    public static final String AD_DISPLAY_NAME = "displayName";
+    public static final String AD_STREET_ADDRESS = "streetAddress";
+    public static final String AD_CITY = "l";
+    public static final String AD_POSTAL_CODE = "postalCode";
+    public static final String AD_STATE_OR_PROVINCE = "st";
+    public static final String AD_COUNTRY_NAME = "co";
+    public static final String AD_COUNTRY_DIGITS = "c";
+    public static final String AD_COUNTRY_CODE = "countryCode";
 
 }

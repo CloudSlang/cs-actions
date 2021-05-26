@@ -87,13 +87,13 @@ public class CreateComputerAccountAction {
             @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true) String computerCommonName,
             @Param(value = InputNames.SAM_ACCOUNT_NAME) String sAMAccountName,
             @Param(value = InputNames.USERNAME) String username,
-            @Param(value = InputNames.PASSWORD) String password,
+            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
             @Param(value = InputNames.USE_SSL) String useSSL,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.KEYSTORE) String keyStore,
-            @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
+            @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword,
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
             @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
         CreateComputerAccountInput.Builder inputBuilder = new CreateComputerAccountInput.Builder()
                 .host(host)

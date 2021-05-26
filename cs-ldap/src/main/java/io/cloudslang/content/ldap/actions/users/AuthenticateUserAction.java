@@ -1,4 +1,18 @@
 /*
+ * (c) Copyright 2020 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
  * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -52,7 +66,7 @@ public class AuthenticateUserAction {
      *                         protocol to establish a connection to the remote computer. By default, the operation tries to
      *                         establish a secure connection over TLSv1.2. Default port for SSL/TLS is 636.
      *                         Default value: false
-     *                         values: true, false.
+     *                         Valid values: true, false.
      * @param trustAllRoots    Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
      *                         no trusted certification authority issued it.
      *                         Default value: true.
@@ -64,7 +78,8 @@ public class AuthenticateUserAction {
      *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
      * @param trustPassword    The password associated with the TrustStore file.
      * @return a map containing the output of the operation. Keys present in the map are:
-     * returnResult - A message which specifies the DN of the user in case of success or an error message in case of failure.
+     * returnResult - A message which specifies if the user was authenticated against AD in case of success or an error
+     *                message in case of failure.
      * returnCode - The return code of the operation. 0 if the operation succeded, -1 if the operation fails.
      * exception - The exception message if the operation fails.
      */
@@ -85,14 +100,13 @@ public class AuthenticateUserAction {
             @Param(value = InputNames.HOST, required = true) String host,
             @Param(value = InputNames.ROOT_DN, required = true) String rootDN,
             @Param(value = InputNames.USERNAME) String username,
-            @Param(value = InputNames.PASSWORD) String password,
+            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
             @Param(value = InputNames.USE_SSL) String useSSL,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.KEYSTORE) String keyStore,
-            @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
+            @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword,
-            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword){
         AuthenticateUserInput.Builder inputBuilder = new AuthenticateUserInput.Builder()
                 .host(host)
                 .rootDN(rootDN)

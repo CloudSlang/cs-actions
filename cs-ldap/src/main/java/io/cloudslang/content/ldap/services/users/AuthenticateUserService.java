@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2020 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.ldap.services.users;
 
 import io.cloudslang.content.ldap.entities.AuthenticateUserInput;
@@ -5,8 +19,10 @@ import io.cloudslang.content.ldap.utils.LDAPQuery;
 import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
+import javax.naming.NamingEnumeration;
 import javax.naming.directory.DirContext;
-import javax.naming.directory.ModificationItem;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
@@ -17,50 +33,52 @@ public class AuthenticateUserService {
     public Map<String, String> execute(AuthenticateUserInput input) {
 
         Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
+
         try {
             LDAPQuery ldap = new LDAPQuery();
-            String rootDN = input.getRootDN();
-            String host = input.getHost();
             String username = input.getUsername();
-            String password = input.getPassword();
-            String keyStore = input.getKeyStore();
-            String keyStorePassword = input.getKeyStorePassword();
-            String trustStore = input.getTrustKeystore();
-            String trustStorePassword = input.getKeyStorePassword();
+            String rootDN = input.getRootDN();
 
             DirContext ctx;
 
             if (input.getUseSSL()) {
                 if (input.getTrustAllRoots()) {
-                    ctx = ldap.MakeDummySSLLDAPConnection(host, username, password);
+                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {
-                    ctx = ldap.MakeSSLLDAPConnection(host, username, password, "false", keyStore, keyStorePassword, trustStore, trustStorePassword);
+                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),"false",
+                            input.getKeyStore(), input.getKeyStorePassword(), input.getTrustKeystore(), input.getTrustPassword());
                 }
 
             } else {
-                ctx = ldap.MakeLDAPConnection(host, username, password);
+                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
             }
-//            String value = "\"" + input.getUserPassword() + "\"";
-//            byte[] bytesPsw = value.getBytes(StandardCharsets.UTF_16LE);
+//             Specify the ids of the attributes to return
+            String attrIDs[] = {"distinguishedName"};
 
+            SearchControls ctls = new SearchControls();
+            ctls.setReturningAttributes(attrIDs);
+            ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            String user = username.substring(username.lastIndexOf("\\") + 1);
+            NamingEnumeration<?> result = ctx.search(rootDN, "(sAMAccountName=" + user + ")", ctls);
 
-            // Specify the changes to make
-            ModificationItem[] mods = new ModificationItem[1];
-//            mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
-//                    new BasicAttribute("unicodePwd", bytesPsw));
-            // Perform requested modifications on named object
-//            ctx.modifyAttributes(userDN, mods);
+            // assume that the user is not authenticated
+            results.put(RETURN_RESULT, "Authentication Failed.");
+            results.put(RETURN_CODE, "-1");
+
+            if (result.hasMoreElements()) {
+                // the user is successfully authenticated
+                String res = ((SearchResult) result.next()).getAttributes().get("distinguishedName").get(0).toString();
+                results.put(RETURN_RESULT, "Successful Authentication: user DN=" + res);
+                results.put(RETURN_CODE, "0");
+            }
+
             ctx.close();
 
-
-            results.put(RETURN_RESULT, "Password Changed");
-            results.put(RETURN_CODE, "0");
-
-        }catch (Exception e) {
+        } catch (Exception e) {
             Exception exception = MySSLSocketFactory.getException();
             if (exception == null)
                 exception = e;
-            results.put(EXCEPTION, String.valueOf(exception));
+            results.put(EXCEPTION, exception.toString());
             results.put(RETURN_RESULT, replaceInvalidXMLCharacters(exception.getMessage()));
             results.put(RETURN_CODE, "-1");
         }

@@ -14,48 +14,30 @@
  */
 package io.cloudslang.content.ldap.services.users;
 
-import io.cloudslang.content.ldap.entities.CreateUserInput;
+import io.cloudslang.content.ldap.entities.UserCommonInput;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
 import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
-import javax.naming.CompositeName;
-import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.ldap.constants.OutputNames.RESULT_COMPUTER_DN;
+import static io.cloudslang.content.ldap.constants.OutputNames.RESULT_USER_DN;
 import static io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLCharacters;
 
-public class CreateUserService {
+public class IsUserEnabledService {
 
-    public Map<String, String> execute(CreateUserInput input) {
+    public Map<String, String> execute(UserCommonInput input) {
 
         Map<String, String> results = ResultUtils.createNewEmptyMap();
 
         try {
-            LDAPQuery ldap = new LDAPQuery();
-            String OU = input.getOU();
-            String sAMAccountName = input.getSAMAccountName();
+            String ouDN = input.getOU();
             String userCN = input.getUserCommonName();
 
-            // if sAMAccountName not provided assign it from compCN
-            if (input.getSAMAccountName().equalsIgnoreCase("")) {
-                sAMAccountName = userCN; }
-
-            sAMAccountName = ldap.replaceIllegalCharactersForSAM(sAMAccountName);
-
-            if (input.getEscapeChars()) {
-                OU = ldap.normalizeDN(OU, false);
-                userCN = ldap.normalizeADExpression(userCN, false);
-            }
-
-            Name ou = new CompositeName().add(OU);
-            Name user = new CompositeName().add("CN=" + userCN);
-
+            LDAPQuery ldap = new LDAPQuery();
             DirContext ctx;
 
             if (input.getUseSSL()) {
@@ -70,37 +52,21 @@ public class CreateUserService {
                 ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
             }
 
-            DirContext ctxOU = (DirContext) ctx.lookup(ou);
+            String userDN = "CN=" + userCN + "," + ouDN;
 
-            String value = "\"" + input.getUserPassword() + "\"";
-            byte[] bytesPsw = value.getBytes(StandardCharsets.UTF_16LE);
-
-            Attributes userAttrs = new BasicAttributes(true);
-            userAttrs.put("objectclass", "user");
-            userAttrs.put("ou", OU);
-            userAttrs.put("sAMAccountName", sAMAccountName);
-            userAttrs.put("unicodePwd", bytesPsw);
-
-            ctxOU.createSubcontext(user, userAttrs);
-
-            Name userDN = new CompositeName().add("CN=" + userCN + "," + OU);
-            // enable user account
             Attributes attrs = ctx.getAttributes(userDN, new String[]{"userAccountControl"});
             Attribute attr = attrs.get("userAccountControl");
-            int valOld = Integer.parseInt((String) attr.get(0));
-            int valNew = valOld & ~0x0002;
-            //Specify the changes to make
-            ModificationItem[] mods = new ModificationItem[1];
-            mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
-                    new BasicAttribute("userAccountControl", Integer.toString(valNew)));
-            // Perform requested modifications on named object
-            ctx.modifyAttributes(userDN, mods);
-            ctxOU.close();
+            int val = Integer.parseInt((String) attr.get(0));
+            if ((val | 0x002) == val) {
+                results.put(RETURN_RESULT, "User account is disabled.");
+                results.put(RETURN_CODE, "-1");
+            } else {
+                results.put(RETURN_RESULT, "User account is enabled.");
+                results.put(RETURN_CODE, "0");
+            }
             ctx.close();
 
-            results.put(RETURN_RESULT, "Added user account with CN=" + userCN);
-            results.put(RESULT_COMPUTER_DN, userDN.toString());
-            results.put(RETURN_CODE, "0");
+            results.put(RESULT_USER_DN, userDN);
 
         } catch (NamingException e) {
             Exception exception = MySSLSocketFactory.getException();
@@ -110,7 +76,6 @@ public class CreateUserService {
             results.put(RETURN_RESULT, replaceInvalidXMLCharacters(exception.getMessage()));
             results.put(RETURN_CODE, "-1");
         }
-
         return results;
     }
 }

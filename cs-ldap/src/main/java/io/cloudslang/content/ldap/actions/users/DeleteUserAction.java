@@ -24,16 +24,16 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.InputNames;
 import io.cloudslang.content.ldap.constants.OutputNames;
-import io.cloudslang.content.ldap.entities.ResetUserPasswordInput;
-import io.cloudslang.content.ldap.services.users.ResetUserPasswordService;
+import io.cloudslang.content.ldap.entities.UserCommonInput;
+import io.cloudslang.content.ldap.services.users.DeleteUserService;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
-public class ResetUserPasswordAction {
+public class DeleteUserAction {
 
     /**
-     * This operation creates a new user in Active Directory.
+     * This operation deletes an user from Active Directory.
      *
      * @param host             The IP or host name of the domain controller. The port number can be mentioned as well, along
      *                         with the host (hostNameOrIP:PortNumber).
@@ -43,14 +43,10 @@ public class ResetUserPasswordAction {
      *                         IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
      *                         a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
      *                         The prefix length is optional.
-     * @param userDN           Distinguished name of the user whose password you want to change.
-     *                         Example: CN=User, OU=OUTest1, DC=battleground, DC=ad).
-     * @param userPassword     The new password. It must meet the following requirements:
-     *                         - is at least six characters long
-     *                         - contains characters from at least three of the following five categories: English uppercase
-     *                         characters ('A' - 'Z'), English lowercase characters ('a' - 'z'), base 10 digits ('0' - '9'),
-     *                         non-alphanumeric (For example: '!', '$', '#', or '%'), unicode characters
-     *                         - does not contain three or more characters from the user's account name
+     * @param OU               The Organizational Unit DN or Common Name DN to add the user to.
+     *                         Example: OU=OUTest1,DC=battleground,DC=ad
+     * @param userCommonName   The CN, generally the full name of user.
+     *                         Example: Bob Smith
      * @param username         User to connect to Active Directory as.
      * @param password         Password to connect to Active Directory as.
      * @param useSSL           If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS)
@@ -68,15 +64,19 @@ public class ResetUserPasswordAction {
      * @param trustKeystore    The location of the TrustStore file.
      *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
      * @param trustPassword    The password associated with the TrustStore file.
-     * @return a map containing the output of the operation. Keys present in the map are:
-     * returnResult - The message 'Password Changed' in case of success or the error in case of failure.
-     * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
-     * exception - The exception message if the operation fails.
+     * @param escapeChars      Add this input and set it to true if you want the operation to escape the special AD characters:
+     *                        '#','=','"','<','>',',','+',';','\','"''.
+     * @return - a map containing the output of the operation. Keys present in the map are:
+     * returnResult - A message with the CN name of the user in case of success or the error in case of failure.
+     * returnCode - the return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
+     * exception - the exception message if the operation fails.
+     * userDN - The distinguished name of the deleted user.
      */
 
-    @Action(name = "Reset User Password",
+    @Action(name = "Delete User",
             outputs = {
                     @Output(OutputNames.RETURN_RESULT),
+                    @Output(OutputNames.RESULT_USER_DN),
                     @Output(OutputNames.RETURN_CODE),
                     @Output(OutputNames.EXCEPTION)
             },
@@ -88,8 +88,8 @@ public class ResetUserPasswordAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.USER_DN, required = true) String userDN,
-            @Param(value = InputNames.USER_PASSWORD, required = true, encrypted = true) String userPassword,
+            @Param(value = InputNames.OU, required = true) String OU,
+            @Param(value = InputNames.USER_COMMON_NAME, required = true) String userCommonName,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD, encrypted = true) String password,
             @Param(value = InputNames.USE_SSL) String useSSL,
@@ -97,12 +97,12 @@ public class ResetUserPasswordAction {
             @Param(value = InputNames.KEYSTORE) String keyStore,
             @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword){
-
-        ResetUserPasswordInput.Builder inputBuilder = new ResetUserPasswordInput.Builder()
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
+            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
+        UserCommonInput.Builder inputBuilder = new UserCommonInput.Builder()
                 .host(host)
-                .userDN(userDN)
-                .userPassword(userPassword)
+                .OU(OU)
+                .userCommonName(userCommonName)
                 .username(username)
                 .password(password)
                 .useSSL(useSSL)
@@ -110,12 +110,12 @@ public class ResetUserPasswordAction {
                 .keyStore(keyStore)
                 .keyStorePassword(keyStorePassword)
                 .trustKeystore(trustKeystore)
-                .trustPassword(trustPassword);
+                .trustPassword(trustPassword)
+                .escapeChars(escapeChars);
         try {
-            return new ResetUserPasswordService().execute(inputBuilder.build());
+            return new DeleteUserService().execute(inputBuilder.build());
         } catch (Exception e) {
             return ResultUtils.fromException(e);
         }
     }
 }
-

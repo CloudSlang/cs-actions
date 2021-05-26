@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2020 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.ldap.services.users;
 
 import io.cloudslang.content.ldap.entities.ResetUserPasswordInput;
@@ -22,25 +36,19 @@ public class ResetUserPasswordService {
         try {
             LDAPQuery ldap = new LDAPQuery();
             String userDN = input.getUserDN();
-            String host = input.getHost();
-            String username = input.getUsername();
-            String password = input.getPassword();
-            String keyStore = input.getKeyStore();
-            String keyStorePassword = input.getKeyStorePassword();
-            String trustStore = input.getTrustKeystore();
-            String trustStorePassword = input.getKeyStorePassword();
 
             DirContext ctx;
 
             if (input.getUseSSL()) {
                 if (input.getTrustAllRoots()) {
-                    ctx = ldap.MakeDummySSLLDAPConnection(host, username, password);
+                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {
-                    ctx = ldap.MakeSSLLDAPConnection(host, username, password, "false", keyStore, keyStorePassword, trustStore, trustStorePassword);
+                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
+                            input.getKeyStore(), input.getKeyStorePassword(), input.getTrustKeystore(), input.getTrustPassword());
                 }
 
             } else {
-                ctx = ldap.MakeLDAPConnection(host, username, password);
+                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
             }
             String value = "\"" + input.getUserPassword() + "\"";
             byte[] bytesPsw = value.getBytes(StandardCharsets.UTF_16LE);
@@ -54,11 +62,10 @@ public class ResetUserPasswordService {
             ctx.modifyAttributes(userDN, mods);
             ctx.close();
 
-
-            results.put(RETURN_RESULT, "Password Changed");
+            results.put(RETURN_RESULT, "Password Changed.");
             results.put(RETURN_CODE, "0");
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             Exception exception = MySSLSocketFactory.getException();
             if (exception == null)
                 exception = e;

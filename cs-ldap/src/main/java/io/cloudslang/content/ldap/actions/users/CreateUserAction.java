@@ -57,7 +57,7 @@ public class CreateUserAction {
      *                         protocol to establish a connection to the remote computer. By default, the operation tries to
      *                         establish a secure connection over TLSv1.2. Default port for SSL/TLS is 636.
      *                         Default value: false
-     *                         values: true, false.
+     *                         Valid values: true, false.
      * @param trustAllRoots    Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
      *                         no trusted certification authority issued it.
      *                         Default value: true.
@@ -71,10 +71,10 @@ public class CreateUserAction {
      * @param escapeChars      Add this input and set it to true if you want the operation to escape the special AD characters:
      *                        '#','=','"','<','>',',','+',';','\','"''.
      * @return - a map containing the output of the operation. Keys present in the map are:
-     * returnResult - A message with the cn name of the user in case of success or the error in case of failure.
+     * returnResult - A message with the CN name of the user in case of success or the error in case of failure.
      * returnCode - the return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
      * exception - the exception message if the operation fails.
-     * userDN - The distinguished name of the newly created user
+     * userDN - The distinguished name of the newly created user.
      */
 
     @Action(name = "Create User",
@@ -94,16 +94,16 @@ public class CreateUserAction {
             @Param(value = InputNames.HOST, required = true) String host,
             @Param(value = InputNames.OU, required = true) String OU,
             @Param(value = InputNames.USER_COMMON_NAME, required = true) String userCommonName,
-            @Param(value = InputNames.USER_PASSWORD, required = true) String userPassword,
+            @Param(value = InputNames.USER_PASSWORD, required = true, encrypted = true) String userPassword,
             @Param(value = InputNames.SAM_ACCOUNT_NAME) String sAMAccountName,
             @Param(value = InputNames.USERNAME) String username,
-            @Param(value = InputNames.PASSWORD) String password,
+            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
             @Param(value = InputNames.USE_SSL) String useSSL,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.KEYSTORE) String keyStore,
-            @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
+            @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword,
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
             @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
         CreateUserInput.Builder inputBuilder = new CreateUserInput.Builder()
                 .host(host)

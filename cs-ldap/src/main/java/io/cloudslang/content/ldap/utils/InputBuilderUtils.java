@@ -154,12 +154,42 @@ public final class InputBuilderUtils {
         return sAMAccountName.trim();
     }
 
-    public static String buildRequiredInput(String input, boolean mandatory) throws Exception {
+    public static String buildUserCommonName(String input, boolean mandatory) throws Exception {
 
         if (isEmpty(input) && mandatory) {
             throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.COMPUTER_COMMON_NAME));
         }
         return input.trim();
+    }
 
+    public static String buildUsername(String input, boolean mandatory) throws Exception {
+
+        if (isEmpty(input) && mandatory) {
+            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.USERNAME));
+        }
+        return input.trim();
+    }
+
+    public static String buildPassword(String input, boolean mandatory) throws Exception {
+
+        if (isEmpty(input) && mandatory) {
+            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.PASSWORD));
+        }
+        return input.trim();
+    }
+
+    public static boolean buildUseSSL(String input, boolean mandatory) throws Exception {
+
+        if (isEmpty(input) && mandatory) {
+            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.USE_SSL));
+        }
+        if (!isValid(input)){
+            throw new Exception(String.format(ExceptionMsgs.EXCEPTION_INVALID_BOOLEAN, InputNames.USE_SSL));
+        }
+        try {
+            return Boolean.parseBoolean(input.toString());
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

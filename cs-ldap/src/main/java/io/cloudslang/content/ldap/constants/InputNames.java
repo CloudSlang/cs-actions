@@ -37,4 +37,14 @@ public final class InputNames {
     public static final String GROUP_COMMON_NAME = "groupCommonName";
     public static final String GROUP_TYPE = "groupType";
     public static final String GROUP_DN = "groupDN";
+    public static final String FIRST_NAME = "groupDN";
+    public static final String LAST_NAME = "groupDN";
+    public static final String DISPLAY_NAME = "groupDN";
+    public static final String STREET = "groupDN";
+    public static final String CITY = "groupDN";
+    public static final String STATE_OR_PROVINCE = "groupDN";
+    public static final String ZIP_OR_POSTAL_CODE = "groupDN";
+    public static final String COUNTRY_OR_REGION = "groupDN";
+    public static final String ATTRIBUTES_LIST = "groupDN";
+    public static final String PORT = "groupDN";
 }

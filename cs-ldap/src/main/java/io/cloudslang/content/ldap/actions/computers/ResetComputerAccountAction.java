@@ -78,13 +78,13 @@ public class ResetComputerAccountAction {
             @Param(value = InputNames.HOST, required = true) String host,
             @Param(value = InputNames.COMPUTER_DN, required = true) String computerDN,
             @Param(value = InputNames.USERNAME) String username,
-            @Param(value = InputNames.PASSWORD) String password,
+            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
             @Param(value = InputNames.USE_SSL) String useSSL,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.KEYSTORE) String keyStore,
-            @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
+            @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword) {
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword) {
         ResetComputerAccountInput.Builder inputBuilder = new ResetComputerAccountInput.Builder()
                 .host(host)
                 .computerDN(computerDN)

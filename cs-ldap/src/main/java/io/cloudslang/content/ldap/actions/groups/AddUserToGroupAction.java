@@ -24,7 +24,7 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.InputNames;
 import io.cloudslang.content.ldap.constants.OutputNames;
-import io.cloudslang.content.ldap.entities.AddUserToGroupInput;
+import io.cloudslang.content.ldap.entities.AddRemoveRemoveUserInput;
 import io.cloudslang.content.ldap.services.groups.AddUserToGroupService;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
@@ -44,14 +44,16 @@ public class AddUserToGroupAction {
      *                         a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
      *                         The prefix length is optional.
      * @param groupDN          The DN (distinguished name) of the group.
+     *                         Example: CN=GroupName,OU=OUTest1,DC=battleground,DC=ad
      * @param userDN           The DN (distinguished name) of the user to add.
+     *                         Example: CN=UserName,OU=OUTest1,DC=battleground,DC=ad
      * @param username         User to connect to Active Directory as.
      * @param password         Password to connect to Active Directory as.
      * @param useSSL           If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS)
      *                         protocol to establish a connection to the remote computer. By default, the operation tries to
      *                         establish a secure connection over TLSv1.2. Default port for SSL/TLS is 636.
      *                         Default value: false
-     *                         values: true, false.
+     *                         Valid values: true, false.
      * @param trustAllRoots    Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
      *                         no trusted certification authority issued it.
      *                         Default value: true.
@@ -63,7 +65,7 @@ public class AddUserToGroupAction {
      *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
      * @param trustPassword    The password associated with the TrustStore file.
      * @return - a map containing the output of the operation. Keys present in the map are:
-     * returnResult - A message with the added user's DN and the group in which it was added DN in case of success or the
+     * returnResult - A message with the added user's DN and the group in which it was added DN, in case of success or the
      *              error in case of failure.
      * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
      * exception - The exception message if the operation fails.
@@ -86,14 +88,14 @@ public class AddUserToGroupAction {
             @Param(value = InputNames.GROUP_DN, required = true) String groupDN,
             @Param(value = InputNames.USER_DN, required = true) String userDN,
             @Param(value = InputNames.USERNAME) String username,
-            @Param(value = InputNames.PASSWORD) String password,
+            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
             @Param(value = InputNames.USE_SSL) String useSSL,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.KEYSTORE) String keyStore,
-            @Param(value = InputNames.KEYSTORE_PASSWORD) String keyStorePassword,
+            @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD) String trustPassword){
-        AddUserToGroupInput.Builder inputBuilder = new AddUserToGroupInput.Builder()
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword){
+        AddRemoveRemoveUserInput.Builder inputBuilder = new AddRemoveRemoveUserInput.Builder()
                 .host(host)
                 .groupDN(groupDN)
                 .userDN(userDN)

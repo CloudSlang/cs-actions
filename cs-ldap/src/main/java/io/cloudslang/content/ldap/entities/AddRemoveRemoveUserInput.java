@@ -15,11 +15,12 @@
 package io.cloudslang.content.ldap.entities;
 
 import io.cloudslang.content.ldap.constants.Constants;
+import io.cloudslang.content.ldap.utils.InputBuilderUtils;
 
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class AddUserToGroupInput implements AddUsrToGroupInput {
+public class AddRemoveRemoveUserInput implements AddRemoveUsrInput {
 
     private String host;
     private String groupDN;
@@ -33,7 +34,7 @@ public class AddUserToGroupInput implements AddUsrToGroupInput {
     private String trustKeystore;
     private String trustPassword;
 
-    public AddUserToGroupInput() {
+    public AddRemoveRemoveUserInput() {
     }
 
     public String getHost() {
@@ -91,73 +92,73 @@ public class AddUserToGroupInput implements AddUsrToGroupInput {
         private String trustKeystore;
         private String trustPassword;
 
-        public AddUserToGroupInput.Builder host(String host) {
+        public AddRemoveRemoveUserInput.Builder host(String host) {
             this.host = host;
             return this;
         }
 
-        public AddUserToGroupInput.Builder groupDN(String groupDN) {
+        public AddRemoveRemoveUserInput.Builder groupDN(String groupDN) {
             this.groupDN = groupDN;
             return this;
         }
 
-        public AddUserToGroupInput.Builder userDN(String userDN) {
+        public AddRemoveRemoveUserInput.Builder userDN(String userDN) {
             this.userDN = userDN;
             return this;
         }
 
-        public AddUserToGroupInput.Builder username(String username) {
+        public AddRemoveRemoveUserInput.Builder username(String username) {
             this.username = username;
             return this;
         }
 
 
-        public AddUserToGroupInput.Builder password(String password) {
+        public AddRemoveRemoveUserInput.Builder password(String password) {
             this.password = password;
             return this;
         }
 
-        public AddUserToGroupInput.Builder useSSL(String useSSL) {
+        public AddRemoveRemoveUserInput.Builder useSSL(String useSSL) {
             this.useSSL = useSSL;
             return this;
         }
 
-        public AddUserToGroupInput.Builder trustAllRoots(String trustAllRoots) {
+        public AddRemoveRemoveUserInput.Builder trustAllRoots(String trustAllRoots) {
             this.trustAllRoots = trustAllRoots;
             return this;
         }
 
-        public AddUserToGroupInput.Builder keyStore(String keystore) {
+        public AddRemoveRemoveUserInput.Builder keyStore(String keystore) {
             this.keystore = keystore;
             return this;
         }
 
 
-        public AddUserToGroupInput.Builder keyStorePassword(String keystorePassword) {
+        public AddRemoveRemoveUserInput.Builder keyStorePassword(String keystorePassword) {
             this.keystorePassword = keystorePassword;
             return this;
         }
 
 
-        public AddUserToGroupInput.Builder trustKeystore(String trustKeystore) {
+        public AddRemoveRemoveUserInput.Builder trustKeystore(String trustKeystore) {
             this.trustKeystore = trustKeystore;
             return this;
         }
 
 
-        public AddUserToGroupInput.Builder trustPassword(String trustPassword) {
+        public AddRemoveRemoveUserInput.Builder trustPassword(String trustPassword) {
             this.trustPassword = trustPassword;
             return this;
         }
 
-        public AddUserToGroupInput build() throws Exception {
-            AddUserToGroupInput input = new AddUserToGroupInput();
+        public AddRemoveRemoveUserInput build() throws Exception {
+            AddRemoveRemoveUserInput input = new AddRemoveRemoveUserInput();
 
             input.host = buildHost(host, true);
 
-            input.groupDN = buildRequiredInput(groupDN, true);
+            input.groupDN = InputBuilderUtils.buildComputerCommonName(groupDN, true);
 
-            input.userDN = buildRequiredInput(userDN, true);
+            input.userDN = InputBuilderUtils.buildComputerCommonName(userDN, true);
 
             input.username = buildUsername(username);
 
