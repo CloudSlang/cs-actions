@@ -14,7 +14,6 @@
  */
 package io.cloudslang.content.ldap.services.users;
 
-import com.hp.oo.sdk.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.Constants;
 import io.cloudslang.content.ldap.constants.ExceptionMsgs;
 import io.cloudslang.content.ldap.entities.UpdateUserDetailsInput;
@@ -74,11 +73,11 @@ public class UpdateUserDetailsService {
             context.modifyAttributes(Constants.AD_COMMOM_NAME + input.getUserCommonName() + ", " + input.getOU(),
                     modsList.toArray(new ModificationItem[modsList.size()]));
 
-            results.put(RETURN_CODE, ReturnCodes.RETURN_CODE_SUCCESS);
+            results.put(RETURN_CODE, "0");
             results.put(RETURN_RESULT, "User's Attributes were updated successfully.");
 
         } catch (Exception e) {
-            results.put(RETURN_CODE, ReturnCodes.RETURN_CODE_FAILURE);
+            results.put(RETURN_CODE, "0");
             results.put(RETURN_RESULT, "An error occurred: User's Attributes were not updated.");
             results.put(EXCEPTION, String.valueOf(e));
         } finally {
@@ -86,7 +85,7 @@ public class UpdateUserDetailsService {
                 try {
                     context.close();
                 } catch (NamingException e) {
-                    results.put(RETURN_CODE, ReturnCodes.RETURN_CODE_FAILURE);
+                    results.put(RETURN_CODE, "-1");
                     results.put(EXCEPTION, String.valueOf(e));
                     results.put(RETURN_RESULT, "User's Attributes were  updated successfully, however the session could" +
                             " not be terminated. This may cause performance issues.");
