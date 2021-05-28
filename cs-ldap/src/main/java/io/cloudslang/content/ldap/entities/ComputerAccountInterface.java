@@ -14,16 +14,17 @@
  */
 package io.cloudslang.content.ldap.entities;
 
-public interface GetCompAccountOUInput {
-    String getPassword();
-
-    String getUsername();
-
-    String getComputerCommonName();
+public interface ComputerAccountInterface {
 
     String getHost();
 
-    String getRootDN();
+    String getOU();
+
+    String getComputerCommonName();
+
+    String getUsername();
+
+    String getPassword();
 
     Boolean getUseSSL();
 

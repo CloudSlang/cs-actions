@@ -19,7 +19,7 @@ import io.cloudslang.content.ldap.constants.Constants;
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DeleteGroupInput implements LDAPInput {
+public class DeleteGroupInput implements DeleteGroupInterface {
 
     private String host;
     private String OU;

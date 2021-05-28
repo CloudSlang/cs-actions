@@ -24,7 +24,7 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ldap.constants.InputNames;
 import io.cloudslang.content.ldap.constants.OutputNames;
-import io.cloudslang.content.ldap.entities.AddRemoveRemoveUserInput;
+import io.cloudslang.content.ldap.entities.AddRemoveUserInput;
 import io.cloudslang.content.ldap.services.groups.AddUserToGroupService;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
@@ -95,7 +95,7 @@ public class AddUserToGroupAction {
             @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword){
-        AddRemoveRemoveUserInput.Builder inputBuilder = new AddRemoveRemoveUserInput.Builder()
+        AddRemoveUserInput.Builder inputBuilder = new AddRemoveUserInput.Builder()
                 .host(host)
                 .groupDN(groupDN)
                 .userDN(userDN)

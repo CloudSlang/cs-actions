@@ -20,7 +20,7 @@ import io.cloudslang.content.ldap.utils.InputBuilderUtils;
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class AddRemoveRemoveUserInput implements AddRemoveUsrInput {
+public class AddRemoveUserInput implements AddRemoveUsrInput {
 
     private String host;
     private String groupDN;
@@ -34,7 +34,7 @@ public class AddRemoveRemoveUserInput implements AddRemoveUsrInput {
     private String trustKeystore;
     private String trustPassword;
 
-    public AddRemoveRemoveUserInput() {
+    public AddRemoveUserInput() {
     }
 
     public String getHost() {
@@ -92,67 +92,67 @@ public class AddRemoveRemoveUserInput implements AddRemoveUsrInput {
         private String trustKeystore;
         private String trustPassword;
 
-        public AddRemoveRemoveUserInput.Builder host(String host) {
+        public AddRemoveUserInput.Builder host(String host) {
             this.host = host;
             return this;
         }
 
-        public AddRemoveRemoveUserInput.Builder groupDN(String groupDN) {
+        public AddRemoveUserInput.Builder groupDN(String groupDN) {
             this.groupDN = groupDN;
             return this;
         }
 
-        public AddRemoveRemoveUserInput.Builder userDN(String userDN) {
+        public AddRemoveUserInput.Builder userDN(String userDN) {
             this.userDN = userDN;
             return this;
         }
 
-        public AddRemoveRemoveUserInput.Builder username(String username) {
+        public AddRemoveUserInput.Builder username(String username) {
             this.username = username;
             return this;
         }
 
 
-        public AddRemoveRemoveUserInput.Builder password(String password) {
+        public AddRemoveUserInput.Builder password(String password) {
             this.password = password;
             return this;
         }
 
-        public AddRemoveRemoveUserInput.Builder useSSL(String useSSL) {
+        public AddRemoveUserInput.Builder useSSL(String useSSL) {
             this.useSSL = useSSL;
             return this;
         }
 
-        public AddRemoveRemoveUserInput.Builder trustAllRoots(String trustAllRoots) {
+        public AddRemoveUserInput.Builder trustAllRoots(String trustAllRoots) {
             this.trustAllRoots = trustAllRoots;
             return this;
         }
 
-        public AddRemoveRemoveUserInput.Builder keyStore(String keystore) {
+        public AddRemoveUserInput.Builder keyStore(String keystore) {
             this.keystore = keystore;
             return this;
         }
 
 
-        public AddRemoveRemoveUserInput.Builder keyStorePassword(String keystorePassword) {
+        public AddRemoveUserInput.Builder keyStorePassword(String keystorePassword) {
             this.keystorePassword = keystorePassword;
             return this;
         }
 
 
-        public AddRemoveRemoveUserInput.Builder trustKeystore(String trustKeystore) {
+        public AddRemoveUserInput.Builder trustKeystore(String trustKeystore) {
             this.trustKeystore = trustKeystore;
             return this;
         }
 
 
-        public AddRemoveRemoveUserInput.Builder trustPassword(String trustPassword) {
+        public AddRemoveUserInput.Builder trustPassword(String trustPassword) {
             this.trustPassword = trustPassword;
             return this;
         }
 
-        public AddRemoveRemoveUserInput build() throws Exception {
-            AddRemoveRemoveUserInput input = new AddRemoveRemoveUserInput();
+        public AddRemoveUserInput build() throws Exception {
+            AddRemoveUserInput input = new AddRemoveUserInput();
 
             input.host = buildHost(host, true);
 

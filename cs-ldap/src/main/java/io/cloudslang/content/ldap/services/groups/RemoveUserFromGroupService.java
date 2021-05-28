@@ -14,7 +14,7 @@
  */
 package io.cloudslang.content.ldap.services.groups;
 
-import io.cloudslang.content.ldap.entities.AddRemoveRemoveUserInput;
+import io.cloudslang.content.ldap.entities.AddRemoveUserInput;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
 import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
@@ -32,7 +32,7 @@ import static io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLChar
 
 public class RemoveUserFromGroupService {
 
-    public Map<String, String> execute(AddRemoveRemoveUserInput input) {
+    public Map<String, String> execute(AddRemoveUserInput input) {
 
         Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
 

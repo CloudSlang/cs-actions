@@ -56,9 +56,7 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
 
     public String getRootDN() { return rootDN; }
 
-    public String getComputerCommonName() {
-        return computerCommonName;
-    }
+    public String getComputerCommonName() { return computerCommonName; }
 
     public String getUsername() {
         return username;

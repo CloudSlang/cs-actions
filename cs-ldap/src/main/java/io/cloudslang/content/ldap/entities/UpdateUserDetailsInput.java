@@ -19,7 +19,7 @@ import io.cloudslang.content.ldap.constants.Constants;
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class UpdateUserDetailsInput implements LDAPInput {
+public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
 
     private String host;
     private String OU;
@@ -51,42 +51,6 @@ public class UpdateUserDetailsInput implements LDAPInput {
 
     public String getOU() {
         return OU;
-    }
-
-    public String getUserCommonName() {
-        return userCommonName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Boolean getUseSSL() {
-        return useSSL;
-    }
-
-    public Boolean getTrustAllRoots() {
-        return trustAllRoots;
-    }
-
-    public String getKeyStore() {
-        return keystore;
-    }
-
-    public String getKeyStorePassword() {
-        return keystorePassword;
-    }
-
-    public String getTrustKeystore() {
-        return trustKeystore;
-    }
-
-    public String getTrustPassword() {
-        return trustPassword;
     }
 
     public String getFirstName() {
@@ -125,6 +89,41 @@ public class UpdateUserDetailsInput implements LDAPInput {
         return attributesList;
     }
 
+    public String getUserCommonName() {
+        return userCommonName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Boolean getUseSSL() {
+        return useSSL;
+    }
+
+    public Boolean getTrustAllRoots() {
+        return trustAllRoots;
+    }
+
+    public String getKeyStore() {
+        return keystore;
+    }
+
+    public String getKeyStorePassword() {
+        return keystorePassword;
+    }
+
+    public String getTrustKeystore() {
+        return trustKeystore;
+    }
+
+    public String getTrustPassword() {
+        return trustPassword;
+    }
 
     public static class Builder {
 
