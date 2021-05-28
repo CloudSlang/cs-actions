@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,13 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.winrm.utils;
 
-import io.cloudslang.content.constants.OutputNames;
+package io.cloudslang.content.azure.exceptions;
 
-public class Outputs extends OutputNames {
-    public static class WinRMOutputs{
-        public static final String COMMAND_EXIT_CODE = "commandExitCode";
-        public static final String STDOUT = "stdout";
+public class CounterImplException extends Exception {
+    private static final long serialVersionUID = -2928111219772269559L;
+
+    public CounterImplException(String e) {
+        super(e);
     }
 }

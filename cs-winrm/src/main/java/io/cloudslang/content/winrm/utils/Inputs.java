@@ -23,7 +23,7 @@ public class Inputs extends InputNames {
         public static final String PROTOCOL = "protocol";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
-        public static final String SCRIPT = "script";
+        public static final String COMMAND = "command";
         public static final String AUTH_TYPE = "authType";
         public static final String PROXY_HOST ="proxyHost";
         public static final String PROXY_PORT = "proxyPort";
@@ -39,5 +39,7 @@ public class Inputs extends InputNames {
         public static final String OPERATION_TIMEOUT = "operationTimeout";
         public static final String REQUEST_NEW_KERBEROS_TICKET = "requestNewKerberosTicket";
         public static final String WORKING_DIRECTORY = "workingDirectory";
+        public static final String CONFIGURATION_NAME = "configurationName";
+        public static final String COMMAND_TYPE = "commandType";
     }
 }

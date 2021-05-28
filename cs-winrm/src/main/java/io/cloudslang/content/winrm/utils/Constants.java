@@ -15,12 +15,17 @@
 package io.cloudslang.content.winrm.utils;
 
 public final class Constants {
+    public static final String KERBEROS = "kerberos";
+    public static final String CMD = "cmd";
+    public static final String POWERSHELL = "powershell";
     public static final String DEFAULT_PORT = "5986";
     public static final String TLSv12 ="TLSv1.2";
     public static final String DEFAULT_TIMEOUT ="60";
+    public static final String DEFAULT_COMMAND_TYPE = "cmd";
     public static final String BASIC = "Basic";
     public static final String NTLM = "NTLM";
     public static final String HTTPS = "https";
+    public static final String HTTP = "http";
     public static final String DEFAULT_PROXY_PORT = "8080";
     public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
@@ -38,5 +43,7 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_TLS_VERSION = "%s for %s input is not a valid tlsVersion value. The valid values are: 'SSLv3','TLSv1','TLSv1.1','TLSv1.2','TLSv1.3'.";
     public static final String EXCEPTION_INVALID_PROXY = "%s for input %s is not a valid proxy port.";
     public static final String EXCEPTION_INVALID_PROTOCOL = "%s for input %s is not a valid protocol. The valid values are 'http' or 'https'.";
+    public static final String EXCEPTION_INVALID_COMMAND_TYPE = "%s for input %s is not a valid command type. The valid values are 'cmd' or 'powershell'.";
+    public static final String EXCEPTION_TIMED_OUT = "Operation timed out.";
 
 }

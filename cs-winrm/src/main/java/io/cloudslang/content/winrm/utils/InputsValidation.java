@@ -41,7 +41,8 @@ public class InputsValidation {
                                                  @NotNull final String keystore,
                                                  @NotNull final String port,
                                                  @NotNull final String tlsVersion,
-                                                 @NotNull final String protocol) {
+                                                 @NotNull final String protocol,
+                                                 @NotNull final String commandType) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
@@ -55,6 +56,7 @@ public class InputsValidation {
         addVerifyPort(exceptionMessages, port, PORT);
         addVerifyTlsVersion(exceptionMessages, tlsVersion, TLS_VERSION);
         addVerifyProtocol(exceptionMessages, protocol, PROTOCOL);
+        addVerifyCommandType(exceptionMessages,commandType, COMMAND_TYPE);
         return exceptionMessages;
     }
 
@@ -158,6 +160,16 @@ public class InputsValidation {
 
         if (!protocols.contains(input.toLowerCase()))
             exceptions.add(String.format(EXCEPTION_INVALID_PROTOCOL, input, inputName));
+        return exceptions;
+    }
+    @NotNull
+    private static List<String> addVerifyCommandType(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+        List<String> protocols = new ArrayList<>();
+        protocols.add("cmd");
+        protocols.add("powershell");
+
+        if (!protocols.contains(input.toLowerCase()))
+            exceptions.add(String.format(EXCEPTION_INVALID_COMMAND_TYPE, input, inputName));
         return exceptions;
     }
 
