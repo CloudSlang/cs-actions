@@ -47,7 +47,6 @@ public class UpdateUserDetailsService {
 
             LDAPQuery ldap = new LDAPQuery();
             List<ModificationItem> mods = new ArrayList<>();
-            List<ModificationItem> modsList = new ArrayList<>();
 
             if (input.getUseSSL()) {
                 if (input.getTrustAllRoots()) {
@@ -71,7 +70,7 @@ public class UpdateUserDetailsService {
 
             // make the changes
             context.modifyAttributes(Constants.AD_COMMOM_NAME + input.getUserCommonName() + ", " + input.getOU(),
-                    modsList.toArray(new ModificationItem[modsList.size()]));
+                    mods.toArray(new ModificationItem[mods.size()]));
 
             results.put(RETURN_CODE, "0");
             results.put(RETURN_RESULT, "User's Attributes were updated successfully.");
@@ -112,8 +111,7 @@ public class UpdateUserDetailsService {
 
     //generate new attribute
     public static void modifyAttributes(String firstName, String lastName, String displayName, String street, String city,
-                                        String zipOrPostalCode, String stateOrProvince, List<ModificationItem> modsList)
-            throws NamingException {
+                                                          String zipOrPostalCode, String stateOrProvince, List<ModificationItem> mods){
         //constructs arrays to hold the values of the inputs
         String attrsArray[] = new String[]{firstName, lastName, displayName, street, city, zipOrPostalCode, stateOrProvince};
         String adAttrsArray[] = new String[]{Constants.AD_GIVEN_NAME, Constants.AD_SURNAME, Constants.AD_DISPLAY_NAME,
@@ -123,15 +121,14 @@ public class UpdateUserDetailsService {
         for (int j = 0; j < attrsArray.length; j++) {
             if (!StringUtils.isBlank(attrsArray[j])) {
                 Attribute mod = new BasicAttribute(adAttrsArray[j], attrsArray[j]);
-                modsList.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod));
+                mods.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod));
             }
         }
-
     }
 
     //generate new custom attributes
-    public static void modifyCustomAttributes(String attributesList, List<ModificationItem> modsList) throws NamingException,
-            IOException, IllegalArgumentException {
+    public static void modifyCustomAttributes(String attributesList, List<ModificationItem> modsList) throws IOException,
+            IllegalArgumentException {
         if (!StringUtils.isBlank(attributesList)) {
             BufferedReader reader = new BufferedReader(new StringReader(attributesList));
             String line;
