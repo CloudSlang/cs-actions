@@ -36,7 +36,7 @@ public class CreateGroupService {
 
     public Map<String, String> execute(CreateGroupInput input) {
 
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
+        Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
 
         try {
             LDAPQuery ldap = new LDAPQuery();

@@ -33,7 +33,7 @@ public class DeleteComputerAccountService {
 
     public Map<String, String> execute(DeleteComputerAccountInput input) {
 
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
+        Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
 
         try {
             LDAPQuery ldap = new LDAPQuery();

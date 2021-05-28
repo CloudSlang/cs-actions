@@ -47,7 +47,7 @@ public class UpdateUserDetailsAction {
      *                         The prefix length is optional.
      * @param OU               The Organizational Unit DN or Common Name DN to add the user to.
      *                         Example: OU=OUTest1,DC=battleground,DC=ad
-     * @param userCommonName   The CN, generally the full name of user.
+     * @param userCommonName   The CN, generally the full name of the user that will be updated.
      *                         Example: Bob Smith
      * @param username         User to connect to Active Directory as.
      * @param password         Password to connect to Active Directory as.

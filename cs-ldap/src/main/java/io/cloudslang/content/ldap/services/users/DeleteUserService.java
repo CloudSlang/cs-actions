@@ -33,7 +33,7 @@ public class DeleteUserService {
 
     public Map<String, String> execute(UserCommonInput input) {
 
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
+        Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
 
         try {
             LDAPQuery ldap = new LDAPQuery();

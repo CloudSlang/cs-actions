@@ -34,7 +34,7 @@ public class CreateComputerAccountService {
 
     public Map<String, String> execute(CreateComputerAccountInput input) {
 
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
+        Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
 
         try {
             LDAPQuery ldap = new LDAPQuery();

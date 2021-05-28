@@ -77,7 +77,7 @@ public class UpdateUserDetailsService {
             results.put(RETURN_RESULT, "User's Attributes were updated successfully.");
 
         } catch (Exception e) {
-            results.put(RETURN_CODE, "0");
+            results.put(RETURN_CODE, "-1");
             results.put(RETURN_RESULT, "An error occurred: User's Attributes were not updated.");
             results.put(EXCEPTION, String.valueOf(e));
         } finally {

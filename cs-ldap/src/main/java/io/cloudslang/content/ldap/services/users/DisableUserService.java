@@ -31,7 +31,7 @@ public class DisableUserService {
 
     public Map<String, String> execute(UserCommonInput input) {
 
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
+        Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
 
         try {
             String ouDN = input.getOU();

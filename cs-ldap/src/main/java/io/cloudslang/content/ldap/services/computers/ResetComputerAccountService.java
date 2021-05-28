@@ -33,7 +33,7 @@ public class ResetComputerAccountService {
 
     public Map<String, String> execute(ResetCompAccountInput input) {
 
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
+        Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
         ClassLoader loaderOrig = Thread.currentThread().getContextClassLoader();
 
         try {

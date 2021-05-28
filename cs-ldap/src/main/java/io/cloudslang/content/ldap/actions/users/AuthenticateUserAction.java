@@ -58,10 +58,10 @@ public class AuthenticateUserAction {
      *                         IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
      *                         a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
      *                         The prefix length is optional.
-     * @param rootDN           The Organizational Unit DN or Common Name DN to add the user to.
-     *                         Example: OU=OUTest1,DC=battleground,DC=ad
-     * @param username         User to connect to Active Directory as.
-     * @param password         Password to connect to Active Directory as.
+     * @param rootDN           The distinguished name of the root element whose subtree you want to search in.
+     *                         Example: CN=Users,DC=domain,DC=com.
+     * @param username         The user's windows username. The only valid format is domain/username.
+     * @param password         The user's password.
      * @param useSSL           If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS)
      *                         protocol to establish a connection to the remote computer. By default, the operation tries to
      *                         establish a secure connection over TLSv1.2. Default port for SSL/TLS is 636.

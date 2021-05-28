@@ -31,7 +31,7 @@ public class DisableComputerAccountService {
 
     public Map<String, String> execute(DisableComputerAccountInput input) {
 
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
+        Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
 
         try {
             LDAPQuery ldap = new LDAPQuery();

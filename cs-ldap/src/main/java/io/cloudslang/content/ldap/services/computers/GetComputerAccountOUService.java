@@ -34,7 +34,7 @@ public class GetComputerAccountOUService {
 
     public Map<String, String> execute(GetComputerAccountOUInput input) {
 
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
+        Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
 
         try {
             LDAPQuery ldap = new LDAPQuery();

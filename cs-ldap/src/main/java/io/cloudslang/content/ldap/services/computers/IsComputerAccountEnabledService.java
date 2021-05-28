@@ -33,7 +33,7 @@ public class IsComputerAccountEnabledService {
 
     public Map<String, String> execute(IsComputerAccountEnabledInput input) {
 
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
+        Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
 
         try {
             LDAPQuery ldap = new LDAPQuery();
@@ -63,9 +63,9 @@ public class IsComputerAccountEnabledService {
             } else {
                 results.put(RETURN_RESULT, "Computer account is enabled.");
                 results.put(RETURN_CODE, "0");
+                results.put(RESULT_COMPUTER_DN, compDN);
             }
             ctx.close();
-            results.put(RESULT_COMPUTER_DN, compDN);
 
         } catch (NamingException e) {
             Exception exception = MySSLSocketFactory.getException();

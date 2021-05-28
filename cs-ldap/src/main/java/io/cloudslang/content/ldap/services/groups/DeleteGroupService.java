@@ -31,7 +31,7 @@ public class DeleteGroupService {
 
     public Map<String, String> execute(DeleteGroupInput input) {
 
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
+        Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
 
         try {
 

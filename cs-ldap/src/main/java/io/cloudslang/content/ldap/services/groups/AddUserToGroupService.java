@@ -34,7 +34,7 @@ public class AddUserToGroupService {
 
     public Map<String, String> execute(AddRemoveRemoveUserInput input) {
 
-        Map<String, String> results = ResultUtils.createNewEmptyMap();
+        Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
 
         try {
             LDAPQuery ldap = new LDAPQuery();
