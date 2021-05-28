@@ -41,18 +41,17 @@ import static io.cloudslang.content.winrm.utils.Descriptions.WinRM.*;
 import static io.cloudslang.content.winrm.utils.Inputs.WinRMInputs.*;
 import static io.cloudslang.content.winrm.utils.Inputs.WinRMInputs.TLS_VERSION;
 import static io.cloudslang.content.winrm.utils.InputsValidation.verifyWinRMInputs;
-import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.SCRIPT_EXIT_CODE;
-import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.STDOUT;
+import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class WinRMAction {
     @Action(name = "WinRM Command",
             outputs = {
-                    @Output(value = RETURN_CODE, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = STDERR, description = STDERR_DESC),
-                    @Output(value = SCRIPT_EXIT_CODE, description = SCRIPT_EXIT_CODE_DESC),
+                    @Output(value = COMMAND_EXIT_CODE, description = COMMAND_EXIT_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STDOUT, description = STDOUT_DESC)
             },
@@ -63,7 +62,7 @@ public class WinRMAction {
     )
     public Map<String, String> execute(
             @Param(value = HOST, description = HOST_DESC, required = true) String host,
-            @Param(value = SCRIPT, description = SCRIPT_DESC, required = true) String script,
+            @Param(value = COMMAND, description = COMMAND_DESC, required = true) String command,
             @Param(value = PORT, description = PORT_DESC) String port,
             @Param(value = PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = USERNAME, description = USERNAME_DESC) String username,
@@ -82,10 +81,12 @@ public class WinRMAction {
             @Param(value = OPERATION_TIMEOUT, description = OPERATION_TIMEOUT_DESC) String operationTimeout,
             @Param(value = TLS_VERSION, description = TLS_VERSION_DESC) String tlsVersion,
             @Param(value = REQUEST_NEW_KERBEROS_TICKET, description = REQUEST_NEW_KERBEROS_TICKET_DESC) String requestNewKerberosToken,
-            @Param(value = WORKING_DIRECTORY, description = WORKING_DIRECTORY_DESC) String workingDirectory
+            @Param(value = WORKING_DIRECTORY, description = WORKING_DIRECTORY_DESC) String workingDirectory,
+            @Param(value = CONFIGURATION_NAME, description = CONFIGURATION_NAME_DESC) String configurationName,
+            @Param(value = COMMAND_TYPE, description = COMMAND_TYPE_DESC) String commandType
     ) {
         host = defaultIfEmpty(host, EMPTY);
-        script = defaultIfEmpty(script, EMPTY);
+        command = defaultIfEmpty(command, EMPTY);
         port = defaultIfEmpty(port, DEFAULT_PORT);
         protocol = defaultIfEmpty(protocol, HTTPS);
         username = defaultIfEmpty(username, EMPTY);
@@ -105,8 +106,11 @@ public class WinRMAction {
         tlsVersion = defaultIfEmpty(tlsVersion, TLSv12);
         requestNewKerberosToken = defaultIfEmpty(requestNewKerberosToken, BOOLEAN_TRUE);
         workingDirectory = defaultIfEmpty(workingDirectory, EMPTY);
+        configurationName = defaultIfEmpty(configurationName, EMPTY);
+        commandType = defaultIfEmpty(commandType, DEFAULT_COMMAND_TYPE);
 
-        final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, requestNewKerberosToken, authType, x509HostnameVerifier, trustKeystore, keystore, port, tlsVersion, protocol);
+        final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, requestNewKerberosToken,
+                authType, x509HostnameVerifier, trustKeystore, keystore, port, tlsVersion, protocol, commandType);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -118,7 +122,7 @@ public class WinRMAction {
                 .username(username)
                 .password(password)
                 .authType(authType)
-                .script(script)
+                .command(command)
                 .proxyHost(proxyHost)
                 .proxyPort(proxyPort)
                 .proxyUsername(proxyUsername)
@@ -133,13 +137,19 @@ public class WinRMAction {
                 .operationTimeout(NumberUtilities.toInteger(operationTimeout))
                 .requestNewKerberosToken(requestNewKerberosToken)
                 .workingDirectory(workingDirectory)
+                .configurationName(configurationName)
+                .commandType(commandType)
                 .build();
         try {
             return WinRMService.execute(winRMInputs);
         } catch (Exception exception) {
             Map<String, String> results = new HashMap();
             results.put("returnCode", "-1");
-            results.put("returnResult", ExceptionUtils.getRootCause(exception).toString());
+            try{
+                results.put("returnResult", ExceptionUtils.getRootCause(exception).toString());
+            }catch (NullPointerException e){
+                results.put("returnResult", exception.getMessage());
+            }
             results.put("exception", ExceptionUtils.getStackTrace(exception));
             return results;
         }
