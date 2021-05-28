@@ -40,21 +40,6 @@
         <tag>master</tag>
     </scm>
 
-    <developers>
-        <developer>
-            <name>Iulia Moldovan</name>
-            <!--<email>@microfocus.com</email>-->
-            <organization>Micro Focus</organization>
-            <organizationUrl>https://www.microfocus.com/about/</organizationUrl>
-        </developer>
-        <developer>
-            <name>Eric Andreica</name>
-            <email>eric.andreica@microfocus.com</email>
-            <organization>Micro Focus</organization>
-            <organizationUrl>https://www.microfocus.com/about/</organizationUrl>
-        </developer>
-    </developers>
-
     <distributionManagement>
         <repository>
             <id>ossrh</id>
