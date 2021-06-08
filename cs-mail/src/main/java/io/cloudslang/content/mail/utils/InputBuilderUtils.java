@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
+import static io.cloudslang.content.mail.constants.Constants.ONE_SECOND;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public final class InputBuilderUtils {
@@ -136,7 +137,7 @@ public final class InputBuilderUtils {
             if (t <= 0) {
                 throw new Exception(ExceptionMsgs.TIMEOUT_MUST_BE_POSITIVE);
             }
-            return Constants.ONE_SECOND; //timeouts in seconds
+            return t * ONE_SECOND; //timeouts in seconds
         }
         return -1;
     }
