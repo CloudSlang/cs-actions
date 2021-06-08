@@ -24,7 +24,7 @@ public interface AuthenticateUserInterface {
 
     String getPassword();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
 

@@ -18,7 +18,7 @@ public interface UserCommInput {
 
     String getHost();
 
-    String getOU();
+    String getDistinguishedName();
 
     String getUserCommonName();
 
@@ -26,13 +26,9 @@ public interface UserCommInput {
 
     String getPassword();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

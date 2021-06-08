@@ -25,7 +25,7 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
     private String rootDN;
     private String username;
     private String password;
-    private boolean useSSL;
+    private String protocol;
     private boolean trustAllRoots;
     private String keystore;
     private String keystorePassword;
@@ -51,8 +51,8 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
         return password;
     }
 
-    public Boolean getUseSSL() {
-        return useSSL;
+    public String getProtocol() {
+        return protocol;
     }
 
     public Boolean getTrustAllRoots() {
@@ -82,7 +82,7 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
         private String rootDN;
         private String username;
         private String password;
-        private String useSSL;
+        private String protocol;
         private String trustAllRoots;
         private String keystore;
         private String keystorePassword;
@@ -111,8 +111,8 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
             return this;
         }
 
-        public AuthenticateUserInput.Builder useSSL(String useSSL) {
-            this.useSSL = useSSL;
+        public AuthenticateUserInput.Builder protocol(String protocol) {
+            this.protocol = protocol;
             return this;
         }
 
@@ -150,7 +150,7 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
 
             input.host = buildHost(host, true);
 
-            input.rootDN = buildOU(rootDN, true);
+            input.rootDN = buildRootDN(rootDN, true);
 
             input.username = buildUsername(username);
 
@@ -158,11 +158,7 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 
-            input.useSSL = buildUseSSL(useSSL);
-
-            input.keystore = buildKeystore(keystore);
-
-            input.keystorePassword = keystorePassword;
+            input.protocol = buildProtocol(protocol);
 
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 

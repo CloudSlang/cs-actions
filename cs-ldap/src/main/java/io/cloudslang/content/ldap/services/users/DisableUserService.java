@@ -34,18 +34,18 @@ public class DisableUserService {
         Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
 
         try {
-            String ouDN = input.getOU();
+            String ouDN = input.getDistinguishedName();
             String userCN = input.getUserCommonName();
 
             LDAPQuery ldap = new LDAPQuery();
             DirContext ctx;
 
-            if (input.getUseSSL()) {
+            if (input.getProtocol().toLowerCase().trim().equals("https")) {
                 if (input.getTrustAllRoots()) {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {
                     ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),"false",
-                            input.getKeyStore(), input.getKeyStorePassword(), input.getTrustKeystore(), input.getTrustPassword());
+                              input.getTrustKeystore(), input.getTrustPassword());
                 }
 
             } else {

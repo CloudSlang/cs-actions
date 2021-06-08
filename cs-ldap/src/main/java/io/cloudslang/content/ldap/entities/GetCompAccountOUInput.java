@@ -25,13 +25,9 @@ public interface GetCompAccountOUInput {
 
     String getRootDN();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

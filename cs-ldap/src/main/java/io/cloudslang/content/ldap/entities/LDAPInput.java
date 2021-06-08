@@ -23,7 +23,7 @@ public interface LDAPInput {
 
     String getOU();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
 

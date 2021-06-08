@@ -18,7 +18,7 @@ public interface DeleteGroupInterface {
 
     String getHost();
 
-    String getOU();
+    String getDistinguishedName();
 
     String getGroupCommonName();
 
@@ -26,13 +26,9 @@ public interface DeleteGroupInterface {
 
     String getPassword();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

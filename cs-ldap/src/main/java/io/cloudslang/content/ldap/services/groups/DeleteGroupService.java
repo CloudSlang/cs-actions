@@ -36,7 +36,7 @@ public class DeleteGroupService {
         try {
 
             LDAPQuery ldap = new LDAPQuery();
-            String groupCN = input.getGroupCommonName(), ouDN = input.getOU(), initGroupCN = groupCN, initOUDN = ouDN;
+            String groupCN = input.getGroupCommonName(), ouDN = input.getDistinguishedName(), initGroupCN = groupCN, initOUDN = ouDN;
             if (input.getEscapeChars()) {
                 ouDN = ldap.normalizeDN(ouDN, true);
                 groupCN = ldap.normalizeADExpression(groupCN, true);
@@ -47,12 +47,12 @@ public class DeleteGroupService {
 
             DirContext ctx;
 
-            if (input.getUseSSL()) {
+            if (input.getProtocol().toLowerCase().trim().equals("https")) {
                 if (Boolean.valueOf(input.getTrustAllRoots())) {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {
                     ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                            input.getKeyStore(), input.getKeyStorePassword(), input.getTrustKeystore(), input.getTrustPassword());
+                              input.getTrustKeystore(), input.getTrustPassword());
                 }
 
             } else {

@@ -18,7 +18,7 @@ public interface UpdateUserDetailsInterface {
 
     String getHost();
 
-    String getOU();
+    String getDistinguishedName();
 
     String getUserCommonName();
 
@@ -44,13 +44,9 @@ public interface UpdateUserDetailsInterface {
 
     String getAttributesList();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

@@ -40,10 +40,8 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
     private String computerCommonName;
     private String username;
     private String password;
-    private boolean useSSL;
+    private String protocol;
     private boolean trustAllRoots;
-    private String keystore;
-    private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
 
@@ -66,20 +64,12 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
         return password;
     }
 
-    public Boolean getUseSSL() {
-        return useSSL;
+    public String getProtocol() {
+        return protocol;
     }
 
     public Boolean getTrustAllRoots() {
         return trustAllRoots;
-    }
-
-    public String getKeyStore() {
-        return keystore;
-    }
-
-    public String getKeyStorePassword() {
-        return keystorePassword;
     }
 
     public String getTrustKeystore() {
@@ -98,10 +88,8 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
         private String computerCommonName;
         private String username;
         private String password;
-        private String useSSL;
+        private String protocol;
         private String trustAllRoots;
-        private String keystore;
-        private String keystorePassword;
         private String trustKeystore;
         private String trustPassword;
 
@@ -131,8 +119,8 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
             return this;
         }
 
-        public Builder useSSL(String useSSL) {
-            this.useSSL = useSSL;
+        public Builder protocol(String protocol) {
+            this.protocol = protocol;
             return this;
         }
 
@@ -140,18 +128,6 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
             this.trustAllRoots = trustAllRoots;
             return this;
         }
-
-        public Builder keyStore(String keystore) {
-            this.keystore = keystore;
-            return this;
-        }
-
-
-        public Builder keyStorePassword(String keystorePassword) {
-            this.keystorePassword = keystorePassword;
-            return this;
-        }
-
 
         public Builder trustKeystore(String trustKeystore) {
             this.trustKeystore = trustKeystore;
@@ -180,11 +156,7 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 
-            input.useSSL = buildUseSSL(useSSL);
-
-            input.keystore = buildKeystore(keystore);
-
-            input.keystorePassword = keystorePassword;
+            input.protocol = buildProtocol(protocol);
 
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 

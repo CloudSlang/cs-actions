@@ -22,7 +22,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
 
     private String host;
-    private String OU;
+    private String distinguishedName;
     private String userCommonName;
     private String username;
     private String password;
@@ -35,10 +35,8 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
     private String zipOrPostalCode;
     private String countryOrRegion;
     private String attributesList;
-    private boolean useSSL;
+    private String protocol;
     private boolean trustAllRoots;
-    private String keystore;
-    private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
 
@@ -49,8 +47,8 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
         return host;
     }
 
-    public String getOU() {
-        return OU;
+    public String getDistinguishedName() {
+        return distinguishedName;
     }
 
     public String getFirstName() {
@@ -101,20 +99,12 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
         return password;
     }
 
-    public Boolean getUseSSL() {
-        return useSSL;
+    public String getProtocol() {
+        return protocol;
     }
 
     public Boolean getTrustAllRoots() {
         return trustAllRoots;
-    }
-
-    public String getKeyStore() {
-        return keystore;
-    }
-
-    public String getKeyStorePassword() {
-        return keystorePassword;
     }
 
     public String getTrustKeystore() {
@@ -128,14 +118,12 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
     public static class Builder {
 
         private String host;
-        private String OU;
+        private String distinguishedName;
         private String userCommonName;
         private String username;
         private String password;
-        private String useSSL;
+        private String protocol;
         private String trustAllRoots;
-        private String keystore;
-        private String keystorePassword;
         private String trustKeystore;
         private String trustPassword;
         private String firstName;
@@ -154,8 +142,8 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
             return this;
         }
 
-        public UpdateUserDetailsInput.Builder OU(String OU) {
-            this.OU = OU;
+        public UpdateUserDetailsInput.Builder distinguishedName(String distinguishedName) {
+            this.distinguishedName = distinguishedName;
             return this;
         }
 
@@ -176,8 +164,8 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
             return this;
         }
 
-        public UpdateUserDetailsInput.Builder useSSL(String useSSL) {
-            this.useSSL = useSSL;
+        public UpdateUserDetailsInput.Builder protocol(String protocol) {
+            this.protocol = protocol;
             return this;
         }
 
@@ -185,18 +173,6 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
             this.trustAllRoots = trustAllRoots;
             return this;
         }
-
-        public UpdateUserDetailsInput.Builder keyStore(String keystore) {
-            this.keystore = keystore;
-            return this;
-        }
-
-
-        public UpdateUserDetailsInput.Builder keyStorePassword(String keystorePassword) {
-            this.keystorePassword = keystorePassword;
-            return this;
-        }
-
 
         public UpdateUserDetailsInput.Builder trustKeystore(String trustKeystore) {
             this.trustKeystore = trustKeystore;
@@ -261,7 +237,7 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
 
             input.host = buildHost(host, true);
 
-            input.OU = buildOU(OU, true);
+            input.distinguishedName = buildDistinguishedName(distinguishedName, true);
 
             input.userCommonName = buildUserCommonName(userCommonName, true);
 
@@ -271,11 +247,7 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 
-            input.useSSL = buildUseSSL(useSSL, true);
-
-            input.keystore = buildKeystore(keystore);
-
-            input.keystorePassword = keystorePassword;
+            input.protocol = buildProtocol(protocol, true);
 
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 

@@ -18,10 +18,10 @@ public final class InputNames {
     public static final String HOST = "host";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
-    public static final String OU = "OU";
+    public static final String DISTINGUISHED_NAME = "distinguishedName";
     public static final String COMPUTER_COMMON_NAME = "computerCommonName";
     public static final String SAM_ACCOUNT_NAME = "sAMAccountName";
-    public static final String USE_SSL = "useSSL";
+    public static final String PROTOCOL = "protocol";
     public static final String TRUST_ALL_ROOTS = "trustAllRoots";
     public static final String KEYSTORE = "keystore";
     public static final String KEYSTORE_PASSWORD = "keystorePassword";

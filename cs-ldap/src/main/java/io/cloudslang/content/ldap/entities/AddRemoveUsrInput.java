@@ -26,13 +26,9 @@ public interface AddRemoveUsrInput {
 
     String getUserDN();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

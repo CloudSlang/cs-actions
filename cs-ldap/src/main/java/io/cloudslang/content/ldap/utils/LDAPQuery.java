@@ -95,14 +95,13 @@ public class LDAPQuery {
         return new InitialDirContext(env);
     }
 
-    public DirContext MakeSSLLDAPConnection(String host, String username, String password, String trustAllRoots, String keyStore, String keyStorePassword, String trustStore, String trustStorePassword) throws NamingException {
+    public DirContext MakeSSLLDAPConnection(String host, String username, String password, String trustAllRoots,
+                                            String trustStore, String trustStorePassword) throws NamingException {
 
         // init the port with the default value
         Address address = new Address(host, Address.PORT_NOT_SET, DEFAULT_PORT);
 
         MySSLSocketFactory.setTrustAllRoots(Boolean.valueOf(trustAllRoots));
-        MySSLSocketFactory.setKeystore(keyStore);
-        MySSLSocketFactory.setKeystorePassword(keyStorePassword);
         MySSLSocketFactory.setTrustKeystore(trustStore);
         MySSLSocketFactory.setTrustPassword(trustStorePassword);
 

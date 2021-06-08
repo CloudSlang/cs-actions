@@ -18,7 +18,7 @@ public interface CreateGroupInputInterface {
 
     String getHost();
 
-    String getOU();
+    String getDistinguishedName();
 
     String getGroupCommonName();
 
@@ -30,13 +30,9 @@ public interface CreateGroupInputInterface {
 
     String getPassword();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

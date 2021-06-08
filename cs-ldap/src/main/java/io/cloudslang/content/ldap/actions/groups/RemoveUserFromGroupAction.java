@@ -1,4 +1,18 @@
 /*
+ * (c) Copyright 2020 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
  * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -47,18 +61,12 @@ public class RemoveUserFromGroupAction {
      * @param userDN           The DN (distinguished name) of the user to add.
      * @param username         User to connect to Active Directory as.
      * @param password         Password to connect to Active Directory as.
-     * @param useSSL           If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS)
-     *                         protocol to establish a connection to the remote computer. By default, the operation tries to
-     *                         establish a secure connection over TLSv1.2. Default port for SSL/TLS is 636.
-     *                         Default value: false
-     *                         Valid values: true, false.
+     * @param protocol         The protocol to use when connecting to the AD server.
+     *                         Valid values: 'HTTP' and 'HTTPS'.
      * @param trustAllRoots    Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
      *                         no trusted certification authority issued it.
      *                         Default value: true.
      *                         Valid values: true, false.
-     * @param keyStore         The location of the KeyStore file.
-     *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
-     * @param keyStorePassword The password associated with the KeyStore file.
      * @param trustKeystore    The location of the TrustStore file.
      *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
      * @param trustPassword    The password associated with the TrustStore file.
@@ -69,7 +77,7 @@ public class RemoveUserFromGroupAction {
      * exception - The exception message if the operation fails.
      */
 
-    @Action(name = "Remove User To Group",
+    @Action(name = "Remove User From Group",
             outputs = {
                     @Output(OutputNames.RETURN_RESULT),
                     @Output(OutputNames.RETURN_CODE),
@@ -87,10 +95,8 @@ public class RemoveUserFromGroupAction {
             @Param(value = InputNames.USER_DN, required = true) String userDN,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD, encrypted = true) String password,
-            @Param(value = InputNames.USE_SSL) String useSSL,
+            @Param(value = InputNames.PROTOCOL) String protocol,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(value = InputNames.KEYSTORE) String keyStore,
-            @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword){
         AddRemoveUserInput.Builder inputBuilder = new AddRemoveUserInput.Builder()
@@ -99,10 +105,8 @@ public class RemoveUserFromGroupAction {
                 .userDN(userDN)
                 .username(username)
                 .password(password)
-                .useSSL(useSSL)
+                .protocol(protocol)
                 .trustAllRoots(trustAllRoots)
-                .keyStore(keyStore)
-                .keyStorePassword(keyStorePassword)
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword);
         try {

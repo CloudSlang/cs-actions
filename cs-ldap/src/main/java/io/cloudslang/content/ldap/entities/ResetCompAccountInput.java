@@ -23,13 +23,9 @@ public interface ResetCompAccountInput {
 
     String getComputerDN();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

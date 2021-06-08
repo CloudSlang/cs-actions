@@ -1,4 +1,18 @@
 /*
+ * (c) Copyright 2020 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
  * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -48,18 +62,12 @@ public class AuthenticateUserAction {
      *                         Example: CN=Users,DC=domain,DC=com.
      * @param username         The user's windows username. The only valid format is domain/username.
      * @param password         The user's password.
-     * @param useSSL           If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS)
-     *                         protocol to establish a connection to the remote computer. By default, the operation tries to
-     *                         establish a secure connection over TLSv1.2. Default port for SSL/TLS is 636.
-     *                         Default value: false
-     *                         Valid values: true, false.
+     * @param protocol         The protocol to use when connecting to the AD server.
+     *                         Valid values: 'HTTP' and 'HTTPS'.
      * @param trustAllRoots    Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
      *                         no trusted certification authority issued it.
      *                         Default value: true.
      *                         Valid values: true, false.
-     * @param keyStore         The location of the KeyStore file.
-     *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
-     * @param keyStorePassword The password associated with the KeyStore file.
      * @param trustKeystore    The location of the TrustStore file.
      *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
      * @param trustPassword    The password associated with the TrustStore file.
@@ -87,10 +95,8 @@ public class AuthenticateUserAction {
             @Param(value = InputNames.ROOT_DN, required = true) String rootDN,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD, encrypted = true) String password,
-            @Param(value = InputNames.USE_SSL) String useSSL,
+            @Param(value = InputNames.PROTOCOL) String protocol,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(value = InputNames.KEYSTORE) String keyStore,
-            @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword){
         AuthenticateUserInput.Builder inputBuilder = new AuthenticateUserInput.Builder()
@@ -98,10 +104,8 @@ public class AuthenticateUserAction {
                 .rootDN(rootDN)
                 .username(username)
                 .password(password)
-                .useSSL(useSSL)
+                .protocol(protocol)
                 .trustAllRoots(trustAllRoots)
-                .keyStore(keyStore)
-                .keyStorePassword(keyStorePassword)
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword);
         try {

@@ -14,13 +14,13 @@
  */
 package io.cloudslang.content.ldap.utils;
 
-import io.cloudslang.content.ldap.constants.Constants;
 import io.cloudslang.content.ldap.constants.ExceptionMsgs;
 import io.cloudslang.content.ldap.constants.InputNames;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public final class InputBuilderUtils {
@@ -32,11 +32,11 @@ public final class InputBuilderUtils {
         return hostname.trim();
     }
 
-    public static String buildOU(String OU, boolean mandatory) throws Exception {
-        if (isEmpty(OU) && mandatory) {
-            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.OU));
+    public static String buildDistinguishedName(String distinguishedName, boolean mandatory) throws Exception {
+        if (isEmpty(distinguishedName) && mandatory) {
+            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.DISTINGUISHED_NAME));
         }
-        return OU.trim();
+        return distinguishedName.trim();
     }
 
     public static String buildUserDN(String userDN, boolean mandatory) throws Exception {
@@ -74,28 +74,30 @@ public final class InputBuilderUtils {
     }
 
     public static boolean buildTrustAllRoots(String trustAllRoots) throws Exception {
-        if (!isValid(trustAllRoots)){
+        if (!isValid(trustAllRoots)) {
             throw new Exception(String.format(ExceptionMsgs.EXCEPTION_INVALID_BOOLEAN, InputNames.TRUST_ALL_ROOTS));
         }
         return StringUtils.isEmpty(trustAllRoots) || Boolean.parseBoolean(trustAllRoots);
     }
 
 
-    public static boolean buildUseSSL(String useSSL) throws Exception {
-        if (!isValid(useSSL)){
-            throw new Exception(String.format(ExceptionMsgs.EXCEPTION_INVALID_BOOLEAN, InputNames.USE_SSL));
+    public static String buildProtocol(String protocol) throws Exception {
+        if (!(Arrays.asList("http", "https").contains(protocol.toLowerCase()))) {
+            throw new Exception(String.format(ExceptionMsgs.EXCEPTION_INVALID_PROTOCOL, InputNames.PROTOCOL));
         }
-        try {
-            return Boolean.parseBoolean(useSSL);
-        } catch (Exception e) {
-            return false;
-        }
+        return protocol;
     }
 
-
-    public static String buildKeystore(String keystore) {
-        return defaultIfEmpty(keystore, Constants.DEFAULT_JAVA_KEYSTORE);
+    public static String buildProtocol(String protocol, Boolean mandatory) throws Exception {
+        if (isEmpty(protocol) && mandatory) {
+            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.PROTOCOL));
+        }
+        if (!(Arrays.asList("http", "https").contains(protocol.toLowerCase()))) {
+            throw new Exception(String.format(ExceptionMsgs.EXCEPTION_INVALID_PROTOCOL, InputNames.PROTOCOL));
+        }
+        return protocol;
     }
+
 
     public static boolean buildEscapeChars(String escapeChars) {
         try {
@@ -178,18 +180,4 @@ public final class InputBuilderUtils {
         return input.trim();
     }
 
-    public static boolean buildUseSSL(String input, boolean mandatory) throws Exception {
-
-        if (isEmpty(input) && mandatory) {
-            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.USE_SSL));
-        }
-        if (!isValid(input)){
-            throw new Exception(String.format(ExceptionMsgs.EXCEPTION_INVALID_BOOLEAN, InputNames.USE_SSL));
-        }
-        try {
-            return Boolean.parseBoolean(input.toString());
-        } catch (Exception e) {
-            return false;
-        }
-    }
 }

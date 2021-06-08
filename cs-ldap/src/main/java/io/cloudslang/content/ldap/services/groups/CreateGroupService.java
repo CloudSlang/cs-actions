@@ -42,7 +42,7 @@ public class CreateGroupService {
             LDAPQuery ldap = new LDAPQuery();
             //  groupCN = ldap.replaceIllegalCharactersForSAM(groupCN);
             String sAMAccountName = input.getSAMAccountName();
-            String ouDN = input.getOU();
+            String ouDN = input.getDistinguishedName();
             String groupCN = input.getGroupCommonName();
 
             sAMAccountName = ldap.replaceIllegalCharactersForSAM(sAMAccountName);
@@ -56,12 +56,12 @@ public class CreateGroupService {
 
             DirContext ctx;
 
-            if (input.getUseSSL()) {
+            if (input.getProtocol().toLowerCase().equals("https")) {
                 if (Boolean.valueOf(input.getTrustAllRoots())) {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {
                     ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                            input.getKeyStore(), input.getKeyStorePassword(), input.getTrustKeystore(), input.getTrustPassword());
+                              input.getTrustKeystore(), input.getTrustPassword());
                 }
 
             } else {
