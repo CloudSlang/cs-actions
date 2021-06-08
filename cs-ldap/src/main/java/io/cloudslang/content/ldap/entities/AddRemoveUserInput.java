@@ -23,8 +23,8 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class AddRemoveUserInput implements AddRemoveUsrInput {
 
     private String host;
-    private String groupDN;
-    private String userDN;
+    private String groupDistinguishedName;
+    private String userDistinguishedName;
     private String username;
     private String password;
     private String protocol;
@@ -39,10 +39,10 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
         return host;
     }
 
-    public String getGroupDN() { return groupDN; }
+    public String getGroupDistinguishedName() { return groupDistinguishedName; }
 
-    public String getUserDN() {
-        return userDN;
+    public String getUserDistinguishedName() {
+        return userDistinguishedName;
     }
 
     public String getUsername() {
@@ -71,8 +71,8 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
     public static class Builder {
 
         private String host;
-        private String groupDN;
-        private String userDN;
+        private String groupDistinguishedName;
+        private String userDistinguishedName;
         private String username;
         private String password;
         private String protocol;
@@ -85,13 +85,13 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
             return this;
         }
 
-        public AddRemoveUserInput.Builder groupDN(String groupDN) {
-            this.groupDN = groupDN;
+        public AddRemoveUserInput.Builder groupDistinguishedName(String groupDistinguishedName) {
+            this.groupDistinguishedName = groupDistinguishedName;
             return this;
         }
 
-        public AddRemoveUserInput.Builder userDN(String userDN) {
-            this.userDN = userDN;
+        public AddRemoveUserInput.Builder userDistinguishedName(String userDistinguishedName) {
+            this.userDistinguishedName = userDistinguishedName;
             return this;
         }
 
@@ -132,9 +132,9 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
 
             input.host = buildHost(host, true);
 
-            input.groupDN = InputBuilderUtils.buildComputerCommonName(groupDN, true);
+            input.groupDistinguishedName = InputBuilderUtils.buildGroupDN(groupDistinguishedName, true);
 
-            input.userDN = InputBuilderUtils.buildComputerCommonName(userDN, true);
+            input.userDistinguishedName = InputBuilderUtils.buildUserDN(userDistinguishedName, true);
 
             input.username = buildUsername(username);
 

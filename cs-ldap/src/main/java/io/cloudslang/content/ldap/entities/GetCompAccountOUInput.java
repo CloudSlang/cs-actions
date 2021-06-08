@@ -23,7 +23,7 @@ public interface GetCompAccountOUInput {
 
     String getHost();
 
-    String getRootDN();
+    String getRootDistinguishedName();
 
     String getProtocol();
 

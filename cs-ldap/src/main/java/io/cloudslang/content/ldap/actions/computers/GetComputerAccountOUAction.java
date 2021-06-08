@@ -34,20 +34,20 @@ public class GetComputerAccountOUAction {
     /**
      * Gets the name of the OU a computer account is in, in Active Directory.
      *
-     * @param host               The domain controller to connect to.
-     * @param rootDN             The distinguished name of the root element whose subtree you want to search in.
-     * @param computerCommonName The name of the computer (its CN).
-     * @param username           The user to connect to AD as.
-     * @param password           The password to connect to AD as.
-     * @param protocol           The protocol to use when connecting to the AD server.
-     *                           Valid values: 'HTTP' and 'HTTPS'.
-     * @param trustAllRoots      Specifies whether to enable weak security over SSL. A SSL certificate is trusted
-     *                           even if no trusted certification authority issued it.
-     *                           Valid values: true, false.
-     *                           Default value: true.
-     * @param trustKeystore      The location of the TrustStore file.
-     *                           Example: %JAVA_HOME%/jre/lib/security/cacerts.
-     * @param trustPassword      The password associated with the TrustStore file.
+     * @param host                  The domain controller to connect to.
+     * @param rootDistinguishedName The distinguished name of the root element whose subtree you want to search in.
+     * @param computerCommonName    The name of the computer (its CN).
+     * @param username              The user to connect to AD as.
+     * @param password              The password to connect to AD as.
+     * @param protocol              The protocol to use when connecting to the AD server.
+     *                              Valid values: 'HTTP' and 'HTTPS'.
+     * @param trustAllRoots         Specifies whether to enable weak security over SSL. A SSL certificate is trusted
+     *                              even if no trusted certification authority issued it.
+     *                              Valid values: true, false.
+     *                              Default value: true.
+     * @param trustKeystore         The location of the TrustStore file.
+     *                              Example: %JAVA_HOME%/jre/lib/security/cacerts.
+     * @param trustPassword         The password associated with the TrustStore file.
      * @return a map containing the output of the operations. Keys present in the map are:
      * returnResult - The return result of the operation.
      * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
@@ -71,7 +71,7 @@ public class GetComputerAccountOUAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.ROOT_DN, required = true) String rootDN,
+            @Param(value = InputNames.ROOT_DISTINGUISHED_NAME, required = true) String rootDistinguishedName,
             @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true) String computerCommonName,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD, encrypted = true) String password,
@@ -83,7 +83,7 @@ public class GetComputerAccountOUAction {
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword) {
         GetComputerAccountOUInput.Builder inputBuilder = new GetComputerAccountOUInput.Builder()
                 .host(host)
-                .rootDN(rootDN)
+                .rootDistinguishedName(rootDistinguishedName)
                 .computerCommonName(computerCommonName)
                 .username(username)
                 .password(password)

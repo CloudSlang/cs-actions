@@ -21,9 +21,9 @@ public interface MoveCompAccountToOUInput {
 
     String getHost();
 
-    String getComputerDN();
+    String getComputerDistinguishedName();
 
-    String getNewOUDN();
+    String getOuCommonName();
 
     String getProtocol();
 

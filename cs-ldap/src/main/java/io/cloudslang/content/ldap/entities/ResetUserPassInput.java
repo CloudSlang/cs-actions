@@ -18,7 +18,7 @@ public interface ResetUserPassInput {
 
     String getHost();
 
-    String getUserDN();
+    String getUserDistinguishedName();
 
     String getUserPassword();
 

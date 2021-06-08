@@ -21,7 +21,7 @@ public interface ResetCompAccountInput {
 
     String getHost();
 
-    String getComputerDN();
+    String getComputerDistinguishedName();
 
     String getProtocol();
 

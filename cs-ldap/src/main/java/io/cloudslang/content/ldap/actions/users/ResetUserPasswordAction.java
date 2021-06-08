@@ -49,33 +49,33 @@ public class ResetUserPasswordAction {
     /**
      * This operation creates a new user in Active Directory.
      *
-     * @param host             The IP or host name of the domain controller. The port number can be mentioned as well, along
-     *                         with the host (hostNameOrIP:PortNumber).
-     *                         Examples: test.example.com,  test.example.com:636, <IPv4Address>, <IPv6Address>,
-     *                         [<IPv6Address>]:<PortNumber> etc.
-     *                         Value format: The format of an IPv4 address is: [0-225].[0-225].[0-225].[0-225]. The format of an
-     *                         IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
-     *                         a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
-     *                         The prefix length is optional.
-     * @param userDN           Distinguished name of the user whose password you want to change.
-     *                         Example: CN=User, OU=OUTest1, DC=battleground, DC=ad).
-     * @param userPassword     The new password. It must meet the following requirements:
-     *                         - is at least six characters long
-     *                         - contains characters from at least three of the following five categories: English uppercase
-     *                         characters ('A' - 'Z'), English lowercase characters ('a' - 'z'), base 10 digits ('0' - '9'),
-     *                         non-alphanumeric (For example: '!', '$', '#', or '%'), unicode characters
-     *                         - does not contain three or more characters from the user's account name
-     * @param username         User to connect to Active Directory as.
-     * @param password         Password to connect to Active Directory as.
-     * @param protocol         The protocol to use when connecting to the AD server.
-     *                         Valid values: 'HTTP' and 'HTTPS'.
-     * @param trustAllRoots    Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
-     *                         no trusted certification authority issued it.
-     *                         Default value: true.
-     *                         Valid values: true, false.
-     * @param trustKeystore    The location of the TrustStore file.
-     *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
-     * @param trustPassword    The password associated with the TrustStore file.
+     * @param host                  The IP or host name of the domain controller. The port number can be mentioned as well, along
+     *                              with the host (hostNameOrIP:PortNumber).
+     *                              Examples: test.example.com,  test.example.com:636, <IPv4Address>, <IPv6Address>,
+     *                              [<IPv6Address>]:<PortNumber> etc.
+     *                              Value format: The format of an IPv4 address is: [0-225].[0-225].[0-225].[0-225]. The format of an
+     *                              IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
+     *                              a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
+     *                              The prefix length is optional.
+     * @param userDistinguishedName Distinguished name of the user whose password you want to change.
+     *                              Example: CN=User, OU=OUTest1, DC=battleground, DC=ad).
+     * @param userPassword          The new password. It must meet the following requirements:
+     *                              - is at least six characters long
+     *                              - contains characters from at least three of the following five categories: English uppercase
+     *                              characters ('A' - 'Z'), English lowercase characters ('a' - 'z'), base 10 digits ('0' - '9'),
+     *                              non-alphanumeric (For example: '!', '$', '#', or '%'), unicode characters
+     *                              - does not contain three or more characters from the user's account name
+     * @param username              User to connect to Active Directory as.
+     * @param password              Password to connect to Active Directory as.
+     * @param protocol              The protocol to use when connecting to the AD server.
+     *                              Valid values: 'HTTP' and 'HTTPS'.
+     * @param trustAllRoots         Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
+     *                              no trusted certification authority issued it.
+     *                              Default value: true.
+     *                              Valid values: true, false.
+     * @param trustKeystore         The location of the TrustStore file.
+     *                              Example: %JAVA_HOME%/jre/lib/security/cacerts
+     * @param trustPassword         The password associated with the TrustStore file.
      * @return a map containing the output of the operation. Keys present in the map are:
      * returnResult - The message 'Password Changed' in case of success or the error in case of failure.
      * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
@@ -96,7 +96,7 @@ public class ResetUserPasswordAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.USER_DN, required = true) String userDN,
+            @Param(value = InputNames.USER_DISTINGUISHED_NAME, required = true) String userDistinguishedName,
             @Param(value = InputNames.USER_PASSWORD, required = true, encrypted = true) String userPassword,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD, encrypted = true) String password,
@@ -107,7 +107,7 @@ public class ResetUserPasswordAction {
 
         ResetUserPasswordInput.Builder inputBuilder = new ResetUserPasswordInput.Builder()
                 .host(host)
-                .userDN(userDN)
+                .userDistinguishedName(userDistinguishedName)
                 .userPassword(userPassword)
                 .username(username)
                 .password(password)

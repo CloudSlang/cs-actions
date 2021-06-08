@@ -37,7 +37,7 @@ public class AuthenticateUserService {
         try {
             LDAPQuery ldap = new LDAPQuery();
             String username = input.getUsername();
-            String rootDN = input.getRootDN();
+            String rootDN = input.getRootDistinguishedName();
 
             DirContext ctx;
 

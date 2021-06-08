@@ -55,12 +55,13 @@ public class RemoveUserFromGroupService {
             //Specify the changes to make
             ModificationItem[] mods = new ModificationItem[1];
             mods[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
-                    new BasicAttribute("member", input.getUserDN()));
+                    new BasicAttribute("member", input.getUserDistinguishedName()));
             // Perform requested modifications on named object
-            ctx.modifyAttributes(input.getGroupDN(), mods);
+            ctx.modifyAttributes(input.getGroupDistinguishedName(), mods);
             ctx.close();
 
-            results.put(RETURN_RESULT, "Removed user (" + input.getUserDN() + ") from group (" + input.getGroupDN() + ")");
+            results.put(RETURN_RESULT, "Removed user (" + input.getUserDistinguishedName() + ") from group (" +
+                    input.getGroupDistinguishedName() + ")");
             results.put(RETURN_CODE, "0");
 
         } catch (NamingException e) {

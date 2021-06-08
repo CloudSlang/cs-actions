@@ -36,8 +36,8 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
 
     private String host;
-    private String computerDN;
-    private String newOUDN;
+    private String computerDistinguishedName;
+    private String ouCommonName;
     private String username;
     private String password;
     private String protocol;
@@ -52,10 +52,10 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
         return host;
     }
 
-    public String getComputerDN() { return computerDN; }
+    public String getComputerDistinguishedName() { return computerDistinguishedName; }
 
-    public String getNewOUDN() {
-        return newOUDN;
+    public String getOuCommonName() {
+        return ouCommonName;
     }
 
     public String getUsername() {
@@ -86,8 +86,8 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
     public static class Builder {
 
         private String host;
-        private String computerDN;
-        private String newOUDN;
+        private String computerDistinguishedName;
+        private String ouCommonName;
         private String username;
         private String password;
         private String protocol;
@@ -100,13 +100,13 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
             return this;
         }
 
-        public Builder computerDN(String computerDN) {
-            this.computerDN = computerDN;
+        public Builder computerDistinguishedName(String computerDistinguishedName) {
+            this.computerDistinguishedName = computerDistinguishedName;
             return this;
         }
 
-        public Builder newOUDN(String newOUDN) {
-            this.newOUDN = newOUDN;
+        public Builder ouCommonName(String ouCommonName) {
+            this.ouCommonName = ouCommonName;
             return this;
         }
 
@@ -149,9 +149,9 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
 
             input.host = buildHost(host, true);
 
-            input.computerDN = buildRootDN(computerDN, true);
+            input.computerDistinguishedName = buildComputerDN(computerDistinguishedName, true);
 
-            input.newOUDN = buildNewOUDN(newOUDN,true);
+            input.ouCommonName = buildNewOUDN(ouCommonName,true);
 
             input.username = buildUsername(username);
 

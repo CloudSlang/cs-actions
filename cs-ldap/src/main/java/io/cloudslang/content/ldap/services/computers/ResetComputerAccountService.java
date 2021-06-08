@@ -52,7 +52,7 @@ public class ResetComputerAccountService {
                 ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
             }
 
-            String compDN = input.getComputerDN();
+            String compDN = input.getComputerDistinguishedName();
             String nameComp = compDN.substring(3, compDN.indexOf(","));
             String value = "\"" + nameComp + "$\"";
 

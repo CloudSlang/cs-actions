@@ -22,9 +22,9 @@ public interface AddRemoveUsrInput {
 
     String getPassword();
 
-    String getGroupDN();
+    String getGroupDistinguishedName();
 
-    String getUserDN();
+    String getUserDistinguishedName();
 
     String getProtocol();
 

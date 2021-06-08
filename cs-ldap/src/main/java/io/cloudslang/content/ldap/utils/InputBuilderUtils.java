@@ -41,7 +41,7 @@ public final class InputBuilderUtils {
 
     public static String buildUserDN(String userDN, boolean mandatory) throws Exception {
         if (isEmpty(userDN) && mandatory) {
-            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.USER_DN));
+            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.USER_DISTINGUISHED_NAME));
         }
         return userDN.trim();
     }
@@ -109,23 +109,23 @@ public final class InputBuilderUtils {
 
     public static String buildRootDN(String rootDN, boolean mandatory) throws Exception {
         if (isEmpty(rootDN) && mandatory) {
-            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.ROOT_DN));
+            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.ROOT_DISTINGUISHED_NAME));
         }
         return rootDN;
     }
 
     public static String buildComputerDN(String computerDN, boolean mandatory) throws Exception {
         if (isEmpty(computerDN) && mandatory) {
-            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.COMPUTER_DN));
+            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.COMPUTER_DISTINGUISHED_NAME));
         }
         return computerDN;
     }
 
-    public static String buildNewOUDN(String newOUDN, boolean mandatory) throws Exception {
-        if (isEmpty(newOUDN) && mandatory) {
-            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.NEW_OUDN));
+    public static String buildNewOUDN(String ouCommonName, boolean mandatory) throws Exception {
+        if (isEmpty(ouCommonName) && mandatory) {
+            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.OU_COMMON_NAME));
         }
-        return newOUDN;
+        return ouCommonName;
     }
 
     public static String buildUserCommonName(String userCommonName) throws Exception {
@@ -147,6 +147,13 @@ public final class InputBuilderUtils {
             throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.GROUP_COMMON_NAME));
         }
         return groupCommonName.trim();
+    }
+
+    public static String buildGroupDN(String groupDistinguishedName, boolean mandatory) throws Exception {
+        if (isEmpty(groupDistinguishedName) && mandatory) {
+            throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.GROUP_DISTINGUISHED_NAME));
+        }
+        return groupDistinguishedName.trim();
     }
 
     public static String buildSAMAccountNameRequired(String sAMAccountName, boolean mandatory) throws Exception {

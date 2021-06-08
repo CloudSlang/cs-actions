@@ -22,7 +22,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class ResetUserPasswordInput implements ResetUserPassInput{
 
     private String host;
-    private String userDN;
+    private String userDistinguishedName;
     private String userPassword;
     private String username;
     private String password;
@@ -38,8 +38,8 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
         return host;
     }
 
-    public String getUserDN() {
-        return userDN;
+    public String getUserDistinguishedName() {
+        return userDistinguishedName;
     }
 
     public String getUsername() {
@@ -73,7 +73,7 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
     public static class Builder {
 
         private String host;
-        private String userDN;
+        private String userDistinguishedName;
         private String userPassword;
         private String username;
         private String password;
@@ -88,8 +88,8 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
             return this;
         }
 
-        public Builder userDN(String userDN) {
-            this.userDN = userDN;
+        public Builder userDistinguishedName(String userDistinguishedName) {
+            this.userDistinguishedName = userDistinguishedName;
             return this;
         }
 
@@ -135,7 +135,7 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
 
             input.host = buildHost(host, true);
 
-            input.userDN = buildUserDN(userDN, true);
+            input.userDistinguishedName = buildUserDN(userDistinguishedName, true);
 
             input.userPassword = buildUserPassword(userPassword);
 

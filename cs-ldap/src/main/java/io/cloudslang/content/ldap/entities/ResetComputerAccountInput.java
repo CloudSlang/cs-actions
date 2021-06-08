@@ -36,7 +36,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class ResetComputerAccountInput implements ResetCompAccountInput{
 
     private String host;
-    private String computerDN;
+    private String computerDistinguishedName;
     private String username;
     private String password;
     private String protocol;
@@ -51,7 +51,7 @@ public class ResetComputerAccountInput implements ResetCompAccountInput{
         return host;
     }
 
-    public String getComputerDN() { return computerDN; }
+    public String getComputerDistinguishedName() { return computerDistinguishedName; }
 
     public String getUsername() {
         return username;
@@ -81,7 +81,7 @@ public class ResetComputerAccountInput implements ResetCompAccountInput{
     public static class Builder {
 
         private String host;
-        private String computerDN;
+        private String computerDistinguishedName;
         private String username;
         private String password;
         private String protocol;
@@ -94,8 +94,8 @@ public class ResetComputerAccountInput implements ResetCompAccountInput{
             return this;
         }
 
-        public Builder computerDN(String computerDN) {
-            this.computerDN = computerDN;
+        public Builder computerDistinguishedName(String computerDistinguishedName) {
+            this.computerDistinguishedName = computerDistinguishedName;
             return this;
         }
 
@@ -139,7 +139,7 @@ public class ResetComputerAccountInput implements ResetCompAccountInput{
 
             input.host = buildHost(host, true);
 
-            input.computerDN = buildRootDN(computerDN, true);
+            input.computerDistinguishedName = buildComputerDN(computerDistinguishedName, true);
 
             input.username = buildUsername(username);
 

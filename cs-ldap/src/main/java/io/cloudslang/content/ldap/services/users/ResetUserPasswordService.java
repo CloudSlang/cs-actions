@@ -35,7 +35,7 @@ public class ResetUserPasswordService {
         Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
         try {
             LDAPQuery ldap = new LDAPQuery();
-            String userDN = input.getUserDN();
+            String userDN = input.getUserDistinguishedName();
 
             DirContext ctx;
 

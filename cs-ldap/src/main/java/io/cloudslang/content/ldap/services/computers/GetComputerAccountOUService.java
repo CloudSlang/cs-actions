@@ -59,7 +59,7 @@ public class GetComputerAccountOUService {
             ctls.setReturningAttributes(attrIDs);
             ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-            NamingEnumeration<?> result = ctx.search(input.getRootDN(), "cn=" + compCN, ctls);
+            NamingEnumeration<?> result = ctx.search(input.getRootDistinguishedName(), "cn=" + compCN, ctls);
             if (result.hasMore()) {
                 String ouDN = ((SearchResult) result.next()).getAttributes().get("ou").get(0).toString();
                 String name = ouDN.substring(0, ouDN.indexOf(","));

@@ -36,7 +36,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class GetComputerAccountOUInput implements GetCompAccountOUInput{
 
     private String host;
-    private String rootDN;
+    private String rootDistinguishedName;
     private String computerCommonName;
     private String username;
     private String password;
@@ -52,7 +52,7 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
         return host;
     }
 
-    public String getRootDN() { return rootDN; }
+    public String getRootDistinguishedName() { return rootDistinguishedName; }
 
     public String getComputerCommonName() { return computerCommonName; }
 
@@ -84,7 +84,7 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
     public static class Builder {
 
         private String host;
-        private String rootDN;
+        private String rootDistinguishedName;
         private String computerCommonName;
         private String username;
         private String password;
@@ -98,8 +98,8 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
             return this;
         }
 
-        public Builder rootDN(String rootDN) {
-            this.rootDN = rootDN;
+        public Builder rootDistinguishedName(String rootDistinguishedName) {
+            this.rootDistinguishedName = rootDistinguishedName;
             return this;
         }
 
@@ -146,7 +146,7 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
 
             input.host = buildHost(host, true);
 
-            input.rootDN = buildRootDN(rootDN, true);
+            input.rootDistinguishedName = buildRootDN(rootDistinguishedName, true);
 
             input.computerCommonName = buildComputerCommonName(computerCommonName,true);
 
