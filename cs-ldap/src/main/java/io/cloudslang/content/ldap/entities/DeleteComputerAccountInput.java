@@ -32,7 +32,7 @@ import io.cloudslang.content.ldap.constants.Constants;
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DeleteComputerAccountInput implements LDAPInput{
+public class DeleteComputerAccountInput implements ComputerAccountInterface{
 
     private String host;
     private String OU;

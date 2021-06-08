@@ -33,7 +33,7 @@ import io.cloudslang.content.ldap.constants.Constants;
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DisableComputerAccountInput implements LDAPInput{
+public class DisableComputerAccountInput implements ComputerAccountInterface{
 
     private String host;
     private String OU;

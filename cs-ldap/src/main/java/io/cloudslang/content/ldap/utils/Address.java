@@ -18,9 +18,6 @@ package io.cloudslang.content.ldap.utils;
 
 import java.net.URI;
 
-/**
- * Created by victor on 13.01.2017.
- */
 public class Address {
     public final static int PORT_NOT_SET = -1;
     int resolvedPort = PORT_NOT_SET;

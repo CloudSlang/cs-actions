@@ -20,7 +20,6 @@ import java.security.cert.X509Certificate;
 /**
  * Used to connect to LDAP using SSL
  *
- * @author nistorc
  */
 public class DummyTrustManager implements X509TrustManager {
     public void checkClientTrusted(X509Certificate[] cert, String authType) {

@@ -19,6 +19,8 @@ public interface GetCompAccountOUInput {
 
     String getUsername();
 
+    String getComputerCommonName();
+
     String getHost();
 
     String getRootDN();

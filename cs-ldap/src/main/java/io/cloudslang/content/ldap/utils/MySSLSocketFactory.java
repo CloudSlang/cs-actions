@@ -26,6 +26,8 @@ import java.net.Socket;
 import java.security.*;
 import java.security.cert.CertificateException;
 
+import static io.cloudslang.content.ldap.constants.Constants.DEFAULT_PASSWORD_FOR_STORE;
+import static io.cloudslang.content.ldap.constants.TlsVersions.TLSv1_2;
 import static java.util.Objects.isNull;
 
 public class MySSLSocketFactory extends SSLSocketFactory {
@@ -172,7 +174,7 @@ public class MySSLSocketFactory extends SSLSocketFactory {
         if (!useClientCert) {
             boolean storeExists = new File(javaKeystore).exists();
             keystore = (storeExists) ? javaKeystore : null;
-            keystorePassword = (storeExists) ? ((keystorePassword.equals("")) ? "changeit" : keystorePassword) : null;
+            keystorePassword = (storeExists) ? ((keystorePassword.equals("")) ? DEFAULT_PASSWORD_FOR_STORE : keystorePassword) : null;
         } else {
             if (!keystore.startsWith("http"))
                 keystore = "" + keystore;
@@ -180,13 +182,13 @@ public class MySSLSocketFactory extends SSLSocketFactory {
         if (!useTrustCert) {
             boolean storeExists = new File(javaKeystore).exists();
             trustKeystore = (storeExists) ? javaKeystore : null;
-            trustPassword = (storeExists) ? ((trustPassword.equals("")) ? "changeit" : trustPassword) : null;
+            trustPassword = (storeExists) ? ((trustPassword.equals("")) ? DEFAULT_PASSWORD_FOR_STORE : trustPassword) : null;
         } else {
             if (!trustKeystore.startsWith("http"))
                 trustKeystore = "" + trustKeystore;
         }
 
-        SSLContext context = SSLContext.getInstance("TLSv1.2");
+        SSLContext context = SSLContext.getInstance(TLSv1_2);
         TrustManager[] trustManagers = null;
         KeyManager[] keyManagers = null;
 

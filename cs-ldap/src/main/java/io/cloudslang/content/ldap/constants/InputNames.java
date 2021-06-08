@@ -34,4 +34,16 @@ public final class InputNames {
     public static final String USER_COMMON_NAME = "userCommonName";
     public static final String USER_PASSWORD = "userPassword";
     public static final String USER_DN = "userDN";
+    public static final String GROUP_COMMON_NAME = "groupCommonName";
+    public static final String GROUP_TYPE = "groupType";
+    public static final String GROUP_DN = "groupDN";
+    public static final String FIRST_NAME = "firstName";
+    public static final String LAST_NAME = "lastName";
+    public static final String DISPLAY_NAME = "displayName";
+    public static final String STREET = "street";
+    public static final String CITY = "city";
+    public static final String STATE_OR_PROVINCE = "stateOrProvince";
+    public static final String ZIP_OR_POSTAL_CODE = "zipOrPostalCode";
+    public static final String COUNTRY_OR_REGION = "countryOrRegion";
+    public static final String ATTRIBUTES_LIST = "attributesList";
 }
