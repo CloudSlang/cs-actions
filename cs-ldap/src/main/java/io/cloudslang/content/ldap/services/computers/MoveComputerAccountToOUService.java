@@ -36,24 +36,24 @@ public class MoveComputerAccountToOUService {
 
         try {
             LDAPQuery ldap = new LDAPQuery();
-            String OU = input.getNewOUDN();
+            String OU = input.getOuCommonName();
             DirContext ctx;
 
-            if (input.getUseSSL()) {
+            if (input.getProtocol().toLowerCase().trim().equals("https")) {
                 if (Boolean.valueOf(input.getTrustAllRoots())) {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {
                     ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                            input.getKeyStore(), input.getKeyStorePassword(), input.getTrustKeystore(), input.getTrustPassword());
+                              input.getTrustKeystore(), input.getTrustPassword());
                 }
 
             } else {
                 ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
             }
 
-            String nameComp = input.getComputerDN().substring(3, input.getComputerDN().indexOf(","));
+            String nameComp = input.getComputerDistinguishedName().substring(3, input.getComputerDistinguishedName().indexOf(","));
             String newCompDN = "CN=" + nameComp + "," + OU;
-            ctx.rename(input.getComputerDN(), newCompDN);
+            ctx.rename(input.getComputerDistinguishedName(), newCompDN);
             // Specify the changes to make
             ModificationItem[] mods = new ModificationItem[1];
             mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,

@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2021 Micro Focus
+ * (c) Copyright 2020 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.ldap.actions.groups;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -35,42 +36,36 @@ public class CreateGroupAction {
     /**
      * This operation creates a new group in Active Directory.
      *
-     * @param host             The IP or host name of the domain controller. The port number can be mentioned as well, along
-     *                         with the host (hostNameOrIP:PortNumber).
-     *                         Examples: test.example.com,  test.example.com:636, <IPv4Address>, <IPv6Address>,
-     *                         [<IPv6Address>]:<PortNumber> etc.
-     *                         Value format: The format of an IPv4 address is: [0-225].[0-225].[0-225].[0-225]. The format of an
-     *                         IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
-     *                         a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
-     *                         The prefix length is optional.
-     * @param OU               The Organizational Unit DN or Common Name DN to add the user to.
-     *                         Example: OU=OUTest1,DC=battleground,DC=ad
-     * @param groupCommonName  The CN, the full name of the new group.
-     * @param sAMAccountName   The sAMAccountName of the new group.
-     * @param groupType        the type of the new group. The groupType values represent: -2147483646 (Security Group - Global),
-     *                         -2147483644 (Security Group - Domain Local), -2147483640 (Security Group - Universal), 2
-     *                         (Distribution Group - Global), 4 (Distribution Group - Domain Local), 8 (Distribution Group - Universal).
-     *                         Valid values: -2147483646, -2147483644, -2147483640, 2, 4, 8
-     *                         Default value: -2147483646
-     * @param username         User to connect to Active Directory as.
-     * @param password         Password to connect to Active Directory as.
-     * @param useSSL           If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS)
-     *                         protocol to establish a connection to the remote computer. By default, the operation tries to
-     *                         establish a secure connection over TLSv1.2. Default port for SSL/TLS is 636.
-     *                         Default value: false
-     *                         Valid values: true, false.
-     * @param trustAllRoots    Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
-     *                         no trusted certification authority issued it.
-     *                         Default value: true.
-     *                         Valid values: true, false.
-     * @param keyStore         The location of the KeyStore file.
-     *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
-     * @param keyStorePassword The password associated with the KeyStore file.
-     * @param trustKeystore    The location of the TrustStore file.
-     *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
-     * @param trustPassword    The password associated with the TrustStore file.
-     * @param escapeChars      Add this input and set it to true if you want the operation to escape the special AD characters:
-     *                         '#','=','"','<','>',',','+',';','\','"''.
+     * @param host              The IP or host name of the domain controller. The port number can be mentioned as well, along
+     *                          with the host (hostNameOrIP:PortNumber).
+     *                          Examples: test.example.com,  test.example.com:636, <IPv4Address>, <IPv6Address>,
+     *                          [<IPv6Address>]:<PortNumber> etc.
+     *                          Value format: The format of an IPv4 address is: [0-225].[0-225].[0-225].[0-225]. The format of an
+     *                          IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
+     *                          a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
+     *                          The prefix length is optional.
+     * @param distinguishedName The Organizational Unit DN or Common Name DN to add the user to.
+     *                          Example: OU=OUTest1,DC=battleground,DC=ad
+     * @param groupCommonName   The CN, the full name of the new group.
+     * @param sAMAccountName    The sAMAccountName of the new group.
+     * @param groupType         the type of the new group. The groupType values represent: -2147483646 (Security Group - Global),
+     *                          -2147483644 (Security Group - Domain Local), -2147483640 (Security Group - Universal), 2
+     *                          (Distribution Group - Global), 4 (Distribution Group - Domain Local), 8 (Distribution Group - Universal).
+     *                          Valid values: -2147483646, -2147483644, -2147483640, 2, 4, 8
+     *                          Default value: -2147483646
+     * @param username          User to connect to Active Directory as.
+     * @param password          Password to connect to Active Directory as.
+     * @param protocol          The protocol to use when connecting to the AD server.
+     *                          Valid values: 'HTTP' and 'HTTPS'.
+     * @param trustAllRoots     Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
+     *                          no trusted certification authority issued it.
+     *                          Default value: true.
+     *                          Valid values: true, false.
+     * @param trustKeystore     The location of the TrustStore file.
+     *                          Example: %JAVA_HOME%/jre/lib/security/cacerts
+     * @param trustPassword     The password associated with the TrustStore file.
+     * @param escapeChars       Add this input and set it to true if you want the operation to escape the special AD characters:
+     *                          '#','=','"','<','>',',','+',';','\','"''.
      * @return - a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message with the distinguished name of the newly created group in case of success or the error message
      *              in case of failure.
@@ -94,31 +89,27 @@ public class CreateGroupAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.OU, required = true) String OU,
+            @Param(value = InputNames.DISTINGUISHED_NAME, required = true) String distinguishedName,
             @Param(value = InputNames.GROUP_COMMON_NAME, required = true) String groupCommonName,
             @Param(value = InputNames.GROUP_TYPE) String groupType,
             @Param(value = InputNames.SAM_ACCOUNT_NAME, required = true) String sAMAccountName,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD, encrypted = true) String password,
-            @Param(value = InputNames.USE_SSL) String useSSL,
+            @Param(value = InputNames.PROTOCOL) String protocol,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(value = InputNames.KEYSTORE) String keyStore,
-            @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
             @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
         CreateGroupInput.Builder inputBuilder = new CreateGroupInput.Builder()
                 .host(host)
-                .OU(OU)
+                .distinguishedName(distinguishedName)
                 .groupCommonName(groupCommonName)
                 .groupType(groupType)
                 .sAMAccountName(sAMAccountName)
                 .username(username)
                 .password(password)
-                .useSSL(useSSL)
+                .protocol(protocol)
                 .trustAllRoots(trustAllRoots)
-                .keyStore(keyStore)
-                .keyStorePassword(keyStorePassword)
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword)
                 .escapeChars(escapeChars);

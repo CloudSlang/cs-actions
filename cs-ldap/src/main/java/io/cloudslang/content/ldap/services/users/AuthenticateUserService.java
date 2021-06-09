@@ -37,16 +37,16 @@ public class AuthenticateUserService {
         try {
             LDAPQuery ldap = new LDAPQuery();
             String username = input.getUsername();
-            String rootDN = input.getRootDN();
+            String rootDN = input.getRootDistinguishedName();
 
             DirContext ctx;
 
-            if (input.getUseSSL()) {
+            if (input.getProtocol().toLowerCase().trim().equals("https")) {
                 if (input.getTrustAllRoots()) {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {
                     ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),"false",
-                            input.getKeyStore(), input.getKeyStorePassword(), input.getTrustKeystore(), input.getTrustPassword());
+                              input.getTrustKeystore(), input.getTrustPassword());
                 }
 
             } else {

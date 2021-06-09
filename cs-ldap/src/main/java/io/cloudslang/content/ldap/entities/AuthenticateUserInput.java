@@ -22,13 +22,11 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class AuthenticateUserInput implements AuthenticateUserInterface {
 
     private String host;
-    private String rootDN;
+    private String rootDistinguishedName;
     private String username;
     private String password;
-    private boolean useSSL;
+    private String protocol;
     private boolean trustAllRoots;
-    private String keystore;
-    private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
 
@@ -39,8 +37,8 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
         return host;
     }
 
-    public String getRootDN() {
-        return rootDN;
+    public String getRootDistinguishedName() {
+        return rootDistinguishedName;
     }
 
     public String getUsername() {
@@ -51,20 +49,12 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
         return password;
     }
 
-    public Boolean getUseSSL() {
-        return useSSL;
+    public String getProtocol() {
+        return protocol;
     }
 
     public Boolean getTrustAllRoots() {
         return trustAllRoots;
-    }
-
-    public String getKeyStore() {
-        return keystore;
-    }
-
-    public String getKeyStorePassword() {
-        return keystorePassword;
     }
 
     public String getTrustKeystore() {
@@ -79,13 +69,11 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
     public static class Builder {
 
         private String host;
-        private String rootDN;
+        private String rootDistinguishedName;
         private String username;
         private String password;
-        private String useSSL;
+        private String protocol;
         private String trustAllRoots;
-        private String keystore;
-        private String keystorePassword;
         private String trustKeystore;
         private String trustPassword;
 
@@ -95,8 +83,8 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
             return this;
         }
 
-        public AuthenticateUserInput.Builder rootDN(String rootDN) {
-            this.rootDN = rootDN;
+        public AuthenticateUserInput.Builder rootDistinguishedName(String rootDistinguishedName) {
+            this.rootDistinguishedName = rootDistinguishedName;
             return this;
         }
 
@@ -111,8 +99,8 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
             return this;
         }
 
-        public AuthenticateUserInput.Builder useSSL(String useSSL) {
-            this.useSSL = useSSL;
+        public AuthenticateUserInput.Builder protocol(String protocol) {
+            this.protocol = protocol;
             return this;
         }
 
@@ -120,18 +108,6 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
             this.trustAllRoots = trustAllRoots;
             return this;
         }
-
-        public AuthenticateUserInput.Builder keyStore(String keystore) {
-            this.keystore = keystore;
-            return this;
-        }
-
-
-        public AuthenticateUserInput.Builder keyStorePassword(String keystorePassword) {
-            this.keystorePassword = keystorePassword;
-            return this;
-        }
-
 
         public AuthenticateUserInput.Builder trustKeystore(String trustKeystore) {
             this.trustKeystore = trustKeystore;
@@ -150,7 +126,7 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
 
             input.host = buildHost(host, true);
 
-            input.rootDN = buildOU(rootDN, true);
+            input.rootDistinguishedName = buildRootDN(rootDistinguishedName, true);
 
             input.username = buildUsername(username);
 
@@ -158,11 +134,7 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 
-            input.useSSL = buildUseSSL(useSSL);
-
-            input.keystore = buildKeystore(keystore);
-
-            input.keystorePassword = keystorePassword;
+            input.protocol = buildProtocol(protocol);
 
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 

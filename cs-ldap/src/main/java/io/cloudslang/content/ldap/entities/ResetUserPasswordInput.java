@@ -22,14 +22,12 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class ResetUserPasswordInput implements ResetUserPassInput{
 
     private String host;
-    private String userDN;
+    private String userDistinguishedName;
     private String userPassword;
     private String username;
     private String password;
-    private boolean useSSL;
+    private String protocol;
     private boolean trustAllRoots;
-    private String keystore;
-    private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
 
@@ -40,8 +38,8 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
         return host;
     }
 
-    public String getUserDN() {
-        return userDN;
+    public String getUserDistinguishedName() {
+        return userDistinguishedName;
     }
 
     public String getUsername() {
@@ -52,20 +50,12 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
         return password;
     }
 
-    public Boolean getUseSSL() {
-        return useSSL;
+    public String getProtocol() {
+        return protocol;
     }
 
     public Boolean getTrustAllRoots() {
         return trustAllRoots;
-    }
-
-    public String getKeyStore() {
-        return keystore;
-    }
-
-    public String getKeyStorePassword() {
-        return keystorePassword;
     }
 
     public String getTrustKeystore() {
@@ -83,14 +73,12 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
     public static class Builder {
 
         private String host;
-        private String userDN;
+        private String userDistinguishedName;
         private String userPassword;
         private String username;
         private String password;
-        private String useSSL;
+        private String protocol;
         private String trustAllRoots;
-        private String keystore;
-        private String keystorePassword;
         private String trustKeystore;
         private String trustPassword;
 
@@ -100,8 +88,8 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
             return this;
         }
 
-        public Builder userDN(String userDN) {
-            this.userDN = userDN;
+        public Builder userDistinguishedName(String userDistinguishedName) {
+            this.userDistinguishedName = userDistinguishedName;
             return this;
         }
 
@@ -121,8 +109,8 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
             return this;
         }
 
-        public Builder useSSL(String useSSL) {
-            this.useSSL = useSSL;
+        public Builder protocol(String protocol) {
+            this.protocol = protocol;
             return this;
         }
 
@@ -130,18 +118,6 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
             this.trustAllRoots = trustAllRoots;
             return this;
         }
-
-        public Builder keyStore(String keystore) {
-            this.keystore = keystore;
-            return this;
-        }
-
-
-        public Builder keyStorePassword(String keystorePassword) {
-            this.keystorePassword = keystorePassword;
-            return this;
-        }
-
 
         public Builder trustKeystore(String trustKeystore) {
             this.trustKeystore = trustKeystore;
@@ -159,7 +135,7 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
 
             input.host = buildHost(host, true);
 
-            input.userDN = buildUserDN(userDN, true);
+            input.userDistinguishedName = buildUserDN(userDistinguishedName, true);
 
             input.userPassword = buildUserPassword(userPassword);
 
@@ -169,11 +145,7 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 
-            input.useSSL = buildUseSSL(useSSL);
-
-            input.keystore = buildKeystore(keystore);
-
-            input.keystorePassword = keystorePassword;
+            input.protocol = buildProtocol(protocol);
 
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 

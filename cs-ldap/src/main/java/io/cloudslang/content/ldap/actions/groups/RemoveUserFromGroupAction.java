@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2021 Micro Focus
+ * (c) Copyright 2020 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.ldap.actions.groups;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -35,33 +36,29 @@ public class RemoveUserFromGroupAction {
     /**
      * This operation removes a user from a group in Active Directory.
      *
-     * @param host             The IP or host name of the domain controller. The port number can be mentioned as well, along
-     *                         with the host (hostNameOrIP:PortNumber).
-     *                         Examples: test.example.com,  test.example.com:636, <IPv4Address>, <IPv6Address>,
-     *                         [<IPv6Address>]:<PortNumber> etc.
-     *                         Value format: The format of an IPv4 address is: [0-225].[0-225].[0-225].[0-225]. The format of an
-     *                         IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
-     *                         a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
-     *                         The prefix length is optional.
-     * @param groupDN          The DN (distinguished name) of the group.
-     * @param userDN           The DN (distinguished name) of the user to add.
-     * @param username         User to connect to Active Directory as.
-     * @param password         Password to connect to Active Directory as.
-     * @param useSSL           If true, the operation uses the Secure Sockets Layer (SSL) or Transport Layer Security (TLS)
-     *                         protocol to establish a connection to the remote computer. By default, the operation tries to
-     *                         establish a secure connection over TLSv1.2. Default port for SSL/TLS is 636.
-     *                         Default value: false
-     *                         Valid values: true, false.
-     * @param trustAllRoots    Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
-     *                         no trusted certification authority issued it.
-     *                         Default value: true.
-     *                         Valid values: true, false.
-     * @param keyStore         The location of the KeyStore file.
-     *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
-     * @param keyStorePassword The password associated with the KeyStore file.
-     * @param trustKeystore    The location of the TrustStore file.
-     *                         Example: %JAVA_HOME%/jre/lib/security/cacerts
-     * @param trustPassword    The password associated with the TrustStore file.
+     * @param host                   The IP or host name of the domain controller. The port number can be mentioned as well,
+     *                               along with the host (hostNameOrIP:PortNumber).
+     *                               Examples: test.example.com,  test.example.com:636, <IPv4Address>, <IPv6Address>,
+     *                               [<IPv6Address>]:<PortNumber> etc.
+     *                               Value format: The format of an IPv4 address is: [0-225].[0-225].[0-225].[0-225]. The format of an
+     *                               IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
+     *                               a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
+     *                               The prefix length is optional.
+     * @param groupDistinguishedName The DN (distinguished name) of the group.
+     *                               Example: CN=GroupName,OU=OUTest1,DC=battleground,DC=ad
+     * @param userDistinguishedName  The DN (distinguished name) of the user to remove.
+     *                               Example: CN=UserName,OU=OUTest1,DC=battleground,DC=ad
+     * @param username               User to connect to Active Directory as.
+     * @param password               Password to connect to Active Directory as.
+     * @param protocol               The protocol to use when connecting to the AD server.
+     *                               Valid values: 'HTTP' and 'HTTPS'.
+     * @param trustAllRoots          Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
+     *                               no trusted certification authority issued it.
+     *                               Default value: true.
+     *                               Valid values: true, false.
+     * @param trustKeystore          The location of the TrustStore file.
+     *                               Example: %JAVA_HOME%/jre/lib/security/cacerts
+     * @param trustPassword          The password associated with the TrustStore file.
      * @return - a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message with the removed user's DN and the group from which it was removed DN, in case of success or the
      *              error in case of failure.
@@ -69,7 +66,7 @@ public class RemoveUserFromGroupAction {
      * exception - The exception message if the operation fails.
      */
 
-    @Action(name = "Remove User To Group",
+    @Action(name = "Remove User From Group",
             outputs = {
                     @Output(OutputNames.RETURN_RESULT),
                     @Output(OutputNames.RETURN_CODE),
@@ -83,26 +80,22 @@ public class RemoveUserFromGroupAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.GROUP_DN, required = true) String groupDN,
-            @Param(value = InputNames.USER_DN, required = true) String userDN,
+            @Param(value = InputNames.GROUP_DISTINGUISHED_NAME, required = true) String groupDistinguishedName,
+            @Param(value = InputNames.USER_DISTINGUISHED_NAME, required = true) String userDistinguishedName,
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD, encrypted = true) String password,
-            @Param(value = InputNames.USE_SSL) String useSSL,
+            @Param(value = InputNames.PROTOCOL) String protocol,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(value = InputNames.KEYSTORE) String keyStore,
-            @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword){
         AddRemoveUserInput.Builder inputBuilder = new AddRemoveUserInput.Builder()
                 .host(host)
-                .groupDN(groupDN)
-                .userDN(userDN)
+                .groupDistinguishedName(groupDistinguishedName)
+                .userDistinguishedName(userDistinguishedName)
                 .username(username)
                 .password(password)
-                .useSSL(useSSL)
+                .protocol(protocol)
                 .trustAllRoots(trustAllRoots)
-                .keyStore(keyStore)
-                .keyStorePassword(keyStorePassword)
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword);
         try {

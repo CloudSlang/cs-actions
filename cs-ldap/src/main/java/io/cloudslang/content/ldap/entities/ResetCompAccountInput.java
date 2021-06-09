@@ -21,15 +21,11 @@ public interface ResetCompAccountInput {
 
     String getHost();
 
-    String getComputerDN();
+    String getComputerDistinguishedName();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

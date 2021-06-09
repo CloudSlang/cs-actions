@@ -38,9 +38,9 @@ public class CreateComputerAccountService {
 
         try {
             LDAPQuery ldap = new LDAPQuery();
-            String OU = input.getOU();
+            String OU = input.getDistinguishedName();
             String compCN = input.getComputerCommonName();
-            Boolean useSSL = input.getUseSSL();
+            String protocol = input.getProtocol();
             Boolean trustAllRoots = input.getTrustAllRoots();
 
 
@@ -53,12 +53,12 @@ public class CreateComputerAccountService {
             Name ou = new CompositeName().add(OU);
             DirContext ctx;
 
-            if (useSSL) {
+            if (protocol.toLowerCase().trim().equals("https")) {
                 if (Boolean.valueOf(trustAllRoots)) {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {
                     ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                            input.getKeyStore(), input.getKeyStorePassword(), input.getTrustKeystore(), input.getTrustPassword());
+                             input.getTrustKeystore(), input.getTrustPassword());
                 }
 
             } else {

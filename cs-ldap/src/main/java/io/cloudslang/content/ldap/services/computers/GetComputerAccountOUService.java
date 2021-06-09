@@ -41,12 +41,12 @@ public class GetComputerAccountOUService {
             String compCN = input.getComputerCommonName();
             DirContext ctx;
 
-            if (input.getUseSSL()) {
+            if (input.getProtocol().toLowerCase().trim().equals("https")) {
                 if (Boolean.valueOf(input.getTrustAllRoots())) {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {
                     ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                            input.getKeyStore(), input.getKeyStorePassword(), input.getTrustKeystore(), input.getTrustPassword());
+                              input.getTrustKeystore(), input.getTrustPassword());
                 }
 
             } else {
@@ -59,7 +59,7 @@ public class GetComputerAccountOUService {
             ctls.setReturningAttributes(attrIDs);
             ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-            NamingEnumeration<?> result = ctx.search(input.getRootDN(), "cn=" + compCN, ctls);
+            NamingEnumeration<?> result = ctx.search(input.getRootDistinguishedName(), "cn=" + compCN, ctls);
             if (result.hasMore()) {
                 String ouDN = ((SearchResult) result.next()).getAttributes().get("ou").get(0).toString();
                 String name = ouDN.substring(0, ouDN.indexOf(","));

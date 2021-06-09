@@ -23,14 +23,12 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class AddRemoveUserInput implements AddRemoveUsrInput {
 
     private String host;
-    private String groupDN;
-    private String userDN;
+    private String groupDistinguishedName;
+    private String userDistinguishedName;
     private String username;
     private String password;
-    private boolean useSSL;
+    private String protocol;
     private boolean trustAllRoots;
-    private String keystore;
-    private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
 
@@ -41,10 +39,10 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
         return host;
     }
 
-    public String getGroupDN() { return groupDN; }
+    public String getGroupDistinguishedName() { return groupDistinguishedName; }
 
-    public String getUserDN() {
-        return userDN;
+    public String getUserDistinguishedName() {
+        return userDistinguishedName;
     }
 
     public String getUsername() {
@@ -53,20 +51,12 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
 
     public String getPassword() { return password; }
 
-    public Boolean getUseSSL() {
-        return useSSL;
+    public String getProtocol() {
+        return protocol;
     }
 
     public Boolean getTrustAllRoots() {
         return trustAllRoots;
-    }
-
-    public String getKeyStore() {
-        return keystore;
-    }
-
-    public String getKeyStorePassword() {
-        return keystorePassword;
     }
 
     public String getTrustKeystore() {
@@ -81,14 +71,12 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
     public static class Builder {
 
         private String host;
-        private String groupDN;
-        private String userDN;
+        private String groupDistinguishedName;
+        private String userDistinguishedName;
         private String username;
         private String password;
-        private String useSSL;
+        private String protocol;
         private String trustAllRoots;
-        private String keystore;
-        private String keystorePassword;
         private String trustKeystore;
         private String trustPassword;
 
@@ -97,13 +85,13 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
             return this;
         }
 
-        public AddRemoveUserInput.Builder groupDN(String groupDN) {
-            this.groupDN = groupDN;
+        public AddRemoveUserInput.Builder groupDistinguishedName(String groupDistinguishedName) {
+            this.groupDistinguishedName = groupDistinguishedName;
             return this;
         }
 
-        public AddRemoveUserInput.Builder userDN(String userDN) {
-            this.userDN = userDN;
+        public AddRemoveUserInput.Builder userDistinguishedName(String userDistinguishedName) {
+            this.userDistinguishedName = userDistinguishedName;
             return this;
         }
 
@@ -118,8 +106,8 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
             return this;
         }
 
-        public AddRemoveUserInput.Builder useSSL(String useSSL) {
-            this.useSSL = useSSL;
+        public AddRemoveUserInput.Builder protocol(String protocol) {
+            this.protocol = protocol;
             return this;
         }
 
@@ -127,18 +115,6 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
             this.trustAllRoots = trustAllRoots;
             return this;
         }
-
-        public AddRemoveUserInput.Builder keyStore(String keystore) {
-            this.keystore = keystore;
-            return this;
-        }
-
-
-        public AddRemoveUserInput.Builder keyStorePassword(String keystorePassword) {
-            this.keystorePassword = keystorePassword;
-            return this;
-        }
-
 
         public AddRemoveUserInput.Builder trustKeystore(String trustKeystore) {
             this.trustKeystore = trustKeystore;
@@ -156,9 +132,9 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
 
             input.host = buildHost(host, true);
 
-            input.groupDN = InputBuilderUtils.buildComputerCommonName(groupDN, true);
+            input.groupDistinguishedName = InputBuilderUtils.buildGroupDN(groupDistinguishedName, true);
 
-            input.userDN = InputBuilderUtils.buildComputerCommonName(userDN, true);
+            input.userDistinguishedName = InputBuilderUtils.buildUserDN(userDistinguishedName, true);
 
             input.username = buildUsername(username);
 
@@ -166,11 +142,7 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 
-            input.useSSL = buildUseSSL(useSSL);
-
-            input.keystore = buildKeystore(keystore);
-
-            input.keystorePassword = keystorePassword;
+            input.protocol = buildProtocol(protocol);
 
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 

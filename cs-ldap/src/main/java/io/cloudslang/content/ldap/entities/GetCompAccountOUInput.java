@@ -23,15 +23,11 @@ public interface GetCompAccountOUInput {
 
     String getHost();
 
-    String getRootDN();
+    String getRootDistinguishedName();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

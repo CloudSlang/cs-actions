@@ -36,14 +36,12 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class IsComputerAccountEnabledInput implements ComputerAccountInterface{
 
     private String host;
-    private String OU;
+    private String distinguishedName;
     private String computerCommonName;
     private String username;
     private String password;
-    private boolean useSSL;
+    private String protocol;
     private boolean trustAllRoots;
-    private String keystore;
-    private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
 
@@ -54,8 +52,8 @@ public class IsComputerAccountEnabledInput implements ComputerAccountInterface{
         return host;
     }
 
-    public String getOU() {
-        return OU;
+    public String getDistinguishedName() {
+        return distinguishedName;
     }
 
     public String getComputerCommonName() {
@@ -70,20 +68,12 @@ public class IsComputerAccountEnabledInput implements ComputerAccountInterface{
         return password;
     }
 
-    public Boolean getUseSSL() {
-        return useSSL;
+    public String getProtocol() {
+        return protocol;
     }
 
     public Boolean getTrustAllRoots() {
         return trustAllRoots;
-    }
-
-    public String getKeyStore() {
-        return keystore;
-    }
-
-    public String getKeyStorePassword() {
-        return keystorePassword;
     }
 
     public String getTrustKeystore() {
@@ -98,14 +88,12 @@ public class IsComputerAccountEnabledInput implements ComputerAccountInterface{
     public static class Builder {
 
         private String host;
-        private String OU;
+        private String distinguishedName;
         private String computerCommonName;
         private String username;
         private String password;
-        private String useSSL;
+        private String protocol;
         private String trustAllRoots;
-        private String keystore;
-        private String keystorePassword;
         private String trustKeystore;
         private String trustPassword;
 
@@ -114,8 +102,8 @@ public class IsComputerAccountEnabledInput implements ComputerAccountInterface{
             return this;
         }
 
-        public Builder OU(String OU) {
-            this.OU = OU;
+        public Builder distinguishedName(String distinguishedName) {
+            this.distinguishedName = distinguishedName;
             return this;
         }
 
@@ -135,24 +123,13 @@ public class IsComputerAccountEnabledInput implements ComputerAccountInterface{
             return this;
         }
 
-        public Builder useSSL(String useSSL) {
-            this.useSSL = useSSL;
+        public Builder protocol(String protocol) {
+            this.protocol = protocol;
             return this;
         }
 
         public Builder trustAllRoots(String trustAllRoots) {
             this.trustAllRoots = trustAllRoots;
-            return this;
-        }
-
-        public Builder keyStore(String keystore) {
-            this.keystore = keystore;
-            return this;
-        }
-
-
-        public Builder keyStorePassword(String keystorePassword) {
-            this.keystorePassword = keystorePassword;
             return this;
         }
 
@@ -174,7 +151,7 @@ public class IsComputerAccountEnabledInput implements ComputerAccountInterface{
 
             input.host = buildHost(host, true);
 
-            input.OU = buildOU(OU, true);
+            input.distinguishedName = buildDistinguishedName(distinguishedName, true);
 
             input.computerCommonName = buildComputerCommonName(computerCommonName,true);
 
@@ -184,11 +161,7 @@ public class IsComputerAccountEnabledInput implements ComputerAccountInterface{
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 
-            input.useSSL = buildUseSSL(useSSL);
-
-            input.keystore = buildKeystore(keystore);
-
-            input.keystorePassword = keystorePassword;
+            input.protocol = buildProtocol(protocol);
 
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 

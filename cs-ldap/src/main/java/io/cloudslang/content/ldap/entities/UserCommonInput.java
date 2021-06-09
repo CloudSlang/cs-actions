@@ -22,14 +22,12 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class UserCommonInput implements UserCommInput {
 
     private String host;
-    private String OU;
+    private String distinguishedName;
     private String userCommonName;
     private String username;
     private String password;
-    private boolean useSSL;
+    private String protocol;
     private boolean trustAllRoots;
-    private String keystore;
-    private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
@@ -41,8 +39,8 @@ public class UserCommonInput implements UserCommInput {
         return host;
     }
 
-    public String getOU() {
-        return OU;
+    public String getDistinguishedName() {
+        return distinguishedName;
     }
 
     public String getUserCommonName() {
@@ -57,20 +55,12 @@ public class UserCommonInput implements UserCommInput {
         return password;
     }
 
-    public Boolean getUseSSL() {
-        return useSSL;
+    public String getProtocol() {
+        return protocol;
     }
 
     public Boolean getTrustAllRoots() {
         return trustAllRoots;
-    }
-
-    public String getKeyStore() {
-        return keystore;
-    }
-
-    public String getKeyStorePassword() {
-        return keystorePassword;
     }
 
     public String getTrustKeystore() {
@@ -88,14 +78,12 @@ public class UserCommonInput implements UserCommInput {
     public static class Builder {
 
         private String host;
-        private String OU;
+        private String distinguishedName;
         private String userCommonName;
         private String username;
         private String password;
-        private String useSSL;
+        private String protocol;
         private String trustAllRoots;
-        private String keystore;
-        private String keystorePassword;
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
@@ -106,8 +94,8 @@ public class UserCommonInput implements UserCommInput {
             return this;
         }
 
-        public UserCommonInput.Builder OU(String OU) {
-            this.OU = OU;
+        public UserCommonInput.Builder distinguishedName(String distinguishedName) {
+            this.distinguishedName = distinguishedName;
             return this;
         }
 
@@ -127,8 +115,8 @@ public class UserCommonInput implements UserCommInput {
             return this;
         }
 
-        public UserCommonInput.Builder useSSL(String useSSL) {
-            this.useSSL = useSSL;
+        public UserCommonInput.Builder protocol(String protocol) {
+            this.protocol = protocol;
             return this;
         }
 
@@ -136,18 +124,6 @@ public class UserCommonInput implements UserCommInput {
             this.trustAllRoots = trustAllRoots;
             return this;
         }
-
-        public UserCommonInput.Builder keyStore(String keystore) {
-            this.keystore = keystore;
-            return this;
-        }
-
-
-        public UserCommonInput.Builder keyStorePassword(String keystorePassword) {
-            this.keystorePassword = keystorePassword;
-            return this;
-        }
-
 
         public UserCommonInput.Builder trustKeystore(String trustKeystore) {
             this.trustKeystore = trustKeystore;
@@ -171,7 +147,7 @@ public class UserCommonInput implements UserCommInput {
 
             input.host = buildHost(host, true);
 
-            input.OU = buildOU(OU, true);
+            input.distinguishedName = buildDistinguishedName(distinguishedName, true);
 
             input.userCommonName = buildUserCommonName(userCommonName, true);
 
@@ -181,11 +157,7 @@ public class UserCommonInput implements UserCommInput {
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 
-            input.useSSL = buildUseSSL(useSSL);
-
-            input.keystore = buildKeystore(keystore);
-
-            input.keystorePassword = keystorePassword;
+            input.protocol = buildProtocol(protocol);
 
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 

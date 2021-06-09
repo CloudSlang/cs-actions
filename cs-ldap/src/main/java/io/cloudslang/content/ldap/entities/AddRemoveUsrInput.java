@@ -22,17 +22,13 @@ public interface AddRemoveUsrInput {
 
     String getPassword();
 
-    String getGroupDN();
+    String getGroupDistinguishedName();
 
-    String getUserDN();
+    String getUserDistinguishedName();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

@@ -22,14 +22,12 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class DeleteGroupInput implements DeleteGroupInterface {
 
     private String host;
-    private String OU;
+    private String distinguishedName;
     private String groupCommonName;
     private String username;
     private String password;
-    private boolean useSSL;
+    private String protocol;
     private boolean trustAllRoots;
-    private String keystore;
-    private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
@@ -41,8 +39,8 @@ public class DeleteGroupInput implements DeleteGroupInterface {
         return host;
     }
 
-    public String getOU() {
-        return OU;
+    public String getDistinguishedName() {
+        return distinguishedName;
     }
 
     public String getGroupCommonName() {
@@ -57,20 +55,12 @@ public class DeleteGroupInput implements DeleteGroupInterface {
         return password;
     }
 
-    public Boolean getUseSSL() {
-        return useSSL;
+    public String getProtocol() {
+        return protocol;
     }
 
     public Boolean getTrustAllRoots() {
         return trustAllRoots;
-    }
-
-    public String getKeyStore() {
-        return keystore;
-    }
-
-    public String getKeyStorePassword() {
-        return keystorePassword;
     }
 
     public String getTrustKeystore() {
@@ -88,14 +78,12 @@ public class DeleteGroupInput implements DeleteGroupInterface {
     public static class Builder {
 
         private String host;
-        private String OU;
+        private String distinguishedName;
         private String groupCommonName;
         private String username;
         private String password;
-        private String useSSL;
+        private String protocol;
         private String trustAllRoots;
-        private String keystore;
-        private String keystorePassword;
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
@@ -106,8 +94,8 @@ public class DeleteGroupInput implements DeleteGroupInterface {
             return this;
         }
 
-        public DeleteGroupInput.Builder OU(String OU) {
-            this.OU = OU;
+        public DeleteGroupInput.Builder distinguishedName(String distinguishedName) {
+            this.distinguishedName = distinguishedName;
             return this;
         }
 
@@ -127,8 +115,8 @@ public class DeleteGroupInput implements DeleteGroupInterface {
             return this;
         }
 
-        public DeleteGroupInput.Builder useSSL(String useSSL) {
-            this.useSSL = useSSL;
+        public DeleteGroupInput.Builder protocol(String protocol) {
+            this.protocol = protocol;
             return this;
         }
 
@@ -136,18 +124,6 @@ public class DeleteGroupInput implements DeleteGroupInterface {
             this.trustAllRoots = trustAllRoots;
             return this;
         }
-
-        public DeleteGroupInput.Builder keyStore(String keystore) {
-            this.keystore = keystore;
-            return this;
-        }
-
-
-        public DeleteGroupInput.Builder keyStorePassword(String keystorePassword) {
-            this.keystorePassword = keystorePassword;
-            return this;
-        }
-
 
         public DeleteGroupInput.Builder trustKeystore(String trustKeystore) {
             this.trustKeystore = trustKeystore;
@@ -171,7 +147,7 @@ public class DeleteGroupInput implements DeleteGroupInterface {
 
             input.host = buildHost(host, true);
 
-            input.OU = buildOU(OU, true);
+            input.distinguishedName = buildDistinguishedName(distinguishedName, true);
 
             input.groupCommonName = buildGroupCommonName(groupCommonName, true);
 
@@ -181,11 +157,7 @@ public class DeleteGroupInput implements DeleteGroupInterface {
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 
-            input.useSSL = buildUseSSL(useSSL);
-
-            input.keystore = buildKeystore(keystore);
-
-            input.keystorePassword = keystorePassword;
+            input.protocol = buildProtocol(protocol);
 
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 

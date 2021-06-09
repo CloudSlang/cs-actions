@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2021 Micro Focus
+ * (c) Copyright 2020 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -48,12 +48,12 @@ public class UpdateUserDetailsService {
             LDAPQuery ldap = new LDAPQuery();
             List<ModificationItem> mods = new ArrayList<>();
 
-            if (input.getUseSSL()) {
+            if (input.getProtocol().toLowerCase().trim().equals("https")) {
                 if (input.getTrustAllRoots()) {
                     context = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {
                     context = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                            input.getKeyStore(), input.getKeyStorePassword(), input.getTrustKeystore(), input.getTrustPassword());
+                              input.getTrustKeystore(), input.getTrustPassword());
                 }
             } else {
                 context = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
@@ -69,7 +69,7 @@ public class UpdateUserDetailsService {
             modifyCustomAttributes(input.getAttributesList(), mods);
 
             // make the changes
-            context.modifyAttributes(Constants.AD_COMMOM_NAME + input.getUserCommonName() + ", " + input.getOU(),
+            context.modifyAttributes(Constants.AD_COMMOM_NAME + input.getUserCommonName() + ", " + input.getDistinguishedName(),
                     mods.toArray(new ModificationItem[mods.size()]));
 
             results.put(RETURN_CODE, "0");

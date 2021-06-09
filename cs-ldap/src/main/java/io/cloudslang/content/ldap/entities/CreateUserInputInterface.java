@@ -18,7 +18,7 @@ public interface CreateUserInputInterface {
 
     String getHost();
 
-    String getOU();
+    String getDistinguishedName();
 
     String getUserCommonName();
 
@@ -30,13 +30,9 @@ public interface CreateUserInputInterface {
 
     String getPassword();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

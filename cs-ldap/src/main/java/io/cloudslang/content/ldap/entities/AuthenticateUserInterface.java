@@ -18,19 +18,15 @@ public interface AuthenticateUserInterface {
 
     String getHost();
 
-    String getRootDN();
+    String getRootDistinguishedName();
 
     String getUsername();
 
     String getPassword();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

@@ -22,16 +22,14 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class CreateGroupInput implements CreateGroupInputInterface {
 
     private String host;
-    private String OU;
+    private String distinguishedName;
     private String groupCommonName;
     private String groupType;
     private String sAMAccountName;
     private String username;
     private String password;
-    private boolean useSSL;
+    private String protocol;
     private boolean trustAllRoots;
-    private String keystore;
-    private String keystorePassword;
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
@@ -43,8 +41,8 @@ public class CreateGroupInput implements CreateGroupInputInterface {
         return host;
     }
 
-    public String getOU() {
-        return OU;
+    public String getDistinguishedName() {
+        return distinguishedName;
     }
 
     public String getGroupCommonName() {
@@ -63,20 +61,12 @@ public class CreateGroupInput implements CreateGroupInputInterface {
         return password;
     }
 
-    public Boolean getUseSSL() {
-        return useSSL;
+    public String getProtocol() {
+        return protocol;
     }
 
     public Boolean getTrustAllRoots() {
         return trustAllRoots;
-    }
-
-    public String getKeyStore() {
-        return keystore;
-    }
-
-    public String getKeyStorePassword() {
-        return keystorePassword;
     }
 
     public String getTrustKeystore() {
@@ -96,16 +86,14 @@ public class CreateGroupInput implements CreateGroupInputInterface {
     public static class Builder {
 
         private String host;
-        private String OU;
+        private String distinguishedName;
         private String groupCommonName;
         private String groupType;
         private String sAMAccountName;
         private String username;
         private String password;
-        private String useSSL;
+        private String protocol;
         private String trustAllRoots;
-        private String keystore;
-        private String keystorePassword;
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
@@ -116,8 +104,8 @@ public class CreateGroupInput implements CreateGroupInputInterface {
             return this;
         }
 
-        public CreateGroupInput.Builder OU(String OU) {
-            this.OU = OU;
+        public CreateGroupInput.Builder distinguishedName(String distinguishedName) {
+            this.distinguishedName = distinguishedName;
             return this;
         }
 
@@ -147,8 +135,8 @@ public class CreateGroupInput implements CreateGroupInputInterface {
             return this;
         }
 
-        public CreateGroupInput.Builder useSSL(String useSSL) {
-            this.useSSL = useSSL;
+        public CreateGroupInput.Builder protocol(String protocol) {
+            this.protocol = protocol;
             return this;
         }
 
@@ -156,18 +144,6 @@ public class CreateGroupInput implements CreateGroupInputInterface {
             this.trustAllRoots = trustAllRoots;
             return this;
         }
-
-        public CreateGroupInput.Builder keyStore(String keystore) {
-            this.keystore = keystore;
-            return this;
-        }
-
-
-        public CreateGroupInput.Builder keyStorePassword(String keystorePassword) {
-            this.keystorePassword = keystorePassword;
-            return this;
-        }
-
 
         public CreateGroupInput.Builder trustKeystore(String trustKeystore) {
             this.trustKeystore = trustKeystore;
@@ -191,7 +167,7 @@ public class CreateGroupInput implements CreateGroupInputInterface {
 
             input.host = buildHost(host, true);
 
-            input.OU = buildOU(OU, true);
+            input.distinguishedName = buildDistinguishedName(distinguishedName, true);
 
             input.groupCommonName = buildGroupCommonName(groupCommonName, true);
 
@@ -205,11 +181,7 @@ public class CreateGroupInput implements CreateGroupInputInterface {
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 
-            input.useSSL = buildUseSSL(useSSL);
-
-            input.keystore = buildKeystore(keystore);
-
-            input.keystorePassword = keystorePassword;
+            input.protocol = buildProtocol(protocol);
 
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 

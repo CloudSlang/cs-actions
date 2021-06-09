@@ -18,7 +18,7 @@ public interface ComputerAccountInterface {
 
     String getHost();
 
-    String getOU();
+    String getDistinguishedName();
 
     String getComputerCommonName();
 
@@ -26,13 +26,9 @@ public interface ComputerAccountInterface {
 
     String getPassword();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

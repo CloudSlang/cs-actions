@@ -18,7 +18,7 @@ public interface ResetUserPassInput {
 
     String getHost();
 
-    String getUserDN();
+    String getUserDistinguishedName();
 
     String getUserPassword();
 
@@ -26,13 +26,9 @@ public interface ResetUserPassInput {
 
     String getPassword();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 

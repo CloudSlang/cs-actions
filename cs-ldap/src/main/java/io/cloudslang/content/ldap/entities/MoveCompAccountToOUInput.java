@@ -21,17 +21,13 @@ public interface MoveCompAccountToOUInput {
 
     String getHost();
 
-    String getComputerDN();
+    String getComputerDistinguishedName();
 
-    String getNewOUDN();
+    String getOuCommonName();
 
-    Boolean getUseSSL();
+    String getProtocol();
 
     Boolean getTrustAllRoots();
-
-    String getKeyStore();
-
-    String getKeyStorePassword();
 
     String getTrustKeystore();
 
