@@ -39,7 +39,7 @@ public class MoveComputerAccountToOUService {
             String OU = input.getOuCommonName();
             DirContext ctx;
 
-            if (input.getProtocol().toLowerCase().equals("https")) {
+            if (input.getProtocol().toLowerCase().trim().equals("https")) {
                 if (Boolean.valueOf(input.getTrustAllRoots())) {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {

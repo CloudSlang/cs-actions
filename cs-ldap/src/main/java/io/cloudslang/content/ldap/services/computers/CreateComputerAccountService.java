@@ -53,7 +53,7 @@ public class CreateComputerAccountService {
             Name ou = new CompositeName().add(OU);
             DirContext ctx;
 
-            if (protocol.toLowerCase().equals("https")) {
+            if (protocol.toLowerCase().trim().equals("https")) {
                 if (Boolean.valueOf(trustAllRoots)) {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {

@@ -62,7 +62,7 @@ public class UpdateUserDetailsService {
             LDAPQuery ldap = new LDAPQuery();
             List<ModificationItem> mods = new ArrayList<>();
 
-            if (input.getProtocol().toLowerCase().equals("https")) {
+            if (input.getProtocol().toLowerCase().trim().equals("https")) {
                 if (input.getTrustAllRoots()) {
                     context = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {
