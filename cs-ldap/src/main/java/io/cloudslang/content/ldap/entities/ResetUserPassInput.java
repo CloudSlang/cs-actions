@@ -34,4 +34,10 @@ public interface ResetUserPassInput {
 
     String getTrustPassword();
 
+    Integer getConnectionTimeout();
+
+    Integer getExecutionTimeout();
+
+
+
 }

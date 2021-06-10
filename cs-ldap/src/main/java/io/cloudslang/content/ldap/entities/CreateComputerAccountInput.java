@@ -19,7 +19,7 @@ import io.cloudslang.content.ldap.constants.Constants;
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class CreateComputerAccountInput implements CreateCompAccountInput{
+public class CreateComputerAccountInput implements CreateCompAccountInput {
 
     private String host;
     private String distinguishedName;
@@ -32,6 +32,8 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
+    private int connectionTimeout;
+    private int executionTimeout;
 
     private CreateComputerAccountInput() {
     }
@@ -80,6 +82,12 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
         return escapeChars;
     }
 
+    public Integer getConnectionTimeout() { return connectionTimeout; }
+
+    public Integer getExecutionTimeout() {
+        return executionTimeout;
+    }
+
     public static class Builder {
 
         private String host;
@@ -93,6 +101,8 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
+        private String connectionTimeout;
+        private String executionTimeout;
 
 
         public Builder host(String host) {
@@ -154,6 +164,16 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
             return this;
         }
 
+        public Builder connectionTimeout(String connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
+        public Builder executionTimeout(String executionTimeout) {
+            this.executionTimeout = executionTimeout;
+            return this;
+        }
+
         public CreateComputerAccountInput build() throws Exception {
             CreateComputerAccountInput input = new CreateComputerAccountInput();
 
@@ -161,9 +181,9 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
 
             input.distinguishedName = buildDistinguishedName(distinguishedName, true);
 
-            input.computerCommonName = buildComputerCommonName(computerCommonName,true);
+            input.computerCommonName = buildComputerCommonName(computerCommonName, true);
 
-            input.sAMAccountName = buildSAMAccountName(sAMAccountName,computerCommonName);
+            input.sAMAccountName = buildSAMAccountName(sAMAccountName, computerCommonName);
 
             input.username = buildUsername(username);
 
@@ -178,6 +198,10 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
             input.trustPassword = trustPassword;
 
             input.escapeChars = buildEscapeChars(escapeChars);
+
+            input.connectionTimeout = buildConnectionTimeout(connectionTimeout);
+
+            input.executionTimeout = buildExecutionTimeout(executionTimeout);
 
             return input;
         }

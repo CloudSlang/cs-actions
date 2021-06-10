@@ -33,4 +33,8 @@ public interface AddRemoveUsrInput {
     String getTrustKeystore();
 
     String getTrustPassword();
+
+    Integer getConnectionTimeout();
+
+    Integer getExecutionTimeout();
 }

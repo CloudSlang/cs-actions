@@ -52,4 +52,8 @@ public interface UpdateUserDetailsInterface {
 
     String getTrustPassword();
 
+    Integer getConnectionTimeout();
+
+    Integer getExecutionTimeout();
+
 }

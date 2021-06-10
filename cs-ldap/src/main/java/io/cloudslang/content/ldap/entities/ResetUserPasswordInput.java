@@ -30,6 +30,8 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
+    private int connectionTimeout;
+    private int executionTimeout;
 
     private ResetUserPasswordInput() {
     }
@@ -70,6 +72,12 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
         return userPassword;
     }
 
+    public Integer getConnectionTimeout() { return connectionTimeout; }
+
+    public Integer getExecutionTimeout() {
+        return executionTimeout;
+    }
+
     public static class Builder {
 
         private String host;
@@ -81,6 +89,8 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
+        private String connectionTimeout;
+        private String executionTimeout;
 
 
         public Builder host(String host) {
@@ -130,6 +140,16 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
             return this;
         }
 
+        public Builder connectionTimeout(String connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
+        public Builder executionTimeout(String executionTimeout) {
+            this.executionTimeout = executionTimeout;
+            return this;
+        }
+
         public ResetUserPasswordInput build() throws Exception {
             ResetUserPasswordInput input = new ResetUserPasswordInput();
 
@@ -150,6 +170,10 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 
             input.trustPassword = trustPassword;
+
+            input.connectionTimeout = buildConnectionTimeout(connectionTimeout);
+
+            input.executionTimeout = buildExecutionTimeout(executionTimeout);
 
             return input;
         }

@@ -48,14 +48,14 @@ public class DeleteComputerAccountService {
 
             if (input.getProtocol().toLowerCase().trim().equals("https")) {
                 if (Boolean.valueOf(input.getTrustAllRoots())) {
-                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
+                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
                 } else {
-                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),"false",
-                            input.getTrustKeystore(), input.getTrustPassword());
+                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
+                            input.getTrustKeystore(), input.getTrustPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
                 }
 
             } else {
-                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
+                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
             }
             String compDN = "CN=" + compCN + "," + OU;
             Name comp = new CompositeName().add(compDN);
@@ -64,7 +64,7 @@ public class DeleteComputerAccountService {
             ctx.close();
             results.put(RETURN_RESULT, "Deleted computer account with CN=" + compCN);
             results.put(RESULT_COMPUTER_DN, compDN);
-            results.put(RETURN_CODE,"0");
+            results.put(RETURN_CODE, "0");
 
         } catch (NamingException e) {
             Exception exception = MySSLSocketFactory.getException();
@@ -72,7 +72,7 @@ public class DeleteComputerAccountService {
                 exception = e;
             results.put(EXCEPTION, String.valueOf(exception));
             results.put(RETURN_RESULT, replaceInvalidXMLCharacters(exception.getMessage()));
-            results.put(RETURN_CODE,"-1");
+            results.put(RETURN_CODE, "-1");
         }
         return results;
     }

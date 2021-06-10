@@ -44,6 +44,8 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
+    private int connectionTimeout;
+    private int executionTimeout;
 
     private MoveComputerAccountToOUInput() {
     }
@@ -82,6 +84,12 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
         return trustPassword;
     }
 
+    public Integer getConnectionTimeout() { return connectionTimeout; }
+
+    public Integer getExecutionTimeout() {
+        return executionTimeout;
+    }
+
 
     public static class Builder {
 
@@ -94,6 +102,8 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
+        private String connectionTimeout;
+        private String executionTimeout;
 
         public Builder host(String host) {
             this.host = host;
@@ -143,6 +153,16 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
             return this;
         }
 
+        public Builder connectionTimeout(String connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
+        public Builder executionTimeout(String executionTimeout) {
+            this.executionTimeout = executionTimeout;
+            return this;
+        }
+
 
         public MoveComputerAccountToOUInput build() throws Exception {
             MoveComputerAccountToOUInput input = new MoveComputerAccountToOUInput();
@@ -164,6 +184,10 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 
             input.trustPassword = trustPassword;
+
+            input.connectionTimeout = buildConnectionTimeout(connectionTimeout);
+
+            input.executionTimeout = buildExecutionTimeout(executionTimeout);
 
             return input;
         }

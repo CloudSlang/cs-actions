@@ -38,4 +38,8 @@ public interface CreateCompAccountInput {
 
     Boolean getEscapeChars();
 
+    Integer getConnectionTimeout();
+
+    Integer getExecutionTimeout();
+
 }

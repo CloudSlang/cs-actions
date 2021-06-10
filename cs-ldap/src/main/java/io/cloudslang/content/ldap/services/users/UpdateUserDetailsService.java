@@ -50,13 +50,13 @@ public class UpdateUserDetailsService {
 
             if (input.getProtocol().toLowerCase().trim().equals("https")) {
                 if (input.getTrustAllRoots()) {
-                    context = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
+                    context = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
                 } else {
                     context = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                              input.getTrustKeystore(), input.getTrustPassword());
+                            input.getTrustKeystore(), input.getTrustPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
                 }
             } else {
-                context = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
+                context = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
             }
             //handle country attributes
             modifyCountryAndRegionAttributes(input.getCountryOrRegion(), mods);
@@ -101,7 +101,7 @@ public class UpdateUserDetailsService {
             if ((countOccurrences(countryOrRegion, ",") == 2)) {
                 String[] countryValues = countryOrRegion.split(",", 3);
                 modsList.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute(Constants.AD_COUNTRY_NAME, countryValues[0])));
-                modsList.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute( Constants.AD_COUNTRY_DIGITS, countryValues[1])));
+                modsList.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute(Constants.AD_COUNTRY_DIGITS, countryValues[1])));
                 modsList.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute(Constants.AD_COUNTRY_CODE, countryValues[2])));
             } else {
                 throw new IllegalArgumentException(ExceptionMsgs.COUNTRY_EXPECTED_FORMAT);
@@ -111,7 +111,7 @@ public class UpdateUserDetailsService {
 
     //generate new attribute
     public static void modifyAttributes(String firstName, String lastName, String displayName, String street, String city,
-                                                          String zipOrPostalCode, String stateOrProvince, List<ModificationItem> mods){
+                                        String zipOrPostalCode, String stateOrProvince, List<ModificationItem> mods) {
         //constructs arrays to hold the values of the inputs
         String attrsArray[] = new String[]{firstName, lastName, displayName, street, city, zipOrPostalCode, stateOrProvince};
         String adAttrsArray[] = new String[]{Constants.AD_GIVEN_NAME, Constants.AD_SURNAME, Constants.AD_DISPLAY_NAME,
@@ -149,7 +149,7 @@ public class UpdateUserDetailsService {
     public static int countOccurrences(String string, String substring) {
         int c, i = string.indexOf(substring);
 
-        for( c = 0; i != -1; i = string.indexOf(substring, i + 1)) {
+        for (c = 0; i != -1; i = string.indexOf(substring, i + 1)) {
             ++c;
         }
         return c;

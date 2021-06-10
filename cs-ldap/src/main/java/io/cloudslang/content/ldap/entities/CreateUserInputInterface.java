@@ -40,4 +40,8 @@ public interface CreateUserInputInterface {
 
     Boolean getEscapeChars();
 
+    Integer getConnectionTimeout();
+
+    Integer getExecutionTimeout();
+
 }

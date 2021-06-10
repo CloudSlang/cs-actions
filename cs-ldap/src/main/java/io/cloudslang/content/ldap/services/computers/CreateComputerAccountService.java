@@ -55,14 +55,14 @@ public class CreateComputerAccountService {
 
             if (protocol.toLowerCase().trim().equals("https")) {
                 if (Boolean.valueOf(trustAllRoots)) {
-                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
+                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
                 } else {
                     ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                             input.getTrustKeystore(), input.getTrustPassword());
+                            input.getTrustKeystore(), input.getTrustPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
                 }
 
             } else {
-                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
+                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
             }
             DirContext ctxOU = (DirContext) ctx.lookup(ou);
             Attributes compAttrs = new BasicAttributes(true);
@@ -88,7 +88,7 @@ public class CreateComputerAccountService {
 
             results.put(RETURN_RESULT, "Added computer account with CN=" + compCN);
             results.put(RESULT_COMPUTER_DN, compDN.toString());
-            results.put(RETURN_CODE,"0");
+            results.put(RETURN_CODE, "0");
 
         } catch (NamingException e) {
             Exception exception = MySSLSocketFactory.getException();
@@ -96,7 +96,7 @@ public class CreateComputerAccountService {
                 exception = e;
             results.put(EXCEPTION, String.valueOf(exception));
             results.put(RETURN_RESULT, replaceInvalidXMLCharacters(exception.getMessage()));
-            results.put(RETURN_CODE,"-1");
+            results.put(RETURN_CODE, "-1");
         }
         return results;
     }

@@ -34,22 +34,25 @@ public class DisableComputerAccountAction {
     /**
      * Disables a computer account in Active Directory.
      *
-     * @param host                       The domain controller to connect to.
-     * @param distinguishedName          The Organizational Unit DN or Common Name DN to add the computer to.
-     *                                   (i.e. OU=OUTest1,DC=battleground,DC=ad)
-     * @param computerCommonName         The name of the computer (its CN).
-     * @param username                   The user to connect to AD as.
-     * @param password                   The password to connect to AD as.
-     * @param protocol                   The protocol to use when connecting to the AD server.
-     *                                   Valid values: 'HTTP' and 'HTTPS'.
-     * @param trustAllRoots              Specifies whether to enable weak security over SSL. A SSL certificate is trusted
-     *                                   even if no trusted certification authority issued it.
-     *                                   Valid values: true, false.
-     *                                   Default value: true.
-     * @param trustKeystore              The location of the TrustStore file.
-     *                                   Example: %JAVA_HOME%/jre/lib/security/cacerts.
-     * @param trustPassword              The password associated with the TrustStore file.
-     *
+     * @param host               The domain controller to connect to.
+     * @param distinguishedName  The Organizational Unit DN or Common Name DN to add the computer to.
+     *                           (i.e. OU=OUTest1,DC=battleground,DC=ad)
+     * @param computerCommonName The name of the computer (its CN).
+     * @param username           The user to connect to AD as.
+     * @param password           The password to connect to AD as.
+     * @param protocol           The protocol to use when connecting to the AD server.
+     *                           Valid values: 'HTTP' and 'HTTPS'.
+     * @param trustAllRoots      Specifies whether to enable weak security over SSL. A SSL certificate is trusted
+     *                           even if no trusted certification authority issued it.
+     *                           Valid values: true, false.
+     *                           Default value: true.
+     * @param trustKeystore      The location of the TrustStore file.
+     *                           Example: %JAVA_HOME%/jre/lib/security/cacerts.
+     * @param trustPassword      The password associated with the TrustStore file.
+     * @param connectionTimeout  Time in milliseconds to wait for the connection to be made.
+     *                           Default value: 10000.
+     * @param executionTimeout   Time in milliseconds to wait for the command to complete.
+     *                           Default value: 90000.
      * @return a map containing the output of the operations. Keys present in the map are:
      * returnResult - The return result of the operation.
      * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
@@ -80,7 +83,9 @@ public class DisableComputerAccountAction {
             @Param(value = InputNames.PROTOCOL) String protocol,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword){
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
+            @Param(value = InputNames.CONNECTION_TIMEOUT) String connectionTimeout,
+            @Param(value = InputNames.EXECUTION_TIMEOUT) String executionTimeout) {
         DisableComputerAccountInput.Builder inputBuilder = new DisableComputerAccountInput.Builder()
                 .host(host)
                 .distinguishedName(distinguishedName)
@@ -90,7 +95,9 @@ public class DisableComputerAccountAction {
                 .protocol(protocol)
                 .trustAllRoots(trustAllRoots)
                 .trustKeystore(trustKeystore)
-                .trustPassword(trustPassword);
+                .trustPassword(trustPassword)
+                .connectionTimeout(connectionTimeout)
+                .executionTimeout(executionTimeout);
         try {
             return new DisableComputerAccountService().execute(inputBuilder.build());
         } catch (Exception e) {

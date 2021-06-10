@@ -33,4 +33,8 @@ public interface MoveCompAccountToOUInput {
 
     String getTrustPassword();
 
+    Integer getConnectionTimeout();
+
+    Integer getExecutionTimeout();
+
 }
