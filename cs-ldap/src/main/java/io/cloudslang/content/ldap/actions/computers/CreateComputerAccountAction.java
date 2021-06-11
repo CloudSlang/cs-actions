@@ -78,7 +78,6 @@ public class CreateComputerAccountAction {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
             })
     public Map<String, String> execute(
-            //Set descriptions to the inputs and outputs
             @Param(value = InputNames.HOST, required = true) String host,
             @Param(value = InputNames.DISTINGUISHED_NAME, required = true) String distinguishedName,
             @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true) String computerCommonName,
