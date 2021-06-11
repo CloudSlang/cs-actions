@@ -39,8 +39,8 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private int connectionTimeout;
-    private int executionTimeout;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     private UpdateUserDetailsInput() {
     }
@@ -117,9 +117,9 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
         return trustPassword;
     }
 
-    public Integer getConnectionTimeout() { return connectionTimeout; }
+    public String getConnectionTimeout() { return connectionTimeout; }
 
-    public Integer getExecutionTimeout() {
+    public String getExecutionTimeout() {
         return executionTimeout;
     }
 
@@ -241,12 +241,12 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
             return this;
         }
 
-        public Builder connectionTimeout(String connectionTimeout) {
+        public UpdateUserDetailsInput.Builder connectionTimeout(String connectionTimeout) {
             this.connectionTimeout = connectionTimeout;
             return this;
         }
 
-        public Builder executionTimeout(String executionTimeout) {
+        public UpdateUserDetailsInput.Builder executionTimeout(String executionTimeout) {
             this.executionTimeout = executionTimeout;
             return this;
         }
@@ -291,9 +291,9 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
 
             input.attributesList = attributesList;
 
-            input.connectionTimeout = buildConnectionTimeout(connectionTimeout);
+            input.connectionTimeout = connectionTimeout;
 
-            input.executionTimeout = buildExecutionTimeout(executionTimeout);
+            input.executionTimeout = executionTimeout;
 
             return input;
         }

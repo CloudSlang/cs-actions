@@ -31,8 +31,8 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private int connectionTimeout;
-    private int executionTimeout;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     public AddRemoveUserInput() {
     }
@@ -41,7 +41,9 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
         return host;
     }
 
-    public String getGroupDistinguishedName() { return groupDistinguishedName; }
+    public String getGroupDistinguishedName() {
+        return groupDistinguishedName;
+    }
 
     public String getUserDistinguishedName() {
         return userDistinguishedName;
@@ -51,7 +53,9 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
         return username;
     }
 
-    public String getPassword() { return password; }
+    public String getPassword() {
+        return password;
+    }
 
     public String getProtocol() {
         return protocol;
@@ -69,9 +73,9 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
         return trustPassword;
     }
 
-    public Integer getConnectionTimeout() { return connectionTimeout; }
+    public String getConnectionTimeout() { return connectionTimeout; }
 
-    public Integer getExecutionTimeout() {
+    public String getExecutionTimeout() {
         return executionTimeout;
     }
 
@@ -137,12 +141,12 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
             return this;
         }
 
-        public Builder connectionTimeout(String connectionTimeout) {
+        public AddRemoveUserInput.Builder connectionTimeout(String connectionTimeout) {
             this.connectionTimeout = connectionTimeout;
             return this;
         }
 
-        public Builder executionTimeout(String executionTimeout) {
+        public AddRemoveUserInput.Builder executionTimeout(String executionTimeout) {
             this.executionTimeout = executionTimeout;
             return this;
         }
@@ -168,9 +172,9 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
 
             input.trustPassword = trustPassword;
 
-            input.connectionTimeout = buildConnectionTimeout(connectionTimeout);
+            input.connectionTimeout = connectionTimeout;
 
-            input.executionTimeout = buildExecutionTimeout(executionTimeout);
+            input.executionTimeout = executionTimeout;
 
             return input;
         }

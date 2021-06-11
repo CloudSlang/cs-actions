@@ -30,8 +30,8 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private int connectionTimeout;
-    private int executionTimeout;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     private ResetUserPasswordInput() {
     }
@@ -72,9 +72,9 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
         return userPassword;
     }
 
-    public Integer getConnectionTimeout() { return connectionTimeout; }
+    public String getConnectionTimeout() { return connectionTimeout; }
 
-    public Integer getExecutionTimeout() {
+    public String getExecutionTimeout() {
         return executionTimeout;
     }
 
@@ -171,9 +171,9 @@ public class ResetUserPasswordInput implements ResetUserPassInput{
 
             input.trustPassword = trustPassword;
 
-            input.connectionTimeout = buildConnectionTimeout(connectionTimeout);
+            input.connectionTimeout = connectionTimeout;
 
-            input.executionTimeout = buildExecutionTimeout(executionTimeout);
+            input.executionTimeout = executionTimeout;
 
             return input;
         }

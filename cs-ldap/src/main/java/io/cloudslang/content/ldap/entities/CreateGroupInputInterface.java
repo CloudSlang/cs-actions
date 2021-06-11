@@ -40,8 +40,8 @@ public interface CreateGroupInputInterface {
 
     Boolean getEscapeChars();
 
-    Integer getConnectionTimeout();
+    String getConnectionTimeout();
 
-    Integer getExecutionTimeout();
+    String getExecutionTimeout();
 
 }

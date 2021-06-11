@@ -29,8 +29,8 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private int connectionTimeout;
-    private int executionTimeout;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     private AuthenticateUserInput() {
     }
@@ -67,9 +67,9 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
         return trustPassword;
     }
 
-    public Integer getConnectionTimeout() { return connectionTimeout; }
+    public String getConnectionTimeout() { return connectionTimeout; }
 
-    public Integer getExecutionTimeout() {
+    public String getExecutionTimeout() {
         return executionTimeout;
     }
 
@@ -130,12 +130,12 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
             return this;
         }
 
-        public Builder connectionTimeout(String connectionTimeout) {
+        public AuthenticateUserInput.Builder connectionTimeout(String connectionTimeout) {
             this.connectionTimeout = connectionTimeout;
             return this;
         }
 
-        public Builder executionTimeout(String executionTimeout) {
+        public AuthenticateUserInput.Builder executionTimeout(String executionTimeout) {
             this.executionTimeout = executionTimeout;
             return this;
         }
@@ -160,9 +160,9 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
 
             input.trustPassword = trustPassword;
 
-            input.connectionTimeout = buildConnectionTimeout(connectionTimeout);
+            input.connectionTimeout = connectionTimeout;
 
-            input.executionTimeout = buildExecutionTimeout(executionTimeout);
+            input.executionTimeout = executionTimeout;
 
             return input;
         }

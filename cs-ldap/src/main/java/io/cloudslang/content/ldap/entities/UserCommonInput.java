@@ -31,8 +31,8 @@ public class UserCommonInput implements UserCommInput {
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private int connectionTimeout;
-    private int executionTimeout;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     private UserCommonInput() {
     }
@@ -77,9 +77,9 @@ public class UserCommonInput implements UserCommInput {
         return escapeChars;
     }
 
-    public Integer getConnectionTimeout() { return connectionTimeout; }
+    public String getConnectionTimeout() { return connectionTimeout; }
 
-    public Integer getExecutionTimeout() {
+    public String getExecutionTimeout() {
         return executionTimeout;
     }
 
@@ -152,12 +152,12 @@ public class UserCommonInput implements UserCommInput {
             return this;
         }
 
-        public Builder connectionTimeout(String connectionTimeout) {
+        public UserCommonInput.Builder connectionTimeout(String connectionTimeout) {
             this.connectionTimeout = connectionTimeout;
             return this;
         }
 
-        public Builder executionTimeout(String executionTimeout) {
+        public UserCommonInput.Builder executionTimeout(String executionTimeout) {
             this.executionTimeout = executionTimeout;
             return this;
         }
@@ -185,9 +185,9 @@ public class UserCommonInput implements UserCommInput {
 
             input.escapeChars = buildEscapeChars(escapeChars);
 
-            input.connectionTimeout = buildConnectionTimeout(connectionTimeout);
+            input.connectionTimeout = connectionTimeout;
 
-            input.executionTimeout = buildExecutionTimeout(executionTimeout);
+            input.executionTimeout = executionTimeout;
 
             return input;
         }

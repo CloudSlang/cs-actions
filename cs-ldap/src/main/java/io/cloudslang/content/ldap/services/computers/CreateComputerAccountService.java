@@ -55,14 +55,14 @@ public class CreateComputerAccountService {
 
             if (protocol.toLowerCase().trim().equals("https")) {
                 if (Boolean.valueOf(trustAllRoots)) {
-                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
+                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
                 } else {
                     ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                            input.getTrustKeystore(), input.getTrustPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
+                            input.getTrustKeystore(), input.getTrustPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
                 }
 
             } else {
-                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
+                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
             }
             DirContext ctxOU = (DirContext) ctx.lookup(ou);
             Attributes compAttrs = new BasicAttributes(true);

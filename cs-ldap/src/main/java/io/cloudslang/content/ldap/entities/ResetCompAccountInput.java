@@ -31,8 +31,8 @@ public interface ResetCompAccountInput {
 
     String getTrustPassword();
 
-    Integer getConnectionTimeout();
+    String getConnectionTimeout();
 
-    Integer getExecutionTimeout();
+    String getExecutionTimeout();
 
 }

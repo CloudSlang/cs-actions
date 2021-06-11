@@ -36,8 +36,8 @@ public interface DeleteGroupInterface {
 
     Boolean getEscapeChars();
 
-    Integer getConnectionTimeout();
+    String getConnectionTimeout();
 
-    Integer getExecutionTimeout();
+    String getExecutionTimeout();
 
 }

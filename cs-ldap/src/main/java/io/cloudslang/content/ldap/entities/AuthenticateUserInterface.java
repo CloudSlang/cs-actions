@@ -32,7 +32,7 @@ public interface AuthenticateUserInterface {
 
     String getTrustPassword();
 
-    Integer getConnectionTimeout();
+    String getConnectionTimeout();
 
-    Integer getExecutionTimeout();
+    String getExecutionTimeout();
 }

@@ -107,22 +107,6 @@ public final class InputBuilderUtils {
         }
     }
 
-    public static int buildConnectionTimeout(String connectionTimeout) {
-        try {
-            return Integer.parseInt(connectionTimeout);
-        } catch (NumberFormatException e) {
-            return -1;
-        }
-    }
-
-    public static int buildExecutionTimeout(String executionTimeout) {
-        try {
-            return Integer.parseInt(executionTimeout);
-        } catch (NumberFormatException e) {
-            return -1;
-        }
-    }
-
     public static String buildRootDN(String rootDN, boolean mandatory) throws Exception {
         if (isEmpty(rootDN) && mandatory) {
             throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.ROOT_DISTINGUISHED_NAME));

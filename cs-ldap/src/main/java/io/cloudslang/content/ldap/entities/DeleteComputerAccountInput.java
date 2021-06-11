@@ -44,8 +44,8 @@ public class DeleteComputerAccountInput implements ComputerAccountInterface{
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private int connectionTimeout;
-    private int executionTimeout;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     private DeleteComputerAccountInput() {
     }
@@ -88,9 +88,9 @@ public class DeleteComputerAccountInput implements ComputerAccountInterface{
         return escapeChars;
     }
 
-    public Integer getConnectionTimeout() { return connectionTimeout; }
+    public String getConnectionTimeout() { return connectionTimeout; }
 
-    public Integer getExecutionTimeout() {
+    public String getExecutionTimeout() {
         return executionTimeout;
     }
 
@@ -196,9 +196,9 @@ public class DeleteComputerAccountInput implements ComputerAccountInterface{
 
             input.escapeChars = buildEscapeChars(escapeChars);
 
-            input.connectionTimeout = buildConnectionTimeout(connectionTimeout);
+            input.connectionTimeout = connectionTimeout;
 
-            input.executionTimeout = buildExecutionTimeout(executionTimeout);
+            input.executionTimeout = executionTimeout;
 
             return input;
         }

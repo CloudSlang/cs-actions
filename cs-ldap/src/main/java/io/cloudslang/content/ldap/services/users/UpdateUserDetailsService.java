@@ -50,13 +50,13 @@ public class UpdateUserDetailsService {
 
             if (input.getProtocol().toLowerCase().trim().equals("https")) {
                 if (input.getTrustAllRoots()) {
-                    context = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
+                    context = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
                 } else {
                     context = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                            input.getTrustKeystore(), input.getTrustPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
+                            input.getTrustKeystore(), input.getTrustPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
                 }
             } else {
-                context = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout().toString(), input.getExecutionTimeout().toString());
+                context = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
             }
             //handle country attributes
             modifyCountryAndRegionAttributes(input.getCountryOrRegion(), mods);

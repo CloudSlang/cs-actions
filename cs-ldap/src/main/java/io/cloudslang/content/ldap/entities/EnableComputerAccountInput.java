@@ -44,8 +44,8 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private int connectionTimeout;
-    private int executionTimeout;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     private EnableComputerAccountInput() {
     }
@@ -86,9 +86,9 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
         return trustPassword;
     }
 
-    public Integer getConnectionTimeout() { return connectionTimeout; }
+    public String getConnectionTimeout() { return connectionTimeout; }
 
-    public Integer getExecutionTimeout() {
+    public String getExecutionTimeout() {
         return executionTimeout;
     }
 
@@ -187,9 +187,9 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
 
             input.trustPassword = trustPassword;
 
-            input.connectionTimeout = buildConnectionTimeout(connectionTimeout);
+            input.connectionTimeout = connectionTimeout;
 
-            input.executionTimeout = buildExecutionTimeout(executionTimeout);
+            input.executionTimeout = executionTimeout;
 
             return input;
         }

@@ -32,8 +32,8 @@ public class CreateComputerAccountInput implements CreateCompAccountInput {
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private int connectionTimeout;
-    private int executionTimeout;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     private CreateComputerAccountInput() {
     }
@@ -82,9 +82,9 @@ public class CreateComputerAccountInput implements CreateCompAccountInput {
         return escapeChars;
     }
 
-    public Integer getConnectionTimeout() { return connectionTimeout; }
+    public String getConnectionTimeout() { return connectionTimeout; }
 
-    public Integer getExecutionTimeout() {
+    public String getExecutionTimeout() {
         return executionTimeout;
     }
 
@@ -199,9 +199,9 @@ public class CreateComputerAccountInput implements CreateCompAccountInput {
 
             input.escapeChars = buildEscapeChars(escapeChars);
 
-            input.connectionTimeout = buildConnectionTimeout(connectionTimeout);
+            input.connectionTimeout = connectionTimeout;
 
-            input.executionTimeout = buildExecutionTimeout(executionTimeout);
+            input.executionTimeout = executionTimeout;
 
             return input;
         }

@@ -44,8 +44,8 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private int connectionTimeout;
-    private int executionTimeout;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     private GetComputerAccountOUInput() {
     }
@@ -82,9 +82,9 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
         return trustPassword;
     }
 
-    public Integer getConnectionTimeout() { return connectionTimeout; }
+    public String getConnectionTimeout() { return connectionTimeout; }
 
-    public Integer getExecutionTimeout() {
+    public String getExecutionTimeout() {
         return executionTimeout;
     }
 
@@ -182,9 +182,9 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
 
             input.trustPassword = trustPassword;
 
-            input.connectionTimeout = buildConnectionTimeout(connectionTimeout);
+            input.connectionTimeout = connectionTimeout;
 
-            input.executionTimeout = buildExecutionTimeout(executionTimeout);
+            input.executionTimeout = executionTimeout;
 
             return input;
         }
