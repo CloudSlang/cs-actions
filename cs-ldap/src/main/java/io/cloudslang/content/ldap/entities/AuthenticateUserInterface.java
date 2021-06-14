@@ -31,4 +31,8 @@ public interface AuthenticateUserInterface {
     String getTrustKeystore();
 
     String getTrustPassword();
+
+    String getConnectionTimeout();
+
+    String getExecutionTimeout();
 }

@@ -48,6 +48,10 @@ public class ResetComputerAccountAction {
      * @param trustKeystore             The location of the TrustStore file.
      *                                  Example: %JAVA_HOME%/jre/lib/security/cacerts.
      * @param trustPassword             The password associated with the TrustStore file.
+     * @param connectionTimeout         Time in milliseconds to wait for the connection to be made.
+     *                                  Default value: 10000.
+     * @param executionTimeout          Time in milliseconds to wait for the command to complete.
+     *                                  Default value: 90000.
      * @return a map containing the output of the operations. Keys present in the map are:
      * returnResult - The return result of the operation.
      * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
@@ -75,7 +79,9 @@ public class ResetComputerAccountAction {
             @Param(value = InputNames.PROTOCOL) String protocol,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword) {
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
+            @Param(value = InputNames.CONNECTION_TIMEOUT) String connectionTimeout,
+            @Param(value = InputNames.EXECUTION_TIMEOUT) String executionTimeout) {
         ResetComputerAccountInput.Builder inputBuilder = new ResetComputerAccountInput.Builder()
                 .host(host)
                 .computerDistinguishedName(computerDistinguishedName)
@@ -84,7 +90,9 @@ public class ResetComputerAccountAction {
                 .protocol(protocol)
                 .trustAllRoots(trustAllRoots)
                 .trustKeystore(trustKeystore)
-                .trustPassword(trustPassword);
+                .trustPassword(trustPassword)
+                .connectionTimeout(connectionTimeout)
+                .executionTimeout(executionTimeout);
         try {
             return new ResetComputerAccountService().execute(inputBuilder.build());
         } catch (Exception e) {

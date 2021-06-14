@@ -33,6 +33,8 @@ public class CreateUserInput implements CreateUserInputInterface {
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     private CreateUserInput() {
     }
@@ -85,6 +87,12 @@ public class CreateUserInput implements CreateUserInputInterface {
         return userPassword;
     }
 
+    public String getConnectionTimeout() { return connectionTimeout; }
+
+    public String getExecutionTimeout() {
+        return executionTimeout;
+    }
+
     public static class Builder {
 
         private String host;
@@ -99,6 +107,8 @@ public class CreateUserInput implements CreateUserInputInterface {
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
+        private String connectionTimeout;
+        private String executionTimeout;
 
 
         public CreateUserInput.Builder host(String host) {
@@ -164,6 +174,16 @@ public class CreateUserInput implements CreateUserInputInterface {
             return this;
         }
 
+        public CreateUserInput.Builder connectionTimeout(String connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
+        public CreateUserInput.Builder executionTimeout(String executionTimeout) {
+            this.executionTimeout = executionTimeout;
+            return this;
+        }
+
         public CreateUserInput build() throws Exception {
             CreateUserInput input = new CreateUserInput();
 
@@ -190,6 +210,10 @@ public class CreateUserInput implements CreateUserInputInterface {
             input.trustPassword = trustPassword;
 
             input.escapeChars = buildEscapeChars(escapeChars);
+
+            input.connectionTimeout = connectionTimeout;
+
+            input.executionTimeout = executionTimeout;
 
             return input;
         }

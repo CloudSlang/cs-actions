@@ -29,6 +29,8 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     private AuthenticateUserInput() {
     }
@@ -65,6 +67,12 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
         return trustPassword;
     }
 
+    public String getConnectionTimeout() { return connectionTimeout; }
+
+    public String getExecutionTimeout() {
+        return executionTimeout;
+    }
+
 
     public static class Builder {
 
@@ -76,6 +84,8 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
+        private String connectionTimeout;
+        private String executionTimeout;
 
 
         public AuthenticateUserInput.Builder host(String host) {
@@ -120,6 +130,16 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
             return this;
         }
 
+        public AuthenticateUserInput.Builder connectionTimeout(String connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
+        public AuthenticateUserInput.Builder executionTimeout(String executionTimeout) {
+            this.executionTimeout = executionTimeout;
+            return this;
+        }
+
 
         public AuthenticateUserInput build() throws Exception {
             AuthenticateUserInput input = new AuthenticateUserInput();
@@ -139,6 +159,10 @@ public class AuthenticateUserInput implements AuthenticateUserInterface {
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 
             input.trustPassword = trustPassword;
+
+            input.connectionTimeout = connectionTimeout;
+
+            input.executionTimeout = executionTimeout;
 
             return input;
         }

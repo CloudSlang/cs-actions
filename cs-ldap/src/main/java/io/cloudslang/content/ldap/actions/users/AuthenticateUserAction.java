@@ -57,6 +57,10 @@ public class AuthenticateUserAction {
      * @param trustKeystore         The location of the TrustStore file.
      *                              Example: %JAVA_HOME%/jre/lib/security/cacerts
      * @param trustPassword         The password associated with the TrustStore file.
+     * @param connectionTimeout     Time in milliseconds to wait for the connection to be made.
+     *                              Default value: 10000.
+     * @param executionTimeout      Time in milliseconds to wait for the command to complete.
+     *                              Default value: 90000.
      * @return a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message which specifies if the user was authenticated against AD in case of success or an error
      *                message in case of failure.
@@ -84,7 +88,9 @@ public class AuthenticateUserAction {
             @Param(value = InputNames.PROTOCOL) String protocol,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword){
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
+            @Param(value = InputNames.CONNECTION_TIMEOUT) String connectionTimeout,
+            @Param(value = InputNames.EXECUTION_TIMEOUT) String executionTimeout){
         AuthenticateUserInput.Builder inputBuilder = new AuthenticateUserInput.Builder()
                 .host(host)
                 .rootDistinguishedName(rootDistinguishedName)
@@ -93,7 +99,9 @@ public class AuthenticateUserAction {
                 .protocol(protocol)
                 .trustAllRoots(trustAllRoots)
                 .trustKeystore(trustKeystore)
-                .trustPassword(trustPassword);
+                .trustPassword(trustPassword)
+                .connectionTimeout(connectionTimeout)
+                .executionTimeout(executionTimeout);
         try {
             return new AuthenticateUserService().execute(inputBuilder.build());
         } catch (Exception e) {

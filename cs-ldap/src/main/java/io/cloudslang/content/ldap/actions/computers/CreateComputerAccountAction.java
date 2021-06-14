@@ -34,25 +34,28 @@ public class CreateComputerAccountAction {
     /**
      * Creates a new computer account in Active Directory.
      *
-     * @param host                       The domain controller to connect to.
-     * @param distinguishedName          The Organizational Unit DN or Common Name DN to add the computer to.
-     *                                   (i.e. OU=OUTest1,DC=battleground,DC=ad)
-     * @param computerCommonName         The name of the computer (its CN).
-     * @param sAMAccountName             Computer's sAMAccountName (ex. MYHYPNOS$). If not provided it will be assigned
-     *                                   from computerCommonName.
-     * @param username                   The user to connect to AD as.
-     * @param password                   The password to connect to AD as.
-     * @param protocol                   The protocol to use when connecting to the AD server.
-     *                                   Valid values: 'HTTP' and 'HTTPS'.
-     * @param trustAllRoots              Specifies whether to enable weak security over SSL. A SSL certificate is trusted
-     *                                   even if no trusted certification authority issued it.
-     *                                   Valid values: true, false.
-     *                                   Default value: true.
-     * @param trustKeystore              The location of the TrustStore file.
-     *                                   Example: %JAVA_HOME%/jre/lib/security/cacerts.
-     * @param trustPassword              The password associated with the TrustStore file.
-     * @param escapeChars                Add this input and set to true if you want the operation to escape the special AD chars.
-     *
+     * @param host               The domain controller to connect to.
+     * @param distinguishedName  The Organizational Unit DN or Common Name DN to add the computer to.
+     *                           (i.e. OU=OUTest1,DC=battleground,DC=ad)
+     * @param computerCommonName The name of the computer (its CN).
+     * @param sAMAccountName     Computer's sAMAccountName (ex. MYHYPNOS$). If not provided it will be assigned
+     *                           from computerCommonName.
+     * @param username           The user to connect to AD as.
+     * @param password           The password to connect to AD as.
+     * @param protocol           The protocol to use when connecting to the AD server.
+     *                           Valid values: 'HTTP' and 'HTTPS'.
+     * @param trustAllRoots      Specifies whether to enable weak security over SSL. A SSL certificate is trusted
+     *                           even if no trusted certification authority issued it.
+     *                           Valid values: true, false.
+     *                           Default value: true.
+     * @param trustKeystore      The location of the TrustStore file.
+     *                           Example: %JAVA_HOME%/jre/lib/security/cacerts.
+     * @param trustPassword      The password associated with the TrustStore file.
+     * @param escapeChars        Add this input and set to true if you want the operation to escape the special AD chars.
+     * @param connectionTimeout  Time in milliseconds to wait for the connection to be made.
+     *                           Default value: 10000.
+     * @param executionTimeout   Time in milliseconds to wait for the command to complete.
+     *                           Default value: 90000.
      * @return a map containing the output of the operations. Keys present in the map are:
      * returnResult - The return result of the operation.
      * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
@@ -85,7 +88,9 @@ public class CreateComputerAccountAction {
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
-            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
+            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars,
+            @Param(value = InputNames.CONNECTION_TIMEOUT) String connectionTimeout,
+            @Param(value = InputNames.EXECUTION_TIMEOUT) String executionTimeout) {
         CreateComputerAccountInput.Builder inputBuilder = new CreateComputerAccountInput.Builder()
                 .host(host)
                 .distinguishedName(distinguishedName)
@@ -97,7 +102,9 @@ public class CreateComputerAccountAction {
                 .trustAllRoots(trustAllRoots)
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword)
-                .escapeChars(escapeChars);
+                .escapeChars(escapeChars)
+                .connectionTimeout(connectionTimeout)
+                .executionTimeout(executionTimeout);
         try {
             return new CreateComputerAccountService().execute(inputBuilder.build());
         } catch (Exception e) {
