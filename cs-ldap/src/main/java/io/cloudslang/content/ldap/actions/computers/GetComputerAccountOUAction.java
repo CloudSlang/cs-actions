@@ -48,6 +48,10 @@ public class GetComputerAccountOUAction {
      * @param trustKeystore         The location of the TrustStore file.
      *                              Example: %JAVA_HOME%/jre/lib/security/cacerts.
      * @param trustPassword         The password associated with the TrustStore file.
+     * @param connectionTimeout     Time in milliseconds to wait for the connection to be made.
+     *                              Default value: 10000.
+     * @param executionTimeout      Time in milliseconds to wait for the command to complete.
+     *                              Default value: 90000.
      * @return a map containing the output of the operations. Keys present in the map are:
      * returnResult - The return result of the operation.
      * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
@@ -80,7 +84,9 @@ public class GetComputerAccountOUAction {
             @Param(value = InputNames.KEYSTORE) String keyStore,
             @Param(value = InputNames.KEYSTORE_PASSWORD, encrypted = true) String keyStorePassword,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword) {
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
+            @Param(value = InputNames.CONNECTION_TIMEOUT) String connectionTimeout,
+            @Param(value = InputNames.EXECUTION_TIMEOUT) String executionTimeout) {
         GetComputerAccountOUInput.Builder inputBuilder = new GetComputerAccountOUInput.Builder()
                 .host(host)
                 .rootDistinguishedName(rootDistinguishedName)
@@ -90,7 +96,9 @@ public class GetComputerAccountOUAction {
                 .protocol(protocol)
                 .trustAllRoots(trustAllRoots)
                 .trustKeystore(trustKeystore)
-                .trustPassword(trustPassword);
+                .trustPassword(trustPassword)
+                .connectionTimeout(connectionTimeout)
+                .executionTimeout(executionTimeout);
         try {
             return new GetComputerAccountOUService().execute(inputBuilder.build());
         } catch (Exception e) {

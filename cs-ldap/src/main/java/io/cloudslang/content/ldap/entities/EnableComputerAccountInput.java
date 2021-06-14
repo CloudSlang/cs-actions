@@ -44,6 +44,8 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     private EnableComputerAccountInput() {
     }
@@ -84,6 +86,12 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
         return trustPassword;
     }
 
+    public String getConnectionTimeout() { return connectionTimeout; }
+
+    public String getExecutionTimeout() {
+        return executionTimeout;
+    }
+
 
     public static class Builder {
 
@@ -96,6 +104,8 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
+        private String connectionTimeout;
+        private String executionTimeout;
 
         public Builder host(String host) {
             this.host = host;
@@ -145,6 +155,16 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
             return this;
         }
 
+        public Builder connectionTimeout(String connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
+        public Builder executionTimeout(String executionTimeout) {
+            this.executionTimeout = executionTimeout;
+            return this;
+        }
+
 
         public EnableComputerAccountInput build() throws Exception {
             EnableComputerAccountInput input = new EnableComputerAccountInput();
@@ -166,6 +186,10 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 
             input.trustPassword = trustPassword;
+
+            input.connectionTimeout = connectionTimeout;
+
+            input.executionTimeout = executionTimeout;
 
             return input;
         }

@@ -31,6 +31,8 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     public AddRemoveUserInput() {
     }
@@ -39,7 +41,9 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
         return host;
     }
 
-    public String getGroupDistinguishedName() { return groupDistinguishedName; }
+    public String getGroupDistinguishedName() {
+        return groupDistinguishedName;
+    }
 
     public String getUserDistinguishedName() {
         return userDistinguishedName;
@@ -49,7 +53,9 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
         return username;
     }
 
-    public String getPassword() { return password; }
+    public String getPassword() {
+        return password;
+    }
 
     public String getProtocol() {
         return protocol;
@@ -67,6 +73,12 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
         return trustPassword;
     }
 
+    public String getConnectionTimeout() { return connectionTimeout; }
+
+    public String getExecutionTimeout() {
+        return executionTimeout;
+    }
+
 
     public static class Builder {
 
@@ -79,6 +91,8 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
+        private String connectionTimeout;
+        private String executionTimeout;
 
         public AddRemoveUserInput.Builder host(String host) {
             this.host = host;
@@ -127,6 +141,16 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
             return this;
         }
 
+        public AddRemoveUserInput.Builder connectionTimeout(String connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
+        public AddRemoveUserInput.Builder executionTimeout(String executionTimeout) {
+            this.executionTimeout = executionTimeout;
+            return this;
+        }
+
         public AddRemoveUserInput build() throws Exception {
             AddRemoveUserInput input = new AddRemoveUserInput();
 
@@ -147,6 +171,10 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 
             input.trustPassword = trustPassword;
+
+            input.connectionTimeout = connectionTimeout;
+
+            input.executionTimeout = executionTimeout;
 
             return input;
         }

@@ -44,7 +44,8 @@ public class CreateUserService {
 
             // if sAMAccountName not provided assign it from compCN
             if (input.getSAMAccountName().equalsIgnoreCase("")) {
-                sAMAccountName = userCN; }
+                sAMAccountName = userCN;
+            }
 
             sAMAccountName = ldap.replaceIllegalCharactersForSAM(sAMAccountName);
 
@@ -60,14 +61,14 @@ public class CreateUserService {
 
             if (input.getProtocol().toLowerCase().trim().equals("https")) {
                 if (input.getTrustAllRoots()) {
-                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
+                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
                 } else {
-                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),"false",
-                              input.getTrustKeystore(), input.getTrustPassword());
+                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
+                            input.getTrustKeystore(), input.getTrustPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
                 }
 
             } else {
-                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
+                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
             }
 
             DirContext ctxOU = (DirContext) ctx.lookup(ou);

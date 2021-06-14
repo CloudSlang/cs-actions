@@ -36,31 +36,35 @@ public class DeleteUserAction {
     /**
      * This operation deletes an user from Active Directory.
      *
-     * @param host              The IP or host name of the domain controller. The port number can be mentioned as well, along
-     *                          with the host (hostNameOrIP:PortNumber).
-     *                          Examples: test.example.com,  test.example.com:636, <IPv4Address>, <IPv6Address>,
-     *                          [<IPv6Address>]:<PortNumber> etc.
-     *                          Value format: The format of an IPv4 address is: [0-225].[0-225].[0-225].[0-225]. The format of an
-     *                          IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
-     *                          a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
-     *                          The prefix length is optional.
-     * @param distinguishedName The Organizational Unit DN or Common Name DN to add the user to.
-     *                          Example: OU=OUTest1,DC=battleground,DC=ad
-     * @param userCommonName    The CN, generally the full name of user.
-     *                          Example: Bob Smith
-     * @param username          User to connect to Active Directory as.
-     * @param password          Password to connect to Active Directory as.
-     * @param protocol          The protocol to use when connecting to the AD server.
-     *                          Valid values: 'HTTP' and 'HTTPS'.
-     * @param trustAllRoots     Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
-     *                          no trusted certification authority issued it.
-     *                          Default value: true.
-     *                          Valid values: true, false.
-     * @param trustKeystore     The location of the TrustStore file.
-     *                          Example: %JAVA_HOME%/jre/lib/security/cacerts
-     * @param trustPassword     The password associated with the TrustStore file.
-     * @param escapeChars       Add this input and set it to true if you want the operation to escape the special AD characters:
-     *                          '#','=','"','<','>',',','+',';','\','"''.
+     * @param host               The IP or host name of the domain controller. The port number can be mentioned as well, along
+     *                           with the host (hostNameOrIP:PortNumber).
+     *                           Examples: test.example.com,  test.example.com:636, <IPv4Address>, <IPv6Address>,
+     *                           [<IPv6Address>]:<PortNumber> etc.
+     *                           Value format: The format of an IPv4 address is: [0-225].[0-225].[0-225].[0-225]. The format of an
+     *                           IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
+     *                           a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
+     *                           The prefix length is optional.
+     * @param distinguishedName  The Organizational Unit DN or Common Name DN to add the user to.
+     *                           Example: OU=OUTest1,DC=battleground,DC=ad
+     * @param userCommonName     The CN, generally the full name of user.
+     *                           Example: Bob Smith
+     * @param username           User to connect to Active Directory as.
+     * @param password           Password to connect to Active Directory as.
+     * @param protocol           The protocol to use when connecting to the AD server.
+     *                           Valid values: 'HTTP' and 'HTTPS'.
+     * @param trustAllRoots      Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
+     *                           no trusted certification authority issued it.
+     *                           Default value: true.
+     *                           Valid values: true, false.
+     * @param trustKeystore      The location of the TrustStore file.
+     *                           Example: %JAVA_HOME%/jre/lib/security/cacerts
+     * @param trustPassword      The password associated with the TrustStore file.
+     * @param escapeChars        Add this input and set it to true if you want the operation to escape the special AD characters:
+     *                           '#','=','"','<','>',',','+',';','\','"''.
+     * @param connectionTimeout  Time in milliseconds to wait for the connection to be made.
+     *                           Default value: 10000.
+     * @param executionTimeout   Time in milliseconds to wait for the command to complete.
+     *                           Default value: 90000.
      * @return - a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message with the CN name of the user in case of success or the error in case of failure.
      * returnCode - the return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
@@ -91,7 +95,9 @@ public class DeleteUserAction {
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
-            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
+            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars,
+            @Param(value = InputNames.CONNECTION_TIMEOUT) String connectionTimeout,
+            @Param(value = InputNames.EXECUTION_TIMEOUT) String executionTimeout) {
         UserCommonInput.Builder inputBuilder = new UserCommonInput.Builder()
                 .host(host)
                 .distinguishedName(distinguishedName)
@@ -102,7 +108,9 @@ public class DeleteUserAction {
                 .trustAllRoots(trustAllRoots)
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword)
-                .escapeChars(escapeChars);
+                .escapeChars(escapeChars)
+                .connectionTimeout(connectionTimeout)
+                .executionTimeout(executionTimeout);
         try {
             return new DeleteUserService().execute(inputBuilder.build());
         } catch (Exception e) {

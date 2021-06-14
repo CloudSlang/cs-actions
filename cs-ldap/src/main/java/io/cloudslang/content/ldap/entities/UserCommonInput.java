@@ -31,6 +31,8 @@ public class UserCommonInput implements UserCommInput {
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     private UserCommonInput() {
     }
@@ -75,6 +77,12 @@ public class UserCommonInput implements UserCommInput {
         return escapeChars;
     }
 
+    public String getConnectionTimeout() { return connectionTimeout; }
+
+    public String getExecutionTimeout() {
+        return executionTimeout;
+    }
+
     public static class Builder {
 
         private String host;
@@ -87,6 +95,8 @@ public class UserCommonInput implements UserCommInput {
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
+        private String connectionTimeout;
+        private String executionTimeout;
 
 
         public UserCommonInput.Builder host(String host) {
@@ -142,6 +152,16 @@ public class UserCommonInput implements UserCommInput {
             return this;
         }
 
+        public UserCommonInput.Builder connectionTimeout(String connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
+        public UserCommonInput.Builder executionTimeout(String executionTimeout) {
+            this.executionTimeout = executionTimeout;
+            return this;
+        }
+
         public UserCommonInput build() throws Exception {
             UserCommonInput input = new UserCommonInput();
 
@@ -164,6 +184,10 @@ public class UserCommonInput implements UserCommInput {
             input.trustPassword = trustPassword;
 
             input.escapeChars = buildEscapeChars(escapeChars);
+
+            input.connectionTimeout = connectionTimeout;
+
+            input.executionTimeout = executionTimeout;
 
             return input;
         }
