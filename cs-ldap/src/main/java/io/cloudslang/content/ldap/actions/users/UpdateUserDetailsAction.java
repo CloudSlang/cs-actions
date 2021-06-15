@@ -50,8 +50,8 @@ public class UpdateUserDetailsAction {
      *                          Example: OU=OUTest1,DC=battleground,DC=ad
      * @param userCommonName    The CN, generally the full name of the user that will be updated.
      *                          Example: Bob Smith
-     * @param username          User to connect to Active Directory as.
-     * @param password          Password to connect to Active Directory as.
+     * @param username          The user to connect to Active Directory as.
+     * @param password          The password of the user to connect to Active Directory.
      * @param firstName         User's first name to change.
      * @param lastName          User's last name to change.
      * @param displayName       User's display name to change.
@@ -68,7 +68,7 @@ public class UpdateUserDetailsAction {
      *                          attributes.
      *                          Example: streetAddress:My Address
      *                                   postalCode:123456
-     * @param protocol          The protocol to use when connecting to the AD server.
+     * @param protocol          The protocol to use when connecting to the Active Directory server.
      *                          Valid values: 'HTTP' and 'HTTPS'.
      * @param trustAllRoots     Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
      *                          no trusted certification authority issued it.
@@ -83,7 +83,7 @@ public class UpdateUserDetailsAction {
      *                          Default value: 90000.
      * @return - a map containing the output of the operation. Keys present in the map are:
      * returnResult - This will contain the response entity in case of success or the error message in case of failure.
-     * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
+     * returnCode - The return code of the operation. 0 if the operation succeeded, -1 if the operation fails.
      * exception - The exception message if the operation fails.
      */
 

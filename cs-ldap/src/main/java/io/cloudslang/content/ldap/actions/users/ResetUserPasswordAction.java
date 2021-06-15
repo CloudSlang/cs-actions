@@ -52,9 +52,9 @@ public class ResetUserPasswordAction {
      *                              characters ('A' - 'Z'), English lowercase characters ('a' - 'z'), base 10 digits ('0' - '9'),
      *                              non-alphanumeric (For example: '!', '$', '#', or '%'), unicode characters
      *                              - does not contain three or more characters from the user's account name
-     * @param username              User to connect to Active Directory as.
-     * @param password              Password to connect to Active Directory as.
-     * @param protocol              The protocol to use when connecting to the AD server.
+     * @param username              The user to connect to Active Directory as.
+     * @param password              The password of the user to connect to Active Directory.
+     * @param protocol              The protocol to use when connecting to the Active Directory server.
      *                              Valid values: 'HTTP' and 'HTTPS'.
      * @param trustAllRoots         Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
      *                              no trusted certification authority issued it.
@@ -69,7 +69,7 @@ public class ResetUserPasswordAction {
      *                              Default value: 90000.
      * @return a map containing the output of the operation. Keys present in the map are:
      * returnResult - The message 'Password Changed' in case of success or the error in case of failure.
-     * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
+     * returnCode - The return code of the operation. 0 if the operation succeeded, -1 if the operation fails.
      * exception - The exception message if the operation fails.
      */
 
