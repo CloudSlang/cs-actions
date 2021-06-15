@@ -30,6 +30,9 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.MoveComputerAccountToOU.*;
+
 public class MoveComputerAccountToOUAction {
     /**
      * Moves a computer account in a new OU in Active Directory.
@@ -37,7 +40,7 @@ public class MoveComputerAccountToOUAction {
      * @param host                      The domain controller to connect to.
      * @param computerDistinguishedName The distinguished name of the computer account we want to move.
      *                                  Example: CN=computer_name,OU=OldContainer,DC=example,DC=com
-     * @param ouCommonName              The Organizational Unit that the computer account will be moved to.
+     * @param newOUDN                   The Organizational Unit that the computer account will be moved to.
      *                                  Example: OU(or CN)=NewContainer,DC=example,DC=com
      * @param username                  The user to connect to Active Directory as.
      * @param password                  The password of the user to connect to Active Directory.
@@ -59,36 +62,36 @@ public class MoveComputerAccountToOUAction {
      * returnCode - The return code of the operation. 0 if the operation succeeded, -1 if the operation fails.
      * exception - The exception message if the operation fails.
      */
-    @Action(name = "Move Computer Account To OU",
+    @Action(name = "Move Computer Account To OU", description = MOVE_COMPUTER_ACCOUNT_TO_OU_DESC,
             outputs = {
-                    @Output(OutputNames.RETURN_RESULT),
-                    @Output(OutputNames.RETURN_CODE),
-                    @Output(OutputNames.EXCEPTION)
+                    @Output(value = OutputNames.RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = OutputNames.RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = OutputNames.EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE,
                             value = ReturnCodes.SUCCESS,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE,
                             value = ReturnCodes.FAILURE,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(
-            @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.COMPUTER_DISTINGUISHED_NAME, required = true) String computerDistinguishedName,
-            @Param(value = InputNames.OU_COMMON_NAME, required = true) String ouCommonName,
-            @Param(value = InputNames.USERNAME) String username,
-            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
-            @Param(value = InputNames.PROTOCOL) String protocol,
-            @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
-            @Param(value = InputNames.CONNECTION_TIMEOUT) String connectionTimeout,
-            @Param(value = InputNames.EXECUTION_TIMEOUT) String executionTimeout) {
+            @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
+            @Param(value = InputNames.COMPUTER_DISTINGUISHED_NAME, required = true, description =MOVE_COMPUTER_ACCOUNT_DISTINGUISHED_NAME_DESC) String computerDistinguishedName,
+            @Param(value = InputNames.NEW_OU_DN, required = true, description = MOVE_COMPUTER_ACCOUNT_COMMON_NAME_DESC) String newOUDN,
+            @Param(value = InputNames.USERNAME, description = USERNAME_DESC) String username,
+            @Param(value = InputNames.PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
+            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
+            @Param(value = InputNames.TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
+            @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
+            @Param(value = InputNames.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
+            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
         MoveComputerAccountToOUInput.Builder inputBuilder = new MoveComputerAccountToOUInput.Builder()
                 .host(host)
                 .computerDistinguishedName(computerDistinguishedName)
-                .ouCommonName(ouCommonName)
+                .ouCommonName(newOUDN)
                 .username(username)
                 .password(password)
                 .protocol(protocol)

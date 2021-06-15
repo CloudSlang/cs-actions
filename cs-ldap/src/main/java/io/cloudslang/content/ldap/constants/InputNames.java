@@ -30,6 +30,7 @@ public final class InputNames {
     public static final String ESCAPE_CHARS = "escapeChars";
     public static final String ROOT_DISTINGUISHED_NAME = "rootDistinguishedName";
     public static final String COMPUTER_DISTINGUISHED_NAME = "computerDistinguishedName";
+    public static final String NEW_OU_DN = "newOUDN";
     public static final String OU_COMMON_NAME = "ouCommonName";
     public static final String USER_COMMON_NAME = "userCommonName";
     public static final String USER_PASSWORD = "userPassword";

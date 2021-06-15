@@ -31,7 +31,11 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
-import static io.cloudslang.content.ldap.constants.Descriptions.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.USER_CN_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.ESCAPE_CHARS_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.HOST_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.DeleteUser.*;
 
 public class DeleteUserAction {
 
@@ -85,9 +89,9 @@ public class DeleteUserAction {
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE,
-                            value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
+                            value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
