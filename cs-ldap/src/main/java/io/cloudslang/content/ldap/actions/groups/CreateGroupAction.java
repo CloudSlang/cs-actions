@@ -53,9 +53,9 @@ public class CreateGroupAction {
      *                          (Distribution Group - Global), 4 (Distribution Group - Domain Local), 8 (Distribution Group - Universal).
      *                          Valid values: -2147483646, -2147483644, -2147483640, 2, 4, 8
      *                          Default value: -2147483646
-     * @param username          User to connect to Active Directory as.
-     * @param password          Password to connect to Active Directory as.
-     * @param protocol          The protocol to use when connecting to the AD server.
+     * @param username          The user to connect to Active Directory as.
+     * @param password          The password of the user to connect to Active Directory.
+     * @param protocol          The protocol to use when connecting to the Active Directory server.
      *                          Valid values: 'HTTP' and 'HTTPS'.
      * @param trustAllRoots     Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
      *                          no trusted certification authority issued it.
@@ -64,8 +64,10 @@ public class CreateGroupAction {
      * @param trustKeystore     The location of the TrustStore file.
      *                          Example: %JAVA_HOME%/jre/lib/security/cacerts
      * @param trustPassword     The password associated with the TrustStore file.
-     * @param escapeChars       Add this input and set it to true if you want the operation to escape the special AD characters:
+     * @param escapeChars       Specifies whether to escape the special Active Directory characters:
      *                          '#','=','"','<','>',',','+',';','\','"''.
+     *                          Default value: false.
+     *                          Valid values: true, false.
      * @param connectionTimeout  Time in milliseconds to wait for the connection to be made.
      *                           Default value: 10000.
      * @param executionTimeout   Time in milliseconds to wait for the command to complete.
@@ -73,7 +75,7 @@ public class CreateGroupAction {
      * @return - a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message with the distinguished name of the newly created group in case of success or the error message
      *              in case of failure.
-     * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
+     * returnCode - The return code of the operation. 0 if the operation succeeded, -1 if the operation fails.
      * exception - The exception message if the operation fails.
      * groupDN - The distinguished name of the newly created group.
      */

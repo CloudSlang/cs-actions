@@ -37,9 +37,9 @@ public class GetComputerAccountOUAction {
      * @param host                  The domain controller to connect to.
      * @param rootDistinguishedName The distinguished name of the root element whose subtree you want to search in.
      * @param computerCommonName    The name of the computer (its CN).
-     * @param username              The user to connect to AD as.
-     * @param password              The password to connect to AD as.
-     * @param protocol              The protocol to use when connecting to the AD server.
+     * @param username              The user to connect to Active Directory as.
+     * @param password              The password of the user to connect to Active Directory.
+     * @param protocol              The protocol to use when connecting to the Active Directory server.
      *                              Valid values: 'HTTP' and 'HTTPS'.
      * @param trustAllRoots         Specifies whether to enable weak security over SSL. A SSL certificate is trusted
      *                              even if no trusted certification authority issued it.
@@ -54,8 +54,8 @@ public class GetComputerAccountOUAction {
      *                              Default value: 90000.
      * @return a map containing the output of the operations. Keys present in the map are:
      * returnResult - The return result of the operation.
-     * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
-     * exception - The exception message if the operation goes to failure.
+     * returnCode - The return code of the operation. 0 if the operation succeeded, -1 if the operation fails.
+     * exception - The exception message if the operation fails.
      * distinguishedName - OU's distinguished name.
      */
     @Action(name = "Get Computer Account OU",

@@ -48,9 +48,9 @@ public class IsUserEnabledAction {
      *                          Example: OU=OUTest1,DC=battleground,DC=ad
      * @param userCommonName    The common name, generally the full name of user.
      *                          Example: Bob Smith
-     * @param username          User to connect to Active Directory as.
-     * @param password          Password to connect to Active Directory as.
-     * @param protocol          The protocol to use when connecting to the AD server.
+     * @param username          The user to connect to Active Directory as.
+     * @param password          The password of the user to connect to Active Directory.
+     * @param protocol          The protocol to use when connecting to the Active Directory server.
      *                          Valid values: 'HTTP' and 'HTTPS'.
      * @param trustAllRoots     Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
      *                          no trusted certification authority issued it.
@@ -64,8 +64,8 @@ public class IsUserEnabledAction {
      * @param executionTimeout  Time in milliseconds to wait for the command to complete.
      *                          Default value: 90000.
      * @return - a map containing the output of the operation. Keys present in the map are:
-     * returnResult - A message with the CN name of the user in case of success or the error in case of failure.
-     * returnCode - the return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
+     * returnResult - A message with the common name of the user in case of success or the error in case of failure.
+     * returnCode - the return code of the operation. 0 if the operation succeeded, -1 if the operation fails.
      * exception - the exception message if the operation fails.
      * userDistinguishedName - The distinguished name of the checked user.
      */

@@ -48,7 +48,7 @@ public class AuthenticateUserAction {
      *                              Example: CN=Users,DC=domain,DC=com.
      * @param username              The user's windows username. The only valid format is domain/username.
      * @param password              The user's password.
-     * @param protocol              The protocol to use when connecting to the AD server.
+     * @param protocol              The protocol to use when connecting to the Active Directory server.
      *                              Valid values: 'HTTP' and 'HTTPS'.
      * @param trustAllRoots         Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
      *                              no trusted certification authority issued it.
@@ -62,7 +62,7 @@ public class AuthenticateUserAction {
      * @param executionTimeout      Time in milliseconds to wait for the command to complete.
      *                              Default value: 90000.
      * @return a map containing the output of the operation. Keys present in the map are:
-     * returnResult - A message which specifies if the user was authenticated against AD in case of success or an error
+     * returnResult - A message which specifies if the user was authenticated against Active Directory in case of success or an error
      *                message in case of failure.
      * returnCode - The return code of the operation. 0 if the operation succeded, -1 if the operation fails.
      * exception - The exception message if the operation fails.

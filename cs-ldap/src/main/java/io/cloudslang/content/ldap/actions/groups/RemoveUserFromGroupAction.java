@@ -48,9 +48,9 @@ public class RemoveUserFromGroupAction {
      *                               Example: CN=GroupName,OU=OUTest1,DC=battleground,DC=ad
      * @param userDistinguishedName  The DN (distinguished name) of the user to remove.
      *                               Example: CN=UserName,OU=OUTest1,DC=battleground,DC=ad
-     * @param username               User to connect to Active Directory as.
-     * @param password               Password to connect to Active Directory as.
-     * @param protocol               The protocol to use when connecting to the AD server.
+     * @param username               The user to connect to Active Directory as.
+     * @param password               The password of the user to connect to Active Directory.
+     * @param protocol               The protocol to use when connecting to the Active Directory server.
      *                               Valid values: 'HTTP' and 'HTTPS'.
      * @param trustAllRoots          Specifies whether to enable weak security over SSL. A SSL certificate is trusted even if
      *                               no trusted certification authority issued it.
@@ -66,7 +66,7 @@ public class RemoveUserFromGroupAction {
      * @return - a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message with the removed user's DN and the group from which it was removed DN, in case of success or the
      *              error in case of failure.
-     * returnCode - The return code of the operation. 0 if the operation goes to success, -1 if the operation goes to failure.
+     * returnCode - The return code of the operation. 0 if the operation succeeded, -1 if the operation fails.
      * exception - The exception message if the operation fails.
      */
 
