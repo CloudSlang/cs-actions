@@ -24,6 +24,11 @@ public class Descriptions {
                 "'HTTP' and 'HTTPS'.";
         public static final String USERNAME_DESC = "The user to connect to Active Directory as.";
         public static final String PASSWORD_DESC = "The password of the user to connect to Active Directory.";
+        public static final String TLS_VERSION_DESC = "The version of TLS to use. The value of this input will be ignored if 'protocol'" +
+                "is set to 'HTTP'." +
+                "Valid values: SSLv3, TLSv1, TLSv1.1, TLSv1.2." +
+                "Default value: TLSv1.2.";
+        public static final String ALLOWED_CIPHERS_DESC = "The password of the user to connect to Active Directory.";
         public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL. A SSL " +
                 "certificate is trust even if no trusted certification authority issued it." +
                 "Valid values: true, false" +

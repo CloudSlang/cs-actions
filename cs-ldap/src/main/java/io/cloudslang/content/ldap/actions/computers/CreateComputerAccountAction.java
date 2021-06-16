@@ -37,29 +37,6 @@ public class CreateComputerAccountAction {
     /**
      * Creates a new computer account in Active Directory.
      *
-     * @param host                       The domain controller to connect to.
-     * @param distinguishedName          The Organizational Unit DN or Common Name DN to add the computer to.
-     *                                   (i.e. OU=OUTest1,DC=battleground,DC=ad)
-     * @param computerCommonName         The name of the computer (its CN).
-     * @param sAMAccountName             Computer's sAMAccountName (ex. MYHYPNOS$). If not provided it will be assigned
-     *                                   from computerCommonName.
-     * @param username                   The user to connect to AD as.
-     * @param password                   The password to connect to AD as.
-     * @param protocol                   The protocol to use when connecting to the AD server.
-     *                                   Valid values: 'HTTP' and 'HTTPS'.
-     * @param tlsVersion                 The version of TLS to use. The value of this input will be ignored if "protocol"
-     *                                   is set to "HTTP".
-     *                                   Valid values: SSLv3, TLSv1, TLSv1.1, TLSv1.2.
-     *                                   Default value: TLSv1.2.
-     * @param trustAllRoots              Specifies whether to enable weak security over SSL. A SSL certificate is trusted
-     *                                   even if no trusted certification authority issued it.
-     *                                   Valid values: true, false.
-     *                                   Default value: true.
-     * @param trustKeystore              The location of the TrustStore file.
-     *                                   Example: %JAVA_HOME%/jre/lib/security/cacerts.
-     * @param trustPassword              The password associated with the TrustStore file.
-     * @param escapeChars                Add this input and set to true if you want the operation to escape the special AD chars.
-     *
      * @param host               The domain controller to connect to.
      * @param distinguishedName  The Organizational Unit DN or Common Name DN to add the computer to.
      *                           (i.e. OU=OUTest1,DC=battleground,DC=ad)
@@ -70,6 +47,10 @@ public class CreateComputerAccountAction {
      * @param password           The password of the user to connect to Active Directory.
      * @param protocol           The protocol to use when connecting to the Active Directory server.
      *                           Valid values: 'HTTP' and 'HTTPS'.
+     * @param tlsVersion         The version of TLS to use. The value of this input will be ignored if "protocol"
+     *                           is set to "HTTP".
+     *                           Valid values: SSLv3, TLSv1, TLSv1.1, TLSv1.2.
+     *                           Default value: TLSv1.2.
      * @param trustAllRoots      Specifies whether to enable weak security over SSL. A SSL certificate is trusted
      *                           even if no trusted certification authority issued it.
      *                           Valid values: true, false.
@@ -103,19 +84,19 @@ public class CreateComputerAccountAction {
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(
-            @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.DISTINGUISHED_NAME, required = true) String distinguishedName,
-            @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true) String computerCommonName,
-            @Param(value = InputNames.SAM_ACCOUNT_NAME) String sAMAccountName,
-            @Param(value = InputNames.USERNAME) String username,
-            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
-            @Param(value = InputNames.PROTOCOL) String protocol,
-            @Param(value = InputNames.TLS_VERSION) String tlsVersion,
-            @Param(value = InputNames.ALLOWED_CIPHERS) String allowedCiphers,
-            @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
-            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars,
+            @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
+            @Param(value = InputNames.DISTINGUISHED_NAME, required = true, description = DISTINGUISHED_NAME_DESC) String distinguishedName,
+            @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true, description = COMPUTER_COMMON_NAME_DESC) String computerCommonName,
+            @Param(value = InputNames.SAM_ACCOUNT_NAME, description = SAM_ACCOUNT_NAME_DESC) String sAMAccountName,
+            @Param(value = InputNames.USERNAME, description = USERNAME_DESC) String username,
+            @Param(value = InputNames.PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
+            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
+            @Param(value = InputNames.TLS_VERSION, description = TLS_VERSION_DESC) String tlsVersion,
+            @Param(value = InputNames.ALLOWED_CIPHERS, description = ALLOWED_CIPHERS_DESC) String allowedCiphers,
+            @Param(value = InputNames.TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
+            @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
+            @Param(value = InputNames.ESCAPE_CHARS, description = ESCAPE_CHARS_DESC) String escapeChars,
             @Param(value = InputNames.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
             @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
         CreateComputerAccountInput.Builder inputBuilder = new CreateComputerAccountInput.Builder()
