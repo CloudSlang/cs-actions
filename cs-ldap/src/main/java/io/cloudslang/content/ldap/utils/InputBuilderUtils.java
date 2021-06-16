@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
+import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public final class InputBuilderUtils {
@@ -192,10 +193,7 @@ public final class InputBuilderUtils {
         return input.trim();
     }
 
-    public static List<String> buildTlsVersions(String tlsVersionInput) throws Exception {
-        if (StringUtils.isEmpty(tlsVersionInput) ||  tlsVersionInput.equals("STARTTLS")) {
-            return Collections.emptyList();
-        }
+    public static String buildTlsVersions(String tlsVersionInput) throws Exception {
 
         String[] tlsVersionsArray = tlsVersionInput.replaceAll("\\s+", StringUtils.EMPTY).split(",");
         List<String> tlsVersions = new ArrayList<>();
@@ -205,7 +203,7 @@ public final class InputBuilderUtils {
             }
             tlsVersions.add(tlsVersion);
         }
-        return tlsVersions;
+        return tlsVersionInput;
     }
 
 
@@ -224,6 +222,13 @@ public final class InputBuilderUtils {
         }
 
         return allowedCiphers;
+    }
+
+    public static String addVerifyPort(String inputName) throws Exception {
+        if (!isValidIpPort(inputName)) {
+            throw new Exception(String.format(ExceptionMsgs.EXCEPTION_INVALID_PORT, InputNames.PROXY_PORT));
+        }
+        return inputName;
     }
 
 }

@@ -30,6 +30,8 @@ package io.cloudslang.content.ldap.entities;
 
 import io.cloudslang.content.ldap.constants.Constants;
 
+import java.util.List;
+
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -41,6 +43,13 @@ public class IsComputerAccountEnabledInput implements ComputerAccountInterface{
     private String username;
     private String password;
     private String protocol;
+    private String proxyHost;
+    private int proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
+    private String tlsVersion;
+    private List<String> allowedCiphers;
+    private String x509HostnameVerifier;
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
@@ -92,6 +101,26 @@ public class IsComputerAccountEnabledInput implements ComputerAccountInterface{
         return executionTimeout;
     }
 
+    public String getTlsVersion() { return tlsVersion; }
+
+    public List<String> getAllowedCiphers() { return allowedCiphers; }
+
+    public String getProxyHost() { return proxyHost; }
+
+    public int getProxyPort() {
+        return proxyPort;
+    }
+
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    public String getX509HostnameVerifier() { return x509HostnameVerifier; }
+
 
     public static class Builder {
 
@@ -101,6 +130,13 @@ public class IsComputerAccountEnabledInput implements ComputerAccountInterface{
         private String username;
         private String password;
         private String protocol;
+        private String proxyHost;
+        private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
+        private String tlsVersion;
+        private String allowedCiphers;
+        private String x509HostnameVerifier;
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
@@ -165,6 +201,40 @@ public class IsComputerAccountEnabledInput implements ComputerAccountInterface{
             return this;
         }
 
+        public Builder tlsVersion(String tlsVersion) {
+            this.tlsVersion = tlsVersion;
+            return this;
+        }
+
+        public Builder allowedCiphers(String allowedCiphers) {
+            this.allowedCiphers = allowedCiphers;
+            return this;
+        }
+
+        public Builder proxyHost(String proxyHost) {
+            this.proxyHost = proxyHost;
+            return this;
+        }
+
+        public Builder proxyPort(String proxyPort) {
+            this.proxyPort = proxyPort;
+            return this;
+        }
+
+        public Builder proxyUsername(String proxyUsername) {
+            this.proxyUsername = proxyUsername;
+            return this;
+        }
+
+        public Builder proxyPassword(String proxyPassword) {
+            this.proxyPassword = proxyPassword;
+            return this;
+        }
+
+        public Builder x509HostnameVerifier(String x509HostnameVerifier) {
+            this.x509HostnameVerifier = x509HostnameVerifier;
+            return this;
+        }
 
         public IsComputerAccountEnabledInput build() throws Exception {
             IsComputerAccountEnabledInput input = new IsComputerAccountEnabledInput();
@@ -190,6 +260,20 @@ public class IsComputerAccountEnabledInput implements ComputerAccountInterface{
             input.connectionTimeout = connectionTimeout;
 
             input.executionTimeout = executionTimeout;
+
+            input.proxyHost = proxyHost;
+
+            input.proxyUsername = proxyUsername;
+
+            input.proxyPassword = proxyPassword;
+
+            input.x509HostnameVerifier =x509HostnameVerifier;
+
+            input.tlsVersion = buildTlsVersions(tlsVersion);
+
+            input.allowedCiphers = buildAllowedCiphers(allowedCiphers);
+
+            input.proxyPort = Integer.parseInt(addVerifyPort(proxyPort));
 
             return input;
         }

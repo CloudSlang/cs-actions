@@ -20,6 +20,7 @@ public final class ExceptionMsgs {
     public static final String INPUT_NOT_SPECIFIED = "The %s input is not specified!";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The value of %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_PROTOCOL = "The value of %s input is not a valid value.";
+    public static final String EXCEPTION_INVALID_PORT = "The value of %s input is not a valid value.";
     public static final String EXPECTED_FORMAT = "The list is not in the expected format. Format should be: attribute:value";
     public static final String COUNTRY_EXPECTED_FORMAT = "The country input in not in the expected format. Please see the " +
             "description for more details";

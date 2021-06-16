@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.ldap.entities;
 
+import java.util.List;
+
 public interface AuthenticateUserInterface {
 
     String getHost();
@@ -35,4 +37,18 @@ public interface AuthenticateUserInterface {
     String getConnectionTimeout();
 
     String getExecutionTimeout();
+
+    String getProxyHost();
+
+    int getProxyPort();
+
+    String getProxyUsername();
+
+    String getProxyPassword();
+
+    String getX509HostnameVerifier();
+
+    String getTlsVersion();
+
+    List<String> getAllowedCiphers();
 }

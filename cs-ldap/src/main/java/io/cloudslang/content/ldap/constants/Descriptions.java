@@ -21,14 +21,20 @@ public class Descriptions {
         //inputs
         public static final String HOST_DESC = "The domain controller to connect to.";
         public static final String PROTOCOL_DESC = " The protocol to use when connecting to the Active Directory server. Valid values: " +
-                "'HTTP' and 'HTTPS'.";
+                "HTTP and HTTPS.";
         public static final String USERNAME_DESC = "The user to connect to Active Directory as.";
         public static final String PASSWORD_DESC = "The password of the user to connect to Active Directory.";
         public static final String TLS_VERSION_DESC = "The version of TLS to use. The value of this input will be ignored if 'protocol'" +
                 "is set to 'HTTP'." +
                 "Valid values: SSLv3, TLSv1, TLSv1.1, TLSv1.2." +
                 "Default value: TLSv1.2.";
-        public static final String ALLOWED_CIPHERS_DESC = "The password of the user to connect to Active Directory.";
+        public static final String ALLOWED_CIPHERS_DESC = " A list of ciphers to use. The value of this input will be ignored if 'tlsVersion' does\n" +
+                "not contain 'TLSv1.2'.\n" +
+                "Default value: TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,\n" +
+                "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, " +
+                "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,\n" +
+                "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_CBC_SHA256,\n" +
+                "TLS_RSA_WITH_AES_128_CBC_SHA256.";
         public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL. A SSL " +
                 "certificate is trust even if no trusted certification authority issued it." +
                 "Valid values: true, false" +
@@ -39,7 +45,23 @@ public class Descriptions {
         public static final String CONNECTION_TIMEOUT_DESC = "Time in milliseconds to wait for the connection to be made." +
                 "Default value: 10000.";
         public static final String EXECUTION_TIMEOUT_DESC = "Time in milliseconds to wait for the connection to complete." +
-                "Default value: 90000.";
+                "Default value: 60000.";
+        public static final String PROXY_HOST_DESC = "The proxy server used to access the web site.";
+        public static final String PROXY_PORT_DESC = "The proxy server port." +
+                "Default value: 8080.";
+        public static final String PROXY_USERNAME_DESC = "The username used when connecting to the proxy.";
+        public static final String PROXY_PASSWORD_DESC = "The proxy server password associated with the 'proxyUsername'" +
+                " input value.";
+        public static final String X_509_DESC = "Specifies the way the server hostname must match a domain name in the subject's Common" +
+                "Name (CN) or subjectAltName field of the X.509 certificate. Set this to 'allow_all' to skip any checking, but you become " +
+                "vulnerable to attacks. For the value 'browser_compatible' the hostname verifier works the same way as Curl" +
+                "and Firefox. The hostname must match either the first CN, or any of the subject-alts. A wildcard can occur in the CN, and " +
+                "in any of the subject-alts. The only difference between 'browser_compatible' and 'strict' is that a wildcard (such as " +
+                "'*.foo.com') with 'browser_compatible' matches all subdomains, including 'a.b.foo.com'. From the" +
+                "security perspective, to provide protection against possible Man-In-The-Middle attacks, we strongly recommend to use " +
+                "'strict' option. " +
+                "Default value: strict." +
+                "Valid values: strict, browser_compatible, allow_all.";
 
         //outputs
         public static final String RETURN_CODE_DESC = "The return code of the operation. 0 if the operation succeeded," +

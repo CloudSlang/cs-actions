@@ -30,12 +30,17 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
     private String username;
     private String password;
     private String protocol;
+    private String proxyHost;
+    private int proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
+    private String tlsVersion;
+    private List<String> allowedCiphers;
+    private String x509HostnameVerifier;
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private List<String> tlsVersions;
-    private List<String> allowedCiphers;
     private String connectionTimeout;
     private String executionTimeout;
 
@@ -92,9 +97,19 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
         return executionTimeout;
     }
 
-    public List<String> getTlsVersion() { return tlsVersions; }
+    public String getTlsVersion() { return tlsVersion; }
 
     public List<String> getAllowedCiphers() { return allowedCiphers; }
+
+    public String getProxyHost() { return proxyHost; }
+
+    public int getProxyPort() { return proxyPort; }
+
+    public String getProxyUsername() { return proxyUsername; }
+
+    public String getProxyPassword() { return proxyPassword; }
+
+    public String getX509HostnameVerifier() { return x509HostnameVerifier; }
 
     public static class Builder {
 
@@ -105,12 +120,17 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
         private String username;
         private String password;
         private String protocol;
+        private String proxyHost;
+        private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
+        private String tlsVersion;
+        private String allowedCiphers;
+        private String x509HostnameVerifier;
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
-        private String tlsVersion;
-        private String allowedCiphers;
         private String connectionTimeout;
         private String executionTimeout;
 
@@ -174,16 +194,6 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
             return this;
         }
 
-        public Builder tlsVersion(String tlsVersion) {
-            this.tlsVersion = tlsVersion;
-            return this;
-        }
-        public Builder allowedCiphers(String allowedCiphers) {
-            this.allowedCiphers = allowedCiphers;
-            return this;
-        }
-
-
         public Builder connectionTimeout(String connectionTimeout) {
             this.connectionTimeout = connectionTimeout;
             return this;
@@ -191,6 +201,41 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
 
         public Builder executionTimeout(String executionTimeout) {
             this.executionTimeout = executionTimeout;
+            return this;
+        }
+
+        public Builder tlsVersion(String tlsVersion) {
+            this.tlsVersion = tlsVersion;
+            return this;
+        }
+
+        public Builder allowedCiphers(String allowedCiphers) {
+            this.allowedCiphers = allowedCiphers;
+            return this;
+        }
+
+        public Builder proxyHost(String proxyHost) {
+            this.proxyHost = proxyHost;
+            return this;
+        }
+
+        public Builder proxyPort(String proxyPort) {
+            this.proxyPort = proxyPort;
+            return this;
+        }
+
+        public Builder proxyUsername(String proxyUsername) {
+            this.proxyUsername = proxyUsername;
+            return this;
+        }
+
+        public Builder proxyPassword(String proxyPassword) {
+            this.proxyPassword = proxyPassword;
+            return this;
+        }
+
+        public Builder x509HostnameVerifier(String x509HostnameVerifier) {
+            this.x509HostnameVerifier = x509HostnameVerifier;
             return this;
         }
 
@@ -223,9 +268,19 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
 
             input.executionTimeout = executionTimeout;
 
-            input.tlsVersions = buildTlsVersions(tlsVersion);
+            input.proxyHost = proxyHost;
+
+            input.proxyUsername = proxyUsername;
+
+            input.proxyPassword = proxyPassword;
+
+            input.x509HostnameVerifier =x509HostnameVerifier;
+
+            input.tlsVersion = buildTlsVersions(tlsVersion);
 
             input.allowedCiphers = buildAllowedCiphers(allowedCiphers);
+
+            input.proxyPort = Integer.parseInt(addVerifyPort(proxyPort));
 
             return input;
         }

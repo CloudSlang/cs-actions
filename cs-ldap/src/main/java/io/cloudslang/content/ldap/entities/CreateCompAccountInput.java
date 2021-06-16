@@ -32,10 +32,6 @@ public interface CreateCompAccountInput {
 
     String getProtocol();
 
-    List<String> getTlsVersion();
-
-    List<String> getAllowedCiphers();
-
     Boolean getTrustAllRoots();
 
     String getTrustKeystore();
@@ -47,5 +43,19 @@ public interface CreateCompAccountInput {
     String getConnectionTimeout();
 
     String getExecutionTimeout();
+
+    String getProxyHost();
+
+    int getProxyPort();
+
+    String getProxyUsername();
+
+    String getProxyPassword();
+
+    String getX509HostnameVerifier();
+
+    String getTlsVersion();
+
+    List<String> getAllowedCiphers();
 
 }

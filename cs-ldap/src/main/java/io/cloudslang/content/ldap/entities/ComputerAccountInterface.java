@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.ldap.entities;
 
+import java.util.List;
+
 public interface ComputerAccountInterface {
 
     String getHost();
@@ -33,5 +35,19 @@ public interface ComputerAccountInterface {
     String getTrustKeystore();
 
     String getTrustPassword();
+
+    String getTlsVersion();
+
+    List<String> getAllowedCiphers();
+
+    String getProxyHost();
+
+    int getProxyPort();
+
+    String getProxyUsername();
+
+    String getProxyPassword();
+
+    String getX509HostnameVerifier();
 
 }

@@ -23,8 +23,6 @@ public final class InputNames {
     public static final String SAM_ACCOUNT_NAME = "sAMAccountName";
     public static final String PROTOCOL = "protocol";
     public static final String TRUST_ALL_ROOTS = "trustAllRoots";
-    public static final String KEYSTORE = "keystore";
-    public static final String KEYSTORE_PASSWORD = "keystorePassword";
     public static final String TRUST_KEYSTORE = "trustKeystore";
     public static final String TRUST_PASSWORD = "trustPassword";
     public static final String ESCAPE_CHARS = "escapeChars";
@@ -50,5 +48,10 @@ public final class InputNames {
     public static final String ALLOWED_CIPHERS = "allowedCiphers";
     public static final String CONNECTION_TIMEOUT = "connectionTimeout";
     public static final String EXECUTION_TIMEOUT = "executionTimeout";
+    public static final String PROXY_HOST = "proxyHost";
+    public static final String PROXY_PORT = "proxyPort";
+    public static final String PROXY_USERNAME = "proxyUsername";
+    public static final String PROXY_PASSWORD = "proxyPassword";
+    public static final String X_509_HOSTNAME_VERIFIER = "x509HostnameVerifier";
 
 }
