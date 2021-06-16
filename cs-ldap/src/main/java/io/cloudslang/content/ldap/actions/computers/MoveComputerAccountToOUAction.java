@@ -40,7 +40,7 @@ public class MoveComputerAccountToOUAction {
      * @param host                      The domain controller to connect to.
      * @param computerDistinguishedName The distinguished name of the computer account we want to move.
      *                                  Example: CN=computer_name,OU=OldContainer,DC=example,DC=com
-     * @param newOUDN                   The Organizational Unit that the computer account will be moved to.
+     * @param ouCommonName              The Organizational Unit that the computer account will be moved to.
      *                                  Example: OU(or CN)=NewContainer,DC=example,DC=com
      * @param username                  The user to connect to Active Directory as.
      * @param password                  The password of the user to connect to Active Directory.
@@ -79,7 +79,7 @@ public class MoveComputerAccountToOUAction {
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
             @Param(value = InputNames.COMPUTER_DISTINGUISHED_NAME, required = true, description =MOVE_COMPUTER_ACCOUNT_DISTINGUISHED_NAME_DESC) String computerDistinguishedName,
-            @Param(value = InputNames.NEW_OU_DN, required = true, description = MOVE_COMPUTER_ACCOUNT_COMMON_NAME_DESC) String newOUDN,
+            @Param(value = InputNames.OU_COMMON_NAME, required = true, description = MOVE_COMPUTER_ACCOUNT_COMMON_NAME_DESC) String ouCommonName,
             @Param(value = InputNames.USERNAME, description = USERNAME_DESC) String username,
             @Param(value = InputNames.PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
             @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
@@ -91,7 +91,7 @@ public class MoveComputerAccountToOUAction {
         MoveComputerAccountToOUInput.Builder inputBuilder = new MoveComputerAccountToOUInput.Builder()
                 .host(host)
                 .computerDistinguishedName(computerDistinguishedName)
-                .ouCommonName(newOUDN)
+                .ouCommonName(ouCommonName)
                 .username(username)
                 .password(password)
                 .protocol(protocol)
