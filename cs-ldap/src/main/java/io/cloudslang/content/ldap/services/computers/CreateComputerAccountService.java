@@ -15,8 +15,8 @@
 package io.cloudslang.content.ldap.services.computers;
 
 import io.cloudslang.content.ldap.entities.CreateComputerAccountInput;
+import io.cloudslang.content.ldap.utils.CustomSSLSocketFactory;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
-import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import javax.naming.CompositeName;
@@ -61,8 +61,8 @@ public class CreateComputerAccountService {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
                 } else {
                     ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), FALSE,
-                             input.getTrustKeystore(), input.getTrustPassword(), input.getTlsVersion(),
-                            Collections.singletonList("TLS_DHE_RSA_WITH_AES_256_CBC_SHA256"),  input.getConnectionTimeout(), input.getExecutionTimeout());
+                             input.getTrustKeystore(), input.getTrustPassword(),
+                             input.getConnectionTimeout(), input.getExecutionTimeout());
                 }
 
             } else {
@@ -95,7 +95,7 @@ public class CreateComputerAccountService {
             results.put(RETURN_CODE, "0");
 
         } catch (NamingException e) {
-            Exception exception = MySSLSocketFactory.getException();
+            Exception exception = CustomSSLSocketFactory.getException();
             if (exception == null)
                 exception = e;
             results.put(EXCEPTION, String.valueOf(exception));

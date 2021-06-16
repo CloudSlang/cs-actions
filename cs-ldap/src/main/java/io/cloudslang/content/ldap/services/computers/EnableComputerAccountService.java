@@ -16,7 +16,7 @@ package io.cloudslang.content.ldap.services.computers;
 
 import io.cloudslang.content.ldap.entities.EnableComputerAccountInput;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
-import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
+import io.cloudslang.content.ldap.utils.CustomSSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import javax.naming.NamingException;
@@ -75,7 +75,7 @@ public class EnableComputerAccountService {
             results.put(RESULT_COMPUTER_DN, compDN);
 
         } catch (NamingException e) {
-            Exception exception = MySSLSocketFactory.getException();
+            Exception exception = CustomSSLSocketFactory.getException();
             if (exception == null)
                 exception = e;
             results.put(EXCEPTION, String.valueOf(exception));

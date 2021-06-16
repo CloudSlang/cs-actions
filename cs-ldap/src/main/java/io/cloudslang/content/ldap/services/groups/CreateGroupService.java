@@ -16,7 +16,7 @@ package io.cloudslang.content.ldap.services.groups;
 
 import io.cloudslang.content.ldap.entities.CreateGroupInput;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
-import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
+import io.cloudslang.content.ldap.utils.CustomSSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import javax.naming.CompositeName;
@@ -98,7 +98,7 @@ public class CreateGroupService {
             results.put(RETURN_CODE, "0");
 
         } catch (NamingException e) {
-            Exception exception = MySSLSocketFactory.getException();
+            Exception exception = CustomSSLSocketFactory.getException();
             if (exception == null)
                 exception = e;
             results.put(EXCEPTION, String.valueOf(exception));

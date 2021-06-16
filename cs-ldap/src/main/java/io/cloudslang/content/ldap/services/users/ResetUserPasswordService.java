@@ -16,7 +16,7 @@ package io.cloudslang.content.ldap.services.users;
 
 import io.cloudslang.content.ldap.entities.ResetUserPasswordInput;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
-import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
+import io.cloudslang.content.ldap.utils.CustomSSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import javax.naming.directory.BasicAttribute;
@@ -66,7 +66,7 @@ public class ResetUserPasswordService {
             results.put(RETURN_CODE, "0");
 
         } catch (Exception e) {
-            Exception exception = MySSLSocketFactory.getException();
+            Exception exception = CustomSSLSocketFactory.getException();
             if (exception == null)
                 exception = e;
             results.put(EXCEPTION, String.valueOf(exception));
