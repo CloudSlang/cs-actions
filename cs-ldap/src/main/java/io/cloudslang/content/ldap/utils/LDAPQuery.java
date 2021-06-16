@@ -140,7 +140,7 @@ public class LDAPQuery {
         env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        env.put(CONNECT_TIMEOUT, connectionTimeout);
+        //env.put(CONNECT_TIMEOUT, connectionTimeout);
         env.put(OPERATION_TIMEOUT, executionTimeout);
         env.put(Context.REFERRAL, "ignore");
 
@@ -173,7 +173,7 @@ public class LDAPQuery {
         env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        env.put(CONNECT_TIMEOUT, connectionTimeout);
+        //env.put(CONNECT_TIMEOUT, connectionTimeout);
         env.put(OPERATION_TIMEOUT, executionTimeout);
         env.put(Context.REFERRAL, "ignore");
 
