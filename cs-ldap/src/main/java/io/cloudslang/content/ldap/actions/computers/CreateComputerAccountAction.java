@@ -115,7 +115,7 @@ public class CreateComputerAccountAction {
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
-            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars) {
+            @Param(value = InputNames.ESCAPE_CHARS) String escapeChars,
             @Param(value = InputNames.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
             @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
         CreateComputerAccountInput.Builder inputBuilder = new CreateComputerAccountInput.Builder()
