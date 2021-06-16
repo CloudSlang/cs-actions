@@ -215,8 +215,8 @@ public final class InputBuilderUtils {
         String[] cipherSuites = allowedCiphersInput.replaceAll("\\s+", StringUtils.EMPTY).split(",");
         List<String> allowedCiphers = Arrays.asList(cipherSuites);
 
-        for(String cipher : allowedCiphers) {
-            if(!CipherSuites.validate(cipher)) {
+        for (String cipher : allowedCiphers) {
+            if (!CipherSuites.validate(cipher)) {
                 throw new IllegalArgumentException("Illegal value of input " + InputNames.ALLOWED_CIPHERS);
             }
         }

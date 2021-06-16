@@ -48,8 +48,8 @@ public final class ResultUtils {
         list.add("\u0000");
 
         String c;
-        for(Iterator var2 = list.iterator(); var2.hasNext(); s = s.replace(c, "")) {
-            c = (String)var2.next();
+        for (Iterator var2 = list.iterator(); var2.hasNext(); s = s.replace(c, "")) {
+            c = (String) var2.next();
         }
 
         return s;

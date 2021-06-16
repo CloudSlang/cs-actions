@@ -32,9 +32,11 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 import java.util.Map;
 
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
-import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.USER_CN_DESC;
-import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.ESCAPE_CHARS_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.HOST_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.DeleteUser.DISTINGUISHED_NAME_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.DeleteUser.FAILURE_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.DeleteUser.SUCCESS_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.DeleteUser.*;
 
 public class DeleteUserAction {

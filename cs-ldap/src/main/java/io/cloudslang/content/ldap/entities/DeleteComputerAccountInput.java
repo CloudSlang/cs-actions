@@ -35,7 +35,7 @@ import java.util.List;
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DeleteComputerAccountInput implements ComputerAccountInterface{
+public class DeleteComputerAccountInput implements ComputerAccountInterface {
 
     private String host;
     private String distinguishedName;
@@ -64,7 +64,9 @@ public class DeleteComputerAccountInput implements ComputerAccountInterface{
         return host;
     }
 
-    public String getDistinguishedName() { return distinguishedName; }
+    public String getDistinguishedName() {
+        return distinguishedName;
+    }
 
     public String getComputerCommonName() {
         return computerCommonName;
@@ -98,17 +100,25 @@ public class DeleteComputerAccountInput implements ComputerAccountInterface{
         return escapeChars;
     }
 
-    public String getConnectionTimeout() { return connectionTimeout; }
+    public String getConnectionTimeout() {
+        return connectionTimeout;
+    }
 
     public String getExecutionTimeout() {
         return executionTimeout;
     }
 
-    public String getTlsVersion() { return tlsVersion; }
+    public String getTlsVersion() {
+        return tlsVersion;
+    }
 
-    public List<String> getAllowedCiphers() { return allowedCiphers; }
+    public List<String> getAllowedCiphers() {
+        return allowedCiphers;
+    }
 
-    public String getProxyHost() { return proxyHost; }
+    public String getProxyHost() {
+        return proxyHost;
+    }
 
     public int getProxyPort() {
         return proxyPort;
@@ -216,6 +226,7 @@ public class DeleteComputerAccountInput implements ComputerAccountInterface{
             this.tlsVersion = tlsVersion;
             return this;
         }
+
         public Builder allowedCiphers(String allowedCiphers) {
             this.allowedCiphers = allowedCiphers;
             return this;
@@ -254,7 +265,7 @@ public class DeleteComputerAccountInput implements ComputerAccountInterface{
 
             input.distinguishedName = buildDistinguishedName(distinguishedName, true);
 
-            input.computerCommonName = buildComputerCommonName(computerCommonName,true);
+            input.computerCommonName = buildComputerCommonName(computerCommonName, true);
 
             input.username = buildUsername(username);
 
@@ -280,7 +291,7 @@ public class DeleteComputerAccountInput implements ComputerAccountInterface{
 
             input.proxyPassword = proxyPassword;
 
-            input.x509HostnameVerifier =x509HostnameVerifier;
+            input.x509HostnameVerifier = x509HostnameVerifier;
 
             input.tlsVersion = buildTlsVersions(tlsVersion);
 

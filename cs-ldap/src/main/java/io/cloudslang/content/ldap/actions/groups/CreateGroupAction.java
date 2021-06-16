@@ -109,24 +109,24 @@ public class CreateGroupAction {
      *                             Default value: 60000.
      * @return - a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message with the distinguished name of the newly created group in case of success or the error message
-     *              in case of failure.
+     * in case of failure.
      * returnCode - The return code of the operation. 0 if the operation succeeded, -1 if the operation fails.
      * exception - The exception message if the operation fails.
      * groupDN - The distinguished name of the newly created group.
      */
 
-    @Action(name = "Create Group", description =  CREATE_GROUP_DESC,
+    @Action(name = "Create Group", description = CREATE_GROUP_DESC,
             outputs = {
-                    @Output(value = OutputNames.RETURN_RESULT, description =  RETURN_RESULT_DESC),
-                    @Output(value = OutputNames.RESULT_GROUP_DN, description =  GROUP_DISTINGUISHED_NAME_DESC),
-                    @Output(value = OutputNames.RETURN_CODE, description =  RETURN_CODE_DESC),
-                    @Output(value = OutputNames.EXCEPTION, description =  EXCEPTION_DESC)
+                    @Output(value = OutputNames.RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = OutputNames.RESULT_GROUP_DN, description = GROUP_DISTINGUISHED_NAME_DESC),
+                    @Output(value = OutputNames.RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = OutputNames.EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description =  SUCCESS_DESC),
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE,
-                            value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description =  FAILURE_DESC)
+                            value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
@@ -134,9 +134,9 @@ public class CreateGroupAction {
             @Param(value = InputNames.GROUP_COMMON_NAME, required = true, description = GROUP_COMMON_NAME_DESC) String groupCommonName,
             @Param(value = InputNames.GROUP_TYPE, description = GROUP_TYPE_DESC) String groupType,
             @Param(value = InputNames.SAM_ACCOUNT_NAME, required = true, description = SAM_ACCOUNT_NAME_DESC) String sAMAccountName,
-            @Param(value = InputNames.USERNAME, description =  USERNAME_DESC) String username,
-            @Param(value = InputNames.PASSWORD, encrypted = true, description =  PASSWORD_DESC) String password,
-            @Param(value = InputNames.PROTOCOL, description =  PROTOCOL_DESC) String protocol,
+            @Param(value = InputNames.USERNAME, description = USERNAME_DESC) String username,
+            @Param(value = InputNames.PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
+            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = InputNames.PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = InputNames.PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
             @Param(value = InputNames.PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,

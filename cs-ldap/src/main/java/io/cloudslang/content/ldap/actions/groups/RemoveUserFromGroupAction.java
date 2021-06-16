@@ -100,7 +100,7 @@ public class RemoveUserFromGroupAction {
      *                               Default value: 60000.
      * @return - a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message with the removed user's DN and the group from which it was removed DN, in case of success or the
-     *              error in case of failure.
+     * error in case of failure.
      * returnCode - The return code of the operation. 0 if the operation succeeded, -1 if the operation fails.
      * exception - The exception message if the operation fails.
      */
@@ -135,7 +135,7 @@ public class RemoveUserFromGroupAction {
             @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
             @Param(value = InputNames.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
-            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout){
+            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
         AddRemoveUserInput.Builder inputBuilder = new AddRemoveUserInput.Builder()
                 .host(host)
                 .groupDistinguishedName(groupDistinguishedName)

@@ -32,10 +32,10 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 import java.util.Map;
 
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
-import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.USER_CN_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.HOST_DESC;
-import static io.cloudslang.content.ldap.constants.Descriptions.EnableUser.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.USER_CN_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.EnableUser.RETURN_CODE_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.EnableUser.*;
 
 public class EnableUserAction {
 

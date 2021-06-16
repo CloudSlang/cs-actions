@@ -35,7 +35,7 @@ import java.util.List;
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
+public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput {
 
     private String host;
     private String computerDistinguishedName;
@@ -63,7 +63,9 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
         return host;
     }
 
-    public String getComputerDistinguishedName() { return computerDistinguishedName; }
+    public String getComputerDistinguishedName() {
+        return computerDistinguishedName;
+    }
 
     public String getOuCommonName() {
         return ouCommonName;
@@ -93,17 +95,25 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
         return trustPassword;
     }
 
-    public String getConnectionTimeout() { return connectionTimeout; }
+    public String getConnectionTimeout() {
+        return connectionTimeout;
+    }
 
     public String getExecutionTimeout() {
         return executionTimeout;
     }
 
-    public String getTlsVersion() { return tlsVersion; }
+    public String getTlsVersion() {
+        return tlsVersion;
+    }
 
-    public List<String> getAllowedCiphers() { return allowedCiphers; }
+    public List<String> getAllowedCiphers() {
+        return allowedCiphers;
+    }
 
-    public String getProxyHost() { return proxyHost; }
+    public String getProxyHost() {
+        return proxyHost;
+    }
 
     public int getProxyPort() {
         return proxyPort;
@@ -117,7 +127,9 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
         return proxyPassword;
     }
 
-    public String getX509HostnameVerifier() { return x509HostnameVerifier; }
+    public String getX509HostnameVerifier() {
+        return x509HostnameVerifier;
+    }
 
 
     public static class Builder {
@@ -242,7 +254,7 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
 
             input.computerDistinguishedName = buildComputerDN(computerDistinguishedName, true);
 
-            input.ouCommonName = buildNewOUDN(ouCommonName,true);
+            input.ouCommonName = buildNewOUDN(ouCommonName, true);
 
             input.username = buildUsername(username);
 
@@ -266,7 +278,7 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput{
 
             input.proxyPassword = proxyPassword;
 
-            input.x509HostnameVerifier =x509HostnameVerifier;
+            input.x509HostnameVerifier = x509HostnameVerifier;
 
             input.tlsVersion = buildTlsVersions(tlsVersion);
 

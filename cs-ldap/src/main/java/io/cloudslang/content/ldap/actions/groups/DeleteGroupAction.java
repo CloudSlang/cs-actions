@@ -105,7 +105,7 @@ public class DeleteGroupAction {
      *                             Default value: 60000.
      * @return - a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message with the distinguished name of the deleted group in case of success or the error message
-     *              in case of failure.
+     * in case of failure.
      * returnCode - The return code of the operation. 0 if the operation succeeded, -1 if the operation fails.
      * exception - The exception message if the operation fails.
      * groupDN - The distinguished name of the deleted group.

@@ -35,7 +35,7 @@ import java.util.List;
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetComputerAccountOUInput implements GetCompAccountOUInput{
+public class GetComputerAccountOUInput implements GetCompAccountOUInput {
 
     private String host;
     private String rootDistinguishedName;
@@ -63,9 +63,13 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
         return host;
     }
 
-    public String getRootDistinguishedName() { return rootDistinguishedName; }
+    public String getRootDistinguishedName() {
+        return rootDistinguishedName;
+    }
 
-    public String getComputerCommonName() { return computerCommonName; }
+    public String getComputerCommonName() {
+        return computerCommonName;
+    }
 
     public String getUsername() {
         return username;
@@ -91,17 +95,25 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
         return trustPassword;
     }
 
-    public String getConnectionTimeout() { return connectionTimeout; }
+    public String getConnectionTimeout() {
+        return connectionTimeout;
+    }
 
     public String getExecutionTimeout() {
         return executionTimeout;
     }
 
-    public String getTlsVersion() { return tlsVersion; }
+    public String getTlsVersion() {
+        return tlsVersion;
+    }
 
-    public List<String> getAllowedCiphers() { return allowedCiphers; }
+    public List<String> getAllowedCiphers() {
+        return allowedCiphers;
+    }
 
-    public String getProxyHost() { return proxyHost; }
+    public String getProxyHost() {
+        return proxyHost;
+    }
 
     public int getProxyPort() {
         return proxyPort;
@@ -115,7 +127,9 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
         return proxyPassword;
     }
 
-    public String getX509HostnameVerifier() { return x509HostnameVerifier; }
+    public String getX509HostnameVerifier() {
+        return x509HostnameVerifier;
+    }
 
     public static class Builder {
 
@@ -237,7 +251,7 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
 
             input.rootDistinguishedName = buildRootDN(rootDistinguishedName, true);
 
-            input.computerCommonName = buildComputerCommonName(computerCommonName,true);
+            input.computerCommonName = buildComputerCommonName(computerCommonName, true);
 
             input.username = buildUsername(username);
 
@@ -261,7 +275,7 @@ public class GetComputerAccountOUInput implements GetCompAccountOUInput{
 
             input.proxyPassword = proxyPassword;
 
-            input.x509HostnameVerifier =x509HostnameVerifier;
+            input.x509HostnameVerifier = x509HostnameVerifier;
 
             input.tlsVersion = buildTlsVersions(tlsVersion);
 

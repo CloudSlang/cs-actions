@@ -109,7 +109,7 @@ public class MoveComputerAccountToOUAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
-            @Param(value = InputNames.COMPUTER_DISTINGUISHED_NAME, required = true, description =MOVE_COMPUTER_ACCOUNT_DISTINGUISHED_NAME_DESC) String computerDistinguishedName,
+            @Param(value = InputNames.COMPUTER_DISTINGUISHED_NAME, required = true, description = MOVE_COMPUTER_ACCOUNT_DISTINGUISHED_NAME_DESC) String computerDistinguishedName,
             @Param(value = InputNames.OU_COMMON_NAME, required = true, description = MOVE_COMPUTER_ACCOUNT_COMMON_NAME_DESC) String ouCommonName,
             @Param(value = InputNames.USERNAME, description = USERNAME_DESC) String username,
             @Param(value = InputNames.PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,

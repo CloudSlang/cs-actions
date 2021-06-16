@@ -2,11 +2,11 @@
 <additionalHeaders>
     <cs-actions-java-header>
         <firstLine>/*</firstLine>
-        <beforeEachLine> </beforeEachLine>
-        <endLine> */</endLine>
-        <afterEachLine> </afterEachLine>
+        <beforeEachLine></beforeEachLine>
+        <endLine>*/</endLine>
+        <afterEachLine></afterEachLine>
         <firstLineDetectionPattern>/*</firstLineDetectionPattern>
-        <lastLineDetectionPattern> */</lastLineDetectionPattern>
+        <lastLineDetectionPattern>*/</lastLineDetectionPattern>
         <emptyLineAfterHeader>true</emptyLineAfterHeader>
         <allowBlankLines>false</allowBlankLines>
         <isMultiline>true</isMultiline>

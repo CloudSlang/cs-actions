@@ -35,7 +35,7 @@ import java.util.List;
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class ResetComputerAccountInput implements ResetCompAccountInput{
+public class ResetComputerAccountInput implements ResetCompAccountInput {
 
     private String host;
     private String computerDistinguishedName;
@@ -62,7 +62,9 @@ public class ResetComputerAccountInput implements ResetCompAccountInput{
         return host;
     }
 
-    public String getComputerDistinguishedName() { return computerDistinguishedName; }
+    public String getComputerDistinguishedName() {
+        return computerDistinguishedName;
+    }
 
     public String getUsername() {
         return username;
@@ -88,26 +90,41 @@ public class ResetComputerAccountInput implements ResetCompAccountInput{
         return trustPassword;
     }
 
-    public String getConnectionTimeout() { return connectionTimeout; }
+    public String getConnectionTimeout() {
+        return connectionTimeout;
+    }
 
     public String getExecutionTimeout() {
         return executionTimeout;
     }
 
-    public String getTlsVersion() { return tlsVersion; }
+    public String getTlsVersion() {
+        return tlsVersion;
+    }
 
-    public List<String> getAllowedCiphers() { return allowedCiphers; }
+    public List<String> getAllowedCiphers() {
+        return allowedCiphers;
+    }
 
-    public String getProxyHost() { return proxyHost; }
+    public String getProxyHost() {
+        return proxyHost;
+    }
 
-    public int getProxyPort() { return proxyPort; }
+    public int getProxyPort() {
+        return proxyPort;
+    }
 
-    public String getProxyUsername() { return proxyUsername; }
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
 
-    public String getProxyPassword() { return proxyPassword; }
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
 
-    public String getX509HostnameVerifier() { return x509HostnameVerifier; }
-
+    public String getX509HostnameVerifier() {
+        return x509HostnameVerifier;
+    }
 
 
     public static class Builder {
@@ -248,7 +265,7 @@ public class ResetComputerAccountInput implements ResetCompAccountInput{
 
             input.proxyPassword = proxyPassword;
 
-            input.x509HostnameVerifier =x509HostnameVerifier;
+            input.x509HostnameVerifier = x509HostnameVerifier;
 
             input.tlsVersion = buildTlsVersions(tlsVersion);
 

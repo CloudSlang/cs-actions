@@ -31,10 +31,10 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 import java.util.Map;
 
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.EnableComputerAccount.FAILURE_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.EnableComputerAccount.SUCCESS_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.EnableComputerAccount.*;
-import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.RETURN_RESULT_DESC;
-import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.DISTINGUISHED_NAME_DESC;
-import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.COMPUTER_COMMON_NAME_DESC;
 
 public class EnableComputerAccountAction {
     /**

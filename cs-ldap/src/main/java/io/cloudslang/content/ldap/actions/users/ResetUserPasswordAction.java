@@ -32,9 +32,9 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 import java.util.Map;
 
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
-import static io.cloudslang.content.ldap.constants.Descriptions.ResetUserPassword.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.HOST_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.ResetUserPassword.RETURN_CODE_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.ResetUserPassword.*;
 
 public class ResetUserPasswordAction {
 
@@ -139,7 +139,7 @@ public class ResetUserPasswordAction {
             @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
             @Param(value = InputNames.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
-            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout){
+            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
         ResetUserPasswordInput.Builder inputBuilder = new ResetUserPasswordInput.Builder()
                 .host(host)

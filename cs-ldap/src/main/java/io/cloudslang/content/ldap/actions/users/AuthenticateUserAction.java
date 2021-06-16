@@ -34,8 +34,8 @@ import java.util.Map;
 import static io.cloudslang.content.ldap.constants.Descriptions.AuthenticateUser.HOST_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.AuthenticateUser.PASSWORD_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.AuthenticateUser.USERNAME_DESC;
-import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.AuthenticateUser.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.RETURN_RESULT_DESC;
 
 public class AuthenticateUserAction {
@@ -101,7 +101,7 @@ public class AuthenticateUserAction {
      *                              Default value: 60000.
      * @return a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message which specifies if the user was authenticated against Active Directory in case of success or an error
-     *                message in case of failure.
+     * message in case of failure.
      * returnCode - The return code of the operation. 0 if the operation succeded, -1 if the operation fails.
      * exception - The exception message if the operation fails.
      */
@@ -135,7 +135,7 @@ public class AuthenticateUserAction {
             @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
             @Param(value = InputNames.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
-            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout){
+            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
         AuthenticateUserInput.Builder inputBuilder = new AuthenticateUserInput.Builder()
                 .host(host)
                 .rootDistinguishedName(rootDistinguishedName)

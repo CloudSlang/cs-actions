@@ -22,10 +22,8 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
     private static String proxyPassword;
     private static List<String> allowedCiphers;
     private static Exception exception;
-    private SSLSocketFactory socketFactory;
-
-
     private static boolean useHttps = true;
+    private SSLSocketFactory socketFactory;
 
     public CustomSSLSocketFactory() {
 
@@ -41,44 +39,6 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
 
         return new CustomSSLSocketFactory();
 
-    }
-
-    private SSLSocketFactory addSSLSettings(boolean trustAllRoots, String trustKeystore, String trustPassword, String tlsVersion) {
-
-        if (!trustAllRoots) {
-            try {
-                System.setProperty("javax.net.ssl.keyStore", trustKeystore);
-                System.setProperty("javax.net.ssl.keyStorePassword", trustPassword);
-                System.setProperty("javax.net.ssl.trustStore", trustKeystore);
-                System.setProperty("javax.net.ssl.trustStorePassword", trustPassword);
-
-                KeyStore keyStore = KeyStore.getInstance("JKS");
-                keyStore.load(new FileInputStream(trustKeystore), trustPassword.toCharArray());
-                // Create key manager
-                KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
-                keyManagerFactory.init(keyStore, trustPassword.toCharArray());
-                KeyManager[] km = keyManagerFactory.getKeyManagers();
-                // Create trust manager
-                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
-                trustManagerFactory.init(keyStore);
-                TrustManager[] tm = trustManagerFactory.getTrustManagers();
-                // Initialize SSLContext
-                SSLContext sslContext = SSLContext.getInstance(tlsVersion);
-                sslContext.init(km, tm, new SecureRandom());
-                return sslContext.getSocketFactory();
-            } catch (Exception e) {
-                System.out.println("hello");
-            }
-        } else {
-            try {
-                SSLContext sslContext = SSLContext.getInstance(tlsVersion);
-                sslContext.init(null, new TrustManager[]{getTrustAllRoots()}, new SecureRandom());
-                return sslContext.getSocketFactory();
-            } catch (Exception e) {
-                System.out.println("hello");
-            }
-        }
-        return null;
     }
 
     public static Exception getException() {
@@ -129,9 +89,63 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
         CustomSSLSocketFactory.allowedCiphers = allowedCiphers;
     }
 
+    private static TrustManager getTrustAllRoots() {
+        return new X509TrustManager() {
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            }
+
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            }
+
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+        };
+    }
 
     public static void setTrustAllRoots(boolean trustAllRoots) {
         CustomSSLSocketFactory.trustAllRoots = trustAllRoots;
+    }
+
+    private SSLSocketFactory addSSLSettings(boolean trustAllRoots, String trustKeystore, String trustPassword, String tlsVersion) {
+
+        if (!useHttps) {
+            return null;
+        }
+        if (!trustAllRoots) {
+            try {
+                System.setProperty("javax.net.ssl.keyStore", trustKeystore);
+                System.setProperty("javax.net.ssl.keyStorePassword", trustPassword);
+                System.setProperty("javax.net.ssl.trustStore", trustKeystore);
+                System.setProperty("javax.net.ssl.trustStorePassword", trustPassword);
+
+                KeyStore keyStore = KeyStore.getInstance("JKS");
+                keyStore.load(new FileInputStream(trustKeystore), trustPassword.toCharArray());
+                // Create key manager
+                KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+                keyManagerFactory.init(keyStore, trustPassword.toCharArray());
+                KeyManager[] km = keyManagerFactory.getKeyManagers();
+                // Create trust manager
+                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+                trustManagerFactory.init(keyStore);
+                TrustManager[] tm = trustManagerFactory.getTrustManagers();
+                // Initialize SSLContext
+                SSLContext sslContext = SSLContext.getInstance(tlsVersion);
+                sslContext.init(km, tm, new SecureRandom());
+                return sslContext.getSocketFactory();
+            } catch (Exception e) {
+                System.out.println("hello");
+            }
+        } else {
+            try {
+                SSLContext sslContext = SSLContext.getInstance(tlsVersion);
+                sslContext.init(null, new TrustManager[]{getTrustAllRoots()}, new SecureRandom());
+                return sslContext.getSocketFactory();
+            } catch (Exception e) {
+                System.out.println("hello");
+            }
+        }
+        return null;
     }
 
     @Override
@@ -259,19 +273,5 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
             throw new IOException("Unable to tunnel through " + ":" + ".  Proxy returns \""
                     + replyStr + "\"");
         }
-    }
-
-    private static TrustManager getTrustAllRoots() {
-        return new X509TrustManager() {
-            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-            }
-
-            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-            }
-
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-        };
     }
 }

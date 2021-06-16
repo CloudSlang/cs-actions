@@ -23,11 +23,9 @@ import javax.naming.CompositeName;
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.*;
-import java.util.Collections;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.ldap.constants.Constants.FALSE;
 import static io.cloudslang.content.ldap.constants.Constants.HTTPS;
 import static io.cloudslang.content.ldap.constants.OutputNames.RESULT_COMPUTER_DN;
 import static io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLCharacters;
@@ -58,15 +56,18 @@ public class CreateComputerAccountService {
 
             if (protocol.toLowerCase().trim().equals(HTTPS)) {
                 if (Boolean.valueOf(trustAllRoots)) {
-                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
+                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
+                            input.getConnectionTimeout(), input.getExecutionTimeout(), input.getTlsVersion(), input.getAllowedCiphers(),
+                            input.getProxyHost(), input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword());
                 } else {
-                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), FALSE,
-                             input.getTrustKeystore(), input.getTrustPassword(),
-                             input.getConnectionTimeout(), input.getExecutionTimeout());
+                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
+                            input.getTrustKeystore(), input.getTrustPassword(), input.getConnectionTimeout(),
+                            input.getExecutionTimeout(), input.getTlsVersion(), input.getAllowedCiphers(), input.getProxyHost(),
+                            input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword(), input.getX509HostnameVerifier());
                 }
-
             } else {
-                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
+                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(),
+                        input.getExecutionTimeout(), input.getProxyHost(), input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword());
             }
             DirContext ctxOU = (DirContext) ctx.lookup(ou);
             Attributes compAttrs = new BasicAttributes(true);

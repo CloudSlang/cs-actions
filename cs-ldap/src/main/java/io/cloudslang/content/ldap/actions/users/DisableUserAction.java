@@ -33,9 +33,9 @@ import java.util.Map;
 
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.RETURN_RESULT_DESC;
-import static io.cloudslang.content.ldap.constants.Descriptions.DisableUser.*;
-import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.USER_CN_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.HOST_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.USER_CN_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.DisableUser.*;
 
 public class DisableUserAction {
 
@@ -138,7 +138,7 @@ public class DisableUserAction {
             @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
             @Param(value = InputNames.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
-            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout){
+            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
         UserCommonInput.Builder inputBuilder = new UserCommonInput.Builder()
                 .host(host)
                 .distinguishedName(distinguishedName)

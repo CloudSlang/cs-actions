@@ -33,9 +33,9 @@ import java.util.Map;
 
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.USER_CN_DESC;
-import static io.cloudslang.content.ldap.constants.Descriptions.UpdateUserDetails.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.UpdateUserDetails.HOST_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.UpdateUserDetails.RETURN_CODE_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.UpdateUserDetails.*;
 
 public class UpdateUserDetailsAction {
 
@@ -73,7 +73,7 @@ public class UpdateUserDetailsAction {
      *                             attribute:value, separated by new line. Make sure that the attributes are valid Active Directory
      *                             attributes.
      *                             Example: streetAddress:My Address
-     *                                      postalCode:123456
+     *                             postalCode:123456
      * @param protocol             The protocol to use when connecting to the Active Directory server.
      *                             Valid values: HTTP and HTTPS.
      * @param proxyHost            The proxy server used to access the web site.

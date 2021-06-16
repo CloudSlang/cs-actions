@@ -24,8 +24,8 @@ public final class TlsVersions {
 
     public static boolean validate(String tlsVersion) throws IllegalAccessException {
         Field[] possibleVersions = TlsVersions.class.getFields();
-        for(Field possibleVersion : possibleVersions) {
-            if(possibleVersion.get(null) != null && possibleVersion.get(null).toString().equals(tlsVersion)) {
+        for (Field possibleVersion : possibleVersions) {
+            if (possibleVersion.get(null) != null && possibleVersion.get(null).toString().equals(tlsVersion)) {
                 return true;
             }
         }
