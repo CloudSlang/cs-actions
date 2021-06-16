@@ -86,6 +86,7 @@ public class LDAPQuery {
         env.put(OPERATION_TIMEOUT, executionTimeout);
         env.put(Context.REFERRAL, "follow");
 
+        if(!proxyHost.isEmpty())
         env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.ldap.utils.CustomSSLSocketFactory");
         DirContext ctx = new InitialDirContext(env);
         return ctx;
