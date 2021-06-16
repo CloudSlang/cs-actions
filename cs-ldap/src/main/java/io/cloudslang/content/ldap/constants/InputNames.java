@@ -48,4 +48,7 @@ public final class InputNames {
     public static final String ATTRIBUTES_LIST = "attributesList";
     public static final String TLS_VERSION = "tlsVersion";
     public static final String ALLOWED_CIPHERS = "allowedCiphers";
+    public static final String CONNECTION_TIMEOUT = "connectionTimeout";
+    public static final String EXECUTION_TIMEOUT = "executionTimeout";
+
 }

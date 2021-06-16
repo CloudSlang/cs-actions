@@ -33,4 +33,10 @@ public interface GetCompAccountOUInput {
 
     String getTrustPassword();
 
+    String getConnectionTimeout();
+
+    String getExecutionTimeout();
+
+
+
 }

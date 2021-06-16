@@ -35,4 +35,8 @@ public interface UserCommInput {
     String getTrustPassword();
 
     Boolean getEscapeChars();
+
+    String getConnectionTimeout();
+
+    String getExecutionTimeout();
 }

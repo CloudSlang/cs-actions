@@ -6,7 +6,7 @@ CloudSlang Actions
 ==================
 
 [![Join the chat at https://gitter.im/CloudSlang/cs-actions](https://badges.gitter.im/CloudSlang/cs-actions.svg)](https://gitter.im/CloudSlang/cs-actions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/CloudSlang/cs-actions.svg?branch=master)](https://travis-ci.org/CloudSlang/cs-actions)
+[![Build Status](https://travis-ci.com/CloudSlang/cs-actions.svg?branch=master)](https://travis-ci.com/CloudSlang/cs-actions)
 [![Coverage Status](https://coveralls.io/repos/github/CloudSlang/cs-actions/badge.svg?branch=master)](https://coveralls.io/github/CloudSlang/cs-actions?branch=master)
 [![Issue Count](https://codeclimate.com/github/CloudSlang/cs-actions/badges/issue_count.svg)](https://codeclimate.com/github/CloudSlang/cs-actions)
 [![Code Climate](https://codeclimate.com/github/CloudSlang/cs-actions/badges/gpa.svg)](https://codeclimate.com/github/CloudSlang/cs-actions)
@@ -16,9 +16,9 @@ CloudSlang Actions
 
 
 * [Overview](#Overview)
-* [Common Integrations](#CommonIntegrations)
-* [Open Source Project](#OpenSourceProject)
-* [Content Actions Development Best Practices](#BestPractices)
+* [Common Integrations](#Common Integrations)
+* [Open Source Project](#Open Source Project)
+* [Content Actions Development Best Practices](#Best Practices)
 
 
 <a name="Overview"/>

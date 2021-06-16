@@ -36,6 +36,8 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
     private boolean escapeChars;
     private List<String> tlsVersions;
     private List<String> allowedCiphers;
+    private String connectionTimeout;
+    private String executionTimeout;
 
     private CreateComputerAccountInput() {
     }
@@ -84,6 +86,12 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
         return escapeChars;
     }
 
+    public String getConnectionTimeout() { return connectionTimeout; }
+
+    public String getExecutionTimeout() {
+        return executionTimeout;
+    }
+
     public List<String> getTlsVersion() { return tlsVersions; }
 
     public List<String> getAllowedCiphers() { return allowedCiphers; }
@@ -103,6 +111,8 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
         private String escapeChars;
         private String tlsVersion;
         private String allowedCiphers;
+        private String connectionTimeout;
+        private String executionTimeout;
 
 
         public Builder host(String host) {
@@ -174,6 +184,16 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
         }
 
 
+        public Builder connectionTimeout(String connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
+        public Builder executionTimeout(String executionTimeout) {
+            this.executionTimeout = executionTimeout;
+            return this;
+        }
+
         public CreateComputerAccountInput build() throws Exception {
             CreateComputerAccountInput input = new CreateComputerAccountInput();
 
@@ -181,9 +201,9 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
 
             input.distinguishedName = buildDistinguishedName(distinguishedName, true);
 
-            input.computerCommonName = buildComputerCommonName(computerCommonName,true);
+            input.computerCommonName = buildComputerCommonName(computerCommonName, true);
 
-            input.sAMAccountName = buildSAMAccountName(sAMAccountName,computerCommonName);
+            input.sAMAccountName = buildSAMAccountName(sAMAccountName, computerCommonName);
 
             input.username = buildUsername(username);
 
@@ -198,6 +218,10 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
             input.trustPassword = trustPassword;
 
             input.escapeChars = buildEscapeChars(escapeChars);
+
+            input.connectionTimeout = connectionTimeout;
+
+            input.executionTimeout = executionTimeout;
 
             input.tlsVersions = buildTlsVersions(tlsVersion);
 
