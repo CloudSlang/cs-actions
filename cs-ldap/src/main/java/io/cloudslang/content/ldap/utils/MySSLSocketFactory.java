@@ -28,6 +28,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 import java.util.List;
 
 import static io.cloudslang.content.ldap.constants.Constants.DEFAULT_PASSWORD_FOR_STORE;
@@ -39,16 +40,16 @@ public class MySSLSocketFactory extends SSLSocketFactory {
     private static boolean trustAllRoots;
     private static String trustKeystore;
     private static String trustPassword;
-    private static List<String> tlsVersion;
+    private static String tlsVersion;
     private static List<String> allowedCiphers;
     private static Exception exception;
-    private SSLSocketFactory socketFactory = new TLSSocketFactory(tlsVersion, allowedCiphers);
+    private SSLSocketFactory socketFactory = new TLSSocketFactory(Collections.singletonList(tlsVersion), allowedCiphers);
 
     public MySSLSocketFactory() {
 
         exception = null;
         try {
-            socketFactory = addSSLSettings(trustAllRoots, trustKeystore, trustPassword, tlsVersion.get(0));
+            socketFactory = addSSLSettings(trustAllRoots, trustKeystore, trustPassword, tlsVersion);
         } catch (Exception e) {
             exception = e;
         }
@@ -76,7 +77,7 @@ public class MySSLSocketFactory extends SSLSocketFactory {
         MySSLSocketFactory.trustPassword = trustPassword;
     }
 
-    public static void setTlsVersion(List<String> tlsVersion) { MySSLSocketFactory.tlsVersion = tlsVersion; }
+    public static void setTlsVersion(String tlsVersion) { MySSLSocketFactory.tlsVersion = tlsVersion; }
 
     public static void setAllowedCiphers(List<String> allowedCiphers) { MySSLSocketFactory.allowedCiphers = allowedCiphers; }
 
