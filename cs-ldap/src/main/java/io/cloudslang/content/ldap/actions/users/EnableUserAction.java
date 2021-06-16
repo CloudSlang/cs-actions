@@ -31,7 +31,11 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
-import static io.cloudslang.content.ldap.constants.Descriptions.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.USER_CN_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.HOST_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.EnableUser.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.EnableUser.RETURN_CODE_DESC;
 
 public class EnableUserAction {
 
@@ -74,16 +78,16 @@ public class EnableUserAction {
 
     @Action(name = "Enable User", description = ENABLE_USER_DESC,
             outputs = {
-                    @Output(value = OutputNames.RETURN_RESULT, description = RETURN_RESULT_ENABLE_USER),
-                    @Output(value = OutputNames.RESULT_USER_DN, description = RESULT_USER_DN_ENABLED_DESC),
+                    @Output(value = OutputNames.RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = OutputNames.RESULT_USER_DN, description = USER_DN_DESC),
                     @Output(value = OutputNames.RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = OutputNames.EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE,
-                            value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
+                            value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
@@ -95,7 +99,6 @@ public class EnableUserAction {
             @Param(value = InputNames.TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
             @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
-            @Param(value = InputNames.ESCAPE_CHARS, description = ESCAPE_CHARS_DESC) String escapeChars,
             @Param(value = InputNames.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
             @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
         UserCommonInput.Builder inputBuilder = new UserCommonInput.Builder()

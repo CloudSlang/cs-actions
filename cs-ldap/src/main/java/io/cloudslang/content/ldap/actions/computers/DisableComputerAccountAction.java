@@ -30,8 +30,11 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
-import static io.cloudslang.content.ldap.constants.Descriptions.*;
-import static io.cloudslang.content.ldap.constants.Descriptions.EXCEPTION_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.DisableComputerAccount.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.RETURN_RESULT_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.DISTINGUISHED_NAME_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.COMPUTER_COMMON_NAME_DESC;
 
 public class DisableComputerAccountAction {
     /**
@@ -72,10 +75,10 @@ public class DisableComputerAccountAction {
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE,
                             value = ReturnCodes.SUCCESS,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE,
                             value = ReturnCodes.FAILURE,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,

@@ -30,6 +30,12 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.EnableComputerAccount.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.RETURN_RESULT_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.DISTINGUISHED_NAME_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.COMPUTER_COMMON_NAME_DESC;
+
 public class EnableComputerAccountAction {
     /**
      * Enables a computer account in Active Directory.
@@ -59,33 +65,33 @@ public class EnableComputerAccountAction {
      * exception - The exception message if the operation fails.
      * computerDN - The distinguished name of the computer account that was enabled.
      */
-    @Action(name = "Enable Computer Account",
+    @Action(name = "Enable Computer Account", description = ENABLE_COMPUTER_ACCOUNT_DESC,
             outputs = {
-                    @Output(OutputNames.RETURN_RESULT),
-                    @Output(OutputNames.RESULT_COMPUTER_DN),
-                    @Output(OutputNames.RETURN_CODE),
-                    @Output(OutputNames.EXCEPTION)
+                    @Output(value = OutputNames.RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = OutputNames.RESULT_COMPUTER_DN, description = RESULT_ENABLE_COMPUTER_DN_DESC),
+                    @Output(value = OutputNames.RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = OutputNames.EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE,
                             value = ReturnCodes.SUCCESS,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE,
                             value = ReturnCodes.FAILURE,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR)
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(
-            @Param(value = InputNames.HOST, required = true) String host,
-            @Param(value = InputNames.DISTINGUISHED_NAME, required = true) String distinguishedName,
-            @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true) String computerCommonName,
-            @Param(value = InputNames.USERNAME) String username,
-            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
-            @Param(value = InputNames.PROTOCOL) String protocol,
-            @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
-            @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
-            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
-            @Param(value = InputNames.CONNECTION_TIMEOUT) String connectionTimeout,
-            @Param(value = InputNames.EXECUTION_TIMEOUT) String executionTimeout) {
+            @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
+            @Param(value = InputNames.DISTINGUISHED_NAME, required = true, description = DISTINGUISHED_NAME_DESC) String distinguishedName,
+            @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true, description = COMPUTER_COMMON_NAME_DESC) String computerCommonName,
+            @Param(value = InputNames.USERNAME, description = USERNAME_DESC) String username,
+            @Param(value = InputNames.PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
+            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
+            @Param(value = InputNames.TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
+            @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
+            @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
+            @Param(value = InputNames.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
+            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
         EnableComputerAccountInput.Builder inputBuilder = new EnableComputerAccountInput.Builder()
                 .host(host)
                 .distinguishedName(distinguishedName)
