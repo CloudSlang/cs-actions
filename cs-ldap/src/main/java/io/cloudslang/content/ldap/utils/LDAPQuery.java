@@ -104,11 +104,8 @@ public class LDAPQuery {
     }
 
     public DirContext MakeSSLLDAPConnection(String host, String username, String password, String trustAllRoots,
-                                            String trustStore, String trustStorePassword, String connectionTimeout, String executionTimeout) throws NamingException {
                                             String trustStore, String trustStorePassword, List<String> tlsVersion,
-                                            List<String> allowedCiphers)
-            throws NamingException {
-
+                                            List<String> allowedCiphers, String connectionTimeout, String executionTimeout) throws NamingException {
         // init the port with the default value
         Address address = new Address(host, Address.PORT_NOT_SET, DEFAULT_PORT);
 
