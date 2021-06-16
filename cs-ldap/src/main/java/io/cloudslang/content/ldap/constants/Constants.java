@@ -18,6 +18,9 @@ public final class Constants {
 
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String SSL = "SSL";
+    public static final String HTTP = "http";
+    public static final String HTTPS = "https";
+    public static final String FALSE = "false";
     public static final String DEFAULT_PASSWORD_FOR_STORE = "changeit";
     public static final String SSL_SOCKET_FACTORY = "javax.net.ssl.SSLSocketFactory";
     public static final String HOST = ".host";

@@ -26,17 +26,16 @@ import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-class TLSSocketFactory extends SSLSocketFactory {
+public class TLSSocketFactory extends SSLSocketFactory {
 
     private List<String> protocols;
     private List<String> cipherSuites;
 
 
-    TLSSocketFactory(List<String> protocols, List<String> cipherSuites) {
+    public TLSSocketFactory(List<String> protocols, List<String> cipherSuites) {
         this.protocols = protocols;
         this.cipherSuites = cipherSuites;
     }
-
 
     @Override
     public String[] getDefaultCipherSuites() {

@@ -23,9 +23,12 @@ import javax.naming.CompositeName;
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.*;
+import java.util.Collections;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.ldap.constants.Constants.FALSE;
+import static io.cloudslang.content.ldap.constants.Constants.HTTPS;
 import static io.cloudslang.content.ldap.constants.OutputNames.RESULT_COMPUTER_DN;
 import static io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLCharacters;
 
@@ -53,12 +56,13 @@ public class CreateComputerAccountService {
             Name ou = new CompositeName().add(OU);
             DirContext ctx;
 
-            if (protocol.toLowerCase().trim().equals("https")) {
+            if (protocol.toLowerCase().trim().equals(HTTPS)) {
                 if (Boolean.valueOf(trustAllRoots)) {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {
-                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                             input.getTrustKeystore(), input.getTrustPassword());
+                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), FALSE,
+                             input.getTrustKeystore(), input.getTrustPassword(), input.getTlsVersion(),
+                            Collections.singletonList("TLS_DHE_RSA_WITH_AES_256_CBC_SHA256"));
                 }
 
             } else {
@@ -88,7 +92,7 @@ public class CreateComputerAccountService {
 
             results.put(RETURN_RESULT, "Added computer account with CN=" + compCN);
             results.put(RESULT_COMPUTER_DN, compDN.toString());
-            results.put(RETURN_CODE,"0");
+            results.put(RETURN_CODE, "0");
 
         } catch (NamingException e) {
             Exception exception = MySSLSocketFactory.getException();
@@ -96,7 +100,7 @@ public class CreateComputerAccountService {
                 exception = e;
             results.put(EXCEPTION, String.valueOf(exception));
             results.put(RETURN_RESULT, replaceInvalidXMLCharacters(exception.getMessage()));
-            results.put(RETURN_CODE,"-1");
+            results.put(RETURN_CODE, "-1");
         }
         return results;
     }

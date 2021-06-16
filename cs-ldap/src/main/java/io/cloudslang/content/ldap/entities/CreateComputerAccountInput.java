@@ -16,6 +16,8 @@ package io.cloudslang.content.ldap.entities;
 
 import io.cloudslang.content.ldap.constants.Constants;
 
+import java.util.List;
+
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -32,6 +34,8 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
+    private List<String> tlsVersions;
+    private List<String> allowedCiphers;
 
     private CreateComputerAccountInput() {
     }
@@ -80,6 +84,10 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
         return escapeChars;
     }
 
+    public List<String> getTlsVersion() { return tlsVersions; }
+
+    public List<String> getAllowedCiphers() { return allowedCiphers; }
+
     public static class Builder {
 
         private String host;
@@ -93,6 +101,8 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
+        private String tlsVersion;
+        private String allowedCiphers;
 
 
         public Builder host(String host) {
@@ -154,6 +164,16 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
             return this;
         }
 
+        public Builder tlsVersion(String tlsVersion) {
+            this.tlsVersion = tlsVersion;
+            return this;
+        }
+        public Builder allowedCiphers(String allowedCiphers) {
+            this.allowedCiphers = allowedCiphers;
+            return this;
+        }
+
+
         public CreateComputerAccountInput build() throws Exception {
             CreateComputerAccountInput input = new CreateComputerAccountInput();
 
@@ -178,6 +198,10 @@ public class CreateComputerAccountInput implements CreateCompAccountInput{
             input.trustPassword = trustPassword;
 
             input.escapeChars = buildEscapeChars(escapeChars);
+
+            input.tlsVersions = buildTlsVersions(tlsVersion);
+
+            input.allowedCiphers = buildAllowedCiphers(allowedCiphers);
 
             return input;
         }

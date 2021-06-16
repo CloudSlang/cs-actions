@@ -96,14 +96,21 @@ public class LDAPQuery {
     }
 
     public DirContext MakeSSLLDAPConnection(String host, String username, String password, String trustAllRoots,
-                                            String trustStore, String trustStorePassword) throws NamingException {
+                                            String trustStore, String trustStorePassword, List<String> tlsVersion,
+                                            List<String> allowedCiphers)
+            throws NamingException {
 
         // init the port with the default value
         Address address = new Address(host, Address.PORT_NOT_SET, DEFAULT_PORT);
 
+//        System.setProperty("https.proxyUser",userid);
+        System.setProperty("https.proxyPassword",password);
+
         MySSLSocketFactory.setTrustAllRoots(Boolean.valueOf(trustAllRoots));
         MySSLSocketFactory.setTrustKeystore(trustStore);
         MySSLSocketFactory.setTrustPassword(trustStorePassword);
+        MySSLSocketFactory.setTlsVersion(tlsVersion);
+        MySSLSocketFactory.setAllowedCiphers(allowedCiphers);
 
         Hashtable<String, String> env = new Hashtable<>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
@@ -112,6 +119,7 @@ public class LDAPQuery {
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
         env.put(Context.REFERRAL, "ignore");
+//        env.put(Context.SECURITY_PROTOCOL, "ssl");
 
         ///******* VERY IMPORTANT LINE - the parameter is the fully qualified name of your socket factory class *********/
         env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.ldap.utils.MySSLSocketFactory");

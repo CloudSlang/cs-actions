@@ -46,4 +46,6 @@ public final class InputNames {
     public static final String ZIP_OR_POSTAL_CODE = "zipOrPostalCode";
     public static final String COUNTRY_OR_REGION = "countryOrRegion";
     public static final String ATTRIBUTES_LIST = "attributesList";
+    public static final String TLS_VERSION = "tlsVersion";
+    public static final String ALLOWED_CIPHERS = "allowedCiphers";
 }

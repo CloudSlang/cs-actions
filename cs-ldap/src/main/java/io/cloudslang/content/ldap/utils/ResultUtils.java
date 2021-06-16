@@ -22,8 +22,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.*;
 
-import static io.cloudslang.content.ldap.constants.OutputNames.*;
-
 public final class ResultUtils {
 
     public static Map<String, String> createNewResultsEmptyMap() {
@@ -31,7 +29,7 @@ public final class ResultUtils {
 
         results.put(OutputNames.RETURN_RESULT, StringUtils.EMPTY);
         results.put(OutputNames.EXCEPTION, StringUtils.EMPTY);
-        results.put(OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
+        results.put(OutputNames.RETURN_CODE, StringUtils.EMPTY);
         return results;
     }
 
@@ -42,7 +40,6 @@ public final class ResultUtils {
         results.put(OutputNames.RETURN_RESULT, ex.getMessage());
         results.put(OutputNames.EXCEPTION, ExceptionUtils.getStackTrace(ex));
         results.put(OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
-        results.put(RESULT_COMPUTER_DN, StringUtils.EMPTY);
         return results;
     }
 

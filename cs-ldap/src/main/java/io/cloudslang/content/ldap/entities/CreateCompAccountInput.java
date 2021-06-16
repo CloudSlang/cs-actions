@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.ldap.entities;
 
+import java.util.List;
+
 public interface CreateCompAccountInput {
 
     String getHost();
@@ -29,6 +31,10 @@ public interface CreateCompAccountInput {
     String getPassword();
 
     String getProtocol();
+
+    List<String> getTlsVersion();
+
+    List<String> getAllowedCiphers();
 
     Boolean getTrustAllRoots();
 

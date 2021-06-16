@@ -53,7 +53,7 @@ public class UpdateUserDetailsService {
                     context = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());
                 } else {
                     context = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                              input.getTrustKeystore(), input.getTrustPassword());
+                              input.getTrustKeystore(), input.getTrustPassword(), null, null);
                 }
             } else {
                 context = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword());

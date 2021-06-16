@@ -44,6 +44,10 @@ public class CreateComputerAccountAction {
      * @param password                   The password to connect to AD as.
      * @param protocol                   The protocol to use when connecting to the AD server.
      *                                   Valid values: 'HTTP' and 'HTTPS'.
+     * @param tlsVersion                 The version of TLS to use. The value of this input will be ignored if "protocol"
+     *                                   is set to "HTTP".
+     *                                   Valid values: SSLv3, TLSv1, TLSv1.1, TLSv1.2.
+     *                                   Default value: TLSv1.2.
      * @param trustAllRoots              Specifies whether to enable weak security over SSL. A SSL certificate is trusted
      *                                   even if no trusted certification authority issued it.
      *                                   Valid values: true, false.
@@ -82,6 +86,8 @@ public class CreateComputerAccountAction {
             @Param(value = InputNames.USERNAME) String username,
             @Param(value = InputNames.PASSWORD, encrypted = true) String password,
             @Param(value = InputNames.PROTOCOL) String protocol,
+            @Param(value = InputNames.TLS_VERSION) String tlsVersion,
+            @Param(value = InputNames.ALLOWED_CIPHERS) String allowedCiphers,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.TRUST_KEYSTORE) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true) String trustPassword,
@@ -94,6 +100,8 @@ public class CreateComputerAccountAction {
                 .username(username)
                 .password(password)
                 .protocol(protocol)
+                .tlsVersion(tlsVersion)
+                .allowedCiphers(allowedCiphers)
                 .trustAllRoots(trustAllRoots)
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword)

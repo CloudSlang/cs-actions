@@ -14,11 +14,16 @@
  */
 package io.cloudslang.content.ldap.utils;
 
+import io.cloudslang.content.ldap.constants.CipherSuites;
 import io.cloudslang.content.ldap.constants.ExceptionMsgs;
 import io.cloudslang.content.ldap.constants.InputNames;
+import io.cloudslang.content.ldap.constants.TlsVersions;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -185,6 +190,40 @@ public final class InputBuilderUtils {
             throw new Exception(String.format(ExceptionMsgs.REQUIRED_INPUT_NOT_SPECIFIED, InputNames.PASSWORD));
         }
         return input.trim();
+    }
+
+    public static List<String> buildTlsVersions(String tlsVersionInput) throws Exception {
+        if (StringUtils.isEmpty(tlsVersionInput) ||  tlsVersionInput.equals("STARTTLS")) {
+            return Collections.emptyList();
+        }
+
+        String[] tlsVersionsArray = tlsVersionInput.replaceAll("\\s+", StringUtils.EMPTY).split(",");
+        List<String> tlsVersions = new ArrayList<>();
+        for (String tlsVersion : tlsVersionsArray) {
+            if (!TlsVersions.validate(tlsVersion)) {
+                throw new IllegalArgumentException("Illegal value of input " + InputNames.TLS_VERSION);
+            }
+            tlsVersions.add(tlsVersion);
+        }
+        return tlsVersions;
+    }
+
+
+    public static List<String> buildAllowedCiphers(String allowedCiphersInput) throws Exception {
+        if (StringUtils.isEmpty(allowedCiphersInput)) {
+            return Collections.emptyList();
+        }
+
+        String[] cipherSuites = allowedCiphersInput.replaceAll("\\s+", StringUtils.EMPTY).split(",");
+        List<String> allowedCiphers = Arrays.asList(cipherSuites);
+
+        for(String cipher : allowedCiphers) {
+            if(!CipherSuites.validate(cipher)) {
+                throw new IllegalArgumentException("Illegal value of input " + InputNames.ALLOWED_CIPHERS);
+            }
+        }
+
+        return allowedCiphers;
     }
 
 }
