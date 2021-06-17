@@ -32,6 +32,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.ldap.constants.Constants.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.Common.RETURN_RESULT_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.MoveComputerAccountToOU.*;
 import static io.cloudslang.content.ldap.constants.TlsVersions.TLSv1_2;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;

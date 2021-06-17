@@ -37,6 +37,7 @@ import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.HOST_
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.USER_CN_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.IsUserEnabled.RETURN_CODE_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.IsUserEnabled.*;
+import static io.cloudslang.content.ldap.constants.Descriptions.IsUserEnabled.RETURN_RESULT_DESC;
 import static io.cloudslang.content.ldap.constants.TlsVersions.TLSv1_2;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
