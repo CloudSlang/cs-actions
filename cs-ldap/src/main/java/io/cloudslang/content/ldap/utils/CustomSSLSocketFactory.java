@@ -221,7 +221,7 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
     private Socket configureSSLSocket(Socket socket) {
         SSLSocket sslSocket = (SSLSocket) socket;
         String[] enabledCipherSuites =  allowedCiphers.toArray(new String[0]);
-        sslSocket.setEnabledCipherSuites(allowedCiphers.toArray(enabledCipherSuites));
+        sslSocket.setEnabledCipherSuites(enabledCipherSuites);
         sslSocket.setEnabledProtocols(ENABLED_PROTOCOLS);
         return sslSocket;
     }
