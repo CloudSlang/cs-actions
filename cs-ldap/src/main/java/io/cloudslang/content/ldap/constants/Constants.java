@@ -22,7 +22,6 @@ public final class Constants {
     public static final String HTTPS = "https";
     public static final String FALSE = "false";
     public static final String DEFAULT_PASSWORD_FOR_STORE = "changeit";
-    public static final String SSL_SOCKET_FACTORY = "javax.net.ssl.SSLSocketFactory";
     public static final String HOST = ".host";
     public static final String JAVA_HOME = "java.home";
     public static final String AD_COMMOM_NAME = "cn=";
@@ -36,5 +35,6 @@ public final class Constants {
     public static final String AD_COUNTRY_NAME = "co";
     public static final String AD_COUNTRY_DIGITS = "c";
     public static final String AD_COUNTRY_CODE = "countryCode";
+    public static final String[] ENABLED_PROTOCOLS =  {"TLSv1.3", "TLSv1.2", "TLSv1.1", "TLSv1"};
 
 }

@@ -129,7 +129,7 @@ public class LDAPQuery {
 
         CustomSSLSocketFactory.setTrustAllRoots(true);
         CustomSSLSocketFactory.setTlsVersion(tlsVersion);
-        CustomSSLSocketFactory.setAllowedCiphers(Arrays.asList(CustomSSLSocketFactory.getDefault().getDefaultCipherSuites()));
+        CustomSSLSocketFactory.setAllowedCiphers(allowedCiphers);
         CustomSSLSocketFactory.setProxyHost(proxyHost);
         CustomSSLSocketFactory.setProxyPort(proxyPort);
         CustomSSLSocketFactory.setProxyUsername(proxyUsername);
@@ -162,7 +162,7 @@ public class LDAPQuery {
         CustomSSLSocketFactory.setTrustKeystore(trustStore);
         CustomSSLSocketFactory.setTrustPassword(trustStorePassword);
         CustomSSLSocketFactory.setTlsVersion(tlsVersion);
-        CustomSSLSocketFactory.setAllowedCiphers(Arrays.asList(CustomSSLSocketFactory.getDefault().getDefaultCipherSuites()));
+        CustomSSLSocketFactory.setAllowedCiphers(allowedCiphers);
         CustomSSLSocketFactory.setProxyHost(proxyHost);
         CustomSSLSocketFactory.setProxyPort(proxyPort);
         CustomSSLSocketFactory.setProxyUsername(proxyUsername);

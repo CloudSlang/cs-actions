@@ -9,7 +9,10 @@ import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 import java.util.List;
+
+import static io.cloudslang.content.ldap.constants.Constants.ENABLED_PROTOCOLS;
 
 public class CustomSSLSocketFactory extends SSLSocketFactory {
     private static boolean trustAllRoots;
@@ -107,7 +110,7 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
         CustomSSLSocketFactory.trustAllRoots = trustAllRoots;
     }
 
-    private SSLSocketFactory addSSLSettings(boolean trustAllRoots, String trustKeystore, String trustPassword, String tlsVersion) {
+    private SSLSocketFactory addSSLSettings(boolean trustAllRoots, String trustKeystore, String trustPassword, String tlsVersion) throws Exception {
 
         if (!useHttps) {
             return null;
@@ -134,7 +137,7 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
                 sslContext.init(km, tm, new SecureRandom());
                 return sslContext.getSocketFactory();
             } catch (Exception e) {
-                System.out.println("hello");
+                throw new Exception(e.getMessage());
             }
         } else {
             try {
@@ -142,10 +145,9 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
                 sslContext.init(null, new TrustManager[]{getTrustAllRoots()}, new SecureRandom());
                 return sslContext.getSocketFactory();
             } catch (Exception e) {
-                System.out.println("hello");
+                throw new Exception(e.getMessage());
             }
         }
-        return null;
     }
 
     @Override
@@ -168,6 +170,8 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
     @Override
     public Socket createSocket(String s, int i) throws IOException, UnknownHostException {
         Socket socket = localCreateSocket(s, i);
+        if (useHttps)
+            return configureSSLSocket(socket);
         return socket;
     }
 
@@ -214,11 +218,12 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
         return socketFactory.createSocket(host, port);
     }
 
-    private void configureSSLSocket(Socket socket) {
+    private Socket configureSSLSocket(Socket socket) {
         SSLSocket sslSocket = (SSLSocket) socket;
-        String[] enabledCipherSuites = new String[allowedCiphers.size()];
-        allowedCiphers.toArray(enabledCipherSuites);
-        sslSocket.setEnabledCipherSuites(enabledCipherSuites);
+        String[] enabledCipherSuites =  allowedCiphers.toArray(new String[0]);
+        sslSocket.setEnabledCipherSuites(allowedCiphers.toArray(enabledCipherSuites));
+        sslSocket.setEnabledProtocols(ENABLED_PROTOCOLS);
+        return sslSocket;
     }
 
     private void doTunnelHandshake(Socket tunnel, String host, int port)
