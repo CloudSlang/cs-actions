@@ -41,8 +41,7 @@ public class CreateComputerAccountInput implements CreateCompAccountInput {
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private String connectionTimeout;
-    private String executionTimeout;
+    private String timeout;
 
     private CreateComputerAccountInput() {
     }
@@ -91,12 +90,8 @@ public class CreateComputerAccountInput implements CreateCompAccountInput {
         return escapeChars;
     }
 
-    public String getConnectionTimeout() {
-        return connectionTimeout;
-    }
-
-    public String getExecutionTimeout() {
-        return executionTimeout;
+    public String getTimeout() {
+        return timeout;
     }
 
     public String getTlsVersion() {
@@ -147,8 +142,7 @@ public class CreateComputerAccountInput implements CreateCompAccountInput {
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
-        private String connectionTimeout;
-        private String executionTimeout;
+        private String timeout;
 
 
         public Builder host(String host) {
@@ -210,13 +204,8 @@ public class CreateComputerAccountInput implements CreateCompAccountInput {
             return this;
         }
 
-        public Builder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
-            return this;
-        }
-
-        public Builder executionTimeout(String executionTimeout) {
-            this.executionTimeout = executionTimeout;
+        public Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 
@@ -280,9 +269,7 @@ public class CreateComputerAccountInput implements CreateCompAccountInput {
 
             input.escapeChars = buildEscapeChars(escapeChars);
 
-            input.connectionTimeout = connectionTimeout;
-
-            input.executionTimeout = executionTimeout;
+            input.timeout = timeout;
 
             input.proxyHost = proxyHost;
 

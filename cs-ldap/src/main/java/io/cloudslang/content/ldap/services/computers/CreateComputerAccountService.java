@@ -56,17 +56,17 @@ public class CreateComputerAccountService {
             if (protocol.toLowerCase().trim().equals(input.getProtocol().toLowerCase())) {
                 if (Boolean.valueOf(trustAllRoots)) {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
-                            input.getExecutionTimeout(), input.getTlsVersion(), input.getAllowedCiphers(),
+                            input.getTimeout(), input.getTlsVersion(), input.getAllowedCiphers(),
                             input.getProxyHost(), input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword());
                 } else {
                     ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
                             input.getTrustKeystore(), input.getTrustPassword(),
-                            input.getExecutionTimeout(), input.getTlsVersion(), input.getAllowedCiphers(), input.getProxyHost(),
+                            input.getTimeout(), input.getTlsVersion(), input.getAllowedCiphers(), input.getProxyHost(),
                             input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword(), input.getX509HostnameVerifier());
                 }
             } else {
                 ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
-                        input.getExecutionTimeout(), input.getProxyHost(), input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword());
+                        input.getTimeout(), input.getProxyHost(), input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword());
             }
             DirContext ctxOU = (DirContext) ctx.lookup(ou);
             Attributes compAttrs = new BasicAttributes(true);

@@ -34,9 +34,7 @@ public interface AuthenticateUserInterface {
 
     String getTrustPassword();
 
-    String getConnectionTimeout();
-
-    String getExecutionTimeout();
+    String getTimeout();
 
     String getProxyHost();
 

@@ -31,9 +31,13 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.ldap.constants.Constants.*;
+import static io.cloudslang.content.ldap.constants.Constants.TIMEOUT_VALUE;
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.RETURN_RESULT_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.RemoveUserFromGroup.*;
+import static io.cloudslang.content.ldap.constants.TlsVersions.TLSv1_2;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class RemoveUserFromGroupAction {
 
@@ -94,9 +98,7 @@ public class RemoveUserFromGroupAction {
      * @param trustKeystore          The location of the TrustStore file.
      *                               Example: %JAVA_HOME%/jre/lib/security/cacerts
      * @param trustPassword          The password associated with the TrustStore file.
-     * @param connectionTimeout      Time in milliseconds to wait for the connection to be made.
-     *                               Default value: 10000.
-     * @param executionTimeout       Time in milliseconds to wait for the command to complete.
+     * @param timeout                Time in milliseconds to wait for the command to complete.
      *                               Default value: 60000.
      * @return - a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message with the removed user's DN and the group from which it was removed DN, in case of success or the
@@ -121,8 +123,8 @@ public class RemoveUserFromGroupAction {
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
             @Param(value = InputNames.GROUP_DISTINGUISHED_NAME, required = true, description = DISTINGUISHED_NAME_DESC) String groupDistinguishedName,
             @Param(value = InputNames.USER_DISTINGUISHED_NAME, required = true, description = USER_DISTINGUISHED_NAME_DESC) String userDistinguishedName,
-            @Param(value = InputNames.USERNAME, description = USERNAME_DESC) String username,
-            @Param(value = InputNames.PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
+            @Param(value = InputNames.USERNAME, required = true, description = USERNAME_DESC) String username,
+            @Param(value = InputNames.PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
             @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = InputNames.PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = InputNames.PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -134,8 +136,17 @@ public class RemoveUserFromGroupAction {
             @Param(value = InputNames.TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
             @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
-            @Param(value = InputNames.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
-            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
+            @Param(value = InputNames.TIMEOUT, description = TIMEOUT_DESC) String timeout) {
+
+        protocol = defaultIfEmpty(protocol, HTTPS);
+        proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
+        tlsVersion = defaultIfEmpty(tlsVersion, TLSv1_2);
+        allowedCiphers = defaultIfEmpty(allowedCiphers, ALLOWED_CIPHERS_LIST);
+        x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
+        trustPassword = defaultIfEmpty(trustPassword, DEFAULT_PASSWORD_FOR_STORE);
+        timeout = defaultIfEmpty(timeout, TIMEOUT_VALUE);
+
         AddRemoveUserInput.Builder inputBuilder = new AddRemoveUserInput.Builder()
                 .host(host)
                 .groupDistinguishedName(groupDistinguishedName)
@@ -153,8 +164,7 @@ public class RemoveUserFromGroupAction {
                 .trustAllRoots(trustAllRoots)
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword)
-                .connectionTimeout(connectionTimeout)
-                .executionTimeout(executionTimeout);
+                .timeout(timeout);
         try {
             return new RemoveUserFromGroupService().execute(inputBuilder.build());
         } catch (Exception e) {

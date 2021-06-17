@@ -30,8 +30,11 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.ldap.constants.Constants.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.*;
+import static io.cloudslang.content.ldap.constants.TlsVersions.TLSv1_2;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateComputerAccountAction {
     /**
@@ -89,9 +92,7 @@ public class CreateComputerAccountAction {
      *                             '#','=','"','<','>',',','+',';','\','"''.
      *                             Default value: false.
      *                             Valid values: true, false.
-     * @param connectionTimeout    Time in milliseconds to wait for the connection to be made.
-     *                             Default value: 10000.
-     * @param executionTimeout     Time in milliseconds to wait for the command to complete.
+     * @param timeout              Time in milliseconds to wait for the command to complete.
      *                             Default value: 60000.
      * @return a map containing the output of the operations. Keys present in the map are:
      * returnResult - The return result of the operation.
@@ -115,8 +116,8 @@ public class CreateComputerAccountAction {
             @Param(value = InputNames.DISTINGUISHED_NAME, required = true, description = DISTINGUISHED_NAME_DESC) String distinguishedName,
             @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true, description = COMPUTER_COMMON_NAME_DESC) String computerCommonName,
             @Param(value = InputNames.SAM_ACCOUNT_NAME, description = SAM_ACCOUNT_NAME_DESC) String sAMAccountName,
-            @Param(value = InputNames.USERNAME, description = USERNAME_DESC) String username,
-            @Param(value = InputNames.PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
+            @Param(value = InputNames.USERNAME, required = true, description = USERNAME_DESC) String username,
+            @Param(value = InputNames.PASSWORD, required = true, encrypted = true, description = PASSWORD_DESC) String password,
             @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = InputNames.PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = InputNames.PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -129,8 +130,18 @@ public class CreateComputerAccountAction {
             @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
             @Param(value = InputNames.ESCAPE_CHARS, description = ESCAPE_CHARS_DESC) String escapeChars,
-            @Param(value = InputNames.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
-            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
+            @Param(value = InputNames.TIMEOUT, description = TIMEOUT_DESC) String timeout) {
+
+        protocol = defaultIfEmpty(protocol, HTTPS);
+        proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
+        tlsVersion = defaultIfEmpty(tlsVersion, TLSv1_2);
+        allowedCiphers = defaultIfEmpty(allowedCiphers, ALLOWED_CIPHERS_LIST);
+        x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
+        trustPassword = defaultIfEmpty(trustPassword, DEFAULT_PASSWORD_FOR_STORE);
+        escapeChars = defaultIfEmpty(escapeChars, BOOLEAN_FALSE);
+        timeout = defaultIfEmpty(timeout, TIMEOUT_VALUE);
+
         CreateComputerAccountInput.Builder inputBuilder = new CreateComputerAccountInput.Builder()
                 .host(host)
                 .distinguishedName(distinguishedName)
@@ -150,8 +161,7 @@ public class CreateComputerAccountAction {
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword)
                 .escapeChars(escapeChars)
-                .connectionTimeout(connectionTimeout)
-                .executionTimeout(executionTimeout);
+                .timeout(timeout);
         try {
             return new CreateComputerAccountService().execute(inputBuilder.build());
         } catch (Exception e) {

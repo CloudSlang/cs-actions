@@ -40,8 +40,7 @@ public class DeleteGroupInput implements DeleteGroupInterface {
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private String connectionTimeout;
-    private String executionTimeout;
+    private String timeout;
 
     public DeleteGroupInput() {
     }
@@ -86,12 +85,8 @@ public class DeleteGroupInput implements DeleteGroupInterface {
         return escapeChars;
     }
 
-    public String getConnectionTimeout() {
-        return connectionTimeout;
-    }
-
-    public String getExecutionTimeout() {
-        return executionTimeout;
+    public String getTimeout() {
+        return timeout;
     }
 
     public String getTlsVersion() {
@@ -141,8 +136,7 @@ public class DeleteGroupInput implements DeleteGroupInterface {
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
-        private String connectionTimeout;
-        private String executionTimeout;
+        private String timeout;
 
 
         public DeleteGroupInput.Builder host(String host) {
@@ -198,13 +192,8 @@ public class DeleteGroupInput implements DeleteGroupInterface {
             return this;
         }
 
-        public DeleteGroupInput.Builder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
-            return this;
-        }
-
-        public DeleteGroupInput.Builder executionTimeout(String executionTimeout) {
-            this.executionTimeout = executionTimeout;
+        public DeleteGroupInput.Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 
@@ -266,9 +255,7 @@ public class DeleteGroupInput implements DeleteGroupInterface {
 
             input.escapeChars = buildEscapeChars(escapeChars);
 
-            input.connectionTimeout = connectionTimeout;
-
-            input.executionTimeout = executionTimeout;
+            input.timeout = timeout;
 
             input.proxyHost = proxyHost;
 

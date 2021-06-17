@@ -42,9 +42,7 @@ public class Descriptions {
         public static final String TRUST_KEYSTORE_DESC = "The location of the TrustStore file." +
                 "Example: %JAVA_HOME%/jre/lib/security/cacerts.";
         public static final String TRUST_PASSWORD_DESC = "The password associated with the TrustStore file.";
-        public static final String CONNECTION_TIMEOUT_DESC = "Time in milliseconds to wait for the connection to be made." +
-                "Default value: 10000.";
-        public static final String EXECUTION_TIMEOUT_DESC = "Time in milliseconds to wait for the connection to complete." +
+        public static final String TIMEOUT_DESC = "Time in milliseconds to wait for the connection to complete." +
                 "Default value: 60000.";
         public static final String PROXY_HOST_DESC = "The proxy server used to access the web site.";
         public static final String PROXY_PORT_DESC = "The proxy server port." +
