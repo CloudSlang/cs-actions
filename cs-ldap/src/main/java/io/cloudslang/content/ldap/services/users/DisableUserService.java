@@ -40,7 +40,7 @@ public class DisableUserService {
             LDAPQuery ldap = new LDAPQuery();
             DirContext ctx;
 
-            if (input.getProtocol().toLowerCase().trim().equals("https")) {
+            if (input.getProtocol().toLowerCase().trim().equals(input.getProtocol().toLowerCase())) {
                 if (input.getTrustAllRoots()) {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
                             input.getConnectionTimeout(), input.getExecutionTimeout(), input.getTlsVersion(), input.getAllowedCiphers(),

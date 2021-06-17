@@ -54,7 +54,7 @@ public class CreateComputerAccountService {
             Name ou = new CompositeName().add(OU);
             DirContext ctx;
 
-            if (protocol.toLowerCase().trim().equals(HTTPS)) {
+            if (protocol.toLowerCase().trim().equals(input.getProtocol().toLowerCase())) {
                 if (Boolean.valueOf(trustAllRoots)) {
                     ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
                             input.getConnectionTimeout(), input.getExecutionTimeout(), input.getTlsVersion(), input.getAllowedCiphers(),
