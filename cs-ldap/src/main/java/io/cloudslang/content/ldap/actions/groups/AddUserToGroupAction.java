@@ -94,7 +94,7 @@ public class AddUserToGroupAction {
      * @param trustKeystore          The location of the TrustStore file.
      *                               Example: %JAVA_HOME%/jre/lib/security/cacerts
      * @param trustPassword          The password associated with the TrustStore file.
-     * @param timeout       Time in milliseconds to wait for the command to complete.
+     * @param timeout                Time in milliseconds to wait for the command to complete.
      *                               Default value: 60000.
      * @return - a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message with the added user's DN and the group in which it was added DN, in case of success or the

@@ -99,7 +99,7 @@ public class DeleteGroupAction {
      *                             '#','=','"','<','>',',','+',';','\','"''.
      *                             Default value: false.
      *                             Valid values: true, false.
-     * @param timeout     Time in milliseconds to wait for the command to complete.
+     * @param timeout              Time in milliseconds to wait for the command to complete.
      *                             Default value: 60000.
      * @return - a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message with the distinguished name of the deleted group in case of success or the error message
