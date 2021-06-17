@@ -36,7 +36,7 @@ public interface AddRemoveUsrInput {
 
     String getTrustPassword();
 
-    String getExecutionTimeout();
+    String getTimeout();
 
     String getProxyHost();
 

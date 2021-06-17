@@ -40,7 +40,7 @@ public class UserCommonInput implements UserCommInput {
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private String executionTimeout;
+    private String timeout;
 
     private UserCommonInput() {
     }
@@ -85,8 +85,8 @@ public class UserCommonInput implements UserCommInput {
         return escapeChars;
     }
 
-    public String getExecutionTimeout() {
-        return executionTimeout;
+    public String getTimeout() {
+        return timeout;
     }
 
     public String getTlsVersion() {
@@ -136,7 +136,7 @@ public class UserCommonInput implements UserCommInput {
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
-        private String executionTimeout;
+        private String timeout;
 
 
         public Builder host(String host) {
@@ -192,8 +192,8 @@ public class UserCommonInput implements UserCommInput {
             return this;
         }
 
-        public Builder executionTimeout(String executionTimeout) {
-            this.executionTimeout = executionTimeout;
+        public Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 
@@ -255,7 +255,7 @@ public class UserCommonInput implements UserCommInput {
 
             input.escapeChars = buildEscapeChars(escapeChars);
 
-            input.executionTimeout = executionTimeout;
+            input.timeout = timeout;
 
             input.proxyHost = proxyHost;
 

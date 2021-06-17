@@ -42,7 +42,7 @@ public interface CreateGroupInputInterface {
 
     Boolean getEscapeChars();
 
-    String getExecutionTimeout();
+    String getTimeout();
 
     String getProxyHost();
 

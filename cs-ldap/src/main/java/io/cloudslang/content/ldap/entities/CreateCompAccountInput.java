@@ -40,7 +40,7 @@ public interface CreateCompAccountInput {
 
     Boolean getEscapeChars();
 
-    String getExecutionTimeout();
+    String getTimeout();
 
     String getProxyHost();
 

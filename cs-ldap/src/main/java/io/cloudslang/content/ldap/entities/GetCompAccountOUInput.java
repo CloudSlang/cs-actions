@@ -35,7 +35,7 @@ public interface GetCompAccountOUInput {
 
     String getTrustPassword();
 
-    String getExecutionTimeout();
+    String getTimeout();
 
     String getProxyHost();
 

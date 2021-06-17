@@ -33,7 +33,7 @@ public interface ResetCompAccountInput {
 
     String getTrustPassword();
 
-    String getExecutionTimeout();
+    String getTimeout();
 
     String getProxyHost();
 

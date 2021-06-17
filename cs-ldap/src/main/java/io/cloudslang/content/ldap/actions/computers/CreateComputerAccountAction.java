@@ -89,7 +89,7 @@ public class CreateComputerAccountAction {
      *                             '#','=','"','<','>',',','+',';','\','"''.
      *                             Default value: false.
      *                             Valid values: true, false.
-     * @param executionTimeout     Time in milliseconds to wait for the command to complete.
+     * @param timeout     Time in milliseconds to wait for the command to complete.
      *                             Default value: 60000.
      * @return a map containing the output of the operations. Keys present in the map are:
      * returnResult - The return result of the operation.
@@ -127,7 +127,7 @@ public class CreateComputerAccountAction {
             @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
             @Param(value = InputNames.ESCAPE_CHARS, description = ESCAPE_CHARS_DESC) String escapeChars,
-            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
+            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String timeout) {
         CreateComputerAccountInput.Builder inputBuilder = new CreateComputerAccountInput.Builder()
                 .host(host)
                 .distinguishedName(distinguishedName)
@@ -147,7 +147,7 @@ public class CreateComputerAccountAction {
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword)
                 .escapeChars(escapeChars)
-                .executionTimeout(executionTimeout);
+                .timeout(timeout);
         try {
             return new CreateComputerAccountService().execute(inputBuilder.build());
         } catch (Exception e) {

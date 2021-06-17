@@ -53,7 +53,7 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private String executionTimeout;
+    private String timeout;
 
     private MoveComputerAccountToOUInput() {
     }
@@ -94,8 +94,8 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput {
         return trustPassword;
     }
 
-    public String getExecutionTimeout() {
-        return executionTimeout;
+    public String getTimeout() {
+        return timeout;
     }
 
     public String getTlsVersion() {
@@ -145,7 +145,7 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput {
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
-        private String executionTimeout;
+        private String timeout;
 
         public Builder host(String host) {
             this.host = host;
@@ -195,8 +195,8 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput {
             return this;
         }
 
-        public Builder executionTimeout(String executionTimeout) {
-            this.executionTimeout = executionTimeout;
+        public Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 
@@ -257,7 +257,7 @@ public class MoveComputerAccountToOUInput implements MoveCompAccountToOUInput {
 
             input.trustPassword = trustPassword;
 
-            input.executionTimeout = executionTimeout;
+            input.timeout = timeout;
 
             input.proxyHost = proxyHost;
 

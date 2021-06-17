@@ -54,7 +54,7 @@ public interface UpdateUserDetailsInterface {
 
     String getTrustPassword();
 
-    String getExecutionTimeout();
+    String getTimeout();
 
     String getProxyHost();
 

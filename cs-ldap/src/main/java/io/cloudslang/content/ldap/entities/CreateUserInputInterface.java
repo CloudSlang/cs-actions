@@ -42,7 +42,7 @@ public interface CreateUserInputInterface {
 
     Boolean getEscapeChars();
 
-    String getExecutionTimeout();
+    String getTimeout();
 
     String getProxyHost();
 

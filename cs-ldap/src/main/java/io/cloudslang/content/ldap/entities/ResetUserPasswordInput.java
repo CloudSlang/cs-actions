@@ -39,7 +39,7 @@ public class ResetUserPasswordInput implements ResetUserPassInput {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private String executionTimeout;
+    private String timeout;
 
     private ResetUserPasswordInput() {
     }
@@ -80,8 +80,8 @@ public class ResetUserPasswordInput implements ResetUserPassInput {
         return userPassword;
     }
 
-    public String getExecutionTimeout() {
-        return executionTimeout;
+    public String getTimeout() {
+        return timeout;
     }
 
     public String getTlsVersion() {
@@ -130,7 +130,7 @@ public class ResetUserPasswordInput implements ResetUserPassInput {
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
-        private String executionTimeout;
+        private String timeout;
 
 
         public Builder host(String host) {
@@ -180,8 +180,8 @@ public class ResetUserPasswordInput implements ResetUserPassInput {
             return this;
         }
 
-        public Builder executionTimeout(String executionTimeout) {
-            this.executionTimeout = executionTimeout;
+        public Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 
@@ -241,7 +241,7 @@ public class ResetUserPasswordInput implements ResetUserPassInput {
 
             input.trustPassword = trustPassword;
 
-            input.executionTimeout = executionTimeout;
+            input.timeout = timeout;
 
             input.proxyHost = proxyHost;
 
@@ -251,7 +251,7 @@ public class ResetUserPasswordInput implements ResetUserPassInput {
 
             input.x509HostnameVerifier = x509HostnameVerifier;
 
-            input.executionTimeout = executionTimeout;
+            input.timeout = timeout;
 
             input.tlsVersion = buildTlsVersions(tlsVersion);
 

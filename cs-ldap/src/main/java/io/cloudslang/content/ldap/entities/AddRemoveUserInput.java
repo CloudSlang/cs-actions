@@ -40,7 +40,7 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private String executionTimeout;
+    private String timeout;
 
     public AddRemoveUserInput() {
     }
@@ -81,8 +81,8 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
         return trustPassword;
     }
 
-    public String getExecutionTimeout() {
-        return executionTimeout;
+    public String getTimeout() {
+        return timeout;
     }
 
     public String getTlsVersion() {
@@ -132,7 +132,7 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
-        private String executionTimeout;
+        private String timeout;
 
         public AddRemoveUserInput.Builder host(String host) {
             this.host = host;
@@ -181,8 +181,8 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
             return this;
         }
 
-        public AddRemoveUserInput.Builder executionTimeout(String executionTimeout) {
-            this.executionTimeout = executionTimeout;
+        public AddRemoveUserInput.Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 
@@ -242,7 +242,7 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
 
             input.trustPassword = trustPassword;
 
-            input.executionTimeout = executionTimeout;
+            input.timeout = timeout;
 
             input.proxyHost = proxyHost;
 

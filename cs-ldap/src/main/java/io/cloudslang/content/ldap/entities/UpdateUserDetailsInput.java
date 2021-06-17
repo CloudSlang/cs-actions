@@ -48,7 +48,7 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private String executionTimeout;
+    private String timeout;
 
     private UpdateUserDetailsInput() {
     }
@@ -125,8 +125,8 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
         return trustPassword;
     }
 
-    public String getExecutionTimeout() {
-        return executionTimeout;
+    public String getTimeout() {
+        return timeout;
     }
 
     public String getTlsVersion() {
@@ -184,7 +184,7 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
         private String zipOrPostalCode;
         private String countryOrRegion;
         private String attributesList;
-        private String executionTimeout;
+        private String timeout;
 
 
         public UpdateUserDetailsInput.Builder host(String host) {
@@ -281,8 +281,8 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
             return this;
         }
 
-        public UpdateUserDetailsInput.Builder executionTimeout(String executionTimeout) {
-            this.executionTimeout = executionTimeout;
+        public UpdateUserDetailsInput.Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 
@@ -360,7 +360,7 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
 
             input.attributesList = attributesList;
 
-            input.executionTimeout = executionTimeout;
+            input.timeout = timeout;
 
             input.proxyHost = proxyHost;
 

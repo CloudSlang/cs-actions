@@ -95,7 +95,7 @@ public class AuthenticateUserAction {
      * @param trustKeystore         The location of the TrustStore file.
      *                              Example: %JAVA_HOME%/jre/lib/security/cacerts
      * @param trustPassword         The password associated with the TrustStore file.
-     * @param executionTimeout      Time in milliseconds to wait for the command to complete.
+     * @param timeout      Time in milliseconds to wait for the command to complete.
      *                              Default value: 60000.
      * @return a map containing the output of the operation. Keys present in the map are:
      * returnResult - A message which specifies if the user was authenticated against Active Directory in case of success or an error
@@ -132,7 +132,7 @@ public class AuthenticateUserAction {
             @Param(value = InputNames.TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
             @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
-            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
+            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String timeout) {
         AuthenticateUserInput.Builder inputBuilder = new AuthenticateUserInput.Builder()
                 .host(host)
                 .rootDistinguishedName(rootDistinguishedName)
@@ -149,7 +149,7 @@ public class AuthenticateUserAction {
                 .trustAllRoots(trustAllRoots)
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword)
-                .executionTimeout(executionTimeout);
+                .timeout(timeout);
         try {
             return new AuthenticateUserService().execute(inputBuilder.build());
         } catch (Exception e) {

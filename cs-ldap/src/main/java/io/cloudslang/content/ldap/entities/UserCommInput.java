@@ -38,7 +38,7 @@ public interface UserCommInput {
 
     Boolean getEscapeChars();
 
-    String getExecutionTimeout();
+    String getTimeout();
 
     String getProxyHost();
 

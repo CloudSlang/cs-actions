@@ -42,7 +42,7 @@ public class CreateGroupInput implements CreateGroupInputInterface {
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private String executionTimeout;
+    private String timeout;
 
     public CreateGroupInput() {
     }
@@ -95,8 +95,8 @@ public class CreateGroupInput implements CreateGroupInputInterface {
         return groupType;
     }
 
-    public String getExecutionTimeout() {
-        return executionTimeout;
+    public String getTimeout() {
+        return timeout;
     }
 
     public String getTlsVersion() {
@@ -148,7 +148,7 @@ public class CreateGroupInput implements CreateGroupInputInterface {
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
-        private String executionTimeout;
+        private String timeout;
 
 
         public CreateGroupInput.Builder host(String host) {
@@ -214,8 +214,8 @@ public class CreateGroupInput implements CreateGroupInputInterface {
             return this;
         }
 
-        public CreateGroupInput.Builder executionTimeout(String executionTimeout) {
-            this.executionTimeout = executionTimeout;
+        public CreateGroupInput.Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 
@@ -282,7 +282,7 @@ public class CreateGroupInput implements CreateGroupInputInterface {
 
             input.escapeChars = buildEscapeChars(escapeChars);
 
-            input.executionTimeout = executionTimeout;
+            input.timeout = timeout;
 
             input.proxyHost = proxyHost;
 

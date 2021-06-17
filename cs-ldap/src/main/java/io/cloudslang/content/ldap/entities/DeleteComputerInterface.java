@@ -36,7 +36,7 @@ public interface DeleteComputerInterface {
 
     String getTrustPassword();
 
-    String getExecutionTimeout();
+    String getTimeout();
 
     String getTlsVersion();
 

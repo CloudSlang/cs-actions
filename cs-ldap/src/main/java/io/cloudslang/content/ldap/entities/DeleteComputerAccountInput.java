@@ -54,7 +54,7 @@ public class DeleteComputerAccountInput implements DeleteComputerInterface {
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private String executionTimeout;
+    private String timeout;
 
     private DeleteComputerAccountInput() {
     }
@@ -99,8 +99,8 @@ public class DeleteComputerAccountInput implements DeleteComputerInterface {
         return escapeChars;
     }
 
-    public String getExecutionTimeout() {
-        return executionTimeout;
+    public String getTimeout() {
+        return timeout;
     }
 
     public String getTlsVersion() {
@@ -143,7 +143,7 @@ public class DeleteComputerAccountInput implements DeleteComputerInterface {
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
-        private String executionTimeout;
+        private String timeout;
         private String proxyHost;
         private String proxyPort;
         private String proxyUsername;
@@ -206,8 +206,8 @@ public class DeleteComputerAccountInput implements DeleteComputerInterface {
             return this;
         }
 
-        public Builder executionTimeout(String executionTimeout) {
-            this.executionTimeout = executionTimeout;
+        public Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 
@@ -270,7 +270,7 @@ public class DeleteComputerAccountInput implements DeleteComputerInterface {
 
             input.escapeChars = buildEscapeChars(escapeChars);
 
-            input.executionTimeout = executionTimeout;
+            input.timeout = timeout;
 
             input.proxyHost = proxyHost;
 

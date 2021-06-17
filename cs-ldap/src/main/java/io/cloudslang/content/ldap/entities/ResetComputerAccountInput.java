@@ -52,7 +52,7 @@ public class ResetComputerAccountInput implements ResetCompAccountInput {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private String executionTimeout;
+    private String timeout;
 
     private ResetComputerAccountInput() {
     }
@@ -89,8 +89,8 @@ public class ResetComputerAccountInput implements ResetCompAccountInput {
         return trustPassword;
     }
 
-    public String getExecutionTimeout() {
-        return executionTimeout;
+    public String getTimeout() {
+        return timeout;
     }
 
     public String getTlsVersion() {
@@ -139,7 +139,7 @@ public class ResetComputerAccountInput implements ResetCompAccountInput {
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
-        private String executionTimeout;
+        private String timeout;
 
         public Builder host(String host) {
             this.host = host;
@@ -185,8 +185,8 @@ public class ResetComputerAccountInput implements ResetCompAccountInput {
             return this;
         }
 
-        public Builder executionTimeout(String executionTimeout) {
-            this.executionTimeout = executionTimeout;
+        public Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 
@@ -244,7 +244,7 @@ public class ResetComputerAccountInput implements ResetCompAccountInput {
 
             input.trustPassword = trustPassword;
 
-            input.executionTimeout = executionTimeout;
+            input.timeout = timeout;
 
             input.proxyHost = proxyHost;
 
