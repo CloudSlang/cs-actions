@@ -33,7 +33,6 @@ import java.util.Map;
 
 import static io.cloudslang.content.ldap.constants.Constants.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
-import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.RETURN_RESULT_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.HOST_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.USER_CN_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.DisableUser.*;

@@ -32,9 +32,8 @@ import java.util.Map;
 
 import static io.cloudslang.content.ldap.constants.Constants.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
-import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.*;
-import static io.cloudslang.content.ldap.constants.Descriptions.DisableComputerAccount.FAILURE_DESC;
-import static io.cloudslang.content.ldap.constants.Descriptions.DisableComputerAccount.SUCCESS_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.COMPUTER_COMMON_NAME_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.DISTINGUISHED_NAME_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.DisableComputerAccount.*;
 import static io.cloudslang.content.ldap.constants.TlsVersions.TLSv1_2;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;

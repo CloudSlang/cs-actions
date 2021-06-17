@@ -62,6 +62,7 @@ public class Descriptions {
                 "Valid values: strict, browser_compatible, allow_all.";
 
         //outputs
+        public static final String RETURN_RESULT_DESC = "The return result of the operation.";
         public static final String RETURN_CODE_DESC = "The return code of the operation. 0 if the operation succeeded," +
                 " -1 if the operation fails.";
         public static final String EXCEPTION_DESC = "The exception message if the operation fails.";
@@ -84,7 +85,6 @@ public class Descriptions {
 
         //outputs
         public static final String RESULT_COMPUTER_DN_DESC = "The distinguished name of the newly created computer account.";
-        public static final String RETURN_RESULT_DESC = "The return result of the operation.";
 
         //results
         public static final String SUCCESS_DESC = "The new computer account was created in the Active Directory.";
