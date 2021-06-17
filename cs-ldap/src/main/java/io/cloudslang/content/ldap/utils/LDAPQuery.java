@@ -65,7 +65,7 @@ public class LDAPQuery {
         return x509HostnameVerifier;
     }
 
-    public DirContext MakeLDAPConnection(String host, String username, String password, String connectionTimeout, String executionTimeout,
+    public DirContext MakeLDAPConnection(String host, String username, String password,  String executionTimeout,
                                          String proxyHost, int proxyPort, String proxyUsername, String proxyPassword) throws NamingException {
 
         CustomSSLSocketFactory.setUseHttps(false);
@@ -82,7 +82,6 @@ public class LDAPQuery {
         env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        //env.put(CONNECT_TIMEOUT, connectionTimeout);
         env.put(OPERATION_TIMEOUT, executionTimeout);
         env.put(Context.REFERRAL, "follow");
 
@@ -122,7 +121,7 @@ public class LDAPQuery {
         return ctx;
     }
 
-    public DirContext MakeDummySSLLDAPConnection(String host, String username, String password, String connectionTimeout, String executionTimeout,
+    public DirContext MakeDummySSLLDAPConnection(String host, String username, String password, String executionTimeout,
                                                  String tlsVersion, List<String> allowedCiphers, String proxyHost, int proxyPort, String proxyUsername, String proxyPassword) throws NamingException {
         // init the port with the default value
         Address address = new Address(host, Address.PORT_NOT_SET, DEFAULT_PORT);
@@ -141,7 +140,6 @@ public class LDAPQuery {
         env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        //env.put(CONNECT_TIMEOUT, connectionTimeout);
         env.put(OPERATION_TIMEOUT, executionTimeout);
         env.put(Context.REFERRAL, "ignore");
 
@@ -151,8 +149,7 @@ public class LDAPQuery {
     }
 
     public DirContext MakeSSLLDAPConnection(String host, String username, String password,
-                                            String trustStore, String trustStorePassword,
-                                            String connectionTimeout, String executionTimeout,
+                                            String trustStore, String trustStorePassword, String executionTimeout,
                                             String tlsVersion, List<String> allowedCiphers, String proxyHost,
                                             int proxyPort, String proxyUsername, String proxyPassword, String x509HostnameVerifier) throws NamingException {
         // init the port with the default value
@@ -174,7 +171,6 @@ public class LDAPQuery {
         env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        //env.put(CONNECT_TIMEOUT, connectionTimeout);
         env.put(OPERATION_TIMEOUT, executionTimeout);
         env.put(Context.REFERRAL, "ignore");
 
