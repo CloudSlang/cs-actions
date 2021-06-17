@@ -123,8 +123,8 @@ public class AuthenticateUserAction {
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
             @Param(value = InputNames.ROOT_DISTINGUISHED_NAME, required = true, description = ROOT_DISTINGUISHED_NAME_DESC) String rootDistinguishedName,
-            @Param(value = InputNames.USERNAME, description = USERNAME_DESC) String username,
-            @Param(value = InputNames.PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
+            @Param(value = InputNames.USERNAME, required = true, description = USERNAME_DESC) String username,
+            @Param(value = InputNames.PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
             @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = InputNames.PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = InputNames.PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
