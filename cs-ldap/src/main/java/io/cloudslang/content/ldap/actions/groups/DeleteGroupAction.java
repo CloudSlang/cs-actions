@@ -32,7 +32,6 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 import java.util.Map;
 
 import static io.cloudslang.content.ldap.constants.Constants.*;
-import static io.cloudslang.content.ldap.constants.Constants.TIMEOUT_VALUE;
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.RETURN_RESULT_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateGroup.DISTINGUISHED_NAME_DESC;

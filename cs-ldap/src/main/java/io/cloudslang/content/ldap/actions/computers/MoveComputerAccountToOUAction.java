@@ -31,7 +31,6 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 import java.util.Map;
 
 import static io.cloudslang.content.ldap.constants.Constants.*;
-import static io.cloudslang.content.ldap.constants.Constants.TIMEOUT_VALUE;
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.MoveComputerAccountToOU.*;
 import static io.cloudslang.content.ldap.constants.TlsVersions.TLSv1_2;

@@ -31,11 +31,9 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 import java.util.Map;
 
 import static io.cloudslang.content.ldap.constants.Constants.*;
-import static io.cloudslang.content.ldap.constants.Constants.TIMEOUT_VALUE;
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
-import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.*;
-import static io.cloudslang.content.ldap.constants.Descriptions.EnableComputerAccount.FAILURE_DESC;
-import static io.cloudslang.content.ldap.constants.Descriptions.EnableComputerAccount.SUCCESS_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.COMPUTER_COMMON_NAME_DESC;
+import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.DISTINGUISHED_NAME_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.EnableComputerAccount.*;
 import static io.cloudslang.content.ldap.constants.TlsVersions.TLSv1_2;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -100,7 +98,7 @@ public class EnableComputerAccountAction {
      */
     @Action(name = "Enable Computer Account", description = ENABLE_COMPUTER_ACCOUNT_DESC,
             outputs = {
-                    @Output(value = OutputNames.RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = OutputNames.RETURN_RESULT, description = RESULT_ENABLE_COMPUTER_DN_DESC),
                     @Output(value = OutputNames.RESULT_COMPUTER_DN, description = RESULT_ENABLE_COMPUTER_DN_DESC),
                     @Output(value = OutputNames.RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = OutputNames.EXCEPTION, description = EXCEPTION_DESC)
