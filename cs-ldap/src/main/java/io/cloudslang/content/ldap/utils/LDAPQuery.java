@@ -181,7 +181,7 @@ public class LDAPQuery {
         try {
             tls.negotiate();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new NamingException(e.getMessage());
         }
 
         return new InitialDirContext(env);
