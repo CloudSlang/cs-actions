@@ -274,7 +274,7 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
         }
 
         if (!replyStr.toLowerCase().contains("200 connection established")) {
-            throw new IOException("Unable to tunnel through " + ":" + ".  Proxy returns \""
+            throw new IOException("Unable to tunnel through "+proxyHost+". Proxy returns \""
                     + replyStr + "\"");
         }
     }
