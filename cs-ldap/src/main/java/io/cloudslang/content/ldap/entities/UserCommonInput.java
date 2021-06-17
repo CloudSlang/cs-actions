@@ -16,6 +16,8 @@ package io.cloudslang.content.ldap.entities;
 
 import io.cloudslang.content.ldap.constants.Constants;
 
+import java.util.List;
+
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -27,12 +29,18 @@ public class UserCommonInput implements UserCommInput {
     private String username;
     private String password;
     private String protocol;
+    private String proxyHost;
+    private int proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
+    private String tlsVersion;
+    private List<String> allowedCiphers;
+    private String x509HostnameVerifier;
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private String connectionTimeout;
-    private String executionTimeout;
+    private String timeout;
 
     private UserCommonInput() {
     }
@@ -77,10 +85,36 @@ public class UserCommonInput implements UserCommInput {
         return escapeChars;
     }
 
-    public String getConnectionTimeout() { return connectionTimeout; }
+    public String getTimeout() {
+        return timeout;
+    }
 
-    public String getExecutionTimeout() {
-        return executionTimeout;
+    public String getTlsVersion() {
+        return tlsVersion;
+    }
+
+    public List<String> getAllowedCiphers() {
+        return allowedCiphers;
+    }
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public int getProxyPort() {
+        return proxyPort;
+    }
+
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    public String getX509HostnameVerifier() {
+        return x509HostnameVerifier;
     }
 
     public static class Builder {
@@ -91,57 +125,63 @@ public class UserCommonInput implements UserCommInput {
         private String username;
         private String password;
         private String protocol;
+        private String proxyHost;
+        private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
+        private String tlsVersion;
+        private String allowedCiphers;
+        private String x509HostnameVerifier;
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
-        private String connectionTimeout;
-        private String executionTimeout;
+        private String timeout;
 
 
-        public UserCommonInput.Builder host(String host) {
+        public Builder host(String host) {
             this.host = host;
             return this;
         }
 
-        public UserCommonInput.Builder distinguishedName(String distinguishedName) {
+        public Builder distinguishedName(String distinguishedName) {
             this.distinguishedName = distinguishedName;
             return this;
         }
 
-        public UserCommonInput.Builder userCommonName(String userCommonName) {
+        public Builder userCommonName(String userCommonName) {
             this.userCommonName = userCommonName;
             return this;
         }
 
-        public UserCommonInput.Builder username(String username) {
+        public Builder username(String username) {
             this.username = username;
             return this;
         }
 
 
-        public UserCommonInput.Builder password(String password) {
+        public Builder password(String password) {
             this.password = password;
             return this;
         }
 
-        public UserCommonInput.Builder protocol(String protocol) {
+        public Builder protocol(String protocol) {
             this.protocol = protocol;
             return this;
         }
 
-        public UserCommonInput.Builder trustAllRoots(String trustAllRoots) {
+        public Builder trustAllRoots(String trustAllRoots) {
             this.trustAllRoots = trustAllRoots;
             return this;
         }
 
-        public UserCommonInput.Builder trustKeystore(String trustKeystore) {
+        public Builder trustKeystore(String trustKeystore) {
             this.trustKeystore = trustKeystore;
             return this;
         }
 
 
-        public UserCommonInput.Builder trustPassword(String trustPassword) {
+        public Builder trustPassword(String trustPassword) {
             this.trustPassword = trustPassword;
             return this;
         }
@@ -152,13 +192,43 @@ public class UserCommonInput implements UserCommInput {
             return this;
         }
 
-        public UserCommonInput.Builder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
+        public Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 
-        public UserCommonInput.Builder executionTimeout(String executionTimeout) {
-            this.executionTimeout = executionTimeout;
+        public Builder tlsVersion(String tlsVersion) {
+            this.tlsVersion = tlsVersion;
+            return this;
+        }
+
+        public Builder allowedCiphers(String allowedCiphers) {
+            this.allowedCiphers = allowedCiphers;
+            return this;
+        }
+
+        public Builder proxyHost(String proxyHost) {
+            this.proxyHost = proxyHost;
+            return this;
+        }
+
+        public Builder proxyPort(String proxyPort) {
+            this.proxyPort = proxyPort;
+            return this;
+        }
+
+        public Builder proxyUsername(String proxyUsername) {
+            this.proxyUsername = proxyUsername;
+            return this;
+        }
+
+        public Builder proxyPassword(String proxyPassword) {
+            this.proxyPassword = proxyPassword;
+            return this;
+        }
+
+        public Builder x509HostnameVerifier(String x509HostnameVerifier) {
+            this.x509HostnameVerifier = x509HostnameVerifier;
             return this;
         }
 
@@ -185,9 +255,21 @@ public class UserCommonInput implements UserCommInput {
 
             input.escapeChars = buildEscapeChars(escapeChars);
 
-            input.connectionTimeout = connectionTimeout;
+            input.timeout = timeout;
 
-            input.executionTimeout = executionTimeout;
+            input.proxyHost = proxyHost;
+
+            input.proxyUsername = proxyUsername;
+
+            input.proxyPassword = proxyPassword;
+
+            input.x509HostnameVerifier = x509HostnameVerifier;
+
+            input.tlsVersion = buildTlsVersions(tlsVersion);
+
+            input.allowedCiphers = buildAllowedCiphers(allowedCiphers);
+
+            input.proxyPort = Integer.parseInt(addVerifyPort(proxyPort));
 
             return input;
         }

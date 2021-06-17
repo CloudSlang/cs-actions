@@ -15,8 +15,8 @@
 package io.cloudslang.content.ldap.services.groups;
 
 import io.cloudslang.content.ldap.entities.DeleteGroupInput;
+import io.cloudslang.content.ldap.utils.CustomSSLSocketFactory;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
-import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import javax.naming.NamingException;
@@ -47,16 +47,21 @@ public class DeleteGroupService {
 
             DirContext ctx;
 
-            if (input.getProtocol().toLowerCase().trim().equals("https")) {
+            if (input.getProtocol().toLowerCase().trim().equals(input.getProtocol().toLowerCase())) {
                 if (Boolean.valueOf(input.getTrustAllRoots())) {
-                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
+                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
+                            input.getTimeout(), input.getTlsVersion(), input.getAllowedCiphers(),
+                            input.getProxyHost(), input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword());
                 } else {
-                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                            input.getTrustKeystore(), input.getTrustPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
+                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
+                            input.getTrustKeystore(), input.getTrustPassword(),
+                            input.getTimeout(), input.getTlsVersion(), input.getAllowedCiphers(), input.getProxyHost(),
+                            input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword(), input.getX509HostnameVerifier());
                 }
 
             } else {
-                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
+                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
+                        input.getTimeout(), input.getProxyHost(), input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword());
             }
 
             String groupDN = "CN=" + groupCN + "," + ouDN;
@@ -70,7 +75,7 @@ public class DeleteGroupService {
             results.put(RETURN_CODE, "0");
 
         } catch (NamingException e) {
-            Exception exception = MySSLSocketFactory.getException();
+            Exception exception = CustomSSLSocketFactory.getException();
             if (exception == null)
                 exception = e;
             results.put(EXCEPTION, String.valueOf(exception));

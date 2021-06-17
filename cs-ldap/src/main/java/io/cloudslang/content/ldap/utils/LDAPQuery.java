@@ -14,10 +14,18 @@
  */
 package io.cloudslang.content.ldap.utils;
 
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import javax.naming.ldap.InitialLdapContext;
+import javax.naming.ldap.StartTlsRequest;
+import javax.naming.ldap.StartTlsResponse;
+import javax.net.ssl.HostnameVerifier;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -27,7 +35,6 @@ import java.util.regex.Pattern;
 
 public class LDAPQuery {
     public static final String AD_ILLEGAL_SAM = "\"\\/[]:;|=,+*?<>";
-    public static final String CONNECT_TIMEOUT = "com.sun.jndi.ldap.connect.timeout";
     public static final String OPERATION_TIMEOUT = "com.sun.jndi.ldap.read.timeout";
     public static final int DEFAULT_PORT = 636;
     public static final int DEFAULT_PORT_2 = 389;
@@ -37,7 +44,34 @@ public class LDAPQuery {
     public String SIMPLE = "simple";
     private boolean bUseSecureAuth = true;
 
-    public DirContext MakeLDAPConnection(String host, String username, String password, String connectionTimeout, String executionTimeout) throws NamingException {
+    private static HostnameVerifier x509HostnameVerifier(String hostnameVerifier) {
+        String x509HostnameVerifierStr = hostnameVerifier.toLowerCase();
+
+        X509HostnameVerifier x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
+        ;
+        switch (x509HostnameVerifierStr) {
+            case "strict":
+                x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
+                break;
+            case "browser_compatible":
+                x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
+                break;
+            case "allow_all":
+                x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+                break;
+        }
+        return x509HostnameVerifier;
+    }
+
+    public DirContext MakeLDAPConnection(String host, String username, String password,  String timeout,
+                                         String proxyHost, int proxyPort, String proxyUsername, String proxyPassword) throws NamingException {
+
+        CustomSSLSocketFactory.setUseHttps(false);
+        CustomSSLSocketFactory.setProxyHost(proxyHost);
+        CustomSSLSocketFactory.setProxyPort(proxyPort);
+        CustomSSLSocketFactory.setProxyUsername(proxyUsername);
+        CustomSSLSocketFactory.setProxyPassword(proxyPassword);
+
         Address address = new Address(host, Address.PORT_NOT_SET, DEFAULT_PORT_2);
         String resolvedHost = address.getHostAndPortForURI();
         Hashtable<String, String> env = new Hashtable<String, String>();
@@ -46,9 +80,11 @@ public class LDAPQuery {
         env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        env.put(CONNECT_TIMEOUT, connectionTimeout);
-        env.put(OPERATION_TIMEOUT, executionTimeout);
+        env.put(OPERATION_TIMEOUT, timeout);
         env.put(Context.REFERRAL, "follow");
+
+        if(!proxyHost.isEmpty())
+        env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.ldap.utils.CustomSSLSocketFactory");
         DirContext ctx = new InitialDirContext(env);
         return ctx;
     }
@@ -68,7 +104,7 @@ public class LDAPQuery {
         return ctx;
     }
 
-    public DirContext MakeLDAPConnection(String host, String dN, String username, String password, String connectionTimeout, String executionTimeout) throws NamingException {
+    public DirContext MakeLDAPConnection(String host, String dN, String username, String password, String timeout) throws NamingException {
         Address address = new Address(host, Address.PORT_NOT_SET, DEFAULT_PORT_2);
         String resolvedHost = address.getHostAndPortForURI();
         Hashtable<String, String> env = new Hashtable<String, String>();
@@ -77,15 +113,24 @@ public class LDAPQuery {
         env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        env.put(CONNECT_TIMEOUT, connectionTimeout);
-        env.put(OPERATION_TIMEOUT, executionTimeout);
+        env.put(OPERATION_TIMEOUT, timeout);
         DirContext ctx = new InitialDirContext(env);
         return ctx;
     }
 
-    public DirContext MakeDummySSLLDAPConnection(String host, String username, String password, String connectionTimeout, String executionTimeout) throws NamingException {
+    public DirContext MakeDummySSLLDAPConnection(String host, String username, String password, String timeout,
+                                                 String tlsVersion, List<String> allowedCiphers, String proxyHost,
+                                                 int proxyPort, String proxyUsername, String proxyPassword) throws NamingException {
         // init the port with the default value
         Address address = new Address(host, Address.PORT_NOT_SET, DEFAULT_PORT);
+
+        CustomSSLSocketFactory.setTrustAllRoots(true);
+        CustomSSLSocketFactory.setTlsVersion(tlsVersion);
+        CustomSSLSocketFactory.setAllowedCiphers(allowedCiphers);
+        CustomSSLSocketFactory.setProxyHost(proxyHost);
+        CustomSSLSocketFactory.setProxyPort(proxyPort);
+        CustomSSLSocketFactory.setProxyUsername(proxyUsername);
+        CustomSSLSocketFactory.setProxyPassword(proxyPassword);
 
         Hashtable<String, String> env = new Hashtable<>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
@@ -93,25 +138,30 @@ public class LDAPQuery {
         env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        env.put(CONNECT_TIMEOUT, connectionTimeout);
-        env.put(OPERATION_TIMEOUT, executionTimeout);
+        env.put(OPERATION_TIMEOUT, timeout);
         env.put(Context.REFERRAL, "ignore");
 
         /******* VERY IMPORTANT LINE - the parameter is the fully qualified name of your socket factory class *********/
-        env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.ldap.utils.DummySSLSocketFactory");
-
+        env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.ldap.utils.CustomSSLSocketFactory");
         return new InitialDirContext(env);
     }
 
-    public DirContext MakeSSLLDAPConnection(String host, String username, String password, String trustAllRoots,
-                                            String trustStore, String trustStorePassword, String connectionTimeout, String executionTimeout) throws NamingException {
-
+    public DirContext MakeSSLLDAPConnection(String host, String username, String password,
+                                            String trustStore, String trustStorePassword, String timeout,
+                                            String tlsVersion, List<String> allowedCiphers, String proxyHost,
+                                            int proxyPort, String proxyUsername, String proxyPassword, String x509HostnameVerifier) throws NamingException {
         // init the port with the default value
         Address address = new Address(host, Address.PORT_NOT_SET, DEFAULT_PORT);
 
-        MySSLSocketFactory.setTrustAllRoots(Boolean.valueOf(trustAllRoots));
-        MySSLSocketFactory.setTrustKeystore(trustStore);
-        MySSLSocketFactory.setTrustPassword(trustStorePassword);
+        CustomSSLSocketFactory.setTrustAllRoots(false);
+        CustomSSLSocketFactory.setTrustKeystore(trustStore);
+        CustomSSLSocketFactory.setTrustPassword(trustStorePassword);
+        CustomSSLSocketFactory.setTlsVersion(tlsVersion);
+        CustomSSLSocketFactory.setAllowedCiphers(allowedCiphers);
+        CustomSSLSocketFactory.setProxyHost(proxyHost);
+        CustomSSLSocketFactory.setProxyPort(proxyPort);
+        CustomSSLSocketFactory.setProxyUsername(proxyUsername);
+        CustomSSLSocketFactory.setProxyPassword(proxyPassword);
 
         Hashtable<String, String> env = new Hashtable<>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
@@ -119,12 +169,20 @@ public class LDAPQuery {
         env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        env.put(CONNECT_TIMEOUT, connectionTimeout);
-        env.put(OPERATION_TIMEOUT, executionTimeout);
+        env.put(OPERATION_TIMEOUT, timeout);
         env.put(Context.REFERRAL, "ignore");
 
         ///******* VERY IMPORTANT LINE - the parameter is the fully qualified name of your socket factory class *********/
-        env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.ldap.utils.MySSLSocketFactory");
+        env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.ldap.utils.CustomSSLSocketFactory");
+
+        DirContext ctx = new InitialLdapContext(env, null);
+        StartTlsResponse tls = (StartTlsResponse) ((InitialLdapContext) ctx).extendedOperation(new StartTlsRequest());
+        tls.setHostnameVerifier(x509HostnameVerifier(x509HostnameVerifier));
+        try {
+            tls.negotiate();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return new InitialDirContext(env);
     }
@@ -154,7 +212,6 @@ public class LDAPQuery {
         return rez.toString();
     }
 
-
     ///<summary>
     ///Escapes the special chracaters that are not escaped by default in the rdn string
     ///</summary>
@@ -170,7 +227,6 @@ public class LDAPQuery {
         rdnValue = normalizeExpression(rdnValue, remove);
         return rdnType + rdnValue;
     }
-
 
     ///<summary>
     ///The method breaks the DN into its components.
@@ -204,7 +260,6 @@ public class LDAPQuery {
         }
         return arr;
     }
-
 
     public String normalizeExpression(String expression, boolean remove) {
         String nDN = expression;

@@ -15,8 +15,8 @@
 package io.cloudslang.content.ldap.services.users;
 
 import io.cloudslang.content.ldap.entities.AuthenticateUserInput;
+import io.cloudslang.content.ldap.utils.CustomSSLSocketFactory;
 import io.cloudslang.content.ldap.utils.LDAPQuery;
-import io.cloudslang.content.ldap.utils.MySSLSocketFactory;
 import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import javax.naming.NamingEnumeration;
@@ -41,16 +41,21 @@ public class AuthenticateUserService {
 
             DirContext ctx;
 
-            if (input.getProtocol().toLowerCase().trim().equals("https")) {
+            if (input.getProtocol().toLowerCase().trim().equals(input.getProtocol().toLowerCase())) {
                 if (input.getTrustAllRoots()) {
-                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
+                    ctx = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
+                            input.getTimeout(), input.getTlsVersion(), input.getAllowedCiphers(),
+                            input.getProxyHost(), input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword());
                 } else {
-                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                            input.getTrustKeystore(), input.getTrustPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
+                    ctx = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
+                            input.getTrustKeystore(), input.getTrustPassword(),
+                            input.getTimeout(), input.getTlsVersion(), input.getAllowedCiphers(), input.getProxyHost(),
+                            input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword(), input.getX509HostnameVerifier());
                 }
 
             } else {
-                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
+                ctx = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
+                        input.getTimeout(), input.getProxyHost(), input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword());
             }
 //             Specify the ids of the attributes to return
             String attrIDs[] = {"distinguishedName"};
@@ -75,7 +80,7 @@ public class AuthenticateUserService {
             ctx.close();
 
         } catch (Exception e) {
-            Exception exception = MySSLSocketFactory.getException();
+            Exception exception = CustomSSLSocketFactory.getException();
             if (exception == null)
                 exception = e;
             results.put(EXCEPTION, exception.toString());

@@ -14,24 +14,42 @@
  */
 package io.cloudslang.content.ldap.entities;
 
-public interface LDAPInput {
-    String getPassword();
+import java.util.List;
 
-    String getUsername();
+public interface DeleteComputerInterface {
 
     String getHost();
 
-    String getOU();
+    String getDistinguishedName();
+
+    String getComputerCommonName();
+
+    String getUsername();
+
+    String getPassword();
 
     String getProtocol();
 
     Boolean getTrustAllRoots();
 
-    String getKeyStore();
-
-    String getKeyStorePassword();
-
     String getTrustKeystore();
 
     String getTrustPassword();
+
+    String getTimeout();
+
+    String getTlsVersion();
+
+    List<String> getAllowedCiphers();
+
+    String getProxyHost();
+
+    int getProxyPort();
+
+    String getProxyUsername();
+
+    String getProxyPassword();
+
+    String getX509HostnameVerifier();
+
 }

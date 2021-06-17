@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.ldap.entities;
 
+import java.util.List;
+
 public interface CreateGroupInputInterface {
 
     String getHost();
@@ -40,8 +42,20 @@ public interface CreateGroupInputInterface {
 
     Boolean getEscapeChars();
 
-    String getConnectionTimeout();
+    String getTimeout();
 
-    String getExecutionTimeout();
+    String getProxyHost();
+
+    int getProxyPort();
+
+    String getProxyUsername();
+
+    String getProxyPassword();
+
+    String getX509HostnameVerifier();
+
+    String getTlsVersion();
+
+    List<String> getAllowedCiphers();
 
 }

@@ -38,63 +38,6 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.ldap.constants.OutputNames.RETURN_CODE;
 
 public class UpdateUserDetailsService {
-    public Map<String, String> execute(UpdateUserDetailsInput input) {
-
-        Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
-        DirContext context = null;
-
-        try {
-
-            LDAPQuery ldap = new LDAPQuery();
-            List<ModificationItem> mods = new ArrayList<>();
-
-            if (input.getProtocol().toLowerCase().trim().equals("https")) {
-                if (input.getTrustAllRoots()) {
-                    context = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
-                } else {
-                    context = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), "false",
-                            input.getTrustKeystore(), input.getTrustPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
-                }
-            } else {
-                context = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(), input.getConnectionTimeout(), input.getExecutionTimeout());
-            }
-            //handle country attributes
-            modifyCountryAndRegionAttributes(input.getCountryOrRegion(), mods);
-
-            // handle attributes
-            modifyAttributes(input.getFirstName(), input.getLastName(), input.getDisplayName(), input.getStreet(), input.getCity(),
-                    input.getZipOrPostalCode(), input.getStateOrProvince(), mods);
-
-            // handle custom attributes
-            modifyCustomAttributes(input.getAttributesList(), mods);
-
-            // make the changes
-            context.modifyAttributes(Constants.AD_COMMOM_NAME + input.getUserCommonName() + ", " + input.getDistinguishedName(),
-                    mods.toArray(new ModificationItem[mods.size()]));
-
-            results.put(RETURN_CODE, "0");
-            results.put(RETURN_RESULT, "User's Attributes were updated successfully.");
-
-        } catch (Exception e) {
-            results.put(RETURN_CODE, "-1");
-            results.put(RETURN_RESULT, "An error occurred: User's Attributes were not updated.");
-            results.put(EXCEPTION, String.valueOf(e));
-        } finally {
-            if (context != null) {
-                try {
-                    context.close();
-                } catch (NamingException e) {
-                    results.put(RETURN_CODE, "-1");
-                    results.put(EXCEPTION, String.valueOf(e));
-                    results.put(RETURN_RESULT, "User's Attributes were  updated successfully, however the session could" +
-                            " not be terminated. This may cause performance issues.");
-                }
-            }
-        }
-        return results;
-    }
-
-
     //generate country attribute
     public static void modifyCountryAndRegionAttributes(String countryOrRegion, List<ModificationItem> modsList) throws NamingException {
         if (!StringUtils.isBlank(countryOrRegion)) {
@@ -153,5 +96,67 @@ public class UpdateUserDetailsService {
             ++c;
         }
         return c;
+    }
+
+    public Map<String, String> execute(UpdateUserDetailsInput input) {
+
+        Map<String, String> results = ResultUtils.createNewResultsEmptyMap();
+        DirContext context = null;
+
+        try {
+
+            LDAPQuery ldap = new LDAPQuery();
+            List<ModificationItem> mods = new ArrayList<>();
+
+            if (input.getProtocol().toLowerCase().trim().equals(input.getProtocol().toLowerCase())) {
+                if (input.getTrustAllRoots()) {
+                    context = ldap.MakeDummySSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
+                            input.getTimeout(), input.getTlsVersion(), input.getAllowedCiphers(),
+                            input.getProxyHost(), input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword());
+                } else {
+                    context = ldap.MakeSSLLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
+                            input.getTrustKeystore(), input.getTrustPassword(),
+                            input.getTimeout(), input.getTlsVersion(), input.getAllowedCiphers(), input.getProxyHost(),
+                            input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword(), input.getX509HostnameVerifier());
+                }
+
+            } else {
+                context = ldap.MakeLDAPConnection(input.getHost(), input.getUsername(), input.getPassword(),
+                        input.getTimeout(), input.getProxyHost(), input.getProxyPort(), input.getProxyUsername(), input.getProxyPassword());
+            }
+            //handle country attributes
+            modifyCountryAndRegionAttributes(input.getCountryOrRegion(), mods);
+
+            // handle attributes
+            modifyAttributes(input.getFirstName(), input.getLastName(), input.getDisplayName(), input.getStreet(), input.getCity(),
+                    input.getZipOrPostalCode(), input.getStateOrProvince(), mods);
+
+            // handle custom attributes
+            modifyCustomAttributes(input.getAttributesList(), mods);
+
+            // make the changes
+            context.modifyAttributes(Constants.AD_COMMOM_NAME + input.getUserCommonName() + ", " + input.getDistinguishedName(),
+                    mods.toArray(new ModificationItem[mods.size()]));
+
+            results.put(RETURN_CODE, "0");
+            results.put(RETURN_RESULT, "User's Attributes were updated successfully.");
+
+        } catch (Exception e) {
+            results.put(RETURN_CODE, "-1");
+            results.put(RETURN_RESULT, "An error occurred: User's Attributes were not updated.");
+            results.put(EXCEPTION, String.valueOf(e));
+        } finally {
+            if (context != null) {
+                try {
+                    context.close();
+                } catch (NamingException e) {
+                    results.put(RETURN_CODE, "-1");
+                    results.put(EXCEPTION, String.valueOf(e));
+                    results.put(RETURN_RESULT, "User's Attributes were  updated successfully, however the session could" +
+                            " not be terminated. This may cause performance issues.");
+                }
+            }
+        }
+        return results;
     }
 }

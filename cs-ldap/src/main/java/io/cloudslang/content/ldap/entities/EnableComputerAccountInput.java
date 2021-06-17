@@ -30,10 +30,12 @@ package io.cloudslang.content.ldap.entities;
 
 import io.cloudslang.content.ldap.constants.Constants;
 
+import java.util.List;
+
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class EnableComputerAccountInput implements ComputerAccountInterface{
+public class EnableComputerAccountInput implements ComputerAccountInterface {
 
     private String host;
     private String distinguishedName;
@@ -41,11 +43,17 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
     private String username;
     private String password;
     private String protocol;
+    private String proxyHost;
+    private int proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
+    private String tlsVersion;
+    private List<String> allowedCiphers;
+    private String x509HostnameVerifier;
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private String connectionTimeout;
-    private String executionTimeout;
+    private String timeout;
 
     private EnableComputerAccountInput() {
     }
@@ -86,12 +94,37 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
         return trustPassword;
     }
 
-    public String getConnectionTimeout() { return connectionTimeout; }
-
-    public String getExecutionTimeout() {
-        return executionTimeout;
+    public String getTimeout() {
+        return timeout;
     }
 
+    public String getTlsVersion() {
+        return tlsVersion;
+    }
+
+    public List<String> getAllowedCiphers() {
+        return allowedCiphers;
+    }
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public int getProxyPort() {
+        return proxyPort;
+    }
+
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    public String getX509HostnameVerifier() {
+        return x509HostnameVerifier;
+    }
 
     public static class Builder {
 
@@ -101,11 +134,17 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
         private String username;
         private String password;
         private String protocol;
+        private String proxyHost;
+        private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
+        private String tlsVersion;
+        private String allowedCiphers;
+        private String x509HostnameVerifier;
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
-        private String connectionTimeout;
-        private String executionTimeout;
+        private String timeout;
 
         public Builder host(String host) {
             this.host = host;
@@ -155,16 +194,45 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
             return this;
         }
 
-        public Builder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
+        public Builder timeout(String timeout) {
+            this.timeout = timeout;
             return this;
         }
 
-        public Builder executionTimeout(String executionTimeout) {
-            this.executionTimeout = executionTimeout;
+        public Builder tlsVersion(String tlsVersion) {
+            this.tlsVersion = tlsVersion;
             return this;
         }
 
+        public Builder allowedCiphers(String allowedCiphers) {
+            this.allowedCiphers = allowedCiphers;
+            return this;
+        }
+
+        public Builder proxyHost(String proxyHost) {
+            this.proxyHost = proxyHost;
+            return this;
+        }
+
+        public Builder proxyPort(String proxyPort) {
+            this.proxyPort = proxyPort;
+            return this;
+        }
+
+        public Builder proxyUsername(String proxyUsername) {
+            this.proxyUsername = proxyUsername;
+            return this;
+        }
+
+        public Builder proxyPassword(String proxyPassword) {
+            this.proxyPassword = proxyPassword;
+            return this;
+        }
+
+        public Builder x509HostnameVerifier(String x509HostnameVerifier) {
+            this.x509HostnameVerifier = x509HostnameVerifier;
+            return this;
+        }
 
         public EnableComputerAccountInput build() throws Exception {
             EnableComputerAccountInput input = new EnableComputerAccountInput();
@@ -173,7 +241,7 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
 
             input.distinguishedName = buildDistinguishedName(distinguishedName, true);
 
-            input.computerCommonName = buildComputerCommonName(computerCommonName,true);
+            input.computerCommonName = buildComputerCommonName(computerCommonName, true);
 
             input.username = buildUsername(username);
 
@@ -187,9 +255,21 @@ public class EnableComputerAccountInput implements ComputerAccountInterface{
 
             input.trustPassword = trustPassword;
 
-            input.connectionTimeout = connectionTimeout;
+            input.timeout = timeout;
 
-            input.executionTimeout = executionTimeout;
+            input.proxyHost = proxyHost;
+
+            input.proxyUsername = proxyUsername;
+
+            input.proxyPassword = proxyPassword;
+
+            input.x509HostnameVerifier = x509HostnameVerifier;
+
+            input.tlsVersion = buildTlsVersions(tlsVersion);
+
+            input.allowedCiphers = buildAllowedCiphers(allowedCiphers);
+
+            input.proxyPort = Integer.parseInt(addVerifyPort(proxyPort));
 
             return input;
         }
