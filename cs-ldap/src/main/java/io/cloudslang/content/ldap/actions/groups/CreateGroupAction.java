@@ -31,9 +31,13 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.ldap.constants.Constants.*;
+import static io.cloudslang.content.ldap.constants.Constants.TIMEOUT_VALUE;
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateComputerAccount.RETURN_RESULT_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateGroup.*;
+import static io.cloudslang.content.ldap.constants.TlsVersions.TLSv1_2;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateGroupAction {
 
@@ -146,7 +150,18 @@ public class CreateGroupAction {
             @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
             @Param(value = InputNames.ESCAPE_CHARS, description = ESCAPE_CHARS_DESC) String escapeChars,
-            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String timeout) {
+            @Param(value = InputNames.TIMEOUT, description = TIMEOUT_DESC) String timeout) {
+
+        protocol = defaultIfEmpty(protocol, HTTPS);
+        proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
+        tlsVersion = defaultIfEmpty(tlsVersion, TLSv1_2);
+        allowedCiphers = defaultIfEmpty(allowedCiphers, ALLOWED_CIPHERS_LIST);
+        x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
+        trustPassword = defaultIfEmpty(trustPassword, DEFAULT_PASSWORD_FOR_STORE);
+        escapeChars = defaultIfEmpty(escapeChars, BOOLEAN_FALSE);
+        timeout = defaultIfEmpty(timeout, TIMEOUT_VALUE);
+
         CreateGroupInput.Builder inputBuilder = new CreateGroupInput.Builder()
                 .host(host)
                 .distinguishedName(distinguishedName)

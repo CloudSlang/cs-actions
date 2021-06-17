@@ -31,11 +31,15 @@ import io.cloudslang.content.ldap.utils.ResultUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.ldap.constants.Constants.*;
+import static io.cloudslang.content.ldap.constants.Constants.TIMEOUT_VALUE;
 import static io.cloudslang.content.ldap.constants.Descriptions.Common.*;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.HOST_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.CreateUser.USER_CN_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.EnableUser.RETURN_CODE_DESC;
 import static io.cloudslang.content.ldap.constants.Descriptions.EnableUser.*;
+import static io.cloudslang.content.ldap.constants.TlsVersions.TLSv1_2;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class EnableUserAction {
 
@@ -135,7 +139,17 @@ public class EnableUserAction {
             @Param(value = InputNames.TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
             @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
-            @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String timeout) {
+            @Param(value = InputNames.TIMEOUT, description = TIMEOUT_DESC) String timeout) {
+
+        protocol = defaultIfEmpty(protocol, HTTPS);
+        proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
+        tlsVersion = defaultIfEmpty(tlsVersion, TLSv1_2);
+        allowedCiphers = defaultIfEmpty(allowedCiphers, ALLOWED_CIPHERS_LIST);
+        x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
+        trustPassword = defaultIfEmpty(trustPassword, DEFAULT_PASSWORD_FOR_STORE);
+        timeout = defaultIfEmpty(timeout, TIMEOUT_VALUE);
+
         UserCommonInput.Builder inputBuilder = new UserCommonInput.Builder()
                 .host(host)
                 .distinguishedName(distinguishedName)
