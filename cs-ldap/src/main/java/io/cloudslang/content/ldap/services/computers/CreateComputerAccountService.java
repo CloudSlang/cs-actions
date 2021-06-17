@@ -26,7 +26,6 @@ import javax.naming.directory.*;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.ldap.constants.Constants.HTTPS;
 import static io.cloudslang.content.ldap.constants.OutputNames.RESULT_COMPUTER_DN;
 import static io.cloudslang.content.ldap.utils.ResultUtils.replaceInvalidXMLCharacters;
 

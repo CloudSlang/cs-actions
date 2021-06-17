@@ -35,6 +35,6 @@ public final class Constants {
     public static final String AD_COUNTRY_NAME = "co";
     public static final String AD_COUNTRY_DIGITS = "c";
     public static final String AD_COUNTRY_CODE = "countryCode";
-    public static final String[] ENABLED_PROTOCOLS =  {"TLSv1.3", "TLSv1.2", "TLSv1.1", "TLSv1"};
+    public static final String[] ENABLED_PROTOCOLS = {"TLSv1.3", "TLSv1.2", "TLSv1.1", "TLSv1"};
 
 }
