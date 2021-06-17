@@ -89,8 +89,6 @@ public class CreateComputerAccountAction {
      *                             '#','=','"','<','>',',','+',';','\','"''.
      *                             Default value: false.
      *                             Valid values: true, false.
-     * @param connectionTimeout    Time in milliseconds to wait for the connection to be made.
-     *                             Default value: 10000.
      * @param executionTimeout     Time in milliseconds to wait for the command to complete.
      *                             Default value: 60000.
      * @return a map containing the output of the operations. Keys present in the map are:
@@ -129,7 +127,6 @@ public class CreateComputerAccountAction {
             @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
             @Param(value = InputNames.ESCAPE_CHARS, description = ESCAPE_CHARS_DESC) String escapeChars,
-            @Param(value = InputNames.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
             @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
         CreateComputerAccountInput.Builder inputBuilder = new CreateComputerAccountInput.Builder()
                 .host(host)
@@ -150,7 +147,6 @@ public class CreateComputerAccountAction {
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword)
                 .escapeChars(escapeChars)
-                .connectionTimeout(connectionTimeout)
                 .executionTimeout(executionTimeout);
         try {
             return new CreateComputerAccountService().execute(inputBuilder.build());

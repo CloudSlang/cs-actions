@@ -40,7 +40,6 @@ public class DeleteGroupInput implements DeleteGroupInterface {
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private String connectionTimeout;
     private String executionTimeout;
 
     public DeleteGroupInput() {
@@ -84,10 +83,6 @@ public class DeleteGroupInput implements DeleteGroupInterface {
 
     public Boolean getEscapeChars() {
         return escapeChars;
-    }
-
-    public String getConnectionTimeout() {
-        return connectionTimeout;
     }
 
     public String getExecutionTimeout() {
@@ -141,7 +136,6 @@ public class DeleteGroupInput implements DeleteGroupInterface {
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
-        private String connectionTimeout;
         private String executionTimeout;
 
 
@@ -195,11 +189,6 @@ public class DeleteGroupInput implements DeleteGroupInterface {
 
         public DeleteGroupInput.Builder escapeChars(String escapeChars) {
             this.escapeChars = escapeChars;
-            return this;
-        }
-
-        public DeleteGroupInput.Builder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
             return this;
         }
 
@@ -265,8 +254,6 @@ public class DeleteGroupInput implements DeleteGroupInterface {
             input.trustPassword = trustPassword;
 
             input.escapeChars = buildEscapeChars(escapeChars);
-
-            input.connectionTimeout = connectionTimeout;
 
             input.executionTimeout = executionTimeout;
 

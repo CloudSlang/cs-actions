@@ -36,6 +36,8 @@ public interface ComputerAccountInterface {
 
     String getTrustPassword();
 
+    String getExecutionTimeout();
+
     String getTlsVersion();
 
     List<String> getAllowedCiphers();

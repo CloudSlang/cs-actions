@@ -35,7 +35,7 @@ import java.util.List;
 import static io.cloudslang.content.ldap.utils.InputBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DeleteComputerAccountInput implements ComputerAccountInterface {
+public class DeleteComputerAccountInput implements DeleteComputerInterface {
 
     private String host;
     private String distinguishedName;
@@ -54,7 +54,6 @@ public class DeleteComputerAccountInput implements ComputerAccountInterface {
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private String connectionTimeout;
     private String executionTimeout;
 
     private DeleteComputerAccountInput() {
@@ -98,10 +97,6 @@ public class DeleteComputerAccountInput implements ComputerAccountInterface {
 
     public Boolean getEscapeChars() {
         return escapeChars;
-    }
-
-    public String getConnectionTimeout() {
-        return connectionTimeout;
     }
 
     public String getExecutionTimeout() {
@@ -148,7 +143,6 @@ public class DeleteComputerAccountInput implements ComputerAccountInterface {
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
-        private String connectionTimeout;
         private String executionTimeout;
         private String proxyHost;
         private String proxyPort;
@@ -209,11 +203,6 @@ public class DeleteComputerAccountInput implements ComputerAccountInterface {
 
         public Builder escapeChars(String escapeChars) {
             this.escapeChars = escapeChars;
-            return this;
-        }
-
-        public Builder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
             return this;
         }
 
@@ -280,8 +269,6 @@ public class DeleteComputerAccountInput implements ComputerAccountInterface {
             input.trustPassword = trustPassword;
 
             input.escapeChars = buildEscapeChars(escapeChars);
-
-            input.connectionTimeout = connectionTimeout;
 
             input.executionTimeout = executionTimeout;
 

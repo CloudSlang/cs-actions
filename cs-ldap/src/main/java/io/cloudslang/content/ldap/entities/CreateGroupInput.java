@@ -42,7 +42,6 @@ public class CreateGroupInput implements CreateGroupInputInterface {
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private String connectionTimeout;
     private String executionTimeout;
 
     public CreateGroupInput() {
@@ -94,10 +93,6 @@ public class CreateGroupInput implements CreateGroupInputInterface {
 
     public String getGroupType() {
         return groupType;
-    }
-
-    public String getConnectionTimeout() {
-        return connectionTimeout;
     }
 
     public String getExecutionTimeout() {
@@ -153,7 +148,6 @@ public class CreateGroupInput implements CreateGroupInputInterface {
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
-        private String connectionTimeout;
         private String executionTimeout;
 
 
@@ -217,11 +211,6 @@ public class CreateGroupInput implements CreateGroupInputInterface {
 
         public CreateGroupInput.Builder escapeChars(String escapeChars) {
             this.escapeChars = escapeChars;
-            return this;
-        }
-
-        public CreateGroupInput.Builder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
             return this;
         }
 
@@ -292,8 +281,6 @@ public class CreateGroupInput implements CreateGroupInputInterface {
             input.trustPassword = trustPassword;
 
             input.escapeChars = buildEscapeChars(escapeChars);
-
-            input.connectionTimeout = connectionTimeout;
 
             input.executionTimeout = executionTimeout;
 

@@ -53,7 +53,6 @@ public class DisableComputerAccountInput implements ComputerAccountInterface {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private String connectionTimeout;
     private String executionTimeout;
 
     private DisableComputerAccountInput() {
@@ -93,10 +92,6 @@ public class DisableComputerAccountInput implements ComputerAccountInterface {
 
     public String getTrustPassword() {
         return trustPassword;
-    }
-
-    public String getConnectionTimeout() {
-        return connectionTimeout;
     }
 
     public String getExecutionTimeout() {
@@ -150,7 +145,6 @@ public class DisableComputerAccountInput implements ComputerAccountInterface {
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
-        private String connectionTimeout;
         private String executionTimeout;
 
         public Builder host(String host) {
@@ -198,11 +192,6 @@ public class DisableComputerAccountInput implements ComputerAccountInterface {
 
         public Builder trustPassword(String trustPassword) {
             this.trustPassword = trustPassword;
-            return this;
-        }
-
-        public Builder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
             return this;
         }
 
@@ -267,8 +256,6 @@ public class DisableComputerAccountInput implements ComputerAccountInterface {
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 
             input.trustPassword = trustPassword;
-
-            input.connectionTimeout = connectionTimeout;
 
             input.executionTimeout = executionTimeout;
 

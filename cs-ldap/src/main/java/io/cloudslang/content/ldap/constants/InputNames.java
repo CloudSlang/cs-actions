@@ -46,12 +46,10 @@ public final class InputNames {
     public static final String ATTRIBUTES_LIST = "attributesList";
     public static final String TLS_VERSION = "tlsVersion";
     public static final String ALLOWED_CIPHERS = "allowedCiphers";
-    public static final String CONNECTION_TIMEOUT = "connectionTimeout";
     public static final String EXECUTION_TIMEOUT = "executionTimeout";
     public static final String PROXY_HOST = "proxyHost";
     public static final String PROXY_PORT = "proxyPort";
     public static final String PROXY_USERNAME = "proxyUsername";
     public static final String PROXY_PASSWORD = "proxyPassword";
     public static final String X_509_HOSTNAME_VERIFIER = "x509HostnameVerifier";
-
 }

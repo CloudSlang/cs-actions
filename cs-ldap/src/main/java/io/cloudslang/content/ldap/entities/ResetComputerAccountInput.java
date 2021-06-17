@@ -52,7 +52,6 @@ public class ResetComputerAccountInput implements ResetCompAccountInput {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private String connectionTimeout;
     private String executionTimeout;
 
     private ResetComputerAccountInput() {
@@ -88,10 +87,6 @@ public class ResetComputerAccountInput implements ResetCompAccountInput {
 
     public String getTrustPassword() {
         return trustPassword;
-    }
-
-    public String getConnectionTimeout() {
-        return connectionTimeout;
     }
 
     public String getExecutionTimeout() {
@@ -144,7 +139,6 @@ public class ResetComputerAccountInput implements ResetCompAccountInput {
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
-        private String connectionTimeout;
         private String executionTimeout;
 
         public Builder host(String host) {
@@ -188,11 +182,6 @@ public class ResetComputerAccountInput implements ResetCompAccountInput {
 
         public Builder trustPassword(String trustPassword) {
             this.trustPassword = trustPassword;
-            return this;
-        }
-
-        public Builder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
             return this;
         }
 
@@ -254,8 +243,6 @@ public class ResetComputerAccountInput implements ResetCompAccountInput {
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 
             input.trustPassword = trustPassword;
-
-            input.connectionTimeout = connectionTimeout;
 
             input.executionTimeout = executionTimeout;
 

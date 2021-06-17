@@ -36,8 +36,6 @@ public interface ResetUserPassInput {
 
     String getTrustPassword();
 
-    String getConnectionTimeout();
-
     String getExecutionTimeout();
 
     String getProxyHost();

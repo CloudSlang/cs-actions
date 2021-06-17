@@ -16,16 +16,17 @@ package io.cloudslang.content.ldap.entities;
 
 import java.util.List;
 
-public interface GetCompAccountOUInput {
-    String getPassword();
-
-    String getUsername();
-
-    String getComputerCommonName();
+public interface DeleteComputerInterface {
 
     String getHost();
 
-    String getRootDistinguishedName();
+    String getDistinguishedName();
+
+    String getComputerCommonName();
+
+    String getUsername();
+
+    String getPassword();
 
     String getProtocol();
 
@@ -37,6 +38,10 @@ public interface GetCompAccountOUInput {
 
     String getExecutionTimeout();
 
+    String getTlsVersion();
+
+    List<String> getAllowedCiphers();
+
     String getProxyHost();
 
     int getProxyPort();
@@ -47,7 +52,4 @@ public interface GetCompAccountOUInput {
 
     String getX509HostnameVerifier();
 
-    String getTlsVersion();
-
-    List<String> getAllowedCiphers();
 }

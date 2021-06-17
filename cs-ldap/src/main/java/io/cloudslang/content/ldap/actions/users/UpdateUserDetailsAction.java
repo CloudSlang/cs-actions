@@ -114,8 +114,6 @@ public class UpdateUserDetailsAction {
      * @param trustKeystore        The location of the TrustStore file.
      *                             Example: %JAVA_HOME%/jre/lib/security/cacerts
      * @param trustPassword        The password associated with the TrustStore file.
-     * @param connectionTimeout    Time in milliseconds to wait for the connection to be made.
-     *                             Default value: 10000.
      * @param executionTimeout     Time in milliseconds to wait for the command to complete.
      *                             Default value: 60000.
      * @return - a map containing the output of the operation. Keys present in the map are:
@@ -162,7 +160,6 @@ public class UpdateUserDetailsAction {
             @Param(value = InputNames.TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
             @Param(value = InputNames.TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
             @Param(value = InputNames.TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
-            @Param(value = InputNames.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
             @Param(value = InputNames.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
         UpdateUserDetailsInput.Builder inputBuilder = new UpdateUserDetailsInput.Builder()
                 .host(host)
@@ -190,7 +187,6 @@ public class UpdateUserDetailsAction {
                 .trustAllRoots(trustAllRoots)
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword)
-                .connectionTimeout(connectionTimeout)
                 .executionTimeout(executionTimeout);
         try {
             return new UpdateUserDetailsService().execute(inputBuilder.build());

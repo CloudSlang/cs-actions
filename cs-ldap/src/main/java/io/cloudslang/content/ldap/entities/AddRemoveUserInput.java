@@ -40,7 +40,6 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private String connectionTimeout;
     private String executionTimeout;
 
     public AddRemoveUserInput() {
@@ -80,10 +79,6 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
 
     public String getTrustPassword() {
         return trustPassword;
-    }
-
-    public String getConnectionTimeout() {
-        return connectionTimeout;
     }
 
     public String getExecutionTimeout() {
@@ -137,7 +132,6 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
-        private String connectionTimeout;
         private String executionTimeout;
 
         public AddRemoveUserInput.Builder host(String host) {
@@ -184,11 +178,6 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
 
         public AddRemoveUserInput.Builder trustPassword(String trustPassword) {
             this.trustPassword = trustPassword;
-            return this;
-        }
-
-        public AddRemoveUserInput.Builder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
             return this;
         }
 
@@ -252,8 +241,6 @@ public class AddRemoveUserInput implements AddRemoveUsrInput {
             input.trustKeystore = defaultIfEmpty(trustKeystore, Constants.DEFAULT_JAVA_KEYSTORE);
 
             input.trustPassword = trustPassword;
-
-            input.connectionTimeout = connectionTimeout;
 
             input.executionTimeout = executionTimeout;
 

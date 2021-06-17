@@ -39,7 +39,6 @@ public class ResetUserPasswordInput implements ResetUserPassInput {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private String connectionTimeout;
     private String executionTimeout;
 
     private ResetUserPasswordInput() {
@@ -79,10 +78,6 @@ public class ResetUserPasswordInput implements ResetUserPassInput {
 
     public String getUserPassword() {
         return userPassword;
-    }
-
-    public String getConnectionTimeout() {
-        return connectionTimeout;
     }
 
     public String getExecutionTimeout() {
@@ -135,7 +130,6 @@ public class ResetUserPasswordInput implements ResetUserPassInput {
         private String trustAllRoots;
         private String trustKeystore;
         private String trustPassword;
-        private String connectionTimeout;
         private String executionTimeout;
 
 
@@ -183,11 +177,6 @@ public class ResetUserPasswordInput implements ResetUserPassInput {
 
         public Builder trustPassword(String trustPassword) {
             this.trustPassword = trustPassword;
-            return this;
-        }
-
-        public Builder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
             return this;
         }
 
@@ -252,7 +241,15 @@ public class ResetUserPasswordInput implements ResetUserPassInput {
 
             input.trustPassword = trustPassword;
 
-            input.connectionTimeout = connectionTimeout;
+            input.executionTimeout = executionTimeout;
+
+            input.proxyHost = proxyHost;
+
+            input.proxyUsername = proxyUsername;
+
+            input.proxyPassword = proxyPassword;
+
+            input.x509HostnameVerifier = x509HostnameVerifier;
 
             input.executionTimeout = executionTimeout;
 

@@ -42,7 +42,6 @@ public class CreateUserInput implements CreateUserInputInterface {
     private String trustKeystore;
     private String trustPassword;
     private boolean escapeChars;
-    private String connectionTimeout;
     private String executionTimeout;
 
     private CreateUserInput() {
@@ -94,10 +93,6 @@ public class CreateUserInput implements CreateUserInputInterface {
 
     public String getUserPassword() {
         return userPassword;
-    }
-
-    public String getConnectionTimeout() {
-        return connectionTimeout;
     }
 
     public String getExecutionTimeout() {
@@ -153,7 +148,6 @@ public class CreateUserInput implements CreateUserInputInterface {
         private String trustKeystore;
         private String trustPassword;
         private String escapeChars;
-        private String connectionTimeout;
         private String executionTimeout;
 
 
@@ -217,11 +211,6 @@ public class CreateUserInput implements CreateUserInputInterface {
 
         public CreateUserInput.Builder escapeChars(String escapeChars) {
             this.escapeChars = escapeChars;
-            return this;
-        }
-
-        public CreateUserInput.Builder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
             return this;
         }
 
@@ -291,8 +280,6 @@ public class CreateUserInput implements CreateUserInputInterface {
             input.trustPassword = trustPassword;
 
             input.escapeChars = buildEscapeChars(escapeChars);
-
-            input.connectionTimeout = connectionTimeout;
 
             input.executionTimeout = executionTimeout;
 

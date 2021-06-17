@@ -48,7 +48,6 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
     private boolean trustAllRoots;
     private String trustKeystore;
     private String trustPassword;
-    private String connectionTimeout;
     private String executionTimeout;
 
     private UpdateUserDetailsInput() {
@@ -126,10 +125,6 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
         return trustPassword;
     }
 
-    public String getConnectionTimeout() {
-        return connectionTimeout;
-    }
-
     public String getExecutionTimeout() {
         return executionTimeout;
     }
@@ -189,7 +184,6 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
         private String zipOrPostalCode;
         private String countryOrRegion;
         private String attributesList;
-        private String connectionTimeout;
         private String executionTimeout;
 
 
@@ -287,11 +281,6 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
             return this;
         }
 
-        public UpdateUserDetailsInput.Builder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
-            return this;
-        }
-
         public UpdateUserDetailsInput.Builder executionTimeout(String executionTimeout) {
             this.executionTimeout = executionTimeout;
             return this;
@@ -371,8 +360,6 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
 
             input.attributesList = attributesList;
 
-            input.connectionTimeout = connectionTimeout;
-
             input.executionTimeout = executionTimeout;
 
             input.proxyHost = proxyHost;
@@ -388,7 +375,6 @@ public class UpdateUserDetailsInput implements UpdateUserDetailsInterface {
             input.allowedCiphers = buildAllowedCiphers(allowedCiphers);
 
             input.proxyPort = Integer.parseInt(addVerifyPort(proxyPort));
-
 
             return input;
         }
