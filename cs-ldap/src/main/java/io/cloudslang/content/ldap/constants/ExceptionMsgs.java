@@ -24,6 +24,4 @@ public final class ExceptionMsgs {
     public static final String EXPECTED_FORMAT = "The list is not in the expected format. Format should be: attribute:value";
     public static final String COUNTRY_EXPECTED_FORMAT = "The country input in not in the expected format. Please see the " +
             "description for more details";
-
-
 }
