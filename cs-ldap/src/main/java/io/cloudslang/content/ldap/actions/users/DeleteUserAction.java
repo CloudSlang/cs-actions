@@ -85,7 +85,7 @@ public class DeleteUserAction {
      * @param trustAllRoots        Specifies whether to enable weak security over SSL. A SSL certificate is trusted
      *                             even if no trusted certification authority issued it.
      *                             Valid values: true, false.
-     *                             Default value: true.
+     *                             Default value: false.
      * @param x509HostnameVerifier Specifies the way the server hostname must match a domain name in the subject's Common
      *                             Name (CN) or subjectAltName field of the X.509 certificate. Set this to "allow_all" to
      *                             skip any checking, but you become vulnerable to attacks.
