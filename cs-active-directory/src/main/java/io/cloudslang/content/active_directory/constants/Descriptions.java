@@ -25,11 +25,13 @@ public class Descriptions {
         public static final String USERNAME_DESC = "The user to connect to Active Directory as.";
         public static final String PASSWORD_DESC = "The password of the user to connect to Active Directory.";
         public static final String TLS_VERSION_DESC = "The version of TLS to use. The value of this input will be ignored if 'protocol'" +
-                "is set to 'HTTP'." +
+                "is set to 'HTTP'. This capability is provided “as is”, please see product documentation for further information." +
                 "Valid values: TLSv1, TLSv1.1, TLSv1.2." +
                 "Default value: TLSv1.2.";
         public static final String ALLOWED_CIPHERS_DESC = " A list of ciphers to use. The value of this input will be ignored if 'tlsVersion' does\n" +
-                "not contain 'TLSv1.2'.\n" +
+                "not contain 'TLSv1.2'. This capability is provided “as is”, please see product documentation for further security considerations. " +
+                "In order to connect successfully to the target host, it should accept at least one of the following ciphers. If this is not the case, it is\n" +
+                "the user's responsibility to configure the host accordingly or to update the list of allowed ciphers.\n" +
                 "Default value: TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,\n" +
                 "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, " +
                 "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,\n" +

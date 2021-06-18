@@ -65,11 +65,16 @@ public class AuthenticateUserAction {
      * @param proxyUsername         The username used when connecting to the proxy.
      * @param proxyPassword         The proxy server password associated with the "proxyUsername" input value.
      * @param tlsVersion            The version of TLS to use. The value of this input will be ignored if "protocol"
-     *                              is set to "HTTP".
+     *                              is set to "HTTP". This capability is provided “as is”, please see product documentation
+     *                              for further information.
      *                              Valid values: TLSv1, TLSv1.1, TLSv1.2.
      *                              Default value: TLSv1.2.
      * @param allowedCiphers        A list of ciphers to use. The value of this input will be ignored if 'tlsVersion' does
-     *                              not contain 'TLSv1.2'.
+     *                              not contain 'TLSv1.2'. This capability is provided “as is”, please see product documentation
+     *                              for further security considerations. In order to connect successfully to the target host,
+     *                              it should accept at least one of the following ciphers. If this is not the case, it is
+     *                              the user's responsibility to configure the host accordingly or to update the list of
+     *                              allowed ciphers.
      *                              Default value: TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,
      *                              TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
      *                              TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,
