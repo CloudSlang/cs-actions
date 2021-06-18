@@ -79,7 +79,8 @@ public class Descriptions {
                 "computer to. (i.e. OU=OUTest1,DC=battleground,DC=ad)";
         public static final String COMPUTER_COMMON_NAME_DESC = "The name of the computer (its CN).";
         public static final String SAM_ACCOUNT_NAME_DESC = "Computer's sAMAccountName (ex. MYHYPNOS$). If not provided " +
-                "it will be assigned from computerCommonName.";
+                "it will be assigned from computerCommonName.  It can't contain any of the following characters: '\"','\\','/',\n" +
+                "'[',']',':',';','|','=',',','+','*','?','<','>'.";
         public static final String ESCAPE_CHARS_DESC = "Specifies whether to escape the special Active Directory characters:\n" +
                 "'#','=','\"','<','>',',','+',';','\\','\"''.\n" +
                 "Default value: false.\n" +
@@ -213,7 +214,9 @@ public class Descriptions {
         public static final String GROUP_TYPE_DESC = "The type of the new group. The groupType values represent: -2147483646 (Security Group - Global), -2147483644 (Security Group - Domain Local), -2147483640 (Security Group - Universal), 2 (Distribution Group - Global), 4 (Distribution Group - Domain Local), 8 (Distribution Group - Universal)\n" +
                 "Valid values: -2147483646, -2147483644, -2147483640, 2, 4, 8\n" +
                 "Default value: -2147483646";
-        public static final String SAM_ACCOUNT_NAME_DESC = "The sAMAccountName of the new group.";
+        public static final String SAM_ACCOUNT_NAME_DESC = "The sAMAccountName of the new group. If it contains special characters, these will be\n" +
+                "replaced with the \"_\" character. The following characters are considered special regarding sAMAccountName: " +
+                "'\"','\\','/','[',']',':',';','|','=',',','+','*','?','<','>'.";
         public static final String ESCAPE_CHARS_DESC = "Add this input and set to true if you want the operation to escape the special AD chars.";
 
         //outputs
@@ -280,7 +283,10 @@ public class Descriptions {
                 "characters ('A' - 'Z'), English lowercase characters ('a' - 'z'), base 10 digits ('0' - '9'),\n" +
                 "non-alphanumeric (For example: '!', '$', '#', or '%'), unicode characters\n" +
                 "- does not contain three or more characters from the user's account name";
-        public static final String SAM_ACCOUNT_NAME_DESC = "The sAMAccountName. If this input is empty, the value will be assigned from input \"userCommonName\".";
+        public static final String SAM_ACCOUNT_NAME_DESC = "The sAMAccountName. If this input is empty, the value will " +
+                "be assigned from input \"userCommonName\". If it contains special characters, these will be replaced with\n" +
+                "the \"_\" character. The following characters are considered special regarding sAMAccountName:\n" +
+                "'\"','\\','/','[',']',':',';','|','=',',','+','*','?','<','>'.";
         public static final String HOST_DESC = "The IP or host name of the domain controller. The port number can be mentioned as well, along with the host (hostNameOrIP:PortNumber).\n" +
                 "Examples: test.example.com,  test.example.com:636, <IPv4Address>, <IPv6Address>, [<IPv6Address>]:<PortNumber> etc.\n" +
                 "Value format: The format of an IPv4 address is: [0-225].[0-225].[0-225].[0-225]. " +

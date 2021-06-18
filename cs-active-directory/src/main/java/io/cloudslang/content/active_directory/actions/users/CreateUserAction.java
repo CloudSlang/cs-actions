@@ -56,7 +56,9 @@ public class CreateUserAction {
      * @param userCommonName       The CN, generally the full name of user.
      *                             Example: Bob Smith
      * @param sAMAccountName       The sAMAccountName. If this input is empty, the value will be assigned from
-     *                             input "userCommonName".
+     *                             input "userCommonName". If it contains special characters, these will be replaced with
+     *                             the "_" character. The following characters are considered special regarding sAMAccountName:
+     *                             '"','\','/','[',']',':',';','|','=',',','+','*','?','<','>'.
      * @param userPassword         The password for the new user. It must meet the following requirements:
      *                             - is at least six characters long
      *                             - contains characters from at least three of the following five categories: English uppercase

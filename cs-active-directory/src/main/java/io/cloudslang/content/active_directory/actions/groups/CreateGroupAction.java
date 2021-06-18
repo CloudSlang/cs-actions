@@ -53,7 +53,9 @@ public class CreateGroupAction {
      * @param distinguishedName    The Organizational Unit DN or Common Name DN to add the user to.
      *                             Example: OU=OUTest1,DC=battleground,DC=ad
      * @param groupCommonName      The CN, the full name of the new group.
-     * @param sAMAccountName       The sAMAccountName of the new group.
+     * @param sAMAccountName       The sAMAccountName of the new group. If it contains special characters, these will be
+     *                             replaced with the "_" character. The following characters are considered special regarding
+     *                             sAMAccountName: '"','\','/','[',']',':',';','|','=',',','+','*','?','<','>'.
      * @param groupType            the type of the new group. The groupType values represent: -2147483646 (Security Group - Global),
      *                             -2147483644 (Security Group - Domain Local), -2147483640 (Security Group - Universal), 2
      *                             (Distribution Group - Global), 4 (Distribution Group - Domain Local), 8 (Distribution Group - Universal).

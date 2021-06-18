@@ -45,8 +45,8 @@ public class CreateComputerAccountAction {
      *                             (i.e. OU=OUTest1,DC=battleground,DC=ad).
      * @param computerCommonName   The name of the computer (its CN).
      * @param sAMAccountName       Computer's sAMAccountName (ex. MYHYPNOS$). If not provided it will be assigned
-     *                             from computerCommonName. It can't contain any of the following characters: '#','=','"',
-     *                             '<','>',',','+',';','\','"''.
+     *                             from computerCommonName. It can't contain any of the following characters: '"','\','/',
+     *                             '[',']',':',';','|','=',',','+','*','?','<','>'.
      * @param username             The user to connect to Active Directory as.
      * @param password             The password of the user to connect to Active Directory.
      * @param protocol             The protocol to use when connecting to the Active Directory server.
