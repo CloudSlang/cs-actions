@@ -314,6 +314,7 @@
     <modules>
         <module>cs-abbyy</module>
         <module>cs-alibaba</module>
+        <module>cs-active-directory</module>
         <module>cs-amazon</module>
         <module>cs-azure</module>
         <module>cs-commons</module>
@@ -327,7 +328,6 @@
         <module>cs-hashicorp-terraform</module>
         <module>cs-http-client</module>
         <module>cs-json</module>
-        <module>cs-ldap</module>  
         <module>cs-lists</module>
         <module>cs-mail</module>
         <module>cs-maps</module>
