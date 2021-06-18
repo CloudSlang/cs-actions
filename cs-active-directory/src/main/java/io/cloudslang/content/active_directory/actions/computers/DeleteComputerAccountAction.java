@@ -58,7 +58,7 @@ public class DeleteComputerAccountAction {
      * @param proxyPassword        The proxy server password associated with the "proxyUsername" input value.
      * @param tlsVersion           The version of TLS to use. The value of this input will be ignored if "protocol"
      *                             is set to "HTTP".
-     *                             Valid values: SSLv3, TLSv1, TLSv1.1, TLSv1.2.
+     *                             Valid values: TLSv1, TLSv1.1, TLSv1.2.
      *                             Default value: TLSv1.2.
      * @param allowedCiphers       A list of ciphers to use. The value of this input will be ignored if 'tlsVersion' does
      *                             not contain 'TLSv1.2'.
