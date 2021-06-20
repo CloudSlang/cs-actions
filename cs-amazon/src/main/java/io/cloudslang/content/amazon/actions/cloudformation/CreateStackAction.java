@@ -20,6 +20,8 @@ import com.amazonaws.services.cloudformation.AmazonCloudFormation;
 import com.amazonaws.services.cloudformation.model.CreateStackRequest;
 import com.amazonaws.services.cloudformation.model.CreateStackResult;
 import com.amazonaws.services.cloudformation.model.Parameter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -34,13 +36,12 @@ import io.cloudslang.content.amazon.utils.ParametersLine;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.*;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.STACK_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateStackAction {
@@ -109,9 +110,18 @@ public class CreateStackAction {
 
             final AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
 
-            final CreateStackResult result = stackBuilder.createStack(createRequest);
+            final CreateStackResult createStackResult = stackBuilder.createStack(createRequest);
 
-            return OutputUtilities.getSuccessResultsMap(result.toString());
+            final ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            final String createStackResultAsJson = ow.writeValueAsString(createStackResult);
+            final String createStackResultAsString = StringUtils.defaultIfEmpty(createStackResult.toString(),"");
+
+            final HashMap<String, String> results = new HashMap();
+            results.put(RETURN_CODE, SUCCESS_RETURN_CODE);
+            results.put(RETURN_RESULT, createStackResultAsString);
+            results.put(RETURN_RESULT_AS_JSON, createStackResultAsJson);
+            return results;
+
         } catch (Exception e) {
             return OutputUtilities.getFailureResultsMap(e);
         }
@@ -123,7 +133,7 @@ public class CreateStackAction {
         }
 
         final List<Parameter> parametersList = new ArrayList<>();
-        for (String line : parameters.split(StringUtils.LF)) {
+        for (final String line : parameters.split(StringUtils.LF)) {
             final ParametersLine paramLine = new ParametersLine(line);
             if (paramLine.isValid()) {
                 final Parameter parameter = new Parameter();
