@@ -84,7 +84,7 @@ public class LDAPQuery {
         env.put(Context.REFERRAL, "follow");
 
         if(!proxyHost.isEmpty())
-        env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.ldap.utils.CustomSSLSocketFactory");
+        env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.active_directory.utils.CustomSSLSocketFactory");
         DirContext ctx = new InitialDirContext(env);
         return ctx;
     }
@@ -142,7 +142,7 @@ public class LDAPQuery {
         env.put(Context.REFERRAL, "ignore");
 
         /******* VERY IMPORTANT LINE - the parameter is the fully qualified name of your socket factory class *********/
-        env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.ldap.utils.CustomSSLSocketFactory");
+        env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.active_directory.utils.CustomSSLSocketFactory");
         return new InitialDirContext(env);
     }
 
@@ -173,7 +173,7 @@ public class LDAPQuery {
         env.put(Context.REFERRAL, "ignore");
 
         ///******* VERY IMPORTANT LINE - the parameter is the fully qualified name of your socket factory class *********/
-        env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.ldap.utils.CustomSSLSocketFactory");
+        env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.active_directory.utils.CustomSSLSocketFactory");
 
         DirContext ctx = new InitialLdapContext(env, null);
         StartTlsResponse tls = (StartTlsResponse) ((InitialLdapContext) ctx).extendedOperation(new StartTlsRequest());
