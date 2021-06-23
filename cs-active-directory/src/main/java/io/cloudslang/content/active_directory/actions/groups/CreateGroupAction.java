@@ -50,7 +50,7 @@ public class CreateGroupAction {
      *                             IPv6 address is ####:####:####:####:####:####:####:####/### (with a prefix), where each #### is
      *                             a hexadecimal value between 0 to FFFF and the prefix /### is a decimal value between 0 to 128.
      *                             The prefix length is optional.
-     * @param distinguishedName    The Organizational Unit DN or Common Name DN to add the user to.
+     * @param distinguishedName    The Organizational Unit DN or Common Name DN to add the group to.
      *                             Example: OU=OUTest1,DC=battleground,DC=ad
      * @param groupCommonName      The CN, the full name of the new group.
      * @param sAMAccountName       The sAMAccountName of the new group. If it contains special characters, these will be
@@ -137,13 +137,13 @@ public class CreateGroupAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
+            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
+            @Param(value = InputNames.USERNAME, required = true, description = USERNAME_DESC) String username,
+            @Param(value = InputNames.PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
             @Param(value = InputNames.DISTINGUISHED_NAME, required = true, description = DISTINGUISHED_NAME_DESC) String distinguishedName,
             @Param(value = InputNames.GROUP_COMMON_NAME, required = true, description = GROUP_COMMON_NAME_DESC) String groupCommonName,
             @Param(value = InputNames.GROUP_TYPE, description = GROUP_TYPE_DESC) String groupType,
             @Param(value = InputNames.SAM_ACCOUNT_NAME, required = true, description = SAM_ACCOUNT_NAME_DESC) String sAMAccountName,
-            @Param(value = InputNames.USERNAME, required = true, description = USERNAME_DESC) String username,
-            @Param(value = InputNames.PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
-            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = InputNames.PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = InputNames.PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
             @Param(value = InputNames.PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,

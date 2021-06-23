@@ -34,7 +34,8 @@ import java.util.Map;
 import static io.cloudslang.content.active_directory.constants.Constants.*;
 import static io.cloudslang.content.active_directory.constants.Descriptions.Common.*;
 import static io.cloudslang.content.active_directory.constants.Descriptions.CreateUser.HOST_DESC;
-import static io.cloudslang.content.active_directory.constants.Descriptions.CreateUser.*;
+import static io.cloudslang.content.active_directory.constants.Descriptions.CreateUser.USER_CN_DESC;
+import static io.cloudslang.content.active_directory.constants.Descriptions.CreateUser.ESCAPE_CHARS_DESC;
 import static io.cloudslang.content.active_directory.constants.Descriptions.DeleteUser.DISTINGUISHED_NAME_DESC;
 import static io.cloudslang.content.active_directory.constants.Descriptions.DeleteUser.FAILURE_DESC;
 import static io.cloudslang.content.active_directory.constants.Descriptions.DeleteUser.SUCCESS_DESC;
@@ -134,11 +135,11 @@ public class DeleteUserAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
-            @Param(value = InputNames.DISTINGUISHED_NAME, required = true, description = DISTINGUISHED_NAME_DESC) String distinguishedName,
-            @Param(value = InputNames.USER_COMMON_NAME, required = true, description = USER_CN_DESC) String userCommonName,
+            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = InputNames.USERNAME, required = true, description = USERNAME_DESC) String username,
             @Param(value = InputNames.PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
-            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
+            @Param(value = InputNames.DISTINGUISHED_NAME, required = true, description = DISTINGUISHED_NAME_DESC) String distinguishedName,
+            @Param(value = InputNames.USER_COMMON_NAME, required = true, description = USER_CN_DESC) String userCommonName,
             @Param(value = InputNames.PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = InputNames.PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
             @Param(value = InputNames.PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,

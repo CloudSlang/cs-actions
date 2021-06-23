@@ -98,6 +98,10 @@ public class Descriptions {
 
         public static final String DELETE_COMPUTER_ACCOUNT_DESC = "Deletes a computer account from Active Directory.";
 
+        //inputs
+        public static final String DISTINGUISHED_NAME_DESC = "The Organizational Unit DN or Common Name DN to delete the " +
+                "computer from. (i.e. OU=OUTest1,DC=battleground,DC=ad)";
+
         //outputs
         public static final String RESULT_COMPUTER_DN_DELETED = "The distinguished name of the computer account that was deleted.";
 
@@ -110,6 +114,10 @@ public class Descriptions {
 
         public static final String DISABLE_COMPUTER_ACCOUNT_DESC = "Disables a computer account in Active Directory.";
 
+        //inputs
+        public static final String DISTINGUISHED_NAME_DESC = "The Organizational Unit DN or Common Name DN to disable the " +
+                "computer from. (i.e. OU=OUTest1,DC=battleground,DC=ad)";
+
         //outputs
         public static final String RESULT_DISABLE_COMPUTER_DN_DESC = "The distinguished name of the computer account that was disabled.";
 
@@ -121,6 +129,10 @@ public class Descriptions {
     public static class EnableComputerAccount {
 
         public static final String ENABLE_COMPUTER_ACCOUNT_DESC = "Enables a computer account in Active Directory.";
+
+        //inputs
+        public static final String DISTINGUISHED_NAME_DESC = "The Organizational Unit DN or Common Name DN on which to enable the " +
+                "computer. (i.e. OU=OUTest1,DC=battleground,DC=ad)";
 
         //outputs
         public static final String RESULT_ENABLE_COMPUTER_DN_DESC = "The distinguished name of the computer account that was enabled.";
@@ -233,6 +245,7 @@ public class Descriptions {
 
         //inputs
         public static final String GROUP_COMMON_NAME_DESC = "The name of the group (its CN).";
+        public static final String DISTINGUISHED_NAME_DESC = "The Organizational Unit DN or Common Name DN to delete the group from (i.e. OU=OUTest1,DC=battleground,DC=ad).";
 
         //outputs
         public static final String RESULT_GROUP_DN_DESC = "The distinguished name of the deleted group.";

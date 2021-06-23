@@ -140,13 +140,13 @@ public class CreateUserAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
+            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
+            @Param(value = InputNames.USERNAME, required = true, description = USERNAME_DESC) String username,
+            @Param(value = InputNames.PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
             @Param(value = InputNames.DISTINGUISHED_NAME, required = true, description = DISTINGUISHED_NAME_DESC) String distinguishedName,
             @Param(value = InputNames.USER_COMMON_NAME, required = true, description = USER_CN_DESC) String userCommonName,
             @Param(value = InputNames.USER_PASSWORD, required = true, encrypted = true, description = USER_PASS_DESC) String userPassword,
             @Param(value = InputNames.SAM_ACCOUNT_NAME, description = SAM_ACCOUNT_NAME_DESC) String sAMAccountName,
-            @Param(value = InputNames.USERNAME, required = true, description = USERNAME_DESC) String username,
-            @Param(value = InputNames.PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
-            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = InputNames.PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = InputNames.PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
             @Param(value = InputNames.PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,

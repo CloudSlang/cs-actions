@@ -32,10 +32,10 @@ import io.cloudslang.content.active_directory.utils.ResultUtils;
 import java.util.Map;
 
 import static io.cloudslang.content.active_directory.constants.Constants.*;
+import static io.cloudslang.content.active_directory.constants.Descriptions.AuthenticateUser.*;
 import static io.cloudslang.content.active_directory.constants.Descriptions.AuthenticateUser.HOST_DESC;
 import static io.cloudslang.content.active_directory.constants.Descriptions.AuthenticateUser.PASSWORD_DESC;
 import static io.cloudslang.content.active_directory.constants.Descriptions.AuthenticateUser.USERNAME_DESC;
-import static io.cloudslang.content.active_directory.constants.Descriptions.AuthenticateUser.*;
 import static io.cloudslang.content.active_directory.constants.Descriptions.Common.*;
 import static io.cloudslang.content.active_directory.constants.TlsVersions.TLSv1_2;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -125,10 +125,10 @@ public class AuthenticateUserAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
-            @Param(value = InputNames.ROOT_DISTINGUISHED_NAME, required = true, description = ROOT_DISTINGUISHED_NAME_DESC) String rootDistinguishedName,
+            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = InputNames.USERNAME, required = true, description = USERNAME_DESC) String username,
             @Param(value = InputNames.PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
-            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
+            @Param(value = InputNames.ROOT_DISTINGUISHED_NAME, required = true, description = ROOT_DISTINGUISHED_NAME_DESC) String rootDistinguishedName,
             @Param(value = InputNames.PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = InputNames.PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
             @Param(value = InputNames.PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
