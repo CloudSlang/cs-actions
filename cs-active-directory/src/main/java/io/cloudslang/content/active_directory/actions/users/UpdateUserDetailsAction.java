@@ -145,10 +145,11 @@ public class UpdateUserDetailsAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
-            @Param(value = InputNames.DISTINGUISHED_NAME, required = true, description = DISTINGUISHED_NAME_DESC) String distinguishedName,
-            @Param(value = InputNames.USER_COMMON_NAME, required = true, description = USER_CN_DESC) String userCommonName,
+            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = InputNames.USERNAME, required = true, description = USERNAME_DESC) String username,
             @Param(value = InputNames.PASSWORD, required = true, encrypted = true, description = PASSWORD_DESC) String password,
+            @Param(value = InputNames.DISTINGUISHED_NAME, required = true, description = DISTINGUISHED_NAME_DESC) String distinguishedName,
+            @Param(value = InputNames.USER_COMMON_NAME, required = true, description = USER_CN_DESC) String userCommonName,
             @Param(value = InputNames.FIRST_NAME, description = FIRST_NAME_DESC) String firstName,
             @Param(value = InputNames.LAST_NAME, description = LAST_NAME_DESC) String lastName,
             @Param(value = InputNames.DISPLAY_NAME, description = DISPLAY_NAME_DESC) String displayName,
@@ -158,7 +159,6 @@ public class UpdateUserDetailsAction {
             @Param(value = InputNames.ZIP_OR_POSTAL_CODE, description = ZIP_OR_POSTAL_CODE_DESC) String zipOrPostalCode,
             @Param(value = InputNames.COUNTRY_OR_REGION, description = COUNTRY_OR_REGION_DESC) String countryOrRegion,
             @Param(value = InputNames.ATTRIBUTES_LIST, description = ATTRIBUTES_LIST_DESC) String attributesList,
-            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = InputNames.PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = InputNames.PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
             @Param(value = InputNames.PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,

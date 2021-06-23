@@ -33,7 +33,6 @@ import java.util.Map;
 import static io.cloudslang.content.active_directory.constants.Constants.*;
 import static io.cloudslang.content.active_directory.constants.Descriptions.Common.*;
 import static io.cloudslang.content.active_directory.constants.Descriptions.CreateComputerAccount.COMPUTER_COMMON_NAME_DESC;
-import static io.cloudslang.content.active_directory.constants.Descriptions.CreateComputerAccount.DISTINGUISHED_NAME_DESC;
 import static io.cloudslang.content.active_directory.constants.Descriptions.DisableComputerAccount.*;
 import static io.cloudslang.content.active_directory.constants.TlsVersions.TLSv1_2;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -43,7 +42,7 @@ public class DisableComputerAccountAction {
      * Disables a computer account in Active Directory.
      *
      * @param host                 The domain controller to connect to.
-     * @param distinguishedName    The Organizational Unit DN or Common Name DN to add the computer to.
+     * @param distinguishedName    The Organizational Unit DN or Common Name DN to disable the computer from.
      *                             (i.e. OU=OUTest1,DC=battleground,DC=ad)
      * @param computerCommonName   The name of the computer (its CN).
      * @param username             The user to connect to Active Directory as.
@@ -118,11 +117,11 @@ public class DisableComputerAccountAction {
             })
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true, description = HOST_DESC) String host,
-            @Param(value = InputNames.DISTINGUISHED_NAME, required = true, description = DISTINGUISHED_NAME_DESC) String distinguishedName,
-            @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true, description = COMPUTER_COMMON_NAME_DESC) String computerCommonName,
+            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = InputNames.USERNAME, required = true, description = USERNAME_DESC) String username,
             @Param(value = InputNames.PASSWORD, required = true, encrypted = true, description = PASSWORD_DESC) String password,
-            @Param(value = InputNames.PROTOCOL, description = PROTOCOL_DESC) String protocol,
+            @Param(value = InputNames.DISTINGUISHED_NAME, required = true, description = DISTINGUISHED_NAME_DESC) String distinguishedName,
+            @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true, description = COMPUTER_COMMON_NAME_DESC) String computerCommonName,
             @Param(value = InputNames.PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = InputNames.PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
             @Param(value = InputNames.PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
