@@ -22,6 +22,7 @@ package io.cloudslang.content.azure.utils;
 public final class Constants {
     public static final String FORWARD_SLASH = "/";
     public static final String COMMA = ",";
+    public static final String SPACE = " ";
     public static final String NEW_LINE = "\n";
     public static final String DEFAULT_CLIENT_ID = "9ba1a5c7-f17a-4de9-a1f1-6178c8d51223";
     public static final String DEFAULT_AUTHORITY = "https://login.windows.net/common";
@@ -35,6 +36,7 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s is not a valid number";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
+    public static final String EXCEPTION_NULL_EMPTY_TWO_VALUES = "Either %s or %s should have values.";
 
     public static final String PROXY_HTTP_USER = "http.proxyUser";
     public static final String PROXY_HTTP_PASSWORD = "http.proxyPassword";
@@ -56,9 +58,10 @@ public final class Constants {
         public static final String ENCODING ="UTF8";
         public static final String FIELD_DELIMETER =",";
         public static final String API = "/api";
-        public static final String API_VERSION = "/v2";
         public static final String NEW_LINE = "\n";
         public static final String DEFAULT_API_VERSION = "2016-03-01";
+        public static final String DEFAULT_COMPUTE_API_VERSION = "2019-07-01";
+        public static final String DEFAULT_COMPUTE_SSH_API_VERSION = "2020-06-01";
         public static final String DEFAULT_DATE_FORMAT = "yyyy/MM/dd";
         public static final String DEFAULT_TIME_FORMAT = "HH";
         public static final String DEFAULT_PROXY_PORT = "8080";
@@ -79,6 +82,8 @@ public final class Constants {
         public static final String DELETE = "DELETE";
         public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
         public static final String CHANGEIT = "changeit";
+        public static final String LATEST = "latest";
+        public static final String DEFAULT_DISK_SIZE = "10";
         public static final String ZERO = "0";
         public static final String CONNECT_TIMEOUT_CONST = "10000";
         public static final String UTF8 = "UTF-8";
@@ -87,13 +92,15 @@ public final class Constants {
         public static final String AUTHORIZATION = "Authorization:";
         public static final String CONTENT_TYPE = "application/json";
         public static final String BEARER = "Bearer ";
-        public static final String AZURE_HOST = "management.azure.com";
+        public static final String AZURE_HOST_CONST = "management.azure.com";
         public static final String STREAM_API_VERSION = "2016-03-01";
         public static final String PATH_SEPARATOR = "/";
         public static final String AND = "&";
+        public static final String DOT = ".";
         public static final String QUERY = "?";
         public static final String ID = "id";
         public static final String HTTPS = "https";
+        public static final String HTTP = "http";
         public static final String STATUS_CODE = "statusCode";
         public static final String AUTHENTICATION_TOKEN_CONTENT_TYPE = "application/x-www-form-urlencoded";
         public static final String AUTHENTICATION_TOKEN_URL = "https://login.microsoftonline.com/";
@@ -112,6 +119,34 @@ public final class Constants {
                 "TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256";
         public static final String EMPTY_JSON = "{}";
 
+    }
+    public static class DeleteVMConstants {
+        public static final String DELETE_VM = "Delete VM";
+
+    }
+    public static class CreateVMConstants{
+        public static final String CREATE_VM = "Create VM";
+        public static final String AZURE_PROTOCOL_PREFIX = "://";
+        public static final String AZURE_CREATE_VM_PATH = "/providers/Microsoft.Compute/virtualMachines/";
+        public static final String AZURE_CREATE_VM_TYPE_PATH = "Microsoft.Compute/virtualMachines";
+        public static final String AZURE_DATA_DISK_CREATE_OPTION = "Empty";
+        public static final String AZURE_CREATE_VM_USING_CUSTOM_IMAGE_PATH = "/providers/Microsoft.Compute/images/";
+        public static final String AZURE_CREATE_VM_AVAILABILITY_SET_PATH = "/providers/Microsoft.Compute/availabilitySets/";
+        public static final String AZURE_CREATE_VM_VHD_URI_PATH = "blob.core.windows.net/vhds/";
+        public static final String AZURE_CREATE_VM_OS_DISK_VHD_PATH = "osDisk.vhd";
+        public static final String AZURE_CREATE_VM_DATA_DISK_VHD_PATH = "dataDisk.vhd";
+        public static final String AZURE_CREATE_VM_OS_DISK_CACHING_PATH = "ReadWrite";
+        public static final String AZURE_CREATE_VM_OS_DISK_CREATION_OPTION_PATH = "FromImage";
+        public static final String AZURE_CREATE_VM_NETWORK_INTERFACES_PATH = "/providers/Microsoft.Network/networkInterfaces/";
+        public static final String AZURE_CREATE_VM_SSH_PUBLIC_KEYS_PATH = "/providers/Microsoft.Compute/sshPublicKeys";
+        public static final String AZURE_AVAILABILITY_SET_SKU_JSON_PATH = "$.sku.name";
+        public static final String AZURE_SSH_PUBLIC_KEYS_JSON_PATH = "$.value";
+        public static final String AZURE_AVAILABILITY_SET_TYPE = "Aligned";
+        public static final String AZURE_DISK_TYPE_MANAGED = "Managed";
+        public static final String DEFAULT_DATA_DISK_NAME = "_dataDisk";
+        public static final String DEFAULT_OS_DISK_NAME = "_osDisk";
+        public static final String DEFAULT_SSH_PUBLIC_KEY_HOME_PATH = "/home/";
+        public static final String DEFAULT_SSH_PUBLIC_KEY_PATH = "/.ssh/authorized_keys";
     }
 
     public static class CreateStreamingJobConstants {
