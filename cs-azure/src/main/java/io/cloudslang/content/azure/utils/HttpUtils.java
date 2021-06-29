@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.azure.utils.Constants.Common.*;
+import static io.cloudslang.content.azure.utils.Inputs.ComputeCommonInputs.AZURE_HOST;
 import static io.cloudslang.content.azure.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -90,13 +91,6 @@ public class HttpUtils {
         httpClientInputs.setProxyPassword(proxyPassword);
     }
 
-    @NotNull
-    public static URIBuilder getUriBuilder() {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setHost(AZURE_HOST);
-        uriBuilder.setScheme(HTTPS);
-        return uriBuilder;
-    }
 
     @NotNull
     public static String getAuthHeaders(@NotNull final String authToken) {

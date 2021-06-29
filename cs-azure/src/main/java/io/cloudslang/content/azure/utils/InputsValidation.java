@@ -34,6 +34,7 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PRIMARY_
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PORT;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.USERNAME;
 import static io.cloudslang.content.azure.utils.Constants.*;
+import static io.cloudslang.content.azure.utils.Inputs.CreateVMInputs.*;
 import static io.cloudslang.content.azure.utils.StorageInputNames.BLOB_NAME;
 import static io.cloudslang.content.azure.utils.StorageInputNames.CONTAINER_NAME;
 import static io.cloudslang.content.azure.utils.StorageInputNames.TIMEOUT;
@@ -65,6 +66,33 @@ public final class InputsValidation {
         addVerifyProxy(exceptionMessages, proxyPort, HttpClientInputs.PROXY_PORT);
         addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
         return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyComputeInputs(@NotNull List<String> exceptions, @Nullable final String availabilitySetName, @Nullable final String diskType, @Nullable final String adminPassword, @Nullable final String sshPublicKeyName,
+                                                   @Nullable final String storageAccount, @Nullable final String storageAccountType,@Nullable final String privateImageName, @Nullable final String publisher,@Nullable final String offer, @Nullable final String sku,
+                                                   @Nullable final String diskSize) {
+
+
+       if(isEmpty(availabilitySetName) && isEmpty(diskType)){
+           exceptions.add(String.format(EXCEPTION_NULL_EMPTY_TWO_VALUES, AVAILABILITY_SET_NAME, DISK_TYPE));
+       }
+        if(isEmpty(adminPassword) && isEmpty(sshPublicKeyName)){
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY_TWO_VALUES, ADMIN_PASSWORD, SSH_PUBLIC_KEY_NAME));
+        }
+        if(isEmpty(storageAccount) && isEmpty(storageAccountType)){
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY_TWO_VALUES, STORAGE_ACCOUNT, STORAGE_ACCOUNT_TYPE));
+        }
+        if(isEmpty(privateImageName) && (isEmpty(publisher) || isEmpty(offer) || isEmpty(sku))){
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY_TWO_VALUES, PRIVATE_IMAGE_NAME, (PUBLISHER + COMMA + SPACE +OFFER + COMMA + SPACE + "and " + SPACE + SKU)));
+        }
+
+        if (StringUtilities.isEmpty(diskSize)) {
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, DISK_SIZE_IN_GB));
+        } else if (!NumberUtilities.isValidInt(diskSize)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, DISK_SIZE_IN_GB));
+        }
+        return exceptions;
     }
 
     @NotNull

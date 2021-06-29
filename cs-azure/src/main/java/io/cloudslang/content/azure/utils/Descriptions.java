@@ -1,18 +1,4 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/*
  * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -107,6 +93,72 @@ public class Descriptions {
 
     }
 
+    public static class ComputeCommonDescriptions {
+
+        public static final String AZURE_PROTOCOL_DESC = "Specifies a connection protocol.\n" +
+                "Valid values: https, http \n" +
+                "Default: https";
+        public static final String AZURE_HOST_DESC = "Specifies the Portal to which requests will be sent.\n" +
+                "Default: management.azure.com";
+        public static final String COMPUTE_LOCATION_DESC = "Specifies the Azure location where the resource exists.\n" +
+                "Example: eastasia, westus, westeurope, japanwest";
+
+        public static final String COMPUTE_API_VERSION_DESC = "Client Api Version." +
+                "Default: 2019-07-01";
+    }
+    public static class DeleteVMDescriptions {
+
+        public static final String DELETE_VM_DESC = "The operation delete a virtual machine.";
+
+    }
+
+    public static class CreateVMDescriptions {
+
+        public static final String CREATE_VM_DESC = "The operation to create a virtual machine.";
+        public static final String NIC_NAME_DESC = "This is the user entered NIC name for the VM.";
+        public static final String AVAILABILITY_SET_NAME_DESC = "Name of the Availability set in which the VM  to be deploy.";
+        public static final String DISK_TYPE_DESC = "Type of disk.\n"+
+                "Allowed Values: Managed, Unmanaged \n" +
+                "Default: Managed";
+        public static final String ADMIN_USERNAME_DESC = "Admin Username of the VM to be provided by the User. The user " +
+                "name should not contain uppercase characters A-Z, special characters except $. It should start with " +
+                "alphanumeric characters and should not be any reserved word like a, admin, root, test etc.";
+        public static final String ADMIN_PASSWORD_DESC = "Admin Password of the VM to be provided by the User. " +
+                "The password should be with character length of 12-72. Password should be a combination of at " +
+                "least 1 lower case character, 1 upper case character, 1 number, and 1 special character.";
+        public static final String SSH_PUBLIC_KEY_NAME_DESC = "The name of the SSH public key.";
+        public static final String VM_SIZE_DESC = "Size of the VM to be created. Options include " +
+                "A0 standard , A1 standard, D1 standard, D2 standard etc   ";
+        public static final String VM_NAME_DESC = "Name of the VM Instance provided by the user.";
+        public static final String IMAGE_VERSION_DESC = "version of the image.\n" +
+                "Default: latest";
+        public static final String DISK_SIZE_IN_GB_DESC = "Size of the disk in GB. \n" +
+                 "Default: 10";;
+        public static final String STORAGE_ACCOUNT_DESC = "Name of the storageAccount. If availabilitySet is classic, " +
+                "then storageAccount is used.";
+        public static final String STORAGE_ACCOUNT_TYPE_DESC = "Type of the storageAccount. If availabilitySet is " +
+                "aligned, then storageAccountType is used\n" +
+                "Example - Standard_LRS";
+        public static final String PUBLISHER_DESC = "Publisher information of the OS Image for the VM.";
+        public static final String SKU_DESC = "A VM service is provisioned at a specific pricing tier or SKU. " +
+                "Options include Free, Basic, or Standard.";
+        public static final String OFFER_DESC = "This contains partial OS image info.";
+        public static final String PLAN_DESC = " Set to true when the image you are using requires a marketplace plan, " +
+                "otherwise set to false.\n" +
+                "Default value: False";
+        public static final String PRIVATE_IMAGE_NAME_DESC = "Name of the private image.";
+        public static final String DATA_DISK_NAME_DESC = "This is the name for the data disk which is a VHD that’s " +
+                "attached to a virtual machine to store application data, or other data you need to keep.";
+        public static final String OS_DISK_NAME_DESC = "Name of the VM disk used as a place to store operating system, " +
+                "applications and data.";
+        public static final String TAG_KEY_LIST_DESC = "The keys of the tags that you want to add to your instance. The " +
+                "length of this list must be equal to the length of the list contained by the tagValueList input. Use " +
+                "the tag key Name in this list if you want to set a specific instance name and it will remain unchanged, " +
+                "will not receive the suffix as in case of the instanceName input.";
+        public static final String TAG_VALUE_LIST_DESC = "The values for the keys provided in the tagKeyList. The " +
+                "lengths of these two list must be the same, and the order of the tag values has to correspond the " +
+                "order of the tag keys.";
+    }
     public static class CreateStreamingJob {
         public static final String CREATE_STREAMING_JOB_OPERATION_DESC = "Creates a streaming job.";
         public static final String JOB_NAME_DESC = "The name of the streaming job.";

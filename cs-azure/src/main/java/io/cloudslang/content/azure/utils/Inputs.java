@@ -30,6 +30,37 @@ public class Inputs extends InputNames {
         public static final String API_VERSION = "apiVersion";
         public static final String SUBSCRIPTION_ID = "subscriptionId";
     }
+    public static class ComputeCommonInputs {
+
+        public static final String AZURE_PROTOCOL = "azureProtocol";
+        public static final String AZURE_HOST = "azureHost";
+        public static final String LOCATION = "location";
+    }
+
+    public static class CreateVMInputs {
+
+        public static final String AVAILABILITY_SET_NAME = "availabilitySetName";
+        public static final String DISK_TYPE = "diskType";
+        public static final String NIC_NAME = "nicName";
+        public static final String ADMIN_USERNAME = "adminUsername";
+        public static final String ADMIN_PASSWORD = "adminPassword";
+        public static final String SSH_PUBLIC_KEY_NAME = "sshPublicKeyName";
+        public static final String VM_SIZE = "vmSize";
+        public static final String VM_NAME = "vmName";
+        public static final String IMAGE_VERSION = "imageVersion";
+        public static final String DISK_SIZE_IN_GB = "diskSizeInGB";
+        public static final String STORAGE_ACCOUNT = "storageAccount";
+        public static final String STORAGE_ACCOUNT_TYPE = "storageAccountType";
+        public static final String PUBLISHER = "publisher";
+        public static final String SKU = "sku";
+        public static final String OFFER = "offer";
+        public static final String PLAN = "plan";
+        public static final String PRIVATE_IMAGE_NAME = "privateImageName";
+        public static final String DATA_DISK_NAME = "dataDiskName";
+        public static final String OS_DISK_NAME = "osDiskName";
+        public static final String TAG_KEY_LIST = "tagKeyList";
+        public static final String TAG_VALUE_LIST = "tagValueList";
+    }
 
     public static class CreateStreamingJobInputs {
         public static final String JOB_NAME = "jobName";
