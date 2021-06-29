@@ -46,6 +46,14 @@ public class WinRMService {
     public static Map<String, String> execute(WinRMInputs winRMInputs) {
 
         boolean useHttps = useHttps(winRMInputs);
+        if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS)) {
+            if(!winRMInputs.getUseSubjectCredsOnly().isEmpty())
+                System.setProperty("javax.security.auth.useSubjectCredsOnly", winRMInputs.getUseSubjectCredsOnly());
+            if (!winRMInputs.getKerberosConfFile().isEmpty())
+                System.setProperty("java.security.krb5.conf", winRMInputs.getKerberosConfFile());
+            if (!winRMInputs.getKerberosLoginConfFile().isEmpty())
+                System.setProperty("java.security.auth.login.config", winRMInputs.getKerberosLoginConfFile());
+        }
         WinRmTool.Builder builder;
 
         if (winRMInputs.getDomain().isEmpty())
@@ -60,15 +68,8 @@ public class WinRMService {
         if (!winRMInputs.getWorkingDirectory().isEmpty())
             builder.workingDirectory(winRMInputs.getWorkingDirectory());
 
-        if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS)) {
-            if(!winRMInputs.getUseSubjectCredsOnly().isEmpty())
-                System.setProperty("javax.security.auth.useSubjectCredsOnly", winRMInputs.getUseSubjectCredsOnly());
-            if (!winRMInputs.getKerberosConfFile().isEmpty())
-                System.setProperty("java.security.auth.login.config", winRMInputs.getKerberosConfFile());
-            if (!winRMInputs.getKerberosLoginConfFile().isEmpty())
-                System.setProperty("java.security.krb5.conf", winRMInputs.getKerberosLoginConfFile());
+        if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS))
             builder.requestNewKerberosTicket(Boolean.parseBoolean(winRMInputs.getRequestNewKerberosTicket()));
-        }
 
         if (!Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
             try {
