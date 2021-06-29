@@ -302,7 +302,7 @@ public class AzureComputeImpl {
                     CreateVMRequestBody.Properties.storageProfile.osDisk.managedDisk();
             managedDisk.setStorageAccountType(inputs.getStorageAccountType());
             osDisk.setManagedDisk(managedDisk);
-            if (AZURE_AVAILABILITY_SET_TYPE.equalsIgnoreCase(getAvailabilitySetType) || inputs.getDiskType().equalsIgnoreCase(AZURE_DISK_TYPE_MANAGED)) {
+            if (inputs.getPrivateImageName().isEmpty() && (AZURE_AVAILABILITY_SET_TYPE.equalsIgnoreCase(getAvailabilitySetType) || inputs.getDiskType().equalsIgnoreCase(AZURE_DISK_TYPE_MANAGED))) {
                 CreateVMRequestBody.Properties.storageProfile.dataDisks.managedDisk dataDisksManagedDisk = new
                         CreateVMRequestBody.Properties.storageProfile.dataDisks.managedDisk();
                 dataDisksManagedDisk.setStorageAccountType(inputs.getStorageAccountType());
