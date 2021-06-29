@@ -42,6 +42,8 @@ import static io.cloudslang.content.azure.utils.Descriptions.Common.*;
 import static io.cloudslang.content.azure.utils.Descriptions.ComputeCommonDescriptions.*;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.RESOURCE_GROUP_NAME_DESC;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateVMDescriptions.*;
+import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
+import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.azure.utils.Inputs.ComputeCommonInputs.*;
 import static io.cloudslang.content.azure.utils.Inputs.CreateVMInputs.*;
@@ -134,7 +136,7 @@ public class CreateVM {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
         }
         try {
-            final Map<String, String> resultMap = AzureComputeImpl.createVM(AzureCreateVMInputs.builder().azureComputeCommonInputs(
+            final Map<String, String> result = AzureComputeImpl.createVM(AzureCreateVMInputs.builder().azureComputeCommonInputs(
                     AzureComputeCommonInputs.builder().azureHost(azureHost)
                             .azureProtocol(azureProtocol)
                             .vmName(vmName)
@@ -174,8 +176,14 @@ public class CreateVM {
                     .osDiskName(osDiskName)
                     .build());
 
+            final String returnMessage = result.get(RETURN_RESULT);
+            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            if (!(statusCode >= 200 && statusCode < 300)) {
+                return getFailureResults(subscriptionId, statusCode, returnMessage);
+            }
 
-            return resultMap;
+            return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
