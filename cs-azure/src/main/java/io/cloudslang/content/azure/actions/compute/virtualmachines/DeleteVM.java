@@ -42,6 +42,8 @@ import static io.cloudslang.content.azure.utils.Descriptions.ComputeCommonDescri
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.RESOURCE_GROUP_NAME_DESC;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateVMDescriptions.VM_NAME_DESC;
 import static io.cloudslang.content.azure.utils.Descriptions.DeleteVMDescriptions.DELETE_VM_DESC;
+import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
+import static io.cloudslang.content.azure.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.azure.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.azure.utils.Inputs.ComputeCommonInputs.AZURE_HOST;
 import static io.cloudslang.content.azure.utils.Inputs.ComputeCommonInputs.AZURE_PROTOCOL;
@@ -104,7 +106,7 @@ public class DeleteVM {
         }
 
         try {
-            final Map<String, String> resultMap = AzureComputeImpl.deleteVM(
+            final Map<String, String> result = AzureComputeImpl.deleteVM(
                     AzureComputeCommonInputs.builder().azureHost(azureHost)
                             .azureProtocol(azureProtocol)
                             .vmName(vmName)
@@ -122,7 +124,15 @@ public class DeleteVM {
                                     .trustKeystore(trustKeystore)
                                     .trustPassword(trustPassword).build())
                             .build());
-            return resultMap;
+
+            final String returnMessage = result.get(RETURN_RESULT);
+            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            if (!(statusCode >= 200 && statusCode < 300)) {
+                return getFailureResults(subscriptionId, statusCode, returnMessage);
+            }
+
+            return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
