@@ -22,9 +22,11 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
+import sun.security.krb5.KrbException;
 
 import javax.net.ssl.*;
 import javax.xml.bind.DatatypeConverter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
@@ -43,14 +45,16 @@ import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.STDOUT;
 
 public class WinRMService {
 
-    public static Map<String, String> execute(WinRMInputs winRMInputs) {
+    public static Map<String, String> execute(WinRMInputs winRMInputs) throws KrbException {
 
         boolean useHttps = useHttps(winRMInputs);
         if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS)) {
-            if(!winRMInputs.getUseSubjectCredsOnly().isEmpty())
+            if (!winRMInputs.getUseSubjectCredsOnly().isEmpty())
                 System.setProperty("javax.security.auth.useSubjectCredsOnly", winRMInputs.getUseSubjectCredsOnly());
-            if (!winRMInputs.getKerberosConfFile().isEmpty())
+            if (!winRMInputs.getKerberosConfFile().isEmpty()) {
                 System.setProperty("java.security.krb5.conf", winRMInputs.getKerberosConfFile());
+                sun.security.krb5.Config.refresh();
+            }
             if (!winRMInputs.getKerberosLoginConfFile().isEmpty())
                 System.setProperty("java.security.auth.login.config", winRMInputs.getKerberosLoginConfFile());
         }
