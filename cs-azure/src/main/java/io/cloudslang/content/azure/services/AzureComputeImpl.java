@@ -269,7 +269,7 @@ public class AzureComputeImpl {
 
         CreateVMRequestBody.Properties.osProfile osProfile = new
                 CreateVMRequestBody.Properties.osProfile();
-        if(inputs.getAzureComputeCommonInputs().getVmName().length()>15) {
+        if(inputs.getAzureComputeCommonInputs().getVmName().length()>14) {
             osProfile.setComputerName(inputs.getAzureComputeCommonInputs().getVmName().substring(0,13));
         }else{
             osProfile.setComputerName(inputs.getAzureComputeCommonInputs().getVmName());
