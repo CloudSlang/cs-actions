@@ -269,7 +269,11 @@ public class AzureComputeImpl {
 
         CreateVMRequestBody.Properties.osProfile osProfile = new
                 CreateVMRequestBody.Properties.osProfile();
-        osProfile.setComputerName(inputs.getAzureComputeCommonInputs().getVmName());
+        if(inputs.getAzureComputeCommonInputs().getVmName().length()>14) {
+            osProfile.setComputerName(inputs.getAzureComputeCommonInputs().getVmName().substring(0,13));
+        }else{
+            osProfile.setComputerName(inputs.getAzureComputeCommonInputs().getVmName());
+        }
         osProfile.setAdminUsername(inputs.getAdminUsername());
 
 
@@ -375,7 +379,6 @@ public class AzureComputeImpl {
         properties.setNetworkProfile(networkProfile);
         createVMRequestBody.setProperties(properties);
         ObjectMapper createInstanceMapper = new ObjectMapper();
-        System.out.println(createInstanceMapper.writeValueAsString(createVMRequestBody));
         return createInstanceMapper.writeValueAsString(createVMRequestBody);
     }
 }
