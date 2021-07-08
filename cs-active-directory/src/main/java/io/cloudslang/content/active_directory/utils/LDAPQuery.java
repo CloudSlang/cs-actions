@@ -72,6 +72,7 @@ public class LDAPQuery {
         CustomSSLSocketFactory.setProxyUsername(proxyUsername);
         CustomSSLSocketFactory.setProxyPassword(proxyPassword);
 
+        String millisecTimeout = String.valueOf(Integer.parseInt(timeout) * 1000);
         Address address = new Address(host, Address.PORT_NOT_SET, DEFAULT_PORT_2);
         String resolvedHost = address.getHostAndPortForURI();
         Hashtable<String, String> env = new Hashtable<String, String>();
@@ -80,7 +81,7 @@ public class LDAPQuery {
         env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        env.put(OPERATION_TIMEOUT, timeout);
+        env.put(OPERATION_TIMEOUT, millisecTimeout);
         env.put(Context.REFERRAL, "follow");
 
         if(!proxyHost.isEmpty())
@@ -107,13 +108,14 @@ public class LDAPQuery {
     public DirContext MakeLDAPConnection(String host, String dN, String username, String password, String timeout) throws NamingException {
         Address address = new Address(host, Address.PORT_NOT_SET, DEFAULT_PORT_2);
         String resolvedHost = address.getHostAndPortForURI();
+        String millisecTimeout = String.valueOf(Integer.parseInt(timeout) * 1000);
         Hashtable<String, String> env = new Hashtable<String, String>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, "ldap://" + resolvedHost + "/" + dN);
         env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        env.put(OPERATION_TIMEOUT, timeout);
+        env.put(OPERATION_TIMEOUT, millisecTimeout);
         DirContext ctx = new InitialDirContext(env);
         return ctx;
     }
@@ -123,7 +125,7 @@ public class LDAPQuery {
                                                  int proxyPort, String proxyUsername, String proxyPassword) throws NamingException {
         // init the port with the default value
         Address address = new Address(host, Address.PORT_NOT_SET, DEFAULT_PORT);
-
+        String millisecTimeout = String.valueOf(Integer.parseInt(timeout) * 1000);
         CustomSSLSocketFactory.setTrustAllRoots(true);
         CustomSSLSocketFactory.setTlsVersion(tlsVersion);
         CustomSSLSocketFactory.setAllowedCiphers(allowedCiphers);
@@ -138,7 +140,7 @@ public class LDAPQuery {
         env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        env.put(OPERATION_TIMEOUT, timeout);
+        env.put(OPERATION_TIMEOUT, millisecTimeout);
         env.put(Context.REFERRAL, "ignore");
 
         /******* VERY IMPORTANT LINE - the parameter is the fully qualified name of your socket factory class *********/
@@ -152,7 +154,7 @@ public class LDAPQuery {
                                             int proxyPort, String proxyUsername, String proxyPassword, String x509HostnameVerifier) throws NamingException {
         // init the port with the default value
         Address address = new Address(host, Address.PORT_NOT_SET, DEFAULT_PORT);
-
+        String millisecTimeout = String.valueOf(Integer.parseInt(timeout) * 1000);
         CustomSSLSocketFactory.setTrustAllRoots(false);
         CustomSSLSocketFactory.setTrustKeystore(trustStore);
         CustomSSLSocketFactory.setTrustPassword(trustStorePassword);
@@ -169,7 +171,7 @@ public class LDAPQuery {
         env.put(Context.SECURITY_AUTHENTICATION, SIMPLE);
         env.put(Context.SECURITY_PRINCIPAL, username);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        env.put(OPERATION_TIMEOUT, timeout);
+        env.put(OPERATION_TIMEOUT, millisecTimeout);
         env.put(Context.REFERRAL, "ignore");
 
         ///******* VERY IMPORTANT LINE - the parameter is the fully qualified name of your socket factory class *********/
