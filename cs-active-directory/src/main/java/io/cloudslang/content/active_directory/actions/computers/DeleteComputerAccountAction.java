@@ -101,8 +101,8 @@ public class DeleteComputerAccountAction {
      *                             '#','=','"','<','>',',','+',';','\','"''.
      *                             Default value: false.
      *                             Valid values: true, false.
-     * @param timeout              Time in milliseconds to wait for the command to complete.
-     *                             Default value: 60000.
+     * @param timeout              Time in seconds to wait for the command to complete.
+     *                             Default value: 60.
      * @return a map containing the output of the operations. Keys present in the map are:
      * returnResult - The return result of the operation.
      * returnCode - The return code of the operation. 0 if the operation succeeded, -1 if the operation fails.

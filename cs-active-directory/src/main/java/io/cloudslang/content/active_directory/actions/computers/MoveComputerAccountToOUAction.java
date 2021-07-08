@@ -97,8 +97,8 @@ public class MoveComputerAccountToOUAction {
      * @param trustKeystore             The location of the TrustStore file.
      *                                  Example: %JAVA_HOME%/jre/lib/security/cacerts.
      * @param trustPassword             The password associated with the TrustStore file.
-     * @param timeout                   Time in milliseconds to wait for the command to complete.
-     *                                  Default value: 60000.
+     * @param timeout                   Time in seconds to wait for the command to complete.
+     *                                  Default value: 60.
      * @return a map containing the output of the operations. Keys present in the map are:
      * returnResult - The new distinguished name (DN) of the computer account, after it was moved to the new OU.
      * returnCode - The return code of the operation. 0 if the operation succeeded, -1 if the operation fails.
