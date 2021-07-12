@@ -134,10 +134,10 @@ public class GetCellService {
                         //string
                         else {
                             //Fix for QCIM1D248808 and Fix for QCIM1293510
-                            if (!cell.toString().isEmpty() && isNumericCell(cell) && !DateUtil.isCellDateFormatted(cell)) {
-                                double aCellValue = cell.getNumericCellValue();
-                                cellString = Double.toString(aCellValue);
-                            }
+//                            if (!cell.toString().isEmpty() && isNumericCell(cell) && !DateUtil.isCellDateFormatted(cell)) {
+//                                double aCellValue = cell.getNumericCellValue();
+//                                cellString = Double.toString(aCellValue);
+//                            }
                             result.append(cellString);
                         }
 
