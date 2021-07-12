@@ -24,4 +24,5 @@ public class Constants {
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String CHANGEIT = "changeit";
     public static final String TLSv12 = "TLSv1.2";
+    public static final String RESPONSE_CHARACTER_SET = "ISO-8859-1";
 }
