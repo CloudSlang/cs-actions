@@ -57,6 +57,12 @@ public class Descriptions {
                 "Valid values: any PSConfiguration that exists on the host. This input will be ignored if command type is 'cmd'.\n" +
                 "Examples: 'microsoft.powershell', 'PowerShell.6', 'PowerShell.7'";
         public static final String COMMAND_TYPE_DESC = "The command type to be executed. Valid values: cmd, powershell. Default value: cmd";
+        public static final String KERBEROS_CONF_FILE_DESC = "A krb5.conf file with content similar to the one in the examples (where you replace CONTOSO.COM with your domain and 'ad.contoso.com' with your kdc FQDN). This configures the Kerberos mechanism required by the Java GSS-API methods.\n" +
+                "                           Format: http://web.mit.edu/kerberos/krb5-1.4/krb5-1.4.4/doc/krb5-admin/krb5.conf.html";
+        public static final String LOGIN_CONF_FILE_DESC = "kerberosLoginConfFile - A login.conf file needed by the JAAS framework with the content similar to the one in examples\n" +
+                "                           Format: http://docs.oracle.com/javase/7/docs/jre/api/security/jaas/spec/com/sun/security/auth/module/Krb5LoginModule.html";
+        public static final String USE_SUBJECT_CREDS_ONLY_DESC = "True by default. Set to false to enable JAAS Kerberos login when JGSS cannot get credentials from the current Subject.";
+        public static final String DOMAIN_DESC = "The domain of the target host.";
 
         public static final String SUCCESS_DESC = "The PowerShell script was executed successfully and the 'scriptExitCode' value is 0.";
         public static final String FAILURE_DESC = "The PowerShell script could not be executed or the value of the 'scriptExitCode' is different than 0.";
