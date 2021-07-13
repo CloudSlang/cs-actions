@@ -62,7 +62,7 @@ public class ListAppenderAction {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = RETURN_CODE_SUCCESS, matchType = MatchType.COMPARE_EQUAL),
                     @Response(text = FAILURE, field = RETURN_CODE, value = RETURN_CODE_FAILURE, matchType = MatchType.COMPARE_EQUAL, isOnFail = true, isDefault = true)
             })
-    public Map<String, String> appendElement(@Param(value = LIST, required = true) String list,
+    public Map<String, String> appendElement(@Param(value = LIST) String list,
                                              @Param(value = ELEMENT, required = true) String element,
                                              @Param(value = DELIMITER) String delimiter) {
         Map<String, String> result = new HashMap<>();
