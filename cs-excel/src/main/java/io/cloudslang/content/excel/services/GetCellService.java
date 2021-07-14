@@ -49,6 +49,7 @@ public class GetCellService {
             final String rowDelimiter = getCellInputs.getRowDelimiter();
             final String columnDelimiter = getCellInputs.getColumnDelimiter();
             final String hasHeader = getCellInputs.getHasHeader();
+            final String enablingRoundingFunction = getCellInputs.getEnablingRoundingFunction();
 
             if (hasHeader.equals(YES))
                 firstRowIndex++;
@@ -61,7 +62,8 @@ public class GetCellService {
             final List<Integer> rowIndexList = validateIndex(processIndex(rowIndex), firstRowIndex, lastRowIndex, true);
             final List<Integer> columnIndexList = validateIndex(processIndex(columnIndex), firstColumnIndex, lastColumnIndex, false);
 
-            final String resultString = getCellFromWorksheet(excelDoc, worksheet, columnIndexList, rowIndexList, rowDelimiter, columnDelimiter);
+            final String resultString = getCellFromWorksheet(excelDoc, worksheet, columnIndexList, rowIndexList, rowDelimiter,
+                    columnDelimiter, enablingRoundingFunction);
             final Map<String, String> results = getSuccessResultsMap(resultString);
 
             if (hasHeader.equals(YES)) {
@@ -83,7 +85,8 @@ public class GetCellService {
                                                final List<Integer> columnIndex,
                                                final List<Integer> rowIndex,
                                                final String rowDelimiter,
-                                               final String columnDelimiter) {
+                                               final String columnDelimiter,
+                                               final String enablingRoundingFunction) {
         StringBuilder result = new StringBuilder();
         final DataFormatter formatter = new DataFormatter();
 
@@ -133,10 +136,12 @@ public class GetCellService {
                         }
                         //string
                         else {
-                            //Fix for QCIM1D248808 and Fix for QCIM1293510
-                            if (!cell.toString().isEmpty() && isNumericCell(cell) && !DateUtil.isCellDateFormatted(cell)) {
-                                double aCellValue = cell.getNumericCellValue();
-                                cellString = Double.toString(aCellValue);
+                            if (enablingRoundingFunction.toLowerCase().equals("true")) {
+                                //Fix for QCIM1D248808 and Fix for QCIM1293510
+                                if (!cell.toString().isEmpty() && isNumericCell(cell) && !DateUtil.isCellDateFormatted(cell)) {
+                                    double aCellValue = cell.getNumericCellValue();
+                                    cellString = round(Double.toString(aCellValue));
+                                }
                             }
                             result.append(cellString);
                         }
