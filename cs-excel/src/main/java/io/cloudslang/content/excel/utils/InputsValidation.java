@@ -38,8 +38,7 @@ import static io.cloudslang.content.excel.utils.Inputs.AddCell.OVERWRITE_DATA;
 import static io.cloudslang.content.excel.utils.Inputs.AddCell.ROW_DATA;
 import static io.cloudslang.content.excel.utils.Inputs.AddCell.ROW_INDEX;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
-import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.FIRST_ROW_INDEX;
-import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.HAS_HEADER;
+import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.*;
 import static io.cloudslang.content.excel.utils.Inputs.GetRowIndexByCondition.COLUMN_INDEX_TO_QUERY;
 import static io.cloudslang.content.excel.utils.Inputs.GetRowIndexByCondition.OPERATOR;
 import static io.cloudslang.content.excel.utils.Inputs.ModifyCell.NEW_VALUE;
@@ -86,7 +85,8 @@ public final class InputsValidation {
                                                    @NotNull final String hasHeader,
                                                    @NotNull final String firstRowIndex,
                                                    @NotNull final String rowIndex,
-                                                   @NotNull final String columnIndex) {
+                                                   @NotNull final String columnIndex,
+                                                   @NotNull final String enablingRoundingFunction) {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyFile(exceptionMessages, excelFileName, EXCEL_FILE_NAME);
 
@@ -94,6 +94,7 @@ public final class InputsValidation {
         addVerifyPositiveNumber(exceptionMessages, firstRowIndex, FIRST_ROW_INDEX);
         addVerifyIndex(exceptionMessages, rowIndex, ROW_INDEX);
         addVerifyIndex(exceptionMessages, columnIndex, COLUMN_INDEX);
+        addVerifyBoolean(exceptionMessages, enablingRoundingFunction, ENABLING_ROUNDING_FUNCTION);
 
         return exceptionMessages;
     }

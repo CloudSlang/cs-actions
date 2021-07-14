@@ -42,6 +42,7 @@ public class Constants {
     public static final String DEFAULT_ROW_DELIMITER = "|";
     public static final String DEFAULT_COLUMN_DELIMITER = ",";
     public static final String DEFAULT_DELIMITER_WORKSHEET_NAMES = ",";
+    public static final String DEFAULT_ENABLING_ROUNDING_FUNCTION = "false";
     public static String FORMAT_XLSX = "XLSX";
     public static String FORMAT_XLS = "XLS";
     public static String FORMAT_XLSM = "XLSM";

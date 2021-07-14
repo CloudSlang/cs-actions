@@ -30,6 +30,7 @@ public class Inputs extends InputNames {
         public static final String COLUMN_INDEX = "columnIndex";
         public static final String ROW_DELIMITER = "rowDelimiter";
         public static final String COLUMN_DELIMITER = "columnDelimiter";
+        public static final String ENABLING_ROUNDING_FUNCTION = "enablingRoundingFunction";
     }
 
     public static class GetRowIndexByCondition {

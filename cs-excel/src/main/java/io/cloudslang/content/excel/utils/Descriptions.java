@@ -39,6 +39,10 @@ public class Descriptions {
                 "Default value: | (pipe)";
         public static final String COLUMN_DELIMITER_DESC = "The delimiter used to separate the columns of the returnResult.\n" +
                 "Default value: , (comma)";
+        public static final String ENABLING_ROUNDING_FUNCTION_DESC = "If the value is set to true, then the selected cells containing decimal " +
+                "numbers will be rounded to 2 decimals digits." +
+                "Valid values: true, false\n" +
+                "Default value: false";
         public static final String RETURN_RESULT_DESC = "This is the primary output. Returns the cell data retrieved from Excel document.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the cell data.";
         public static final String HEADER_DESC = "A delimited list of column names of data being returned if hasHeader is set to yes. ";
