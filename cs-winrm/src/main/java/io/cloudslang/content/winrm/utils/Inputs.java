@@ -41,5 +41,9 @@ public class Inputs extends InputNames {
         public static final String WORKING_DIRECTORY = "workingDirectory";
         public static final String CONFIGURATION_NAME = "configurationName";
         public static final String COMMAND_TYPE = "commandType";
+        public static final String KERBEROS_CONF_FILE = "kerberosConfFile";
+        public static final String KERBEROS_LOGIN_CONF_FILE = "kerberosLoginConfFile";
+        public static final String DOMAIN = "domain";
+        public static final String USE_SUBJECT_CREDS_ONLY= "useSubjectCredsOnly";
     }
 }
