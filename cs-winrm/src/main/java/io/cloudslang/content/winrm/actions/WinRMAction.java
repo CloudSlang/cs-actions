@@ -85,7 +85,7 @@ public class WinRMAction {
             @Param(value = CONFIGURATION_NAME, description = CONFIGURATION_NAME_DESC) String configurationName,
             @Param(value = COMMAND_TYPE, description = COMMAND_TYPE_DESC) String commandType,
             @Param(value = KERBEROS_CONF_FILE, description = KERBEROS_CONF_FILE_DESC) String kerberosConfFile,
-            @Param(value = KERBEROS_LOGIN_CONF_FILE, description = KERBEROS_LOGIN_CONF_FILE) String kerberosLoginConfFile,
+            @Param(value = KERBEROS_LOGIN_CONF_FILE, description = LOGIN_CONF_FILE_DESC) String kerberosLoginConfFile,
             @Param(value = DOMAIN, description = DOMAIN_DESC) String domain,
             @Param(value = USE_SUBJECT_CREDS_ONLY, description = USE_SUBJECT_CREDS_ONLY_DESC) String useSubjectCredsOnly
 

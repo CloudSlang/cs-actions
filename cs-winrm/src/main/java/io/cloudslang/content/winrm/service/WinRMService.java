@@ -26,10 +26,9 @@ import sun.security.krb5.KrbException;
 
 import javax.net.ssl.*;
 import javax.xml.bind.DatatypeConverter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -45,18 +44,52 @@ import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.STDOUT;
 
 public class WinRMService {
 
-    public static Map<String, String> execute(WinRMInputs winRMInputs) throws KrbException {
+    public static Map<String, String> execute(WinRMInputs winRMInputs) throws KrbException, IOException {
 
         boolean useHttps = useHttps(winRMInputs);
         if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS)) {
             if (!winRMInputs.getUseSubjectCredsOnly().isEmpty())
                 System.setProperty("javax.security.auth.useSubjectCredsOnly", winRMInputs.getUseSubjectCredsOnly());
+            else
+                System.setProperty("javax.security.auth.useSubjectCredsOnly", "true");
+
             if (!winRMInputs.getKerberosConfFile().isEmpty()) {
-                System.setProperty("java.security.krb5.conf", winRMInputs.getKerberosConfFile());
+                if (new File(winRMInputs.getKerberosConfFile()).exists()) {
+                    System.setProperty("java.security.krb5.conf", winRMInputs.getKerberosConfFile());
+                } else {
+                    BufferedWriter bw = null;
+                    try {
+                        File tempFile = Files.createTempFile("krb5", ".conf").toFile();
+                        bw = new BufferedWriter(new FileWriter(tempFile));
+                        bw.write(winRMInputs.getKerberosConfFile());
+                        tempFile.deleteOnExit();
+                        System.setProperty("java.security.krb5.conf", tempFile.getAbsolutePath());
+                    } finally {
+                        if (bw != null)
+                            bw.close();
+                    }
+                }
                 sun.security.krb5.Config.refresh();
             }
-            if (!winRMInputs.getKerberosLoginConfFile().isEmpty())
-                System.setProperty("java.security.auth.login.config", winRMInputs.getKerberosLoginConfFile());
+            if (!winRMInputs.getKerberosLoginConfFile().isEmpty()) {
+                if (new File(winRMInputs.getKerberosLoginConfFile()).exists()) {
+                    System.setProperty("java.security.auth.login.config", winRMInputs.getKerberosLoginConfFile());
+                } else {
+                    BufferedWriter bw = null;
+                    try {
+                        File tempFile = Files.createTempFile("login", ".conf").toFile();
+                        bw = new BufferedWriter(new FileWriter(tempFile));
+                        bw.write(winRMInputs.getKerberosLoginConfFile());
+                        tempFile.deleteOnExit();
+                        System.setProperty("java.security.auth.login.config", tempFile.getAbsolutePath());
+                    } finally {
+                        if (bw != null)
+                            bw.close();
+                    }
+                }
+            }
+            else
+                System.setProperty("java.security.auth.login.config", "");
         }
         WinRmTool.Builder builder;
 
@@ -161,19 +194,31 @@ public class WinRMService {
             if (!winRMInputs.getProxyHost().isEmpty()) {
                 System.setProperty("https.proxyHost", winRMInputs.getProxyHost());
                 System.setProperty("https.proxyPort", winRMInputs.getProxyPort());
+            } else {
+                System.setProperty("https.proxyHost", "");
+                System.setProperty("https.proxyPort", "");
             }
             if (!winRMInputs.getProxyUsername().isEmpty()) {
                 System.setProperty("https.proxyUser", winRMInputs.getProxyUsername());
                 System.setProperty("https.proxyPassword", winRMInputs.getProxyPassword());
+            } else {
+                System.setProperty("https.proxyUser", "");
+                System.setProperty("https.proxyPassword", "");
             }
         } else if (winRMInputs.getProtocol().equalsIgnoreCase(HTTP)) {
             if (!winRMInputs.getProxyHost().isEmpty()) {
                 System.setProperty("http.proxyHost", winRMInputs.getProxyHost());
                 System.setProperty("http.proxyPort", winRMInputs.getProxyPort());
+            } else {
+                System.setProperty("http.proxyHost", "");
+                System.setProperty("http.proxyPort", "");
             }
             if (!winRMInputs.getProxyUsername().isEmpty()) {
                 System.setProperty("http.proxyUser", winRMInputs.getProxyUsername());
                 System.setProperty("http.proxyPassword", winRMInputs.getProxyPassword());
+            } else {
+                System.setProperty("http.proxyUser", "");
+                System.setProperty("http.proxyPassword", "");
             }
         }
         return useHttps;
