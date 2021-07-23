@@ -51,7 +51,7 @@ public class WinRMService {
             if (!winRMInputs.getUseSubjectCredsOnly().isEmpty())
                 System.setProperty("javax.security.auth.useSubjectCredsOnly", winRMInputs.getUseSubjectCredsOnly());
             else
-                System.setProperty("javax.security.auth.useSubjectCredsOnly", "true");
+                System.setProperty("javax.security.auth.useSubjectCredsOnly", BOOLEAN_TRUE);
 
             if (!winRMInputs.getKerberosConfFile().isEmpty()) {
                 if (new File(winRMInputs.getKerberosConfFile()).exists()) {
@@ -59,9 +59,9 @@ public class WinRMService {
                 } else {
                     BufferedWriter bw = null;
                     try {
-                        File tempFile = Files.createTempFile("krb5", ".conf").toFile();
+                        File tempFile = Files.createTempFile(KRB5, CONF).toFile();
                         bw = new BufferedWriter(new FileWriter(tempFile));
-                        bw.write(winRMInputs.getKerberosConfFile());
+                        bw.write(winRMInputs.getKerberosConfFile().replace(SLASH_NEW_LINE, System.getProperty(LINE_SEPARATOR)));
                         tempFile.deleteOnExit();
                         System.setProperty("java.security.krb5.conf", tempFile.getAbsolutePath());
                     } finally {
@@ -77,9 +77,9 @@ public class WinRMService {
                 } else {
                     BufferedWriter bw = null;
                     try {
-                        File tempFile = Files.createTempFile("login", ".conf").toFile();
+                        File tempFile = Files.createTempFile(LOGIN, CONF).toFile();
                         bw = new BufferedWriter(new FileWriter(tempFile));
-                        bw.write(winRMInputs.getKerberosLoginConfFile());
+                        bw.write(winRMInputs.getKerberosLoginConfFile().replace(SLASH_NEW_LINE, System.getProperty(LINE_SEPARATOR)));
                         tempFile.deleteOnExit();
                         System.setProperty("java.security.auth.login.config", tempFile.getAbsolutePath());
                     } finally {
@@ -87,9 +87,8 @@ public class WinRMService {
                             bw.close();
                     }
                 }
-            }
-            else
-                System.setProperty("java.security.auth.login.config", "");
+            } else
+                System.setProperty("java.security.auth.login.config", EMPTY_STRING);
         }
         WinRmTool.Builder builder;
 
@@ -115,14 +114,14 @@ public class WinRMService {
                 System.setProperty("javax.net.ssl.trustStore", winRMInputs.getTrustKeystore());
                 System.setProperty("javax.net.ssl.trustStorePassword", winRMInputs.getTrustPassword());
 
-                KeyStore keyStore = KeyStore.getInstance("JKS");
+                KeyStore keyStore = KeyStore.getInstance(JKS);
                 keyStore.load(new FileInputStream(winRMInputs.getKeystore()), winRMInputs.getKeystorePassword().toCharArray());
                 // Create key manager
-                KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+                KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(SunX509);
                 keyManagerFactory.init(keyStore, winRMInputs.getKeystorePassword().toCharArray());
                 KeyManager[] km = keyManagerFactory.getKeyManagers();
                 // Create trust manager
-                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(SunX509);
                 trustManagerFactory.init(keyStore);
                 TrustManager[] tm = trustManagerFactory.getTrustManagers();
                 // Initialize SSLContext
@@ -195,30 +194,30 @@ public class WinRMService {
                 System.setProperty("https.proxyHost", winRMInputs.getProxyHost());
                 System.setProperty("https.proxyPort", winRMInputs.getProxyPort());
             } else {
-                System.setProperty("https.proxyHost", "");
-                System.setProperty("https.proxyPort", "");
+                System.setProperty("https.proxyHost", EMPTY_STRING);
+                System.setProperty("https.proxyPort", EMPTY_STRING);
             }
             if (!winRMInputs.getProxyUsername().isEmpty()) {
                 System.setProperty("https.proxyUser", winRMInputs.getProxyUsername());
                 System.setProperty("https.proxyPassword", winRMInputs.getProxyPassword());
             } else {
-                System.setProperty("https.proxyUser", "");
-                System.setProperty("https.proxyPassword", "");
+                System.setProperty("https.proxyUser", EMPTY_STRING);
+                System.setProperty("https.proxyPassword", EMPTY_STRING);
             }
         } else if (winRMInputs.getProtocol().equalsIgnoreCase(HTTP)) {
             if (!winRMInputs.getProxyHost().isEmpty()) {
                 System.setProperty("http.proxyHost", winRMInputs.getProxyHost());
                 System.setProperty("http.proxyPort", winRMInputs.getProxyPort());
             } else {
-                System.setProperty("http.proxyHost", "");
-                System.setProperty("http.proxyPort", "");
+                System.setProperty("http.proxyHost", EMPTY_STRING);
+                System.setProperty("http.proxyPort", EMPTY_STRING);
             }
             if (!winRMInputs.getProxyUsername().isEmpty()) {
                 System.setProperty("http.proxyUser", winRMInputs.getProxyUsername());
                 System.setProperty("http.proxyPassword", winRMInputs.getProxyPassword());
             } else {
-                System.setProperty("http.proxyUser", "");
-                System.setProperty("http.proxyPassword", "");
+                System.setProperty("http.proxyUser", EMPTY_STRING);
+                System.setProperty("http.proxyPassword", EMPTY_STRING);
             }
         }
         return useHttps;
@@ -244,16 +243,16 @@ public class WinRMService {
         String tls_version = tlsVersion;
         switch (tlsVersion.toLowerCase()) {
             case "tlsv1":
-                tls_version = "TLSv1";
+                tls_version = TLSv1;
                 break;
             case "tlsv1.1":
-                tls_version = "TLSv1.1";
+                tls_version = TLSv1_1;
                 break;
             case "tlsv1.2":
-                tls_version = "TLSv1.2";
+                tls_version = TLSv1_2;
                 break;
             case "tlsv1.3":
-                tls_version = "TLSv1.3";
+                tls_version = TLSv1_3;
                 break;
         }
         return tls_version;
