@@ -61,7 +61,7 @@ public class WinRMService {
                     try {
                         File tempFile = Files.createTempFile(KRB5, CONF).toFile();
                         bw = new BufferedWriter(new FileWriter(tempFile));
-                        bw.write(winRMInputs.getKerberosConfFile().replace(SLASH_NEW_LINE, System.getProperty("line.separator")));
+                        bw.write(winRMInputs.getKerberosConfFile().replace(SLASH_NEW_LINE, System.getProperty(LINE_SEPARATOR)));
                         tempFile.deleteOnExit();
                         System.setProperty("java.security.krb5.conf", tempFile.getAbsolutePath());
                     } finally {
