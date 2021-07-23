@@ -29,10 +29,13 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.text.Normalizer;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.STDERR;
@@ -44,7 +47,7 @@ import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.STDOUT;
 
 public class WinRMService {
 
-    public static Map<String, String> execute(WinRMInputs winRMInputs) throws KrbException, IOException {
+    public static Map<String, String> execute(WinRMInputs winRMInputs) throws KrbException, IOException, InvalidPathException {
 
         boolean useHttps = useHttps(winRMInputs);
         if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS)) {
@@ -61,7 +64,7 @@ public class WinRMService {
                     try {
                         File tempFile = Files.createTempFile("krb5", ".conf").toFile();
                         bw = new BufferedWriter(new FileWriter(tempFile));
-                        bw.write(winRMInputs.getKerberosConfFile());
+                        bw.write(winRMInputs.getKerberosConfFile().replace("\\n",System.getProperty("line.separator")));
                         tempFile.deleteOnExit();
                         System.setProperty("java.security.krb5.conf", tempFile.getAbsolutePath());
                     } finally {
@@ -79,7 +82,7 @@ public class WinRMService {
                     try {
                         File tempFile = Files.createTempFile("login", ".conf").toFile();
                         bw = new BufferedWriter(new FileWriter(tempFile));
-                        bw.write(winRMInputs.getKerberosLoginConfFile());
+                        bw.write(winRMInputs.getKerberosLoginConfFile().replace("\\n",System.getProperty("line.separator")));
                         tempFile.deleteOnExit();
                         System.setProperty("java.security.auth.login.config", tempFile.getAbsolutePath());
                     } finally {
