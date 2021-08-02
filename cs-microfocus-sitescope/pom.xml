@@ -55,6 +55,27 @@
         </snapshotRepository>
     </distributionManagement>
 
+    <developers>
+        <developer>
+            <name>Florin Anca</name>
+            <email>florin.anca@microfocus.com</email>
+            <organization>Micro Focus</organization>
+            <organizationUrl>https://www.microfocus.com/en-us/home</organizationUrl>
+        </developer>
+        <developer>
+            <name>Ioana Matei</name>
+            <email>ioana.matei@microfocus.com</email>
+            <organization>Micro Focus</organization>
+            <organizationUrl>https://www.microfocus.com/en-us/home</organizationUrl>
+        </developer>
+        <developer>
+            <name>Alexandra Boicu</name>
+            <email>alexandra.boicu@microfocus.com</email>
+            <organization>Micro Focus</organization>
+            <organizationUrl>https://www.microfocus.com/en-us/home</organizationUrl>
+        </developer>
+    </developers>
+
     <properties>
         <!--Maven versions-->
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
