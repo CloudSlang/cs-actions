@@ -85,7 +85,7 @@ public class RemoteSecureCopyAction {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             }
     )
-    public Map<String, String> copyTo(
+    public Map<String, String> execute(
             @Param(value = SOURCE_HOST) String sourceHost,
             @Param(value = SOURCE_PATH, required = true) String sourcePath,
             @Param(SOURCE_PORT) String sourcePort,
