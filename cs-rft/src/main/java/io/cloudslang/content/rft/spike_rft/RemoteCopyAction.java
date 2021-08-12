@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.rft.spike_rft;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -6,6 +20,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
@@ -51,34 +66,63 @@ public class RemoteCopyAction {
                                        @Param(value = INPUT_FILE_TYPE, description = PARAM_CHARACTER_SET_DESC) String fileType,
                                        @Param(value = INPUT_PASSIVE, description = PARAM_CHARACTER_SET_DESC) String passive) throws Exception {
 
-        Map<String, String> result = null;
+        Map<String, String> results = new HashMap();
 
-        validateProtocol(sourceProtocol);
-        validateProtocol(destinationProtocol);
-        ICopier src = CopierFactory.getExecutor(sourceProtocol);
-        src.setProtocol(sourceProtocol);
-        ICopier dest = CopierFactory.getExecutor(destinationProtocol);
-        dest.setProtocol(destinationProtocol);
+        RemoteCopyInputs inputs = new RemoteCopyInputs.RemoteCopyBuilder()
+                .sourceHost(sourceHost)
+                .sourcePort(sourcePort)
+                .sourceUsername(sourceUsername)
+                .sourcePassword(sourcePassword)
+                .sourcePrivateKeyFile(sourcePrivateKeyFile)
+                .sourcePath(sourcePath)
+                .sourceProtocol(sourceProtocol)
+                .sourceTimeout(sourceTimeout)
+                .sourceCharacterSet(sourceCharacterSet)
+                .destinationHost(destinationHost)
+                .destinationPort(destinationPort)
+                .destinationUsername(destinationUsername)
+                .destinationPassword(destinationPassword)
+                .destinationPrivateKeyFile(destinationPrivateKeyFile)
+                .destinationPath(destinationPath)
+                .destinationProtocol(destinationProtocol)
+                .destinationTimeout(destinationTimeout)
+                .destinationCharacterSet(destinationCharacterSet)
+                .fileType(fileType)
+                .passive(passive)
+                .build();
 
-        io.cloudslang.content.rft.spike_rft.InputsValidation.checkOptions(sourceProtocol, sourceHost, fileType);
-        checkOptions(destinationProtocol, destinationHost, fileType);
+        validateProtocol(inputs.getSourceProtocol());
+        validateProtocol(inputs.getDestinationProtocol());
+        ICopier src = CopierFactory.getExecutor(inputs.getSourceProtocol());
+        src.setProtocol(inputs.getSourceProtocol());
+        ICopier dest = CopierFactory.getExecutor(inputs.getDestinationProtocol());
+        dest.setProtocol(inputs.getDestinationProtocol());
 
-        setCredentials(src, sourceHost, sourceProtocol, sourceUsername, sourcePassword, sourcePrivateKeyFile);
-        setCredentials(dest, destinationHost, destinationPort, destinationUsername, destinationPassword, destinationPrivateKeyFile);
+        src.setVersion("v2");
+        dest.setVersion("v2");
 
-        setAndValidateCharacterSet(src, sourceCharacterSet, INPUT_SRC_CHARACTER_SET);
-        setAndValidateCharacterSet(dest, destinationCharacterSet, INPUT_DEST_CHARACTERSET);
+        InputsValidation.checkOptions(inputs.getSourceProtocol(), inputs.getSourceHost(), inputs.getFileType());
+        checkOptions(inputs.getDestinationProtocol(), inputs.getDestinationHost(), inputs.getFileType());
 
-        setCustomArgumentForFTP(src, dest, sourceProtocol, destinationProtocol, fileType, Boolean.parseBoolean(passive));
+        setCredentials(src, inputs.getSourceHost(), inputs.getSourcePort(), inputs.getSourceUsername(), inputs.getSourcePassword(),
+                inputs.getSourcePrivateKeyFile());
+        setCredentials(dest, inputs.getDestinationHost(), inputs.getDestinationPort(), inputs.getDestinationUsername(),
+                inputs.getDestinationPassword(), inputs.getDestinationPrivateKeyFile());
 
-        setTimeout(src, sourceTimeout);
-        setTimeout(dest, destinationTimeout);
+        setAndValidateCharacterSet(src, inputs.getSourceCharacterSet(), INPUT_SRC_CHARACTER_SET);
+        setAndValidateCharacterSet(dest, inputs.getDestinationCharacterSet(), INPUT_DEST_CHARACTERSET);
 
-        src.copyTo(dest, sourcePath, destinationPath);
-        result.put("returnResult", "Copy completed successfully");
-        result.put("returnCode", "0");
+        setCustomArgumentForFTP(src, dest, inputs.getSourceProtocol(), inputs.getDestinationProtocol(), inputs.getFileType(),
+                Boolean.parseBoolean(inputs.getPassive()));
 
-        return result;
+        setTimeout(src, inputs.getSourceTimeout());
+        setTimeout(dest, inputs.getDestinationTimeout());
+
+        src.copyTo(dest, inputs.getSourcePath(), inputs.getDestinationPath());
+        results.put("returnResult", "Copy completed successfully");
+        results.put("returnCode", "0");
+
+        return results;
     }
 
 }
