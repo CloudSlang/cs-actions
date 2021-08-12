@@ -18,7 +18,6 @@ import static io.cloudslang.content.rft.spike_rft.Constants.*;
 import static io.cloudslang.content.rft.spike_rft.InputsValidation.*;
 import static io.cloudslang.content.rft.utils.Descriptions.FTPDescriptions.*;
 
-
 public class RemoteCopyAction {
 
     @Action(name = "Remote Copy Action",
@@ -50,32 +49,32 @@ public class RemoteCopyAction {
                                        @Param(value = INPUT_DEST_TIMEOUT, description = PARAM_PASSIVE_DESC) String destinationTimeout,
                                        @Param(value = INPUT_DEST_CHARACTERSET, description = PARAM_CHARACTER_SET_DESC) String destinationCharacterSet,
                                        @Param(value = INPUT_FILE_TYPE, description = PARAM_CHARACTER_SET_DESC) String fileType,
-                                       @Param(value = INPUT_PASSIVE, description = PARAM_CHARACTER_SET_DESC) String passive) {
+                                       @Param(value = INPUT_PASSIVE, description = PARAM_CHARACTER_SET_DESC) String passive) throws Exception {
 
         Map<String, String> result = null;
 
-        validateProtocol(srcProtocol);
-        validateProtocol(destProtocol);
-        ICopier src = CopierFactory.getExecutor(srcProtocol);
-        src.setProtocol(srcProtocol);
-        ICopier dest = CopierFactory.getExecutor(destProtocol);
-        dest.setProtocol(destProtocol);
+        validateProtocol(sourceProtocol);
+        validateProtocol(destinationProtocol);
+        ICopier src = CopierFactory.getExecutor(sourceProtocol);
+        src.setProtocol(sourceProtocol);
+        ICopier dest = CopierFactory.getExecutor(destinationProtocol);
+        dest.setProtocol(destinationProtocol);
 
-        io.cloudslang.content.rft.spike_rft.InputsValidation.checkOptions(srcProtocol, srcHost, type);
-        checkOptions(destProtocol, destHost, type);
+        io.cloudslang.content.rft.spike_rft.InputsValidation.checkOptions(sourceProtocol, sourceHost, fileType);
+        checkOptions(destinationProtocol, destinationHost, fileType);
 
-        setCredentials(src, srcHost, srcPort, srcUsername, srcPassword, srcPrivateKeyFile);
-        setCredentials(dest, destHost, destPort, destUsername, destPassword, destPrivateKeyFile);
+        setCredentials(src, sourceHost, sourceProtocol, sourceUsername, sourcePassword, sourcePrivateKeyFile);
+        setCredentials(dest, destinationHost, destinationPort, destinationUsername, destinationPassword, destinationPrivateKeyFile);
 
-        setAndValidateCharacterSet(src, srcCharacterSet, INPUT_SRC_CHARACTER_SET);
-        setAndValidateCharacterSet(dest, destCharacterSet, INPUT_DEST_CHARACTERSET);
+        setAndValidateCharacterSet(src, sourceCharacterSet, INPUT_SRC_CHARACTER_SET);
+        setAndValidateCharacterSet(dest, destinationCharacterSet, INPUT_DEST_CHARACTERSET);
 
-        setCustomArgumentForFTP(src, dest, srcProtocol, destProtocol, type, passive);
+        setCustomArgumentForFTP(src, dest, sourceProtocol, destinationProtocol, fileType, Boolean.parseBoolean(passive));
 
-        setTimeout(src, srcTimeout);
-        setTimeout(dest, destTimeout);
+        setTimeout(src, sourceTimeout);
+        setTimeout(dest, destinationTimeout);
 
-        src.copyTo(dest, srcPath, destPath);
+        src.copyTo(dest, sourcePath, destinationPath);
         result.put("returnResult", "Copy completed successfully");
         result.put("returnCode", "0");
 
