@@ -154,6 +154,17 @@
             <version>1.64</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.hp.oo.contentcommons</groupId>
+            <artifactId>ssh-commons</artifactId>
+            <version>1.6.32</version>
+        </dependency>
 
     </dependencies>
 
