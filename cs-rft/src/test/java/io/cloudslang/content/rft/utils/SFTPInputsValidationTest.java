@@ -17,40 +17,43 @@ package io.cloudslang.content.rft.utils;
 import org.junit.Test;
 
 import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 public class SFTPInputsValidationTest {
 
     @Test
     public void verifyValidSFTPPInputs() {
-        List<String> exceptions = InputsValidation.verifyInputsSFTP("someHost",
+        List<String> exceptions = InputsValidation.verifyInputsSFTP(
+                "someHost",
                 "21",
                 "username",
                 "password",
-                "privateKeyPath",
+                "8080",
                 "UTF-8",
                 "true",
                 SFTPOperation.PUT,
                 "specificinput.txt",
                 "specificinput2.txt");
         int numberOfExceptions = exceptions.size();
-        assertEquals(numberOfExceptions,0);
+        assertEquals(numberOfExceptions, 0);
     }
 
     @Test
     public void verifyInvalidSFTPInputs() {
-        List<String> exceptions = InputsValidation.verifyInputsSFTP(null,
+        List<String> exceptions = InputsValidation.verifyInputsSFTP(
+                null,
                 "212222",
                 null,
                 "",
                 "",
                 "",
-                "tsdarue",
+                "",
                 SFTPOperation.GET,
                 "",
                 "");
         int numberOfExceptions = exceptions.size();
-        assertEquals(numberOfExceptions,8);
+        assertEquals(numberOfExceptions, 8);
     }
 
 }

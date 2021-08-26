@@ -59,6 +59,12 @@ public class SFTPGet {
                                        @Param(value = PARAM_PORT, description = PARAM_PORT_DESC) String port,
                                        @Param(value = PARAM_USERNAME, description = PARAM_USERNAME_DESC) String username,
                                        @Param(value = PARAM_PASSWORD, description = PARAM_PASSWORD_DESC) String password,
+                                       @Param(value = PARAM_PROXY_HOST, description = PARAM_PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PARAM_PROXY_PORT, description = PARAM_PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PARAM_PROXY_USERNAME, description = PARAM_PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PARAM_PROXY_PASSWORD, description = PARAM_PROXY_PASSWORD_DESC) String proxyPassword,
+                                       @Param(value = PARAM_CONNECT_TIMEOUT, description = PARAM_CONNECT_TIMEOUT_DESC) String connectTimeout,
+                                       @Param(value = PARAM_EXECUTION_TIMEOUT, description = PARAM_EXECUTION_TIMEOUT_DESC) String executionTimeout,
                                        @Param(value = PARAM_PRIVATE_KEY, description = PARAM_PRIVATE_KEY_DESC) String privateKey,
                                        @Param(value = PARAM_REMOTE_FILE, description = PARAM_REMOTE_FILE_DESC) String remoteFile,
                                        @Param(value = PARAM_LOCAL_LOCATION, description = PARAM_LOCAL_LOCATION_DESC) String localLocation,
@@ -70,13 +76,15 @@ public class SFTPGet {
         port = defaultIfEmpty(port, String.valueOf(DEFAULT_PORT));
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
+        proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
         privateKey = defaultIfEmpty(privateKey, EMPTY);
         remoteFile = defaultIfEmpty(remoteFile, EMPTY);
         localLocation = defaultIfEmpty(localLocation, EMPTY);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
 
-        final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, privateKey, characterSet, closeSession, SFTPOperation.GET, remoteFile, localLocation);
+        final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
+                characterSet, closeSession, SFTPOperation.GET, remoteFile, localLocation);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -89,6 +97,12 @@ public class SFTPGet {
                         .port(port)
                         .username(username)
                         .password(password)
+                        .proxyHost(proxyHost)
+                        .proxyPort(proxyPort)
+                        .proxyUsername(proxyUsername)
+                        .proxyPassword(proxyPassword)
+                        .connectTimeout(connectTimeout)
+                        .executionTimeout(executionTimeout)
                         .privateKey(privateKey)
                         .characterSet(characterSet)
                         .closeSession(closeSession)
@@ -96,7 +110,7 @@ public class SFTPGet {
                         .build())
                 .build();
 
-        return new SFTPService().execute(sftpGetInputs,SFTPOperation.GET);
+        return new SFTPService().execute(sftpGetInputs, SFTPOperation.GET);
 
     }
 }
