@@ -67,7 +67,7 @@ public class SFTPPut {
                                        @Param(value = PARAM_PRIVATE_KEY, description = PARAM_PRIVATE_KEY_DESC) String privateKey,
                                        @Param(value = PARAM_REMOTE_LOCATION, description = PARAM_REMOTE_LOCATION_DESC) String remoteLocation,
                                        @Param(value = PARAM_LOCAL_FILE, description = PARAM_LOCAL_FILE_DESC) String localFile,
-                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = PARAM_LOCAL_FILE_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
+                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = PARAM_GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = PARAM_CHARACTER_SET, description = PARAM_CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = PARAM_CLOSE_SESSION, description = PARAM_CLOSE_SESSION_DESC) String closeSession,
                                        @Param(value = PARAM_CONNECT_TIMEOUT, description = PARAM_CONNECT_TIMEOUT_DESC) String connectTimeout,
