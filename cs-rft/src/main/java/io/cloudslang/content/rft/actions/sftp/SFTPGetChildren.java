@@ -34,13 +34,11 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUA
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
-import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.PARAM_CLOSE_SESSION;
 import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -63,6 +61,12 @@ public class SFTPGetChildren {
                                        @Param(value = PARAM_PORT, description = PARAM_PORT_DESC) String port,
                                        @Param(value = PARAM_USERNAME, description = PARAM_USERNAME_DESC) String username,
                                        @Param(value = PARAM_PASSWORD, description = PARAM_PASSWORD_DESC) String password,
+                                       @Param(value = PARAM_PROXY_HOST, description = PARAM_PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PARAM_PROXY_PORT, description = PARAM_PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PARAM_PROXY_USERNAME, description = PARAM_PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PARAM_PROXY_PASSWORD, description = PARAM_PROXY_PASSWORD_DESC) String proxyPassword,
+                                       @Param(value = PARAM_CONNECT_TIMEOUT, description = PARAM_CONNECT_TIMEOUT_DESC) String connectTimeout,
+                                       @Param(value = PARAM_EXECUTION_TIMEOUT, description = PARAM_EXECUTION_TIMEOUT_DESC) String executionTimeout,
                                        @Param(value = PARAM_PRIVATE_KEY, description = PARAM_PRIVATE_KEY_DESC) String privateKey,
                                        @Param(value = PARAM_REMOTE_PATH, description = PARAM_REMOTE_PATH_DESC) String remotePath,
                                        @Param(value = PARAM_DELIMITER, description = PARAM_DELIMITER_DESC) String delimiter,
@@ -74,12 +78,14 @@ public class SFTPGetChildren {
         port = defaultIfEmpty(port, String.valueOf(DEFAULT_PORT));
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
+        proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
         privateKey = defaultIfEmpty(privateKey, EMPTY);
         remotePath = defaultIfEmpty(remotePath, EMPTY);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
 
-        final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, privateKey, characterSet, closeSession, SFTPOperation.GET_CHILDREN, remotePath, delimiter);
+        final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
+                characterSet, closeSession, SFTPOperation.GET_CHILDREN, remotePath, delimiter, connectTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -92,6 +98,12 @@ public class SFTPGetChildren {
                         .port(port)
                         .username(username)
                         .password(password)
+                        .proxyHost(proxyHost)
+                        .proxyPort(proxyPort)
+                        .proxyUsername(proxyUsername)
+                        .proxyPassword(proxyPassword)
+                        .connectTimeout(connectTimeout)
+                        .executionTimeout(executionTimeout)
                         .privateKey(privateKey)
                         .characterSet(characterSet)
                         .closeSession(closeSession)
@@ -99,7 +111,7 @@ public class SFTPGetChildren {
                         .build())
                 .build();
 
-        return new SFTPService().execute(sftpGetChildrenInputs,SFTPOperation.GET_CHILDREN);
+        return new SFTPService().execute(sftpGetChildrenInputs, SFTPOperation.GET_CHILDREN);
 
     }
 }

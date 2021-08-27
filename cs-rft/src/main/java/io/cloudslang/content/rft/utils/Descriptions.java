@@ -42,6 +42,12 @@ public class Descriptions {
         public static final String PARAM_PORT_DESC = "The port to connect to on host.";
         public static final String PARAM_USERNAME_DESC = "Remote username.";
         public static final String PARAM_PASSWORD_DESC = "Password to authenticate. If using a private key file this will be used as the passphrase for the file";
+        public static final String PARAM_PROXY_HOST_DESC = "The proxy server used to access the remote host.";
+        public static final String PARAM_PROXY_PORT_DESC = "The proxy server port.";
+        public static final String PARAM_PROXY_USERNAME_DESC = "The username used when connecting to the proxy.";
+        public static final String PARAM_PROXY_PASSWORD_DESC = "The password used when connecting to the proxy.";
+        public static final String PARAM_CONNECT_TIMEOUT_DESC = "Time in seconds to wait for the connection to complete.";
+        public static final String PARAM_EXECUTION_TIMEOUT_DESC = "Time in seconds to wait for the operation to complete.";
         public static final String PARAM_PRIVATE_KEY_DESC = "Absolute path for private key file for public/private key authentication.";
         public static final String PARAM_REMOTE_FILE_DESC = "The remote file.";
         public static final String PARAM_REMOTE_LOCATION_DESC = "The remote location where the file is to be placed.";
@@ -50,7 +56,6 @@ public class Descriptions {
         public static final String PARAM_GLOBAL_SESSION_DESC = "The sessionObject that holds the connection if the close session is false.";
         public static final String PARAM_DELIMITER_DESC = "A delimiter to use for the result lists (returnResult, files, folders).";
         public static final String PARAM_REMOTE_PATH_DESC = "The remote file or directory name.";
-
 
         public static final String PARAM_CHARACTER_SET_DESC = "The name of the control encoding to use. Examples: UTF-8, EUC-JP, SJIS.  Default is UTF-8.";
         public static final String PARAM_CLOSE_SESSION_DESC = "Close the SSH session at completion of operation?  Default value is true.  If false the SSH session can be reused by other SFTP commands in the same flow.  Valid values: true, false.";

@@ -15,7 +15,7 @@
 package io.cloudslang.content.rft.utils;
 
 
-import io.cloudslang.content.rft.entities.sftp.SFTPCommonInputs;
+import io.cloudslang.content.utils.NumberUtilities;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,20 +59,22 @@ public class InputsValidation {
         return exceptionMessages;
     }
 
-
     public static List<String> verifyInputsSFTP(
             @Nullable final String host,
             @Nullable final String port,
             @Nullable final String username,
             @Nullable final String password,
-            @Nullable final String privateKey,
+            @Nullable final String proxyPort,
             @Nullable final String characterSet,
             @Nullable final String closeSession,
             @Nullable final SFTPOperation sftpOperation,
             @Nullable final String firstSpecificInput,
-            @Nullable final String secondSpecificInput) {
+            @Nullable final String secondSpecificInput,
+            @Nullable final String connectTimeout,
+            @Nullable final String executionTimeout) {
 
-        final List<String> exceptions = verifyCommonSFTPInputs(host,port,username,password,privateKey,characterSet,closeSession);
+        final List<String> exceptions = verifyCommonSFTPInputs(host, port, username, password, proxyPort,
+                characterSet, closeSession, connectTimeout, executionTimeout);
         if (sftpOperation == SFTPOperation.GET) {
             addVerifyNotNullOrEmpty(exceptions, firstSpecificInput, Inputs.SFTPInputs.PARAM_REMOTE_FILE);
             addVerifyNotNullOrEmpty(exceptions, secondSpecificInput, Inputs.SFTPInputs.PARAM_LOCAL_LOCATION);
@@ -82,8 +84,8 @@ public class InputsValidation {
             addVerifyNotNullOrEmpty(exceptions, secondSpecificInput, Inputs.SFTPInputs.PARAM_LOCAL_FILE);
 
         } else if (sftpOperation == SFTPOperation.GET_CHILDREN) {
-            addVerifyNotNullOrEmpty(exceptions,firstSpecificInput,Inputs.SFTPInputs.PARAM_REMOTE_PATH);
-            addVerifyNotNullOrEmpty(exceptions,secondSpecificInput,Inputs.SFTPInputs.PARAM_DELIMITER);
+            addVerifyNotNullOrEmpty(exceptions, firstSpecificInput, Inputs.SFTPInputs.PARAM_REMOTE_PATH);
+            addVerifyNotNullOrEmpty(exceptions, secondSpecificInput, Inputs.SFTPInputs.PARAM_DELIMITER);
         }
         return exceptions;
     }
@@ -93,20 +95,24 @@ public class InputsValidation {
             @Nullable final String port,
             @Nullable final String username,
             @Nullable final String password,
-            @Nullable final String privateKey,
+            @Nullable final String proxyPort,
             @Nullable final String characterSet,
-            @Nullable final String closeSession) {
+            @Nullable final String closeSession,
+            @Nullable final String connectTimeout,
+            @Nullable final String executionTimeout) {
 
         final List<String> exceptions = new ArrayList<>();
         addVerifyNotNullOrEmpty(exceptions, host, Inputs.SFTPInputs.PARAM_HOST);
         addVerifyPort(exceptions, port);
         addVerifyNotNullOrEmpty(exceptions, username, Inputs.SFTPInputs.PARAM_USERNAME);
         addVerifyNotNullOrEmpty(exceptions, password, Inputs.SFTPInputs.PARAM_PASSWORD);
+        addVerifyPort(exceptions, proxyPort);
         addVerifyCharacterSet(exceptions, characterSet);
-        addVerifyBoolean(exceptions,closeSession, PARAM_CLOSE_SESSION);
+        addVerifyBoolean(exceptions, closeSession, PARAM_CLOSE_SESSION);
+        addVerifyNumber(exceptions, connectTimeout, Inputs.SFTPInputs.PARAM_CONNECT_TIMEOUT);
+        addVerifyNumber(exceptions, executionTimeout, Inputs.SFTPInputs.PARAM_EXECUTION_TIMEOUT);
 
         return exceptions;
-
     }
 
     private static void addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
@@ -157,6 +163,16 @@ public class InputsValidation {
         } catch (NumberFormatException e) {
             return -1;
         }
+    }
+
+    @NotNull
+    private static List<String> addVerifyNumber(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+        if (isEmpty(input)) {
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+        } else if (!NumberUtilities.isValidInt(input)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
+        }
+        return exceptions;
     }
 
 
