@@ -44,7 +44,7 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class SFTPPut {
+public class SFTPUploadFile {
 
     @Action(name = "SFTP Put Operation",
             outputs = {
