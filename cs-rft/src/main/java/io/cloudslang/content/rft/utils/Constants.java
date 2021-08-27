@@ -47,6 +47,8 @@ public class Constants {
     public static final String PORT_21 = "21";
     public static final String CHARACTER_SET_LATIN1 = "ISO-8859-1";
     public static final String CHARACTER_SET_UTF8 = "UTF-8";
+    public static final String CONNECT_TIMEOUT = "60";
+    public static final String EXECUTION_TIMEOUT = "60";
 
     public static final String NEW_LINE = "\n";
 
@@ -71,6 +73,7 @@ public class Constants {
     public static final String EXCEPTION_UNABLE_TO_RETRIEVE = "Unable to retrieve file over SFTP";
     public static final String EXCEPTION_UNABLE_TO_STORE = "Unable to store file over SFTP";
     public static final String EXCEPTION_UNABLE_SAVE_SESSION = "The SSH Session could not be saved in the given sessionParam";
+    public static final String EXCEPTION_INVALID_NUMBER = "%s for %s input is not a valid number value.";
 
 
 }

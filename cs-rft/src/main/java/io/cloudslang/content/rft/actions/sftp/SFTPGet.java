@@ -84,7 +84,7 @@ public class SFTPGet {
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
 
         final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
-                characterSet, closeSession, SFTPOperation.GET, remoteFile, localLocation);
+                characterSet, closeSession, SFTPOperation.GET, remoteFile, localLocation, connectTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }

@@ -64,14 +64,14 @@ public class SFTPPut {
                                        @Param(value = PARAM_PROXY_PORT, description = PARAM_PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PARAM_PROXY_USERNAME, description = PARAM_PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PARAM_PROXY_PASSWORD, description = PARAM_PROXY_PASSWORD_DESC) String proxyPassword,
-                                       @Param(value = PARAM_CONNECT_TIMEOUT, description = PARAM_CONNECT_TIMEOUT_DESC) String connectTimeout,
-                                       @Param(value = PARAM_EXECUTION_TIMEOUT, description = PARAM_EXECUTION_TIMEOUT_DESC) String executionTimeout,
                                        @Param(value = PARAM_PRIVATE_KEY, description = PARAM_PRIVATE_KEY_DESC) String privateKey,
                                        @Param(value = PARAM_REMOTE_LOCATION, description = PARAM_REMOTE_LOCATION_DESC) String remoteLocation,
                                        @Param(value = PARAM_LOCAL_FILE, description = PARAM_LOCAL_FILE_DESC) String localFile,
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = PARAM_LOCAL_FILE_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = PARAM_CHARACTER_SET, description = PARAM_CHARACTER_SET_DESC) String characterSet,
-                                       @Param(value = PARAM_CLOSE_SESSION, description = PARAM_CLOSE_SESSION_DESC) String closeSession) {
+                                       @Param(value = PARAM_CLOSE_SESSION, description = PARAM_CLOSE_SESSION_DESC) String closeSession,
+                                       @Param(value = PARAM_CONNECT_TIMEOUT, description = PARAM_CONNECT_TIMEOUT_DESC) String connectTimeout,
+                                       @Param(value = PARAM_EXECUTION_TIMEOUT, description = PARAM_EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
         host = defaultIfEmpty(host, EMPTY);
         port = defaultIfEmpty(port, String.valueOf(DEFAULT_PORT));
@@ -83,10 +83,11 @@ public class SFTPPut {
         localFile = defaultIfEmpty(localFile, EMPTY);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
-
+        connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT);
+        executionTimeout = defaultIfEmpty(executionTimeout, EXECUTION_TIMEOUT);
 
         final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
-                characterSet, closeSession, SFTPOperation.PUT, remoteLocation, localFile);
+                characterSet, closeSession, SFTPOperation.PUT, remoteLocation, localFile, connectTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -103,12 +104,12 @@ public class SFTPPut {
                         .proxyPort(proxyPort)
                         .proxyUsername(proxyUsername)
                         .proxyPassword(proxyPassword)
-                        .connectTimeout(connectTimeout)
-                        .executionTimeout(executionTimeout)
                         .privateKey(privateKey)
                         .globalSessionObject(globalSessionObject)
                         .characterSet(characterSet)
                         .closeSession(closeSession)
+                        .connectTimeout(connectTimeout)
+                        .executionTimeout(executionTimeout)
                         .build())
                 .build();
 

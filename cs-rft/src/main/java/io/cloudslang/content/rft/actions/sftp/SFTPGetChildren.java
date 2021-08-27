@@ -85,7 +85,7 @@ public class SFTPGetChildren {
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
 
         final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
-                characterSet, closeSession, SFTPOperation.GET_CHILDREN, remotePath, delimiter);
+                characterSet, closeSession, SFTPOperation.GET_CHILDREN, remotePath, delimiter, connectTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }

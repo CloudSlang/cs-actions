@@ -34,7 +34,9 @@ public class SFTPInputsValidationTest {
                 "true",
                 SFTPOperation.PUT,
                 "specificinput.txt",
-                "specificinput2.txt");
+                "specificinput2.txt",
+                "60",
+                "60");
         int numberOfExceptions = exceptions.size();
         assertEquals(numberOfExceptions, 0);
     }
@@ -51,9 +53,11 @@ public class SFTPInputsValidationTest {
                 "",
                 SFTPOperation.GET,
                 "",
+                "",
+                "invalid",
                 "");
         int numberOfExceptions = exceptions.size();
-        assertEquals(numberOfExceptions, 8);
+        assertEquals(numberOfExceptions, 10);
     }
 
 }
