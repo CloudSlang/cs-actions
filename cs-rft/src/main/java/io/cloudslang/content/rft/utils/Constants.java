@@ -38,6 +38,7 @@ public class Constants {
     public static final String DEFAULT_KNOWN_HOSTS_POLICY = "strict";
     public static final Path DEFAULT_KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
     public static final int DEFAULT_PROXY_PORT = 8080;
+    public static final String DEFAULT_DELIMITER = String.valueOf(',');
 
 
     public static final String BOOLEAN_FALSE = "false";
