@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class Office365CommonInputs {
+public class AzureActiveDirectoryCommonInputs {
     private final String authToken;
     private final String userPrincipalName;
     private final String userId;
@@ -42,10 +42,10 @@ public class Office365CommonInputs {
     @java.beans.ConstructorProperties({"authToken", "userPrincipalName", "userId", "proxyHost", "proxyPort", "proxyUsername",
             "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "connectTimeout",
             "socketTimeout", "keepAlive", "connectionsMaxPerRoute", "connectionsMaxTotal", "responseCharacterSet"})
-    private Office365CommonInputs(String authToken, String userPrincipalName, String userId, String proxyHost, String proxyPort,
-                                  String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier,
-                                  String trustKeystore, String trustPassword, String connectTimeout, String socketTimeout,
-                                  String keepAlive, String connectionsMaxPerRoute, String connectionsMaxTotal, String responseCharacterSet) {
+    private AzureActiveDirectoryCommonInputs(String authToken, String userPrincipalName, String userId, String proxyHost, String proxyPort,
+                                             String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier,
+                                             String trustKeystore, String trustPassword, String connectTimeout, String socketTimeout,
+                                             String keepAlive, String connectionsMaxPerRoute, String connectionsMaxTotal, String responseCharacterSet) {
         this.authToken = authToken;
         this.userPrincipalName = userPrincipalName;
         this.userId = userId;
@@ -66,8 +66,8 @@ public class Office365CommonInputs {
     }
 
     @NotNull
-    public static Office365CommonInputsBuilder builder() {
-        return new Office365CommonInputsBuilder();
+    public static AzureActiveDirectoryCommonInputsBuilder builder() {
+        return new AzureActiveDirectoryCommonInputsBuilder();
     }
 
     @NotNull
@@ -155,7 +155,7 @@ public class Office365CommonInputs {
         return this.responseCharacterSet;
     }
 
-    public static class Office365CommonInputsBuilder {
+    public static class AzureActiveDirectoryCommonInputsBuilder {
         private String authToken = EMPTY;
         private String userPrincipalName = EMPTY;
         private String userId = EMPTY;
@@ -174,113 +174,113 @@ public class Office365CommonInputs {
         private String connectionsMaxTotal = EMPTY;
         private String responseCharacterSet = EMPTY;
 
-        Office365CommonInputsBuilder() {
+        AzureActiveDirectoryCommonInputsBuilder() {
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder authToken(@NotNull final String authToken) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder authToken(@NotNull final String authToken) {
             this.authToken = authToken;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder userPrincipalName(@NotNull final String userPrincipalName) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder userPrincipalName(@NotNull final String userPrincipalName) {
             this.userPrincipalName = userPrincipalName;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder userId(@NotNull final String userId) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder userId(@NotNull final String userId) {
             this.userId = userId;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder trustAllRoots(@NotNull final String trustAllRoots) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder trustAllRoots(@NotNull final String trustAllRoots) {
             this.trustAllRoots = trustAllRoots;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder x509HostnameVerifier(@NotNull final String x509HostnameVerifier) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder x509HostnameVerifier(@NotNull final String x509HostnameVerifier) {
             this.x509HostnameVerifier = x509HostnameVerifier;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder trustKeystore(@NotNull final String trustKeystore) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder trustKeystore(@NotNull final String trustKeystore) {
             this.trustKeystore = trustKeystore;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder trustPassword(@NotNull final String trustPassword) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder trustPassword(@NotNull final String trustPassword) {
             this.trustPassword = trustPassword;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder proxyHost(@NotNull final String proxyHost) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder proxyHost(@NotNull final String proxyHost) {
             this.proxyHost = proxyHost;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder proxyPort(final String proxyPort) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder proxyPort(final String proxyPort) {
             this.proxyPort = proxyPort;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder proxyUsername(@NotNull final String proxyUsername) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder proxyUsername(@NotNull final String proxyUsername) {
             this.proxyUsername = proxyUsername;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder proxyPassword(@NotNull final String proxyPassword) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder proxyPassword(@NotNull final String proxyPassword) {
             this.proxyPassword = proxyPassword;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder connectTimeout(@NotNull final String connectTimeout) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder connectTimeout(@NotNull final String connectTimeout) {
             this.connectTimeout = connectTimeout;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder socketTimeout(@NotNull final String socketTimeout) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder socketTimeout(@NotNull final String socketTimeout) {
             this.socketTimeout = socketTimeout;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder keepAlive(@NotNull final String keepAlive) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder keepAlive(@NotNull final String keepAlive) {
             this.keepAlive = keepAlive;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder connectionsMaxPerRoute(@NotNull final String connectionsMaxPerRoute) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder connectionsMaxPerRoute(@NotNull final String connectionsMaxPerRoute) {
             this.connectionsMaxPerRoute = connectionsMaxPerRoute;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder connectionsMaxTotal(@NotNull final String connectionsMaxTotal) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder connectionsMaxTotal(@NotNull final String connectionsMaxTotal) {
             this.connectionsMaxTotal = connectionsMaxTotal;
             return this;
         }
 
         @NotNull
-        public Office365CommonInputs.Office365CommonInputsBuilder responseCharacterSet(@NotNull final String responseCharacterSet) {
+        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder responseCharacterSet(@NotNull final String responseCharacterSet) {
             this.responseCharacterSet = responseCharacterSet;
             return this;
         }
 
-        public Office365CommonInputs build() {
-            return new Office365CommonInputs(authToken, userPrincipalName, userId, proxyHost, proxyPort, proxyUsername, proxyPassword,
+        public AzureActiveDirectoryCommonInputs build() {
+            return new AzureActiveDirectoryCommonInputs(authToken, userPrincipalName, userId, proxyHost, proxyPort, proxyUsername, proxyPassword,
                     trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, connectTimeout,
                     socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal, responseCharacterSet);
         }

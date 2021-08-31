@@ -17,7 +17,7 @@
 package io.cloudslang.content.microsoftAD.services;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
-import io.cloudslang.content.microsoftAD.entities.Office365CommonInputs;
+import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import org.jetbrains.annotations.NotNull;
 
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.setConnectionParameters;
@@ -28,7 +28,7 @@ public class HttpCommons {
 
     @NotNull
     static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
-                                    @NotNull final Office365CommonInputs commonInputs) {
+                                    @NotNull final AzureActiveDirectoryCommonInputs commonInputs) {
         setProxy(httpClientInputs,
                 commonInputs.getProxyHost(),
                 commonInputs.getProxyPort(),
