@@ -70,11 +70,11 @@ public class InputsValidation {
             @Nullable final SFTPOperation sftpOperation,
             @Nullable final String firstSpecificInput,
             @Nullable final String secondSpecificInput,
-            @Nullable final String connectTimeout,
+            @Nullable final String connectionTimeout,
             @Nullable final String executionTimeout) {
 
         final List<String> exceptions = verifyCommonSFTPInputs(host, port, username, password, proxyPort,
-                characterSet, closeSession, connectTimeout, executionTimeout);
+                characterSet, closeSession, connectionTimeout, executionTimeout);
         if (sftpOperation == SFTPOperation.GET) {
             addVerifyNotNullOrEmpty(exceptions, firstSpecificInput, Inputs.SFTPInputs.REMOTE_FILE);
             addVerifyNotNullOrEmpty(exceptions, secondSpecificInput, Inputs.SFTPInputs.LOCAL_LOCATION);
@@ -98,7 +98,7 @@ public class InputsValidation {
             @Nullable final String proxyPort,
             @Nullable final String characterSet,
             @Nullable final String closeSession,
-            @Nullable final String connectTimeout,
+            @Nullable final String connectionTimeout,
             @Nullable final String executionTimeout) {
 
         final List<String> exceptions = new ArrayList<>();
@@ -109,7 +109,7 @@ public class InputsValidation {
         addVerifyPort(exceptions, proxyPort);
         addVerifyCharacterSet(exceptions, characterSet);
         addVerifyBoolean(exceptions, closeSession, CLOSE_SESSION);
-        addVerifyNumber(exceptions, connectTimeout, Inputs.SFTPInputs.CONNECTION_TIMEOUT);
+        addVerifyNumber(exceptions, connectionTimeout, Inputs.SFTPInputs.CONNECTION_TIMEOUT);
         addVerifyNumber(exceptions, executionTimeout, Inputs.SFTPInputs.EXECUTION_TIMEOUT);
 
         return exceptions;

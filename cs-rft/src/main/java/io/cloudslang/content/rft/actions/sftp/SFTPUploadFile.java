@@ -72,7 +72,7 @@ public class SFTPUploadFile {
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = CLOSE_SESSION, description = CLOSE_SESSION_DESC) String closeSession,
-                                       @Param(value =  Inputs.SFTPInputs.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectTimeout,
+                                       @Param(value =  Inputs.SFTPInputs.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
                                        @Param(value = Inputs.SFTPInputs.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
         host = defaultIfEmpty(host, EMPTY);
@@ -85,11 +85,11 @@ public class SFTPUploadFile {
         localFile = defaultIfEmpty(localFile, EMPTY);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
-        connectTimeout = defaultIfEmpty(connectTimeout, Constants.CONNECTION_TIMEOUT);
+        connectionTimeout = defaultIfEmpty(connectionTimeout, Constants.CONNECTION_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, Constants.EXECUTION_TIMEOUT);
 
         final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
-                characterSet, closeSession, SFTPOperation.PUT, remoteLocation, localFile, connectTimeout, executionTimeout);
+                characterSet, closeSession, SFTPOperation.PUT, remoteLocation, localFile, connectionTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -110,7 +110,7 @@ public class SFTPUploadFile {
                         .globalSessionObject(globalSessionObject)
                         .characterSet(characterSet)
                         .closeSession(closeSession)
-                        .connectTimeout(connectTimeout)
+                        .connectionTimeout(connectionTimeout)
                         .executionTimeout(executionTimeout)
                         .build())
                 .build();

@@ -73,7 +73,7 @@ public class SFTPGetChildren {
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = CLOSE_SESSION, description = CLOSE_SESSION_DESC) String closeSession,
-                                       @Param(value = Inputs.SFTPInputs.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectTimeout,
+                                       @Param(value = Inputs.SFTPInputs.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
                                        @Param(value = Inputs.SFTPInputs.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
         host = defaultIfEmpty(host, EMPTY);
@@ -86,11 +86,11 @@ public class SFTPGetChildren {
         delimiter = defaultIfEmpty(delimiter,DEFAULT_DELIMITER);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
-        connectTimeout = defaultIfEmpty(connectTimeout, Constants.CONNECTION_TIMEOUT);
+        connectionTimeout = defaultIfEmpty(connectionTimeout, Constants.CONNECTION_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, Constants.EXECUTION_TIMEOUT);
 
         final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
-                characterSet, closeSession, SFTPOperation.GET_CHILDREN, remotePath, delimiter, connectTimeout, executionTimeout);
+                characterSet, closeSession, SFTPOperation.GET_CHILDREN, remotePath, delimiter, connectionTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -107,7 +107,7 @@ public class SFTPGetChildren {
                         .proxyPort(proxyPort)
                         .proxyUsername(proxyUsername)
                         .proxyPassword(proxyPassword)
-                        .connectTimeout(connectTimeout)
+                        .connectionTimeout(connectionTimeout)
                         .executionTimeout(executionTimeout)
                         .privateKey(privateKey)
                         .characterSet(characterSet)

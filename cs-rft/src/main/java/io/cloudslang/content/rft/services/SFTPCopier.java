@@ -46,7 +46,7 @@ public class SFTPCopier {
         String proxyUsername = sftpInputs.getSftpCommonInputs().getProxyUsername();
         String proxyPassword = sftpInputs.getSftpCommonInputs().getProxyPassword();
 
-        String connectTimeout = sftpInputs.getSftpCommonInputs().getConnectTimeout();
+        String connectionTimeout = sftpInputs.getSftpCommonInputs().getConnectionTimeout();
         String executionTimeout = sftpInputs.getSftpCommonInputs().getExecutionTimeout();
 
         MyUserInfo uInfo = new MyUserInfo();
@@ -76,15 +76,15 @@ public class SFTPCopier {
             session.setProxy(proxy);
         }
 
-        if (!connectTimeout.isEmpty()) {
-            int connTimeout = Integer.parseInt(sftpInputs.getSftpCommonInputs().getConnectTimeout());
+        if (!connectionTimeout.isEmpty()) {
+            int connTimeout = Integer.parseInt(sftpInputs.getSftpCommonInputs().getConnectionTimeout());
             session.setTimeout(connTimeout * 1000);
         }
 
         session.connect();
 
         if (!executionTimeout.isEmpty()) {
-            int execTimeout = Integer.parseInt(sftpInputs.getSftpCommonInputs().getConnectTimeout());
+            int execTimeout = Integer.parseInt(sftpInputs.getSftpCommonInputs().getConnectionTimeout());
             session.setTimeout(execTimeout * 1000);
         }
 
