@@ -29,7 +29,7 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.rft.utils.Inputs.FTPInputs.PARAM_TYPE;
+import static io.cloudslang.content.rft.utils.Inputs.FTPInputs.TYPE;
 import static io.cloudslang.content.rft.utils.Constants.*;
 
 public class FTPService {
@@ -168,7 +168,7 @@ public class FTPService {
         } else if (type.equalsIgnoreCase("ascii")) {
             setASCIIFileType(ftp);
         } else {
-            throw new FTPException(String.format(EXCEPTION_INVALID_TYPE, type, PARAM_TYPE));
+            throw new FTPException(String.format(EXCEPTION_INVALID_TYPE, type, TYPE));
         }
     }
 

@@ -38,6 +38,7 @@ public class Constants {
     public static final String DEFAULT_KNOWN_HOSTS_POLICY = "strict";
     public static final Path DEFAULT_KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
     public static final int DEFAULT_PROXY_PORT = 8080;
+    public static final String DEFAULT_DELIMITER = String.valueOf(',');
 
 
     public static final String BOOLEAN_FALSE = "false";
@@ -47,7 +48,7 @@ public class Constants {
     public static final String PORT_21 = "21";
     public static final String CHARACTER_SET_LATIN1 = "ISO-8859-1";
     public static final String CHARACTER_SET_UTF8 = "UTF-8";
-    public static final String CONNECT_TIMEOUT = "60";
+    public static final String CONNECTION_TIMEOUT = "60";
     public static final String EXECUTION_TIMEOUT = "60";
 
     public static final String NEW_LINE = "\n";

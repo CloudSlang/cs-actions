@@ -14,8 +14,6 @@
  */
 package io.cloudslang.content.rft.entities.sftp;
 
-import io.cloudslang.content.rft.actions.sftp.SFTPGet;
-import io.cloudslang.content.rft.utils.Inputs;
 import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
