@@ -40,45 +40,45 @@ public class Inputs extends InputNames {
     }
 
     public static final class FTPInputs{
-        public static final String PARAM_HOSTNAME = "hostName";
-        public static final String PARAM_PORT = "port";
-        public static final String PARAM_LOCAL_FILE = "localFile";
-        public static final String PARAM_REMOTE_FILE = "remoteFile";
-        public static final String PARAM_USER = "user";
-        public static final String PARAM_PASSWORD = "password";
-        public static final String PARAM_TYPE = "type";
-        public static final String PARAM_PASSIVE = "passive";
-        public static final String PARAM_CHARACTER_SET = "characterSet";
+        public static final String HOST_NAME = "hostName";
+        public static final String PORT = "port";
+        public static final String LOCAL_FILE = "localFile";
+        public static final String REMOTE_FILE = "remoteFile";
+        public static final String USER = "user";
+        public static final String PASSWORD = "password";
+        public static final String TYPE = "type";
+        public static final String PASSIVE = "passive";
+        public static final String CHARACTER_SET = "characterSet";
     }
 
     public static final class SFTPInputs {
 
         //COMMON INPUTS
-        public static final String PARAM_HOST = "host";
-        public static final String PARAM_PORT = "port";
-        public static final String PARAM_USERNAME = "username";
-        public static final String PARAM_PASSWORD = "password";
-        public static final String PARAM_PROXY_HOST = "proxyHost";
-        public static final String PARAM_PROXY_PORT = "proxyPort";
-        public static final String PARAM_PROXY_USERNAME = "proxyUsername";
-        public static final String PARAM_PROXY_PASSWORD = "proxyPassword";
-        public static final String PARAM_CONNECTION_TIMEOUT = "connectionTimeout";
-        public static final String PARAM_EXECUTION_TIMEOUT = "executionTimeout";
-        public static final String PARAM_PRIVATE_KEY = "privateKey";
-        public static final String PARAM_CHARACTER_SET = "characterSet";
-        public static final String PARAM_CLOSE_SESSION = "closeSession";
+        public static final String HOST = "host";
+        public static final String PORT = "port";
+        public static final String USERNAME = "username";
+        public static final String PASSWORD = "password";
+        public static final String PROXY_HOST = "proxyHost";
+        public static final String PROXY_PORT = "proxyPort";
+        public static final String PROXY_USERNAME = "proxyUsername";
+        public static final String PROXY_PASSWORD = "proxyPassword";
+        public static final String CONNECTION_TIMEOUT = "connectionTimeout";
+        public static final String EXECUTION_TIMEOUT = "executionTimeout";
+        public static final String PRIVATE_KEY = "privateKey";
+        public static final String CHARACTER_SET = "characterSet";
+        public static final String CLOSE_SESSION = "closeSession";
 
         //GET ONLY
-        public static final String PARAM_REMOTE_FILE = "remoteFile";
-        public static final String PARAM_LOCAL_LOCATION = "localLocation";
+        public static final String REMOTE_FILE = "remoteFile";
+        public static final String LOCAL_LOCATION = "localLocation";
 
         //PUT ONLY
-        public static final String PARAM_REMOTE_LOCATION = "remoteLocation";
-        public static final String PARAM_LOCAL_FILE = "localFile";
+        public static final String REMOTE_LOCATION = "remoteLocation";
+        public static final String LOCAL_FILE = "localFile";
 
         //GET CHILDREN ONLY
-        public static final String PARAM_DELIMITER = "delimiter";
-        public static final String PARAM_REMOTE_PATH = "remotePath";
+        public static final String DELIMITER = "delimiter";
+        public static final String REMOTE_PATH = "remotePath";
 
     }
 

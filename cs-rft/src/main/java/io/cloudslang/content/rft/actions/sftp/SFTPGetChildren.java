@@ -24,6 +24,8 @@ import io.cloudslang.content.rft.entities.sftp.SFTPCommonInputs;
 import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
 import io.cloudslang.content.rft.entities.sftp.SFTPGetChildrenInputs;
 import io.cloudslang.content.rft.services.SFTPService;
+import io.cloudslang.content.rft.utils.Constants;
+import io.cloudslang.content.rft.utils.Inputs;
 import io.cloudslang.content.rft.utils.SFTPOperation;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -57,22 +59,22 @@ public class SFTPGetChildren {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = PARAM_HOST, description = PARAM_HOST_DESC, required = true) String host,
-                                       @Param(value = PARAM_PORT, description = PARAM_PORT_DESC) String port,
-                                       @Param(value = PARAM_USERNAME, description = PARAM_USERNAME_DESC, required = true) String username,
-                                       @Param(value = PARAM_PASSWORD, description = PARAM_PASSWORD_DESC,required = true, encrypted = true) String password,
-                                       @Param(value = PARAM_PROXY_HOST, description = PARAM_PROXY_HOST_DESC) String proxyHost,
-                                       @Param(value = PARAM_PROXY_PORT, description = PARAM_PROXY_PORT_DESC) String proxyPort,
-                                       @Param(value = PARAM_PROXY_USERNAME, description = PARAM_PROXY_USERNAME_DESC) String proxyUsername,
-                                       @Param(value = PARAM_PROXY_PASSWORD, description = PARAM_PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
-                                       @Param(value = PARAM_PRIVATE_KEY, description = PARAM_PRIVATE_KEY_DESC) String privateKey,
-                                       @Param(value = PARAM_REMOTE_PATH, description = PARAM_REMOTE_PATH_DESC, required = true) String remotePath,
-                                       @Param(value = PARAM_DELIMITER, description = PARAM_DELIMITER_DESC) String delimiter,
-                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = PARAM_GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
-                                       @Param(value = PARAM_CHARACTER_SET, description = PARAM_CHARACTER_SET_DESC) String characterSet,
-                                       @Param(value = PARAM_CLOSE_SESSION, description = PARAM_CLOSE_SESSION_DESC) String closeSession,
-                                       @Param(value = PARAM_CONNECTION_TIMEOUT, description = PARAM_CONNECTION_TIMEOUT_DESC) String connectTimeout,
-                                       @Param(value = PARAM_EXECUTION_TIMEOUT, description = PARAM_EXECUTION_TIMEOUT_DESC) String executionTimeout) {
+    public Map<String, String> execute(@Param(value = HOST, description = HOST_NAME, required = true) String host,
+                                       @Param(value = PORT, description = PORT_DESC) String port,
+                                       @Param(value = USERNAME, description = USERNAME_DESC, required = true) String username,
+                                       @Param(value = PASSWORD, description = PASSWORD_DESC,required = true, encrypted = true) String password,
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
+                                       @Param(value = PRIVATE_KEY, description = PRIVATE_KEY_DESC) String privateKey,
+                                       @Param(value = REMOTE_PATH, description = REMOTE_PATH_DESC, required = true) String remotePath,
+                                       @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
+                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
+                                       @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
+                                       @Param(value = CLOSE_SESSION, description = CLOSE_SESSION_DESC) String closeSession,
+                                       @Param(value = Inputs.SFTPInputs.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectTimeout,
+                                       @Param(value = Inputs.SFTPInputs.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
         host = defaultIfEmpty(host, EMPTY);
         port = defaultIfEmpty(port, String.valueOf(DEFAULT_PORT));
@@ -84,8 +86,8 @@ public class SFTPGetChildren {
         delimiter = defaultIfEmpty(delimiter,DEFAULT_DELIMITER);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
-        connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT);
-        executionTimeout = defaultIfEmpty(executionTimeout, EXECUTION_TIMEOUT);
+        connectTimeout = defaultIfEmpty(connectTimeout, Constants.CONNECTION_TIMEOUT);
+        executionTimeout = defaultIfEmpty(executionTimeout, Constants.EXECUTION_TIMEOUT);
 
         final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
                 characterSet, closeSession, SFTPOperation.GET_CHILDREN, remotePath, delimiter, connectTimeout, executionTimeout);
