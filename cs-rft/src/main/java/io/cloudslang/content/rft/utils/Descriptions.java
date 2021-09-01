@@ -69,4 +69,29 @@ public class Descriptions {
         public static final String FILES_DESC = "A list of files in the remote directory.";
         public static final String FOLDERS_DESC = "A list of folders in the remote directory.";
     }
+
+    public static class RemoteCopyDescriptions {
+        public static final String SRC_HOST_DESC = "Command failed.";
+        public static final String SRC_PORT_DESC = "Command failed.";
+        public static final String SRC_USERNAME_DESC = "Command failed.";
+        public static final String SRC_PASSWORD_DESC = "Command failed.";
+        public static final String SRC_PRIVATE_KEY_FILE_DESC = "Command failed.";
+        public static final String SRC_PATH_DESC = "Command failed.";
+        public static final String SRC_PROTOCOL_DESC = "Command failed.";
+        public static final String SRC_TIMEOUT_DESC = "Command failed.";
+        public static final String SRC_CHARACTER_SET_DESC = "Command failed.";
+        public static final String DEST_HOST_DESC = "Command failed.";
+        public static final String DEST_PORT_DESC = "Command failed.";
+        public static final String DEST_USERNAME_DESC = "Command failed.";
+        public static final String DEST_PASSWORD_DESC = "Command failed.";
+        public static final String DEST_PRIVATE_KEY_FILE_DESC = "Command failed.";
+        public static final String DEST_PATH_DESC = "Command failed.";
+        public static final String DEST_PROTOCOL_DESC = "Command failed.";
+        public static final String DEST_TIMEOUT_DESC = "Command failed.";
+        public static final String DEST_CHARACTER_SET_DESC = "Command failed.";
+        public static final String FILE_TYPE_DESC = "Command failed.";
+        public static final String PASSIVE_DESC = "Command failed.";
+
+    }
+
 }

@@ -82,4 +82,27 @@ public class Inputs extends InputNames {
 
     }
 
+    public static final class RemoteCopyInputs {
+        public static final String SRC_HOST = "sourceHost";
+        public static final String SRC_PORT = "sourcePort";
+        public static final String SRC_USERNAME = "sourceUsername";
+        public static final String SRC_PASSWORD = "sourcePassword";
+        public static final String SRC_PRIVATE_KEY_FILE = "sourcePrivateKeyFile";
+        public static final String SRC_PATH = "sourcePath";
+        public static final String SRC_PROTOCOL = "sourceProtocol";
+        public static final String SRC_TIMEOUT = "sourceTimeout";
+        public static final String SRC_CHARACTER_SET = "sourceCharacterSet";
+        public static final String DEST_HOST = "destinationHost";
+        public static final String DEST_PORT = "destinationPort";
+        public static final String DEST_USERNAME = "destinationUsername";
+        public static final String DEST_PASSWORD = "destinationPassword";
+        public static final String DEST_PRIVATE_KEY_FILE = "destinationPrivateKeyFile";
+        public static final String DEST_PATH = "destinationPath";
+        public static final String DEST_PROTOCOL = "destinationProtocol";
+        public static final String DEST_TIMEOUT = "destinationTimeout";
+        public static final String DEST_CHARACTER_SET = "destinationCharacterSet";
+        public static final String FILE_TYPE = "fileType";
+        public static final String PASSIVE = "passive";
+    }
+
 }
