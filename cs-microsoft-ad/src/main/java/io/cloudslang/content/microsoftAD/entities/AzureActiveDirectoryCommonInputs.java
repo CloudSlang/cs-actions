@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class AzureActiveDirectoryCommonInputs {
+
     private final String authToken;
     private final String userPrincipalName;
     private final String userId;

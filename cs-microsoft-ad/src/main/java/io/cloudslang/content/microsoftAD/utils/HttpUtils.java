@@ -27,7 +27,6 @@ import java.net.Proxy;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
-import static io.cloudslang.content.microsoftAD.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
@@ -268,17 +267,15 @@ public class HttpUtils {
     @NotNull
     public static Map<String, String> getOperationResults(@NotNull final Map<String, String> result,
                                                           @NotNull final String successMessage,
-                                                          final String failureMessage,
-                                                          final String document) {
+                                                          final String failureMessage) {
         final Map<String, String> results;
         final String statusCode = result.get(STATUS_CODE);
-        if (Integer.parseInt(statusCode) >= 200 && Integer.parseInt(statusCode) < 300) {
+
+        if (Integer.parseInt(statusCode) >= 200 && Integer.parseInt(statusCode) < 300)
             results = getSuccessResultsMap(successMessage);
-            if (!isEmpty(document))
-                results.put(DOCUMENT, document);
-        } else {
+        else
             results = getFailureResultsMap(failureMessage);
-        }
+
         results.put(STATUS_CODE, statusCode);
         return results;
     }

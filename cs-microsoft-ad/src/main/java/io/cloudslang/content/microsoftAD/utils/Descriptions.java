@@ -53,38 +53,7 @@ public class Descriptions {
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
                 "Default value: UTF-8";
 
-        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
-    }
-
-    public static class GetEmail {
-        public static final String AUTH_TOKEN_DESC = "The authorization token for Office 365.";
-        public static final String EMAIL_ADDRESS_DESC = "The email address on which to perform the action.";
-        public static final String USER_PRINCIPAL_NAME_DESC = "The email address of the user to perform the action on. " +
-                "The input is mutually exclusive with the userId input.";
-        public static final String USER_ID_DESC = "The ID of the user to perform the action on.";
-        public static final String O_DATA_QUERY_DESC = "Query parameters which can be used to specify and control the amount of data returned " +
-                "in a response specified in 'key1=val1&key2=val2' format. $top and $select options should be not passed for this input because the values" +
-                "for these options can be passed in topQuery and selectQuery inputs." +
-                " Example: &filter=Subject eq 'Test' AND IsRead eq true " +
-                "          &filter=HasAttachments eq true"+
-                "          &search=\"from:help@contoso.com\""+
-                "          &search=\"subject:Test\"";
-        public static final String TOP_QUERY_DESC = "Query parameter use to specify the number of results. Default value: 10";
-        public static final String SELECT_QUERY_DESC = "A list of query parameters in the form of a comma delimited list." +
-                " Example: id,internetMessageHeaders";
-
-        public static final String MESSAGE_ID_DESC = "The ID of the message to retrieve.";
-        public static final String FOLDER_ID_DESC = "The ID of the folder which contains the message to retrieve.";
-
-        public static final String RETURN_RESULT_DESC = "The full API response in case of success, or error message in case of failure.";
-        public static final String DOCUMENT_DESC = "The full API response in case of success.";
-        public static final String STATUS_CODE_DESC = "The HTTP status code for Office 365 API request.";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the message.";
-        public static final String ATTACHMENT_ID_DESC = "The ID of the added attachment.";
-
-        public static final String SUCCESS_DESC = "Email message retrieved successfully.";
-        public static final String FAILURE_DESC = "There was an error while trying to retrieve the email message.";
-
+        public static final String AUTH_TOKEN_DESC = "Authentication token";
     }
 
     public static class GetAuthorizationToken {
@@ -111,74 +80,30 @@ public class Descriptions {
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
     }
 
-    public static class SendMail {
-        public static final String TENANT_NAME_DESC = "Your application tenant.";
-        public static final String MESSAGE_ID_DESC = "The ID of the sent mail.";
-    }
-
-    public static class SendMessage {
-
-        public static final String MESSAGE_ID_DESC = "The ID of the message to send.";
-        public static final String RETURN_RESULT_DESC = "A message is returned in case of success, an error message is returned in case of failure.";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while sending the email.";
-
-    }
-
-    public static class ListMessages {
-        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response containing the messages.";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
-        public static final String FAILURE_DESC = "There was an error while trying to get the messages.";
-        public static final String SUCCESS_DESC = "The request was successfully executed.";
-        public static final String MESSAGE_ID_LIST_DESC = "A comma-separated list of message IDs from the retrieved document.";
-    }
-
-    public static class CreateMessage {
-        public static final String AUTH_TOKEN_DESC = "The Office 365 authorization token.";
-        public static final String USER_PRINCIPAL_NAME_DESC = "The email address of the user to perform the action on." +
-                "The input is mutually exclusive with the 'userId' input.";
-        public static final String USER_ID_DESC = "The ID of the user to perform the action on. The input is mutually exclusive with the " +
-                "'userPrincipalName' input.";
-        public static final String FOLDER_ID_DESC = "The ID of the folder to perform the action on.";
-        public static final String BCCC_RECIPIENTS_DESC = "The Bcc recipients for the message. Updatable only if 'isDraft' = true.";
-        public static final String CATEGORIES_DESC = "The categories associated with the message.";
-        public static final String CC_RECIPIENTS_DESC = "The Cc recipients for the message. Updatable only if 'isDraft' = true.";
-        public static final String FROM_DESC = "The mailbox owner and sender of the message. Updatable only if isDraft = true. Must" +
-                "correspond to the actual mailbox used.";
-        public static final String IMPORTANCE_DESC = "The importance of the message. The possible values are: 'Low', 'Normal', 'High'.";
-        public static final String INFERENCE_CLASSIFICATION_DESC = "The classification of the message for the user, based on inferred relevance or\n" +
-                "importance, or on an explicit override. The possible values are: 'focused' or 'other'.";
-        public static final String INTERNET_MESSAGE_ID_DESC = "The message ID in the format specified by RFC2822. Updatable only if 'isDraft' = true.";
-        public static final String IS_READ_DESC = "Indicates whether the message has been read.";
-        public static final String REPLY_TO_DESC = "The email addresses to use when replying. Updatable only if 'isDraft' = true.";
-        public static final String SENDER_DESC = "The account that is actually used to generate the message. Updatable only if 'isDraft' = true,\n" +
-                "and when sending a message from a shared mailbox, or sending a message as a delegate.\n" +
-                "In any case, the value must correspond to the actual mailbox used.";
-        public static final String TO_RECIPIENTS_DESC = "The 'To recipients' for the message. Updatable only if 'isDraft' = true.";
-        public static final String BODY_DESC = "The body of the message. Updatable only if 'isDraft' = true.";
-        public static final String IS_DELIVERY_RECEIPT_REQUESTED_DESC = "Indicates whether a delivery receipt is requested for the message.";
-        public static final String IS_READ_RECEIPT_REQUESTED_DESC = "Indicates whether a read receipt is requested for the message.";
-        public static final String SUBJECT_DESC = "The subject of the message. Updatable only if 'isDraft' = true.";
-        public static final String CREATE_MESSAGE_EXCEPTION_DESC = "An error message in case there was an error while creating the message.";
-        public static final String CREATE_MESSAGE_RETURN_RESULT_DESC = "The body of the created message.";
-        public static final String DOCUMENT_DESC = "The full API response in case of success";
-        public static final String MESSAGE_ID_DESC = "The Id of the created message";
-    }
-
-    public static class MoveMessage {
-        public static final String DESTINATION_ID_DESC = "The destination folder ID, or a well-known folder name.";
-    }
-
     public static class CreateUser {
+
+        //Description
+        public static final String DESC = "Create a new user. The request body contains the user to create. At a " +
+                "minimum, you must specify the required properties for the user. You can optionally specify any " +
+                "other writable properties.";
+
+        //Inputs
         public static final String ACCOUNT_ENABLED_DESC = "true if the account is enabled; otherwise, false.";
         public static final String DISPLAY_NAME_DESC = "The name to display in the address book for the user.";
-        public static final String ON_PREMISES_IMMUTABLE_ID_DESC = "Only needs to be specified when creating a new user account if you are using " +
-                "a federated domain for the user's userPrincipalName (UPN) property.";
+        public static final String ON_PREMISES_IMMUTABLE_ID_DESC = "Only needs to be specified when creating a new " +
+                "user account if you are using a federated domain for the user's userPrincipalName (UPN) property.";
         public static final String MAIL_NICKNAME_DESC = "The mail alias for the user.";
-        public static final String CREATE_USER_PRINCIPAL_NAME_DESC = "The user principal name (someuser@contoso.com).";
-        public static final String FORCE_CHANGE_PASSWORD_DESC = "A boolean value to specify if the user must change his password on the next login.";
-        public static final String CREATE_USER_PASSWORD_DESC = "The password for the user. This property is required when a user is created." +
-                " It can be updated, but the user will be required to change the password on the next login." +
-                " The password must satisfy minimum requirements as specified by the user’s passwordPolicies property. By default, a strong password is required.";
+        public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name (someuser@contoso.com).";
+        public static final String FORCE_CHANGE_PASSWORD_DESC = "true if the user must change her " +
+                "password on the next login; otherwise false. If not set, default is false. NOTE: For Azure B2C " +
+                "tenants, set to false and instead use custom policies and user flows to force password reset at " +
+                "first sign in.";
+        public static final String PASSWORD_DESC = "The password for the user. This property is required when a user " +
+                "is created. It can be updated, but the user will be required to change the password on the next " +
+                "login. The password must satisfy minimum requirements as specified by the user’s passwordPolicies " +
+                "property. By default, a strong password is required.";
+
+        //Outputs
         public static final String CREATE_USER_RETURN_RESULT_DESC = "If successful, returns the complete API response.";
         public static final String CREATE_USER_DOCUMENT_DESC = "The full API response in case of success";
         public static final String CREATE_USER_EXCEPTION_DESC = "An error message in case there was an error while creating the user.";
@@ -212,34 +137,5 @@ public class Descriptions {
         public static final String LIST_USERS_RESULT_DESC = "If successful, returns the complete API response.";
         public static final String LIST_USERS_DOCUMENT_DESC = "The full API response in case of success";
         public static final String LIST_USERS_EXCEPTION_DESC = "An error message in case there was an error while retrieving the list of user objects.";
-    }
-
-    public static class AddAttachment {
-        public static final String FILE_PATH_DESC = "The absolute path to the file that will be attached.";
-        public static final String CONTENT_NAME_DESC = "The name of the file that will be attached.";
-        public static final String CONTENT_BYTES_DESC = "The representation in bytes of the file that will be attached.";
-        public static final String ADD_ATTACHMENT_RETURN_RESULT_DESC = "If the attachment is successful, returns the complete API response.";
-        public static final String ADD_ATTACHMENT_EXCEPTION_DESC = "An error message in case there was an error adding the attachment.";
-        public static final String SUCCESS_DESC = "Attachment was added successfully.";
-        public static final String FAILURE_DESC = "There was an error while trying to add the attachment.";
-    }
-
-    public static class ListAttachments {
-        public static final String ATTACHMENT_ID_DESC = "A list of attachment id's delimited by a comma";
-        public static final String SUCCESS_DESC = "Attachment ID retrieved successfully.";
-        public static final String FAILURE_DESC = "There was an error while trying to retrieve the attachment id of the message.";
-    }
-
-    public static class GetAttachments {
-        public static final String ATTACHMENT_ID_DESC = "The ID of the attachment to be retrieved.";
-        public static final String FILE_PATH_DESC = "The file path under which the attachment will be downloaded. The attachment will not be downloaded if a path is not provided.";
-
-        public static final String CONTENT_NAME_DESC = "The name of the attachment.";
-        public static final String CONTENT_TYPE_DESC = "The content type of the attachment.";
-        public static final String CONTENT_BYTES_DESC = "The bytes contained in the attachment.";
-        public static final String CONTENT_SIZE_DESC = "The size of the attachment.";
-
-        public static final String SUCCESS_DESC = "Attachment was retrieved successfully.";
-        public static final String FAILURE_DESC = "There was an error while trying to retrieve the attachment.";
     }
 }
