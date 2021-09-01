@@ -22,7 +22,6 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.sftp.SFTPCommonInputs;
 import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
-import io.cloudslang.content.rft.entities.sftp.SFTPGetInputs;
 import io.cloudslang.content.rft.entities.sftp.SFTPPutInputs;
 import io.cloudslang.content.rft.services.SFTPService;
 import io.cloudslang.content.rft.utils.SFTPOperation;
@@ -35,20 +34,17 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUA
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
-import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.PARAM_CLOSE_SESSION_DESC;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
-import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.PARAM_CLOSE_SESSION;
 import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class SFTPPut {
+public class SFTPUploadFile {
 
     @Action(name = "SFTP Put Operation",
             outputs = {
@@ -64,25 +60,34 @@ public class SFTPPut {
                                        @Param(value = PARAM_PORT, description = PARAM_PORT_DESC) String port,
                                        @Param(value = PARAM_USERNAME, description = PARAM_USERNAME_DESC) String username,
                                        @Param(value = PARAM_PASSWORD, description = PARAM_PASSWORD_DESC) String password,
+                                       @Param(value = PARAM_PROXY_HOST, description = PARAM_PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PARAM_PROXY_PORT, description = PARAM_PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PARAM_PROXY_USERNAME, description = PARAM_PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PARAM_PROXY_PASSWORD, description = PARAM_PROXY_PASSWORD_DESC) String proxyPassword,
                                        @Param(value = PARAM_PRIVATE_KEY, description = PARAM_PRIVATE_KEY_DESC) String privateKey,
                                        @Param(value = PARAM_REMOTE_LOCATION, description = PARAM_REMOTE_LOCATION_DESC) String remoteLocation,
                                        @Param(value = PARAM_LOCAL_FILE, description = PARAM_LOCAL_FILE_DESC) String localFile,
-                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = PARAM_LOCAL_FILE_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
+                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = PARAM_GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = PARAM_CHARACTER_SET, description = PARAM_CHARACTER_SET_DESC) String characterSet,
-                                       @Param(value = PARAM_CLOSE_SESSION, description = PARAM_CLOSE_SESSION_DESC) String closeSession) {
+                                       @Param(value = PARAM_CLOSE_SESSION, description = PARAM_CLOSE_SESSION_DESC) String closeSession,
+                                       @Param(value = PARAM_CONNECT_TIMEOUT, description = PARAM_CONNECT_TIMEOUT_DESC) String connectTimeout,
+                                       @Param(value = PARAM_EXECUTION_TIMEOUT, description = PARAM_EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
         host = defaultIfEmpty(host, EMPTY);
         port = defaultIfEmpty(port, String.valueOf(DEFAULT_PORT));
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
+        proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
         privateKey = defaultIfEmpty(privateKey, EMPTY);
         remoteLocation = defaultIfEmpty(remoteLocation, EMPTY);
         localFile = defaultIfEmpty(localFile, EMPTY);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
+        connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT);
+        executionTimeout = defaultIfEmpty(executionTimeout, EXECUTION_TIMEOUT);
 
-
-        final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, privateKey, characterSet, closeSession, SFTPOperation.PUT, remoteLocation, localFile);
+        final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
+                characterSet, closeSession, SFTPOperation.PUT, remoteLocation, localFile, connectTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -95,14 +100,20 @@ public class SFTPPut {
                         .port(port)
                         .username(username)
                         .password(password)
+                        .proxyHost(proxyHost)
+                        .proxyPort(proxyPort)
+                        .proxyUsername(proxyUsername)
+                        .proxyPassword(proxyPassword)
                         .privateKey(privateKey)
                         .globalSessionObject(globalSessionObject)
                         .characterSet(characterSet)
                         .closeSession(closeSession)
+                        .connectTimeout(connectTimeout)
+                        .executionTimeout(executionTimeout)
                         .build())
                 .build();
 
-        return new SFTPService().execute(sftpPutInputs,SFTPOperation.PUT);
+        return new SFTPService().execute(sftpPutInputs, SFTPOperation.PUT);
 
     }
 }

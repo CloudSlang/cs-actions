@@ -41,6 +41,14 @@ public class SFTPCopier {
         String privateKey = sftpInputs.getSftpCommonInputs().getPrivateKey();
         String password = sftpInputs.getSftpCommonInputs().getPassword();
 
+        String proxyHost = sftpInputs.getSftpCommonInputs().getProxyHost();
+        int proxyPort = Integer.parseInt(sftpInputs.getSftpCommonInputs().getProxyPort());
+        String proxyUsername = sftpInputs.getSftpCommonInputs().getProxyUsername();
+        String proxyPassword = sftpInputs.getSftpCommonInputs().getProxyPassword();
+
+        String connectTimeout = sftpInputs.getSftpCommonInputs().getConnectTimeout();
+        String executionTimeout = sftpInputs.getSftpCommonInputs().getExecutionTimeout();
+
         MyUserInfo uInfo = new MyUserInfo();
         uInfo.setPasswd(password);
         uInfo.setPromptYesNo(true);
@@ -59,7 +67,26 @@ public class SFTPCopier {
         session = jsch.getSession(sftpInputs.getSftpCommonInputs().getUsername(), sftpInputs.getSftpCommonInputs().getHost(), Integer.parseInt(sftpInputs.getSftpCommonInputs().getPort()));
         session.setConfig("PreferredAuthentications", "publickey,keyboard-interactive,password");
         session.setUserInfo(ui);
+
+        if (!proxyHost.isEmpty()) {
+            ProxyHTTP proxy = new ProxyHTTP(proxyHost, proxyPort);
+            if ((!proxyUsername.isEmpty()) && (!proxyPassword.isEmpty())) {
+                proxy.setUserPasswd(proxyUsername, proxyPassword);
+            }
+            session.setProxy(proxy);
+        }
+
+        if (!connectTimeout.isEmpty()) {
+            int connTimeout = Integer.parseInt(sftpInputs.getSftpCommonInputs().getConnectTimeout());
+            session.setTimeout(connTimeout * 1000);
+        }
+
         session.connect();
+
+        if (!executionTimeout.isEmpty()) {
+            int execTimeout = Integer.parseInt(sftpInputs.getSftpCommonInputs().getConnectTimeout());
+            session.setTimeout(execTimeout * 1000);
+        }
 
         Channel ochannel = session.openChannel("sftp");
         ochannel.connect();
@@ -227,7 +254,7 @@ public class SFTPCopier {
         result.put("returnCode", "0");
         result.put("files", files);
         result.put("folders", folders);
-        result.put("returnResult",returnResult);
+        result.put("returnResult", returnResult);
     }
 
 }

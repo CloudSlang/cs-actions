@@ -21,7 +21,6 @@ import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
 import io.cloudslang.content.rft.services.SFTPCopier;
 import io.cloudslang.content.rft.services.SFTPService;
 import io.cloudslang.content.rft.utils.CacheUtils;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,13 +48,13 @@ public class SFTPTest {
     private GlobalSessionObject<Map<String,SFTPConnection>> globalSessionObjectMock;
 
     private SFTPGet sftpGet;
-    private SFTPPut sftpPut;
+    private SFTPUploadFile sftpUploadFile;
     private SFTPGetChildren sftpGetChildren;
 
     @Before
     public void setUp()  {
         sftpGet = new SFTPGet();
-        sftpPut = new SFTPPut();
+        sftpUploadFile = new SFTPUploadFile();
         sftpGetChildren = new SFTPGetChildren();
     }
 

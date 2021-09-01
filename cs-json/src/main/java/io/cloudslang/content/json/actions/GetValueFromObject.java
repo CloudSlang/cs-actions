@@ -113,9 +113,12 @@ public class GetValueFromObject {
 
     private JsonNode getObject(JsonNode jsonObject, String key, int startIndex) throws Exception {
 
-        if (key.contains("[") && key.contains("]"))
+        if (key.matches("([\"'])(?:(?=(\\\\?))\\2.)*?\\1"))
+            return getValue(jsonObject, key.trim().substring(1, key.length() - 1));
+
+        if (key.contains("[") && key.contains("]") || (key.contains("."))) {
             keys = key.split(ESCAPED_SLASH + ".");
-        else
+        } else
             return getValue(jsonObject, key);
 
         if (startIndex >= keys.length) {
