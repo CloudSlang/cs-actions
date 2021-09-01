@@ -47,13 +47,13 @@ public class SFTPTest {
     @Mock
     private GlobalSessionObject<Map<String,SFTPConnection>> globalSessionObjectMock;
 
-    private SFTPGet sftpGet;
+    private SFTPDownloadFile sftpDownloadFile;
     private SFTPUploadFile sftpUploadFile;
     private SFTPGetChildren sftpGetChildren;
 
     @Before
     public void setUp()  {
-        sftpGet = new SFTPGet();
+        sftpDownloadFile = new SFTPDownloadFile();
         sftpUploadFile = new SFTPUploadFile();
         sftpGetChildren = new SFTPGetChildren();
     }

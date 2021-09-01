@@ -32,7 +32,7 @@ public class SFTPCommonInputs implements IHasFTPOperation {
     private final String proxyPort;
     private final String proxyUsername;
     private final String proxyPassword;
-    private final String connectTimeout;
+    private final String connectionTimeout;
     private final String executionTimeout;
     private final String privateKey;
     private final String characterSet;
@@ -40,8 +40,8 @@ public class SFTPCommonInputs implements IHasFTPOperation {
     private GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject;
 
 
-    @java.beans.ConstructorProperties({"host", "port", "username", "password", "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "connectTimeout", "executionTimeout","privateKey", "globalSessionObject", "characterSet", "closeSession"})
-    public SFTPCommonInputs(String host, String port, String username, String password, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword, String connectTimeout, String executionTimeout, String privateKey, GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject, String characterSet, String closeSession) {
+    @java.beans.ConstructorProperties({"host", "port", "username", "password", "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "connectionTimeout", "executionTimeout","privateKey", "globalSessionObject", "characterSet", "closeSession"})
+    public SFTPCommonInputs(String host, String port, String username, String password, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword, String connectionTimeout, String executionTimeout, String privateKey, GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject, String characterSet, String closeSession) {
         this.host = host;
         this.port = port;
         this.username = username;
@@ -50,7 +50,7 @@ public class SFTPCommonInputs implements IHasFTPOperation {
         this.proxyPort = proxyPort;
         this.proxyUsername = proxyUsername;
         this.proxyPassword = proxyPassword;
-        this.connectTimeout = connectTimeout;
+        this.connectionTimeout = connectionTimeout;
         this.executionTimeout = executionTimeout;
         this.privateKey = privateKey;
         this.globalSessionObject = globalSessionObject;
@@ -105,8 +105,8 @@ public class SFTPCommonInputs implements IHasFTPOperation {
     }
 
     @NotNull
-    public String getConnectTimeout() {
-        return connectTimeout;
+    public String getConnectionTimeout() {
+        return connectionTimeout;
     }
 
     @NotNull
@@ -152,7 +152,7 @@ public class SFTPCommonInputs implements IHasFTPOperation {
         private String proxyPort = EMPTY;
         private String proxyUsername = EMPTY;
         private String proxyPassword = EMPTY;
-        private String connectTimeout = EMPTY;
+        private String connectionTimeout = EMPTY;
         private String executionTimeout = EMPTY;
         private String privateKey = EMPTY;
         private String characterSet = EMPTY;
@@ -211,8 +211,8 @@ public class SFTPCommonInputs implements IHasFTPOperation {
         }
 
         @NotNull
-        public SFTPCommonInputs.SFTPCommonInputsBuilder connectTimeout(@NotNull final String connectTimeout) {
-            this.connectTimeout = connectTimeout;
+        public SFTPCommonInputs.SFTPCommonInputsBuilder connectionTimeout(@NotNull final String connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
             return this;
         }
 
@@ -248,7 +248,7 @@ public class SFTPCommonInputs implements IHasFTPOperation {
         }
 
         public SFTPCommonInputs build() {
-            return new SFTPCommonInputs(host, port, username, password, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeout, executionTimeout, privateKey, globalSessionObject, characterSet, closeSession);
+            return new SFTPCommonInputs(host, port, username, password, proxyHost, proxyPort, proxyUsername, proxyPassword, connectionTimeout, executionTimeout, privateKey, globalSessionObject, characterSet, closeSession);
         }
     }
 }
