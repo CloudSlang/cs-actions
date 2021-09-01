@@ -20,24 +20,20 @@ import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.microsoftAD.utils.Constants.FILE_PATH;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.PASSWORD;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.USERNAME;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateMessage.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.*;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.EmailInputs.*;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.MoveMessage.DESTINATION_ID;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.omg.PortableServer.IdAssignmentPolicyValue.USER_ID;
 
 public final class InputsValidation {
 
@@ -54,69 +50,6 @@ public final class InputsValidation {
             addVerifyNotNullOrEmpty(exceptionMessages, clientSecret, CLIENT_SECRET);
         }
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
-        return exceptionMessages;
-    }
-
-    @NotNull
-    public static List<String> verifyGetMessageInputs(@Nullable final String messageId,
-                                                      @Nullable final String userPrincipalName,
-                                                      @Nullable final String userId,
-                                                      @Nullable final String proxyPort,
-                                                      @Nullable final String trust_all_roots,
-                                                      @Nullable final String connectTimeout,
-                                                      @Nullable final String socketTimeout,
-                                                      @Nullable final String keepAlive,
-                                                      @Nullable final String connectionsMaxPerRoute,
-                                                      @Nullable final String connectionsMaxTotal) {
-
-        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trust_all_roots,
-                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-
-        addVerifyNotNullOrEmpty(exceptionMessages, messageId, MESSAGE_ID);
-
-        return exceptionMessages;
-    }
-
-    @NotNull
-    public static List<String> verifySendEmailInputs(@Nullable final String clientId,
-                                                     @NotNull final String proxyPort,
-                                                     @Nullable final String userPrincipalName,
-                                                     @Nullable final String userId,
-                                                     @Nullable final String trust_all_roots,
-                                                     @Nullable final String connectTimeout,
-                                                     @Nullable final String socketTimeout,
-                                                     @Nullable final String keepAlive,
-                                                     @Nullable final String connectionsMaxPerRoute,
-                                                     @Nullable final String connectionsMaxTotal) {
-
-        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trust_all_roots,
-                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-
-        addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
-        addVerifyNotNullOrEmpty(exceptionMessages, clientId, CLIENT_ID);
-
-        return exceptionMessages;
-    }
-
-    @NotNull
-    public static List<String> verifyGetAttachmentInputs(@Nullable final String messageId,
-                                                         @Nullable final String userPrincipalName,
-                                                         @Nullable final String attachmentId,
-                                                         @Nullable final String userId,
-                                                         @Nullable final String proxyPort,
-                                                         @Nullable final String trust_all_roots,
-                                                         @Nullable final String connectTimeout,
-                                                         @Nullable final String socketTimeout,
-                                                         @Nullable final String keepAlive,
-                                                         @Nullable final String connectionsMaxPerRoute,
-                                                         @Nullable final String connectionsMaxTotal) {
-
-        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trust_all_roots,
-                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-
-        addVerifyNotNullOrEmpty(exceptionMessages, messageId, MESSAGE_ID);
-        addVerifyNotNullOrEmpty(exceptionMessages, attachmentId, ATTACHMENT_ID);
-
         return exceptionMessages;
     }
 
@@ -140,28 +73,6 @@ public final class InputsValidation {
         addVerifyBoolean(exceptionMessages, keepAlive, KEEP_ALIVE);
         addVerifyNumber(exceptionMessages, connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE);
         addVerifyNumber(exceptionMessages, connectionsMaxTotal, CONNECTIONS_MAX_TOTAL);
-
-        return exceptionMessages;
-    }
-
-    @NotNull
-    public static List<String> verifyMoveMessageInputs(@Nullable final String userPrincipalName,
-                                                       @Nullable final String userId,
-                                                       @Nullable final String messageId,
-                                                       @Nullable final String destinationId,
-                                                       @Nullable final String proxyPort,
-                                                       @Nullable final String trust_all_roots,
-                                                       @Nullable final String connectTimeout,
-                                                       @Nullable final String socketTimeout,
-                                                       @Nullable final String keepAlive,
-                                                       @Nullable final String connectionsMaxPerRoute,
-                                                       @Nullable final String connectionsMaxTotal) {
-
-        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trust_all_roots,
-                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-
-        addVerifyNotNullOrEmpty(exceptionMessages, messageId, MESSAGE_ID);
-        addVerifyNotNullOrEmpty(exceptionMessages, destinationId, DESTINATION_ID);
 
         return exceptionMessages;
     }
@@ -240,47 +151,6 @@ public final class InputsValidation {
     }
 
     @NotNull
-    public static List<String> verifyCreateMessageInputs(@Nullable final String sender, @Nullable final String importance,
-                                                         @Nullable final String toRecipients, @Nullable final String isRead,
-                                                         @Nullable final String isDeliveryReceiptRequested,
-                                                         @Nullable final String isReadReceiptRequested,
-                                                         @Nullable final String inferenceClassification) {
-        final List<String> exceptionMessages = new ArrayList<>();
-        addVerifyNotNullOrEmpty(exceptionMessages, sender, SENDER);
-        addVerifyNotNullOrEmpty(exceptionMessages, importance, IMPORTANCE);
-        addVerifyNotNullOrEmpty(exceptionMessages, inferenceClassification, INFERENCE_CLASSIFICATION);
-        addVerifyNotNullOrEmpty(exceptionMessages, toRecipients, TO_RECIPIENTS);
-        addVerifyBoolean(exceptionMessages, isRead, IS_READ);
-        addVerifyBoolean(exceptionMessages, isDeliveryReceiptRequested, IS_DELIVERY_RECEIPT_REQUESTED);
-        addVerifyBoolean(exceptionMessages, isReadReceiptRequested, IS_READ_RECEIPT_REQUESTED);
-        return exceptionMessages;
-    }
-
-    @NotNull
-    public static List<String> verifyAddAttachmentInputs(
-            @Nullable final String filePath,
-            @Nullable final String contentName,
-            @Nullable final String contentBytes,
-            @Nullable final String userPrincipalName,
-            @Nullable final String userId,
-            @Nullable final String messageId,
-            @Nullable final String proxyPort,
-            @Nullable final String trust_all_roots,
-            @Nullable final String connectTimeout,
-            @Nullable final String socketTimeout,
-            @Nullable final String keepAlive,
-            @Nullable final String connectionsMaxPerRoute,
-            @Nullable final String connectionsMaxTotal) {
-
-        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trust_all_roots,
-                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        addVerifyAttachmentBytesOrPath(exceptionMessages, filePath, contentName, contentBytes);
-        addVerifyNotNullOrEmpty(exceptionMessages, messageId, MESSAGE_ID);
-
-        return exceptionMessages;
-    }
-
-    @NotNull
     private static List<String> addVerifyUserInputs(@NotNull List<String> exceptions, @Nullable final String userPrincipalName,
                                                     @Nullable final String userId) {
         if (isEmpty(userPrincipalName) && isEmpty(userId)) {
@@ -298,19 +168,7 @@ public final class InputsValidation {
     }
 
     @NotNull
-    private static List<String> addVerifyAttachmentBytesOrPath(@NotNull List<String> exceptions, @Nullable final String filePath, @Nullable final String contentName, @Nullable final String contentBytes) {
-        boolean emptyContentNameAndBytes = isEmpty(contentName) || isEmpty(contentBytes);
-        if (isEmpty(filePath) && emptyContentNameAndBytes) {
-            exceptions.add(EXCEPTION_EMPTY_FILE_PATH_AND_CONTENT_BYTES);
-        } else if (!isEmpty(filePath) && !isValidFile(filePath) && emptyContentNameAndBytes) {
-            exceptions.add(String.format(EXCEPTION_INVALID_FILE, filePath, FILE_PATH));
-        }
-        return exceptions;
-    }
-
-
-    @NotNull
-    private static List<String> addVerifyNotNullOrEmpty(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+    public static List<String> addVerifyNotNullOrEmpty(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         }
@@ -328,7 +186,7 @@ public final class InputsValidation {
     }
 
     @NotNull
-    private static List<String> addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+    public static List<String> addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!isValid(input)) {
@@ -345,10 +203,6 @@ public final class InputsValidation {
             exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
         }
         return exceptions;
-    }
-
-    private static boolean isValidFile(@NotNull final String filePath) {
-        return new File(filePath).exists();
     }
 }
 
