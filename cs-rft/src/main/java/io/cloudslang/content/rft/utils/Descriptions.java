@@ -46,7 +46,7 @@ public class Descriptions {
         public static final String PARAM_PROXY_PORT_DESC = "The proxy server port.";
         public static final String PARAM_PROXY_USERNAME_DESC = "The username used when connecting to the proxy.";
         public static final String PARAM_PROXY_PASSWORD_DESC = "The password used when connecting to the proxy.";
-        public static final String PARAM_CONNECT_TIMEOUT_DESC = "Time in seconds to wait for the connection to complete.";
+        public static final String PARAM_CONNECTION_TIMEOUT_DESC = "Time in seconds to wait for the connection to complete.";
         public static final String PARAM_EXECUTION_TIMEOUT_DESC = "Time in seconds to wait for the operation to complete.";
         public static final String PARAM_PRIVATE_KEY_DESC = "Absolute path for private key file for public/private key authentication.";
         public static final String PARAM_REMOTE_FILE_DESC = "The remote file.";

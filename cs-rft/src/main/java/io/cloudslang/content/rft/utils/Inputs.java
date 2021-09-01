@@ -62,7 +62,7 @@ public class Inputs extends InputNames {
         public static final String PARAM_PROXY_PORT = "proxyPort";
         public static final String PARAM_PROXY_USERNAME = "proxyUsername";
         public static final String PARAM_PROXY_PASSWORD = "proxyPassword";
-        public static final String PARAM_CONNECT_TIMEOUT = "connectTimeout";
+        public static final String PARAM_CONNECTION_TIMEOUT = "connectionTimeout";
         public static final String PARAM_EXECUTION_TIMEOUT = "executionTimeout";
         public static final String PARAM_PRIVATE_KEY = "privateKey";
         public static final String PARAM_CHARACTER_SET = "characterSet";

@@ -69,7 +69,7 @@ public class SFTPDownloadFile {
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = PARAM_GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = PARAM_CHARACTER_SET, description = PARAM_CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = PARAM_CLOSE_SESSION, description = PARAM_CLOSE_SESSION_DESC) String closeSession,
-                                       @Param(value = PARAM_CONNECT_TIMEOUT, description = PARAM_CONNECT_TIMEOUT_DESC) String connectTimeout,
+                                       @Param(value = PARAM_CONNECTION_TIMEOUT, description = PARAM_CONNECTION_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = PARAM_EXECUTION_TIMEOUT, description = PARAM_EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
         host = defaultIfEmpty(host, EMPTY);
