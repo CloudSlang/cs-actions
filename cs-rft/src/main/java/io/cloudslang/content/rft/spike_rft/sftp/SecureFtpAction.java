@@ -13,22 +13,6 @@
  * limitations under the License.
  */
 package io.cloudslang.content.rft.spike_rft.sftp;
-/*
- * @(#)SecureFtpAction.java	11.14 10/07/2006
-*
-* Copyright 2006 Quintegra Solutions. All rights reserved.
-* Quintegra Solutions PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
-*/
-/**
- * <p>
- * Singleton implementation of SFTP commands
- * <p/>
- * </p>
- *
- * @version 1.0, 12/07/2006
- * @author <a href="mailto:bhat@quintegrasolutions.com">Jayanarayana Bhat U </a>
- */
-
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
@@ -41,53 +25,53 @@ public class SecureFtpAction {
     /**
      * connect
      *
-     * @param _userName
-     * @param _password
-     * @param _host
-     * @param _port
-     * @param _timeout
+     * @param username
+     * @param password
+     * @param host
+     * @param port
+     * @param timeout
      * @throws Exception
      */
-    public void connect(String _userName, String _password, String _host, int _port, int _timeout) throws Exception {
+    public void connect(String username, String password, String host, int port, int timeout) throws Exception {
         connectionObj = new Connection();
-        connectionObj.setUserName(_userName);
-        connectionObj.setPassword(_password);
-        connectionObj.setHost(_host);
-        connectionObj.setPort(_port);
-        connectionObj.setTimeout(_timeout);
+        connectionObj.setUserName(username);
+        connectionObj.setPassword(password);
+        connectionObj.setHost(host);
+        connectionObj.setPort(port);
+        connectionObj.setTimeout(timeout);
         connectionObj.connect();
     }
 
     /**
      * Connect with a privateKey
      *
-     * @param _userName
-     * @param _password
-     * @param _privateKey
-     * @param _host
-     * @param _port
-     * @param _timeout
+     * @param username
+     * @param password
+     * @param privateKey
+     * @param host
+     * @param port
+     * @param timeout
      * @throws Exception
      */
-    public void connect(String _userName, String _password, String _privateKey, String _host, int _port, int _timeout) throws Exception {
+    public void connect(String username, String password, String privateKey, String host, int port, int timeout) throws Exception {
         connectionObj = new Connection();
-        connectionObj.setUserName(_userName);
-        connectionObj.setPassword(_password);
-        connectionObj.setHost(_host);
-        connectionObj.setPort(_port);
-        connectionObj.setPrivateKey(_privateKey);
-        connectionObj.setTimeout(_timeout);
+        connectionObj.setUserName(username);
+        connectionObj.setPassword(password);
+        connectionObj.setHost(host);
+        connectionObj.setPort(port);
+        connectionObj.setPrivateKey(privateKey);
+        connectionObj.setTimeout(timeout);
         connectionObj.connect();
     }
 
     /**
      * Connect with an existing ssh session.
      *
-     * @param _session
+     * @param session
      * @throws Exception
      */
-    public void connect(Session _session) throws Exception {
-        connectionObj = new Connection(_session);
+    public void connect(Session session) throws Exception {
+        connectionObj = new Connection(session);
         cachedSession = true; //this session was created elsewhere.
         connectionObj.connect();
     }

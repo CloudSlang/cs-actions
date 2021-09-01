@@ -24,13 +24,6 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-/**
- * </p> Performs a FTP Get/Post (copies a file to/from a remote host using FTP).
- * �Copyright 2008-2017 EntIT Software LLC, a Micro Focus company
- *
- * @author Cristina Nistor
- * @version 2.1, 19 May 2008, modified by Cristina Nistor
- */
 public class FtpCopier extends SimpleCopier {
 
     /**

@@ -14,15 +14,6 @@
  */
 package io.cloudslang.content.rft.spike_rft;
 
-/**
- * </p> Copies a file to/from the local host.
- *
- * @version 1.0, 21 April 2008
- * @author Cristina Nistor
- * @version 2.0, 15 May 2008, modified by Stephen Atwell
- * @version 2.1, 19 May 2008, modified by Cristina Nistor
- */
-
 import com.opsware.pas.content.commons.util.FSUtil;
 import java.io.File;
 

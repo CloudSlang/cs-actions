@@ -22,10 +22,8 @@ import io.cloudslang.content.rft.spike_rft.sftp.SecureFtpAction;
 import java.io.File;
 
 /**
- * </p> Performs a SFTP Get/Put (copies a file to/from a remote host using SFTP).
+ * Performs a SFTP Get/Put (copies a file to/from a remote host using SFTP).
  *
- * @author Cristina Nistor
- * @version 2.2, 19 May 2008, modified by Cristina Nistor
  */
 public class SftpCopier extends SimpleCopier {
 

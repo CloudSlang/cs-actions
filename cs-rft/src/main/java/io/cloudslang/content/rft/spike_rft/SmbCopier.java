@@ -35,10 +35,6 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.HashSet;
 
-/**
- * User: bancl
- * Date: 4/23/2015
- */
 public class SmbCopier extends SimpleCopier {
 
     private String sourceFileName;

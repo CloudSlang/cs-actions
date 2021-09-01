@@ -14,9 +14,6 @@
  */
 package io.cloudslang.content.rft.spike_rft;
 
-/**
- * �Copyright 2008-2017 EntIT Software LLC, a Micro Focus company
- */
 public interface ICopier {
 
     /**

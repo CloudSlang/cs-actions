@@ -29,9 +29,10 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.rft.spike_rft.Constants.*;
 import static io.cloudslang.content.rft.spike_rft.InputsValidation.*;
 import static io.cloudslang.content.rft.utils.Descriptions.FTPDescriptions.*;
+import static io.cloudslang.content.rft.utils.Descriptions.RemoteCopyDescriptions.*;
+import static io.cloudslang.content.rft.utils.Inputs.RemoteCopyInputs.*;
 
 public class RemoteCopyAction {
 
@@ -45,26 +46,30 @@ public class RemoteCopyAction {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = INPUT_SRC_HOST, description = PARAM_HOSTNAME_DESC) String sourceHost,
-                                       @Param(value = INPUT_SRC_PORT, description = PARAM_PORT_DESC) String sourcePort,
-                                       @Param(value = INPUT_SRC_USERNAME, description = PARAM_LOCAL_FILE_DESC) String sourceUsername,
-                                       @Param(value = INPUT_SRC_PASSWORD, description = PARAM_REMOTE_FILE_DESC) String sourcePassword,
-                                       @Param(value = INPUT_SRC_PRIVATE_KEY_FILE, description = PARAM_USER_DESC) String sourcePrivateKeyFile,
-                                       @Param(value = INPUT_SRC_PATH, description = PARAM_PASSWORD_DESC) String sourcePath,
-                                       @Param(value = INPUT_SRC_PROTOCOL, description = PARAM_TYPE_DESC) String sourceProtocol,
-                                       @Param(value = INPUT_SRC_TIMEOUT, description = PARAM_PASSIVE_DESC) String sourceTimeout,
-                                       @Param(value = INPUT_SRC_CHARACTER_SET, description = PARAM_CHARACTER_SET_DESC) String sourceCharacterSet,
-                                       @Param(value = INPUT_DEST_HOST, description = PARAM_HOSTNAME_DESC) String destinationHost,
-                                       @Param(value = INPUT_DEST_PORT, description = PARAM_PORT_DESC) String destinationPort,
-                                       @Param(value = INPUT_DEST_USERNAME, description = PARAM_LOCAL_FILE_DESC) String destinationUsername,
-                                       @Param(value = INPUT_DEST_PASSWORD, description = PARAM_REMOTE_FILE_DESC) String destinationPassword,
-                                       @Param(value = INPUT_DEST_PRIVATE_KEY_FILE, description = PARAM_USER_DESC) String destinationPrivateKeyFile,
-                                       @Param(value = INPUT_DEST_PATH, description = PARAM_PASSWORD_DESC) String destinationPath,
-                                       @Param(value = INPUT_DEST_PROTOCOL, description = PARAM_TYPE_DESC) String destinationProtocol,
-                                       @Param(value = INPUT_DEST_TIMEOUT, description = PARAM_PASSIVE_DESC) String destinationTimeout,
-                                       @Param(value = INPUT_DEST_CHARACTERSET, description = PARAM_CHARACTER_SET_DESC) String destinationCharacterSet,
-                                       @Param(value = INPUT_FILE_TYPE, description = PARAM_CHARACTER_SET_DESC) String fileType,
-                                       @Param(value = INPUT_PASSIVE, description = PARAM_CHARACTER_SET_DESC) String passive) throws Exception {
+    public Map<String, String> execute(@Param(value = SRC_HOST, description = SRC_HOST_DESC) String sourceHost,
+                                       @Param(value = SRC_PORT, description = SRC_PORT_DESC) String sourcePort,
+                                       @Param(value = SRC_USERNAME, description = SRC_USERNAME_DESC, sensitive = true) String sourceUsername,
+                                       @Param(value = SRC_PASSWORD, description = SRC_PASSWORD_DESC) String sourcePassword,
+                                       @Param(value = SRC_PRIVATE_KEY_FILE, description = SRC_PRIVATE_KEY_FILE_DESC) String sourcePrivateKeyFile,
+                                       @Param(value = SRC_PATH, description = SRC_PATH_DESC) String sourcePath,
+                                       @Param(value = SRC_PROTOCOL, description = SRC_PROTOCOL_DESC) String sourceProtocol,
+                                       @Param(value = SRC_TIMEOUT, description = SRC_TIMEOUT_DESC) String sourceTimeout,
+                                       @Param(value = SRC_CHARACTER_SET, description = SRC_CHARACTER_SET_DESC) String sourceCharacterSet,
+                                       @Param(value = DEST_HOST, description = DEST_HOST_DESC) String destinationHost,
+                                       @Param(value = DEST_PORT, description = DEST_PORT_DESC) String destinationPort,
+                                       @Param(value = DEST_USERNAME, description = DEST_USERNAME_DESC) String destinationUsername,
+                                       @Param(value = DEST_PASSWORD, description = DEST_PASSWORD_DESC) String destinationPassword,
+                                       @Param(value = DEST_PRIVATE_KEY_FILE, description = DEST_PRIVATE_KEY_FILE_DESC) String destinationPrivateKeyFile,
+                                       @Param(value = DEST_PATH, description = DEST_PATH_DESC) String destinationPath,
+                                       @Param(value = DEST_PROTOCOL, description = DEST_PROTOCOL_DESC) String destinationProtocol,
+                                       @Param(value = DEST_TIMEOUT, description = DEST_TIMEOUT_DESC) String destinationTimeout,
+                                       @Param(value = DEST_CHARACTER_SET, description = DEST_CHARACTER_SET_DESC) String destinationCharacterSet,
+                                       @Param(value = FILE_TYPE, description = FILE_TYPE_DESC) String fileType,
+                                       @Param(value = PASSIVE, description = PASSIVE_DESC) String passive,
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PARAM_PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC) String proxyPassword) throws Exception {
 
         Map<String, String> results = new HashMap();
 
@@ -109,8 +114,8 @@ public class RemoteCopyAction {
         setCredentials(dest, inputs.getDestinationHost(), inputs.getDestinationPort(), inputs.getDestinationUsername(),
                 inputs.getDestinationPassword(), inputs.getDestinationPrivateKeyFile());
 
-        setAndValidateCharacterSet(src, inputs.getSourceCharacterSet(), INPUT_SRC_CHARACTER_SET);
-        setAndValidateCharacterSet(dest, inputs.getDestinationCharacterSet(), INPUT_DEST_CHARACTERSET);
+        setAndValidateCharacterSet(src, inputs.getSourceCharacterSet(), SRC_CHARACTER_SET);
+        setAndValidateCharacterSet(dest, inputs.getDestinationCharacterSet(), DEST_CHARACTER_SET);
 
         setCustomArgumentForFTP(src, dest, inputs.getSourceProtocol(), inputs.getDestinationProtocol(), inputs.getFileType(),
                 Boolean.parseBoolean(inputs.getPassive()));
@@ -119,8 +124,8 @@ public class RemoteCopyAction {
         setTimeout(dest, inputs.getDestinationTimeout());
 
         src.copyTo(dest, inputs.getSourcePath(), inputs.getDestinationPath());
-        results.put("returnResult", "Copy completed successfully");
-        results.put("returnCode", "0");
+        results.put(RETURN_RESULT, "Copy completed successfully");
+        results.put(RETURN_CODE, "0");
 
         return results;
     }
