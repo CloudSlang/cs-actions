@@ -171,9 +171,9 @@ public class InputsValidation {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!NumberUtilities.isValidInt(input)) {
             exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
+        }else if(Integer.parseInt(input) < 0 ){
+            exceptions.add(String.format(EXCEPTION_INVALID_NEGATIVE_NUMBER, input, inputName));
         }
         return exceptions;
     }
-
-
 }

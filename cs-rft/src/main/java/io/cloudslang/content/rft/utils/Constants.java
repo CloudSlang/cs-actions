@@ -75,6 +75,5 @@ public class Constants {
     public static final String EXCEPTION_UNABLE_TO_STORE = "Unable to store file over SFTP";
     public static final String EXCEPTION_UNABLE_SAVE_SESSION = "The SSH Session could not be saved in the given sessionParam";
     public static final String EXCEPTION_INVALID_NUMBER = "%s for %s input is not a valid number value.";
-
-
+    public static final String EXCEPTION_INVALID_NEGATIVE_NUMBER = "%s for %s input should not be a negative number.";
 }
