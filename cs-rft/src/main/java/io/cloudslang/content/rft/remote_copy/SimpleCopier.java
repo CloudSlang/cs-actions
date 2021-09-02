@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.rft.spike_rft;
+package io.cloudslang.content.rft.remote_copy;
 
 import java.io.File;
 
@@ -31,7 +31,7 @@ public abstract class SimpleCopier implements ICopier {
         if (host.contains(":")) {
             int portNo = Integer.parseInt(host.split(":")[1]);
             if (portNo < 0 || portNo > 65535) {
-                throw new IllegalArgumentException("invalid port number: " + portNo);
+                throw new IllegalArgumentException("Invalid port number: " + portNo);
             }
             return portNo;
         } else {

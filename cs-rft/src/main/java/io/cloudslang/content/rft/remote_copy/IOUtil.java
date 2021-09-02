@@ -17,7 +17,7 @@
 // (powered by Fernflower decompiler)
 //
 
-package io.cloudslang.content.rft.spike_rft;
+package io.cloudslang.content.rft.remote_copy;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

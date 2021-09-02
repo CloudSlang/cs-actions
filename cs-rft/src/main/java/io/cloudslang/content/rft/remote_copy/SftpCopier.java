@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.rft.spike_rft;
+package io.cloudslang.content.rft.remote_copy;
 
 import com.hp.oo.content.commons.util.Address;
 import com.jcraft.jsch.Session;
 import com.opsware.pas.content.commons.util.StringUtils;
-import io.cloudslang.content.rft.spike_rft.sftp.SecureFtpAction;
+import io.cloudslang.content.rft.remote_copy.sftp.SecureFtpAction;
 
 import java.io.File;
 

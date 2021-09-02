@@ -12,24 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.rft.spike_rft;
+package io.cloudslang.content.rft.remote_copy;
 
 import java.io.File;
 
-public class SimpleReader implements IReader {
-    String name;
-    File file;
+public interface IReader {
 
-    SimpleReader(String fileName, File file) {
-        name = fileName;
-        this.file = file;
-    }
+    public String getFileName();
 
-    public String getFileName() {
-        return name;
-    }
-
-    public File getFile() {
-        return file;
-    }
+    public File getFile();
 }

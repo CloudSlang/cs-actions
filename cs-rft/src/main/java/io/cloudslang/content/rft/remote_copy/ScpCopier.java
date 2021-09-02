@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.rft.spike_rft;
+package io.cloudslang.content.rft.remote_copy;
 /**
  * </p> Copies a file to/from/between two remote hosts using SCP.
  *

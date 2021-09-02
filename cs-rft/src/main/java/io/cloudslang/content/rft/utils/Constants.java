@@ -41,6 +41,7 @@ public class Constants {
     public static final String DEFAULT_DELIMITER = String.valueOf(',');
 
 
+    public static final String VERSION = "v2";
     public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
     public static final String BINARY_FILE_TYPE = "binary";

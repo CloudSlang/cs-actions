@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.rft.spike_rft.sftp;
+package io.cloudslang.content.rft.remote_copy.sftp;
 
 import com.jcraft.jsch.*;
 import org.apache.log4j.Logger;

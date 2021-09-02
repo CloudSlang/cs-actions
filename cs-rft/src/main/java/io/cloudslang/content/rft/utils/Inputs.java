@@ -103,6 +103,10 @@ public class Inputs extends InputNames {
         public static final String DEST_CHARACTER_SET = "destinationCharacterSet";
         public static final String FILE_TYPE = "fileType";
         public static final String PASSIVE = "passive";
+        public static final String PROXY_HOST = "passive";
+        public static final String PROXY_PORT = "passive";
+        public static final String PROXY_USERNAME = "passive";
+        public static final String PROXY_PASSWORD = "passive";
     }
 
 }

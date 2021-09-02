@@ -91,6 +91,7 @@ public class Descriptions {
         public static final String DEST_CHARACTER_SET_DESC = "Command failed.";
         public static final String FILE_TYPE_DESC = "Command failed.";
         public static final String PASSIVE_DESC = "Command failed.";
+        public static final String RETURN_RESULT_REMOTE_COPY_DESC = "Command failed.";
 
     }
 

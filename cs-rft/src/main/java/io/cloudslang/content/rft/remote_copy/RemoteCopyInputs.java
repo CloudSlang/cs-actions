@@ -1,4 +1,4 @@
-package io.cloudslang.content.rft.spike_rft;
+package io.cloudslang.content.rft.remote_copy;
 
 public class RemoteCopyInputs {
 
