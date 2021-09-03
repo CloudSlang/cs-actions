@@ -22,6 +22,10 @@ public class RemoteCopyInputs {
     private final String destinationCharacterSet;
     private final String fileType;
     private final String passive;
+    private final String proxyHost;
+    private final String passive;
+    private final String passive;
+    private final String passive;
 
 
     private RemoteCopyInputs(String sourceHost, String sourcePort, String sourceUsername, String sourcePassword, String sourcePrivateKeyFile,

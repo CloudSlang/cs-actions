@@ -34,8 +34,6 @@ public class Inputs extends InputNames {
         public static final String KNOWN_HOSTS_POLICY = "knownHostsPolicy";
         public static final String KNOWN_HOSTS_PATH = "knownHostsPath";
         public static final String TIMEOUT = "timeout";
-        public static final String PROXY_HOST = "proxyHost";
-        public static final String PROXY_PORT = "proxyPort";
 
     }
 
@@ -58,12 +56,7 @@ public class Inputs extends InputNames {
         public static final String PORT = "port";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
-        public static final String PROXY_HOST = "proxyHost";
-        public static final String PROXY_PORT = "proxyPort";
-        public static final String PROXY_USERNAME = "proxyUsername";
-        public static final String PROXY_PASSWORD = "proxyPassword";
-        public static final String CONNECTION_TIMEOUT = "connectionTimeout";
-        public static final String EXECUTION_TIMEOUT = "executionTimeout";
+
         public static final String PRIVATE_KEY = "privateKey";
         public static final String CHARACTER_SET = "characterSet";
         public static final String CLOSE_SESSION = "closeSession";
@@ -103,10 +96,14 @@ public class Inputs extends InputNames {
         public static final String DEST_CHARACTER_SET = "destinationCharacterSet";
         public static final String FILE_TYPE = "fileType";
         public static final String PASSIVE = "passive";
-        public static final String PROXY_HOST = "passive";
-        public static final String PROXY_PORT = "passive";
-        public static final String PROXY_USERNAME = "passive";
-        public static final String PROXY_PASSWORD = "passive";
     }
 
+    public static final class CommonInputs {
+        public static final String PROXY_HOST = "proxyHost";
+        public static final String PROXY_PORT = "proxyPort";
+        public static final String PROXY_USERNAME = "proxyUsername";
+        public static final String PROXY_PASSWORD = "proxyPassword";
+        public static final String CONNECTION_TIMEOUT = "connectionTimeout";
+        public static final String EXECUTION_TIMEOUT = "executionTimeout";
+    }
 }

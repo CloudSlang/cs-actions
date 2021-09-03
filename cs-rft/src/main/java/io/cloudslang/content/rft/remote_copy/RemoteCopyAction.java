@@ -29,14 +29,16 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.DEFAULT_PROXY_PORT;
+import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.RemoteCopyDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
+import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.RemoteCopyInputs.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class RemoteCopyAction {
 
-    @Action(name = "Remote Copy Action",
+    @Action(name = "Remote Copy Action", description = REMOTE_COPY_ACTION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_REMOTE_COPY_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -64,12 +66,14 @@ public class RemoteCopyAction {
                                        @Param(value = DEST_PROTOCOL, description = DEST_PROTOCOL_DESC) String destinationProtocol,
                                        @Param(value = DEST_TIMEOUT, description = DEST_TIMEOUT_DESC) String destinationTimeout,
                                        @Param(value = DEST_CHARACTER_SET, description = DEST_CHARACTER_SET_DESC) String destinationCharacterSet,
-                                       @Param(value = FILE_TYPE, description = FILE_TYPE_DESC) String fileType,
+                                       @Param(value = FILE_TYPE, description = TYPE_DESC) String fileType,
                                        @Param(value = PASSIVE, description = PASSIVE_DESC) String passive,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC) String proxyPassword) {
+                                       @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
+                                       @Param(value = CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
+                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
         proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
         passive = defaultIfEmpty(passive, String.valueOf(Boolean.FALSE));

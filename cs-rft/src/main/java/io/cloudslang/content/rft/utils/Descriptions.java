@@ -23,8 +23,6 @@ public class Descriptions {
         public static final String REMOTE_FILE_DESC = "The remote file.";
         public static final String USER_DESC = "The user to connect as.";
         public static final String PASSWORD_DESC = "The password for user.";
-        public static final String TYPE_DESC = "The type of the file to get (binary or ascii).";
-        public static final String PASSIVE_DESC = "If true, passive connection mode will be enabled.  The default is active connection mode.";
         public static final String CHARACTER_SET_DESC = "The name of the control encoding to use. Default is ISO-8859-1 (Latin-1).";
 
         public static final String FAILURE_DESC = "There was an error during the execution.";
@@ -42,12 +40,6 @@ public class Descriptions {
         public static final String PORT_DESC = "The port to connect to on host.";
         public static final String USERNAME_DESC = "Remote username.";
         public static final String PASSWORD_DESC = "Password to authenticate. If using a private key file this will be used as the passphrase for the file";
-        public static final String PROXY_HOST_DESC = "The proxy server used to access the remote host.";
-        public static final String PROXY_PORT_DESC = "The proxy server port.";
-        public static final String PROXY_USERNAME_DESC = "The username used when connecting to the proxy.";
-        public static final String PROXY_PASSWORD_DESC = "The password used when connecting to the proxy.";
-        public static final String CONNECTION_TIMEOUT_DESC = "Time in seconds to wait for the connection to complete.";
-        public static final String EXECUTION_TIMEOUT_DESC = "Time in seconds to wait for the operation to complete.";
         public static final String PRIVATE_KEY_DESC = "Absolute path for private key file for public/private key authentication.";
         public static final String REMOTE_FILE_DESC = "The remote file.";
         public static final String REMOTE_LOCATION_DESC = "The remote location where the file is to be placed.";
@@ -89,10 +81,20 @@ public class Descriptions {
         public static final String DEST_PROTOCOL_DESC = "Command failed.";
         public static final String DEST_TIMEOUT_DESC = "Command failed.";
         public static final String DEST_CHARACTER_SET_DESC = "Command failed.";
-        public static final String FILE_TYPE_DESC = "Command failed.";
-        public static final String PASSIVE_DESC = "Command failed.";
         public static final String RETURN_RESULT_REMOTE_COPY_DESC = "Command failed.";
+        public static final String REMOTE_COPY_ACTION_DESC = "Command failed.";
 
+    }
+
+    public static class CommonInputsDescriptions {
+        public static final String PROXY_HOST_DESC = "The proxy server used to access the remote host.";
+        public static final String PROXY_PORT_DESC = "The proxy server port.";
+        public static final String PROXY_USERNAME_DESC = "The username used when connecting to the proxy.";
+        public static final String PROXY_PASSWORD_DESC = "The password used when connecting to the proxy.";
+        public static final String CONNECTION_TIMEOUT_DESC = "Time in seconds to wait for the connection to complete.";
+        public static final String EXECUTION_TIMEOUT_DESC = "Time in seconds to wait for the operation to complete.";
+        public static final String PASSIVE_DESC = "If true, passive connection mode will be enabled.  The default is active connection mode.";
+        public static final String TYPE_DESC = "The type of the file to get (binary or ascii).";
     }
 
 }

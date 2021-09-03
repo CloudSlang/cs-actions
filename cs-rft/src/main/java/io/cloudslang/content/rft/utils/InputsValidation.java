@@ -109,8 +109,8 @@ public class InputsValidation {
         addVerifyPort(exceptions, proxyPort);
         addVerifyCharacterSet(exceptions, characterSet);
         addVerifyBoolean(exceptions, closeSession, CLOSE_SESSION);
-        addVerifyNumber(exceptions, connectionTimeout, Inputs.SFTPInputs.CONNECTION_TIMEOUT);
-        addVerifyNumber(exceptions, executionTimeout, Inputs.SFTPInputs.EXECUTION_TIMEOUT);
+        addVerifyNumber(exceptions, connectionTimeout, CONNECTION_TIMEOUT);
+        addVerifyNumber(exceptions, executionTimeout, EXECUTION_TIMEOUT);
 
         return exceptions;
     }

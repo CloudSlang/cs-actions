@@ -20,14 +20,19 @@ import org.apache.log4j.Logger;
 public class Connection {
 
     private static Logger logger = Logger.getLogger(Connection.class);
-    private String userName;
+    private String username;
     private String password;
     private String host;
     private int port = 22;
     private String privateKey;
     private Session session;
     private ChannelSftp secureChannel;
-    private int timeout;
+    private int connectionTimeout;
+    private int executionTimeout;
+    private String proxyHost;
+    private int proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
 
     public Connection() {
 
@@ -78,13 +83,25 @@ public class Connection {
                 }
 
             UserInfo ui = uInfo;
-            session = jsch.getSession(userName, host, port);
+            session = jsch.getSession(username, host, port);
             session.setUserInfo(ui);
             session.setConfig("PreferredAuthentications", "publickey,keyboard-interactive,password");
-            if (timeout > 0)
-                session.connect(timeout);
+
+            if (!proxyHost.isEmpty()) {
+                ProxyHTTP proxy = new ProxyHTTP(proxyHost, proxyPort);
+                if ((!proxyUsername.isEmpty()) && (!proxyPassword.isEmpty())) {
+                    proxy.setUserPasswd(proxyUsername, proxyPassword);
+                }
+                session.setProxy(proxy);
+            }
+
+            if (connectionTimeout > 0)
+                session.connect(connectionTimeout * 1000);
             else
                 session.connect();
+
+            if (executionTimeout > 0)
+                session.setTimeout(executionTimeout * 1000);
         }
         if (connectChannel) {
             Channel channel = session.openChannel("sftp");
@@ -92,14 +109,6 @@ public class Connection {
             secureChannel = (ChannelSftp) channel;
             logger.debug("Connected to sftp server version: " + secureChannel.getServerVersion());
         }
-    }
-
-    public int getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
     }
 
     public String getHost() {
@@ -126,12 +135,12 @@ public class Connection {
         this.privateKey = privateKey;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserName(String username) {
+        this.username = username;
     }
 
     public ChannelSftp getSecureChannel() {
@@ -151,4 +160,53 @@ public class Connection {
             this.port = port;
         }
     }
+
+    public int getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public int getExecutionTimeout() {
+        return executionTimeout;
+    }
+
+    public void setExecutionTimeout(int executionTimeout) {
+        this.executionTimeout = executionTimeout;
+    }
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public void setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+    }
+
+    public int getProxyPort() {
+        return proxyPort;
+    }
+
+    public void setProxyPort(int proxyPort) {
+        this.proxyPort = proxyPort;
+    }
+
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public void setProxyUsername(String proxyUsername) {
+        this.proxyUsername = proxyUsername;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    public void setProxyPassword(String proxyPassword) {
+        this.proxyPassword = proxyPassword;
+    }
+
 }

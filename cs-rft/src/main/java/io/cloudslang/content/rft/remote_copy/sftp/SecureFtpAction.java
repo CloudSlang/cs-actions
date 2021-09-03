@@ -22,45 +22,37 @@ public class SecureFtpAction {
     private boolean cachedSession = false; //by default not using a cached session.
     private Connection connectionObj = null;
 
-    /**
-     * connect
-     *
-     * @param username
-     * @param password
-     * @param host
-     * @param port
-     * @param timeout
-     * @throws Exception
-     */
-    public void connect(String username, String password, String host, int port, int timeout) throws Exception {
+    public void connect(String username, String password, String host, int port, int connectionTimeout, int executionTimeout,
+                        String proxyHost, int proxyPort, String proxyUsername, String proxyPassword) throws Exception {
         connectionObj = new Connection();
         connectionObj.setUserName(username);
         connectionObj.setPassword(password);
         connectionObj.setHost(host);
         connectionObj.setPort(port);
-        connectionObj.setTimeout(timeout);
+        connectionObj.setConnectionTimeout(connectionTimeout);
+        connectionObj.setExecutionTimeout(executionTimeout);
+        connectionObj.setProxyHost(proxyHost);
+        connectionObj.setProxyPort(proxyPort);
+        connectionObj.setProxyUsername(proxyUsername);
+        connectionObj.setProxyPassword(proxyPassword);
         connectionObj.connect();
     }
 
-    /**
-     * Connect with a privateKey
-     *
-     * @param username
-     * @param password
-     * @param privateKey
-     * @param host
-     * @param port
-     * @param timeout
-     * @throws Exception
-     */
-    public void connect(String username, String password, String privateKey, String host, int port, int timeout) throws Exception {
+    public void connect(String username, String password, String privateKey, String host, int port, int connectionTimeout,
+                        int executionTimeout, String proxyHost, int proxyPort, String proxyUsername, String proxyPassword)
+            throws Exception {
         connectionObj = new Connection();
         connectionObj.setUserName(username);
         connectionObj.setPassword(password);
         connectionObj.setHost(host);
         connectionObj.setPort(port);
         connectionObj.setPrivateKey(privateKey);
-        connectionObj.setTimeout(timeout);
+        connectionObj.setConnectionTimeout(connectionTimeout);
+        connectionObj.setExecutionTimeout(executionTimeout);
+        connectionObj.setProxyHost(proxyHost);
+        connectionObj.setProxyPort(proxyPort);
+        connectionObj.setProxyUsername(proxyUsername);
+        connectionObj.setProxyPassword(proxyPassword);
         connectionObj.connect();
     }
 

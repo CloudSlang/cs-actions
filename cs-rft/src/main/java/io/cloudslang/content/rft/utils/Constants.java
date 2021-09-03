@@ -14,17 +14,11 @@
  */
 
 
-
 package io.cloudslang.content.rft.utils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Date: 7/21/2015
- *
- * @author lesant
- */
 public class Constants {
     public static final String EMPTY_STRING = "";
     public static final String NO_ACK_RECEIVED = "No ack received";

@@ -34,9 +34,10 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
+import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.FTPDescriptions.*;
-import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsFTP;
 import static io.cloudslang.content.rft.utils.Inputs.FTPInputs.*;
+import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -64,12 +65,12 @@ public class Put {
                                        @Param(value = PASSIVE, description = PASSIVE_DESC) String passive,
                                        @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet) {
 
-        hostName = defaultIfEmpty(hostName,EMPTY);
+        hostName = defaultIfEmpty(hostName, EMPTY);
         port = defaultIfEmpty(port, PORT_21);
-        localFile = defaultIfEmpty(localFile,EMPTY);
-        remoteFile = defaultIfEmpty(remoteFile,EMPTY);
-        user = defaultIfEmpty(user,EMPTY);
-        password = defaultIfEmpty(password,EMPTY);
+        localFile = defaultIfEmpty(localFile, EMPTY);
+        remoteFile = defaultIfEmpty(remoteFile, EMPTY);
+        user = defaultIfEmpty(user, EMPTY);
+        password = defaultIfEmpty(password, EMPTY);
         type = defaultIfEmpty(type, BINARY_FILE_TYPE);
         passive = defaultIfEmpty(passive, BOOLEAN_FALSE);
         passive = passive.toLowerCase();
@@ -79,7 +80,7 @@ public class Put {
         final List<String> exceptionMessages = verifyInputsFTP(hostName, port, localFile, remoteFile, user, password, type, passive, characterSet);
 
         if (!exceptionMessages.isEmpty()) {
-            Map<String,String> result =  getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE)); //REPLY CODE = 501 SYNTAX ERROR IN PARAMETERS OR ARGUMENTS
+            Map<String, String> result = getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE)); //REPLY CODE = 501 SYNTAX ERROR IN PARAMETERS OR ARGUMENTS
             result.put(FTP_REPLY_CODE, "501");
             result.put(FTP_SESSION_LOG, "");
             return result;

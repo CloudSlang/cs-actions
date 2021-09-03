@@ -15,12 +15,6 @@
 package io.cloudslang.content.rft.remote_copy;
 /**
  * </p> Copies a file to/from/between two remote hosts using SCP.
- *
- * @version 1.0, 21 April 2008
- * @author Cristina Nistor
- * @version 2.0, 15 May 2008, modified by Stephen Atwell
- * @version 2.1, 16 May 2008, modified by Cristina Nistor
- * @version 2.2, 19 May 2008, modified by Cristina Nistor
  */
 
 import com.hp.oo.content.commons.util.Address;
