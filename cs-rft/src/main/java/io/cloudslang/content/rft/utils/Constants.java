@@ -43,8 +43,8 @@ public class Constants {
     public static final String PORT_21 = "21";
     public static final String CHARACTER_SET_LATIN1 = "ISO-8859-1";
     public static final String CHARACTER_SET_UTF8 = "UTF-8";
-    public static final String CONNECTION_TIMEOUT = "60";
-    public static final String EXECUTION_TIMEOUT = "60";
+    public static final String DEFAULT_CONNECTION_TIMEOUT = "60";
+    public static final String DEFAULT_EXECUTION_TIMEOUT = "60";
 
     public static final String NEW_LINE = "\n";
 

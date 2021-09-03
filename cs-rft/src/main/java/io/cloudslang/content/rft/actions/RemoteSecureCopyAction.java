@@ -23,18 +23,17 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.RemoteSecureCopyInputs;
 import io.cloudslang.content.rft.services.RemoteSecureCopyService;
 
+import java.util.Map;
+
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-
-
-import java.util.Map;
-
+import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.rft.utils.Inputs.RemoteSecureCopyInputs.*;
 
 /**

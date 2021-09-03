@@ -67,7 +67,7 @@ public class LocalCopier extends SimpleCopier {
         return CopierFactory.copiers.local.name();
     }
 
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
     }
 }

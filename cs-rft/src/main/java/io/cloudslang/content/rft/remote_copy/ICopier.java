@@ -80,9 +80,14 @@ public interface ICopier {
     public void setVersion(String version);
 
     /**
-     * @param timeout
+     * @param connectionTimeout
      */
-    public void setTimeout(int timeout);
+    public void setConnectionTimeout(int connectionTimeout);
+
+    /**
+     * @param executionTimeout
+     */
+    public void setExecutionTimeout(int executionTimeout);
 
     /**
      * @param protocol

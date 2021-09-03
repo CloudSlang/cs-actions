@@ -24,7 +24,6 @@ import io.cloudslang.content.rft.entities.sftp.SFTPCommonInputs;
 import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
 import io.cloudslang.content.rft.entities.sftp.SFTPPutInputs;
 import io.cloudslang.content.rft.services.SFTPService;
-import io.cloudslang.content.rft.utils.Constants;
 import io.cloudslang.content.rft.utils.SFTPOperation;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -41,8 +40,6 @@ import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.CONNECTION_TIMEOUT;
-import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.EXECUTION_TIMEOUT;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
 import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -88,8 +85,8 @@ public class SFTPUploadFile {
         localFile = defaultIfEmpty(localFile, EMPTY);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
-        connectionTimeout = defaultIfEmpty(connectionTimeout, Constants.CONNECTION_TIMEOUT);
-        executionTimeout = defaultIfEmpty(executionTimeout, Constants.EXECUTION_TIMEOUT);
+        connectionTimeout = defaultIfEmpty(connectionTimeout, DEFAULT_CONNECTION_TIMEOUT);
+        executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
 
         final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
                 characterSet, closeSession, SFTPOperation.PUT, remoteLocation, localFile, connectionTimeout, executionTimeout);

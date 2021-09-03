@@ -9,7 +9,6 @@ public class RemoteCopyInputs {
     private final String sourcePrivateKeyFile;
     private final String sourcePath;
     private final String sourceProtocol;
-    private final String sourceTimeout;
     private final String sourceCharacterSet;
     private final String destinationHost;
     private final String destinationPort;
@@ -18,21 +17,20 @@ public class RemoteCopyInputs {
     private final String destinationPrivateKeyFile;
     private final String destinationPath;
     private final String destinationProtocol;
-    private final String destinationTimeout;
     private final String destinationCharacterSet;
-    private final String fileType;
-    private final String passive;
     private final String proxyHost;
-    private final String passive;
-    private final String passive;
-    private final String passive;
-
+    private final String proxyPort;
+    private final String proxyUsername;
+    private final String proxyPassword;
+    private final String connectionTimeout;
+    private final String executionTimeout;
 
     private RemoteCopyInputs(String sourceHost, String sourcePort, String sourceUsername, String sourcePassword, String sourcePrivateKeyFile,
-                             String sourcePath, String sourceProtocol, String sourceTimeout, String sourceCharacterSet, String destinationHost,
+                             String sourcePath, String sourceProtocol, String sourceCharacterSet, String destinationHost,
                              String destinationPort, String destinationUsername, String destinationPassword, String destinationPrivateKeyFile,
-                             String destinationPath, String destinationProtocol, String destinationTimeout,
-                             String destinationCharacterSet, String fileType, String passive) {
+                             String destinationPath, String destinationProtocol, String destinationCharacterSet,
+                             String proxyHost, String proxyPort, String proxyUsername, String proxyPassword,
+                             String connectionTimeout, String executionTimeout) {
         this.sourceHost = sourceHost;
         this.sourcePort = sourcePort;
         this.sourceUsername = sourceUsername;
@@ -40,7 +38,6 @@ public class RemoteCopyInputs {
         this.sourcePrivateKeyFile = sourcePrivateKeyFile;
         this.sourcePath = sourcePath;
         this.sourceProtocol = sourceProtocol;
-        this.sourceTimeout = sourceTimeout;
         this.sourceCharacterSet = sourceCharacterSet;
         this.destinationHost = destinationHost;
         this.destinationPort = destinationPort;
@@ -49,10 +46,13 @@ public class RemoteCopyInputs {
         this.destinationPrivateKeyFile = destinationPrivateKeyFile;
         this.destinationPath = destinationPath;
         this.destinationProtocol = destinationProtocol;
-        this.destinationTimeout = destinationTimeout;
         this.destinationCharacterSet = destinationCharacterSet;
-        this.fileType = fileType;
-        this.passive = passive;
+        this.proxyHost = proxyHost;
+        this.proxyPort = proxyPort;
+        this.proxyUsername = proxyUsername;
+        this.proxyPassword = proxyPassword;
+        this.connectionTimeout = connectionTimeout;
+        this.executionTimeout = executionTimeout;
     }
 
     public String getSourceHost() {
@@ -81,10 +81,6 @@ public class RemoteCopyInputs {
 
     public String getSourceProtocol() {
         return sourceProtocol;
-    }
-
-    public String getSourceTimeout() {
-        return sourceTimeout;
     }
 
     public String getSourceCharacterSet() {
@@ -119,20 +115,32 @@ public class RemoteCopyInputs {
         return destinationProtocol;
     }
 
-    public String getDestinationTimeout() {
-        return destinationTimeout;
-    }
-
     public String getDestinationCharacterSet() {
         return destinationCharacterSet;
     }
 
-    public String getFileType() {
-        return fileType;
+    public String getProxyHost() {
+        return proxyHost;
     }
 
-    public String getPassive() {
-        return passive;
+    public String getProxyPort() {
+        return proxyPort;
+    }
+
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    public String getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
+    public String getExecutionTimeout() {
+        return executionTimeout;
     }
 
     public static class RemoteCopyBuilder {
@@ -143,7 +151,6 @@ public class RemoteCopyInputs {
         private String sourcePrivateKeyFile;
         private String sourcePath;
         private String sourceProtocol;
-        private String sourceTimeout;
         private String sourceCharacterSet;
         private String destinationHost;
         private String destinationPort;
@@ -152,19 +159,23 @@ public class RemoteCopyInputs {
         private String destinationPrivateKeyFile;
         private String destinationPath;
         private String destinationProtocol;
-        private String destinationTimeout;
         private String destinationCharacterSet;
-        private String fileType;
-        private String passive;
+        private String proxyHost;
+        private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
+        private String connectionTimeout;
+        private String executionTimeout;
 
         public RemoteCopyBuilder() {
         }
 
         public RemoteCopyInputs build() {
             return new RemoteCopyInputs(sourceHost, sourcePort, sourceUsername, sourcePassword, sourcePrivateKeyFile,
-                    sourcePath, sourceProtocol, sourceTimeout, sourceCharacterSet, destinationHost, destinationPort, destinationUsername,
-                    destinationPassword, destinationPrivateKeyFile, destinationPath, destinationProtocol, destinationTimeout,
-                    destinationCharacterSet, fileType, passive);
+                    sourcePath, sourceProtocol, sourceCharacterSet, destinationHost, destinationPort, destinationUsername,
+                    destinationPassword, destinationPrivateKeyFile, destinationPath, destinationProtocol,
+                    destinationCharacterSet, proxyHost, proxyPort, proxyUsername, proxyPassword,
+                    connectionTimeout,executionTimeout);
         }
 
         public RemoteCopyBuilder sourceHost(String sourceHost) {
@@ -199,11 +210,6 @@ public class RemoteCopyInputs {
 
         public RemoteCopyBuilder sourceProtocol(String sourceProtocol) {
             this.sourceProtocol = sourceProtocol;
-            return this;
-        }
-
-        public RemoteCopyBuilder sourceTimeout(String sourceTimeout) {
-            this.sourceTimeout = sourceTimeout;
             return this;
         }
 
@@ -247,23 +253,38 @@ public class RemoteCopyInputs {
             return this;
         }
 
-        public RemoteCopyBuilder destinationTimeout(String destinationTimeout) {
-            this.destinationTimeout = destinationTimeout;
-            return this;
-        }
-
         public RemoteCopyBuilder destinationCharacterSet(String destinationCharacterSet) {
             this.destinationCharacterSet = destinationCharacterSet;
             return this;
         }
 
-        public RemoteCopyBuilder fileType(String fileType) {
-            this.fileType = fileType;
+        public RemoteCopyBuilder proxyHost(String proxyHost) {
+            this.proxyHost = proxyHost;
             return this;
         }
 
-        public RemoteCopyBuilder passive(String passive) {
-            this.passive = passive;
+        public RemoteCopyBuilder proxyPort(String proxyPort) {
+            this.proxyPort = proxyPort;
+            return this;
+        }
+
+        public RemoteCopyBuilder proxyUsername(String proxyUsername) {
+            this.proxyUsername = proxyUsername;
+            return this;
+        }
+
+        public RemoteCopyBuilder proxyPassword(String proxyPassword) {
+            this.proxyPassword = proxyPassword;
+            return this;
+        }
+
+        public RemoteCopyBuilder connectionTimeout(String connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
+        public RemoteCopyBuilder executionTimeout(String executionTimeout) {
+            this.executionTimeout = executionTimeout;
             return this;
         }
     }

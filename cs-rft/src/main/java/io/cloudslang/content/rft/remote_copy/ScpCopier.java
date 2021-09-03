@@ -49,7 +49,8 @@ public class ScpCopier extends SimpleCopier {
 
     protected void getFile(String source, File getFile) throws Exception {
 
-        SCPLocalOperationGet scpOp = new SCPLocalOperationGet(source, host, port, username, password, privateKeyFile, getFile, this, super.timeout);
+        SCPLocalOperationGet scpOp = new SCPLocalOperationGet(source, host, port, username, password, privateKeyFile,
+                getFile, this, connectionTimeout * 1000);
         SSHOperationResult raw = scpOp.exec();  //contains a call to bindOperation()
         if (raw.isTimedOut()) {
             throw new Exception("SCP Operation timed out");
@@ -71,7 +72,7 @@ public class ScpCopier extends SimpleCopier {
 
     protected void putFile(IReader sourceFile, String destination) throws Exception {
         LocalSCPOperationPut scpOp = new LocalSCPOperationPut(sourceFile.getFile(), destination, host, port,
-                username, password, privateKeyFile, sourceFile.getFileName(), super.timeout);
+                username, password, privateKeyFile, sourceFile.getFileName(), connectionTimeout * 1000);
         SSHOperationResult raw = scpOp.exec();  //contains a call to bindOperation()
         if (raw.isTimedOut()) {
             throw new Exception("SCP Operation timed out");
@@ -119,9 +120,10 @@ class SCPLocalOperationGet extends SSHOperation<DefaultSSHSessionCreator, SCPLoc
     private String srcUsername;
     private String srcPassword;
     private String srcPrivateKeyFile;
-    private int timeout;
+    private int connectionTimeout;
 
-    public SCPLocalOperationGet(String srcPath, String srcHost, int port, String srcUsername, String srcPassword, String srcPrivateKeyFile, File dest, ScpCopier exec, int timeout) {
+    public SCPLocalOperationGet(String srcPath, String srcHost, int port, String srcUsername, String srcPassword,
+                                String srcPrivateKeyFile, File dest, ScpCopier exec, int timeout) {
         this(new DefaultSSHSessionCreator(), new SCPLocalProcessor(srcPath, dest, exec, timeout));
         Address address = new Address(srcHost, port);
         this.srcHost = address.getBareHost();
@@ -129,7 +131,7 @@ class SCPLocalOperationGet extends SSHOperation<DefaultSSHSessionCreator, SCPLoc
         this.srcUsername = srcUsername;
         this.srcPassword = srcPassword;
         this.srcPrivateKeyFile = srcPrivateKeyFile;
-        this.timeout = timeout;
+        this.connectionTimeout = timeout;
     }
 
     protected SCPLocalOperationGet(DefaultSSHSessionCreator sessCreator, SCPLocalProcessor channelProc) {
@@ -158,7 +160,7 @@ class SCPLocalOperationGet extends SSHOperation<DefaultSSHSessionCreator, SCPLoc
             result.put(SSHOperation.PK_FILE, srcPrivateKeyFile);
         }
 
-        result.put(SSHOperation.TIMEOUT, String.valueOf(timeout));
+        result.put(SSHOperation.TIMEOUT, String.valueOf(connectionTimeout));
 
         return result;
     }
@@ -168,18 +170,18 @@ class SCPLocalProcessor extends SSHChannelProcessor {
 
     public static final String CHANNELTYPE = "exec";
     protected ChannelExec channel;
-    protected long timeout;
+    protected int connectionTimeout;
     OutputStream out;
     InputStream in;
     ScpCopier parent;
     private String srcPath;
     private File dest;
 
-    public SCPLocalProcessor(String srcPath, File dest, ScpCopier parent, long timeout) {
+    public SCPLocalProcessor(String srcPath, File dest, ScpCopier parent, int connectionTimeout) {
         this.srcPath = srcPath;
         this.dest = dest;
         this.parent = parent;
-        this.timeout = timeout;
+        this.connectionTimeout = connectionTimeout;
         // small hack to handle the input name change from privateKey to privateKeyFile
     }
 
@@ -211,7 +213,7 @@ class SCPLocalProcessor extends SSHChannelProcessor {
             channel.setCommand("scp -f " + getSourceFile());
 
             // connect channel to host
-            channel.connect((int) timeout);
+            channel.connect(connectionTimeout);
             // run the shell simulator (this basically is sending a batch of commands to the ssh server)
 
             return copyFrom();
@@ -363,18 +365,18 @@ class LocalSCPProcessor extends SSHChannelProcessor {
 
     public static final String CHANNELTYPE = "exec";
     protected ChannelExec channel;
-    protected long timeout;
     OutputStream out;
     InputStream in;
     String sourceFileName;
+    private int connectionTimeout;
     private File tmp;
     private String destPath;
 
-    public LocalSCPProcessor(File tmp, String destPath, String sourceFileName, long timeout) {
+    public LocalSCPProcessor(File tmp, String destPath, String sourceFileName, int connectionTimeout) {
         this.tmp = tmp;
         this.destPath = destPath;
         this.sourceFileName = sourceFileName;
-        this.timeout = timeout;
+        this.connectionTimeout = connectionTimeout;
     }
 
     @SuppressWarnings("unchecked")
@@ -412,7 +414,7 @@ class LocalSCPProcessor extends SSHChannelProcessor {
             channel.setCommand("scp -p -t " + getDestinationPath());
 
             // connect channel to host
-            channel.connect((int) timeout);
+            channel.connect(connectionTimeout);
             // run the shell simulator (this basically is sending a batch of commands to the ssh server)
 
             return copyTo();
@@ -523,7 +525,7 @@ class LocalSCPOperationPut extends SSHOperation<DefaultSSHSessionCreator, LocalS
     private String destUsername;
     private String destPassword;
     private String destPrivateKeyFile;
-    private int timeout;
+    private int connectionTimeout;
 
     public LocalSCPOperationPut(File tmp, String destPath, String destHost, int port, String destUsername, String destPassword, String destPrivateKeyFile, String sourceFileName, int timeout) {
         this(new DefaultSSHSessionCreator(), new LocalSCPProcessor(tmp, destPath, sourceFileName, timeout));
@@ -533,7 +535,7 @@ class LocalSCPOperationPut extends SSHOperation<DefaultSSHSessionCreator, LocalS
         this.destUsername = destUsername;
         this.destPassword = destPassword;
         this.destPrivateKeyFile = destPrivateKeyFile;
-        this.timeout = timeout;
+        this.connectionTimeout = timeout;
     }
 
     protected LocalSCPOperationPut(DefaultSSHSessionCreator sessCreator, LocalSCPProcessor channelProc) {
@@ -562,7 +564,7 @@ class LocalSCPOperationPut extends SSHOperation<DefaultSSHSessionCreator, LocalS
             result.put(SSHOperation.PK_FILE, destPrivateKeyFile);
         }
 
-        result.put(SSHOperation.TIMEOUT, String.valueOf(timeout));
+        result.put(SSHOperation.TIMEOUT, String.valueOf(connectionTimeout));
 
         // Kerberos support: deserialize tickets and place them in the binding map
         /*if (!CollectionUtils.isEmpty(tickets)) {

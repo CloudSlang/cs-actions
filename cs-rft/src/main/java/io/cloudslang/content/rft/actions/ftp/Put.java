@@ -36,6 +36,8 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.FTPDescriptions.*;
+import static io.cloudslang.content.rft.utils.Descriptions.FTPDescriptions.FAILURE_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.FTPDescriptions.SUCCESS_DESC;
 import static io.cloudslang.content.rft.utils.Inputs.FTPInputs.*;
 import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;

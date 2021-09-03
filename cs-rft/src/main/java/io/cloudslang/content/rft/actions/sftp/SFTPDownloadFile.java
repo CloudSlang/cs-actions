@@ -24,8 +24,6 @@ import io.cloudslang.content.rft.entities.sftp.SFTPCommonInputs;
 import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
 import io.cloudslang.content.rft.entities.sftp.SFTPGetInputs;
 import io.cloudslang.content.rft.services.SFTPService;
-import io.cloudslang.content.rft.utils.Constants;
-import io.cloudslang.content.rft.utils.Inputs;
 import io.cloudslang.content.rft.utils.SFTPOperation;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -39,7 +37,9 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
+import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
+import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
 import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -60,7 +60,7 @@ public class SFTPDownloadFile {
     public Map<String, String> execute(@Param(value = HOST, description = HOST_NAME, required = true) String host,
                                        @Param(value = PORT, description = PORT_DESC) String port,
                                        @Param(value = USERNAME, description = USERNAME_DESC, required = true) String username,
-                                       @Param(value = PASSWORD, description = PASSWORD_DESC,required = true, encrypted = true) String password,
+                                       @Param(value = PASSWORD, description = PASSWORD_DESC, required = true, encrypted = true) String password,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -71,8 +71,8 @@ public class SFTPDownloadFile {
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = CLOSE_SESSION, description = CLOSE_SESSION_DESC) String closeSession,
-                                       @Param(value = Inputs.SFTPInputs.CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
-                                       @Param(value = Inputs.SFTPInputs.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
+                                       @Param(value = CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
+                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
         host = defaultIfEmpty(host, EMPTY);
         port = defaultIfEmpty(port, String.valueOf(DEFAULT_PORT));
@@ -84,8 +84,8 @@ public class SFTPDownloadFile {
         localLocation = defaultIfEmpty(localLocation, EMPTY);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
-        connectionTimeout = defaultIfEmpty(connectionTimeout, Constants.CONNECTION_TIMEOUT);
-        executionTimeout = defaultIfEmpty(executionTimeout, Constants.EXECUTION_TIMEOUT);
+        connectionTimeout = defaultIfEmpty(connectionTimeout, DEFAULT_CONNECTION_TIMEOUT);
+        executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
 
         final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
                 characterSet, closeSession, SFTPOperation.GET, remoteFile, localLocation, connectionTimeout, executionTimeout);

@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.rft.utils.Constants.*;
+import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.CONNECTION_TIMEOUT;
+import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.EXECUTION_TIMEOUT;
 import static io.cloudslang.content.rft.utils.Inputs.FTPInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.CLOSE_SESSION;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;

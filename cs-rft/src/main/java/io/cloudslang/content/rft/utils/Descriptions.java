@@ -52,9 +52,6 @@ public class Descriptions {
         public static final String CHARACTER_SET_DESC = "The name of the control encoding to use. Examples: UTF-8, EUC-JP, SJIS.  Default is UTF-8.";
         public static final String CLOSE_SESSION_DESC = "Close the SSH session at completion of operation?  Default value is true.  If false the SSH session can be reused by other SFTP commands in the same flow.  Valid values: true, false.";
 
-        public static final String SUCCESS_DESC = "Command completed successfully.";
-        public static final String FAILURE_DESC = "Command failed.";
-
         public static final String RETURN_RESULT_DESC = "Remote file will be copied to local system.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the operation.";
@@ -63,26 +60,38 @@ public class Descriptions {
     }
 
     public static class RemoteCopyDescriptions {
-        public static final String SRC_HOST_DESC = "Command failed.";
-        public static final String SRC_PORT_DESC = "Command failed.";
-        public static final String SRC_USERNAME_DESC = "Command failed.";
-        public static final String SRC_PASSWORD_DESC = "Command failed.";
-        public static final String SRC_PRIVATE_KEY_FILE_DESC = "Command failed.";
-        public static final String SRC_PATH_DESC = "Command failed.";
-        public static final String SRC_PROTOCOL_DESC = "Command failed.";
-        public static final String SRC_TIMEOUT_DESC = "Command failed.";
-        public static final String SRC_CHARACTER_SET_DESC = "Command failed.";
-        public static final String DEST_HOST_DESC = "Command failed.";
-        public static final String DEST_PORT_DESC = "Command failed.";
-        public static final String DEST_USERNAME_DESC = "Command failed.";
-        public static final String DEST_PASSWORD_DESC = "Command failed.";
-        public static final String DEST_PRIVATE_KEY_FILE_DESC = "Command failed.";
-        public static final String DEST_PATH_DESC = "Command failed.";
-        public static final String DEST_PROTOCOL_DESC = "Command failed.";
-        public static final String DEST_TIMEOUT_DESC = "Command failed.";
-        public static final String DEST_CHARACTER_SET_DESC = "Command failed.";
-        public static final String RETURN_RESULT_REMOTE_COPY_DESC = "Command failed.";
-        public static final String REMOTE_COPY_ACTION_DESC = "Command failed.";
+        public static final String SRC_HOST_DESC = "The host where the source file is located.";
+        public static final String SRC_PORT_DESC = "The port for connecting to the source host.";
+        public static final String SRC_USERNAME_DESC = "The username for connecting to the host of the source file.";
+        public static final String SRC_PASSWORD_DESC = "The password for connecting to the host of the source file.";
+        public static final String SRC_PRIVATE_KEY_FILE_DESC = "Absolute path of the private key file for public/private" +
+                " key authentication on the source host.";
+        public static final String SRC_PATH_DESC = "The absolute path to the source file. For the SFTP protocol please " +
+                "use a relative path to the SFTP server root directory.";
+        public static final String SRC_PROTOCOL_DESC = "The protocol used to copy from the source file. \n" +
+                "Valid values: local, SCP, SFTP, SMB3.";
+        public static final String SRC_CHARACTER_SET_DESC = "The name of the control encoding to use with source host " +
+                "for SFTP protocol. \n" +
+                "Examples: UTF-8, EUC-JP, SJIS.";
+        public static final String DEST_HOST_DESC = "The destination host of the transferred file.";
+        public static final String DEST_PORT_DESC = "The port for connecting to the destination host.";
+        public static final String DEST_USERNAME_DESC = "The username for connecting to the destination host.";
+        public static final String DEST_PASSWORD_DESC = "The password for connecting to the destination host.";
+        public static final String DEST_PRIVATE_KEY_FILE_DESC = "Absolute path of the private key file for public/private" +
+                " key authentication on the destination host.";
+        public static final String DEST_PATH_DESC = "The absolute path to the destination file.\n" +
+                "When using the protocol SMB33 the destination path should start with the samba shared folder.\n" +
+                "Example: sambaSharedFolder\\folder1\\folder2\\file.";
+        public static final String DEST_PROTOCOL_DESC = "The protocol used to copy to the destination file.\n" +
+                "Valid values: local, SCP, SFTP, SMB3.";
+        public static final String DEST_CHARACTER_SET_DESC = "The name of the control encoding to use with destination host " +
+                "for SFTP protocol. \n" +
+                "Examples: UTF-8, EUC-JP, SJIS.   \n" +
+                "Default: UTF-8.";
+        public static final String RETURN_RESULT_REMOTE_COPY_DESC = " This is the primary output and it contains the " +
+                "\"Copy completed successfully\" message if the operation successfully completes, or an exception message otherwise.";
+        public static final String REMOTE_COPY_ACTION_DESC = "This operation copies files between two remote machines " +
+                "using different protocols (local, SCP, SFTP, SMB3).";
 
     }
 
@@ -95,6 +104,8 @@ public class Descriptions {
         public static final String EXECUTION_TIMEOUT_DESC = "Time in seconds to wait for the operation to complete.";
         public static final String PASSIVE_DESC = "If true, passive connection mode will be enabled.  The default is active connection mode.";
         public static final String TYPE_DESC = "The type of the file to get (binary or ascii).";
+        public static final String SUCCESS_DESC = "The file was copied successfully.";
+        public static final String FAILURE_DESC = "The file could not be copied.";
     }
 
 }

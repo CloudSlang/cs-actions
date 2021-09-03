@@ -34,32 +34,39 @@ public class SftpCopier extends SimpleCopier {
     private int port;
     private String username;
     private String password;
+    private int connectionTimeout;
+    private int executionTimeout;
+    private String proxyHost;
+    private int proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
     private String privateKeyFile;
     private Session cachedSession;
 
 
     public SftpCopier() {
-
     }
 
-    /**
-     * @return
-     * @throws Exception
-     */
     private SecureFtpAction connect() throws Exception {
         SecureFtpAction action = new SecureFtpAction();
         if (cachedSession != null) {
             action.connect(cachedSession);
         } else if (privateKeyFile != null && privateKeyFile.length() > 0) {
-            action.connect(username, password, privateKeyFile, host, port, timeout);
+            action.connect(username, password, privateKeyFile, host, port, connectionTimeout, executionTimeout, proxyHost,
+                    proxyPort, proxyUsername, proxyPassword);
         } else {
-            action.connect(username, password, host, port, timeout);
+            action.connect(username, password, host, port, connectionTimeout, executionTimeout, proxyHost, proxyPort,
+                    proxyUsername, proxyPassword);
         }
         return action;
     }
 
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public void setExecutionTimeout(int executionTimeout) {
+        this.executionTimeout = executionTimeout;
     }
 
     protected void getFile(String source, File getFile) throws Exception {
@@ -131,5 +138,21 @@ public class SftpCopier extends SimpleCopier {
 
     public String getProtocolName() {
         return CopierFactory.copiers.sftp.name();
+    }
+
+    public void setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+    }
+
+    public void setProxyPort(int proxyPort) {
+        this.proxyPort = proxyPort;
+    }
+
+    public void setProxyUsername(String proxyUsername) {
+        this.proxyUsername = proxyUsername;
+    }
+
+    public void setProxyPassword(String proxyPassword) {
+        this.proxyPassword = proxyPassword;
     }
 }

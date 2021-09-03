@@ -28,7 +28,7 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.rft.utils.Constants.DEFAULT_PROXY_PORT;
+import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.RemoteCopyDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
@@ -55,7 +55,6 @@ public class RemoteCopyAction {
                                        @Param(value = SRC_PRIVATE_KEY_FILE, description = SRC_PRIVATE_KEY_FILE_DESC) String sourcePrivateKeyFile,
                                        @Param(value = SRC_PATH, description = SRC_PATH_DESC) String sourcePath,
                                        @Param(value = SRC_PROTOCOL, description = SRC_PROTOCOL_DESC) String sourceProtocol,
-                                       @Param(value = SRC_TIMEOUT, description = SRC_TIMEOUT_DESC) String sourceTimeout,
                                        @Param(value = SRC_CHARACTER_SET, description = SRC_CHARACTER_SET_DESC) String sourceCharacterSet,
                                        @Param(value = DEST_HOST, description = DEST_HOST_DESC) String destinationHost,
                                        @Param(value = DEST_PORT, description = DEST_PORT_DESC) String destinationPort,
@@ -64,10 +63,7 @@ public class RemoteCopyAction {
                                        @Param(value = DEST_PRIVATE_KEY_FILE, description = DEST_PRIVATE_KEY_FILE_DESC) String destinationPrivateKeyFile,
                                        @Param(value = DEST_PATH, description = DEST_PATH_DESC) String destinationPath,
                                        @Param(value = DEST_PROTOCOL, description = DEST_PROTOCOL_DESC) String destinationProtocol,
-                                       @Param(value = DEST_TIMEOUT, description = DEST_TIMEOUT_DESC) String destinationTimeout,
                                        @Param(value = DEST_CHARACTER_SET, description = DEST_CHARACTER_SET_DESC) String destinationCharacterSet,
-                                       @Param(value = FILE_TYPE, description = TYPE_DESC) String fileType,
-                                       @Param(value = PASSIVE, description = PASSIVE_DESC) String passive,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -76,9 +72,8 @@ public class RemoteCopyAction {
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
         proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
-        passive = defaultIfEmpty(passive, String.valueOf(Boolean.FALSE));
-//        connectionTimeout = defaultIfEmpty(connectionTimeout, Constants.CONNECTION_TIMEOUT);
-//        executionTimeout = defaultIfEmpty(executionTimeout, Constants.EXECUTION_TIMEOUT);
+        connectionTimeout = defaultIfEmpty(connectionTimeout, DEFAULT_CONNECTION_TIMEOUT);
+        executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
 
         RemoteCopyInputs inputs = new RemoteCopyInputs.RemoteCopyBuilder()
                 .sourceHost(sourceHost)
@@ -88,7 +83,6 @@ public class RemoteCopyAction {
                 .sourcePrivateKeyFile(sourcePrivateKeyFile)
                 .sourcePath(sourcePath)
                 .sourceProtocol(sourceProtocol)
-                .sourceTimeout(sourceTimeout)
                 .sourceCharacterSet(sourceCharacterSet)
                 .destinationHost(destinationHost)
                 .destinationPort(destinationPort)
@@ -97,10 +91,13 @@ public class RemoteCopyAction {
                 .destinationPrivateKeyFile(destinationPrivateKeyFile)
                 .destinationPath(destinationPath)
                 .destinationProtocol(destinationProtocol)
-                .destinationTimeout(destinationTimeout)
                 .destinationCharacterSet(destinationCharacterSet)
-                .fileType(fileType)
-                .passive(passive)
+                .proxyHost(proxyHost)
+                .proxyPort(proxyPort)
+                .proxyUsername(proxyUsername)
+                .proxyPassword(proxyPassword)
+                .connectionTimeout(connectionTimeout)
+                .executionTimeout(executionTimeout)
                 .build();
 
         return new RemoteCopyService().execute(inputs);

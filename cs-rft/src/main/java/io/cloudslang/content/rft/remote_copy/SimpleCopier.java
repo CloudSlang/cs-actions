@@ -18,15 +18,11 @@ import java.io.File;
 
 public abstract class SimpleCopier implements ICopier {
 
-    public int timeout;
+    public int connectionTimeout;
+    public int executionTimeout;
     public String protocol;
     public String version = "";
 
-    /**
-     * @param host
-     * @param defaultPort
-     * @return
-     */
     public static int resolvePort(String host, int defaultPort) {
         if (host.contains(":")) {
             int portNo = Integer.parseInt(host.split(":")[1]);
@@ -74,9 +70,12 @@ public abstract class SimpleCopier implements ICopier {
         }
     }
 
-    @Override
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public void setExecutionTimeout(int executionTimeout) {
+        this.executionTimeout = executionTimeout;
     }
 
     protected abstract IReader getFile(String source) throws Exception;//, boolean useTemp) throws Exception;

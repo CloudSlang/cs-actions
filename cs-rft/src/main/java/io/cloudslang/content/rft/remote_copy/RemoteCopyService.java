@@ -20,7 +20,6 @@ public class RemoteCopyService {
         Map<String, String> results = new HashMap();
 
         try {
-
             validateProtocol(inputs.getSourceProtocol());
             validateProtocol(inputs.getDestinationProtocol());
             ICopier src = CopierFactory.getExecutor(inputs.getSourceProtocol());
@@ -31,8 +30,8 @@ public class RemoteCopyService {
             src.setVersion(VERSION);
             dest.setVersion(VERSION);
 
-            checkOptions(inputs.getSourceProtocol(), inputs.getSourceHost(), inputs.getFileType());
-            checkOptions(inputs.getDestinationProtocol(), inputs.getDestinationHost(), inputs.getFileType());
+            checkOptions(inputs.getSourceProtocol(), inputs.getSourceHost());
+            checkOptions(inputs.getDestinationProtocol(), inputs.getDestinationHost());
 
             setCredentials(src, inputs.getSourceHost(), inputs.getSourcePort(), inputs.getSourceUsername(), inputs.getSourcePassword(),
                     inputs.getSourcePrivateKeyFile());
@@ -42,11 +41,13 @@ public class RemoteCopyService {
             setAndValidateCharacterSet(src, inputs.getSourceCharacterSet(), SRC_CHARACTER_SET);
             setAndValidateCharacterSet(dest, inputs.getDestinationCharacterSet(), DEST_CHARACTER_SET);
 
-            setTimeout(src, inputs.getSourceTimeout());
-            setTimeout(dest, inputs.getDestinationTimeout());
+            setConnectionTimeout(src, inputs.getConnectionTimeout());
+            setConnectionTimeout(dest, inputs.getConnectionTimeout());
+            setExecutionTimeout(src, inputs.getExecutionTimeout());
+            setExecutionTimeout(dest, inputs.getExecutionTimeout());
 
             src.copyTo(dest, inputs.getSourcePath(), inputs.getDestinationPath());
-            results.put(RETURN_RESULT, "Copy completed successfully");
+            results.put(RETURN_RESULT, "Copy completed successfully!");
             results.put(RETURN_CODE, "0");
 
         } catch (Exception e) {
@@ -58,9 +59,15 @@ public class RemoteCopyService {
 
     }
 
-    public static void setTimeout(ICopier src, String srcTimeout) {
-        if ((srcTimeout != null) && (srcTimeout.length() > 0)) {
-            src.setTimeout(Integer.parseInt(srcTimeout));
+    public static void setConnectionTimeout(ICopier src, String connectionTimeout) {
+        if ((connectionTimeout != null) && (connectionTimeout.length() > 0)) {
+            src.setConnectionTimeout(Integer.parseInt(connectionTimeout));
+        }
+    }
+
+    public static void setExecutionTimeout(ICopier src, String executionTimeout) {
+        if ((executionTimeout != null) && (executionTimeout.length() > 0)) {
+            src.setExecutionTimeout(Integer.parseInt(executionTimeout));
         }
     }
 
@@ -74,7 +81,7 @@ public class RemoteCopyService {
 
     public enum protocols {local, scp, sftp, smb3}
 
-    public static void checkOptions(String copier, String host, String type) throws Exception {
+    public static void checkOptions(String copier, String host) throws Exception {
         switch (copiers.valueOf(copier)) {
             case local:
                 if (host == null || !host.trim().equalsIgnoreCase("localhost")) {
