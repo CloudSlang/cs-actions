@@ -1,7 +1,10 @@
-package io.cloudslang.content.rft.remote_copy;
+package io.cloudslang.content.rft.services;
 
 import com.opsware.pas.content.commons.util.StringUtils;
+import io.cloudslang.content.rft.remote_copy.CopierFactory;
 import io.cloudslang.content.rft.remote_copy.CopierFactory.copiers;
+import io.cloudslang.content.rft.remote_copy.ICopier;
+import io.cloudslang.content.rft.remote_copy.RemoteCopyInputs;
 
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;

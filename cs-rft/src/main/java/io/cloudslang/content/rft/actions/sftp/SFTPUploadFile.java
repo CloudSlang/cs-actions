@@ -22,7 +22,7 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.sftp.SFTPCommonInputs;
 import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
-import io.cloudslang.content.rft.entities.sftp.SFTPPutInputs;
+import io.cloudslang.content.rft.entities.sftp.SFTPUploadFileInputs;
 import io.cloudslang.content.rft.services.SFTPService;
 import io.cloudslang.content.rft.utils.SFTPOperation;
 import io.cloudslang.content.utils.StringUtilities;
@@ -94,7 +94,7 @@ public class SFTPUploadFile {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
-        SFTPPutInputs sftpPutInputs = SFTPPutInputs.builder()
+        SFTPUploadFileInputs sftpUploadFileInputs = SFTPUploadFileInputs.builder()
                 .remoteLocation(remoteLocation)
                 .localFile(localFile)
                 .sftpCommonInputs(SFTPCommonInputs.builder()
@@ -115,7 +115,7 @@ public class SFTPUploadFile {
                         .build())
                 .build();
 
-        return new SFTPService().execute(sftpPutInputs, SFTPOperation.PUT);
+        return new SFTPService().execute(sftpUploadFileInputs, SFTPOperation.PUT);
 
     }
 }

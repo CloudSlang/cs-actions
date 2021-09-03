@@ -18,12 +18,12 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class SFTPPutInputs implements IHasFTPOperation {
+public class SFTPUploadFileInputs implements IHasFTPOperation {
     private final SFTPCommonInputs sftpCommonInputs;
     private final String remoteLocation;
     private final String localFile;
 
-    public SFTPPutInputs(SFTPCommonInputs sftpCommonInputs, String remoteLocation, String localFile) {
+    public SFTPUploadFileInputs(SFTPCommonInputs sftpCommonInputs, String remoteLocation, String localFile) {
         this.sftpCommonInputs = sftpCommonInputs;
         this.remoteLocation = remoteLocation;
         this.localFile = localFile;
@@ -54,25 +54,25 @@ public class SFTPPutInputs implements IHasFTPOperation {
         }
 
         @NotNull
-        public SFTPPutInputs.SFTPPutInputsBuilder sftpCommonInputs(@NotNull final SFTPCommonInputs sftpCommonInputs){
+        public SFTPUploadFileInputs.SFTPPutInputsBuilder sftpCommonInputs(@NotNull final SFTPCommonInputs sftpCommonInputs){
             this.sftpCommonInputs  = sftpCommonInputs;
             return this;
         }
 
         @NotNull
-        public SFTPPutInputs.SFTPPutInputsBuilder remoteLocation(@NotNull final String remoteLocation){
+        public SFTPUploadFileInputs.SFTPPutInputsBuilder remoteLocation(@NotNull final String remoteLocation){
             this.remoteLocation = remoteLocation;
             return this;
         }
 
         @NotNull
-        public SFTPPutInputs.SFTPPutInputsBuilder localFile(@NotNull final String localFile){
+        public SFTPUploadFileInputs.SFTPPutInputsBuilder localFile(@NotNull final String localFile){
             this.localFile = localFile;
             return this;
         }
 
-        public SFTPPutInputs build(){
-            return new SFTPPutInputs(sftpCommonInputs,remoteLocation,localFile);
+        public SFTPUploadFileInputs build(){
+            return new SFTPUploadFileInputs(sftpCommonInputs,remoteLocation,localFile);
         }
 
 
