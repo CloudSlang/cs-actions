@@ -37,9 +37,11 @@ public class RemoteCopyService {
             checkOptions(inputs.getDestinationProtocol(), inputs.getDestinationHost());
 
             setCredentials(src, inputs.getSourceHost(), inputs.getSourcePort(), inputs.getSourceUsername(), inputs.getSourcePassword(),
-                    inputs.getSourcePrivateKeyFile());
+                    inputs.getSourcePrivateKeyFile(), inputs.getProxyHost(), inputs.getProxyPort(), inputs.getProxyUsername(),
+                    inputs.getProxyPassword());
             setCredentials(dest, inputs.getDestinationHost(), inputs.getDestinationPort(), inputs.getDestinationUsername(),
-                    inputs.getDestinationPassword(), inputs.getDestinationPrivateKeyFile());
+                    inputs.getDestinationPassword(), inputs.getDestinationPrivateKeyFile(), inputs.getProxyHost(),
+                    inputs.getProxyPort(), inputs.getProxyUsername(), inputs.getProxyPassword());
 
             setAndValidateCharacterSet(src, inputs.getSourceCharacterSet(), SRC_CHARACTER_SET);
             setAndValidateCharacterSet(dest, inputs.getDestinationCharacterSet(), DEST_CHARACTER_SET);
@@ -100,7 +102,7 @@ public class RemoteCopyService {
         }
     }
 
-    public static void setCredentials(ICopier copier, String host, String portString, String username, String password, String privateKeyFile) {
+    public void setCredentials(ICopier copier, String host, String portString, String username, String password, String privateKeyFile) {
         int port = -1;
         if (portString != null && !portString.isEmpty())
             port = Integer.parseInt(portString);
@@ -111,6 +113,24 @@ public class RemoteCopyService {
             copier.setCredentials(host, port, username, password, privateKeyFile);
         } else {
             copier.setCredentials(host, port, username, password);
+        }
+    }
+
+    public static void setCredentials(ICopier copier, String host, String portString, String username, String password,
+                                      String privateKeyFile, String proxyHost, String proxyPort, String proxyUsername,
+                                      String proxyPassword) {
+        int port = -1;
+        if (portString != null && !portString.isEmpty())
+            port = Integer.parseInt(portString);
+        if (copiers.valueOf(copier.getProtocolName()) == copiers.local) {
+            host = "";
+        }
+        if (privateKeyFile != null && privateKeyFile.length() > 0) {
+            copier.setCredentials(host, port, username, password, privateKeyFile, proxyHost, proxyPort, proxyUsername,
+                    proxyPassword);
+        } else {
+            copier.setCredentials(host, port, username, password, proxyHost, proxyPort, proxyUsername,
+                    proxyPassword);
         }
     }
 

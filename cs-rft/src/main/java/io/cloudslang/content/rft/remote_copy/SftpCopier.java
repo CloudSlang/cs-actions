@@ -21,15 +21,15 @@ import io.cloudslang.content.rft.remote_copy.sftp.SecureFtpAction;
 
 import java.io.File;
 
+import static io.cloudslang.content.rft.utils.Constants.CHARACTER_SET_UTF8;
+
 /**
  * Performs a SFTP Get/Put (copies a file to/from a remote host using SFTP).
  *
  */
 public class SftpCopier extends SimpleCopier {
 
-    public final String DEFAULT_CHARACTERSETNAME = "UTF-8";
-    protected String characterSetName = DEFAULT_CHARACTERSETNAME;
-    File putTmp;
+    protected String characterSetName = CHARACTER_SET_UTF8;
     private String host;
     private int port;
     private String username;
@@ -99,20 +99,24 @@ public class SftpCopier extends SimpleCopier {
     }
 
     @Override
-    public void setCredentials(String host, int port, String username,
-                               String password) throws UnsupportedOperationException {
+    public void setCredentials(String host, int port, String username, String password, String proxyHost, String proxyPort,
+                               String proxyUsername, String proxyPassword) throws UnsupportedOperationException {
         Address address = new Address(host, port);
         this.host = address.getBareHost();
         this.port = address.getPort();
         this.username = username;
         this.password = password;
+        this.proxyHost = proxyHost;
+        this.proxyPort = Integer.valueOf(proxyPort);
+        this.proxyUsername = proxyUsername;
+        this.proxyPassword = proxyPassword;
     }
 
     @Override
-    public void setCredentials(String host, int port, String username,
-                               String password, String privateKeyFile)
+    public void setCredentials(String host, int port, String username, String password, String privateKeyFile,
+                               String proxyHost, String proxyPort, String proxyUsername, String proxyPassword)
             throws UnsupportedOperationException {
-        setCredentials(host, port, username, password);
+        setCredentials(host, port, username, password, proxyHost, proxyPort, proxyUsername, proxyPassword);
         this.privateKeyFile = privateKeyFile;
     }
 

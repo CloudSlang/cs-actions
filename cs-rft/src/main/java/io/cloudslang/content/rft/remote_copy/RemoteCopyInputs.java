@@ -123,9 +123,7 @@ public class RemoteCopyInputs {
         return proxyHost;
     }
 
-    public String getProxyPort() {
-        return proxyPort;
-    }
+    public String getProxyPort() { return proxyPort; }
 
     public String getProxyUsername() {
         return proxyUsername;

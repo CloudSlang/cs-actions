@@ -22,6 +22,10 @@ public abstract class SimpleCopier implements ICopier {
     public int executionTimeout;
     public String protocol;
     public String version = "";
+    public String proxyHost;
+    public int proxyPort;
+    public String proxyUsername;
+    public String proxyPassword;
 
     public static int resolvePort(String host, int defaultPort) {
         if (host.contains(":")) {
@@ -117,6 +121,30 @@ public abstract class SimpleCopier implements ICopier {
     }
 
     @Override
+    public void setCredentials(String host, int port, String username, String password, String proxyHost, String proxyPort,
+                               String proxyUsername, String proxyPassword) throws UnsupportedOperationException {
+        if (host != null && host.length() > 0) {
+            throw new UnsupportedOperationException(getProtocolName() + " does not allow the host to be set.");
+        } else if (username != null && username.length() > 0) {
+            throw new UnsupportedOperationException(getProtocolName() + " does not allow the username to be set.");
+        } else if (password != null && password.length() > 0) {
+            throw new UnsupportedOperationException(getProtocolName() + " does not allow the password to be set.");
+        } else if (port >= 0) {
+            throw new UnsupportedOperationException(getProtocolName() + " does not allow the port to be set.");
+        }
+    }
+
+    @Override
+    public void setCredentials(String host, int port, String username, String password, String privateKeyFile,
+                               String proxyHost, String proxyPort, String proxyUsername, String proxyPassword)
+            throws UnsupportedOperationException {
+        if (privateKeyFile != null && privateKeyFile.length() > 0) {
+            throw new UnsupportedOperationException(getProtocolName() + " does not allow the privateKeyFile to be set.");
+        }
+        setCredentials(host, port, username, password, proxyHost, proxyPort, proxyUsername, proxyPassword);
+    }
+
+    @Override
     public void setCustomArgument(simpleArgument name, String value) {
         throw new UnsupportedOperationException(getProtocolName() + " does not allow " + name.name() + " to be set");
     }
@@ -140,5 +168,21 @@ public abstract class SimpleCopier implements ICopier {
     public void setVersion(String version){
         this.version = version;
     };
+
+//    public void setProxyHost(String proxyHost) {
+//        this.proxyHost = proxyHost;
+//    }
+//
+//    public void setProxyPort(int proxyPort) {
+//        this.proxyPort = proxyPort;
+//    }
+//
+//    public void setProxyUsername(String proxyUsername) {
+//        this.proxyUsername = proxyUsername;
+//    }
+//
+//    public void setProxyPassword(String proxyPassword) {
+//        this.proxyPassword = proxyPassword;
+//    }
 
 }
