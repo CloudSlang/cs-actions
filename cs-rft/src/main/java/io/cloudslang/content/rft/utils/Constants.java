@@ -52,7 +52,7 @@ public class Constants {
     public static final String FILES = "files";
     public static final String FOLDERS = "folders";
 
-    public static final String SUCCESS_RESULT = "The operation was successfully completed!";
+    public static final String SUCCESS_RESULT = "The file transfer was successfully completed!";
 
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";

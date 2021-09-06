@@ -89,7 +89,7 @@ public class Descriptions {
                 "Examples: UTF-8, EUC-JP, SJIS.   \n" +
                 "Default: UTF-8.";
         public static final String RETURN_RESULT_REMOTE_COPY_DESC = " This is the primary output and it contains the " +
-                "\"Copy completed successfully\" message if the operation successfully completes, or an exception message otherwise.";
+                "success message if the operation successfully completes, or an exception message otherwise.";
         public static final String REMOTE_COPY_ACTION_DESC = "This operation copies files between two remote machines " +
                 "using different protocols (local, SCP, SFTP, SMB3).";
 

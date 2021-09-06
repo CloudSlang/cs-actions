@@ -74,6 +74,8 @@ public class RemoteCopyAction {
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
         proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
+        sourceCharacterSet = defaultIfEmpty(sourceCharacterSet, CHARACTER_SET_UTF8);
+        destinationCharacterSet = defaultIfEmpty(destinationCharacterSet, CHARACTER_SET_UTF8);
         connectionTimeout = defaultIfEmpty(connectionTimeout, DEFAULT_CONNECTION_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
 
