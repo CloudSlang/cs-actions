@@ -1,85 +1,62 @@
 package io.cloudslang.content.microsoftAD.actions.userManagement;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
+import io.cloudslang.content.microsoftAD.entities.DeleteUserInputs;
+import io.cloudslang.content.microsoftAD.utils.Outputs;
 import io.cloudslang.content.utils.StringUtilities;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
-
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECTIONS_MAX_TOTAL;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECT_TIMEOUT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.SOCKET_TIMEOUT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_KEYSTORE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER;
-import static io.cloudslang.content.microsoftAD.utils.Constants.BOOLEAN_FALSE;
-import static io.cloudslang.content.microsoftAD.utils.Constants.CHANGEIT;
-import static io.cloudslang.content.microsoftAD.utils.Constants.CONNECTIONS_MAX_PER_ROUTE_CONST;
-import static io.cloudslang.content.microsoftAD.utils.Constants.CONNECTIONS_MAX_TOTAL_CONST;
-import static io.cloudslang.content.microsoftAD.utils.Constants.DEFAULT_JAVA_KEYSTORE;
-import static io.cloudslang.content.microsoftAD.utils.Constants.DEFAULT_PROXY_PORT;
-import static io.cloudslang.content.microsoftAD.utils.Constants.NEW_LINE;
-import static io.cloudslang.content.microsoftAD.utils.Constants.STATUS_CODE;
-import static io.cloudslang.content.microsoftAD.utils.Constants.STRICT;
-import static io.cloudslang.content.microsoftAD.utils.Constants.UTF8;
-import static io.cloudslang.content.microsoftAD.utils.Constants.ZERO;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.CONNECT_TIMEOUT_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.CONN_MAX_ROUTE_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.KEEP_ALIVE_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.RETURN_CODE_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.SOCKET_TIMEOUT_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.TRUST_ALL_ROOTS_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.TRUST_KEYSTORE_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.TRUST_PASSWORD_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.X509_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateMessage.AUTH_TOKEN_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.DeleteUser.DELETE_USER_EXCEPTION_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.DeleteUser.DELETE_USER_RETURN_RESULT_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.DeleteUser.SUCCESS_RETURN_RESULT_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.FAILURE_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.SUCCESS_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetEmail.STATUS_CODE_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetEmail.USER_ID_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetEmail.USER_PRINCIPAL_NAME_DESC;
+import static io.cloudslang.content.microsoftAD.services.DeleteUserService.deleteUser;
+import static io.cloudslang.content.microsoftAD.utils.Constants.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.AUTH_TOKEN_DESC;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.USER_PRINCIPAL_NAME_DESC;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.DeleteUser.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.EmailInputs.AUTH_TOKEN;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.EmailInputs.USER_ID;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.EmailInputs.USER_PRINCIPAL_NAME;
-import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.*;
+import static io.cloudslang.content.microsoftAD.utils.InputsValidation.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class DeleteUser {
-    @Action(name = "Delete a user from Azure",
+    @Action(name = "Delete a user from AzureAD",
             outputs = {@Output(value = RETURN_RESULT, description = DELETE_USER_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = EXCEPTION, description = DELETE_USER_EXCEPTION_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)},
+                    @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC)},
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
@@ -104,6 +81,9 @@ public class DeleteUser {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
+
+
+        //inputs validation
         userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         userId = defaultIfEmpty(userId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
@@ -143,6 +123,7 @@ public class DeleteUser {
                             .keepAlive(keepAlive)
                             .responseCharacterSet(responseCharacterSet)
                             .connectTimeout(connectTimeout)
+                            .socketTimeout(socketTimeout)
                             .trustAllRoots(trustAllRoots)
                             .userId(userId)
                             .userPrincipalName(userPrincipalName)
@@ -157,7 +138,7 @@ public class DeleteUser {
                 returnMessage = SUCCESS_RETURN_RESULT_DESC;
             else
                 returnMessage = result.get(RETURN_RESULT);
-            return getOperationResults(result, returnMessage, returnMessage, EMPTY);
+            return getOperationResults(result, returnMessage.toString(), returnMessage.toString());
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

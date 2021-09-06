@@ -1,0 +1,46 @@
+package io.cloudslang.content.microsoftAD.services;
+
+import io.cloudslang.content.microsoftAD.entities.DeleteUserInputs;
+
+
+import org.jetbrains.annotations.NotNull;
+import sun.invoke.empty.Empty;
+
+import java.io.IOException;
+import java.util.Map;
+
+import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpDelete;
+import static io.cloudslang.content.microsoftAD.utils.Constants.DELETE_USER_REQUEST_URL;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
+/*
+
+TODO: Change from the default httprequest to the new one
+
+
+ */
+
+public class DeleteUserService {
+
+   public static Map<String, String> deleteUser(@NotNull final DeleteUserInputs deleteUserInputs) throws Exception {
+    if(!deleteUserInputs.getCommonInputs().getUserId().equals(EMPTY))
+        return httpDelete(deleteUserInputs.getCommonInputs(), DELETE_USER_REQUEST_URL  + deleteUserInputs.getCommonInputs().getUserId().toString());
+
+    return httpDelete(deleteUserInputs.getCommonInputs(), DELETE_USER_REQUEST_URL  + deleteUserInputs.getCommonInputs().getUserId().toString());
+
+    }
+
+
+    @NotNull
+    public static String getDeleteUserUrl(@NotNull final DeleteUserInputs deleteUserInputs) {
+        String finalUrl = DELETE_USER_REQUEST_URL;
+
+        if (!deleteUserInputs.getCommonInputs().getUserPrincipalName().isEmpty())
+            finalUrl = finalUrl + deleteUserInputs.getCommonInputs().getUserPrincipalName();
+        else
+            finalUrl = finalUrl + deleteUserInputs.getCommonInputs().getUserId();
+
+        return finalUrl;
+    }
+
+}
