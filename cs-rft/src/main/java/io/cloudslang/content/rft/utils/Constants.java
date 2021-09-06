@@ -22,8 +22,6 @@ public class Constants {
     public static final String EMPTY_STRING = "";
     public static final String NO_ACK_RECEIVED = "No ack received";
     public static final String SSH_SESSIONS_DEFAULT_ID = "sshSessions:default-id";
-    public static final String STDOUT = "STDOUT";
-    public static final String STDERR = "STDERR";
 
     // default values
     public static final int DEFAULT_PORT = 22;
@@ -32,6 +30,8 @@ public class Constants {
     public static final Path DEFAULT_KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
     public static final int DEFAULT_PROXY_PORT = 8080;
     public static final String DEFAULT_DELIMITER = String.valueOf(',');
+    public static final String SUCCESS_RETURN_CODE = "0";
+    public static final String FAILURE_RETURN_CODE = "-1";
 
 
     public static final String VERSION = "v2";

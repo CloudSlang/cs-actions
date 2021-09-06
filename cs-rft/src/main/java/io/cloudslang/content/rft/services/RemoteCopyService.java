@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.rft.utils.Constants.VERSION;
+import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Inputs.RemoteCopyInputs.DEST_CHARACTER_SET;
 import static io.cloudslang.content.rft.utils.Inputs.RemoteCopyInputs.SRC_CHARACTER_SET;
 
@@ -52,13 +52,13 @@ public class RemoteCopyService {
             setExecutionTimeout(dest, inputs.getExecutionTimeout());
 
             src.copyTo(dest, inputs.getSourcePath(), inputs.getDestinationPath());
-            results.put(RETURN_RESULT, "Copy completed successfully!");
-            results.put(RETURN_CODE, "0");
+            results.put(RETURN_RESULT, SUCCESS_RESULT);
+            results.put(RETURN_CODE, SUCCESS_RETURN_CODE);
 
         } catch (Exception e) {
             results.put(EXCEPTION, String.valueOf(e));
             results.put(RETURN_RESULT, (e.getMessage()));
-            results.put(RETURN_CODE, "-1");
+            results.put(RETURN_CODE, FAILURE_RETURN_CODE);
         }
         return results;
 
@@ -76,16 +76,6 @@ public class RemoteCopyService {
         }
     }
 
-    private void validateProtocol(String srcProtocol) throws Exception {
-        try {
-            protocols.valueOf(srcProtocol);
-        } catch (Exception e) {
-            throw (new Exception("Protocol " + srcProtocol + " not supported!"));
-        }
-    }
-
-    public enum protocols {local, scp, sftp, smb3}
-
     public static void checkOptions(String copier, String host) throws Exception {
         switch (copiers.valueOf(copier)) {
             case local:
@@ -99,20 +89,6 @@ public class RemoteCopyService {
                 break;
             default:
                 break;
-        }
-    }
-
-    public void setCredentials(ICopier copier, String host, String portString, String username, String password, String privateKeyFile) {
-        int port = -1;
-        if (portString != null && !portString.isEmpty())
-            port = Integer.parseInt(portString);
-        if (copiers.valueOf(copier.getProtocolName()) == copiers.local) {
-            host = "";
-        }
-        if (privateKeyFile != null && privateKeyFile.length() > 0) {
-            copier.setCredentials(host, port, username, password, privateKeyFile);
-        } else {
-            copier.setCredentials(host, port, username, password);
         }
     }
 
@@ -134,16 +110,6 @@ public class RemoteCopyService {
         }
     }
 
-    private void setAndValidateCharacterSet(ICopier copier, String characterSet, String source) throws Exception {
-        try {
-            if (!setCharacterSet(copier, characterSet)) {
-                throw new Exception(source + " input: " + characterSet + " is not a valid character set name");
-            }
-        } catch (IllegalCharsetNameException icne) {
-            throw new Exception(source + " input: " + characterSet + " is not a valid character set name");
-        }
-    }
-
     public static boolean setCharacterSet(ICopier copier, String characterSetName) {
         if (copiers.valueOf(copier.getProtocolName()) == copiers.sftp) {
             if (!StringUtils.isNull(characterSetName)) {
@@ -155,5 +121,25 @@ public class RemoteCopyService {
         }
         return true;
     }
+
+    private void validateProtocol(String srcProtocol) throws Exception {
+        try {
+            protocols.valueOf(srcProtocol);
+        } catch (Exception e) {
+            throw (new Exception("Protocol " + srcProtocol + " not supported!"));
+        }
+    }
+
+    private void setAndValidateCharacterSet(ICopier copier, String characterSet, String source) throws Exception {
+        try {
+            if (!setCharacterSet(copier, characterSet)) {
+                throw new Exception(source + " input: " + characterSet + " is not a valid character set name");
+            }
+        } catch (IllegalCharsetNameException icne) {
+            throw new Exception(source + " input: " + characterSet + " is not a valid character set name");
+        }
+    }
+
+    public enum protocols {local, scp, sftp, smb3}
 
 }
