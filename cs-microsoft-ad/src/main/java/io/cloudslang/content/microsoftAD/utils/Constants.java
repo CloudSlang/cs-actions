@@ -100,4 +100,7 @@ public final class Constants {
     public static final String ERROR = "error";
     public static final String MESSAGE = "message";
     public static final String SEND_EMAIL_ADD_ATTACHMENT = "Could not attach %S";
+
+    //API URLs
+    public static final String CREATE_USER_URL = "https://graph.microsoft.com/v1.0/users";
 }

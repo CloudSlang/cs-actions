@@ -45,6 +45,8 @@ public final class Inputs extends InputNames {
         public static final String FORCE_CHANGE_PASSWORD = "forceChangePasswordNextSignIn";
         public static final String PASSWORD = "password";
         public static final String USER_PRINCIPAL_NAME = "userPrincipalName";
+        public static final String PASSWORD_PROFILE = "passwordProfile";
+        public static final String BODY = "body";
     }
 }
 

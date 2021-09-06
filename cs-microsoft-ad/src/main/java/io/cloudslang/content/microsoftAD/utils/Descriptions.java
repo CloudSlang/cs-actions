@@ -16,7 +16,10 @@
 package io.cloudslang.content.microsoftAD.utils;
 
 public class Descriptions {
+
     public static class Common {
+
+        //Inputs
         public static final String PROXY_HOST_DESC = "Proxy server used to access the Office 365 service.";
         public static final String PROXY_PORT_DESC = "Proxy server port used to access the Office 365 service." +
                 "Default: '8080'";
@@ -47,13 +50,16 @@ public class Descriptions {
                 "represents an infinite timeout.";
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout.";
-        public static final String RESPONSC_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
+        public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
                 "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
                 "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
                 "Default value: UTF-8";
-
         public static final String AUTH_TOKEN_DESC = "Authentication token";
+
+        //Outputs
+        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
+        public static final String STATUS_CODE_DESC = "Successful if between 200 and 300.";
     }
 
     public static class GetAuthorizationToken {
@@ -71,7 +77,6 @@ public class Descriptions {
                 "Default: 'https://graph.microsoft.com'";
 
         public static final String RETURN_RESULT_DESC = "The authorization token for Office 365.";
-        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String AUTH_TOKEN_DESC = "The authentication token.";
         public static final String AUTH_TOKEN_TYPE_DESC = "The authentication token type.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while generating the token.";
@@ -89,24 +94,24 @@ public class Descriptions {
 
         //Inputs
         public static final String ACCOUNT_ENABLED_DESC = "true if the account is enabled; otherwise, false.";
-        public static final String DISPLAY_NAME_DESC = "The name to display in the address book for the user.";
+        public static final String DISPLAY_NAME_DESC = "Required if body not set - The name to display in the address book for the user.";
         public static final String ON_PREMISES_IMMUTABLE_ID_DESC = "Only needs to be specified when creating a new " +
                 "user account if you are using a federated domain for the user's userPrincipalName (UPN) property.";
-        public static final String MAIL_NICKNAME_DESC = "The mail alias for the user.";
-        public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name (someuser@contoso.com).";
+        public static final String MAIL_NICKNAME_DESC = "Required if body not set -The mail alias for the user.";
+        public static final String USER_PRINCIPAL_NAME_DESC = "Required if body not set -The user principal name (someuser@contoso.com).";
         public static final String FORCE_CHANGE_PASSWORD_DESC = "true if the user must change her " +
                 "password on the next login; otherwise false. If not set, default is false. NOTE: For Azure B2C " +
                 "tenants, set to false and instead use custom policies and user flows to force password reset at " +
                 "first sign in.";
-        public static final String PASSWORD_DESC = "The password for the user. This property is required when a user " +
+        public static final String PASSWORD_DESC = "Required if body not set -The password for the user. This property is required when a user " +
                 "is created. It can be updated, but the user will be required to change the password on the next " +
                 "login. The password must satisfy minimum requirements as specified by the user’s passwordPolicies " +
                 "property. By default, a strong password is required.";
+        public static final String BODY_DESC = "Full json body if the user wants to set additional properties. " +
+                "All the other inputs are ignored if the body is given.";
 
         //Outputs
-        public static final String CREATE_USER_RETURN_RESULT_DESC = "If successful, returns the complete API response.";
-        public static final String CREATE_USER_DOCUMENT_DESC = "The full API response in case of success";
-        public static final String CREATE_USER_EXCEPTION_DESC = "An error message in case there was an error while creating the user.";
+        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response.";
     }
 
     public static class UpdateUser {

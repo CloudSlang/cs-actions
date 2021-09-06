@@ -1,6 +1,19 @@
-package io.cloudslang.content.microsoftAD.services;
+/*
+ * (c) Copyright 2019 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.cloudslang.content.microsoftAD.entities;
 
-import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -13,25 +26,25 @@ public class CreateUserInputs {
     private final String mailNickname;
     private final String userPrincipalName;
     private final String forceChangePassword;
-    private final String assignedPassword;
-    private final String oDataQuery;
+    private final String password;
+    private final String body;
 
     private final AzureActiveDirectoryCommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"accountEnabled", "displayName", "onPremisesImmutableId", "mailNickname",
-            "userPrincipalName", "forceChangePassword", "assignedPassword", "commonInputs", "oDataQuery"})
+            "userPrincipalName", "forceChangePassword", "password", "commonInputs", "oDataQuery"})
 
     public CreateUserInputs(String accountEnabled, String displayName, String onPremisesImmutableId, String mailNickname,
-                            String userPrincipalName, String forceChangePassword, String assignedPassword, AzureActiveDirectoryCommonInputs commonInputs, String oDataQuery) {
+                            String userPrincipalName, String forceChangePassword, String password, AzureActiveDirectoryCommonInputs commonInputs, String body) {
         this.accountEnabled = accountEnabled;
         this.displayName = displayName;
         this.onPremisesImmutableId = onPremisesImmutableId;
         this.mailNickname = mailNickname;
         this.userPrincipalName = userPrincipalName;
         this.forceChangePassword = forceChangePassword;
-        this.assignedPassword = assignedPassword;
+        this.password = password;
         this.commonInputs = commonInputs;
-        this.oDataQuery = oDataQuery;
+        this.body = body;
     }
 
     @NotNull
@@ -70,8 +83,8 @@ public class CreateUserInputs {
     }
 
     @NotNull
-    public String getAssignedPassword() {
-        return assignedPassword;
+    public String getPassword() {
+        return password;
     }
 
     @NotNull
@@ -80,8 +93,8 @@ public class CreateUserInputs {
     }
 
     @NotNull
-    public String getoDataQuery() {
-        return oDataQuery;
+    public String getBody() {
+        return body;
     }
 
     public static class CreateUserInputsBuilder {
@@ -91,9 +104,9 @@ public class CreateUserInputs {
         private String mailNickname = EMPTY;
         private String userPrincipalName = EMPTY;
         private String forceChangePassword = EMPTY;
-        private String assignedPassword = EMPTY;
+        private String password = EMPTY;
         private AzureActiveDirectoryCommonInputs commonInputs;
-        private String oDataQuery = EMPTY;
+        private String body = EMPTY;
 
         CreateUserInputsBuilder() {
         }
@@ -135,8 +148,8 @@ public class CreateUserInputs {
         }
 
         @NotNull
-        public CreateUserInputs.CreateUserInputsBuilder assignedPassword(@NotNull final String assignedPassword) {
-            this.assignedPassword = assignedPassword;
+        public CreateUserInputs.CreateUserInputsBuilder password(@NotNull final String password) {
+            this.password = password;
             return this;
         }
 
@@ -147,14 +160,14 @@ public class CreateUserInputs {
         }
 
         @NotNull
-        public CreateUserInputs.CreateUserInputsBuilder oDataQuery(@NotNull final String oDataQuery) {
-            this.oDataQuery = oDataQuery;
+        public CreateUserInputs.CreateUserInputsBuilder body(@NotNull final String body) {
+            this.body = body;
             return this;
         }
 
         public CreateUserInputs build() {
             return new CreateUserInputs(accountEnabled, displayName, onPremisesImmutableId, mailNickname,
-                    userPrincipalName, forceChangePassword, assignedPassword, commonInputs, oDataQuery);
+                    userPrincipalName, forceChangePassword, password, commonInputs, body);
 
         }
     }
