@@ -23,12 +23,13 @@ public class RemoteCopyService {
         Map<String, String> results = new HashMap();
 
         try {
-            validateProtocol(inputs.getSourceProtocol());
-            validateProtocol(inputs.getDestinationProtocol());
-            ICopier src = CopierFactory.getExecutor(inputs.getSourceProtocol());
-            src.setProtocol(inputs.getSourceProtocol());
-            ICopier dest = CopierFactory.getExecutor(inputs.getDestinationProtocol());
-            dest.setProtocol(inputs.getDestinationProtocol());
+            String srcProtocol = inputs.getSourceProtocol().toLowerCase().trim();
+            String destProtocol = inputs.getDestinationProtocol().toLowerCase().trim();
+
+            ICopier src = CopierFactory.getExecutor(srcProtocol);
+            src.setProtocol(srcProtocol);
+            ICopier dest = CopierFactory.getExecutor(destProtocol);
+            dest.setProtocol(destProtocol);
 
             src.setVersion(VERSION);
             dest.setVersion(VERSION);
@@ -122,14 +123,6 @@ public class RemoteCopyService {
         return true;
     }
 
-    private void validateProtocol(String srcProtocol) throws Exception {
-        try {
-            protocols.valueOf(srcProtocol);
-        } catch (Exception e) {
-            throw (new Exception("Protocol " + srcProtocol + " not supported!"));
-        }
-    }
-
     private void setAndValidateCharacterSet(ICopier copier, String characterSet, String source) throws Exception {
         try {
             if (!setCharacterSet(copier, characterSet)) {
@@ -140,6 +133,6 @@ public class RemoteCopyService {
         }
     }
 
-    public enum protocols {local, scp, sftp, smb3}
+    public enum protocols {local, scp, sftp, smb3, LOCAL, SCP, SFTP, SMB3}
 
 }

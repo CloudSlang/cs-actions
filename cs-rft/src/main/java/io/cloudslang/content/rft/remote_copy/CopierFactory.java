@@ -40,5 +40,5 @@ public class CopierFactory {
         return executorMap.get(name).newInstance();
     }
 
-    public enum copiers {local, scp, sftp, smb3}
+    public enum copiers {local, scp, sftp, smb3, LOCAL, SCP, SFTP, SMB3}
 }
