@@ -21,7 +21,9 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.remote_copy.RemoteCopyInputs;
 import io.cloudslang.content.rft.services.RemoteCopyService;
+import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
@@ -33,9 +35,12 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.RemoteCopyDescriptions.*;
-import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.EXCEPTION_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.RETURN_CODE_DESC;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.RemoteCopyInputs.*;
+import static io.cloudslang.content.rft.utils.InputsValidation.verifyRemoteCopyInputs;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class RemoteCopyAction {
@@ -73,11 +78,20 @@ public class RemoteCopyAction {
                                        @Param(value = CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
+        sourcePort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PORT));
+        destinationPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PORT));
         proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
         sourceCharacterSet = defaultIfEmpty(sourceCharacterSet, CHARACTER_SET_UTF8);
         destinationCharacterSet = defaultIfEmpty(destinationCharacterSet, CHARACTER_SET_UTF8);
         connectionTimeout = defaultIfEmpty(connectionTimeout, DEFAULT_CONNECTION_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
+
+        final List<String> exceptionMessages = verifyRemoteCopyInputs(sourceHost, sourcePort, sourcePath, sourceProtocol,
+                sourceCharacterSet, destinationHost, destinationPort, destinationPath, destinationProtocol, destinationCharacterSet,
+                proxyPort, connectionTimeout, executionTimeout);
+        if (!exceptionMessages.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+        }
 
         RemoteCopyInputs inputs = new RemoteCopyInputs.RemoteCopyBuilder()
                 .sourceHost(sourceHost)

@@ -57,7 +57,9 @@ public class Constants {
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_TYPE = "The '%s' for %s input is not a valid type value.(ascii/binary)";
-    public static final String EXCEPTION_INVALID_PORT = "Invalid port number: %s. Valid values: 0-65535";
+    public static final String EXCEPTION_INVALID_PORT = "Invalid port number: %s. The valid value is between: 0-65535";
+    public static final String EXCEPTION_INVALID_PROTOCOL = "Invalid protocol value: %s. The valid values are: local, " +
+            "scp, sftp, smb3.";
     public static final String EXCEPTION_UNKNOWN_HOST = "Unknown host: %s.";
     public static final String EXCEPTION_INVALID_LOCAL_FILE = "The value '%s'  is not a valid file path.";
     public static final String EXCEPTION_INVALID_REMOTE_FILE = "'%s' does not exist.";
