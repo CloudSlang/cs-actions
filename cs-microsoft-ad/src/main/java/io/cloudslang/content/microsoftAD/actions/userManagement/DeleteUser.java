@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2019 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.microsoftAD.actions.userManagement;
 
 import com.google.gson.JsonElement;
@@ -53,7 +67,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class DeleteUser {
-    @Action(name = "Delete a user from AzureAD",
+    @Action(name = "Delete User",
+            description = "Delete a user from Azure Active Directory",
             outputs = {@Output(value = RETURN_RESULT, description = DELETE_USER_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC)},

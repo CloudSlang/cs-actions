@@ -15,6 +15,7 @@
 
 package io.cloudslang.content.microsoftAD.services;
 import com.google.gson.JsonObject;
+import io.cloudslang.content.httpclient.build.conn.SSLConnectionSocketFactoryBuilder;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import org.apache.http.HttpHeaders;
 import org.apache.http.auth.AuthScope;
@@ -27,6 +28,7 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.DefaultHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -38,6 +40,7 @@ import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
@@ -53,8 +56,10 @@ public class HttpCommons {
             SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(
                     new File(commonInputs.getTrustKeystore()),
                     commonInputs.getTrustPassword().toCharArray()).build();
-            HostnameVerifier hostnameVerifier = new DefaultHostnameVerifier();
+            HostnameVerifier hostnameVerifier = x509HostnameVerifier(commonInputs.getX509HostnameVerifier().toLowerCase());
             SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
+
+            //SSLConnectionSocketFactoryBuilder
             httpClientBuilder.setSSLSocketFactory(socketFactory).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,6 +105,24 @@ public class HttpCommons {
             result.put(RETURN_RESULT, e.getMessage());
             return result;
         }
+    }
+
+    private static HostnameVerifier x509HostnameVerifier(String hostnameVerifier) {
+        String x509HostnameVerifierStr = hostnameVerifier.toLowerCase();
+        X509HostnameVerifier x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
+        ;
+        switch (x509HostnameVerifierStr) {
+            case "strict":
+                x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
+                break;
+            case "browser_compatible":
+                x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
+                break;
+            case "allow_all":
+                x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+                break;
+        }
+        return x509HostnameVerifier;
     }
 
     public static Map<String, String> httpDelete(AzureActiveDirectoryCommonInputs commonInputs, String url) {

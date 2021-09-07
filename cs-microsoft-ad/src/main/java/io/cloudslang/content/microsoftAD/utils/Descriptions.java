@@ -17,8 +17,8 @@ package io.cloudslang.content.microsoftAD.utils;
 
 public class Descriptions {
     public static class Common {
-        public static final String PROXY_HOST_DESC = "Proxy server used to access the Office 365 service.";
-        public static final String PROXY_PORT_DESC = "Proxy server port used to access the Office 365 service." +
+        public static final String PROXY_HOST_DESC = "Proxy server used to access the Azure Active Directory service.";
+        public static final String PROXY_PORT_DESC = "Proxy server port used to access the Azure Active Directory service." +
                 "Default: '8080'";
         public static final String PROXY_USERNAME_DESC = "Proxy server user name.";
         public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxy_username input value.";
@@ -54,6 +54,8 @@ public class Descriptions {
                 "Default value: UTF-8";
 
         public static final String AUTH_TOKEN_DESC = "Authentication token";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for Azure API request.";
+        public static final String USER_ID_DESC = "The ID of the user to perform the action on.";
     }
 
     public static class GetAuthorizationToken {
@@ -62,15 +64,15 @@ public class Descriptions {
                 "Default: 'API'";
         public static final String CLIENT_ID_DESC = "Service Client ID";
         public static final String CLIENT_SECRET_DESC = "Service Client Secret";
-        public static final String USERNAME_DESC = "Office 365 username";
-        public static final String PASSWORD_DESC = "Office 365 password";
+        public static final String USERNAME_DESC = "Azure Active Directory username";
+        public static final String PASSWORD_DESC = "Azure Active Directory password";
         public static final String LOGIN_AUTHORITY_DESC = "The authority URL. Usually, the format for this input is:\n" +
                 "'https://login.windows.net/TENANT_NAME/oauth2/token' where TENANT_NAME is your application\n" +
                 "tenant.";
         public static final String RESOURCES_DESC = "The resource URL\n" +
                 "Default: 'https://graph.microsoft.com'";
 
-        public static final String RETURN_RESULT_DESC = "The authorization token for Office 365.";
+        public static final String RETURN_RESULT_DESC = "The authorization token for Azure Active Directory.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String AUTH_TOKEN_DESC = "The authentication token.";
         public static final String AUTH_TOKEN_TYPE_DESC = "The authentication token type.";
