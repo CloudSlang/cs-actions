@@ -16,7 +16,6 @@
 
 package io.cloudslang.content.microsoftAD.services;
 
-import com.sun.corba.se.impl.legacy.connection.DefaultSocketFactory;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import org.apache.http.HttpHeaders;
 import org.apache.http.auth.AuthScope;
@@ -38,12 +37,10 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
 import org.apache.http.util.EntityUtils;
-import sun.security.ssl.SSLSocketFactoryImpl;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSocketFactory;
 import java.io.File;
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -82,16 +79,16 @@ public class HttpCommons {
 
     private static HostnameVerifier x509HostnameVerifier(String hostnameVerifier) {
         String x509HostnameVerifierStr = hostnameVerifier.toLowerCase();
-        HostnameVerifier x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
+        HostnameVerifier x509HostnameVerifier = STRICT_HOSTNAME_VERIFIER;
         switch (x509HostnameVerifierStr) {
             case "strict":
-                x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
+                x509HostnameVerifier = STRICT_HOSTNAME_VERIFIER;
                 break;
             case "browser_compatible":
-                x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
+                x509HostnameVerifier = BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
                 break;
             case "allow_all":
-                x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+                x509HostnameVerifier = ALLOW_ALL_HOSTNAME_VERIFIER;
                 break;
         }
         return x509HostnameVerifier;
@@ -107,7 +104,6 @@ public class HttpCommons {
 
                 SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (TrustStrategy) hostnameVerifier).build();
                 SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
-                //SSLSocketFactory sslSocketFactory = new SSLSocketFactory();
                 httpClientBuilder.setSSLSocketFactory(socketFactory).build();
 
             } catch (NoSuchAlgorithmException e) {
@@ -204,6 +200,9 @@ public class HttpCommons {
 
         Map<String, String> result = new HashMap<>();
 
+        result.put(STATUS_CODE, EMPTY);
+        result.put(RETURN_RESULT, EMPTY);
+
         try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
 
             HttpPost httpPost = new HttpPost(url);
@@ -219,10 +218,6 @@ public class HttpCommons {
                 return result;
             }
         } catch (IOException e) {
-
-            result.put(STATUS_CODE, EMPTY);
-            result.put(RETURN_RESULT, e.getMessage());
-
             return result;
         }
     }
