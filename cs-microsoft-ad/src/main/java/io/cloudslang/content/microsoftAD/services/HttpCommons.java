@@ -25,9 +25,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.DefaultHostnameVerifier;
+import org.apache.http.conn.ssl.AbstractVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -36,12 +34,17 @@ import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.ssl.TrustStrategy;
 import org.apache.http.util.EntityUtils;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLException;
 import java.io.File;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,30 +54,82 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class HttpCommons {
 
+    private final static HostnameVerifier ALLOW_ALL_HOSTNAME_VERIFIER = new AbstractVerifier() {
+        @Override
+        public void verify(String s, String[] strings, String[] strings1) throws SSLException {}
+        public final String toString() { return "ALLOW_ALL"; }
+    };
+
+    private final static HostnameVerifier STRICT_HOSTNAME_VERIFIER = new AbstractVerifier() {
+        @Override
+        public void verify(String s, String[] strings, String[] strings1) throws SSLException {
+            this.verify(s, strings, strings1, true);
+        }
+        public final String toString() { return "STRICT"; }
+    };
+
+    private final static HostnameVerifier BROWSER_COMPATIBLE_HOSTNAME_VERIFIER = new AbstractVerifier() {
+        @Override
+        public void verify(String s, String[] strings, String[] strings1) throws SSLException {
+            this.verify(s, strings, strings1, false);
+        }
+        public final String toString() { return "BROWSER_COMPATIBLE"; }
+    };
+
     public static void setSSLContext(HttpClientBuilder httpClientBuilder, AzureActiveDirectoryCommonInputs commonInputs) {
 
-        if (commonInputs.getTrustKeystore() == EMPTY)
-            return;
+        String x509HostnameVerifierStr = commonInputs.getX509HostnameVerifier().toLowerCase();
+        HostnameVerifier x509HostnameVerifier = STRICT_HOSTNAME_VERIFIER;
 
-        try {
+        switch (x509HostnameVerifierStr) {
+            case "strict":
+                x509HostnameVerifier = STRICT_HOSTNAME_VERIFIER;
+                break;
+            case "browser_compatible":
+                x509HostnameVerifier = BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
+                break;
+            case "allow_all":
+                x509HostnameVerifier = ALLOW_ALL_HOSTNAME_VERIFIER;
+                break;
+        }
 
-            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(
-                    new File(commonInputs.getTrustKeystore()),
-                    commonInputs.getTrustPassword().toCharArray()).build();
+        if (commonInputs.getTrustAllRoots().equals(BOOLEAN_TRUE)) {
 
-            HostnameVerifier hostnameVerifier = new DefaultHostnameVerifier();
-            SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
+            try {
 
-            httpClientBuilder.setSSLSocketFactory(socketFactory).build();
+                SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (TrustStrategy) x509HostnameVerifier).build();
+                SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, x509HostnameVerifier);
+                httpClientBuilder.setSSLSocketFactory(socketFactory).build();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (KeyStoreException e) {
+                e.printStackTrace();
+            } catch (KeyManagementException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+
+            try {
+
+                SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(
+                        new File(commonInputs.getTrustKeystore()),
+                        commonInputs.getTrustPassword().toCharArray()).build();
+
+                SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, x509HostnameVerifier);
+                httpClientBuilder.setSSLSocketFactory(socketFactory);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
     public static void setProxy(HttpClientBuilder httpClientBuilder, AzureActiveDirectoryCommonInputs commonInputs) {
 
-        if (commonInputs.getTrustKeystore() == EMPTY)
+        if (commonInputs.getTrustKeystore().equals(EMPTY))
             return;
 
         try {
@@ -93,6 +148,9 @@ public class HttpCommons {
 
     public static void setTimeout(HttpClientBuilder httpClientBuilder, AzureActiveDirectoryCommonInputs commonInputs) {
 
+        if (commonInputs.getKeepAlive().equals(BOOLEAN_TRUE))
+            httpClientBuilder.setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy());
+
         try {
 
             RequestConfig requestConfig = RequestConfig.custom()
@@ -100,7 +158,7 @@ public class HttpCommons {
                 .setSocketTimeout(Integer.parseInt(commonInputs.getSocketTimeout()))
                 .build();
 
-            httpClientBuilder.setDefaultRequestConfig(requestConfig).setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy());
+            httpClientBuilder.setDefaultRequestConfig(requestConfig);
 
         } catch (NumberFormatException e) {
             e.printStackTrace();

@@ -91,6 +91,7 @@ public class Descriptions {
         public static final String DESC = "Create a new user. The request body contains the user to create. At a " +
                 "minimum, you must specify the required properties for the user. You can optionally specify any " +
                 "other writable properties.";
+        public static final String NAME = "Create User";
 
         //Inputs
         public static final String ACCOUNT_ENABLED_DESC = "true if the account is enabled; otherwise, false.";

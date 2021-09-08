@@ -28,7 +28,7 @@ public class CreateUserService {
 
     public static Map<String, String> createUser(CreateUserInputs createUserInputs) {
 
-        if (createUserInputs.getBody() != EMPTY)
+        if (!createUserInputs.getBody().equals(EMPTY))
             return httpPost(createUserInputs.getCommonInputs(), CREATE_USER_URL, createUserInputs.getBody());
 
         JsonObject passwordProfile = new JsonObject();
@@ -38,7 +38,7 @@ public class CreateUserService {
         JsonObject body = new JsonObject();
         body.addProperty(ACCOUNT_ENABLED, createUserInputs.getAccountEnabled());
         body.addProperty(DISPLAY_NAME, createUserInputs.getDisplayName());
-        if (createUserInputs.getOnPremisesImmutableId() != EMPTY)
+        if (!createUserInputs.getOnPremisesImmutableId().equals(EMPTY))
             body.addProperty(ON_PREMISES_IMMUTABLE_ID, createUserInputs.getOnPremisesImmutableId());
         body.addProperty(MAIL_NICKNAME, createUserInputs.getMailNickname());
         body.addProperty(USER_PRINCIPAL_NAME, createUserInputs.getUserPrincipalName());

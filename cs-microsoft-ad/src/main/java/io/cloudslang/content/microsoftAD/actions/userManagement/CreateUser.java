@@ -21,7 +21,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.CreateUserInputs;
-import io.cloudslang.content.microsoftAD.utils.Outputs;
+import io.cloudslang.content.microsoftAD.utils.Descriptions;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -39,19 +39,22 @@ import static io.cloudslang.content.microsoftAD.services.CreateUserService.creat
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.NAME;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.BODY;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.PASSWORD;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.*;
-import static io.cloudslang.content.microsoftAD.utils.InputsValidation.*;
+import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyCommonUserInputs;
+import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyCreateUserInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class CreateUser {
 
-    @Action(name = DESC,
+    @Action(name = NAME,
+            description = DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -90,7 +93,7 @@ public class CreateUser {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
 
-        if (body == EMPTY) {
+        if (body.equals(EMPTY)) {
             accountEnabled = defaultIfEmpty(accountEnabled, BOOLEAN_TRUE);
             displayName = defaultIfEmpty(displayName, EMPTY);
             onPremisesImmutableId = defaultIfEmpty(onPremisesImmutableId, EMPTY);
@@ -116,7 +119,7 @@ public class CreateUser {
 
         final List<String> exceptionMessages;
 
-        if (body == EMPTY)
+        if (body.equals(EMPTY))
             exceptionMessages = verifyCreateUserInputs(accountEnabled, displayName, mailNickname,
                     userPrincipalName, forceChangePassword, password, proxyPort, trustAllRoots,
                     connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
