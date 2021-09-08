@@ -106,8 +106,7 @@ public class RemoteCopyService {
             copier.setCredentials(host, port, username, password, privateKeyFile, proxyHost, proxyPort, proxyUsername,
                     proxyPassword);
         } else {
-            copier.setCredentials(host, port, username, password, proxyHost, proxyPort, proxyUsername,
-                    proxyPassword);
+            copier.setCredentials(host, port, username, password, proxyHost, proxyPort, proxyUsername, proxyPassword);
         }
     }
 
