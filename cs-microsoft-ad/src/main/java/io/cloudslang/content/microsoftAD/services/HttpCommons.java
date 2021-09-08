@@ -16,6 +16,7 @@
 
 package io.cloudslang.content.microsoftAD.services;
 
+import com.sun.corba.se.impl.legacy.connection.DefaultSocketFactory;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import org.apache.http.HttpHeaders;
 import org.apache.http.auth.AuthScope;
@@ -37,10 +38,12 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
 import org.apache.http.util.EntityUtils;
+import sun.security.ssl.SSLSocketFactoryImpl;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.File;
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -104,6 +107,7 @@ public class HttpCommons {
 
                 SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (TrustStrategy) hostnameVerifier).build();
                 SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
+                //SSLSocketFactory sslSocketFactory = new SSLSocketFactory();
                 httpClientBuilder.setSSLSocketFactory(socketFactory).build();
 
             } catch (NoSuchAlgorithmException e) {
