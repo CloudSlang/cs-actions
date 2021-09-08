@@ -54,6 +54,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class HttpCommons {
@@ -237,7 +238,10 @@ public class HttpCommons {
             httpDelete.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
             try (CloseableHttpResponse response = httpClient.execute(httpDelete)) {
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
-                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), commonInputs.getResponseCharacterSet())); result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), commonInputs.getResponseCharacterSet()));
+                //if status code is 204, no return result is provided, otherwise there is a return result
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode <= 200 && statusCode > 300)
+                    result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), commonInputs.getResponseCharacterSet()));
                 return result;
             }
         } catch (IOException e) {
