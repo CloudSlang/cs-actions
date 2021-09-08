@@ -48,5 +48,11 @@ public final class Inputs extends InputNames {
         public static final String PASSWORD_PROFILE = "passwordProfile";
         public static final String BODY = "body";
     }
+
+    public static class DeleteUser {
+
+        public static final String USER_PRINCIPAL_NAME = "userPrincipalName";
+        public static final String USER_ID = "userId";
+    }
 }
 

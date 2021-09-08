@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-
 package io.cloudslang.content.microsoftAD.services;
-
+import com.google.gson.JsonObject;
+import io.cloudslang.content.httpclient.build.conn.SSLConnectionSocketFactoryBuilder;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import org.apache.http.HttpHeaders;
 import org.apache.http.auth.AuthScope;
@@ -36,6 +36,35 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
 import org.apache.http.util.EntityUtils;
+import org.apache.http.HttpHeaders;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.DefaultHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.util.EntityUtils;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.microsoftAD.utils.Constants.*;
+import static io.cloudslang.content.microsoftAD.utils.Constants.STATUS_CODE;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -158,62 +187,37 @@ public class HttpCommons {
                 .setSocketTimeout(Integer.parseInt(commonInputs.getSocketTimeout()))
                 .build();
 
-            httpClientBuilder.setDefaultRequestConfig(requestConfig);
-
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+    private static HostnameVerifier x509HostnameVerifier(String hostnameVerifier) {
+        String x509HostnameVerifierStr = hostnameVerifier.toLowerCase();
+        X509HostnameVerifier x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
+        ;
+        switch (x509HostnameVerifierStr) {
+            case "strict":
+                x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
+                break;
+            case "browser_compatible":
+                x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
+                break;
+            case "allow_all":
+                x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+                break;
         }
+        return x509HostnameVerifier;
     }
 
-    public static void setMaxConnections(HttpClientBuilder httpClientBuilder, AzureActiveDirectoryCommonInputs commonInputs) {
-
-        try {
-
-            PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-            connectionManager.setMaxTotal(Integer.parseInt(commonInputs.getConnectionsMaxTotal()));
-            connectionManager.setDefaultMaxPerRoute(Integer.parseInt(commonInputs.getConnectionsMaxPerRoute()));
-
-            httpClientBuilder.setConnectionManager(connectionManager);
-
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static HttpClient createHttpClient(AzureActiveDirectoryCommonInputs commonInputs) {
-
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-        setProxy(httpClientBuilder, commonInputs);
-        setSSLContext(httpClientBuilder, commonInputs);
-        setTimeout(httpClientBuilder, commonInputs);
-        setMaxConnections(httpClientBuilder, commonInputs);
-
-        return httpClientBuilder.build();
-    }
-
-    public static Map<String, String> httpPost(AzureActiveDirectoryCommonInputs commonInputs, String url, String body) {
-
+    public static Map<String, String> httpDelete(AzureActiveDirectoryCommonInputs commonInputs, String url) {
         Map<String, String> result = new HashMap<>();
-
         try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
-
-            HttpPost httpPost = new HttpPost(url);
-            httpPost.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
-            httpPost.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
-            httpPost.setEntity(new StringEntity(body));
-
-            try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
-
+            HttpDelete httpDelete = new HttpDelete(url);
+            httpDelete.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
+            httpDelete.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+            try (CloseableHttpResponse response = httpClient.execute(httpDelete)) {
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
-                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), commonInputs.getResponseCharacterSet()));
-
                 return result;
             }
         } catch (IOException e) {
-
             result.put(STATUS_CODE, EMPTY);
             result.put(RETURN_RESULT, e.getMessage());
-
             return result;
         }
     }
