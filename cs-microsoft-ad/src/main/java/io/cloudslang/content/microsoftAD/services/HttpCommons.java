@@ -229,17 +229,18 @@ public class HttpCommons {
 
     public static Map<String, String> httpDelete(AzureActiveDirectoryCommonInputs commonInputs, String url) {
         Map<String, String> result = new HashMap<>();
+        result.put(STATUS_CODE, EMPTY);
+        result.put(RETURN_RESULT, EMPTY);
         try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
             HttpDelete httpDelete = new HttpDelete(url);
             httpDelete.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
             httpDelete.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
             try (CloseableHttpResponse response = httpClient.execute(httpDelete)) {
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
+                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), commonInputs.getResponseCharacterSet())); result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), commonInputs.getResponseCharacterSet()));
                 return result;
             }
         } catch (IOException e) {
-            result.put(STATUS_CODE, EMPTY);
-            result.put(RETURN_RESULT, e.getMessage());
             return result;
         }
     }

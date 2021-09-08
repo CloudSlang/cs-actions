@@ -35,10 +35,7 @@ public class DeleteUserService {
 
    public static Map<String, String> deleteUser(@NotNull final DeleteUserInputs deleteUserInputs) throws Exception {
 
-    if(!deleteUserInputs.getCommonInputs().getUserId().equals(EMPTY))
-        return httpDelete(deleteUserInputs.getCommonInputs(), DELETE_USER_REQUEST_URL  + deleteUserInputs.getCommonInputs().getUserId().toString());
-
-    return httpDelete(deleteUserInputs.getCommonInputs(), DELETE_USER_REQUEST_URL  + deleteUserInputs.getCommonInputs().getUserId().toString());
+    return httpDelete(deleteUserInputs.getCommonInputs(), getDeleteUserUrl(deleteUserInputs));
 
     }
 
