@@ -18,14 +18,14 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class SFTPGetInputs implements IHasFTPOperation {
+public class SFTPDownloadFileInputs implements IHasFTPOperation {
     private final SFTPCommonInputs sftpCommonInputs;
     private final String remoteFile;
     private final String localLocation;
 
     @java.beans.ConstructorProperties({"sfptCommonInputs","remoteFile","localLocation"})
 
-    public SFTPGetInputs(SFTPCommonInputs sftpCommonInputs, String remoteFile, String localLocation) {
+    public SFTPDownloadFileInputs(SFTPCommonInputs sftpCommonInputs, String remoteFile, String localLocation) {
         this.sftpCommonInputs = sftpCommonInputs;
         this.remoteFile = remoteFile;
         this.localLocation = localLocation;
@@ -60,25 +60,25 @@ public class SFTPGetInputs implements IHasFTPOperation {
         }
 
         @NotNull
-        public SFTPGetInputs.SFTPGetInputsBuilder sftpCommonInputs(@NotNull final SFTPCommonInputs sftpCommonInputs){
+        public SFTPDownloadFileInputs.SFTPGetInputsBuilder sftpCommonInputs(@NotNull final SFTPCommonInputs sftpCommonInputs){
             this.sftpCommonInputs  = sftpCommonInputs;
             return this;
         }
 
         @NotNull
-        public SFTPGetInputs.SFTPGetInputsBuilder remoteFile(@NotNull final String remoteFile){
+        public SFTPDownloadFileInputs.SFTPGetInputsBuilder remoteFile(@NotNull final String remoteFile){
             this.remoteFile = remoteFile;
             return this;
         }
 
         @NotNull
-        public SFTPGetInputs.SFTPGetInputsBuilder localLocation(@NotNull final String localLocation){
+        public SFTPDownloadFileInputs.SFTPGetInputsBuilder localLocation(@NotNull final String localLocation){
             this.localLocation = localLocation;
             return this;
         }
 
-        public SFTPGetInputs build(){
-            return new SFTPGetInputs(sftpCommonInputs,remoteFile,localLocation);
+        public SFTPDownloadFileInputs build(){
+            return new SFTPDownloadFileInputs(sftpCommonInputs,remoteFile,localLocation);
         }
 
 
