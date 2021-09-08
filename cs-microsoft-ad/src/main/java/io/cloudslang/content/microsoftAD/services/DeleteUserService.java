@@ -24,12 +24,6 @@ import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpDelete;
 import static io.cloudslang.content.microsoftAD.utils.Constants.DELETE_USER_REQUEST_URL;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-/*
-
-TODO: Change from the default httprequest to the new one
-
-
- */
 
 public class DeleteUserService {
 

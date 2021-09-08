@@ -148,12 +148,7 @@ public class DeleteUser {
                             .build())
                     .build());
 
-            final String returnMessage;
-            if (result.get(STATUS_CODE).equals("204"))
-                returnMessage = SUCCESS_RETURN_RESULT_DESC;
-            else
-                returnMessage = result.get(RETURN_RESULT);
-            return getOperationResults(result, returnMessage.toString(), returnMessage.toString());
+            return getOperationResults(result, SUCCESS_RETURN_RESULT_DESC,  result.get(RETURN_RESULT));
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
