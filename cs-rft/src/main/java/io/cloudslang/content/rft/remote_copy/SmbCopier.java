@@ -25,7 +25,6 @@ import com.hierynomus.smbj.auth.AuthenticationContext;
 import com.hierynomus.smbj.connection.Connection;
 import com.hierynomus.smbj.session.Session;
 import com.hierynomus.smbj.share.DiskShare;
-import com.hp.oo.content.commons.util.Address;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileInputStream;
@@ -201,11 +200,15 @@ public class SmbCopier extends SimpleCopier {
     }
 
     @Override
-    public void setCredentials(String host, int port, String username,
-                               String password) throws UnsupportedOperationException {
+    public void setCredentials(String host, int port, String username, String password, String proxyHost, String proxyPort,
+                               String proxyUsername, String proxyPassword) throws UnsupportedOperationException {
         Address address = new Address(host, port);
         this.host = address.getBareHost();
         this.username = username;
         this.password = password;
+        this.proxyHost = proxyHost;
+        this.proxyPort = Integer.valueOf(proxyPort);
+        this.proxyUsername = proxyUsername;
+        this.proxyPassword = proxyPassword;
     }
 }
