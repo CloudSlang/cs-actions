@@ -93,7 +93,6 @@ public interface ICopier {
      */
     public void setProtocol(String protocol);
 
-//
 
     /**
      *
