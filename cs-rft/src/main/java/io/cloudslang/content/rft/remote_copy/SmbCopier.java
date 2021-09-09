@@ -200,15 +200,11 @@ public class SmbCopier extends SimpleCopier {
     }
 
     @Override
-    public void setCredentials(String host, int port, String username, String password, String proxyHost, String proxyPort,
-                               String proxyUsername, String proxyPassword) throws UnsupportedOperationException {
+    public void setCredentials(String host, int port, String username, String password) throws UnsupportedOperationException {
         Address address = new Address(host, port);
         this.host = address.getBareHost();
         this.username = username;
         this.password = password;
-        this.proxyHost = proxyHost;
-        this.proxyPort = Integer.valueOf(proxyPort);
-        this.proxyUsername = proxyUsername;
-        this.proxyPassword = proxyPassword;
+
     }
 }
