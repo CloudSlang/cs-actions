@@ -18,10 +18,6 @@ public class RemoteCopyInputs {
     private final String destinationPath;
     private final String destinationProtocol;
     private final String destinationCharacterSet;
-    private final String proxyHost;
-    private final String proxyPort;
-    private final String proxyUsername;
-    private final String proxyPassword;
     private final String connectionTimeout;
     private final String executionTimeout;
 
@@ -29,7 +25,6 @@ public class RemoteCopyInputs {
                              String sourcePath, String sourceProtocol, String sourceCharacterSet, String destinationHost,
                              String destinationPort, String destinationUsername, String destinationPassword, String destinationPrivateKeyFile,
                              String destinationPath, String destinationProtocol, String destinationCharacterSet,
-                             String proxyHost, String proxyPort, String proxyUsername, String proxyPassword,
                              String connectionTimeout, String executionTimeout) {
         this.sourceHost = sourceHost;
         this.sourcePort = sourcePort;
@@ -47,10 +42,6 @@ public class RemoteCopyInputs {
         this.destinationPath = destinationPath;
         this.destinationProtocol = destinationProtocol;
         this.destinationCharacterSet = destinationCharacterSet;
-        this.proxyHost = proxyHost;
-        this.proxyPort = proxyPort;
-        this.proxyUsername = proxyUsername;
-        this.proxyPassword = proxyPassword;
         this.connectionTimeout = connectionTimeout;
         this.executionTimeout = executionTimeout;
     }
@@ -119,20 +110,6 @@ public class RemoteCopyInputs {
         return destinationCharacterSet;
     }
 
-    public String getProxyHost() {
-        return proxyHost;
-    }
-
-    public String getProxyPort() { return proxyPort; }
-
-    public String getProxyUsername() {
-        return proxyUsername;
-    }
-
-    public String getProxyPassword() {
-        return proxyPassword;
-    }
-
     public String getConnectionTimeout() {
         return connectionTimeout;
     }
@@ -158,10 +135,6 @@ public class RemoteCopyInputs {
         private String destinationPath;
         private String destinationProtocol;
         private String destinationCharacterSet;
-        private String proxyHost;
-        private String proxyPort;
-        private String proxyUsername;
-        private String proxyPassword;
         private String connectionTimeout;
         private String executionTimeout;
 
@@ -172,8 +145,7 @@ public class RemoteCopyInputs {
             return new RemoteCopyInputs(sourceHost, sourcePort, sourceUsername, sourcePassword, sourcePrivateKeyFile,
                     sourcePath, sourceProtocol, sourceCharacterSet, destinationHost, destinationPort, destinationUsername,
                     destinationPassword, destinationPrivateKeyFile, destinationPath, destinationProtocol,
-                    destinationCharacterSet, proxyHost, proxyPort, proxyUsername, proxyPassword,
-                    connectionTimeout,executionTimeout);
+                    destinationCharacterSet, connectionTimeout,executionTimeout);
         }
 
         public RemoteCopyBuilder sourceHost(String sourceHost) {
@@ -253,26 +225,6 @@ public class RemoteCopyInputs {
 
         public RemoteCopyBuilder destinationCharacterSet(String destinationCharacterSet) {
             this.destinationCharacterSet = destinationCharacterSet;
-            return this;
-        }
-
-        public RemoteCopyBuilder proxyHost(String proxyHost) {
-            this.proxyHost = proxyHost;
-            return this;
-        }
-
-        public RemoteCopyBuilder proxyPort(String proxyPort) {
-            this.proxyPort = proxyPort;
-            return this;
-        }
-
-        public RemoteCopyBuilder proxyUsername(String proxyUsername) {
-            this.proxyUsername = proxyUsername;
-            return this;
-        }
-
-        public RemoteCopyBuilder proxyPassword(String proxyPassword) {
-            this.proxyPassword = proxyPassword;
             return this;
         }
 

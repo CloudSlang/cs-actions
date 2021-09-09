@@ -29,10 +29,6 @@ public class Connection {
     private ChannelSftp secureChannel;
     private int connectionTimeout;
     private int executionTimeout;
-    private String proxyHost;
-    private int proxyPort;
-    private String proxyUsername;
-    private String proxyPassword;
 
     public Connection() {
 
@@ -86,14 +82,6 @@ public class Connection {
             session = jsch.getSession(username, host, port);
             session.setUserInfo(ui);
             session.setConfig("PreferredAuthentications", "publickey,keyboard-interactive,password");
-
-            if (!proxyHost.isEmpty()) {
-                ProxyHTTP proxy = new ProxyHTTP(proxyHost, proxyPort);
-                if ((!proxyUsername.isEmpty()) && (!proxyPassword.isEmpty())) {
-                    proxy.setUserPasswd(proxyUsername, proxyPassword);
-                }
-                session.setProxy(proxy);
-            }
 
             if (connectionTimeout > 0)
                 session.connect(connectionTimeout * 1000);
@@ -175,38 +163,6 @@ public class Connection {
 
     public void setExecutionTimeout(int executionTimeout) {
         this.executionTimeout = executionTimeout;
-    }
-
-    public String getProxyHost() {
-        return proxyHost;
-    }
-
-    public void setProxyHost(String proxyHost) {
-        this.proxyHost = proxyHost;
-    }
-
-    public int getProxyPort() {
-        return proxyPort;
-    }
-
-    public void setProxyPort(int proxyPort) {
-        this.proxyPort = proxyPort;
-    }
-
-    public String getProxyUsername() {
-        return proxyUsername;
-    }
-
-    public void setProxyUsername(String proxyUsername) {
-        this.proxyUsername = proxyUsername;
-    }
-
-    public String getProxyPassword() {
-        return proxyPassword;
-    }
-
-    public void setProxyPassword(String proxyPassword) {
-        this.proxyPassword = proxyPassword;
     }
 
 }

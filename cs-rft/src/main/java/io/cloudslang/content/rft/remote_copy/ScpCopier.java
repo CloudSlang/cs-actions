@@ -26,7 +26,6 @@ import com.iconclude.dharma.commons.security.ssh.SSHOperationResult;
 import com.iconclude.dharma.commons.util.StringUtils;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.ProxyHTTP;
 import com.jcraft.jsch.Session;
 
 import java.io.*;
@@ -41,10 +40,6 @@ public class ScpCopier extends SimpleCopier {
     private String username;
     private String password;
     private String privateKeyFile;
-    private String proxyHost;
-    private int proxyPort;
-    private String proxyUsername;
-    private String proxyPassword;
 
     //Collection<KerberosTicket> tickets;
 
@@ -55,7 +50,7 @@ public class ScpCopier extends SimpleCopier {
     protected void getFile(String source, File getFile) throws Exception {
 
         SCPLocalOperationGet scpOp = new SCPLocalOperationGet(source, host, port, username, password, privateKeyFile,
-                getFile, this, connectionTimeout * 1000, proxyHost, proxyPort, proxyPassword, proxyUsername);
+                getFile, this, connectionTimeout * 1000);
         SSHOperationResult raw = scpOp.exec();  //contains a call to bindOperation()
         if (raw.isTimedOut()) {
             throw new Exception("SCP Operation timed out");
@@ -77,8 +72,7 @@ public class ScpCopier extends SimpleCopier {
 
     protected void putFile(IReader sourceFile, String destination) throws Exception {
         LocalSCPOperationPut scpOp = new LocalSCPOperationPut(sourceFile.getFile(), destination, host, port,
-                username, password, privateKeyFile, sourceFile.getFileName(), connectionTimeout * 1000,
-                proxyHost, proxyPort, proxyPassword, proxyUsername);
+                username, password, privateKeyFile, sourceFile.getFileName(), connectionTimeout * 1000);
         SSHOperationResult raw = scpOp.exec();  //contains a call to bindOperation()
         if (raw.isTimedOut()) {
             throw new Exception("SCP Operation timed out");
@@ -88,24 +82,18 @@ public class ScpCopier extends SimpleCopier {
     }
 
     @Override
-    public void setCredentials(String host, int port, String username, String password, String proxyHost, String proxyPort,
-                               String proxyUsername, String proxyPassword) throws UnsupportedOperationException {
+    public void setCredentials(String host, int port, String username, String password) throws UnsupportedOperationException {
         Address address = new Address(host, port);
         this.host = address.getBareHost();
         this.port = address.getPort();
         this.username = username;
         this.password = password;
-        this.proxyHost = proxyHost;
-        this.proxyPort = Integer.valueOf(proxyPort);
-        this.proxyUsername = proxyUsername;
-        this.proxyPassword = proxyPassword;
     }
 
     @Override
-    public void setCredentials(String host, int port, String username, String password, String privateKeyFile,
-                               String proxyHost, String proxyPort, String proxyUsername, String proxyPassword)
+    public void setCredentials(String host, int port, String username, String password, String privateKeyFile)
             throws UnsupportedOperationException {
-        setCredentials(host, port, username, password, proxyHost, proxyPort, proxyUsername, proxyPassword);
+        setCredentials(host, port, username, password);
         this.privateKeyFile = privateKeyFile;
     }
 
@@ -131,16 +119,10 @@ class SCPLocalOperationGet extends SSHOperation<DefaultSSHSessionCreator, SCPLoc
     private String srcPassword;
     private String srcPrivateKeyFile;
     private int connectionTimeout;
-    private String proxyHost;
-    private int proxyPort;
-    private String proxyUsername;
-    private String proxyPassword;
 
     public SCPLocalOperationGet(String srcPath, String srcHost, int port, String srcUsername, String srcPassword,
-                                String srcPrivateKeyFile, File dest, ScpCopier exec, int timeout, String proxyHost,
-                                int proxyPort, String proxyUsername, String proxyPassword) {
-        this(new DefaultSSHSessionCreator(), new SCPLocalProcessor(srcPath, dest, exec, timeout, proxyHost, proxyPort,
-                proxyUsername, proxyPassword));
+                                String srcPrivateKeyFile, File dest, ScpCopier exec, int timeout) {
+        this(new DefaultSSHSessionCreator(), new SCPLocalProcessor(srcPath, dest, exec, timeout));
         Address address = new Address(srcHost, port);
         this.srcHost = address.getBareHost();
         this.port = address.getPort();
@@ -148,10 +130,6 @@ class SCPLocalOperationGet extends SSHOperation<DefaultSSHSessionCreator, SCPLoc
         this.srcPassword = srcPassword;
         this.srcPrivateKeyFile = srcPrivateKeyFile;
         this.connectionTimeout = timeout;
-        this.proxyHost = proxyHost;
-        this.proxyPort = proxyPort;
-        this.proxyUsername = proxyUsername;
-        this.proxyPassword = proxyPassword;
     }
 
     protected SCPLocalOperationGet(DefaultSSHSessionCreator sessCreator, SCPLocalProcessor channelProc) {
@@ -196,34 +174,18 @@ class SCPLocalProcessor extends SSHChannelProcessor {
     ScpCopier parent;
     private String srcPath;
     private File dest;
-    public String proxyHost;
-    public int proxyPort;
-    public String proxyUsername;
-    public String proxyPassword;
 
-    public SCPLocalProcessor(String srcPath, File dest, ScpCopier parent, int connectionTimeout, String proxyHost, int
-                             proxyPort, String proxyUsername, String proxyPassword) {
+    public SCPLocalProcessor(String srcPath, File dest, ScpCopier parent, int connectionTimeout) {
         this.srcPath = srcPath;
         this.dest = dest;
         this.parent = parent;
         this.connectionTimeout = connectionTimeout;
-        this.proxyHost = proxyHost;
-        this.proxyPort = proxyPort;
-        this.proxyUsername = proxyUsername;
-        this.proxyPassword = proxyPassword;
         // small hack to handle the input name change from privateKey to privateKeyFile
     }
 
     @SuppressWarnings("unchecked")
     //@Override
     public void createChannel(Session session, Map bindings) throws JSchException {
-        if (!proxyHost.isEmpty()) {
-            ProxyHTTP proxy = new ProxyHTTP(proxyHost, proxyPort);
-            if ((!proxyUsername.isEmpty()) && (!proxyPassword.isEmpty())) {
-                proxy.setUserPasswd(proxyUsername, proxyPassword);
-            }
-            session.setProxy(proxy);
-        }
         channel = (ChannelExec) session.openChannel(CHANNELTYPE);
     }
 
@@ -406,33 +368,17 @@ class LocalSCPProcessor extends SSHChannelProcessor {
     private int connectionTimeout;
     private File tmp;
     private String destPath;
-    private String proxyHost;
-    private int proxyPort;
-    private String proxyUsername;
-    private String proxyPassword;
 
-    public LocalSCPProcessor(File tmp, String destPath, String sourceFileName, int connectionTimeout, String proxyHost,
-                             int proxyPort, String proxyUsername, String proxyPassword) {
+    public LocalSCPProcessor(File tmp, String destPath, String sourceFileName, int connectionTimeout) {
         this.tmp = tmp;
         this.destPath = destPath;
         this.sourceFileName = sourceFileName;
         this.connectionTimeout = connectionTimeout;
-        this.proxyHost = proxyHost;
-        this.proxyPort = proxyPort;
-        this.proxyUsername = proxyUsername;
-        this.proxyPassword = proxyPassword;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void createChannel(Session session, Map bindings) throws JSchException {
-        if (!proxyHost.isEmpty()) {
-            ProxyHTTP proxy = new ProxyHTTP(proxyHost, proxyPort);
-            if ((!proxyUsername.isEmpty()) && (!proxyPassword.isEmpty())) {
-                proxy.setUserPasswd(proxyUsername, proxyPassword);
-            }
-            session.setProxy(proxy);
-        }
         channel = (ChannelExec) session.openChannel(CHANNELTYPE);
     }
 
@@ -576,16 +522,10 @@ class LocalSCPOperationPut extends SSHOperation<DefaultSSHSessionCreator, LocalS
     private String destPassword;
     private String destPrivateKeyFile;
     private int connectionTimeout;
-    private String proxyHost;
-    private int proxyPort;
-    private String proxyUsername;
-    private String proxyPassword;
 
     public LocalSCPOperationPut(File tmp, String destPath, String destHost, int port, String destUsername, String destPassword,
-                                String destPrivateKeyFile, String sourceFileName, int timeout, String proxyHost, int proxyPort,
-                                String proxyPassword, String proxyUsername) {
-        this(new DefaultSSHSessionCreator(), new LocalSCPProcessor(tmp, destPath, sourceFileName, timeout, proxyHost, proxyPort,
-                proxyUsername, proxyPassword));
+                                String destPrivateKeyFile, String sourceFileName, int timeout) {
+        this(new DefaultSSHSessionCreator(), new LocalSCPProcessor(tmp, destPath, sourceFileName, timeout));
         Address address = new Address(destHost, port);
         this.destHost = address.getBareHost();
         this.port = address.getPort();
@@ -593,10 +533,6 @@ class LocalSCPOperationPut extends SSHOperation<DefaultSSHSessionCreator, LocalS
         this.destPassword = destPassword;
         this.destPrivateKeyFile = destPrivateKeyFile;
         this.connectionTimeout = timeout;
-        this.proxyHost = proxyHost;
-        this.proxyPort = proxyPort;
-        this.proxyPassword = proxyPassword;
-        this.proxyUsername = proxyUsername;
     }
 
     protected LocalSCPOperationPut(DefaultSSHSessionCreator sessCreator, LocalSCPProcessor channelProc) {

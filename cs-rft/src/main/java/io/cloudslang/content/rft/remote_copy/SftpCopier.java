@@ -36,10 +36,6 @@ public class SftpCopier extends SimpleCopier {
     private String password;
     private int connectionTimeout;
     private int executionTimeout;
-    private String proxyHost;
-    private int proxyPort;
-    private String proxyUsername;
-    private String proxyPassword;
     private String privateKeyFile;
     private Session cachedSession;
 
@@ -52,11 +48,9 @@ public class SftpCopier extends SimpleCopier {
         if (cachedSession != null) {
             action.connect(cachedSession);
         } else if (privateKeyFile != null && privateKeyFile.length() > 0) {
-            action.connect(username, password, privateKeyFile, host, port, connectionTimeout, executionTimeout, proxyHost,
-                    proxyPort, proxyUsername, proxyPassword);
+            action.connect(username, password, privateKeyFile, host, port, connectionTimeout, executionTimeout);
         } else {
-            action.connect(username, password, host, port, connectionTimeout, executionTimeout, proxyHost, proxyPort,
-                    proxyUsername, proxyPassword);
+            action.connect(username, password, host, port, connectionTimeout, executionTimeout);
         }
         return action;
     }
@@ -99,24 +93,18 @@ public class SftpCopier extends SimpleCopier {
     }
 
     @Override
-    public void setCredentials(String host, int port, String username, String password, String proxyHost, String proxyPort,
-                               String proxyUsername, String proxyPassword) throws UnsupportedOperationException {
+    public void setCredentials(String host, int port, String username, String password) throws UnsupportedOperationException {
         Address address = new Address(host, port);
         this.host = address.getBareHost();
         this.port = address.getPort();
         this.username = username;
         this.password = password;
-        this.proxyHost = proxyHost;
-        this.proxyPort = Integer.valueOf(proxyPort);
-        this.proxyUsername = proxyUsername;
-        this.proxyPassword = proxyPassword;
     }
 
     @Override
-    public void setCredentials(String host, int port, String username, String password, String privateKeyFile,
-                               String proxyHost, String proxyPort, String proxyUsername, String proxyPassword)
+    public void setCredentials(String host, int port, String username, String password, String privateKeyFile)
             throws UnsupportedOperationException {
-        setCredentials(host, port, username, password, proxyHost, proxyPort, proxyUsername, proxyPassword);
+        setCredentials(host, port, username, password);
         this.privateKeyFile = privateKeyFile;
     }
 
@@ -144,19 +132,4 @@ public class SftpCopier extends SimpleCopier {
         return CopierFactory.copiers.sftp.name();
     }
 
-    public void setProxyHost(String proxyHost) {
-        this.proxyHost = proxyHost;
-    }
-
-    public void setProxyPort(int proxyPort) {
-        this.proxyPort = proxyPort;
-    }
-
-    public void setProxyUsername(String proxyUsername) {
-        this.proxyUsername = proxyUsername;
-    }
-
-    public void setProxyPassword(String proxyPassword) {
-        this.proxyPassword = proxyPassword;
-    }
 }

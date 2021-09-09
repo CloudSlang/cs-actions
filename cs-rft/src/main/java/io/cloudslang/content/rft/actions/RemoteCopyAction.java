@@ -71,14 +71,9 @@ public class RemoteCopyAction {
                                        @Param(value = DEST_PATH, description = DEST_PATH_DESC, required = true) String destinationPath,
                                        @Param(value = DEST_PROTOCOL, description = DEST_PROTOCOL_DESC, required = true) String destinationProtocol,
                                        @Param(value = DEST_CHARACTER_SET, description = DEST_CHARACTER_SET_DESC) String destinationCharacterSet,
-                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
-                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
-                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
                                        @Param(value = CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
-        proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
         sourceCharacterSet = defaultIfEmpty(sourceCharacterSet, CHARACTER_SET_UTF8);
         destinationCharacterSet = defaultIfEmpty(destinationCharacterSet, CHARACTER_SET_UTF8);
         connectionTimeout = defaultIfEmpty(connectionTimeout, DEFAULT_CONNECTION_TIMEOUT);
@@ -86,7 +81,7 @@ public class RemoteCopyAction {
 
         final List<String> exceptionMessages = verifyRemoteCopyInputs(sourceHost, sourcePort, sourcePath, sourceProtocol,
                 sourceCharacterSet, destinationHost, destinationPort, destinationPath, destinationProtocol, destinationCharacterSet,
-                proxyPort, connectionTimeout, executionTimeout);
+                connectionTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -108,10 +103,6 @@ public class RemoteCopyAction {
                 .destinationPath(destinationPath)
                 .destinationProtocol(destinationProtocol)
                 .destinationCharacterSet(destinationCharacterSet)
-                .proxyHost(proxyHost)
-                .proxyPort(proxyPort)
-                .proxyUsername(proxyUsername)
-                .proxyPassword(proxyPassword)
                 .connectionTimeout(connectionTimeout)
                 .executionTimeout(executionTimeout)
                 .build();

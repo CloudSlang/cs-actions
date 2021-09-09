@@ -35,35 +35,6 @@ public interface ICopier {
     public void setCredentials(String host, int port, String username, String password, String privateKeyFile) throws UnsupportedOperationException;
 
 
-    /**
-     * @param host
-     * @param username
-     * @param password
-     * @param proxyHost
-     * @param proxyPort
-     * @param proxyUsername
-     * @param proxyPassword
-     * @throws UnsupportedOperationException
-     */
-    public void setCredentials(String host, int port, String username, String password, String proxyHost, String proxyPort,
-                               String proxyUsername, String proxyPassword) throws UnsupportedOperationException;
-
-
-    /**
-     * @param host
-     * @param username
-     * @param password
-     * @param privateKeyFile
-     * @param proxyHost
-     * @param proxyPort
-     * @param proxyUsername
-     * @param proxyPassword
-     * @throws UnsupportedOperationException
-     */
-    public void setCredentials(String host, int port, String username, String password, String privateKeyFile,
-                               String proxyHost, String proxyPort, String proxyUsername, String proxyPassword)
-            throws UnsupportedOperationException;
-
 
     /**
      * @param destination
@@ -122,26 +93,6 @@ public interface ICopier {
      */
     public void setProtocol(String protocol);
 
-//    /**
-//     * @param proxyHost
-//     */
-//    public void setProxyHost(String proxyHost);
-//
-//    /**
-//     * @param proxyPort
-//     */
-//    public void setProxyPort(int proxyPort);
-//
-//    /**
-//     * @param proxyUsername
-//     */
-//    public void setProxyUsername(String proxyUsername);
-//
-//    /**
-//     * @param proxyPassword
-//     */
-//    public void setProxyPassword(String proxyPassword);
-//
 
     /**
      *
