@@ -240,7 +240,7 @@ public class HttpCommons {
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
                 //if status code is 204, no return result is provided, otherwise there is a return result
                 int statusCode = response.getStatusLine().getStatusCode();
-                if (statusCode <= 200 && statusCode > 300)
+                if (statusCode <= 200 ||  statusCode > 300)
                     result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), commonInputs.getResponseCharacterSet()));
                 return result;
             }
