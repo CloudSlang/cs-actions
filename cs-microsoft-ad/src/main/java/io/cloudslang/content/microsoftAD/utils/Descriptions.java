@@ -122,6 +122,8 @@ public class Descriptions {
         public static final String DELETE_USER_NAME = "Delete User";
 
         //Results
+        public static final String DELETE_USER_SUCCESS_DESC = "User deleted successfully.";
+        public static final String DELETE_USER_FAILURE_DESC = "There was an error while trying to delete user.";
         public static final String DELETE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content response code. It does not return anything in the response body.";
         public static final String DELETE_USER_EXCEPTION_DESC = "An error message in case there was an error while deleting the user.";
         public static final String SUCCESS_RETURN_RESULT_DESC = "The user was successfully deleted.";
