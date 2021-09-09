@@ -131,7 +131,6 @@ public class InputsValidation {
             @Nullable final String destinationPath,
             @Nullable final String destinationProtocol,
             @Nullable final String destinationCharacterSet,
-//            @Nullable final String proxyPort,
             @Nullable final String connectionTimeout,
             @Nullable final String executionTimeout) {
 
@@ -144,7 +143,6 @@ public class InputsValidation {
         addVerifyNotNullOrEmpty(exceptions, destinationPath, SOURCE_PATH);
         addVerifyProtocol(exceptions, sourceProtocol);
         addVerifyProtocol(exceptions, destinationProtocol);
-//        addVerifyPort(exceptions, proxyPort);
         addVerifyCharacterSet(exceptions, sourceCharacterSet);
         addVerifyCharacterSet(exceptions, destinationCharacterSet);
         addVerifyNumber(exceptions, connectionTimeout, CONNECTION_TIMEOUT);
