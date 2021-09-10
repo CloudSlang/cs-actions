@@ -19,6 +19,7 @@ package io.cloudslang.content.microsoftAD.services;
 import com.sun.corba.se.impl.legacy.connection.DefaultSocketFactory;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -150,6 +151,7 @@ public class HttpCommons {
                     new UsernamePasswordCredentials(commonInputs.getProxyUsername(), commonInputs.getProxyPassword()));
 
             httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+            httpClientBuilder.setProxy(new HttpHost(commonInputs.getProxyHost()));
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
