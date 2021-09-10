@@ -245,6 +245,9 @@ public class HttpCommons {
                 return result;
             }
         } catch (IOException e) {
+            result.put(STATUS_CODE, EMPTY);
+            result.put(RETURN_RESULT, e.getMessage());
+
             return result;
         }
     }

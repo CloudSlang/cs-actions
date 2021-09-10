@@ -30,6 +30,7 @@ import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class HttpUtils {
@@ -270,6 +271,14 @@ public class HttpUtils {
                                                           final String failureMessage) {
         final Map<String, String> results;
         final String statusCode = result.get(STATUS_CODE);
+
+
+        //Validation for empty status code
+        if(statusCode.equals(EMPTY)){
+            results = getFailureResultsMap(failureMessage);
+            return results;
+        }
+
 
         if (Integer.parseInt(statusCode) >= 200 && Integer.parseInt(statusCode) < 300)
             results = getSuccessResultsMap(successMessage);
