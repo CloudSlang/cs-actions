@@ -151,7 +151,8 @@ public class HttpCommons {
                     new UsernamePasswordCredentials(commonInputs.getProxyUsername(), commonInputs.getProxyPassword()));
 
             httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-            httpClientBuilder.setProxy(new HttpHost(commonInputs.getProxyHost()));
+
+            httpClientBuilder.setProxy(new HttpHost(commonInputs.getProxyHost(),Integer.parseInt(commonInputs.getProxyPort())));
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
