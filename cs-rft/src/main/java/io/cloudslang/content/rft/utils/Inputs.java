@@ -80,6 +80,8 @@ public class Inputs extends InputNames {
         public static final String DELIMITER = "delimiter";
         public static final String REMOTE_PATH = "remotePath";
 
+        public static final String MODE = "mode";
+
     }
 
 }

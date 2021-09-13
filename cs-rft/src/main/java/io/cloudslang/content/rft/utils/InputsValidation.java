@@ -176,4 +176,17 @@ public class InputsValidation {
         }
         return exceptions;
     }
+
+    public static List<String> verifyInputsSFTPCommand(String remotePath, String mode, String host, String port,
+                                                        String username, String password, String proxyPort,
+                                                        String characterSet, String closeSession, String connectionTimeout,
+                                                        String executionTimeout){
+          final List<String> exceptions = verifyCommonSFTPInputs(host,port, username, password, proxyPort,
+                    characterSet,closeSession, connectionTimeout, executionTimeout);
+
+          addVerifyNotNullOrEmpty(exceptions, remotePath, Inputs.SFTPInputs.REMOTE_PATH);
+          addVerifyNotNullOrEmpty(exceptions, mode, Inputs.SFTPInputs.MODE);
+
+          return exceptions;
+    }
 }

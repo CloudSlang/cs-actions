@@ -15,5 +15,5 @@
 package io.cloudslang.content.rft.utils;
 
 public enum SFTPOperation {
-    GET,PUT,GET_CHILDREN;
+    GET,PUT,GET_CHILDREN,COMMAND;
 }
