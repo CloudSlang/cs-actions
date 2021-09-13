@@ -93,23 +93,25 @@ public class CreateUser {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
 
-        if (body.equals(EMPTY)) {
-            accountEnabled = defaultIfEmpty(accountEnabled, BOOLEAN_TRUE);
-            displayName = defaultIfEmpty(displayName, EMPTY);
-            onPremisesImmutableId = defaultIfEmpty(onPremisesImmutableId, EMPTY);
-            mailNickname = defaultIfEmpty(mailNickname, EMPTY);
-            userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
-            forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_TRUE);
-        }
+        accountEnabled = defaultIfEmpty(accountEnabled, BOOLEAN_TRUE);
+        displayName = defaultIfEmpty(displayName, EMPTY);
+        onPremisesImmutableId = defaultIfEmpty(onPremisesImmutableId, EMPTY);
+        mailNickname = defaultIfEmpty(mailNickname, EMPTY);
+        userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
+        forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_TRUE);
+        password = defaultIfEmpty(password, EMPTY);
+        body = defaultIfEmpty(body, EMPTY);
 
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
+
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
+
         connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);

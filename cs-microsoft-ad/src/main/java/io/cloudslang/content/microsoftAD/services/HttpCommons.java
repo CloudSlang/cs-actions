@@ -136,7 +136,7 @@ public class HttpCommons {
 
     public static void setProxy(HttpClientBuilder httpClientBuilder, AzureActiveDirectoryCommonInputs commonInputs) {
 
-        if (commonInputs.getTrustKeystore().equals(EMPTY))
+        if (commonInputs.getProxyHost().equals(EMPTY))
             return;
 
         try {
