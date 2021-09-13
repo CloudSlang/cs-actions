@@ -62,6 +62,12 @@ public class Descriptions {
     }
 
     public static class GetAuthorizationToken {
+
+        //Description
+        public static final String NAME = "Get Authorization Token";
+        public static final String DESC = "Return the authorization token for Microsoft Azure Active Directory";
+
+        //Inputs
         public static final String LOGIN_TYPE_DESC = "Login method according to application type\n" +
                 "Valid values: 'API', 'Native'\n" +
                 "Default: 'API'";

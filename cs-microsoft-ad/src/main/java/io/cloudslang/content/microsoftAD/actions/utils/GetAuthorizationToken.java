@@ -23,6 +23,7 @@ import com.microsoft.aad.adal4j.AuthenticationResult;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AuthorizationTokenInputs;
 import io.cloudslang.content.microsoftAD.services.AuthorizationTokenImpl;
+import io.cloudslang.content.microsoftAD.utils.Descriptions;
 import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -70,7 +71,8 @@ public class GetAuthorizationToken {
      * @param proxyPassword  The proxy server password associated with the proxyUsername input value
      * @return The authorization token for Office 365
      */
-    @Action(name = "Get the authorization token for Office 365",
+    @Action(name = Descriptions.GetAuthorizationToken.NAME,
+            description = DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
