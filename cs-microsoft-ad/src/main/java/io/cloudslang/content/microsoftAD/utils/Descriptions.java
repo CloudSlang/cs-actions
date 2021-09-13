@@ -120,33 +120,19 @@ public class Descriptions {
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response.";
     }
 
-    public static class UpdateUser {
-        public static final String UPDATE_USER_RETURN_RESULT_DESC = "A message is returned in case of success, an error message is returned in case of failure.";
-        public static final String UPDATE_USER_EXCEPTION_DESC = "An error message in case there was an error while updating the user.";
-        public static final String UPDATE_USER_PASSWORD_DESC = "The new password for the user.";
-        public static final String UPDATE_USER_ON_PREMISES_IMMUTABLE_ID_DESC = "Only needs to be specified when updating a user account if you are using " +
-                "a federated domain for the user's userPrincipalName (UPN) property.";
-        public static final String UPDATE_USER_ID_TO_UPDATE_DESC = "The ID of the user to perform the action on.";
-        public static final String UPDATE_USER_PRINCIPAL_NAME_TO_UPDATE_DESC = "The userPrincipalName of the user to perform the action on.";
-        public static final String CREATE_USER_PRINCIPAL_NAME_TO_UPDATE_WITH_DESC = "The new userPrincipalName fot the user.";
-    }
-
-    public static class GetUser {
-        public static final String GET_USER_RETURN_RESULT_DESC = "A message is returned in case of success, an error message is returned in case of failure.";
-        public static final String GET_USER_EXCEPTION_DESC = "An error message in case there was an error while retrieving the user properties and relationships.";
-        public static final String ID_OUTPUT_DESC = "The ID of the user";
-    }
-
 
     public static class DeleteUser {
+
+        //Descriptions
+        public static final String DELETE_USER_DESC = "Delete user. When deleted, user resources are moved to a temporary container and can be restored within 30 days. After that time, they are permanently deleted.";
+        public static final String DELETE_USER_NAME = "Delete User";
+
+        //Results
+        public static final String DELETE_USER_SUCCESS_DESC = "User deleted successfully.";
+        public static final String DELETE_USER_FAILURE_DESC = "There was an error while trying to delete user.";
         public static final String DELETE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content response code. It does not return anything in the response body.";
         public static final String DELETE_USER_EXCEPTION_DESC = "An error message in case there was an error while deleting the user.";
         public static final String SUCCESS_RETURN_RESULT_DESC = "The user was successfully deleted.";
     }
 
-    public static class ListUser {
-        public static final String LIST_USERS_RESULT_DESC = "If successful, returns the complete API response.";
-        public static final String LIST_USERS_DOCUMENT_DESC = "The full API response in case of success";
-        public static final String LIST_USERS_EXCEPTION_DESC = "An error message in case there was an error while retrieving the list of user objects.";
-    }
 }

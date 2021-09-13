@@ -18,6 +18,7 @@ package io.cloudslang.content.microsoftAD.services;
 
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -147,6 +148,8 @@ public class HttpCommons {
 
             httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
+            httpClientBuilder.setProxy(new HttpHost(commonInputs.getProxyHost(),Integer.parseInt(commonInputs.getProxyPort())));
+
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -235,11 +238,14 @@ public class HttpCommons {
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
                 //if status code is 204, no return result is provided, otherwise there is a return result
                 int statusCode = response.getStatusLine().getStatusCode();
-                if (statusCode <= 200 && statusCode > 300)
+                if (statusCode <= 200 ||  statusCode > 300)
                     result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), commonInputs.getResponseCharacterSet()));
                 return result;
             }
         } catch (IOException e) {
+            result.put(STATUS_CODE, EMPTY);
+            result.put(RETURN_RESULT, e.getMessage());
+
             return result;
         }
     }
