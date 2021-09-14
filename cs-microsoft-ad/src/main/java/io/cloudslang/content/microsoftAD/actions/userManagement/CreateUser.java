@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.microsoftAD.actions.userManagement;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -174,13 +176,13 @@ public class CreateUser {
 
             finalResult.put(USER_ID, EMPTY);
 
-            if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300)
-                try {
-                    JSONObject json = (JSONObject) (new JSONParser()).parse(result.get(RETURN_RESULT));
-                    finalResult.put(USER_ID, json.getAsString(ID));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+            if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300) {
+
+                JsonObject json = ((new JsonParser()).parse(result.get(RETURN_RESULT))).getAsJsonObject();
+
+                if (json.has(ID))
+                    finalResult.put(USER_ID, json.get(ID).getAsString());
+            }
 
             return finalResult;
 
