@@ -14,6 +14,8 @@
  */
 package io.cloudslang.content.microsoftAD.actions.userManagement;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -21,8 +23,10 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.CreateUserInputs;
-import io.cloudslang.content.microsoftAD.utils.Descriptions;
 import io.cloudslang.content.utils.StringUtilities;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 
 import java.util.List;
 import java.util.Map;
@@ -38,8 +42,14 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.microsoftAD.services.CreateUserService.createUser;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.NAME;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.PASSWORD_DESC;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.RETURN_RESULT_DESC;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.USER_ID_DESC;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.BODY;
@@ -58,11 +68,12 @@ public class CreateUser {
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = USER_ID, description = USER_ID_DESC),
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = "SUCCESS_DESC"),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = "FAILURE_DESC")
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
@@ -91,25 +102,27 @@ public class CreateUser {
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
+                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
-        if (body.equals(EMPTY)) {
-            accountEnabled = defaultIfEmpty(accountEnabled, BOOLEAN_TRUE);
-            displayName = defaultIfEmpty(displayName, EMPTY);
-            onPremisesImmutableId = defaultIfEmpty(onPremisesImmutableId, EMPTY);
-            mailNickname = defaultIfEmpty(mailNickname, EMPTY);
-            userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
-            forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_TRUE);
-        }
+        accountEnabled = defaultIfEmpty(accountEnabled, BOOLEAN_TRUE);
+        displayName = defaultIfEmpty(displayName, EMPTY);
+        onPremisesImmutableId = defaultIfEmpty(onPremisesImmutableId, EMPTY);
+        mailNickname = defaultIfEmpty(mailNickname, EMPTY);
+        userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
+        forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_TRUE);
+        password = defaultIfEmpty(password, EMPTY);
+        body = defaultIfEmpty(body, EMPTY);
 
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
+
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
+
         connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
@@ -159,7 +172,19 @@ public class CreateUser {
                             .build())
                     .build());
 
-            return getOperationResults(result, result.get(RETURN_RESULT), result.get(RETURN_RESULT));
+            Map<String, String> finalResult = getOperationResults(result, result.get(RETURN_RESULT), result.get(RETURN_RESULT));
+
+            finalResult.put(USER_ID, EMPTY);
+
+            if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300) {
+
+                JsonObject json = ((new JsonParser()).parse(result.get(RETURN_RESULT))).getAsJsonObject();
+
+                if (json.has(ID))
+                    finalResult.put(USER_ID, json.get(ID).getAsString());
+            }
+
+            return finalResult;
 
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
