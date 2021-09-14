@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -24,9 +24,6 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.CreateUserInputs;
 import io.cloudslang.content.utils.StringUtilities;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 
 import java.util.List;
 import java.util.Map;

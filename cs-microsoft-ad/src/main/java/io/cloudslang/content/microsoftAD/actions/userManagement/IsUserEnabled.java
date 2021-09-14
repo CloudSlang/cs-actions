@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -54,6 +54,7 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.microsoftAD.services.GetUserService.getUser;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
+import static io.cloudslang.content.microsoftAD.utils.Constants.USER_ID;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserEnabled.*;

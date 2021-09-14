@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -113,6 +113,7 @@ public class Descriptions {
 
         //Outputs
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response.";
+        public static final String USER_ID_DESC = "The ID of the newly created user.";
     }
 
 

@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -16,7 +16,6 @@
 
 package io.cloudslang.content.microsoftAD.services;
 
-import com.sun.corba.se.impl.legacy.connection.DefaultSocketFactory;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
 import org.apache.http.HttpHeaders;

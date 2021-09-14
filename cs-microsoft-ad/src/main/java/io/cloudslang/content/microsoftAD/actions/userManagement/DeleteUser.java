@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -23,20 +23,7 @@ import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInpu
 import io.cloudslang.content.microsoftAD.entities.DeleteUserInputs;
 import io.cloudslang.content.microsoftAD.utils.Outputs;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpHost;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,10 +42,11 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.USER_PRINCIPAL_NAME_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.DeleteUser.*;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.*;
+
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.*;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_ID;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -146,7 +134,7 @@ public class DeleteUser {
                             .build())
                     .build());
 
-            return getOperationResults(result, SUCCESS_RETURN_RESULT_DESC,  result.get(RETURN_RESULT));
+            return getOperationResults(result, SUCCESS_RETURN_RESULT_DESC, result.get(RETURN_RESULT));
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
