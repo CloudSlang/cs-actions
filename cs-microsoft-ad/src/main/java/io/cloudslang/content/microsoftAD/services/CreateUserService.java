@@ -20,7 +20,7 @@ import io.cloudslang.content.microsoftAD.entities.CreateUserInputs;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPost;
-import static io.cloudslang.content.microsoftAD.utils.Constants.CREATE_USER_URL;
+import static io.cloudslang.content.microsoftAD.utils.Constants.CREATE_USER_REQUEST_URL;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
@@ -29,7 +29,7 @@ public class CreateUserService {
     public static Map<String, String> createUser(CreateUserInputs createUserInputs) {
 
         if (!createUserInputs.getBody().equals(EMPTY))
-            return httpPost(createUserInputs.getCommonInputs(), CREATE_USER_URL, createUserInputs.getBody());
+            return httpPost(createUserInputs.getCommonInputs(), CREATE_USER_REQUEST_URL, createUserInputs.getBody());
 
         JsonObject passwordProfile = new JsonObject();
         passwordProfile.addProperty(FORCE_CHANGE_PASSWORD, createUserInputs.getForceChangePassword());
@@ -44,6 +44,6 @@ public class CreateUserService {
         body.addProperty(USER_PRINCIPAL_NAME, createUserInputs.getUserPrincipalName());
         body.add(PASSWORD_PROFILE, passwordProfile);
 
-        return httpPost(createUserInputs.getCommonInputs(), CREATE_USER_URL, body.toString());
+        return httpPost(createUserInputs.getCommonInputs(), CREATE_USER_REQUEST_URL, body.toString());
     }
 }

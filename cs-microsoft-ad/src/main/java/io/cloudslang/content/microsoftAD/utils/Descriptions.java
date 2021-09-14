@@ -118,6 +118,7 @@ public class Descriptions {
 
         //Outputs
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response.";
+        public static final String USER_ID_DESC = "The ID of the newly created user.";
     }
 
 
