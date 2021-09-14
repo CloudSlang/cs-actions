@@ -16,7 +16,9 @@
 
 package io.cloudslang.content.microsoftAD.services;
 
+import com.sun.corba.se.impl.legacy.connection.DefaultSocketFactory;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
+import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -26,8 +28,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.AbstractVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -37,10 +41,12 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
 import org.apache.http.util.EntityUtils;
+import sun.security.ssl.SSLSocketFactoryImpl;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.File;
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -51,6 +57,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
+import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class HttpCommons {
@@ -58,7 +65,7 @@ public class HttpCommons {
     private final static HostnameVerifier ALLOW_ALL_HOSTNAME_VERIFIER = new AbstractVerifier() {
         @Override
         public void verify(String s, String[] strings, String[] strings1) throws SSLException {}
-        public final String toString() { return ALLOW_ALL; }
+        public final String toString() { return "ALLOW_ALL"; }
     };
 
     private final static HostnameVerifier STRICT_HOSTNAME_VERIFIER = new AbstractVerifier() {
@@ -66,7 +73,7 @@ public class HttpCommons {
         public void verify(String s, String[] strings, String[] strings1) throws SSLException {
             this.verify(s, strings, strings1, true);
         }
-        public final String toString() { return STRICT; }
+        public final String toString() { return "STRICT"; }
     };
 
     private final static HostnameVerifier BROWSER_COMPATIBLE_HOSTNAME_VERIFIER = new AbstractVerifier() {
@@ -74,21 +81,21 @@ public class HttpCommons {
         public void verify(String s, String[] strings, String[] strings1) throws SSLException {
             this.verify(s, strings, strings1, false);
         }
-        public final String toString() { return BROWSER_COMPATIBLE; }
+        public final String toString() { return "BROWSER_COMPATIBLE"; }
     };
 
     private static HostnameVerifier x509HostnameVerifier(String hostnameVerifier) {
         String x509HostnameVerifierStr = hostnameVerifier.toLowerCase();
-        HostnameVerifier x509HostnameVerifier = STRICT_HOSTNAME_VERIFIER;
+        HostnameVerifier x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
         switch (x509HostnameVerifierStr) {
-            case STRICT:
-                x509HostnameVerifier = STRICT_HOSTNAME_VERIFIER;
+            case "strict":
+                x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
                 break;
-            case BROWSER_COMPATIBLE:
-                x509HostnameVerifier = BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
+            case "browser_compatible":
+                x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
                 break;
-            case ALLOW_ALL:
-                x509HostnameVerifier = ALLOW_ALL_HOSTNAME_VERIFIER;
+            case "allow_all":
+                x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
                 break;
         }
         return x509HostnameVerifier;
@@ -103,7 +110,9 @@ public class HttpCommons {
             try {
 
                 SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (TrustStrategy) hostnameVerifier).build();
-                httpClientBuilder.setSSLContext(sslContext).setSSLHostnameVerifier(hostnameVerifier);
+                SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
+                //SSLSocketFactory sslSocketFactory = new SSLSocketFactory();
+                httpClientBuilder.setSSLSocketFactory(socketFactory).build();
 
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
@@ -121,7 +130,8 @@ public class HttpCommons {
                         new File(commonInputs.getTrustKeystore()),
                         commonInputs.getTrustPassword().toCharArray()).build();
 
-                httpClientBuilder.setSSLContext(sslContext).setSSLHostnameVerifier(hostnameVerifier);
+                SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
+                httpClientBuilder.setSSLSocketFactory(socketFactory);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -200,9 +210,6 @@ public class HttpCommons {
 
         Map<String, String> result = new HashMap<>();
 
-        result.put(STATUS_CODE, EMPTY);
-        result.put(RETURN_RESULT, EMPTY);
-
         try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
 
             HttpPost httpPost = new HttpPost(url);
@@ -218,6 +225,10 @@ public class HttpCommons {
                 return result;
             }
         } catch (IOException e) {
+
+            result.put(STATUS_CODE, EMPTY);
+            result.put(RETURN_RESULT, e.getMessage());
+
             return result;
         }
     }
@@ -236,6 +247,28 @@ public class HttpCommons {
                 int statusCode = response.getStatusLine().getStatusCode();
                 if (statusCode <= 200 ||  statusCode > 300)
                     result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), commonInputs.getResponseCharacterSet()));
+                return result;
+            }
+        } catch (IOException e) {
+            result.put(STATUS_CODE, EMPTY);
+            result.put(RETURN_RESULT, e.getMessage());
+
+            return result;
+        }
+    }
+
+    public static Map<String, String> httpGet(GetUserInputs getUserInputsInputs, String url) {
+        Map<String, String> result = new HashMap<>();
+        result.put(STATUS_CODE, EMPTY);
+        result.put(RETURN_RESULT, EMPTY);
+        try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(getUserInputsInputs.getCommonInputs())) {
+            HttpGet httpGet = new HttpGet(url);
+            httpGet.setHeader(HttpHeaders.AUTHORIZATION, BEARER + getUserInputsInputs.getCommonInputs().getAuthToken());
+            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+            try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
+                result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
+                int statusCode = response.getStatusLine().getStatusCode();
+                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), getUserInputsInputs.getCommonInputs().getResponseCharacterSet()));
                 return result;
             }
         } catch (IOException e) {

@@ -14,13 +14,16 @@
  */
 package io.cloudslang.content.microsoftAD.actions.userManagement;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
-import io.cloudslang.content.microsoftAD.entities.DeleteUserInputs;
+import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
+import io.cloudslang.content.microsoftAD.utils.Descriptions;
 import io.cloudslang.content.microsoftAD.utils.Outputs;
 import io.cloudslang.content.utils.StringUtilities;
 import org.apache.http.HttpHeaders;
@@ -49,13 +52,11 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
-import static io.cloudslang.content.microsoftAD.services.DeleteUserService.deleteUser;
+import static io.cloudslang.content.microsoftAD.services.GetUserService.getUser;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.AUTH_TOKEN_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.USER_PRINCIPAL_NAME_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.DeleteUser.*;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserEnabled.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.*;
@@ -64,15 +65,16 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DeleteUser {
-    @Action(name = DELETE_USER_NAME,
-            description = DELETE_USER_DESC,
-            outputs = {@Output(value = RETURN_RESULT, description = DELETE_USER_RETURN_RESULT_DESC),
+public class IsUserEnabled {
+    @Action(name = IS_USER_ENABLED_NAME,
+            description = IS_USER_ENABLED_DESC,
+            outputs = {@Output(value = RETURN_RESULT, description = IS_USER_ENABLED_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC)},
+                    @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = ACCOUNT_ENABLED_OUT, description = Descriptions.CreateUser.ACCOUNT_ENABLED_DESC)},
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = DELETE_USER_SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = DELETE_USER_FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = IS_USER_ENABLED_SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = IS_USER_ENABLED_FAILURE_DESC)
             })
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
@@ -124,7 +126,8 @@ public class DeleteUser {
         }
 
         try {
-            final Map<String, String> result = deleteUser(DeleteUserInputs.builder()
+            final Map<String, String> result = getUser(GetUserInputs.builder()
+                    .oDataQuery(IS_USER_ENABLED_ODATA_QUERY)
                     .commonInputs(AzureActiveDirectoryCommonInputs.builder()
                             .authToken(authToken)
                             .proxyHost(proxyHost)
@@ -146,7 +149,22 @@ public class DeleteUser {
                             .build())
                     .build());
 
-            return getOperationResults(result, SUCCESS_RETURN_RESULT_DESC,  result.get(RETURN_RESULT));
+            final String returnMessage = result.get(RETURN_RESULT);
+            final Map<String, String> results = getOperationResults(result, IS_USER_ENABLED_SUCCESS_RETURN_RESULT_DESC,  result.get(RETURN_RESULT));
+            final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+
+
+            if (statusCode >= 200 && statusCode < 300) {
+                final JsonParser parser = new JsonParser();
+                final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
+                if (responseJson.has(ACCOUNT_ENABLED_OUT)) {
+                    final String accountEnabled = responseJson.get(ACCOUNT_ENABLED_OUT).getAsString();
+                    results.put(ACCOUNT_ENABLED_OUT, accountEnabled);
+                } else
+                    results.put(ACCOUNT_ENABLED_OUT, EMPTY);
+
+            }
+            return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

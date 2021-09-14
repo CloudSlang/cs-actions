@@ -59,15 +59,10 @@ public class Descriptions {
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Azure API request, successful if between 200 and 300.";
         public static final String USER_ID_DESC = "The ID of the user to perform the action on.";
+
     }
 
     public static class GetAuthorizationToken {
-
-        //Description
-        public static final String NAME = "Get Authorization Token";
-        public static final String DESC = "Return the authorization token for Microsoft Azure Active Directory";
-
-        //Inputs
         public static final String LOGIN_TYPE_DESC = "Login method according to application type\n" +
                 "Valid values: 'API', 'Native'\n" +
                 "Default: 'API'";
@@ -118,7 +113,6 @@ public class Descriptions {
 
         //Outputs
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response.";
-        public static final String USER_ID_DESC = "The ID of the newly created user.";
     }
 
 
@@ -134,6 +128,21 @@ public class Descriptions {
         public static final String DELETE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content response code. It does not return anything in the response body.";
         public static final String DELETE_USER_EXCEPTION_DESC = "An error message in case there was an error while deleting the user.";
         public static final String SUCCESS_RETURN_RESULT_DESC = "The user was successfully deleted.";
+    }
+
+    public static class IsUserEnabled {
+
+        //Descriptions
+        public static final String IS_USER_ENABLED_DESC = "Checks if a user is enabled.";
+        public static final String IS_USER_ENABLED_NAME = "Is User Enabled";
+
+        //Results
+        public static final String IS_USER_ENABLED_SUCCESS_DESC = "Request went successfully.";
+        public static final String IS_USER_ENABLED_FAILURE_DESC = "There was an error while trying to do the request.";
+        public static final String IS_USER_ENABLED_RETURN_RESULT_DESC = "If successful, this method returns 200 response code.";
+        public static final String IS_USER_ENABLED_EXCEPTION_DESC = "An error message in case there was an error while getting the user details.";
+        public static final String IS_USER_ENABLED_SUCCESS_RETURN_RESULT_DESC = "Request went successfully.";
+        public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name (someuser@contoso.com).";
     }
 
 }
