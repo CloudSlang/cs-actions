@@ -34,7 +34,7 @@ public class Descriptions {
         public static final String TRUST_KEYSTORE_DESC = "The pathname of the Java TrustStore file. This contains " +
                 "certificates from other parties that you expect to communicate with, or from Certificate Authorities" +
                 " that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https' " +
-                "or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS)";
+                "or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS).";
         public static final String TRUST_PASSWORD_DESC = "The password associated with the TrustStore file. If " +
                 "trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied.";
         public static final String CONN_MAX_TOTAL_DESC = "The maximum limit of connections in total.";
@@ -53,7 +53,7 @@ public class Descriptions {
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
                 "Default value: UTF-8";
 
-        public static final String AUTH_TOKEN_DESC = "Authentication token";
+        public static final String AUTH_TOKEN_DESC = "Token used to authenticate to Azure Active Directory.";
 
         //Outputs
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
@@ -63,17 +63,22 @@ public class Descriptions {
     }
 
     public static class GetAuthorizationToken {
-        public static final String LOGIN_TYPE_DESC = "Login method according to application type\n" +
+
+        //Description
+        public static final String NAME = "Get Authorization Token";
+        public static final String DESC = "Get the authorization token for Azure Active Directory.";
+
+        public static final String LOGIN_TYPE_DESC = "Login method according to application type.\n" +
                 "Valid values: 'API', 'Native'\n" +
                 "Default: 'API'";
-        public static final String CLIENT_ID_DESC = "Service Client ID";
-        public static final String CLIENT_SECRET_DESC = "Service Client Secret";
-        public static final String USERNAME_DESC = "Azure Active Directory username";
-        public static final String PASSWORD_DESC = "Azure Active Directory password";
+        public static final String CLIENT_ID_DESC = "Service Client ID.";
+        public static final String CLIENT_SECRET_DESC = "Service Client Secret.";
+        public static final String USERNAME_DESC = "Azure Active Directory username.";
+        public static final String PASSWORD_DESC = "Azure Active Directory password.";
         public static final String LOGIN_AUTHORITY_DESC = "The authority URL. Usually, the format for this input is:\n" +
                 "'https://login.windows.net/TENANT_NAME/oauth2/token' where TENANT_NAME is your application\n" +
                 "tenant.";
-        public static final String RESOURCES_DESC = "The resource URL\n" +
+        public static final String RESOURCES_DESC = "The resource URL.\n" +
                 "Default: 'https://graph.microsoft.com'";
 
         public static final String RETURN_RESULT_DESC = "The authorization token for Azure Active Directory.";
