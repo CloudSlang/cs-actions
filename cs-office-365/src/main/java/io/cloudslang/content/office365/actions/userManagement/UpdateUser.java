@@ -45,7 +45,6 @@ import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizatio
 import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.STATUS_CODE_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.UpdateUser.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
@@ -98,7 +97,7 @@ public class UpdateUser {
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSC_CHARACTER_SET_DESC) String responseCharacterSet) {
+                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
         accountEnabled = defaultIfEmpty(accountEnabled, BOOLEAN_TRUE);
         displayName = defaultIfEmpty(displayName, EMPTY);
