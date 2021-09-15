@@ -42,7 +42,7 @@ public final class Inputs extends InputNames {
         public static final String DISPLAY_NAME = "displayName";
         public static final String ON_PREMISES_IMMUTABLE_ID = "onPremisesImmutableId";
         public static final String MAIL_NICKNAME = "mailNickname";
-        public static final String FORCE_CHANGE_PASSWORD = "forceChangePasswordNextSignIn";
+        public static final String FORCE_CHANGE_PASSWORD = "forceChangePassword";
         public static final String PASSWORD = "password";
         public static final String USER_PRINCIPAL_NAME = "userPrincipalName";
         public static final String PASSWORD_PROFILE = "passwordProfile";
