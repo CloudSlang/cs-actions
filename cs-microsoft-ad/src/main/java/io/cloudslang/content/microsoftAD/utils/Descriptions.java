@@ -17,11 +17,13 @@ package io.cloudslang.content.microsoftAD.utils;
 
 public class Descriptions {
     public static class Common {
+
         public static final String PROXY_HOST_DESC = "Proxy server used to access the Azure Active Directory service.";
         public static final String PROXY_PORT_DESC = "Proxy server port used to access the Azure Active Directory service." +
                 "Default: '8080'";
         public static final String PROXY_USERNAME_DESC = "Proxy server user name.";
         public static final String PROXY_PASSWORD_DESC = "Proxy server password associated with the proxy_username input value.";
+
         public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL/TSL. " +
                 "A certificate is trusted even if no trusted certification authority issued it.";
         public static final String X509_DESC = "Specifies the way the server hostname must match a domain name in " +
@@ -37,6 +39,7 @@ public class Descriptions {
                 "or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS).";
         public static final String TRUST_PASSWORD_DESC = "The password associated with the TrustStore file. If " +
                 "trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied.";
+
         public static final String CONN_MAX_TOTAL_DESC = "The maximum limit of connections in total.";
         public static final String CONN_MAX_ROUTE_DESC = "The maximum limit of connections on a per route basis.";
         public static final String KEEP_ALIVE_DESC = "Specifies whether to create a shared connection that will be " +
@@ -47,18 +50,22 @@ public class Descriptions {
                 "represents an infinite timeout.";
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout.";
+
         public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
                 "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
                 "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
                 "Default value: UTF-8";
 
+        //Inputs
         public static final String AUTH_TOKEN_DESC = "Token used to authenticate to Azure Active Directory.";
+        public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name. \nExample: someuser@contoso.com";
 
         //Outputs
-        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
+        public static final String RETURN_CODE_DESC = "0 if success, -1 if failure.";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Azure API request, successful if between 200 and 300.";
         public static final String USER_ID_DESC = "The ID of the user to perform the action on.";
+        public static final String EXCEPTION_DESC = "The error message in case of failure.";
 
     }
 
@@ -82,9 +89,10 @@ public class Descriptions {
                 "Default: 'https://graph.microsoft.com'";
 
         public static final String RETURN_RESULT_DESC = "The authorization token for Azure Active Directory.";
-        public static final String AUTH_TOKEN_DESC = "The authentication token.";
+        public static final String AUTH_TOKEN_DESC = "Generated authentication token.";
         public static final String AUTH_TOKEN_TYPE_DESC = "The authentication token type.";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while generating the token.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while generating the " +
+                "token.";
 
         public static final String SUCCESS_DESC = "Token generated successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
@@ -99,20 +107,22 @@ public class Descriptions {
         public static final String NAME = "Create User";
 
         //Inputs
-        public static final String ACCOUNT_ENABLED_DESC = "true if the account is enabled; otherwise, false.";
-        public static final String DISPLAY_NAME_DESC = "Required if body not set - The name to display in the address book for the user.";
+        public static final String ACCOUNT_ENABLED_DESC = "Must be true if the user wants to enable the account. " +
+                "\nDefault value: false.";
+        public static final String DISPLAY_NAME_DESC = "Required if body not set - The name to display in the " +
+                "address book for the user.";
         public static final String ON_PREMISES_IMMUTABLE_ID_DESC = "Only needs to be specified when creating a new " +
                 "user account if you are using a federated domain for the user's userPrincipalName (UPN) property.";
         public static final String MAIL_NICKNAME_DESC = "Required if body not set -The mail alias for the user.";
-        public static final String USER_PRINCIPAL_NAME_DESC = "Required if body not set -The user principal name (someuser@contoso.com).";
-        public static final String FORCE_CHANGE_PASSWORD_DESC = "true if the user must change her " +
-                "password on the next login; otherwise false. If not set, default is false. NOTE: For Azure B2C " +
+        public static final String USER_PRINCIPAL_NAME_DESC = "Required if body not set -The user principal name." +
+                "\nExample: someuser@contoso.com";
+        public static final String FORCE_CHANGE_PASSWORD_DESC = "In case the value for the input is true, the user " +
+                "must change the password on the next login. \nDefault value: false. \nNOTE: For Azure B2C " +
                 "tenants, set to false and instead use custom policies and user flows to force password reset at " +
                 "first sign in.";
-        public static final String PASSWORD_DESC = "Required if body not set -The password for the user. This property is required when a user " +
-                "is created. It can be updated, but the user will be required to change the password on the next " +
-                "login. The password must satisfy minimum requirements as specified by the user’s passwordPolicies " +
-                "property. By default, a strong password is required.";
+        public static final String PASSWORD_DESC = "Required if body not set -The password for the user. This " +
+                "property is required when a user is created. The password must satisfy minimum requirements as " +
+                "specified by the user’s passwordPolicies property. By default, a strong password is required.";
         public static final String BODY_DESC = "Full json body if the user wants to set additional properties. " +
                 "All the other inputs are ignored if the body is given.";
 
@@ -125,14 +135,14 @@ public class Descriptions {
     public static class DeleteUser {
 
         //Descriptions
-        public static final String DELETE_USER_DESC = "Delete user. When deleted, user resources are moved to a temporary container and can be restored within 30 days. After that time, they are permanently deleted.";
+        public static final String DELETE_USER_DESC = "Delete a user from Active Directory. When deleted, user resources are moved to a " +
+                "temporary container and can be restored within 30 days. After that time, they are permanently deleted.";
         public static final String DELETE_USER_NAME = "Delete User";
 
         //Results
-        public static final String DELETE_USER_SUCCESS_DESC = "User deleted successfully.";
         public static final String DELETE_USER_FAILURE_DESC = "There was an error while trying to delete user.";
-        public static final String DELETE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content response code. It does not return anything in the response body.";
-        public static final String DELETE_USER_EXCEPTION_DESC = "An error message in case there was an error while deleting the user.";
+        public static final String DELETE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content " +
+                "response code. It does not return anything in the response body.";
         public static final String SUCCESS_RETURN_RESULT_DESC = "The user was successfully deleted.";
     }
 
@@ -145,10 +155,8 @@ public class Descriptions {
         //Results
         public static final String IS_USER_ENABLED_SUCCESS_DESC = "Request went successfully.";
         public static final String IS_USER_ENABLED_FAILURE_DESC = "There was an error while trying to do the request.";
-        public static final String IS_USER_ENABLED_RETURN_RESULT_DESC = "If successful, this method returns 200 response code.";
-        public static final String IS_USER_ENABLED_EXCEPTION_DESC = "An error message in case there was an error while getting the user details.";
-        public static final String IS_USER_ENABLED_SUCCESS_RETURN_RESULT_DESC = "Request went successfully.";
-        public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name (someuser@contoso.com).";
+        public static final String IS_USER_ENABLED_RETURN_RESULT_DESC = "If successful, this method returns 200 " +
+                "response code.";
     }
 
 }

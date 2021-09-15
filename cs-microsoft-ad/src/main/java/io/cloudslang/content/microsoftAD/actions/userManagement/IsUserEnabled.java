@@ -33,8 +33,7 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
@@ -56,7 +55,9 @@ public class IsUserEnabled {
             outputs = {@Output(value = RETURN_RESULT, description = IS_USER_ENABLED_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = ACCOUNT_ENABLED_OUT, description = Descriptions.CreateUser.ACCOUNT_ENABLED_DESC)},
+                    @Output(value = ACCOUNT_ENABLED_OUT, description = Descriptions.CreateUser.ACCOUNT_ENABLED_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC)
+            },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = IS_USER_ENABLED_SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = IS_USER_ENABLED_FAILURE_DESC)
@@ -135,7 +136,7 @@ public class IsUserEnabled {
                     .build());
 
             final String returnMessage = result.get(RETURN_RESULT);
-            final Map<String, String> results = getOperationResults(result, IS_USER_ENABLED_SUCCESS_RETURN_RESULT_DESC,  result.get(RETURN_RESULT));
+            final Map<String, String> results = getOperationResults(result, IS_USER_ENABLED_SUCCESS_DESC,  result.get(RETURN_RESULT));
             final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
 

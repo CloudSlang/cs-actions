@@ -23,6 +23,8 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.CreateUserInputs;
+import io.cloudslang.content.microsoftAD.utils.Descriptions;
+import io.cloudslang.content.microsoftAD.utils.Descriptions.Common;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -31,20 +33,21 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.microsoftAD.services.CreateUserService.createUser;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.EXCEPTION_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.NAME;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.PASSWORD_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.RETURN_RESULT_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.USER_ID_DESC;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.USER_PRINCIPAL_NAME_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
@@ -67,6 +70,7 @@ public class CreateUser {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = USER_ID, description = USER_ID_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -75,6 +79,8 @@ public class CreateUser {
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
 
+                                       @Param(value = BODY, description = BODY_DESC) String body,
+
                                        @Param(value = ACCOUNT_ENABLED, description = ACCOUNT_ENABLED_DESC) String accountEnabled,
                                        @Param(value = DISPLAY_NAME, description = DISPLAY_NAME_DESC) String displayName,
                                        @Param(value = ON_PREMISES_IMMUTABLE_ID, description = ON_PREMISES_IMMUTABLE_ID_DESC) String onPremisesImmutableId,
@@ -82,7 +88,6 @@ public class CreateUser {
                                        @Param(value = FORCE_CHANGE_PASSWORD, description = FORCE_CHANGE_PASSWORD_DESC) String forceChangePassword,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
-                                       @Param(value = BODY, description = BODY_DESC) String body,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,

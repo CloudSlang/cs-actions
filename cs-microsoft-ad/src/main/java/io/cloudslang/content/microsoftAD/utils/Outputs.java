@@ -21,6 +21,7 @@ public final class Outputs extends OutputNames {
 
     public static class CommonOutputs {
         public static final String STATUS_CODE = "statusCode";
+        public static final String EXCEPTION = "exception";
     }
 
     public static class AuthorizationOutputs {

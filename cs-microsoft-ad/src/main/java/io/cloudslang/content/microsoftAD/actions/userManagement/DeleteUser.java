@@ -30,8 +30,7 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
@@ -40,7 +39,6 @@ import static io.cloudslang.content.microsoftAD.services.DeleteUserService.delet
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.AUTH_TOKEN_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.USER_PRINCIPAL_NAME_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.DeleteUser.*;
 
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
@@ -57,9 +55,11 @@ public class DeleteUser {
             description = DELETE_USER_DESC,
             outputs = {@Output(value = RETURN_RESULT, description = DELETE_USER_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC)},
+                    @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC)
+            },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = DELETE_USER_SUCCESS_DESC),
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_RETURN_RESULT_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = DELETE_USER_FAILURE_DESC)
             })
 
