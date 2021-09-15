@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2021 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,17 +12,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.cloudslang.content.microsoftAD.actions.userManagement;
 
-
-package io.cloudslang.content.office365.actions.email;
-
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.office365.entities.MoveMessageInputs;
-import io.cloudslang.content.office365.entities.Office365CommonInputs;
+import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
+import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
+import io.cloudslang.content.microsoftAD.utils.Descriptions;
+import io.cloudslang.content.microsoftAD.utils.Outputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -31,59 +33,38 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.office365.services.EmailServiceImpl.moveMessage;
-import static io.cloudslang.content.office365.utils.Constants.*;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.AUTH_TOKEN_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.USER_ID_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.USER_PRINCIPAL_NAME_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.CreateUser.*;
-import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.FAILURE_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetAuthorizationToken.SUCCESS_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.MESSAGE_ID_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.GetEmail.STATUS_CODE_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.MoveMessage.DESTINATION_ID_DESC;
-import static io.cloudslang.content.office365.utils.HttpUtils.getOperationResults;
-import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_HOST;
-import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
-import static io.cloudslang.content.office365.utils.Inputs.MoveMessage.DESTINATION_ID;
-import static io.cloudslang.content.office365.utils.InputsValidation.verifyMoveMessageInputs;
-import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
+import static io.cloudslang.content.microsoftAD.services.GetUserService.getUser;
+import static io.cloudslang.content.microsoftAD.utils.Constants.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserEnabled.*;
+import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_PRINCIPAL_NAME;
+import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class MoveMessage {
-    @Action(name = "Move a message to a folder in Office 365",
-            outputs = {
-                    @Output(value = RETURN_RESULT, description = CREATE_USER_RETURN_RESULT_DESC),
+public class IsUserEnabled {
+    @Action(name = IS_USER_ENABLED_NAME,
+            description = IS_USER_ENABLED_DESC,
+            outputs = {@Output(value = RETURN_RESULT, description = IS_USER_ENABLED_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = DOCUMENT, description = CREATE_USER_DOCUMENT_DESC),
-                    @Output(value = EXCEPTION, description = CREATE_USER_EXCEPTION_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
-            },
+                    @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = ACCOUNT_ENABLED_OUT, description = Descriptions.CreateUser.ACCOUNT_ENABLED_DESC)},
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = IS_USER_ENABLED_SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = IS_USER_ENABLED_FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
 
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = USER_ID, description = USER_ID_DESC) String userId,
-                                       @Param(value = MESSAGE_ID, required = true, description = MESSAGE_ID_DESC) String messageId,
-                                       @Param(value = DESTINATION_ID, required = true, description = DESTINATION_ID_DESC) String destinationId,
-
-
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -99,11 +80,12 @@ public class MoveMessage {
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSC_CHARACTER_SET_DESC) String responseCharacterSet) {
+                                       @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
+
+
+        //inputs validation
         userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         userId = defaultIfEmpty(userId, EMPTY);
-        messageId = defaultIfEmpty(messageId, EMPTY);
-        destinationId = defaultIfEmpty(destinationId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -119,21 +101,20 @@ public class MoveMessage {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
-        final List<String> exceptionMessages = verifyMoveMessageInputs(userPrincipalName, userId, messageId,
-                destinationId, proxyPort, trustAllRoots, connectTimeout, socketTimeout, keepAlive,
+
+        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
+                connectTimeout, socketTimeout, keepAlive,
                 connectionsMaxPerRoute, connectionsMaxTotal);
+
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
         try {
-            final Map<String, String> result = moveMessage(MoveMessageInputs.builder()
-                    .messageId(messageId)
-                    .destinationId(destinationId)
-                    .commonInputs(Office365CommonInputs.builder()
+            final Map<String, String> result = getUser(GetUserInputs.builder()
+                    .oDataQuery(IS_USER_ENABLED_ODATA_QUERY)
+                    .commonInputs(AzureActiveDirectoryCommonInputs.builder()
                             .authToken(authToken)
-                            .userPrincipalName(userPrincipalName)
-                            .userId(userId)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
@@ -143,14 +124,32 @@ public class MoveMessage {
                             .keepAlive(keepAlive)
                             .responseCharacterSet(responseCharacterSet)
                             .connectTimeout(connectTimeout)
+                            .socketTimeout(socketTimeout)
                             .trustAllRoots(trustAllRoots)
+                            .userId(userId)
+                            .userPrincipalName(userPrincipalName)
                             .x509HostnameVerifier(x509HostnameVerifier)
                             .trustKeystore(trustKeystore)
                             .trustPassword(trustPassword)
                             .build())
                     .build());
+
             final String returnMessage = result.get(RETURN_RESULT);
-            return getOperationResults(result,returnMessage, returnMessage, returnMessage);
+            final Map<String, String> results = getOperationResults(result, IS_USER_ENABLED_SUCCESS_RETURN_RESULT_DESC,  result.get(RETURN_RESULT));
+            final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+
+
+            if (statusCode >= 200 && statusCode < 300) {
+                final JsonParser parser = new JsonParser();
+                final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
+                if (responseJson.has(ACCOUNT_ENABLED_OUT)) {
+                    final String accountEnabled = responseJson.get(ACCOUNT_ENABLED_OUT).getAsString();
+                    results.put(ACCOUNT_ENABLED_OUT, accountEnabled);
+                } else
+                    results.put(ACCOUNT_ENABLED_OUT, EMPTY);
+
+            }
+            return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
