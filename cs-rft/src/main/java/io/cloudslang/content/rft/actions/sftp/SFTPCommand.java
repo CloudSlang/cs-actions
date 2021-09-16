@@ -42,7 +42,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 
 public class SFTPCommand {
-    @Action(name = "SFTP Command",
+    @Action(name = SFTP_COMMAND,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -61,8 +61,11 @@ public class SFTPCommand {
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
                                        @Param(value = PRIVATE_KEY, description = PRIVATE_KEY_DESC) String privateKey,
+                                       @Param(value = COMMAND_TYPE, description = COMMAND_TYPE_DESC) String commandType,
                                        @Param(value = REMOTE_PATH, description = REMOTE_PATH_DESC, required = true) String remotePath,
                                        @Param(value = MODE, description = MODE_DESC, required = true) String mode,
+                                       @Param(value = GID, description = GID_DESC, required = true) String gid,
+                                       @Param(value = UID, description = UID_DESC, required = true) String uid,
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = CLOSE_SESSION, description = CLOSE_SESSION_DESC) String closeSession,
@@ -90,6 +93,9 @@ public class SFTPCommand {
         SFTPCommandInputs sftpCommandInputs = SFTPCommandInputs.builder()
                 .remotePath(remotePath)
                 .mode(mode)
+                .commandType(commandType)
+                .gid(gid)
+                .uid(uid)
                 .sftpCommonInputs(SFTPCommonInputs.builder()
                         .host(host)
                         .port(port)
@@ -108,6 +114,6 @@ public class SFTPCommand {
                         .build())
                 .build();
 
-        return new SFTPService().execute(sftpCommandInputs, SFTPOperation.GET);
+        return new SFTPService().execute(sftpCommandInputs, SFTPOperation.COMMAND);
     }
 }

@@ -99,10 +99,6 @@ public class SFTPCopier {
         this.channel = (ChannelSftp) savedChannel;
     }
 
-    public void sftpChmode(SFTPCopier sftpCopier,String mode, String remotePath) throws SftpException {
-        sftpCopier.channel.chmod(Integer.parseInt(mode),remotePath);
-    }
-
     public void setSftpInputs(IHasFTPOperation sftpInputs) {
         this.sftpInputs = sftpInputs;
     }

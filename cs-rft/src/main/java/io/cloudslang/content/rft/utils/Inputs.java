@@ -80,7 +80,11 @@ public class Inputs extends InputNames {
         public static final String DELIMITER = "delimiter";
         public static final String REMOTE_PATH = "remotePath";
 
+        //SFTP COMMAND
         public static final String MODE = "mode";
+        public static final String COMMAND_TYPE = "commandType";
+        public static final String GID = "gid";
+        public static final String UID = "uid";
 
     }
 

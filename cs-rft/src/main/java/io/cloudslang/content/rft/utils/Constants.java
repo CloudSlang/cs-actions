@@ -58,6 +58,13 @@ public class Constants {
     public static final String FILES = "files";
     public static final String FOLDERS = "folders";
 
+    public static final String SFTP_COMMAND = "SFTP Command";
+
+    public static final String CHMOD = "chmod";
+    public static final String CHGRP = "chgrp";
+    public static final String CHOWN = "chown";
+    public static final String SFTP_COMMON_INPUTS = "sfptCommonInputs";
+
     public static final String SUCCESS_RESULT = "The operation was successfully completed!";
 
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
@@ -76,4 +83,5 @@ public class Constants {
     public static final String EXCEPTION_UNABLE_SAVE_SESSION = "The SSH Session could not be saved in the given sessionParam";
     public static final String EXCEPTION_INVALID_NUMBER = "%s for %s input is not a valid number value.";
     public static final String EXCEPTION_INVALID_NEGATIVE_NUMBER = "%s for %s input should not be a negative number.";
+
 }

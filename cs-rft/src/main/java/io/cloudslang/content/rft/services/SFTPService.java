@@ -16,6 +16,7 @@ package io.cloudslang.content.rft.services;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.rft.entities.sftp.IHasFTPOperation;
+import io.cloudslang.content.rft.entities.sftp.SFTPCommandInputs;
 import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
 import io.cloudslang.content.rft.utils.CacheUtils;
 import io.cloudslang.content.rft.utils.Constants;
@@ -27,8 +28,7 @@ import java.security.Security;
 
 import java.util.Map;
 
-import static io.cloudslang.content.rft.utils.Constants.EXCEPTION_UNABLE_SAVE_SESSION;
-import static io.cloudslang.content.rft.utils.Constants.SUCCESS_RESULT;
+import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 
@@ -65,8 +65,6 @@ public class SFTPService {
         }
     }
 
-
-
     private void performSFTPOperation(IHasFTPOperation sftpInputs, SFTPOperation sftpOperation, SFTPCopier sftpCopier, String sessionId) throws Exception {
         if (sftpOperation == SFTPOperation.GET) {
             sftpCopier.setSftpInputs(sftpInputs);
@@ -77,6 +75,14 @@ public class SFTPService {
         } else if(sftpOperation == SFTPOperation.GET_CHILDREN){
             sftpCopier.setSftpInputs(sftpInputs);
             sftpCopier.getChildren();
+        } else if(sftpOperation == SFTPOperation.COMMAND) {
+            SFTPCommandInputs sftpCommandInputs = (SFTPCommandInputs) sftpInputs;
+            if (sftpCommandInputs.getCommandType().equals(CHMOD))
+                sftpCopier.channel.chmod(Integer.parseInt(sftpCommandInputs.getMode()), sftpCommandInputs.getremotePath());
+            else if (sftpCommandInputs.getCommandType().equals(CHGRP))
+                sftpCopier.channel.chgrp(Integer.parseInt(sftpCommandInputs.getGid()), sftpCommandInputs.getremotePath());
+            else if (sftpCommandInputs.getCommandType().equals(CHOWN))
+                sftpCopier.channel.chown(Integer.parseInt(sftpCommandInputs.getUid()), sftpCommandInputs.getremotePath());
         }
         handleSessionClosure(sftpInputs, sftpCopier, sessionId);
     }

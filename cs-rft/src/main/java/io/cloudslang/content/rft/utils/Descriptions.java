@@ -94,5 +94,8 @@ public class Descriptions {
         public static final String MODE_DESC = "New numeric mode for remote file or directory.  First digit is for" +
                 " everyone, second digit is for group, third digit is for owner.  Setuid, Setgid, and Sticky bits are" +
                 " not supported via SFTP.  Examples: 765 (rwx,rw-,r-x), 432 (r--,-wx,-w-), 100 (--x,---,---).";
+        public static final String UID_DESC = "Numeric user id of the new owner for the remote file or directory.";
+        public static final String GID_DESC = "New numeric group id for remote file or directory.";
+        public static final String COMMAND_TYPE_DESC = "The command type";
     }
 }
