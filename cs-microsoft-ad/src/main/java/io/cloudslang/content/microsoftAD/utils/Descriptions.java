@@ -66,7 +66,6 @@ public class Descriptions {
         public static final String STATUS_CODE_DESC = "The HTTP status code for Azure API request, successful if between 200 and 300.";
         public static final String USER_ID_DESC = "The ID of the user to perform the action on.";
         public static final String EXCEPTION_DESC = "The error message in case of failure.";
-
     }
 
     public static class GetAuthorizationToken {
@@ -129,6 +128,10 @@ public class Descriptions {
         //Outputs
         public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response.";
         public static final String USER_ID_DESC = "The ID of the newly created user.";
+
+        //Results
+        public static final String SUCCESS_DESC = "User created successfully.";
+        public static final String FAILURE_DESC = "Failed to create user.";
     }
 
 
@@ -144,6 +147,8 @@ public class Descriptions {
         public static final String DELETE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content " +
                 "response code. It does not return anything in the response body.";
         public static final String SUCCESS_RETURN_RESULT_DESC = "The user was successfully deleted.";
+
+
     }
 
     public static class IsUserEnabled {
@@ -151,6 +156,9 @@ public class Descriptions {
         //Descriptions
         public static final String IS_USER_ENABLED_DESC = "Checks if a user is enabled.";
         public static final String IS_USER_ENABLED_NAME = "Is User Enabled";
+
+        //Outputs
+        public static final String ACCOUNT_ENABLED_DESC = "True if the account is enabled, false otherwise.";
 
         //Results
         public static final String IS_USER_ENABLED_SUCCESS_DESC = "Request went successfully.";

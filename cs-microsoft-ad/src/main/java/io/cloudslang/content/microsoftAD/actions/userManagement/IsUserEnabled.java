@@ -23,7 +23,6 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
-import io.cloudslang.content.microsoftAD.utils.Descriptions;
 import io.cloudslang.content.microsoftAD.utils.Outputs;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -55,7 +54,7 @@ public class IsUserEnabled {
             outputs = {@Output(value = RETURN_RESULT, description = IS_USER_ENABLED_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = ACCOUNT_ENABLED_OUT, description = Descriptions.CreateUser.ACCOUNT_ENABLED_DESC),
+                    @Output(value = ACCOUNT_ENABLED_OUT, description = ACCOUNT_ENABLED_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
@@ -81,7 +80,7 @@ public class IsUserEnabled {
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
+                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
 
 
         //inputs validation
