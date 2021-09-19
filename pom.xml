@@ -333,6 +333,7 @@
         <module>cs-maps</module>
         <module>cs-microfocus-dca</module>
         <module>cs-microfocus-hcm</module>
+        <module>cs-microsoft-ad</module>
         <module>cs-nutanix-prism</module>
         <module>cs-office-365</module>
         <module>cs-oracle-cloud</module>
