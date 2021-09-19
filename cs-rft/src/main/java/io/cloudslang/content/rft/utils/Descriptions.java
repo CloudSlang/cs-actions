@@ -108,4 +108,43 @@ public class Descriptions {
         public static final String FAILURE_DESC = "The file could not be copied.";
     }
 
+    public static class SCPDescriptions{
+
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the operation.";
+        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
+        public static final String RETURN_RESULT_DESC = " This is the primary output and it contains the " +
+                "success message if the operation successfully completes, or an exception message otherwise.";
+
+        public static final String SUCCESS_DESC = "The file was copied successfully.";
+        public static final String FAILURE_DESC = "The file could not be copied.";
+        public static final String KNOWN_HOSTS_POLICY_DESC = "Optional - Policy used for managing known_hosts file. Valid: 'allow', 'strict', 'add' Default: 'allow'";
+        public static final String KNOWN_HOSTS_PATH_DESC = "Path to the known_hosts file.";
+
+        //SCP Copy File
+        public static final String SCP_COPY_FILE_ACTION_DESC = "Copy files to and from remote machine through SSH";
+        public static final String HOST_DESC = "IP address/host name.";
+        public static final String PORT_DESC = "The port number to connect to.";
+        public static final String USERNAME_DESC = "Remote username.";
+        public static final String PASSWORD_DESC = "Password of user. If using a private key file this will be used as the passphrase for the file.";
+        public static final String LOCAL_FILE_DESC = "Absolute path to the local file. This path is relative to the host that the operation is running on.";
+        public static final String COPY_ACTION_DESC = "To/From copy action.\n Valid values: to, from";
+        public static final String REMOTE_FILE_DESC = "Absolute path to remote file.";
+        public static final String PRIVATE_KEY_DESC = "Absolute path for private key file for public/private key authentication.";
+
+        //SCP Remote Copy File
+        public static final String SCP_REMOTE_COPY_FILE_ACTION_DESC = "Copies files between two remote machines through secure SSH.";
+        public static final String SOURCE_PATH_DESC = "The absolute path to the source file.";
+        public static final String SOURCE_HOST_DESC = "The host of the source file.";
+        public static final String SOURCE_PORT_DESC = "The port used for connecting to the source host.";
+        public static final String SOURCE_USERNAME_DESC = "The username for connecting to the host of the source file.";
+        public static final String SOURCE_PASSWORD_DESC = "The password for connecting to the host of the source file. If using a private key file this will be used as the passphrase for the file.";
+        public static final String SOURCE_PRIVATE_KEY_DESC = "Absolute path of the private key file for public/private key authentication on the source host.";
+        public static final String DESTINATION_PATH_DESC = "The absolute path to the destination file.";
+        public static final String DESTINATION_HOST_DESC = "The host of the destination file.";
+        public static final String DESTINATION_PORT_DESC = "The port used for connecting to the destination host.";
+        public static final String DESTINATION_USERNAME_DESC = "The username for connecting to the host of the destination file.";
+        public static final String DESTINATION_PASSWORD_DESC = "The password for connecting to the host of the destination file. If using a private key file this will be used as the passphrase for the file.";
+        public static final String DESTINATION_PRIVATE_KEY_DESC = "Absolute path of the private key file for public/private key authentication on the destination host.";
+
+    }
 }

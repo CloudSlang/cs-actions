@@ -102,4 +102,34 @@ public class Inputs extends InputNames {
         public static final String CONNECTION_TIMEOUT = "connectionTimeout";
         public static final String EXECUTION_TIMEOUT = "executionTimeout";
     }
+
+    public static final class SCPInputs{
+        public static final String KNOWN_HOSTS_POLICY = "known_hosts_policy";
+        public static final String KNOWN_HOSTS_PATH = "known_hosts_path";
+
+        //SCP Copy file only
+        public static final String HOST = "host";
+        public static final String PORT = "port";
+        public static final String USERNAME = "username";
+        public static final String PASSWORD = "password";
+        public static final String LOCAL_FILE = "localFile";
+        public static final String COPY_ACTION = "copyAction";
+        public static final String REMOTE_FILE = "remoteFile";
+        public static final String PRIVATE_KEY = "privateKey";
+
+
+        //SCP Remote Copy File only
+        public static final String SOURCE_PATH = "sourcePath";
+        public static final String SOURCE_HOST = "sourceHost";
+        public static final String SOURCE_PORT = "sourcePort";
+        public static final String SOURCE_USERNAME = "sourceUsername";
+        public static final String SOURCE_PASSWORD = "sourcePassword";
+        public static final String SOURCE_PRIVATE_KEY = "sourcePrivateKey";
+        public static final String DESTINATION_PATH = "destinationPath";
+        public static final String DESTINATION_HOST = "destinationHost";
+        public static final String DESTINATION_PORT = "destinationPort";
+        public static final String DESTINATION_USERNAME = "destinationUsername";
+        public static final String DESTINATION_PASSWORD = "destinationPassword";
+        public static final String DESTINATION_PRIVATE_KEY = "destinationPrivateKey";
+    }
 }
