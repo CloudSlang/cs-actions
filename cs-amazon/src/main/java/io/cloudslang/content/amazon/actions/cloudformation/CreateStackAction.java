@@ -111,10 +111,10 @@ public class CreateStackAction {
             final AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
 
             final CreateStackResult createStackResult = stackBuilder.createStack(createRequest);
+            final String createStackResultAsString = StringUtils.defaultIfEmpty(createStackResult.toString(),"");
 
             final ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             final String createStackResultAsJson = ow.writeValueAsString(createStackResult);
-            final String createStackResultAsString = StringUtils.defaultIfEmpty(createStackResult.toString(),"");
 
             final HashMap<String, String> results = new HashMap();
             results.put(RETURN_CODE, SUCCESS_RETURN_CODE);
