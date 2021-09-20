@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -30,7 +30,6 @@ public class MyUserInfo implements UserInfo {
      * This callback gets invoked when using GSSAPI-with-MIC authentication with the Kerberos mechanism; when that
      * happens, we must somehow provide a subject on whose behalf the connection is being made.
      *
-     * @see com.jcraft.jsch.UserInfo#getSubject()
      */
     public Subject getSubject() {
         return null;
