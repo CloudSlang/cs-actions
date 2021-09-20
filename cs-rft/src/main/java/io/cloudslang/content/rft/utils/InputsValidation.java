@@ -30,6 +30,10 @@ import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.CONNECTION_TIM
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.EXECUTION_TIMEOUT;
 import static io.cloudslang.content.rft.utils.Inputs.FTPInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.RemoteSecureCopyInputs.*;
+import static io.cloudslang.content.rft.utils.Inputs.SCPInputs.HOST;
+import static io.cloudslang.content.rft.utils.Inputs.SCPInputs.LOCAL_FILE;
+import static io.cloudslang.content.rft.utils.Inputs.SCPInputs.COPY_ACTION;
+import static io.cloudslang.content.rft.utils.Inputs.SCPInputs.REMOTE_FILE;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.CLOSE_SESSION;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
@@ -151,6 +155,48 @@ public class InputsValidation {
         return exceptions;
     }
 
+    public static List<String> verifySCPRemoteCopyFileInputs(
+            @Nullable final String sourceHost,
+            @Nullable final String sourcePort,
+            @Nullable final String sourcePath,
+            @Nullable final String destinationHost,
+            @Nullable final String destinationPort,
+            @Nullable final String destinationPath,
+            @Nullable final String connectionTimeout,
+            @Nullable final String executionTimeout) {
+
+        final List<String> exceptions = new ArrayList<>();
+        addVerifyNotNullOrEmpty(exceptions, sourceHost, SOURCE_HOST);
+        addVerifyNotNullOrEmpty(exceptions, destinationHost, DESTINATION_HOST);
+        addVerifyPort(exceptions, sourcePort);
+        addVerifyPort(exceptions, destinationPort);
+        addVerifyNotNullOrEmpty(exceptions, sourcePath, SOURCE_PATH);
+        addVerifyNotNullOrEmpty(exceptions, destinationPath, SOURCE_PATH);
+        addVerifyNumber(exceptions, connectionTimeout, CONNECTION_TIMEOUT);
+        addVerifyNumber(exceptions, executionTimeout, EXECUTION_TIMEOUT);
+        return exceptions;
+    }
+
+    public static List<String> verifySCPCopyFileInputs(
+            @Nullable final String host,
+            @Nullable final String port,
+            @Nullable final String localFile,
+            @Nullable final String copyAction,
+            @Nullable final String remoteFile,
+            @Nullable final String connectionTimeout,
+            @Nullable final String executionTimeout) {
+
+        final List<String> exceptions = new ArrayList<>();
+        addVerifyNotNullOrEmpty(exceptions, host, HOST);
+        addVerifyNotNullOrEmpty(exceptions, localFile, LOCAL_FILE);
+        addVerifyNotNullOrEmpty(exceptions, remoteFile, REMOTE_FILE);
+        addVerifyCopyAction(exceptions,copyAction);
+        addVerifyPort(exceptions, port);
+        addVerifyNumber(exceptions, connectionTimeout, CONNECTION_TIMEOUT);
+        addVerifyNumber(exceptions, executionTimeout, EXECUTION_TIMEOUT);
+        return exceptions;
+    }
+
     private static void addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
         if (!isValid(input))
             exceptions.add(String.format(EXCEPTION_INVALID_BOOLEAN, input, inputName));
@@ -207,7 +253,7 @@ public class InputsValidation {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!NumberUtilities.isValidInt(input)) {
             exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
-        }else if(Integer.parseInt(input) < 0 ){
+        } else if (Integer.parseInt(input) < 0) {
             exceptions.add(String.format(EXCEPTION_INVALID_NEGATIVE_NUMBER, input, inputName));
         }
         return exceptions;
@@ -216,7 +262,15 @@ public class InputsValidation {
     private static void addVerifyProtocol(@NotNull List<String> exceptions, @Nullable final String input) {
         String[] protocols = {"local", "scp", "sftp", "smb3"};
         if (!Arrays.asList(protocols).contains(input.toLowerCase())) {
-                exceptions.add(String.format(EXCEPTION_INVALID_PROTOCOL, input));
-            }
+            exceptions.add(String.format(EXCEPTION_INVALID_PROTOCOL, input));
         }
+    }
+
+    private static List<String> addVerifyCopyAction(@NotNull List<String> exceptions, @Nullable final String input){
+        String[] copyActions = {"to", "from"};
+        if (!Arrays.asList(copyActions).contains(input.toLowerCase())) {
+            exceptions.add(String.format(EXCEPTION_INVALID_COPY_ACTION, input));
+        }
+        return exceptions;
+    }
 }

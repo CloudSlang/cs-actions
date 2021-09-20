@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+    * (c) Copyright 2021 Micro Focus
     * All rights reserved. This program and the accompanying materials
     * are made available under the terms of the Apache License v2.0 which accompany this distribution.
     *
@@ -79,8 +79,8 @@
         <junit.version>4.13.1</junit.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <maven.sources.skip>true</maven.sources.skip>
         <custom.nexus>overwritten_by_ci</custom.nexus>
     </properties>

@@ -26,7 +26,7 @@ public class Constants {
     // default values
     public static final int DEFAULT_PORT = 22;
     public static final int DEFAULT_TIMEOUT = 90000;
-    public static final String DEFAULT_KNOWN_HOSTS_POLICY = "strict";
+    public static final String DEFAULT_KNOWN_HOSTS_POLICY = "allow";
     public static final Path DEFAULT_KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
     public static final int DEFAULT_PROXY_PORT = 8080;
     public static final String DEFAULT_DELIMITER = String.valueOf(',');
@@ -71,4 +71,6 @@ public class Constants {
     public static final String EXCEPTION_UNABLE_SAVE_SESSION = "The SSH Session could not be saved in the given sessionParam.";
     public static final String EXCEPTION_INVALID_NUMBER = "%s for %s input is not a valid number value.";
     public static final String EXCEPTION_INVALID_NEGATIVE_NUMBER = "%s for %s input should not be a negative number.";
+    public static final String EXCEPTION_INVALID_COPY_ACTION= "%s is not a valid value for the input copyAction, valid values for are: to, from.";
+    public static final String EXCEPTION_EXECUTION_TIMED_OUT = "Operation timed out.";
 }
