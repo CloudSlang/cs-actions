@@ -60,6 +60,7 @@ public class Constants {
     public static final String EXCEPTION_INVALID_PORT = "Invalid port number: %s. The valid value is between: 0-65535.";
     public static final String EXCEPTION_INVALID_PROTOCOL = "Invalid protocol value: %s. The valid values are: local, " +
             "scp, sftp, smb3.";
+    public static final String EXCEPTION_INVALID_KNOWN_HOSTS_POLICIES = "%s is an invalid value for known host policy. The valid values are: allow, strict, add.";
     public static final String EXCEPTION_UNKNOWN_HOST = "Unknown host: %s.";
     public static final String EXCEPTION_INVALID_LOCAL_FILE = "The value '%s'  is not a valid file path.";
     public static final String EXCEPTION_INVALID_REMOTE_FILE = "'%s' does not exist.";
@@ -71,6 +72,6 @@ public class Constants {
     public static final String EXCEPTION_UNABLE_SAVE_SESSION = "The SSH Session could not be saved in the given sessionParam.";
     public static final String EXCEPTION_INVALID_NUMBER = "%s for %s input is not a valid number value.";
     public static final String EXCEPTION_INVALID_NEGATIVE_NUMBER = "%s for %s input should not be a negative number.";
-    public static final String EXCEPTION_INVALID_COPY_ACTION= "%s is not a valid value for the input copyAction, valid values for are: to, from.";
+    public static final String EXCEPTION_INVALID_COPY_ACTION= "%s is not a valid value for the input copy_action, valid values for are: to, from.";
     public static final String EXCEPTION_EXECUTION_TIMED_OUT = "Operation timed out.";
 }

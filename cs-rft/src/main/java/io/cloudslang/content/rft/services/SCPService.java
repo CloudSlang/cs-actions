@@ -41,7 +41,6 @@ public class SCPService {
     private static final String KNOWN_HOSTS_STRICT = "strict";
     private static final String KNOWN_HOSTS_ADD = "add";
 
-
     public Map<String, String> executeSCPCopyFile(SCPCopyFileInputs inputs) {
         Map<String, String> results = new HashMap<>();
         boolean successfullyCopied = false;
@@ -50,6 +49,8 @@ public class SCPService {
             JSch jsch = new JSch();
             Session session = jsch.getSession(inputs.getUsername(), inputs.getHost(), Integer.parseInt(inputs.getPort()));
             establishPasswordOrPrivateKeyFile(jsch, session, inputs.getPrivateKey(), inputs.getPassword());
+            if (!StringUtils.isEmpty(inputs.getProxyHost()))
+                session.setProxy(new ProxyHTTP(inputs.getProxyHost(),Integer.parseInt(inputs.getProxyPort())));
             establishKnownHostsConfiguration(inputs.getKnownHostsPolicy(), inputs.getKnownHostsPath(), jsch, session);
             session.connect(Integer.parseInt(inputs.getConnectionTimeout()) * 1000);
             switch (inputs.getCopyAction().toLowerCase()) {
