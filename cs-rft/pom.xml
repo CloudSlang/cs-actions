@@ -151,7 +151,7 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
-            <version>1.64</version>
+            <version>1.69</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -164,11 +164,23 @@
             <groupId>com.hp.oo.contentcommons</groupId>
             <artifactId>ssh-commons</artifactId>
             <version>1.6.32</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.hp.oo.sdk</groupId>
+                    <artifactId>oo-legacy-action-plugin</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.hierynomus</groupId>
             <artifactId>smbj</artifactId>
-            <version>0.9.1</version>
+            <version>0.11.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.samba.jcifs</groupId>
