@@ -163,7 +163,8 @@ public class InputsValidation {
             @Nullable final String destinationPort,
             @Nullable final String destinationPath,
             @Nullable final String connectionTimeout,
-            @Nullable final String executionTimeout) {
+            @Nullable final String executionTimeout,
+            @Nullable final String knownHostsPolicy) {
 
         final List<String> exceptions = new ArrayList<>();
         addVerifyNotNullOrEmpty(exceptions, sourceHost, SOURCE_HOST);
@@ -174,6 +175,7 @@ public class InputsValidation {
         addVerifyNotNullOrEmpty(exceptions, destinationPath, SOURCE_PATH);
         addVerifyNumber(exceptions, connectionTimeout, CONNECTION_TIMEOUT);
         addVerifyNumber(exceptions, executionTimeout, EXECUTION_TIMEOUT);
+        addVerifyKnownHostsPolicies(exceptions,knownHostsPolicy);
         return exceptions;
     }
 
@@ -184,7 +186,8 @@ public class InputsValidation {
             @Nullable final String copyAction,
             @Nullable final String remoteFile,
             @Nullable final String connectionTimeout,
-            @Nullable final String executionTimeout) {
+            @Nullable final String executionTimeout,
+            @Nullable final String knownHostsPolicy) {
 
         final List<String> exceptions = new ArrayList<>();
         addVerifyNotNullOrEmpty(exceptions, host, HOST);
@@ -194,6 +197,7 @@ public class InputsValidation {
         addVerifyPort(exceptions, port);
         addVerifyNumber(exceptions, connectionTimeout, CONNECTION_TIMEOUT);
         addVerifyNumber(exceptions, executionTimeout, EXECUTION_TIMEOUT);
+        addVerifyKnownHostsPolicies(exceptions,knownHostsPolicy);
         return exceptions;
     }
 
@@ -272,5 +276,12 @@ public class InputsValidation {
             exceptions.add(String.format(EXCEPTION_INVALID_COPY_ACTION, input));
         }
         return exceptions;
+    }
+
+    private static void addVerifyKnownHostsPolicies(@NotNull List<String> exceptions, @Nullable final String input) {
+        String[] protocols = {"allow", "strict", "add"};
+        if (!Arrays.asList(protocols).contains(input.toLowerCase())) {
+            exceptions.add(String.format(EXCEPTION_INVALID_KNOWN_HOSTS_POLICIES, input));
+        }
     }
 }

@@ -83,12 +83,6 @@ public class SFTPCopier {
         }
 
         session.connect();
-
-        if (!executionTimeout.isEmpty()) {
-            int execTimeout = Integer.parseInt(sftpInputs.getSftpCommonInputs().getExecutionTimeout());
-            session.setTimeout(execTimeout * 1000);
-        }
-
         Channel ochannel = session.openChannel("sftp");
         ochannel.connect();
         channel = (ChannelSftp) ochannel;

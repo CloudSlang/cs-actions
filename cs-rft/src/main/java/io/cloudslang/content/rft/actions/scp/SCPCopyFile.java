@@ -75,13 +75,13 @@ public class SCPCopyFile {
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
         proxyHost = defaultIfEmpty(proxyHost,EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
-        port = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PORT));
-        knownHostsPolicy = defaultIfEmpty(knownHostsPath,DEFAULT_KNOWN_HOSTS_POLICY);
+        port = defaultIfEmpty(port, String.valueOf(DEFAULT_PORT));
+        knownHostsPolicy = defaultIfEmpty(knownHostsPolicy,DEFAULT_KNOWN_HOSTS_POLICY);
         knownHostsPath = defaultIfEmpty(knownHostsPath,DEFAULT_KNOWN_HOSTS_PATH.toString());
         privateKey = defaultIfEmpty(privateKey, EMPTY);
 
         final List<String> exceptionMessages = verifySCPCopyFileInputs(host,port,localFile,copyAction,remoteFile,
-                connectionTimeout, executionTimeout);
+                connectionTimeout, executionTimeout, knownHostsPolicy);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }

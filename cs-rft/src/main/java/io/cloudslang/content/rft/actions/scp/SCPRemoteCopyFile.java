@@ -21,7 +21,8 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.scp.SCPRemoteCopyFileInputs;
 import io.cloudslang.content.rft.services.SCPService;
-
+import io.cloudslang.content.utils.StringUtilities;
+import java.util.List;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
@@ -39,6 +40,8 @@ import static io.cloudslang.content.rft.utils.Descriptions.SCPDescriptions.SUCCE
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.rft.utils.Inputs.SCPInputs.*;
+import static io.cloudslang.content.rft.utils.InputsValidation.verifySCPRemoteCopyFileInputs;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -78,10 +81,16 @@ public class SCPRemoteCopyFile {
         proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
         sourcePort = defaultIfEmpty(sourcePort, String.valueOf(DEFAULT_PORT));
         destinationPort = defaultIfEmpty(destinationPort, String.valueOf(DEFAULT_PORT));
-        knownHostsPolicy = defaultIfEmpty(knownHostsPath,DEFAULT_KNOWN_HOSTS_POLICY);
+        knownHostsPolicy = defaultIfEmpty(knownHostsPolicy,DEFAULT_KNOWN_HOSTS_POLICY);
         knownHostsPath = defaultIfEmpty(knownHostsPath,DEFAULT_KNOWN_HOSTS_PATH.toString());
         destinationPrivateKey = defaultIfEmpty(destinationPrivateKey,EMPTY);
         sourcePrivateKey = defaultIfEmpty(sourcePrivateKey, EMPTY);
+
+        final List<String> exceptionMessages = verifySCPRemoteCopyFileInputs(sourceHost,sourcePort,sourcePath,destinationHost,destinationPort,destinationPath,
+                connectionTimeout, executionTimeout, knownHostsPolicy);
+        if (!exceptionMessages.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+        }
 
         SCPRemoteCopyFileInputs inputs = new SCPRemoteCopyFileInputs.SCPRemoteCopyFileInputsBuilder()
                 .sourceHost(sourceHost)
