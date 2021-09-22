@@ -173,7 +173,7 @@
                 </executions>
                 <!--Disabled doclint due to javadoc changes in Java 8 -->
                 <configuration>
-                    <doclin>none</doclin>
+                    <doclint>none</doclint>
                 </configuration>
             </plugin>
             <plugin>
