@@ -80,7 +80,7 @@ public class SFTPService {
                     try {
                         sftpCopier.getFromRemote();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e);
                     }
                 }).get(Integer.parseInt(sftpInputs.getSftpCommonInputs().getExecutionTimeout()) * 1000L, TimeUnit.SECONDS);
             } catch (TimeoutException e) {
@@ -94,7 +94,7 @@ public class SFTPService {
                     try {
                         sftpCopier.putToRemote();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e);
                     }
                 }).get(Integer.parseInt(sftpInputs.getSftpCommonInputs().getExecutionTimeout()) * 1000L, TimeUnit.SECONDS);
             } catch (TimeoutException e) {
@@ -108,7 +108,7 @@ public class SFTPService {
                     try {
                         sftpCopier.getChildren();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e);
                     }
                 }).get(Integer.parseInt(sftpInputs.getSftpCommonInputs().getExecutionTimeout()) * 1000L, TimeUnit.SECONDS);
             } catch (TimeoutException e) {
