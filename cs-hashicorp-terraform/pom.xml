@@ -226,7 +226,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <doclint>-Xdoclint:none</doclint>
+                    <doclint>none</doclint>
                 </configuration>
             </plugin>
             <plugin>
