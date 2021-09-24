@@ -33,6 +33,9 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
+    public static final String CHARSET = "charset";
+    public static final String SEMICOLON = ";";
+    public static final String EQUALS = "=";
     public static final String CHANGEIT = "changeit";
     public static final String ZERO = "0";
     public static final String UTF8 = "UTF-8";
