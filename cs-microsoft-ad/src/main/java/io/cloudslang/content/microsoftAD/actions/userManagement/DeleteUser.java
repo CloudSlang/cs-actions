@@ -103,9 +103,10 @@ public class DeleteUser {
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
 
-        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
-                connectTimeout, socketTimeout, keepAlive,
-                connectionsMaxPerRoute, connectionsMaxTotal);
+        final List<String> exceptionMessages = verifyDeleteInputs(userPrincipalName, userId, proxyPort, trustAllRoots, x509HostnameVerifier,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+
+
 
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));

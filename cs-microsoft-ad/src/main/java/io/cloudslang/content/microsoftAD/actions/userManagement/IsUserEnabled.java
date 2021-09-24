@@ -43,7 +43,7 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserEnabled
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_PRINCIPAL_NAME;
-import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.microsoftAD.utils.InputsValidation.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -102,7 +102,7 @@ public class IsUserEnabled {
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
 
-        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
+        final List<String> exceptionMessages = verifyGetInputs(userPrincipalName, userId, proxyPort, trustAllRoots, x509HostnameVerifier,
                 connectTimeout, socketTimeout, keepAlive,
                 connectionsMaxPerRoute, connectionsMaxTotal);
 
