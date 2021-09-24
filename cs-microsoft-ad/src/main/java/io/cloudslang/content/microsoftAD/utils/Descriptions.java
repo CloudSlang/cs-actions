@@ -61,7 +61,6 @@ public class Descriptions {
         public static final String EXCEPTION_INVALID_TLS_VERSION = "%s for %s input is not a valid tlsVersion value. The valid values are: 'TLSv1','TLSv1.1','TLSv1.2','TLSv1.3'.";
 
 
-
         //Inputs
         public static final String AUTH_TOKEN_DESC = "Token used to authenticate to Azure Active Directory.";
         public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name. \nExample: someuser@contoso.com" +

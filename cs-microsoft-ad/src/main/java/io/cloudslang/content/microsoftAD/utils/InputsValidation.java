@@ -77,15 +77,15 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyGetInputs(@Nullable final String userPrincipalName,
-                                                  @Nullable final String userId,
-                                                  @Nullable final String proxyPort,
-                                                  @Nullable final String trust_all_roots,
-                                                  @Nullable final String x509HostnameVerifier,
-                                                  @Nullable final String connectTimeout,
-                                                  @Nullable final String socketTimeout,
-                                                  @Nullable final String keepAlive,
-                                                  @Nullable final String connectionsMaxPerRoute,
-                                                  @Nullable final String connectionsMaxTotal) {
+                                               @Nullable final String userId,
+                                               @Nullable final String proxyPort,
+                                               @Nullable final String trust_all_roots,
+                                               @Nullable final String x509HostnameVerifier,
+                                               @Nullable final String connectTimeout,
+                                               @Nullable final String socketTimeout,
+                                               @Nullable final String keepAlive,
+                                               @Nullable final String connectionsMaxPerRoute,
+                                               @Nullable final String connectionsMaxTotal) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyUserInputs(exceptionMessages, userPrincipalName, userId);
@@ -108,7 +108,7 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
         addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
-        addVerifyx509HostnameVerifier(exceptionMessages,x509HostnameVerifier,X509_HOSTNAME_VERIFIER);
+        addVerifyx509HostnameVerifier(exceptionMessages, x509HostnameVerifier, X509_HOSTNAME_VERIFIER);
         addVerifyNumber(exceptionMessages, connectTimeout, CONNECT_TIMEOUT);
         addVerifyNumber(exceptionMessages, socketTimeout, SOCKET_TIMEOUT);
         addVerifyBoolean(exceptionMessages, keepAlive, KEEP_ALIVE);

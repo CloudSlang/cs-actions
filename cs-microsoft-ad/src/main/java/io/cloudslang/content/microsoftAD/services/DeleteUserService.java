@@ -15,21 +15,19 @@
 package io.cloudslang.content.microsoftAD.services;
 
 import io.cloudslang.content.microsoftAD.entities.DeleteUserInputs;
-
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpDelete;
 import static io.cloudslang.content.microsoftAD.utils.Constants.DELETE_USER_REQUEST_URL;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 
 public class DeleteUserService {
 
-   public static Map<String, String> deleteUser(@NotNull final DeleteUserInputs deleteUserInputs) throws Exception {
+    public static Map<String, String> deleteUser(@NotNull final DeleteUserInputs deleteUserInputs) throws Exception {
 
-    return httpDelete(deleteUserInputs.getCommonInputs(), getDeleteUserUrl(deleteUserInputs));
+        return httpDelete(deleteUserInputs.getCommonInputs(), getDeleteUserUrl(deleteUserInputs));
 
     }
 

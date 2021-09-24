@@ -274,7 +274,7 @@ public class HttpUtils {
 
 
         //Validation for empty status code
-        if(statusCode.equals(EMPTY)){
+        if (statusCode.equals(EMPTY)) {
             results = getFailureResultsMap(failureMessage);
             return results;
         }

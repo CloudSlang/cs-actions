@@ -43,7 +43,7 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserEnabled
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_PRINCIPAL_NAME;
-import static io.cloudslang.content.microsoftAD.utils.InputsValidation.*;
+import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyGetInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -136,6 +136,8 @@ public class IsUserEnabled {
 
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, IS_USER_ENABLED_SUCCESS_DESC,  result.get(RETURN_RESULT));
+
+            if(!result.get(STATUS_CODE).isEmpty()){
             final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
 
@@ -148,6 +150,7 @@ public class IsUserEnabled {
                 } else
                     results.put(ACCOUNT_ENABLED_OUT, EMPTY);
 
+            }
             }
             return results;
         } catch (Exception exception) {
