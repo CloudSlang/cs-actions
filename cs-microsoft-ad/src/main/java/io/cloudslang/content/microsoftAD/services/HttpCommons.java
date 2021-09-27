@@ -219,7 +219,8 @@ public class HttpCommons {
         try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
             HttpDelete httpDelete = new HttpDelete(url);
             httpDelete.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
-            httpDelete.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+            httpDelete.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON + SEMICOLON + CHARSET + EQUALS +
+                    UTF8);
             try (CloseableHttpResponse response = httpClient.execute(httpDelete)) {
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
                 //if status code is 204, no return result is provided, otherwise there is a return result
@@ -243,7 +244,8 @@ public class HttpCommons {
         try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(getUserInputsInputs.getCommonInputs())) {
             HttpGet httpGet = new HttpGet(url);
             httpGet.setHeader(HttpHeaders.AUTHORIZATION, BEARER + getUserInputsInputs.getCommonInputs().getAuthToken());
-            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON + SEMICOLON + CHARSET + EQUALS +
+                    UTF8);
             try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
                 int statusCode = response.getStatusLine().getStatusCode();
