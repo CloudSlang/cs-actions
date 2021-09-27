@@ -18,6 +18,8 @@ package io.cloudslang.content.microsoftAD.services;
 
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
+import org.apache.http.Consts;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -37,11 +39,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
+import javax.swing.text.html.parser.Entity;
 import java.io.File;
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -192,9 +196,10 @@ public class HttpCommons {
 
             HttpPost httpPost = new HttpPost(url);
             httpPost.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
-            httpPost.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON + SEMICOLON + CHARSET + EQUALS +
-                    UTF8);
-            httpPost.setEntity(new StringEntity(body));
+            httpPost.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+            StringEntity stringEntity = new StringEntity(body,UTF8);
+            stringEntity.setContentType(APPLICATION_JSON);
+            httpPost.setEntity(stringEntity);
 
             try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
 
@@ -219,8 +224,7 @@ public class HttpCommons {
         try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
             HttpDelete httpDelete = new HttpDelete(url);
             httpDelete.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
-            httpDelete.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON + SEMICOLON + CHARSET + EQUALS +
-                    UTF8);
+            httpDelete.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
             try (CloseableHttpResponse response = httpClient.execute(httpDelete)) {
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
                 //if status code is 204, no return result is provided, otherwise there is a return result
@@ -244,8 +248,7 @@ public class HttpCommons {
         try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(getUserInputsInputs.getCommonInputs())) {
             HttpGet httpGet = new HttpGet(url);
             httpGet.setHeader(HttpHeaders.AUTHORIZATION, BEARER + getUserInputsInputs.getCommonInputs().getAuthToken());
-            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON + SEMICOLON + CHARSET + EQUALS +
-                    UTF8);
+            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
             try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
                 int statusCode = response.getStatusLine().getStatusCode();
