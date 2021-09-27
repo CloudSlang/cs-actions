@@ -194,7 +194,10 @@ public class HttpCommons {
             httpPost.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
             httpPost.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON + SEMICOLON + CHARSET + EQUALS +
                     UTF8);
-            httpPost.setEntity(new StringEntity(body));
+            StringEntity stringEntity = new StringEntity(body);
+            stringEntity.setContentEncoding(UTF8);
+            stringEntity.setContentType(APPLICATION_JSON);
+            httpPost.setEntity(stringEntity);
 
             try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
 
