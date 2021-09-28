@@ -70,6 +70,8 @@ public class SCPRemoteCopyFile {
                                        @Param(value = DESTINATION_PATH, description = DESTINATION_PATH_DESC, required = true) String destinationPath,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
                                        @Param(value = KNOWN_HOSTS_POLICY, description = KNOWN_HOSTS_POLICY_DESC) String knownHostsPolicy,
                                        @Param(value = KNOWN_HOSTS_PATH, description = KNOWN_HOSTS_PATH_DESC) String knownHostsPath,
                                        @Param(value = CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
@@ -109,6 +111,8 @@ public class SCPRemoteCopyFile {
                 .connectionTimeout(connectionTimeout)
                 .proxyHost(proxyHost)
                 .proxyPort(proxyPort)
+                .proxyUsername(proxyUsername)
+                .proxyPassword(proxyPassword)
                 .knownHostsPath(knownHostsPath)
                 .knownHostsPolicy(knownHostsPolicy)
                 .build();

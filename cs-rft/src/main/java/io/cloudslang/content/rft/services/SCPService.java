@@ -49,8 +49,15 @@ public class SCPService {
             JSch jsch = new JSch();
             Session session = jsch.getSession(inputs.getUsername(), inputs.getHost(), Integer.parseInt(inputs.getPort()));
             establishPasswordOrPrivateKeyFile(jsch, session, inputs.getPrivateKey(), inputs.getPassword());
-            if (!StringUtils.isEmpty(inputs.getProxyHost()))
-                session.setProxy(new ProxyHTTP(inputs.getProxyHost(),Integer.parseInt(inputs.getProxyPort())));
+
+            if (!StringUtils.isEmpty(inputs.getProxyHost())) {
+                ProxyHTTP proxy = new ProxyHTTP(inputs.getProxyHost(), Integer.parseInt(inputs.getProxyPort()));
+                if ((!inputs.getProxyUsername().isEmpty()) && (!inputs.getProxyPassword().isEmpty())) {
+                    proxy.setUserPasswd(inputs.getProxyUsername(), inputs.getProxyPassword());
+                }
+                session.setProxy(proxy);
+            }
+
             establishKnownHostsConfiguration(inputs.getKnownHostsPolicy(), inputs.getKnownHostsPath(), jsch, session);
             session.connect(Integer.parseInt(inputs.getConnectionTimeout()) * 1000);
             switch (inputs.getCopyAction().toLowerCase()) {
@@ -117,16 +124,30 @@ public class SCPService {
 
             JSch jschRemoteToLocal = new JSch();
             Session sessionRemoteToLocal = jschRemoteToLocal.getSession(inputs.getSourceUsername(), inputs.getSourceHost(), Integer.parseInt(inputs.getSourcePort()));
-            if (!StringUtils.isEmpty(inputs.getProxyHost()))
-                sessionRemoteToLocal.setProxy(new ProxyHTTP(inputs.getProxyHost(),Integer.parseInt(inputs.getProxyPort())));
+
+            if (!StringUtils.isEmpty(inputs.getProxyHost())) {
+                ProxyHTTP proxy = new ProxyHTTP(inputs.getProxyHost(), Integer.parseInt(inputs.getProxyPort()));
+                if ((!inputs.getProxyUsername().isEmpty()) && (!inputs.getProxyPassword().isEmpty())) {
+                    proxy.setUserPasswd(inputs.getProxyUsername(), inputs.getProxyPassword());
+                }
+                sessionRemoteToLocal.setProxy(proxy);
+            }
+
             establishPasswordOrPrivateKeyFile(jschRemoteToLocal, sessionRemoteToLocal, inputs.getSourcePrivateKey(), inputs.getSourcePassword());
             establishKnownHostsConfiguration(inputs.getKnownHostsPolicy(), inputs.getKnownHostsPath(), jschRemoteToLocal, sessionRemoteToLocal);
             sessionRemoteToLocal.connect(Integer.parseInt(inputs.getConnectionTimeout())* 1000);
 
             JSch jschLocalToRemote = new JSch();
             Session sessionLocalToRemote = jschLocalToRemote.getSession(inputs.getSourceUsername(), inputs.getSourceHost(), Integer.parseInt(inputs.getSourcePort()));
-            if (!StringUtils.isEmpty(inputs.getProxyHost()))
-                sessionRemoteToLocal.setProxy(new ProxyHTTP(inputs.getProxyHost(),Integer.parseInt(inputs.getProxyPort())));
+
+            if (!StringUtils.isEmpty(inputs.getProxyHost())) {
+                ProxyHTTP proxy = new ProxyHTTP(inputs.getProxyHost(), Integer.parseInt(inputs.getProxyPort()));
+                if ((!inputs.getProxyUsername().isEmpty()) && (!inputs.getProxyPassword().isEmpty())) {
+                    proxy.setUserPasswd(inputs.getProxyUsername(), inputs.getProxyPassword());
+                }
+                sessionLocalToRemote.setProxy(proxy);
+            }
+
             establishPasswordOrPrivateKeyFile(jschLocalToRemote, sessionLocalToRemote, inputs.getDestinationPrivateKey(), inputs.getDestinationPassword());
             establishKnownHostsConfiguration(inputs.getKnownHostsPolicy(), inputs.getKnownHostsPath(), jschLocalToRemote, sessionLocalToRemote);
             sessionLocalToRemote.connect(Integer.parseInt(inputs.getConnectionTimeout())* 1000);
