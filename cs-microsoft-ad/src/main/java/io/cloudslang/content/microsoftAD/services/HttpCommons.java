@@ -251,7 +251,6 @@ public class HttpCommons {
             httpGet.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
             try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
-                int statusCode = response.getStatusLine().getStatusCode();
                 result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), getUserInputsInputs.getCommonInputs().getResponseCharacterSet()));
                 return result;
             }
