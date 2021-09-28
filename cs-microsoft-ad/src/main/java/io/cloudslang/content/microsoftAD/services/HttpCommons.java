@@ -211,7 +211,7 @@ public class HttpCommons {
         } catch (IOException e) {
 
             result.put(STATUS_CODE, EMPTY);
-            result.put(RETURN_RESULT, e.getMessage());
+            result.put(RETURN_RESULT, e.toString()); //e.getMessage returns incomplete exception
 
             return result;
         }
@@ -235,7 +235,7 @@ public class HttpCommons {
             }
         } catch (IOException e) {
             result.put(STATUS_CODE, EMPTY);
-            result.put(RETURN_RESULT, e.getMessage());
+            result.put(RETURN_RESULT, e.toString()); //e.getMessage returns incomplete exception
 
             return result;
         }
@@ -257,7 +257,7 @@ public class HttpCommons {
             }
         } catch (IOException e) {
             result.put(STATUS_CODE, EMPTY);
-            result.put(RETURN_RESULT, e.getMessage());
+            result.put(RETURN_RESULT, e.toString()); //e.getMessage returns incomplete exception
 
             return result;
         }
