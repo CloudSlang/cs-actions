@@ -262,7 +262,7 @@ public class HttpCommons {
         } catch (Exception e) {
             result.put(STATUS_CODE, EMPTY);
             result.put(RETURN_RESULT, e.getMessage());
-            result.put(EXCEPTION, e.getStackTrace().toString());
+            result.put(EXCEPTION, e.toString());
 
             return result;
         }
