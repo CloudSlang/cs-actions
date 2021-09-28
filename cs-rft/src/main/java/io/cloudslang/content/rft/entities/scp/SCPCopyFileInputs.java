@@ -257,7 +257,7 @@ public class SCPCopyFileInputs {
 
         public SCPCopyFileInputs build() {
             return new SCPCopyFileInputs(host, port, username, password, localFile, copyAction, remoteFile,
-                    connectionTimeout, executionTimeout, privateKey, proxyHost, proxyHost, proxyUsername, proxyPassword,
+                    connectionTimeout, executionTimeout, privateKey, proxyHost, proxyPort, proxyUsername, proxyPassword,
                     knownHostsPolicy, knownHostsPath);
         }
     }
