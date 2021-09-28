@@ -22,9 +22,8 @@ public final class Constants {
     public static final String DEFAULT_LOGIN_TYPE = "Native";
     public static final String DEFAULT_RESOURCE = "https://graph.microsoft.com";
     public static final String DEFAULT_PROXY_PORT = "8080";
-    public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
-    public static final String STRICT = "strict";
+    public static final String BOOLEAN_FALSE = "false";
     public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
@@ -64,6 +63,15 @@ public final class Constants {
     public static final String IS_USER_ENABLED_ODATA_QUERY = "$select=accountEnabled";
     public static final String ACCOUNT_ENABLED_OUT = "accountEnabled";
     public static final String USER_ID = "userId";
+
+    public static final String STRICT = "strict";
+    public static final String ALLOW_ALL = "allow_all";
+    public static final String BROWSER_COMPATIBLE = "browser_compatible";
+
+    public static final String TLSV1 = "tlsv1";
+    public static final String TLSV11 = "tlsv1.1";
+    public static final String TLSV12 = "tlsv1.2";
+    public static final String TLSV13 = "tlsv1.3";
 
     //API URLs
     public static final String CREATE_USER_URL = "https://graph.microsoft.com/v1.0/users";

@@ -208,10 +208,10 @@ public final class InputsValidation {
     @NotNull
     private static List<String> addVerifyx509HostnameVerifier(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
         List<String> x509HostnameVerifiers = new ArrayList<>();
-        x509HostnameVerifiers.add("strict");
-        x509HostnameVerifiers.add("allow_all");
-        x509HostnameVerifiers.add("browser_compatible");
-        if (!x509HostnameVerifiers.contains(input.toLowerCase()))
+        x509HostnameVerifiers.add(STRICT);
+        x509HostnameVerifiers.add(ALLOW_ALL);
+        x509HostnameVerifiers.add(BROWSER_COMPATIBLE);
+        if (!x509HostnameVerifiers.contains(input.toLowerCase().trim()))
             exceptions.add(String.format(EXCEPTION_INVALID_HOSTNAME_VERIFIER, input, inputName));
         return exceptions;
     }
@@ -219,10 +219,10 @@ public final class InputsValidation {
     @NotNull
     private static List<String> addVerifyTlsVersion(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
         List<String> tlsVersions = new ArrayList<>();
-        tlsVersions.add("tlsv1");
-        tlsVersions.add("tlsv1.1");
-        tlsVersions.add("tlsv1.2");
-        tlsVersions.add("tlsv1.3");
+        tlsVersions.add(TLSV1);
+        tlsVersions.add(TLSV11);
+        tlsVersions.add(TLSV12);
+        tlsVersions.add(TLSV13);
         if (!tlsVersions.contains(input.toLowerCase()))
             exceptions.add(String.format(EXCEPTION_INVALID_TLS_VERSION, input, inputName));
         return exceptions;

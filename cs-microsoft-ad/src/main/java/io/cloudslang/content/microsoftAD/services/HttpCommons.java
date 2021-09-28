@@ -18,7 +18,9 @@ package io.cloudslang.content.microsoftAD.services;
 
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
-import org.apache.http.*;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -28,34 +30,27 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.message.BasicHeaderElementIterator;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.swing.text.html.parser.Entity;
-import javax.xml.ws.spi.http.HttpContext;
 import java.io.File;
-import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -74,13 +69,13 @@ public class HttpCommons {
         String x509HostnameVerifierStr = hostnameVerifier.toLowerCase();
         HostnameVerifier x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
         switch (x509HostnameVerifierStr) {
-            case "strict":
+            case STRICT:
                 x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
                 break;
-            case "browser_compatible":
+            case BROWSER_COMPATIBLE:
                 x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
                 break;
-            case "allow_all":
+            case ALLOW_ALL:
                 x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
                 break;
         }
@@ -218,9 +213,9 @@ public class HttpCommons {
                 return result;
             }
         } catch (Exception e) {
-
             result.put(STATUS_CODE, EMPTY);
-            result.put(RETURN_RESULT, e.toString()); //e.getMessage returns incomplete exception
+            result.put(RETURN_RESULT, e.getMessage());
+            result.put(EXCEPTION, e.toString());
 
             return result;
         }
@@ -244,7 +239,8 @@ public class HttpCommons {
             }
         } catch (Exception e) {
             result.put(STATUS_CODE, EMPTY);
-            result.put(RETURN_RESULT, e.toString()); //e.getMessage returns incomplete exception
+            result.put(RETURN_RESULT, e.getMessage());
+            result.put(EXCEPTION, e.toString());
 
             return result;
         }
@@ -265,7 +261,8 @@ public class HttpCommons {
             }
         } catch (Exception e) {
             result.put(STATUS_CODE, EMPTY);
-            result.put(RETURN_RESULT, e.toString()); //e.getMessage returns incomplete exception
+            result.put(RETURN_RESULT, e.getMessage());
+            result.put(EXCEPTION, e.getStackTrace().toString());
 
             return result;
         }

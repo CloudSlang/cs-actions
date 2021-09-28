@@ -27,6 +27,7 @@ import java.net.Proxy;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
+import static io.cloudslang.content.microsoftAD.utils.Outputs.CommonOutputs.EXCEPTION;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.net.Proxy.Type.HTTP;
@@ -275,7 +276,12 @@ public class HttpUtils {
 
         //Validation for empty status code
         if (statusCode.equals(EMPTY)) {
+
             results = getFailureResultsMap(failureMessage);
+
+            if (result.get(EXCEPTION) != null)
+                results.put(EXCEPTION, result.get(EXCEPTION));
+
             return results;
         }
 
@@ -286,6 +292,10 @@ public class HttpUtils {
             results = getFailureResultsMap(failureMessage);
 
         results.put(STATUS_CODE, statusCode);
+
+        if (result.get(EXCEPTION) != null)
+            results.put(EXCEPTION, result.get(EXCEPTION));
+
         return results;
     }
 }
