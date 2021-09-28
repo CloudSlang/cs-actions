@@ -152,7 +152,7 @@ public class MSSQLQuery {
             try {
                 authLibraryPath =  exportPathToAuthDll();
             } catch (Exception e) {
-                e.printStackTrace();
+                return getFailureResultsMap(e);
             }
         }
 
