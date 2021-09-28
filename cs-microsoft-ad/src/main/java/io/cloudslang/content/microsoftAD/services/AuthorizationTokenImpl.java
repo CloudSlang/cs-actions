@@ -20,6 +20,7 @@ import com.microsoft.aad.adal4j.AuthenticationResult;
 import com.microsoft.aad.adal4j.ClientCredential;
 import io.cloudslang.content.microsoftAD.entities.AuthorizationTokenInputs;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -49,9 +50,9 @@ public class AuthorizationTokenImpl {
     private static AuthenticationResult acquireToken(@NotNull final AuthenticationContext context, @NotNull final AuthorizationTokenInputs inputs, @NotNull ClientCredential credential, @NotNull ExecutorService service) throws Exception {
         final Future<AuthenticationResult> future = context.acquireToken(inputs.getResource(), credential, null);
         service.shutdown();
-        try{
+        try {
             return future.get();
-        }catch(Exception e){
+        } catch (Exception e) {
             if (e.getMessage().equals("java.lang.NullPointerException"))
                 throw new Exception(EXCEPTION_ACQUIRE_TOKEN_FAILED);
             else throw new Exception(e.getMessage());
@@ -61,9 +62,9 @@ public class AuthorizationTokenImpl {
     private static AuthenticationResult acquireToken(@NotNull final AuthenticationContext context, @NotNull final AuthorizationTokenInputs inputs, @NotNull ExecutorService service) throws Exception {
         final Future<AuthenticationResult> future = context.acquireToken(inputs.getResource(), inputs.getClientId(), inputs.getUsername(), inputs.getPassword(), null);
         service.shutdown();
-        try{
+        try {
             return future.get();
-        }catch(Exception e){
+        } catch (Exception e) {
             if (e.getMessage().equals("java.lang.NullPointerException"))
                 throw new Exception(EXCEPTION_ACQUIRE_TOKEN_FAILED);
             else throw new Exception(e.getMessage());

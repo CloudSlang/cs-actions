@@ -34,18 +34,15 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.microsoftAD.services.DeleteUserService.deleteUser;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.DeleteUser.*;
-
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_ID;
-import static io.cloudslang.content.microsoftAD.utils.InputsValidation.*;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_PRINCIPAL_NAME;
+import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyDeleteInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -103,9 +100,9 @@ public class DeleteUser {
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
 
-        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
-                connectTimeout, socketTimeout, keepAlive,
-                connectionsMaxPerRoute, connectionsMaxTotal);
+        final List<String> exceptionMessages = verifyDeleteInputs(userPrincipalName, userId, proxyPort, trustAllRoots, x509HostnameVerifier,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+
 
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));

@@ -57,9 +57,14 @@ public class Descriptions {
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
                 "Default value: UTF-8";
 
+        public static final String EXCEPTION_INVALID_HOSTNAME_VERIFIER = "%s for %s input is not a valid x509HostnameVerifier value. The valid values are: 'strict','browser_compatible','allow_all'.";
+        public static final String EXCEPTION_INVALID_TLS_VERSION = "%s for %s input is not a valid tlsVersion value. The valid values are: 'TLSv1','TLSv1.1','TLSv1.2','TLSv1.3'.";
+
+
         //Inputs
         public static final String AUTH_TOKEN_DESC = "Token used to authenticate to Azure Active Directory.";
-        public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name. \nExample: someuser@contoso.com";
+        public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name. \nExample: someuser@contoso.com" +
+                "The input is mutually exclusive with the userId input.";
 
         //Outputs
         public static final String RETURN_CODE_DESC = "0 if success, -1 if failure.";

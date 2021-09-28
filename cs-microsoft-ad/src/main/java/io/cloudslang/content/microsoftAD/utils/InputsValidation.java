@@ -25,6 +25,8 @@ import java.util.List;
 
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.EXCEPTION_INVALID_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.EXCEPTION_INVALID_TLS_VERSION;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.PASSWORD;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.USERNAME;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.*;
@@ -54,10 +56,11 @@ public final class InputsValidation {
     }
 
     @NotNull
-    public static List<String> verifyCommonInputs(@Nullable final String userPrincipalName,
+    public static List<String> verifyDeleteInputs(@Nullable final String userPrincipalName,
                                                   @Nullable final String userId,
                                                   @Nullable final String proxyPort,
                                                   @Nullable final String trust_all_roots,
+                                                  @Nullable final String x509HostnameVerifier,
                                                   @Nullable final String connectTimeout,
                                                   @Nullable final String socketTimeout,
                                                   @Nullable final String keepAlive,
@@ -66,20 +69,36 @@ public final class InputsValidation {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyUserInputs(exceptionMessages, userPrincipalName, userId);
-        addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
-        addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
-        addVerifyNumber(exceptionMessages, connectTimeout, CONNECT_TIMEOUT);
-        addVerifyNumber(exceptionMessages, socketTimeout, SOCKET_TIMEOUT);
-        addVerifyBoolean(exceptionMessages, keepAlive, KEEP_ALIVE);
-        addVerifyNumber(exceptionMessages, connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE);
-        addVerifyNumber(exceptionMessages, connectionsMaxTotal, CONNECTIONS_MAX_TOTAL);
 
+        exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots, x509HostnameVerifier,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyGetInputs(@Nullable final String userPrincipalName,
+                                               @Nullable final String userId,
+                                               @Nullable final String proxyPort,
+                                               @Nullable final String trust_all_roots,
+                                               @Nullable final String x509HostnameVerifier,
+                                               @Nullable final String connectTimeout,
+                                               @Nullable final String socketTimeout,
+                                               @Nullable final String keepAlive,
+                                               @Nullable final String connectionsMaxPerRoute,
+                                               @Nullable final String connectionsMaxTotal) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyUserInputs(exceptionMessages, userPrincipalName, userId);
+
+        exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots, x509HostnameVerifier,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
         return exceptionMessages;
     }
 
     @NotNull
     public static List<String> verifyCommonUserInputs(@Nullable final String proxyPort,
                                                       @Nullable final String trust_all_roots,
+                                                      @Nullable final String x509HostnameVerifier,
                                                       @Nullable final String connectTimeout,
                                                       @Nullable final String socketTimeout,
                                                       @Nullable final String keepAlive,
@@ -89,6 +108,7 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
         addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
+        addVerifyx509HostnameVerifier(exceptionMessages, x509HostnameVerifier, X509_HOSTNAME_VERIFIER);
         addVerifyNumber(exceptionMessages, connectTimeout, CONNECT_TIMEOUT);
         addVerifyNumber(exceptionMessages, socketTimeout, SOCKET_TIMEOUT);
         addVerifyBoolean(exceptionMessages, keepAlive, KEEP_ALIVE);
@@ -107,6 +127,7 @@ public final class InputsValidation {
                                                       @Nullable final String password,
                                                       @Nullable final String proxyPort,
                                                       @Nullable final String trust_all_roots,
+                                                      @Nullable final String x509HostnameVerifier,
                                                       @Nullable final String connectTimeout,
                                                       @Nullable final String socketTimeout,
                                                       @Nullable final String keepAlive,
@@ -122,33 +143,12 @@ public final class InputsValidation {
         addVerifyBoolean(exceptionMessages, forceChangePassword, FORCE_CHANGE_PASSWORD);
         addVerifyNotNullOrEmpty(exceptionMessages, password, PASSWORD);
 
-        exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots,
+        exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots, x509HostnameVerifier,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
 
         return exceptionMessages;
     }
 
-    @NotNull
-    public static List<String> verifyUpdateUserInputs(@Nullable final String accountEnabled,
-                                                      @Nullable final String userIdToUpdate,
-                                                      @Nullable final String userPrincipalNameToUpdate,
-                                                      @Nullable final String forceChangePassword,
-                                                      @Nullable final String proxyPort,
-                                                      @Nullable final String trust_all_roots,
-                                                      @Nullable final String connectTimeout,
-                                                      @Nullable final String socketTimeout,
-                                                      @Nullable final String keepAlive,
-                                                      @Nullable final String connectionsMaxPerRoute,
-                                                      @Nullable final String connectionsMaxTotal) {
-
-        final List<String> exceptionMessages = verifyCommonInputs(userPrincipalNameToUpdate, userIdToUpdate, proxyPort, trust_all_roots,
-                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-
-        addVerifyBoolean(exceptionMessages, accountEnabled, ACCOUNT_ENABLED);
-        addVerifyBoolean(exceptionMessages, forceChangePassword, FORCE_CHANGE_PASSWORD);
-
-        return exceptionMessages;
-    }
 
     @NotNull
     private static List<String> addVerifyUserInputs(@NotNull List<String> exceptions, @Nullable final String userPrincipalName,
@@ -204,5 +204,29 @@ public final class InputsValidation {
         }
         return exceptions;
     }
+
+    @NotNull
+    private static List<String> addVerifyx509HostnameVerifier(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+        List<String> x509HostnameVerifiers = new ArrayList<>();
+        x509HostnameVerifiers.add(STRICT);
+        x509HostnameVerifiers.add(ALLOW_ALL);
+        x509HostnameVerifiers.add(BROWSER_COMPATIBLE);
+        if (!x509HostnameVerifiers.contains(input.toLowerCase().trim()))
+            exceptions.add(String.format(EXCEPTION_INVALID_HOSTNAME_VERIFIER, input, inputName));
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyTlsVersion(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+        List<String> tlsVersions = new ArrayList<>();
+        tlsVersions.add(TLSV1);
+        tlsVersions.add(TLSV11);
+        tlsVersions.add(TLSV12);
+        tlsVersions.add(TLSV13);
+        if (!tlsVersions.contains(input.toLowerCase()))
+            exceptions.add(String.format(EXCEPTION_INVALID_TLS_VERSION, input, inputName));
+        return exceptions;
+    }
+
 }
 
