@@ -24,12 +24,14 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.security.Provider;
 import java.security.Security;
-
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-import static io.cloudslang.content.rft.utils.Constants.EXCEPTION_UNABLE_SAVE_SESSION;
-import static io.cloudslang.content.rft.utils.Constants.SUCCESS_RESULT;
-import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 
 public class SFTPService {
@@ -48,7 +50,7 @@ public class SFTPService {
             }
 
             performSFTPOperation(sftpInputs, sftpOperation, sftpCopier, sessionId);
-            if(sftpOperation==SFTPOperation.GET_CHILDREN)
+            if (sftpOperation == SFTPOperation.GET_CHILDREN)
                 return sftpCopier.getResult();
 
             return getSuccessResultsMap(SUCCESS_RESULT);
@@ -58,25 +60,60 @@ public class SFTPService {
             if (sftpCopier != null) {
                 cleanupCopier(sftpInputs, sftpCopier, sessionId);
             }
-            return getFailureResultsMap(e);
-        }finally {
-            if(providerAdded)
+            Map<String, String> results = new HashMap<>();
+            results.put(EXCEPTION, String.valueOf(e));
+            results.put(RETURN_RESULT, e.getMessage());
+            results.put(RETURN_CODE, FAILURE_RETURN_CODE);
+            return results;
+        } finally {
+            if (providerAdded)
                 removeSecurityProvider();
         }
     }
 
 
-
     private void performSFTPOperation(IHasFTPOperation sftpInputs, SFTPOperation sftpOperation, SFTPCopier sftpCopier, String sessionId) throws Exception {
         if (sftpOperation == SFTPOperation.GET) {
             sftpCopier.setSftpInputs(sftpInputs);
-            sftpCopier.getFromRemote();
+            try {
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        sftpCopier.getFromRemote();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }).get(Integer.parseInt(sftpInputs.getSftpCommonInputs().getExecutionTimeout()) * 1000L, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                throw new Exception(EXCEPTION_EXECUTION_TIMED_OUT);
+            }
         } else if (sftpOperation == SFTPOperation.PUT) {
             sftpCopier.setSftpInputs(sftpInputs);
-            sftpCopier.putToRemote();
-        } else if(sftpOperation == SFTPOperation.GET_CHILDREN){
+
+            try {
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        sftpCopier.putToRemote();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }).get(Integer.parseInt(sftpInputs.getSftpCommonInputs().getExecutionTimeout()) * 1000L, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                throw new Exception(EXCEPTION_EXECUTION_TIMED_OUT);
+            }
+        } else if (sftpOperation == SFTPOperation.GET_CHILDREN) {
             sftpCopier.setSftpInputs(sftpInputs);
-            sftpCopier.getChildren();
+
+            try {
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        sftpCopier.getChildren();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }).get(Integer.parseInt(sftpInputs.getSftpCommonInputs().getExecutionTimeout()) * 1000L, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                throw new Exception(EXCEPTION_EXECUTION_TIMED_OUT);
+            }
         }
         handleSessionClosure(sftpInputs, sftpCopier, sessionId);
     }
@@ -85,7 +122,7 @@ public class SFTPService {
         boolean closeSession = Boolean.parseBoolean(sftpInputs.getSftpCommonInputs().getCloseSession());
         if (closeSession) {
             cleanupCopier(sftpInputs, sftpCopier, sessionId);
-        } else{
+        } else {
             final boolean saved = saveToCache(sftpInputs.getSftpCommonInputs().getGlobalSessionObject(), sftpCopier, sessionId);
             if (!saved)
                 throw new RuntimeException(EXCEPTION_UNABLE_SAVE_SESSION);
@@ -93,7 +130,7 @@ public class SFTPService {
     }
 
     public boolean saveToCache(GlobalSessionObject<Map<String, SFTPConnection>> sessionParam, SFTPCopier sftpCopier, String sessionId) {
-        if (sessionParam != null &&sessionParam.getName() == null ) {
+        if (sessionParam != null && sessionParam.getName() == null) {
             sessionParam.setName(Constants.SSH_SESSIONS_DEFAULT_ID);
         }
         return sftpCopier.saveToCache(sessionParam, sessionId);
@@ -105,7 +142,7 @@ public class SFTPService {
     }
 
     public SFTPCopier getSftpCopierFromCache(IHasFTPOperation sftpInputs, String sessionId) {
-        if (sessionId != null ) {
+        if (sessionId != null) {
             synchronized (sessionId) {
                 return CacheUtils.getFromCache(sftpInputs.getSftpCommonInputs().getGlobalSessionObject().getResource(), sessionId);
             }
