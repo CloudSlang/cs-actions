@@ -135,10 +135,10 @@ public class SCPService {
 
             establishPasswordOrPrivateKeyFile(jschRemoteToLocal, sessionRemoteToLocal, inputs.getSourcePrivateKey(), inputs.getSourcePassword());
             establishKnownHostsConfiguration(inputs.getKnownHostsPolicy(), inputs.getKnownHostsPath(), jschRemoteToLocal, sessionRemoteToLocal);
-            sessionRemoteToLocal.connect(Integer.parseInt(inputs.getConnectionTimeout())* 1000);
+            sessionRemoteToLocal.connect(Integer.parseInt(inputs.getConnectionTimeout()) * 1000);
 
             JSch jschLocalToRemote = new JSch();
-            Session sessionLocalToRemote = jschLocalToRemote.getSession(inputs.getSourceUsername(), inputs.getSourceHost(), Integer.parseInt(inputs.getSourcePort()));
+            Session sessionLocalToRemote = jschLocalToRemote.getSession(inputs.getDestinationUsername(), inputs.getDestinationHost(), Integer.parseInt(inputs.getDestinationPort()));
 
             if (!StringUtils.isEmpty(inputs.getProxyHost())) {
                 ProxyHTTP proxy = new ProxyHTTP(inputs.getProxyHost(), Integer.parseInt(inputs.getProxyPort()));
@@ -150,7 +150,7 @@ public class SCPService {
 
             establishPasswordOrPrivateKeyFile(jschLocalToRemote, sessionLocalToRemote, inputs.getDestinationPrivateKey(), inputs.getDestinationPassword());
             establishKnownHostsConfiguration(inputs.getKnownHostsPolicy(), inputs.getKnownHostsPath(), jschLocalToRemote, sessionLocalToRemote);
-            sessionLocalToRemote.connect(Integer.parseInt(inputs.getConnectionTimeout())* 1000);
+            sessionLocalToRemote.connect(Integer.parseInt(inputs.getConnectionTimeout()) * 1000);
 
             try {
                 successfullyCopied = CompletableFuture.supplyAsync(() -> copyRemoteToLocal(sessionRemoteToLocal, inputs.getSourcePath(), temporaryDestFilePath)
@@ -180,8 +180,8 @@ public class SCPService {
             results.put(EXCEPTION, String.valueOf(e));
             results.put(RETURN_RESULT, e.getMessage());
             results.put(RETURN_CODE, FAILURE_RETURN_CODE);
-        }finally {
-            if(temporaryDestFile != null)
+        } finally {
+            if (temporaryDestFile != null)
                 temporaryDestFile.delete();
         }
         return results;
@@ -277,7 +277,7 @@ public class SCPService {
             try {
                 if (fos != null)
                     fos.close();
-                if(channel!=null)
+                if (channel != null)
                     channel.disconnect();
                 session.disconnect();
             } catch (Exception ex) {
@@ -368,7 +368,7 @@ public class SCPService {
                     fis.close();
                 if (out != null)
                     out.close();
-                if(channel!=null)
+                if (channel != null)
                     channel.disconnect();
                 session.disconnect();
             } catch (IOException e) {
