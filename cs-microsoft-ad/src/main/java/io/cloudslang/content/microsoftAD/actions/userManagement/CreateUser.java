@@ -128,10 +128,10 @@ public class CreateUser {
 
         if (body.equals(EMPTY))
             exceptionMessages = verifyCreateUserInputs(accountEnabled, displayName, mailNickname,
-                    userPrincipalName, forceChangePassword, password, proxyPort, trustAllRoots,
+                    userPrincipalName, forceChangePassword, password, proxyPort, trustAllRoots, x509HostnameVerifier,
                     connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         else
-            exceptionMessages = verifyCommonUserInputs(proxyPort, trustAllRoots,
+            exceptionMessages = verifyCommonUserInputs(proxyPort, trustAllRoots, x509HostnameVerifier,
                     connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
 
         if (!exceptionMessages.isEmpty())
@@ -170,7 +170,7 @@ public class CreateUser {
 
             finalResult.put(USER_ID, EMPTY);
 
-            if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300) {
+            if (!result.get(STATUS_CODE).isEmpty() && Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300) {
 
                 JsonObject json = ((new JsonParser()).parse(result.get(RETURN_RESULT))).getAsJsonObject();
 

@@ -33,6 +33,8 @@ public class SCPRemoteCopyFileInputs {
     private final String executionTimeout;
     private final String proxyHost;
     private final String proxyPort;
+    private final String proxyUsername;
+    private final String proxyPassword;
     private final String knownHostsPolicy;
     private final String knownHostsPath;
 
@@ -40,8 +42,8 @@ public class SCPRemoteCopyFileInputs {
                                    String sourcePrivateKey, String sourcePath, String destinationHost,
                                    String destinationPort, String destinationUsername, String destinationPassword,
                                    String destinationPrivateKey, String destinationPath, String connectionTimeout,
-                                   String executionTimeout, String proxyHost, String proxyPort, String knownHostsPolicy,
-                                   String knownHostsPath) {
+                                   String executionTimeout, String proxyHost, String proxyPort, String proxyUsername,
+                                   String proxyPassword, String knownHostsPolicy, String knownHostsPath) {
         this.sourceHost = sourceHost;
         this.sourcePort = sourcePort;
         this.sourceUsername = sourceUsername;
@@ -58,6 +60,8 @@ public class SCPRemoteCopyFileInputs {
         this.executionTimeout = executionTimeout;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
+        this.proxyUsername = proxyUsername;
+        this.proxyPassword = proxyPassword;
         this.knownHostsPolicy = knownHostsPolicy;
         this.knownHostsPath = knownHostsPath;
     }
@@ -70,6 +74,16 @@ public class SCPRemoteCopyFileInputs {
     @NotNull
     public String getProxyPort() {
         return proxyPort;
+    }
+
+    @NotNull
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    @NotNull
+    public String getProxyPassword() {
+        return proxyPassword;
     }
 
     @NotNull
@@ -169,6 +183,8 @@ public class SCPRemoteCopyFileInputs {
         private String executionTimeout;
         private String proxyHost;
         private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
         private String knownHostsPolicy;
         private String knownHostsPath;
 
@@ -250,6 +266,18 @@ public class SCPRemoteCopyFileInputs {
             return this;
         }
 
+        @NotNull
+        public SCPRemoteCopyFileInputsBuilder proxyUsername(@NotNull final String proxyUsername) {
+            this.proxyUsername = proxyUsername;
+            return this;
+        }
+
+        @NotNull
+        public SCPRemoteCopyFileInputsBuilder proxyPassword(@NotNull final String proxyPassword) {
+            this.proxyPassword = proxyPassword;
+            return this;
+        }
+
         public SCPRemoteCopyFileInputsBuilder knownHostsPolicy(@NotNull final String knownHostsPolicy) {
             this.knownHostsPolicy = knownHostsPolicy;
             return this;
@@ -269,7 +297,7 @@ public class SCPRemoteCopyFileInputs {
             return new SCPRemoteCopyFileInputs(sourceHost, sourcePort, sourceUsername, sourcePassword, sourcePrivateKey,
                     sourcePath, destinationHost, destinationPort, destinationUsername, destinationPassword,
                     destinationPrivateKey, destinationPath, connectionTimeout, executionTimeout, proxyHost,
-                    proxyPort, knownHostsPolicy, knownHostsPath);
+                    proxyPort, proxyUsername, proxyPassword, knownHostsPolicy, knownHostsPath);
         }
     }
 }

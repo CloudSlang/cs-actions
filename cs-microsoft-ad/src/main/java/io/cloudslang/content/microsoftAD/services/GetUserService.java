@@ -15,22 +15,20 @@
 package io.cloudslang.content.microsoftAD.services;
 
 import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
-
-
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpGet;
 import static io.cloudslang.content.microsoftAD.utils.Constants.GET_USER_REQUEST_URL;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 
 public class GetUserService {
 
     public static Map<String, String> getUser(@NotNull final GetUserInputs getUserInputs) throws Exception {
 
-        return httpGet(getUserInputs, getUserUrl(getUserInputs.getODataQuery(),getUserInputs.getCommonInputs().getUserPrincipalName(), getUserInputs.getCommonInputs().getUserId()));
+        return httpGet(getUserInputs, getUserUrl(getUserInputs.getODataQuery(), getUserInputs.getCommonInputs().getUserPrincipalName(), getUserInputs.getCommonInputs().getUserId()));
 
     }
 
@@ -43,8 +41,8 @@ public class GetUserService {
         else
             finalUrl = GET_USER_REQUEST_URL + userId;
 
-        if(!StringUtils.isEmpty(oDdataQuery))
-            finalUrl = finalUrl + "?"  + oDdataQuery;
+        if (!StringUtils.isEmpty(oDdataQuery))
+            finalUrl = finalUrl + "?" + oDdataQuery;
 
         return finalUrl;
     }

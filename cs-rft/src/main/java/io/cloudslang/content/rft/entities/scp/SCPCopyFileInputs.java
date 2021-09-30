@@ -30,12 +30,15 @@ public class SCPCopyFileInputs {
     private final String privateKey;
     private final String proxyHost;
     private final String proxyPort;
+    private final String proxyUsername;
+    private final String proxyPassword;
     private final String knownHostsPolicy;
     private final String knownHostsPath;
 
     public SCPCopyFileInputs(String host, String port, String username, String password, String localFile,
                              String copyAction, String remoteFile, String connectionTimeout, String executionTimeout,
-                             String privateKey, String proxyHost, String proxyPort, String knownHostsPolicy, String knownHostsPath) {
+                             String privateKey, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword,
+                             String knownHostsPolicy, String knownHostsPath) {
         this.host = host;
         this.port = port;
         this.username = username;
@@ -48,6 +51,8 @@ public class SCPCopyFileInputs {
         this.privateKey = privateKey;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
+        this.proxyUsername = proxyUsername;
+        this.proxyPassword = proxyPassword;
         this.knownHostsPolicy = knownHostsPolicy;
         this.knownHostsPath = knownHostsPath;
     }
@@ -60,6 +65,16 @@ public class SCPCopyFileInputs {
     @NotNull
     public String getProxyPort() {
         return proxyPort;
+    }
+
+    @NotNull
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    @NotNull
+    public String getProxyPassword() {
+        return proxyPassword;
     }
 
     @NotNull
@@ -135,6 +150,8 @@ public class SCPCopyFileInputs {
         private String privateKey;
         private String proxyHost;
         private String proxyPort;
+        private String proxyUsername;
+        private String proxyPassword;
         private String knownHostsPolicy;
         private String knownHostsPath;
 
@@ -207,6 +224,18 @@ public class SCPCopyFileInputs {
             return this;
         }
 
+        @NotNull
+        public SCPCopyFileInputsBuilder proxyUsername(@NotNull final String proxyUsername) {
+            this.proxyUsername = proxyUsername;
+            return this;
+        }
+
+        @NotNull
+        public SCPCopyFileInputsBuilder proxyPassword(@NotNull final String proxyPassword) {
+            this.proxyPassword = proxyPassword;
+            return this;
+        }
+
 
         @NotNull
         public SCPCopyFileInputsBuilder knownHostsPolicy(@NotNull final String knownHostsPolicy) {
@@ -228,7 +257,8 @@ public class SCPCopyFileInputs {
 
         public SCPCopyFileInputs build() {
             return new SCPCopyFileInputs(host, port, username, password, localFile, copyAction, remoteFile,
-                    connectionTimeout, executionTimeout, privateKey,proxyHost,proxyHost,knownHostsPolicy,knownHostsPath);
+                    connectionTimeout, executionTimeout, privateKey, proxyHost, proxyPort, proxyUsername, proxyPassword,
+                    knownHostsPolicy, knownHostsPath);
         }
     }
 }

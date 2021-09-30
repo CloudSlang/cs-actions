@@ -22,10 +22,9 @@ public final class Constants {
     public static final String DEFAULT_LOGIN_TYPE = "Native";
     public static final String DEFAULT_RESOURCE = "https://graph.microsoft.com";
     public static final String DEFAULT_PROXY_PORT = "8080";
-    public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
-    public static final String STRICT = "strict";
-    public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED="Request to acquire token failed.";
+    public static final String BOOLEAN_FALSE = "false";
+    public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
@@ -33,6 +32,9 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
+    public static final String CHARSET = "charset";
+    public static final String SEMICOLON = ";";
+    public static final String EQUALS = "=";
     public static final String CHANGEIT = "changeit";
     public static final String ZERO = "0";
     public static final String UTF8 = "UTF-8";
@@ -61,6 +63,15 @@ public final class Constants {
     public static final String IS_USER_ENABLED_ODATA_QUERY = "$select=accountEnabled";
     public static final String ACCOUNT_ENABLED_OUT = "accountEnabled";
     public static final String USER_ID = "userId";
+
+    public static final String STRICT = "strict";
+    public static final String ALLOW_ALL = "allow_all";
+    public static final String BROWSER_COMPATIBLE = "browser_compatible";
+
+    public static final String TLSV1 = "tlsv1";
+    public static final String TLSV11 = "tlsv1.1";
+    public static final String TLSV12 = "tlsv1.2";
+    public static final String TLSV13 = "tlsv1.3";
 
     //API URLs
     public static final String CREATE_USER_URL = "https://graph.microsoft.com/v1.0/users";
