@@ -19,7 +19,7 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.microsoft.aad.adal4j.AuthenticationResult;
+import com.microsoft.aad.msal4j.IAuthenticationResult;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AuthorizationTokenInputs;
 import io.cloudslang.content.microsoftAD.services.AuthorizationTokenImpl;
@@ -44,7 +44,6 @@ import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyAuthorizationInputs;
 import static io.cloudslang.content.microsoftAD.utils.Outputs.AuthorizationOutputs.AUTH_TOKEN;
-import static io.cloudslang.content.microsoftAD.utils.Outputs.AuthorizationOutputs.AUTH_TOKEN_TYPE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -52,13 +51,12 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class GetAuthorizationToken {
 
-    @Action(name = NAME,
-            description = DESC,
+    @Action(name = GET_AUTHORIZATION_TOKEN_NAME,
+            description = GET_THE_AUTHORIZATION_TOKEN_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC),
-                    @Output(value = AUTH_TOKEN_TYPE, description = AUTH_TOKEN_TYPE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
@@ -71,7 +69,7 @@ public class GetAuthorizationToken {
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = LOGIN_AUTHORITY, required = true, description = LOGIN_AUTHORITY_DESC) String loginAuthority,
-                                       @Param(value = RESOURCE, description = RESOURCES_DESC) String resource,
+                                       @Param(value = SCOPE, description = SCOPE_DESC) String scope,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -81,7 +79,7 @@ public class GetAuthorizationToken {
         clientSecret = defaultIfEmpty(clientSecret, EMPTY);
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
-        resource = defaultIfEmpty(resource, DEFAULT_RESOURCE);
+        scope = defaultIfEmpty(scope, DEFAULT_SCOPE);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -92,23 +90,22 @@ public class GetAuthorizationToken {
         }
 
         try {
-            final AuthenticationResult result = AuthorizationTokenImpl.getToken(AuthorizationTokenInputs.builder()
+            final IAuthenticationResult result = AuthorizationTokenImpl.getToken(AuthorizationTokenInputs.builder()
                     .loginType(loginType)
                     .clientId(clientId)
                     .clientSecret(clientSecret)
                     .username(username)
                     .password(password)
                     .authority(loginAuthority)
-                    .resource(resource)
+                    .scope(scope)
                     .proxyHost(proxyHost)
                     .proxyPort(NumberUtilities.toInteger(proxyPort))
                     .proxyUsername(proxyUsername)
                     .proxyPassword(proxyPassword)
                     .build());
 
-            final Map<String, String> successResultsMap = getSuccessResultsMap(result.getAccessToken());
-            successResultsMap.put(AUTH_TOKEN, result.getAccessToken());
-            successResultsMap.put(AUTH_TOKEN_TYPE, result.getAccessTokenType());
+            final Map<String, String> successResultsMap = getSuccessResultsMap(result.accessToken());
+            successResultsMap.put(AUTH_TOKEN, result.accessToken());
             return successResultsMap;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
