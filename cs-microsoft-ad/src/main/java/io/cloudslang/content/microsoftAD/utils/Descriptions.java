@@ -89,10 +89,10 @@ public class Descriptions {
         public static final String LOGIN_AUTHORITY_DESC = "The authority URL. Usually, the format for this input is:\n" +
                 "'https://login.windows.net/TENANT_NAME/oauth2/v2.0/token' where TENANT_NAME is your application\n" +
                 "tenant.";
-        public static final String SCOPE_DESC = "The scope URL. The scope consists of a series of identifiers separated " +
-                "by the slash (/) character. The https://graph.microsoft.com/.default scope means that the user consent" +
-                " to all of the configured permissions present on the specific Azure AD Application. \n" +
-                "Example: https://graph.microsoft.com/User.Read, https://graph.microsoft.com/Sites.Read" +
+        public static final String SCOPE_DESC = "The scope URL. The scope consists of a series of resource permissions separated " +
+                "by a comma (,), i.e.: 'https://graph.microsoft.com/User.Read, https://graph.microsoft.com/Sites.Read'. " +
+                "The 'https://graph.microsoft.com/.default' scope means that the user consent to all of the configured permissions " +
+                "present on the specific Azure AD Application. For the 'API' loginType, '/.default' scope should be used. \n" +
                 "Default: 'https://graph.microsoft.com/.default'";
 
         public static final String RETURN_RESULT_DESC = "The authorization token for Azure Active Directory.";
