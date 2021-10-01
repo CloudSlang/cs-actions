@@ -34,7 +34,7 @@ public final class Inputs extends InputNames {
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
         public static final String LOGIN_AUTHORITY = "loginAuthority";
-        public static final String RESOURCE = "resource";
+        public static final String SCOPE = "scope";
     }
 
     public static class CreateUser {
