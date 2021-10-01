@@ -20,10 +20,13 @@ package io.cloudslang.content.database.services.databases;
 import io.cloudslang.content.database.utils.Address;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.SQLInputs;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,6 +34,7 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
@@ -39,6 +43,7 @@ import static io.cloudslang.content.database.constants.DBInputNames.INSTANCE;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.utils.Constants.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.isValidAuthType;
+import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 import static org.apache.commons.lang3.StringUtils.join;
 
@@ -88,6 +93,52 @@ public class MSSqlDatabase implements SqlDatabase {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(INACCESSIBLE_OR_INEXISTENT_SYS_PATHS_FIELD_EXCEPTION);
         }
+    }
+
+    public static String exportPathToAuthDll() throws Exception {
+        InputStream stream = null;
+        OutputStream resStreamOut = null;
+        final String jarFolder;
+
+        try {
+            //Search for present sqljdbc_auth.dll directory
+            final File parentTempDir = new File(System.getProperty(JAVA_IO_TMPDIR));
+            final Collection tempFiles = FileUtils.listFiles(
+                    parentTempDir,
+                    new RegexFileFilter(MSSQL_FILE_DRIVER),
+                    DirectoryFileFilter.DIRECTORY
+            );
+            final File[] tempFilesArray = (File[]) tempFiles.toArray(new File[0]);
+
+            for (File file : tempFilesArray) {
+                final String sha256 = sha256Hex(new FileInputStream(file));
+                if (sha256.equalsIgnoreCase(SQL_JDBC_AUTH_SHA256))
+                    return Paths.get(file.getParent().replace('\\', '/') + "/")
+                            .toRealPath()
+                            .toString();
+            }
+
+            //If dll was not found, create it
+            stream = MSSqlDatabase.class.getResourceAsStream(MSSQL_FILE_DRIVER);
+            if (stream == null) {
+                throw new Exception("Cannot get resource \"" +MSSQL_FILE_DRIVER + "\" from dll file.");
+            }
+
+            int readBytes;
+            final byte[] buffer = new byte[4096];
+            final Path tempDir = Files.createTempDirectory(SQL_JDBC_DRIVER_DIR_PREFIX);
+            jarFolder = tempDir.toFile().getPath().replace('\\', '/') + "/";
+
+            resStreamOut = new FileOutputStream(jarFolder + MSSQL_FILE_DRIVER);
+            while ((readBytes = stream.read(buffer)) > 0) {
+                resStreamOut.write(buffer, 0, readBytes);
+            }
+        } finally {
+            if (stream != null) stream.close();
+            if (resStreamOut != null) resStreamOut.close();
+        }
+
+        return Paths.get(jarFolder).toRealPath().toString();
     }
 
     private static void validateLibraryPath(String sqlJdbcAuthLibraryPath) {

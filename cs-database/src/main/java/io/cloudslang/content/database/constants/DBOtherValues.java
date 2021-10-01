@@ -62,6 +62,9 @@ public class DBOtherValues {
     public static final String MYSQL_JDBC_DRIVER = "com.mysql.jdbc.Driver";
     public static final String POSTGRESQL_DRIVER = "org.postgresql.Driver";
     public static final String MSSQL_FILE_DRIVER = "sqljdbc_auth.dll";
+    public static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
+    public static final String SQL_JDBC_AUTH_SHA256 = "40d03b21b7143358b2b2762cb0da1194a55853932b101321ffe3e8062df350ba";
+    public static final String SQL_JDBC_DRIVER_DIR_PREFIX = "sql-jdbc-driver";
 
     public static final String KEY_COLUMNS = "%s - Columns";
     public static final String KEY_FILES = "%s - Files";

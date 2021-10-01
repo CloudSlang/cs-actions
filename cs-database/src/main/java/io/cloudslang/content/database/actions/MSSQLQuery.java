@@ -42,6 +42,8 @@ import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBOutputNames.*;
 import static io.cloudslang.content.database.constants.DBResponseNames.*;
+import static io.cloudslang.content.database.services.databases.MSSqlDatabase.exportPathToAuthDll;
+import static io.cloudslang.content.database.utils.Constants.AUTH_WINDOWS;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryInputs;
 import static io.cloudslang.content.database.utils.SQLUtils.getRowsFromGlobalSessionMap;
@@ -145,6 +147,14 @@ public class MSSQLQuery {
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
         ignoreCase = defaultIfEmpty(ignoreCase, TRUE);
+
+        if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType) && MSSQL_DB_TYPE.equalsIgnoreCase(dbType)){
+            try {
+                authLibraryPath =  exportPathToAuthDll();
+            } catch (Exception e) {
+                return getFailureResultsMap(e);
+            }
+        }
 
         final List<String> preInputsValidation = validateSqlQueryInputs(dbServerName, dbType, username, password, instance, dbPort,
                 databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
