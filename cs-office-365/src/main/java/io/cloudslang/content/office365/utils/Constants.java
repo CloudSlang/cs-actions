@@ -22,6 +22,7 @@ public final class Constants {
     public static final String DEFAULT_LOGIN_TYPE = "Native";
     public static final String DEFAULT_RESOURCE = "https://graph.microsoft.com";
     public static final String DEFAULT_PROXY_PORT = "8080";
+    public static final String DEFAULT_SCOPE = "https://graph.microsoft.com/.default";
     public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
     public static final String STRICT = "strict";
