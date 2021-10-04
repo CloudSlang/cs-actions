@@ -7,7 +7,6 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.microsoft.aad.msal4j.IAuthenticationResult;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.office365.entities.AuthorizationTokenInputs;
-import io.cloudslang.content.office365.services.AuthorizationTokenImpl;
 import io.cloudslang.content.office365.services.AuthorizationTokenV2Impl;
 import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
@@ -32,7 +31,6 @@ import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyAuthorizationInputs;
 import static io.cloudslang.content.office365.utils.Outputs.AuthorizationOutputs.AUTH_TOKEN;
-import static io.cloudslang.content.office365.utils.Outputs.AuthorizationOutputs.AUTH_TOKEN_TYPE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -62,12 +60,11 @@ public class GetAuthorizationTokenV2 {
      * @param proxyPassword  The proxy server password associated with the proxyUsername input value
      * @return The authorization token for Office 365
      */
-    @Action(name = "Get the authorization token for Office 365",
+    @Action(name = "Get the authorization token for Office 365 V2",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC),
-                    @Output(value = AUTH_TOKEN_TYPE, description = AUTH_TOKEN_TYPE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
@@ -76,7 +73,7 @@ public class GetAuthorizationTokenV2 {
             })
     public Map<String, String> execute(@Param(value = LOGIN_TYPE, description = LOGIN_TYPE_DESC) String loginType,
                                        @Param(value = CLIENT_ID, required = true, description = CLIENT_ID_DESC) String clientId,
-                                       @Param(value = CLIENT_SECRET, encrypted = true, required = true, description = CLIENT_SECRET_DESC) String clientSecret,
+                                       @Param(value = CLIENT_SECRET, encrypted = true, description = CLIENT_SECRET_DESC) String clientSecret,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = LOGIN_AUTHORITY, required = true, description = LOGIN_AUTHORITY_DESC) String loginAuthority,
