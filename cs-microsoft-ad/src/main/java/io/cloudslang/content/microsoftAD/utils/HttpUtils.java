@@ -15,6 +15,9 @@
 
 package io.cloudslang.content.microsoftAD.utils;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
 import org.apache.http.client.utils.URIBuilder;
@@ -26,6 +29,7 @@ import java.net.PasswordAuthentication;
 import java.net.Proxy;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Outputs.CommonOutputs.EXCEPTION;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -297,5 +301,20 @@ public class HttpUtils {
             results.put(EXCEPTION, result.get(EXCEPTION));
 
         return results;
+    }
+
+    @NotNull
+    public static void parseApiExceptionMessage(@NotNull final Map<String, String> result) {
+
+        String exception = result.get(EXCEPTION);
+
+        if (exception == null || exception.isEmpty())
+            return;
+
+        try {
+            result.put(RETURN_RESULT, ((new JsonParser()).parse(exception)).getAsJsonObject().getAsJsonObject(ERROR).get(MESSAGE).toString());
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -57,13 +57,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class HttpCommons {
 
-    private static ConnectionKeepAliveStrategy keepAliveStrategy = new ConnectionKeepAliveStrategy() {
-
-        @Override
-        public long getKeepAliveDuration(HttpResponse httpResponse, org.apache.http.protocol.HttpContext httpContext) {
-            return Long.MAX_VALUE;
-        }
-    };
+    private static ConnectionKeepAliveStrategy keepAliveStrategy = (httpResponse, httpContext) -> Long.MAX_VALUE;
 
     private static HostnameVerifier x509HostnameVerifier(String hostnameVerifier) {
         String x509HostnameVerifierStr = hostnameVerifier.toLowerCase();
@@ -208,7 +202,7 @@ public class HttpCommons {
             try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
 
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
-                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), commonInputs.getResponseCharacterSet()));
+                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
 
                 return result;
             }
@@ -234,7 +228,7 @@ public class HttpCommons {
                 //if status code is 204, no return result is provided, otherwise there is a return result
                 int statusCode = response.getStatusLine().getStatusCode();
                 if (statusCode < 200 || statusCode > 300)
-                    result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), commonInputs.getResponseCharacterSet()));
+                    result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
                 return result;
             }
         } catch (Exception e) {
@@ -256,7 +250,7 @@ public class HttpCommons {
             httpGet.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
             try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
-                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), getUserInputsInputs.getCommonInputs().getResponseCharacterSet()));
+                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
                 return result;
             }
         } catch (Exception e) {
