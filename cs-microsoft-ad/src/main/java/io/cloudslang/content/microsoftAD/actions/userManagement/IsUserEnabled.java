@@ -41,6 +41,7 @@ import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserEnabled.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_PRINCIPAL_NAME;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyGetInputs;
@@ -79,8 +80,7 @@ public class IsUserEnabled {
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
-                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
+                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
 
 
         //inputs validation
@@ -99,7 +99,6 @@ public class IsUserEnabled {
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
-        responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
 
         final List<String> exceptionMessages = verifyGetInputs(userPrincipalName, userId, proxyPort, trustAllRoots, x509HostnameVerifier,
@@ -122,7 +121,6 @@ public class IsUserEnabled {
                             .connectionsMaxTotal(connectionsMaxTotal)
                             .connectionsMaxPerRoute(connectionsMaxPerRoute)
                             .keepAlive(keepAlive)
-                            .responseCharacterSet(responseCharacterSet)
                             .connectTimeout(connectTimeout)
                             .socketTimeout(socketTimeout)
                             .trustAllRoots(trustAllRoots)
@@ -152,6 +150,9 @@ public class IsUserEnabled {
 
             }
             }
+
+            parseApiExceptionMessage(results);
+
             return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);

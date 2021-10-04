@@ -43,6 +43,7 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.US
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.BODY;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.PASSWORD;
@@ -95,8 +96,7 @@ public class CreateUser {
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
-                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
+                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
 
         accountEnabled = defaultIfEmpty(accountEnabled, BOOLEAN_TRUE);
         displayName = defaultIfEmpty(displayName, EMPTY);
@@ -122,7 +122,6 @@ public class CreateUser {
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
-        responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
         final List<String> exceptionMessages;
 
@@ -156,7 +155,6 @@ public class CreateUser {
                             .connectionsMaxTotal(connectionsMaxTotal)
                             .connectionsMaxPerRoute(connectionsMaxPerRoute)
                             .keepAlive(keepAlive)
-                            .responseCharacterSet(responseCharacterSet)
                             .connectTimeout(connectTimeout)
                             .socketTimeout(socketTimeout)
                             .trustAllRoots(trustAllRoots)
@@ -177,6 +175,8 @@ public class CreateUser {
                 if (json.has(ID))
                     finalResult.put(USER_ID, json.get(ID).getAsString());
             }
+
+            parseApiExceptionMessage(finalResult);
 
             return finalResult;
 

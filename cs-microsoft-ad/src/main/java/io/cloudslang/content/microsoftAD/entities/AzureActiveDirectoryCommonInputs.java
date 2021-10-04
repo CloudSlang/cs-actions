@@ -37,16 +37,15 @@ public class AzureActiveDirectoryCommonInputs {
     private final String keepAlive;
     private final String connectionsMaxPerRoute;
     private final String connectionsMaxTotal;
-    private final String responseCharacterSet;
 
 
     @java.beans.ConstructorProperties({"authToken", "userPrincipalName", "userId", "proxyHost", "proxyPort", "proxyUsername",
             "proxyPassword", "trustAllRoots", "x509HostnameVerifier", "trustKeystore", "trustPassword", "connectTimeout",
-            "socketTimeout", "keepAlive", "connectionsMaxPerRoute", "connectionsMaxTotal", "responseCharacterSet"})
+            "socketTimeout", "keepAlive", "connectionsMaxPerRoute", "connectionsMaxTotal"})
     private AzureActiveDirectoryCommonInputs(String authToken, String userPrincipalName, String userId, String proxyHost, String proxyPort,
                                              String proxyUsername, String proxyPassword, String trustAllRoots, String x509HostnameVerifier,
                                              String trustKeystore, String trustPassword, String connectTimeout, String socketTimeout,
-                                             String keepAlive, String connectionsMaxPerRoute, String connectionsMaxTotal, String responseCharacterSet) {
+                                             String keepAlive, String connectionsMaxPerRoute, String connectionsMaxTotal) {
         this.authToken = authToken;
         this.userPrincipalName = userPrincipalName;
         this.userId = userId;
@@ -63,7 +62,6 @@ public class AzureActiveDirectoryCommonInputs {
         this.keepAlive = keepAlive;
         this.connectionsMaxPerRoute = connectionsMaxPerRoute;
         this.connectionsMaxTotal = connectionsMaxTotal;
-        this.responseCharacterSet = responseCharacterSet;
     }
 
     @NotNull
@@ -151,11 +149,6 @@ public class AzureActiveDirectoryCommonInputs {
         return this.connectionsMaxTotal;
     }
 
-    @NotNull
-    public String getResponseCharacterSet() {
-        return this.responseCharacterSet;
-    }
-
     public static class AzureActiveDirectoryCommonInputsBuilder {
         private String authToken = EMPTY;
         private String userPrincipalName = EMPTY;
@@ -173,7 +166,6 @@ public class AzureActiveDirectoryCommonInputs {
         private String keepAlive = EMPTY;
         private String connectionsMaxPerRoute = EMPTY;
         private String connectionsMaxTotal = EMPTY;
-        private String responseCharacterSet = EMPTY;
 
         AzureActiveDirectoryCommonInputsBuilder() {
         }
@@ -274,16 +266,10 @@ public class AzureActiveDirectoryCommonInputs {
             return this;
         }
 
-        @NotNull
-        public AzureActiveDirectoryCommonInputs.AzureActiveDirectoryCommonInputsBuilder responseCharacterSet(@NotNull final String responseCharacterSet) {
-            this.responseCharacterSet = responseCharacterSet;
-            return this;
-        }
-
         public AzureActiveDirectoryCommonInputs build() {
             return new AzureActiveDirectoryCommonInputs(authToken, userPrincipalName, userId, proxyHost, proxyPort, proxyUsername, proxyPassword,
                     trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, connectTimeout,
-                    socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal, responseCharacterSet);
+                    socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
         }
     }
 }

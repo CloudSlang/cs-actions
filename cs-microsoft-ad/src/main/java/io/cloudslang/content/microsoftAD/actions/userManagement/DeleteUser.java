@@ -39,6 +39,7 @@ import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.DeleteUser.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_ID;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_PRINCIPAL_NAME;
@@ -77,8 +78,7 @@ public class DeleteUser {
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
-                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
+                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
 
 
         //inputs validation
@@ -97,7 +97,6 @@ public class DeleteUser {
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
-        responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
 
         final List<String> exceptionMessages = verifyDeleteInputs(userPrincipalName, userId, proxyPort, trustAllRoots, x509HostnameVerifier,
@@ -119,7 +118,6 @@ public class DeleteUser {
                             .connectionsMaxTotal(connectionsMaxTotal)
                             .connectionsMaxPerRoute(connectionsMaxPerRoute)
                             .keepAlive(keepAlive)
-                            .responseCharacterSet(responseCharacterSet)
                             .connectTimeout(connectTimeout)
                             .socketTimeout(socketTimeout)
                             .trustAllRoots(trustAllRoots)
@@ -131,7 +129,10 @@ public class DeleteUser {
                             .build())
                     .build());
 
-            return getOperationResults(result, SUCCESS_RETURN_RESULT_DESC, result.get(RETURN_RESULT));
+            Map<String, String> finalResult = getOperationResults(result, SUCCESS_RETURN_RESULT_DESC, result.get(RETURN_RESULT));
+            parseApiExceptionMessage(finalResult);
+
+            return finalResult;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
