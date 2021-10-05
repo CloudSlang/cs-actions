@@ -46,7 +46,7 @@ public class UpdateUserService {
             body.addProperty(ON_PREMISES_IMMUTABLE_ID, updateUserInputs.getCreateUserCommonInputs().getOnPremisesImmutableId());
         if (!updateUserInputs.getCreateUserCommonInputs().getMailNickname().isEmpty())
         body.addProperty(MAIL_NICKNAME, updateUserInputs.getCreateUserCommonInputs().getMailNickname());
-        if (!updateUserInputs.getCreateUserCommonInputs().getMailNickname().isEmpty())
+        if (!updateUserInputs.getUpdatedUserPrincipalName().isEmpty())
         body.addProperty(USER_PRINCIPAL_NAME, updateUserInputs.getUpdatedUserPrincipalName());
 
         if (!updateUserInputs.getCreateUserCommonInputs().getPassword().isEmpty()) {
