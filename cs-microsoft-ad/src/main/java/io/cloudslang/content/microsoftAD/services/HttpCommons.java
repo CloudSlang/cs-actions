@@ -278,6 +278,10 @@ public class HttpCommons {
 
             try (CloseableHttpResponse response = httpClient.execute(httpPatch)) {
 
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode < 200 || statusCode > 300)
+                    result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
+
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
 
                 return result;
