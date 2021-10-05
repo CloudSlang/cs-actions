@@ -14,8 +14,6 @@
  */
 package io.cloudslang.content.microsoftAD.actions.userManagement;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -40,11 +38,9 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.microsoftAD.services.UpdateUserService.updateUser;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.USER_PRINCIPAL_NAME_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.AUTH_TOKEN_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.UpdateUser.UPDATE_USER_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.UpdateUser.UPDATE_USER_NAME;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.UpdateUser.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.BODY;
@@ -56,7 +52,7 @@ import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_ID;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.UpdateUserInputs.UPDATED_USER_PRINCIPAL_NAME;
-import static io.cloudslang.content.microsoftAD.utils.InputsValidation.*;
+import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyUpdateUserInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -84,7 +80,7 @@ public class UpdateUser {
                                        @Param(value = MAIL_NICKNAME, description = MAIL_NICKNAME_DESC) String mailNickname,
                                        @Param(value = FORCE_CHANGE_PASSWORD, description = FORCE_CHANGE_PASSWORD_DESC) String forceChangePassword,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
-                                       @Param(value = UPDATED_USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String updatedUserPrincipalName,
+                                       @Param(value = UPDATED_USER_PRINCIPAL_NAME, description = UPDATED_USER_PRINCIPAL_NAME_DESC) String updatedUserPrincipalName,
                                        @Param(value = BODY, description = BODY_DESC) String body,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -100,13 +96,10 @@ public class UpdateUser {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
 
-        userId = defaultIfEmpty(userId, EMPTY);
-        userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         accountEnabled = defaultIfEmpty(accountEnabled, BOOLEAN_TRUE);
         displayName = defaultIfEmpty(displayName, EMPTY);
         onPremisesImmutableId = defaultIfEmpty(onPremisesImmutableId, EMPTY);
-        mailNickname = defaultIfEmpty(mailNickname, EMPTY);
-        forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_TRUE);
+        forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_FALSE);
         password = defaultIfEmpty(password, EMPTY);
         updatedUserPrincipalName = defaultIfEmpty(updatedUserPrincipalName, EMPTY);
         body = defaultIfEmpty(body, EMPTY);
@@ -124,15 +117,9 @@ public class UpdateUser {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
 
-        final List<String> exceptionMessages;
-
-        if (body.equals(EMPTY))
-            exceptionMessages = verifyUpdateUserInputs(accountEnabled, userId, userPrincipalName, displayName, mailNickname,
-                    updatedUserPrincipalName, forceChangePassword, password, proxyPort, trustAllRoots, x509HostnameVerifier,
-                    connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        else
-            exceptionMessages = verifyCommonUserInputs(proxyPort, trustAllRoots, x509HostnameVerifier,
-                    connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        final List<String> exceptionMessages = verifyUpdateUserInputs(accountEnabled, userId, userPrincipalName, forceChangePassword,
+                proxyPort, trustAllRoots, x509HostnameVerifier, connectTimeout, socketTimeout, keepAlive,
+                connectionsMaxPerRoute, connectionsMaxTotal);
 
         if (!exceptionMessages.isEmpty())
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
@@ -151,6 +138,8 @@ public class UpdateUser {
                             .build())
                     .commonInputs(AzureActiveDirectoryCommonInputs.builder()
                             .authToken(authToken)
+                            .userId(userId)
+                            .userPrincipalName(userPrincipalName)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)
@@ -171,7 +160,7 @@ public class UpdateUser {
 
             if (!result.get(STATUS_CODE).isEmpty() && Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300) {
 
-                JsonObject json = ((new JsonParser()).parse(result.get(RETURN_RESULT))).getAsJsonObject();
+                finalResult.put(RETURN_RESULT, UPDATE_USER_RETURN_RESULT);
 
             }
 

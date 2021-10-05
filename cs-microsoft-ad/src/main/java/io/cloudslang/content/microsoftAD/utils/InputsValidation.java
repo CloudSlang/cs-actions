@@ -27,13 +27,12 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.EXCEPTION_INVALID_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.EXCEPTION_INVALID_TLS_VERSION;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PASSWORD;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.USERNAME;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.*;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PASSWORD;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_PORT;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_ID;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.UpdateUserInputs.UPDATED_USER_PRINCIPAL_NAME;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -159,11 +158,7 @@ public final class InputsValidation {
     public static List<String> verifyUpdateUserInputs(@Nullable final String accountEnabled,
                                                       @Nullable final String userId,
                                                       @Nullable final String userPrincipalName,
-                                                      @Nullable final String displayName,
-                                                      @Nullable final String mailNickname,
-                                                      @Nullable final String updatedUserPrincipalName,
                                                       @Nullable final String forceChangePassword,
-                                                      @Nullable final String password,
                                                       @Nullable final String proxyPort,
                                                       @Nullable final String trustAllRoots,
                                                       @Nullable final String x509HostnameVerifier,
@@ -173,11 +168,11 @@ public final class InputsValidation {
                                                       @Nullable final String connectionsMaxPerRoute,
                                                       @Nullable final String connectionsMaxTotal) {
         final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyUserIdOrPrincipalName(exceptionMessages, userId, userPrincipalName);
         addVerifyUserInputs(exceptionMessages, userPrincipalName, userId);
-        addVerifyNotNullOrEmpty(exceptionMessages, updatedUserPrincipalName, UPDATED_USER_PRINCIPAL_NAME);
-
-        exceptionMessages.addAll(verifyCreateUserInputs(accountEnabled, displayName, mailNickname, userPrincipalName,
-                forceChangePassword, password, proxyPort, trustAllRoots, x509HostnameVerifier,
+        addVerifyBoolean(exceptionMessages, accountEnabled, ACCOUNT_ENABLED);
+        addVerifyBoolean(exceptionMessages, forceChangePassword, FORCE_CHANGE_PASSWORD);
+        exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trustAllRoots, x509HostnameVerifier,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
 
         return exceptionMessages;
@@ -189,6 +184,16 @@ public final class InputsValidation {
                                                     @Nullable final String userId) {
         if (isEmpty(userPrincipalName) && isEmpty(userId)) {
             exceptions.add(String.format(EXCEPTION_INVALID_LOGIN_TYPE_REST, USER_PRINCIPAL_NAME, USER_ID));
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyUserIdOrPrincipalName(@NotNull List<String> exceptions,
+                                                               @Nullable final String userId,
+                                                               @Nullable final String userPrincipalName) {
+        if (isEmpty(userPrincipalName) && isEmpty(userId)) {
+            exceptions.add(String.format(EXCEPTION_USER_IDENTIFIER_NOT_SPEC, USER_PRINCIPAL_NAME, USER_ID));
         }
         return exceptions;
     }

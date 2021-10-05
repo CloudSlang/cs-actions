@@ -171,6 +171,8 @@ public class Descriptions {
     public static class UpdateUser {
         public static final String UPDATE_USER_NAME = "Update User";
         public static final String UPDATE_USER_DESC = "Updates user's properties.";
+        public static final String UPDATED_USER_PRINCIPAL_NAME_DESC = "The new User Principal Name.";
+        public static final String UPDATE_USER_RETURN_RESULT = "The user's properties were updated successfully!";
 
     }
 }

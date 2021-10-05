@@ -51,7 +51,6 @@ import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyCommonUserInputs;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyCreateUserInputs;
 import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.USER_ID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -107,7 +106,7 @@ public class CreateUser {
         onPremisesImmutableId = defaultIfEmpty(onPremisesImmutableId, EMPTY);
         mailNickname = defaultIfEmpty(mailNickname, EMPTY);
         userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
-        forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_TRUE);
+        forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_FALSE);
         password = defaultIfEmpty(password, EMPTY);
         body = defaultIfEmpty(body, EMPTY);
 
@@ -127,15 +126,9 @@ public class CreateUser {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
 
-        final List<String> exceptionMessages;
-
-        if (body.equals(EMPTY))
-            exceptionMessages = verifyCreateUserInputs(accountEnabled, displayName, mailNickname,
-                    userPrincipalName, forceChangePassword, password, proxyPort, trustAllRoots, x509HostnameVerifier,
-                    connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
-        else
-            exceptionMessages = verifyCommonUserInputs(proxyPort, trustAllRoots, x509HostnameVerifier,
-                    connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        final List<String> exceptionMessages = verifyCreateUserInputs(accountEnabled, displayName, mailNickname,
+                userPrincipalName, forceChangePassword, password, proxyPort, trustAllRoots, x509HostnameVerifier,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
 
         if (!exceptionMessages.isEmpty())
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));

@@ -16,8 +16,10 @@ package io.cloudslang.content.microsoftAD.services;
 
 import com.google.gson.JsonObject;
 import io.cloudslang.content.microsoftAD.entities.UpdateUserInputs;
+
 import java.util.Map;
-import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPost;
+
+import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPatch;
 import static io.cloudslang.content.microsoftAD.utils.Constants.USERS_URL;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -25,23 +27,39 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class UpdateUserService {
 
     public static Map<String, String> updateUser(UpdateUserInputs updateUserInputs) {
+        String UPDATE_USERS_URL;
+
+        if (!(updateUserInputs.getCommonInputs().getUserId().isEmpty()))
+            UPDATE_USERS_URL = USERS_URL + "/" + updateUserInputs.getCommonInputs().getUserId().trim();
+        else
+            UPDATE_USERS_URL = USERS_URL + "/" + updateUserInputs.getCommonInputs().getUserPrincipalName().trim();
 
         if (!updateUserInputs.getCreateUserCommonInputs().getBody().equals(EMPTY))
-            return httpPost(updateUserInputs.getCommonInputs(), USERS_URL, updateUserInputs.getCreateUserCommonInputs().getBody());
-
-        JsonObject passwordProfile = new JsonObject();
-        passwordProfile.addProperty(FORCE_CHANGE_PASSWORD, updateUserInputs.getCreateUserCommonInputs().getForceChangePassword());
-        passwordProfile.addProperty(PASSWORD, updateUserInputs.getCreateUserCommonInputs().getPassword());
+            return httpPatch(updateUserInputs.getCommonInputs(), UPDATE_USERS_URL, updateUserInputs.getCreateUserCommonInputs().getBody());
 
         JsonObject body = new JsonObject();
+        if (!updateUserInputs.getCreateUserCommonInputs().getAccountEnabled().isEmpty())
         body.addProperty(ACCOUNT_ENABLED, updateUserInputs.getCreateUserCommonInputs().getAccountEnabled());
-        body.addProperty(DISPLAY_NAME, updateUserInputs.getCreateUserCommonInputs().getDisplayName());
-        if (!updateUserInputs.getCreateUserCommonInputs().getOnPremisesImmutableId().equals(EMPTY))
+        if (!updateUserInputs.getCreateUserCommonInputs().getDisplayName().isEmpty())
+            body.addProperty(DISPLAY_NAME, updateUserInputs.getCreateUserCommonInputs().getDisplayName());
+        if (!updateUserInputs.getCreateUserCommonInputs().getOnPremisesImmutableId().isEmpty())
             body.addProperty(ON_PREMISES_IMMUTABLE_ID, updateUserInputs.getCreateUserCommonInputs().getOnPremisesImmutableId());
+        if (!updateUserInputs.getCreateUserCommonInputs().getMailNickname().isEmpty())
         body.addProperty(MAIL_NICKNAME, updateUserInputs.getCreateUserCommonInputs().getMailNickname());
+        if (!updateUserInputs.getCreateUserCommonInputs().getMailNickname().isEmpty())
         body.addProperty(USER_PRINCIPAL_NAME, updateUserInputs.getUpdatedUserPrincipalName());
-        body.add(PASSWORD_PROFILE, passwordProfile);
 
-        return httpPost(updateUserInputs.getCommonInputs(), USERS_URL, body.toString());
+        if (!updateUserInputs.getCreateUserCommonInputs().getPassword().isEmpty()) {
+            JsonObject passwordProfile = new JsonObject();
+
+            if (!updateUserInputs.getCreateUserCommonInputs().getForceChangePassword().isEmpty())
+                passwordProfile.addProperty(FORCE_CHANGE_PASSWORD, updateUserInputs.getCreateUserCommonInputs().getForceChangePassword());
+            else
+                passwordProfile.addProperty(FORCE_CHANGE_PASSWORD, Boolean.FALSE);
+
+            passwordProfile.addProperty(PASSWORD, updateUserInputs.getCreateUserCommonInputs().getPassword());
+            body.add(PASSWORD_PROFILE, passwordProfile);
+        }
+        return httpPatch(updateUserInputs.getCommonInputs(), UPDATE_USERS_URL, body.toString());
     }
 }
