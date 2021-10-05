@@ -80,8 +80,7 @@ public class IsUserInGroup {
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
-                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
+                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
 
         //inputs validation
         userId = defaultIfEmpty(userId, EMPTY);
@@ -100,7 +99,6 @@ public class IsUserInGroup {
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
-        responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
 
         final List<String> exceptionMessages = verifyIsUserInGroupInputs(userId, securityEnabledOnly,
                 proxyPort, trustAllRoots, x509HostnameVerifier, connectTimeout, socketTimeout, keepAlive,
@@ -124,7 +122,6 @@ public class IsUserInGroup {
                             .connectionsMaxTotal(connectionsMaxTotal)
                             .connectionsMaxPerRoute(connectionsMaxPerRoute)
                             .keepAlive(keepAlive)
-                            .responseCharacterSet(responseCharacterSet)
                             .connectTimeout(connectTimeout)
                             .socketTimeout(socketTimeout)
                             .trustAllRoots(trustAllRoots)
