@@ -116,7 +116,6 @@ public class DisableUser {
                     .trustPassword(trustPassword)
                     .build(), false);
 
-            System.out.println(result);
 
             final Map<String, String> results = getOperationResults(result, DISABLE_USER_SUCCESS_RETURN_RESULT_DESC,  result.get(RETURN_RESULT));
             parseApiExceptionMessage(results);
