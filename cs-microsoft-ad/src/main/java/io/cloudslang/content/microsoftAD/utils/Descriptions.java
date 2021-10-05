@@ -51,12 +51,6 @@ public class Descriptions {
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout.";
 
-        public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
-                "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
-                "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
-                "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
-                "Default value: UTF-8";
-
         public static final String EXCEPTION_INVALID_HOSTNAME_VERIFIER = "%s for %s input is not a valid x509HostnameVerifier value. The valid values are: 'strict','browser_compatible','allow_all'.";
         public static final String EXCEPTION_INVALID_TLS_VERSION = "%s for %s input is not a valid tlsVersion value. The valid values are: 'TLSv1','TLSv1.1','TLSv1.2','TLSv1.3'.";
 
@@ -76,8 +70,8 @@ public class Descriptions {
     public static class GetAuthorizationToken {
 
         //Description
-        public static final String NAME = "Get Authorization Token";
-        public static final String DESC = "Get the authorization token for Azure Active Directory.";
+        public static final String GET_AUTHORIZATION_TOKEN_NAME = "Get Authorization Token";
+        public static final String GET_THE_AUTHORIZATION_TOKEN_DESC = "Get the authorization token for Azure Active Directory.";
 
         public static final String LOGIN_TYPE_DESC = "Login method according to application type.\n" +
                 "Valid values: 'API', 'Native'\n" +
@@ -87,14 +81,16 @@ public class Descriptions {
         public static final String USERNAME_DESC = "Azure Active Directory username.";
         public static final String PASSWORD_DESC = "Azure Active Directory password.";
         public static final String LOGIN_AUTHORITY_DESC = "The authority URL. Usually, the format for this input is:\n" +
-                "'https://login.windows.net/TENANT_NAME/oauth2/token' where TENANT_NAME is your application\n" +
+                "'https://login.windows.net/TENANT_NAME/oauth2/v2.0/token' where TENANT_NAME is your application\n" +
                 "tenant.";
-        public static final String RESOURCES_DESC = "The resource URL.\n" +
-                "Default: 'https://graph.microsoft.com'";
+        public static final String SCOPE_DESC = "The scope URL. The scope consists of a series of resource permissions separated " +
+                "by a comma (,), i.e.: 'https://graph.microsoft.com/User.Read, https://graph.microsoft.com/Sites.Read'. " +
+                "The 'https://graph.microsoft.com/.default' scope means that the user consent to all of the configured permissions " +
+                "present on the specific Azure AD Application. For the 'API' loginType, '/.default' scope should be used. \n" +
+                "Default: 'https://graph.microsoft.com/.default'";
 
         public static final String RETURN_RESULT_DESC = "The authorization token for Azure Active Directory.";
         public static final String AUTH_TOKEN_DESC = "Generated authentication token.";
-        public static final String AUTH_TOKEN_TYPE_DESC = "The authentication token type.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while generating the " +
                 "token.";
 

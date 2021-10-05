@@ -100,6 +100,11 @@ public class Descriptions {
                 "tenant.";
         public static final String RESOURCES_DESC = "The resource URL\n" +
                 "Default: 'https://graph.microsoft.com'";
+        public static final String SCOPE_DESC = "The scope URL. The scope consists of a series of resource permissions separated " +
+                "by a comma (,), i.e.: 'https://graph.microsoft.com/User.Read, https://graph.microsoft.com/Sites.Read'. " +
+                "The 'https://graph.microsoft.com/.default' scope means that the user consent to all of the configured permissions " +
+                "present on the specific Azure AD Application. For the 'API' loginType, '/.default' scope should be used. \n" +
+                "Default: 'https://graph.microsoft.com/.default'";
 
         public static final String RETURN_RESULT_DESC = "The authorization token for Office 365.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";

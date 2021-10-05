@@ -21,6 +21,8 @@ public final class Constants {
     public static final String NEW_LINE = "\n";
     public static final String DEFAULT_LOGIN_TYPE = "Native";
     public static final String DEFAULT_RESOURCE = "https://graph.microsoft.com";
+    public static final String DEFAULT_SCOPE = "https://graph.microsoft.com/.default";
+    public static final String DEFAULT_LOGIN_AUTHORITY_V2 = "https://login.microsoftonline.com/itomcontent.onmicrosoft.com/oauth2/v2.0/token";
     public static final String DEFAULT_PROXY_PORT = "8080";
     public static final String BOOLEAN_TRUE = "true";
     public static final String BOOLEAN_FALSE = "false";
@@ -57,14 +59,13 @@ public final class Constants {
     public static final String SEND = "/send";
     public static final String MOVE = "/move";
     public static final String ID = "id";
-    public static final String VALUE = "value";
+    public static final String ERROR = "error";
+    public static final String MESSAGE = "message";
 
     public static final String ATTACHMENTS = "/attachments";
     public static final String ATTACHMENTS_PATH = "/attachments/";
     public static final String IS_USER_ENABLED_ODATA_QUERY = "$select=accountEnabled";
-    public static final String GET_MEMBER_GROUPS = "/getMemberGroups";
     public static final String ACCOUNT_ENABLED_OUT = "accountEnabled";
-    public static final String SECURITY_ENABLED_ONLY = "securityEnabledOnly";
     public static final String USER_ID = "userId";
 
     public static final String STRICT = "strict";
@@ -80,5 +81,4 @@ public final class Constants {
     public static final String CREATE_USER_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
-    public static final String GET_MEMBER_GROUPS_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
 }

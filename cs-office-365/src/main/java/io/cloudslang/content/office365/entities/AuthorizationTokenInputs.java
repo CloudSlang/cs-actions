@@ -27,14 +27,15 @@ public class AuthorizationTokenInputs {
     private final String password;
     private final String authority;
     private final String resource;
+    private final String scope;
     private final String proxyHost;
     private final int proxyPort;
     private final String proxyUsername;
     private final String proxyPassword;
 
-    @java.beans.ConstructorProperties({"loginType", "clientId", "clientSecret", "username", "password", "authority", "resource", "proxyHost", "proxyPort", "proxyUsername", "proxyPassword"})
+    @java.beans.ConstructorProperties({"loginType", "clientId", "clientSecret", "username", "password", "authority", "resource", "scope", "proxyHost", "proxyPort", "proxyUsername", "proxyPassword"})
     private AuthorizationTokenInputs(final String loginType, final String clientId, final String clientSecret, final String username, final String password, final String authority,
-                                     final String resource, final String proxyHost, final int proxyPort, final String proxyUsername, final String proxyPassword) {
+                                     final String resource, final String scope, final String proxyHost, final int proxyPort, final String proxyUsername, final String proxyPassword) {
         this.loginType = loginType;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
@@ -42,6 +43,7 @@ public class AuthorizationTokenInputs {
         this.password = password;
         this.authority = authority;
         this.resource = resource;
+        this.scope = scope;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
         this.proxyUsername = proxyUsername;
@@ -89,6 +91,11 @@ public class AuthorizationTokenInputs {
     }
 
     @NotNull
+    public String getScope() {
+        return this.scope;
+    }
+
+    @NotNull
     public String getProxyHost() {
         return this.proxyHost;
     }
@@ -115,6 +122,7 @@ public class AuthorizationTokenInputs {
         private String password = EMPTY;
         private String authority = EMPTY;
         private String resource = EMPTY;
+        private String scope = EMPTY;
         private String proxyHost = EMPTY;
         private int proxyPort;
         private String proxyUsername = EMPTY;
@@ -166,6 +174,12 @@ public class AuthorizationTokenInputs {
         }
 
         @NotNull
+        public AuthorizationTokenInputsBuilder scope(@NotNull final String scope) {
+            this.scope = scope;
+            return this;
+        }
+
+        @NotNull
         public AuthorizationTokenInputsBuilder proxyHost(@NotNull final String proxyHost) {
             this.proxyHost = proxyHost;
             return this;
@@ -191,16 +205,16 @@ public class AuthorizationTokenInputs {
 
         @NotNull
         public AuthorizationTokenInputs build() {
-            return new AuthorizationTokenInputs(loginType, clientId, clientSecret, username, password, authority, resource, proxyHost, proxyPort, proxyUsername, proxyPassword);
+            return new AuthorizationTokenInputs(loginType, clientId, clientSecret, username, password, authority, resource, scope, proxyHost, proxyPort, proxyUsername, proxyPassword);
         }
 
         @Override
         public String toString() {
             return String.format("AuthorizationTokenInputsBuilder(loginType=%s, clientId=%s, clientSecret=%s," +
-                            " username=%s, password=%s, clientId=%s, authority=%s, resource=%s, proxyHost=%s," +
+                            " username=%s, password=%s, clientId=%s, authority=%s, resource=%s, scope=%s, proxyHost=%s," +
                             " proxyPort=%s, proxyUsername=%s, proxyPassword=%s)",
                     this.loginType, this.clientId, this.clientSecret, this.username, this.password, this.authority,
-                    this.resource, this.proxyHost, this.proxyPort, this.proxyUsername, this.proxyPassword);
+                    this.resource, this.scope, this.proxyHost, this.proxyPort, this.proxyUsername, this.proxyPassword);
         }
     }
 }

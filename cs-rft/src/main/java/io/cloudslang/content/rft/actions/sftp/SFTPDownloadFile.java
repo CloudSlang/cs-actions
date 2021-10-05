@@ -39,6 +39,7 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.RETURN_RESULT_DESC;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
 import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;

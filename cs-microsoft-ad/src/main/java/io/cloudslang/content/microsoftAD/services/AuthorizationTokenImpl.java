@@ -15,41 +15,51 @@
 
 package io.cloudslang.content.microsoftAD.services;
 
-import com.microsoft.aad.adal4j.AuthenticationContext;
-import com.microsoft.aad.adal4j.AuthenticationResult;
-import com.microsoft.aad.adal4j.ClientCredential;
+import com.microsoft.aad.msal4j.*;
 import io.cloudslang.content.microsoftAD.entities.AuthorizationTokenInputs;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.net.Authenticator;
+import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
+import java.net.Proxy;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import static io.cloudslang.content.microsoftAD.utils.Constants.API;
 import static io.cloudslang.content.microsoftAD.utils.Constants.EXCEPTION_ACQUIRE_TOKEN_FAILED;
-import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getProxy;
 
 public class AuthorizationTokenImpl {
 
     @NotNull
-    public static AuthenticationResult getToken(@NotNull final AuthorizationTokenInputs inputs) throws Exception {
-        final ExecutorService service = Executors.newSingleThreadExecutor();
-        final AuthenticationContext context = new AuthenticationContext(inputs.getAuthority(), false, service);
-        context.setProxy(getProxy(inputs.getProxyHost(), inputs.getProxyPort(), inputs.getProxyUsername(), inputs.getProxyPassword()));
+    public static IAuthenticationResult getToken(@NotNull final AuthorizationTokenInputs inputs) throws Exception {
+        Set<String> scope = new HashSet<>(Arrays.asList(inputs.getScope().split(",")));
+        Proxy proxy = getProxy(inputs);
 
         //Verifying if loginType is API to instantiate ClientCredential object
         if (inputs.getLoginType().equalsIgnoreCase(API)) {
-            final ClientCredential credential = new ClientCredential(inputs.getClientId(), inputs.getClientSecret());
-            return acquireToken(context, inputs, credential, service);
+            return getAccessTokenByClientCredentialGrant(inputs, scope, proxy);
         }
-
         //Otherwise, the loginType is Native since the verification was already made in the @Action
-        return acquireToken(context, inputs, service);
+        return getAccessTokenPublicClient(inputs, scope, proxy);
     }
 
-    private static AuthenticationResult acquireToken(@NotNull final AuthenticationContext context, @NotNull final AuthorizationTokenInputs inputs, @NotNull ClientCredential credential, @NotNull ExecutorService service) throws Exception {
-        final Future<AuthenticationResult> future = context.acquireToken(inputs.getResource(), credential, null);
-        service.shutdown();
+    private static IAuthenticationResult getAccessTokenByClientCredentialGrant(@NotNull final AuthorizationTokenInputs inputs,
+                                                                               @NotNull final Set<String> scope,
+                                                                               @NotNull final Proxy proxy) throws Exception {
+
+        ConfidentialClientApplication confidentialClientApplication = ConfidentialClientApplication
+                .builder(inputs.getClientId(), ClientCredentialFactory.createFromSecret(inputs.getClientSecret()))
+                .authority(inputs.getAuthority())
+                .proxy(proxy)
+                .build();
+
+        ClientCredentialParameters clientCredentialParameters = ClientCredentialParameters.builder(scope).build();
+
+        final CompletableFuture<IAuthenticationResult> future = confidentialClientApplication.acquireToken(clientCredentialParameters);
         try {
             return future.get();
         } catch (Exception e) {
@@ -59,9 +69,19 @@ public class AuthorizationTokenImpl {
         }
     }
 
-    private static AuthenticationResult acquireToken(@NotNull final AuthenticationContext context, @NotNull final AuthorizationTokenInputs inputs, @NotNull ExecutorService service) throws Exception {
-        final Future<AuthenticationResult> future = context.acquireToken(inputs.getResource(), inputs.getClientId(), inputs.getUsername(), inputs.getPassword(), null);
-        service.shutdown();
+    private static IAuthenticationResult getAccessTokenPublicClient(@NotNull final AuthorizationTokenInputs inputs,
+                                                                    @NotNull final Set<String> scope,
+                                                                    @NotNull final Proxy proxy) throws Exception {
+        final PublicClientApplication publicClientApplication = PublicClientApplication
+                .builder(inputs.getClientId())
+                .authority(inputs.getAuthority())
+                .proxy(proxy)
+                .build();
+
+        UserNamePasswordParameters userNamePasswordParameters = UserNamePasswordParameters.builder(scope, inputs.getUsername(),
+                inputs.getPassword().toCharArray()).build();
+
+        CompletableFuture<IAuthenticationResult> future = publicClientApplication.acquireToken(userNamePasswordParameters);
         try {
             return future.get();
         } catch (Exception e) {
@@ -69,5 +89,26 @@ public class AuthorizationTokenImpl {
                 throw new Exception(EXCEPTION_ACQUIRE_TOKEN_FAILED);
             else throw new Exception(e.getMessage());
         }
+    }
+
+    private static Proxy getProxy(@NotNull final AuthorizationTokenInputs inputs) {
+        Proxy proxy;
+
+        if (!StringUtils.isEmpty(inputs.getProxyHost())) {
+            proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(inputs.getProxyHost(), inputs.getProxyPort()));
+            if ((!inputs.getProxyUsername().isEmpty()) && (!inputs.getProxyPassword().isEmpty())) {
+                Authenticator authenticator = new Authenticator() {
+
+                    public PasswordAuthentication getPasswordAuthentication() {
+                        return (new PasswordAuthentication(inputs.getProxyUsername(),
+                                inputs.getProxyPassword().toCharArray()));
+                    }
+                };
+                Authenticator.setDefault(authenticator);
+            }
+        } else
+            proxy = Proxy.NO_PROXY;
+
+        return proxy;
     }
 }
