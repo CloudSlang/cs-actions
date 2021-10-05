@@ -193,7 +193,7 @@ public class Descriptions {
         public static final String DISABLE_USER_FAILURE_DESC = "There was an error while trying to disable user.";
         public static final String DISABLE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content " +
                 "response code. It does not return anything in the response body.";
-        public static final String DISABLE_USER_SUCCESS_RETURN_RESULT_DESC = "The user was successfully disable.";
+        public static final String DISABLE_USER_SUCCESS_RETURN_RESULT_DESC = "The user was successfully disabled.";
 
 
     }
