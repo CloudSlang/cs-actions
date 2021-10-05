@@ -19,7 +19,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.microsoftAD.services.EnableUserService.enabledUser;
+import static io.cloudslang.content.microsoftAD.services.EnableDisableUserService.enableDisableUser;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.USER_ID_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
@@ -97,7 +97,7 @@ public class DisableUser {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
         try {
-            final Map<String, String> result = enabledUser(AzureActiveDirectoryCommonInputs.builder()
+            final Map<String, String> result = enableDisableUser(AzureActiveDirectoryCommonInputs.builder()
                     .authToken(authToken)
                     .proxyHost(proxyHost)
                     .proxyPort(proxyPort)

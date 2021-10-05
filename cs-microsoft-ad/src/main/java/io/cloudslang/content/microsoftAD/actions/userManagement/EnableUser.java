@@ -19,13 +19,12 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.microsoftAD.services.EnableUserService.enabledUser;
+import static io.cloudslang.content.microsoftAD.services.EnableDisableUserService.enableDisableUser;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.USER_ID_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.EnableUser.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.AUTH_TOKEN_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserEnabled.IS_USER_ENABLED_SUCCESS_DESC;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
@@ -98,7 +97,7 @@ public class EnableUser {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
         try {
-            final Map<String, String> result = enabledUser(AzureActiveDirectoryCommonInputs.builder()
+            final Map<String, String> result = enableDisableUser(AzureActiveDirectoryCommonInputs.builder()
                     .authToken(authToken)
                     .proxyHost(proxyHost)
                     .proxyPort(proxyPort)
