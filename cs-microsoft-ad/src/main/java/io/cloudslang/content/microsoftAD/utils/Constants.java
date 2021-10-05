@@ -67,6 +67,7 @@ public final class Constants {
     public static final String IS_USER_ENABLED_ODATA_QUERY = "$select=accountEnabled";
     public static final String ACCOUNT_ENABLED_OUT = "accountEnabled";
     public static final String USER_ID = "userId";
+    public static final String ACCOUNT_ENABLED = "accountEnabled";
 
     public static final String STRICT = "strict";
     public static final String ALLOW_ALL = "allow_all";
@@ -81,4 +82,5 @@ public final class Constants {
     public static final String CREATE_USER_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
+    public static final String UPDATE_USER_URL = "https://graph.microsoft.com/v1.0/users/";
 }
