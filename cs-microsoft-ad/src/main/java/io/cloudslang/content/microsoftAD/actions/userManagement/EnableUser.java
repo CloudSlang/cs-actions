@@ -23,8 +23,9 @@ import static io.cloudslang.content.microsoftAD.services.EnableUserService.enabl
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.USER_ID_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.DisableUser.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.EnableUser.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.AUTH_TOKEN_DESC;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserEnabled.IS_USER_ENABLED_SUCCESS_DESC;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
@@ -34,18 +35,18 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DisableUser {
-    @Action(name = DISABLE_USER_NAME,
-            description = DISABLE_USER_DESC,
+public class EnableUser {
+    @Action(name = ENABLE_USER_NAME,
+            description = ENABLE_USER_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = DISABLE_USER_RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = ENABLE_USER_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = DISABLE_USER_SUCCESS_RETURN_RESULT_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = DISABLE_USER_FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = ENABLE_USER_SUCCESS_RETURN_RESULT_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = ENABLE_USER_FAILURE_DESC)
             })
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
@@ -114,11 +115,11 @@ public class DisableUser {
                     .x509HostnameVerifier(x509HostnameVerifier)
                     .trustKeystore(trustKeystore)
                     .trustPassword(trustPassword)
-                    .build(), false);
+                    .build(), true);
 
             System.out.println(result);
 
-            final Map<String, String> results = getOperationResults(result, DISABLE_USER_SUCCESS_RETURN_RESULT_DESC,  result.get(RETURN_RESULT));
+            final Map<String, String> results = getOperationResults(result, ENABLE_USER_SUCCESS_RETURN_RESULT_DESC,  result.get(RETURN_RESULT));
             parseApiExceptionMessage(results);
 
             return results;
