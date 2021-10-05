@@ -186,8 +186,8 @@ public class Descriptions {
         public static final String IS_USER_IN_GROUP_SUCCESS_DESC = "Request went successfully.";
         public static final String NO_GROUP_MEMBER = "The user does not belong to any group.";
         public static final String IS_USER_IN_GROUP_FAILURE_DESC = "There was an error while trying to do the request.";
-        public static final String IS_USER_IN_GROUP_RETURN_RESULT_DESC = "If successful, this method returns 200 " +
-                "response code and the IDs of the groups that the user is a member of. If the user does not belong to any" +
+        public static final String IS_USER_IN_GROUP_RETURN_RESULT_DESC = "If successful this method returns the IDs of " +
+                "the groups that the user is a member of. If the user does not belong to any" +
                 "group, a suggestive message will be displayed.";
     }
 
