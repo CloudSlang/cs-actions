@@ -15,8 +15,7 @@
 package io.cloudslang.content.rft.services;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.rft.entities.sftp.IHasFTPOperation;
-import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
+import io.cloudslang.content.rft.entities.sftp.*;
 import io.cloudslang.content.rft.utils.CacheUtils;
 import io.cloudslang.content.rft.utils.Constants;
 import io.cloudslang.content.rft.utils.SFTPOperation;
@@ -27,11 +26,14 @@ import java.security.Security;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.rft.utils.Constants.*;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPCreateDirectoryDescriptions.CREATE_DIR_SUCCESS_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteFileDescriptions.SUCCESS_DESC;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 
 public class SFTPService {
@@ -52,8 +54,14 @@ public class SFTPService {
             performSFTPOperation(sftpInputs, sftpOperation, sftpCopier, sessionId);
             if (sftpOperation == SFTPOperation.GET_CHILDREN)
                 return sftpCopier.getResult();
-
-            return getSuccessResultsMap(SUCCESS_RESULT);
+            if (sftpOperation == SFTPOperation.DELETE_FILE)
+                return getSuccessResultsMap(SUCCESS_DESC);
+            else if (sftpOperation == SFTPOperation.CREATE_DIRECTORY)
+                return getSuccessResultsMap(CREATE_DIR_SUCCESS_DESC);
+            else if (sftpOperation == SFTPOperation.DELETE_DIRECTORY)
+                return getSuccessResultsMap(CREATE_DIR_SUCCESS_DESC);
+            else
+                return getSuccessResultsMap(SUCCESS_RESULT);
 
 
         } catch (Exception e) {
@@ -113,6 +121,73 @@ public class SFTPService {
                 }).get(Integer.parseInt(sftpInputs.getSftpCommonInputs().getExecutionTimeout()) * 1000L, TimeUnit.SECONDS);
             } catch (TimeoutException e) {
                 throw new Exception(EXCEPTION_EXECUTION_TIMED_OUT);
+            }
+        }else if (sftpOperation == SFTPOperation.RENAME) {
+            SFTPRenameInputs sftpRenameInputs = (SFTPRenameInputs) sftpInputs;
+            try {
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        sftpCopier.channel.rename(sftpRenameInputs.getremotePath(), sftpRenameInputs.getNewRemotePath());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }).get(Integer.parseInt(sftpInputs.getSftpCommonInputs().getExecutionTimeout()) * 1000L, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                throw new Exception(EXCEPTION_EXECUTION_TIMED_OUT);
+            }
+        }
+        else if (sftpOperation == SFTPOperation.COMMAND) {
+            SFTPCommandInputs sftpCommandInputs = (SFTPCommandInputs) sftpInputs;
+            if (sftpCommandInputs.getCommandType().equals(CHMOD))
+                sftpCopier.channel.chmod(Integer.parseInt(sftpCommandInputs.getMode()), sftpCommandInputs.getremotePath());
+            else if (sftpCommandInputs.getCommandType().equals(CHGRP))
+                sftpCopier.channel.chgrp(Integer.parseInt(sftpCommandInputs.getGid()), sftpCommandInputs.getremotePath());
+            else if (sftpCommandInputs.getCommandType().equals(CHOWN))
+                sftpCopier.channel.chown(Integer.parseInt(sftpCommandInputs.getUid()), sftpCommandInputs.getremotePath());
+            else if (sftpCommandInputs.getCommandType().equals(RENAME))
+                sftpCopier.channel.rename(sftpCommandInputs.getremotePath(), sftpCommandInputs.getnewRemotePath());
+        } else if (sftpOperation == SFTPOperation.DELETE_FILE) {
+            SFTPDeleteFileInputs sftpDeleteFileInputs = (SFTPDeleteFileInputs) sftpInputs;
+            try {
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        sftpCopier.channel.rm(sftpDeleteFileInputs.getremotePath());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }).get(Integer.parseInt(sftpInputs.getSftpCommonInputs().getExecutionTimeout()) * 1000L, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                throw new Exception(EXCEPTION_EXECUTION_TIMED_OUT);
+            }
+        } else if (sftpOperation == SFTPOperation.CREATE_DIRECTORY) {
+            SFTPCreateDirectoryInputs sftpCreateDirectory = (SFTPCreateDirectoryInputs) sftpInputs;
+            try {
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        sftpCopier.channel.mkdir(sftpCreateDirectory.getRemotePath());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }).get(Integer.parseInt(sftpInputs.getSftpCommonInputs().getExecutionTimeout()) * 1000L, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                throw new Exception(EXCEPTION_EXECUTION_TIMED_OUT);
+            } catch (ExecutionException e) {
+                throw new Exception(EXCEPTION_EXISTING_DIRECTORY);
+            }
+        } else if (sftpOperation == SFTPOperation.DELETE_DIRECTORY) {
+            SFTPDeleteDirectoryInputs sftpDeleteDirectoryInputs = (SFTPDeleteDirectoryInputs) sftpInputs;
+            try {
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        sftpCopier.channel.rmdir(sftpDeleteDirectoryInputs.getRemotePath());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }).get(Integer.parseInt(sftpInputs.getSftpCommonInputs().getExecutionTimeout()) * 1000L, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                throw new Exception(EXCEPTION_EXECUTION_TIMED_OUT);
+            } catch (ExecutionException e) {
+                throw new Exception(EXCEPTION_DIRECTORY_DELETE);
             }
         }
         handleSessionClosure(sftpInputs, sftpCopier, sessionId);
