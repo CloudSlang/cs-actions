@@ -43,7 +43,7 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserEnabled
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_PRINCIPAL_NAME;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_PRINCIPAL_NAME;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyGetInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -52,7 +52,8 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class IsUserEnabled {
     @Action(name = IS_USER_ENABLED_NAME,
             description = IS_USER_ENABLED_DESC,
-            outputs = {@Output(value = RETURN_RESULT, description = IS_USER_ENABLED_RETURN_RESULT_DESC),
+            outputs = {
+                    @Output(value = RETURN_RESULT, description = IS_USER_ENABLED_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = ACCOUNT_ENABLED_OUT, description = ACCOUNT_ENABLED_DESC),

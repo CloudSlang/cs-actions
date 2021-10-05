@@ -20,9 +20,7 @@ public final class Constants {
     public static final String NATIVE = "native";
     public static final String NEW_LINE = "\n";
     public static final String DEFAULT_LOGIN_TYPE = "Native";
-    public static final String DEFAULT_RESOURCE = "https://graph.microsoft.com";
     public static final String DEFAULT_SCOPE = "https://graph.microsoft.com/.default";
-    public static final String DEFAULT_LOGIN_AUTHORITY_V2 = "https://login.microsoftonline.com/itomcontent.onmicrosoft.com/oauth2/v2.0/token";
     public static final String DEFAULT_PROXY_PORT = "8080";
     public static final String BOOLEAN_TRUE = "true";
     public static final String BOOLEAN_FALSE = "false";
@@ -78,7 +76,5 @@ public final class Constants {
     public static final String TLSV13 = "tlsv1.3";
 
     //API URLs
-    public static final String CREATE_USER_URL = "https://graph.microsoft.com/v1.0/users";
-    public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
-    public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
+    public static final String USERS_URL = "https://graph.microsoft.com/v1.0/users";
 }

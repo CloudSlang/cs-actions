@@ -168,4 +168,9 @@ public class Descriptions {
                 "response code.";
     }
 
+    public static class UpdateUser {
+        public static final String UPDATE_USER_NAME = "Update User";
+        public static final String UPDATE_USER_DESC = "Updates user's properties.";
+
+    }
 }
