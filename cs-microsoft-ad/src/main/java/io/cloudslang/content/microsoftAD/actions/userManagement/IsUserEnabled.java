@@ -23,7 +23,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
-import io.cloudslang.content.microsoftAD.utils.Outputs;
+import io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -55,7 +55,7 @@ public class IsUserEnabled {
             outputs = {
                     @Output(value = RETURN_RESULT, description = IS_USER_ENABLED_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = OutputNames.STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = ACCOUNT_ENABLED_OUT, description = ACCOUNT_ENABLED_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
@@ -134,22 +134,22 @@ public class IsUserEnabled {
                     .build());
 
             final String returnMessage = result.get(RETURN_RESULT);
-            final Map<String, String> results = getOperationResults(result, IS_USER_ENABLED_SUCCESS_DESC,  result.get(RETURN_RESULT));
+            final Map<String, String> results = getOperationResults(result, IS_USER_ENABLED_SUCCESS_DESC, result.get(RETURN_RESULT));
 
-            if(!result.get(STATUS_CODE).isEmpty()){
-            final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            if (!result.get(STATUS_CODE).isEmpty()) {
+                final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
 
-            if (statusCode >= 200 && statusCode < 300) {
-                final JsonParser parser = new JsonParser();
-                final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
-                if (responseJson.has(ACCOUNT_ENABLED_OUT)) {
-                    final String accountEnabled = responseJson.get(ACCOUNT_ENABLED_OUT).getAsString();
-                    results.put(ACCOUNT_ENABLED_OUT, accountEnabled);
-                } else
-                    results.put(ACCOUNT_ENABLED_OUT, EMPTY);
+                if (statusCode >= 200 && statusCode < 300) {
+                    final JsonParser parser = new JsonParser();
+                    final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
+                    if (responseJson.has(ACCOUNT_ENABLED_OUT)) {
+                        final String accountEnabled = responseJson.get(ACCOUNT_ENABLED_OUT).getAsString();
+                        results.put(ACCOUNT_ENABLED_OUT, accountEnabled);
+                    } else
+                        results.put(ACCOUNT_ENABLED_OUT, EMPTY);
 
-            }
+                }
             }
 
             parseApiExceptionMessage(results);

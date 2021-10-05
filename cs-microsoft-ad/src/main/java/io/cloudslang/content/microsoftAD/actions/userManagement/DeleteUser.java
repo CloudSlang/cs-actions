@@ -21,7 +21,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.DeleteUserInputs;
-import io.cloudslang.content.microsoftAD.utils.Outputs;
+import io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class DeleteUser {
             outputs = {
                     @Output(value = RETURN_RESULT, description = DELETE_USER_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = OutputNames.STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
