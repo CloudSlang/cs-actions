@@ -57,11 +57,14 @@ public final class Constants {
     public static final String SEND = "/send";
     public static final String MOVE = "/move";
     public static final String ID = "id";
+    public static final String VALUE = "value";
 
     public static final String ATTACHMENTS = "/attachments";
     public static final String ATTACHMENTS_PATH = "/attachments/";
     public static final String IS_USER_ENABLED_ODATA_QUERY = "$select=accountEnabled";
+    public static final String GET_MEMBER_GROUPS = "/getMemberGroups";
     public static final String ACCOUNT_ENABLED_OUT = "accountEnabled";
+    public static final String SECURITY_ENABLED_ONLY = "securityEnabledOnly";
     public static final String USER_ID = "userId";
 
     public static final String STRICT = "strict";
@@ -77,4 +80,5 @@ public final class Constants {
     public static final String CREATE_USER_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
+    public static final String GET_MEMBER_GROUPS_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
 }

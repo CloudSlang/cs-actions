@@ -54,5 +54,13 @@ public final class Inputs extends InputNames {
         public static final String USER_PRINCIPAL_NAME = "userPrincipalName";
         public static final String USER_ID = "userId";
     }
+
+    public static class IsUserInGroup {
+
+        public static final String SECURITY_ENABLED_ONLY = "securityEnabledOnly";
+        public static final String USER_ID = "userId";
+        public static final String BODY = "body";
+    }
+
 }
 

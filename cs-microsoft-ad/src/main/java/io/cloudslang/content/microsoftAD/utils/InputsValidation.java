@@ -149,6 +149,29 @@ public final class InputsValidation {
         return exceptionMessages;
     }
 
+    @NotNull
+    public static List<String> verifyIsUserInGroupInputs(@Nullable final String userId,
+                                                         @Nullable final String securityEnabledOnly,
+                                                         @Nullable final String proxyPort,
+                                                         @Nullable final String trust_all_roots,
+                                                         @Nullable final String x509HostnameVerifier,
+                                                         @Nullable final String connectTimeout,
+                                                         @Nullable final String socketTimeout,
+                                                         @Nullable final String keepAlive,
+                                                         @Nullable final String connectionsMaxPerRoute,
+                                                         @Nullable final String connectionsMaxTotal) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+
+        addVerifyNotNullOrEmpty(exceptionMessages, userId, USER_ID);
+        addVerifyBoolean(exceptionMessages, securityEnabledOnly, SECURITY_ENABLED_ONLY);
+
+        exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots, x509HostnameVerifier,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
+
+        return exceptionMessages;
+    }
+
 
     @NotNull
     private static List<String> addVerifyUserInputs(@NotNull List<String> exceptions, @Nullable final String userPrincipalName,
