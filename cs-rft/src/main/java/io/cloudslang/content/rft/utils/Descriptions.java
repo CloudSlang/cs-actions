@@ -77,8 +77,11 @@ public class Descriptions {
         public static final String SRC_PASSWORD_DESC = "The password for connecting to the host of the source file.";
         public static final String SRC_PRIVATE_KEY_FILE_DESC = "Absolute path of the private key file for public/private" +
                 " key authentication on the source host.";
-        public static final String SRC_PATH_DESC = "The absolute path to the source file. For the SFTP protocol please " +
-                "use a relative path to the SFTP server root directory.";
+        public static final String SRC_PATH_DESC = "The absolute path to the source file. When using the SFTP protocol " +
+                "only the file name must be provided and the file should be located in the ‘ChrootDirectory’ of the SFTP " +
+                "server if it is set, otherwise in the user's root folder. When using SMB3 the destination path should " +
+                "start with the samba shared folder. For more details about how to configure a SFTP server, how to set " +
+                "the ‘ChrootDirectory’ and how to configure the samba shared folder check the usage section from the CP's release notes.";
         public static final String SRC_PROTOCOL_DESC = "The protocol used to copy from the source file. \n" +
                 "Valid values: local, SCP, SFTP, SMB3.";
         public static final String SRC_CHARACTER_SET_DESC = "The name of the control encoding to use with source host " +
@@ -90,8 +93,11 @@ public class Descriptions {
         public static final String DEST_PASSWORD_DESC = "The password for connecting to the destination host.";
         public static final String DEST_PRIVATE_KEY_FILE_DESC = "Absolute path of the private key file for public/private" +
                 " key authentication on the destination host.";
-        public static final String DEST_PATH_DESC = "The absolute path to the destination file.\n" +
-                "When using the protocol SMB33 the destination path should start with the samba shared folder.\n" +
+        public static final String DEST_PATH_DESC = "The absolute path to the destination file. When using the SFTP protocol " +
+                "only the file name must be provided and the file will be stored in the ‘ChrootDirectory’ of the SFTP server if it is set, otherwise in the " +
+                "user's root folder. When using the SMB3 protocol the destination path should start with the samba shared folder.\n" +
+                "For more details about how to configure a SFTP server, how to set the ‘ChrootDirectory’ and how to configure " +
+                "the samba shared folder check the usage section from the CP's release notes." +
                 "Example: sambaSharedFolder\\folder1\\folder2\\file.";
         public static final String DEST_PROTOCOL_DESC = "The protocol used to copy to the destination file.\n" +
                 "Valid values: local, SCP, SFTP, SMB3.";
