@@ -39,10 +39,17 @@ public class Descriptions {
         public static final String HOST_NAME = "IP address/host name.";
         public static final String PORT_DESC = "The port to connect to on host.";
         public static final String USERNAME_DESC = "Remote username.";
-        public static final String PASSWORD_DESC = "Password to authenticate. If using a private key file this will be used as the passphrase for the file";
+        public static final String PASSWORD_DESC = "Password to authenticate. If using a private key file this will be " +
+                "used as the passphrase for the file";
         public static final String PRIVATE_KEY_DESC = "Absolute path for private key file for public/private key authentication.";
-        public static final String REMOTE_FILE_DESC = "The remote file.";
-        public static final String REMOTE_LOCATION_DESC = "The remote location where the file is to be placed.";
+        public static final String REMOTE_FILE_DESC = "The remote source file name. If the ‘ChrootDirectory’ of the" +
+                " SFTP server is set, then the file will be downloaded from the given path otherwise it will be downloaded from the" +
+                " user's root folder. For more details about how to configure a SFTP server and how to set the ‘ChrootDirectory’ " +
+                "check the usage section from the CP's release notes.";
+        public static final String REMOTE_LOCATION_DESC = "The remote destination file name. If the ‘ChrootDirectory’ of " +
+                "the SFTP server is set, then the file will be uploaded in the given path otherwise it will be saved in " +
+                "the user's root folder. For more details about how to configure a SFTP server and how to set the ‘ChrootDirectory’ " +
+                "check the usage section from the CP's release notes.";
         public static final String LOCAL_FILE_DESC = "The path to the file on the RAS to be copied remotely using SFTP.";
         public static final String LOCAL_LOCATION_DESC = "The location where file is to be placed on the RAS.";
         public static final String GLOBAL_SESSION_DESC = "The sessionObject that holds the connection if the close session is false.";
@@ -50,8 +57,11 @@ public class Descriptions {
         public static final String REMOTE_PATH_DESC = "The remote file or directory name.";
         public static final String NEW_REMOTE_PATH_DESC = "The new name for the remote file or directory.";
 
-        public static final String CHARACTER_SET_DESC = "The name of the control encoding to use. Examples: UTF-8, EUC-JP, SJIS.  Default is UTF-8.";
-        public static final String CLOSE_SESSION_DESC = "Close the SSH session at completion of operation?  Default value is true.  If false the SSH session can be reused by other SFTP commands in the same flow.  Valid values: true, false.";
+        public static final String CHARACTER_SET_DESC = "The name of the control encoding to use. Examples: UTF-8, EUC-JP," +
+                " SJIS.  Default is UTF-8.";
+        public static final String CLOSE_SESSION_DESC = "Close the SSH session at completion of operation?  " +
+                "Default value is true.  If false the SSH session can be reused by other SFTP commands in the same flow.  " +
+                "Valid values: true, false.";
 
         public static final String RETURN_RESULT_DESC = "Remote file will be copied to local system.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
