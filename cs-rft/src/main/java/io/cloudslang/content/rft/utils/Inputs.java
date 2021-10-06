@@ -72,6 +72,13 @@ public class Inputs extends InputNames {
         //GET CHILDREN ONLY
         public static final String DELIMITER = "delimiter";
         public static final String REMOTE_PATH = "remotePath";
+        public static final String NEW_REMOTE_PATH = "newRemotePath";
+
+        //SFTP COMMAND
+        public static final String MODE = "mode";
+        public static final String COMMAND_TYPE = "commandType";
+        public static final String GID = "gid";
+        public static final String UID = "uid";
 
     }
 

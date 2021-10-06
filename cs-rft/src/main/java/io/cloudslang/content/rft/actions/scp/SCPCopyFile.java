@@ -36,6 +36,7 @@ import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SCPDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SCPDescriptions.FAILURE_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.SCPDescriptions.RETURN_RESULT_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.SCPDescriptions.SUCCESS_DESC;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SCPInputs.*;
