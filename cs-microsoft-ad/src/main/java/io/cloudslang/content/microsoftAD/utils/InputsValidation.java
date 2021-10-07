@@ -32,6 +32,7 @@ import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.*;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.ACCOUNT_ENABLED;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_ID;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
