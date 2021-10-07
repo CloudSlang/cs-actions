@@ -59,7 +59,7 @@ public class SFTPInputsValidationTest {
                 "invalid",
                 "");
         int numberOfExceptions = exceptions.size();
-        assertEquals(numberOfExceptions, 10);
+        assertEquals(numberOfExceptions, 11);
     }
 
 }
