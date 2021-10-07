@@ -62,7 +62,7 @@ public class UpdateUser {
     @Action(name = UPDATE_USER_NAME,
             description = UPDATE_USER_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = UPDATE_USER_RETURN_RESULT),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
