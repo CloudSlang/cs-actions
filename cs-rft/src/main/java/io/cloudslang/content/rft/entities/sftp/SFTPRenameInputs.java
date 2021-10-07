@@ -23,13 +23,17 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class SFTPRenameInputs implements IHasFTPOperation {
     private final SFTPCommonInputs sftpCommonInputs;
     private final String remotePath;
+    private final String remoteFile;
     private final String newRemotePath;
+    private final String newRemoteFile;
 
-    @java.beans.ConstructorProperties({SFTP_COMMON_INPUTS, REMOTE_PATH,NEW_REMOTE_PATH})
-    public SFTPRenameInputs(SFTPCommonInputs sftpCommonInputs, String remotePath, String newRemotePath) {
+    @java.beans.ConstructorProperties({SFTP_COMMON_INPUTS, REMOTE_PATH,REMOTE_FILE,NEW_REMOTE_PATH,NEW_REMOTE_FILE})
+    public SFTPRenameInputs(SFTPCommonInputs sftpCommonInputs, String remotePath,String remoteFile, String newRemotePath,String newRemoteFile) {
         this.sftpCommonInputs = sftpCommonInputs;
         this.remotePath = remotePath;
+        this.remoteFile = remoteFile;
         this.newRemotePath = newRemotePath;
+        this.newRemoteFile = newRemoteFile;
     }
 
     @NotNull
@@ -48,14 +52,26 @@ public class SFTPRenameInputs implements IHasFTPOperation {
     }
 
     @NotNull
+    public String getRemoteFile() {
+        return remoteFile;
+    }
+
+    @NotNull
     public String getNewRemotePath() {
         return newRemotePath;
+    }
+
+    @NotNull
+    public String getNewRemoteFile() {
+        return newRemoteFile;
     }
 
     public static class SFTPRenameInputsBuilder {
         private SFTPCommonInputs sftpCommonInputs;
         private String remotePath = EMPTY;
+        private String remoteFile = EMPTY;
         private String newRemotePath = EMPTY;
+        private String newRemoteFile = EMPTY;
 
         SFTPRenameInputsBuilder() {
         }
@@ -73,13 +89,25 @@ public class SFTPRenameInputs implements IHasFTPOperation {
         }
 
         @NotNull
+        public SFTPRenameInputs.SFTPRenameInputsBuilder remoteFile(@NotNull final String remoteFile) {
+            this.remoteFile = remoteFile;
+            return this;
+        }
+
+        @NotNull
         public SFTPRenameInputs.SFTPRenameInputsBuilder newRemotePath(@NotNull final String newRemotePath) {
             this.newRemotePath = newRemotePath;
             return this;
         }
 
+        @NotNull
+        public SFTPRenameInputs.SFTPRenameInputsBuilder newRemoteFile(@NotNull final String newRemoteFile) {
+            this.newRemoteFile = newRemoteFile;
+            return this;
+        }
+
         public SFTPRenameInputs build() {
-            return new SFTPRenameInputs(sftpCommonInputs, remotePath,newRemotePath);
+            return new SFTPRenameInputs(sftpCommonInputs, remotePath,remoteFile,newRemotePath,newRemoteFile);
         }
 
     }

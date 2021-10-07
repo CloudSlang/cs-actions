@@ -32,6 +32,7 @@ public class Constants {
     public static final String SFTP_RENAME_DESCRIPTION = "Renames a file or directory remotely using Secure FTP (SFTP).";
 
     public static final String EMPTY_STRING = "";
+    public static final String BACKSLASH = "/";
     public static final String NO_ACK_RECEIVED = "No ack received";
     public static final String SSH_SESSIONS_DEFAULT_ID = "sshSessions:default-id";
 

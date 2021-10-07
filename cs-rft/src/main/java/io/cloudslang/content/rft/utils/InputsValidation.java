@@ -299,14 +299,26 @@ public class InputsValidation {
         return exceptions;
     }
 
-    public static List<String> verifyInputsSFTPDeleteFile(String remotePath, String host, String port,
+    public static List<String> verifyInputsSFTPDeleteFile(String remoteFile, String host, String port,
                                                        String username, String password, String proxyPort,
                                                        String characterSet, String closeSession, String connectionTimeout,
                                                        String executionTimeout){
         final List<String> exceptions = verifyCommonSFTPInputs(host,port, username, password, proxyPort,
                 characterSet,closeSession, connectionTimeout, executionTimeout);
 
-        addVerifyNotNullOrEmpty(exceptions, remotePath, SFTPInputs.REMOTE_FILE);
+        addVerifyNotNullOrEmpty(exceptions, remoteFile, SFTPInputs.REMOTE_FILE);
+        return exceptions;
+    }
+
+    public static List<String> verifyInputsSFTPRename(String remoteFile,String newRemoteFile, String host, String port,
+                                                          String username, String password, String proxyPort,
+                                                          String characterSet, String closeSession, String connectionTimeout,
+                                                          String executionTimeout){
+        final List<String> exceptions = verifyCommonSFTPInputs(host,port, username, password, proxyPort,
+                characterSet,closeSession, connectionTimeout, executionTimeout);
+
+        addVerifyNotNullOrEmpty(exceptions, remoteFile, SFTPInputs.REMOTE_FILE);
+        addVerifyNotNullOrEmpty(exceptions, newRemoteFile, SFTPInputs.NEW_REMOTE_FILE);
         return exceptions;
     }
 }

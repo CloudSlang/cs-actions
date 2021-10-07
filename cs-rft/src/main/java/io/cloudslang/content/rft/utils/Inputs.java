@@ -63,6 +63,7 @@ public class Inputs extends InputNames {
 
         //GET ONLY
         public static final String REMOTE_FILE = "remoteFile";
+        public static final String NEW_REMOTE_FILE = "newRemoteFile";
         public static final String LOCAL_LOCATION = "localLocation";
 
         //PUT ONLY

@@ -42,6 +42,7 @@ public class Descriptions {
         public static final String PASSWORD_DESC = "Password to authenticate. If using a private key file this will be used as the passphrase for the file";
         public static final String PRIVATE_KEY_DESC = "Absolute path for private key file for public/private key authentication.";
         public static final String REMOTE_FILE_DESC = "The remote file.";
+        public static final String NEW_REMOTE_FILE_DESC = "The remote file.";
         public static final String REMOTE_LOCATION_DESC = "The remote location where the file is to be placed.";
         public static final String LOCAL_FILE_DESC = "The path to the file on the RAS to be copied remotely using SFTP.";
         public static final String LOCAL_LOCATION_DESC = "The location where file is to be placed on the RAS.";
