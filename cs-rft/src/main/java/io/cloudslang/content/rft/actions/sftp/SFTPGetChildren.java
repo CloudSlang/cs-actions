@@ -37,12 +37,13 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
+import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.RETURN_RESULT_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.RETURN_RESULT_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
-import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;
+import static io.cloudslang.content.rft.utils.InputsValidation.verifyGetChildrenInputsSFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -90,8 +91,9 @@ public class SFTPGetChildren {
         connectionTimeout = defaultIfEmpty(connectionTimeout, DEFAULT_CONNECTION_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
 
-        final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
-                characterSet, closeSession, SFTPOperation.GET_CHILDREN, remotePath, delimiter, connectionTimeout, executionTimeout);
+        final List<String> exceptionMessages = verifyGetChildrenInputsSFTP(host, port, username, password, proxyPort,
+                characterSet, closeSession, remotePath, delimiter, connectionTimeout, executionTimeout);
+
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }

@@ -26,10 +26,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.*;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustAllStrategy;
@@ -254,6 +251,42 @@ public class HttpCommons {
                 return result;
             }
         } catch (Exception e) {
+            result.put(STATUS_CODE, EMPTY);
+            result.put(RETURN_RESULT, e.getMessage());
+            result.put(EXCEPTION, e.toString());
+
+            return result;
+        }
+    }
+
+    public static Map<String, String> httpPatch(AzureActiveDirectoryCommonInputs commonInputs, String url, String body) {
+
+        Map<String, String> result = new HashMap<>();
+        result.put(STATUS_CODE, EMPTY);
+        result.put(RETURN_RESULT, EMPTY);
+
+        try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
+
+            StringEntity stringEntity = new StringEntity(body, UTF8);
+            stringEntity.setContentType(APPLICATION_JSON);
+
+            HttpPatch httpPatch = new HttpPatch(url);
+            httpPatch.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
+            httpPatch.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+            httpPatch.setEntity(stringEntity);
+
+            try (CloseableHttpResponse response = httpClient.execute(httpPatch)) {
+
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode < 200 || statusCode > 300)
+                    result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
+
+                result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
+
+                return result;
+            }
+        } catch (Exception e) {
+
             result.put(STATUS_CODE, EMPTY);
             result.put(RETURN_RESULT, e.getMessage());
             result.put(EXCEPTION, e.toString());

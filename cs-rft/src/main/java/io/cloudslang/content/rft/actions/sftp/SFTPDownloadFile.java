@@ -38,11 +38,13 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.RETURN_RESULT_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.RETURN_RESULT_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPDownloadFileDescriptions.*;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
-import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;
+import static io.cloudslang.content.rft.utils.InputsValidation.verifySFTPFileInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -68,7 +70,8 @@ public class SFTPDownloadFile {
                                        @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
                                        @Param(value = PRIVATE_KEY, description = PRIVATE_KEY_DESC) String privateKey,
                                        @Param(value = REMOTE_FILE, description = REMOTE_FILE_DESC, required = true) String remoteFile,
-                                       @Param(value = LOCAL_LOCATION, description = LOCAL_LOCATION_DESC, required = true) String localLocation,
+                                       @Param(value = REMOTE_LOCATION, description = REMOTE_LOCATION_DESC, required = true) String remotePath,
+                                       @Param(value = LOCAL_LOCATION, description = LOCAL_LOCATION_DESC, required = true) String localPath,
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = CLOSE_SESSION, description = CLOSE_SESSION_DESC) String closeSession,
@@ -82,21 +85,24 @@ public class SFTPDownloadFile {
         proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
         privateKey = defaultIfEmpty(privateKey, EMPTY);
         remoteFile = defaultIfEmpty(remoteFile, EMPTY);
-        localLocation = defaultIfEmpty(localLocation, EMPTY);
+        remotePath = defaultIfEmpty(remotePath, EMPTY);
+        localPath = defaultIfEmpty(localPath, EMPTY);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
         connectionTimeout = defaultIfEmpty(connectionTimeout, DEFAULT_CONNECTION_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
 
-        final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
-                characterSet, closeSession, SFTPOperation.GET, remoteFile, localLocation, connectionTimeout, executionTimeout);
+        final List<String> exceptionMessages = verifySFTPFileInputs(host, port, username, password, proxyPort,
+                characterSet, closeSession, SFTPOperation.GET, remoteFile, remotePath, localPath, connectionTimeout, executionTimeout);
+
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
         SFTPDownloadFileInputs sftpDownloadFileInputs = SFTPDownloadFileInputs.builder()
                 .remoteFile(remoteFile)
-                .localLocation(localLocation)
+                .remotePath(remotePath)
+                .localPath(localPath)
                 .sftpCommonInputs(SFTPCommonInputs.builder()
                         .host(host)
                         .port(port)

@@ -71,6 +71,7 @@ public class SFTPDeleteFileInputs implements IHasFTPOperation {
             this.remotePath = remotePath;
             return this;
         }
+
         @NotNull
         public SFTPDeleteFileInputs.SFTPRenameInputsBuilder remoteFile(@NotNull final String remoteFile) {
             this.remoteFile = remoteFile;

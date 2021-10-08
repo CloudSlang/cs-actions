@@ -37,7 +37,7 @@ public class Inputs extends InputNames {
 
     }
 
-    public static final class FTPInputs{
+    public static final class FTPInputs {
         public static final String HOST_NAME = "hostName";
         public static final String PORT = "port";
         public static final String LOCAL_FILE = "localFile";
@@ -65,9 +65,12 @@ public class Inputs extends InputNames {
         public static final String REMOTE_FILE = "remoteFile";
         public static final String NEW_REMOTE_FILE = "newRemoteFile";
         public static final String LOCAL_LOCATION = "localLocation";
+        public static final String REMOTE_LOCATION = "remotePath";
+        public static final String LOCAL_LOCATION = "localPath";
 
         //PUT ONLY
-        public static final String REMOTE_LOCATION = "remoteLocation";
+        public static final String REMOTE_PATH_PUT = "remotePath";
+        public static final String LOCAL_PATH_PUT = "localPath";
         public static final String LOCAL_FILE = "localFile";
 
         //GET CHILDREN ONLY
@@ -111,7 +114,7 @@ public class Inputs extends InputNames {
         public static final String EXECUTION_TIMEOUT = "executionTimeout";
     }
 
-    public static final class SCPInputs{
+    public static final class SCPInputs {
         public static final String KNOWN_HOSTS_POLICY = "known_hosts_policy";
         public static final String KNOWN_HOSTS_PATH = "known_hosts_path";
 

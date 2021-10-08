@@ -72,7 +72,6 @@ public class SFTPCreateDirectoryInputs implements IHasFTPOperation {
             return this;
         }
 
-        @NotNull
         public SFTPCreateDirectoryInputs.SFTPDeleteDirectoryInputsBuilder remoteFile(@NotNull final String remoteFile) {
             this.remoteFile = remoteFile;
             return this;
@@ -81,6 +80,7 @@ public class SFTPCreateDirectoryInputs implements IHasFTPOperation {
 
         public SFTPCreateDirectoryInputs build(){
             return new SFTPCreateDirectoryInputs(sftpCommonInputs, remotePath, remoteFile);
+
         }
 
 

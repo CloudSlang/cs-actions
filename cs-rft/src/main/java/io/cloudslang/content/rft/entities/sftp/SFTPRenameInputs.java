@@ -57,9 +57,11 @@ public class SFTPRenameInputs implements IHasFTPOperation {
     }
 
     @NotNull
+
     public String getNewRemotePath() {
         return newRemotePath;
     }
+
 
     @NotNull
     public String getNewRemoteFile() {

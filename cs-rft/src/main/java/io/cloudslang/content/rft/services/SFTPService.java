@@ -36,6 +36,7 @@ import static io.cloudslang.content.rft.utils.Descriptions.SFTPCreateDirectoryDe
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteDirectoryDescriptions.DELETE_DIR_SUCCESS_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteFileDescriptions.SUCCESS_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPRenameDescriptions.RENAME_SUCCESS_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteFileDescriptions.SUCCESS_DESC;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 
 public class SFTPService {
