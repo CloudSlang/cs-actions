@@ -315,8 +315,8 @@ public class InputsValidation {
                                                        String username, String password, String proxyPort,
                                                        String characterSet, String closeSession, String connectionTimeout,
                                                        String executionTimeout) {
-        final List<String> exceptions = verifyCommonSFTPInputs(host, port, username, password, proxyPort,
-                characterSet, closeSession, connectionTimeout, executionTimeout);
+        final List<String> exceptions = verifyCommonSFTPInputs(host,port, username, password, proxyPort,
+                characterSet,closeSession, connectionTimeout, executionTimeout);
 
         addVerifyNotNullOrEmpty(exceptions, remotePath, Inputs.SFTPInputs.REMOTE_PATH);
 //        addVerifyNotNullOrEmpty(exceptions, newRemotePath, Inputs.SFTPInputs.NEW_REMOTE_PATH);
@@ -324,6 +324,25 @@ public class InputsValidation {
 
         return exceptions;
     }
+
+    public static List<String> verifyInputsSFTPDeleteFile(String remoteFile, String host, String port,
+                                                       String username, String password, String proxyPort,
+                                                       String characterSet, String closeSession, String connectionTimeout,
+                                                       String executionTimeout){
+        final List<String> exceptions = verifyCommonSFTPInputs(host,port, username, password, proxyPort,
+                characterSet,closeSession, connectionTimeout, executionTimeout);
+        return exceptions;
+    }
+
+    public static List<String> verifyInputsSFTPRename(String remoteFile,String newRemoteFile, String host, String port,
+                                                          String username, String password, String proxyPort,
+                                                          String characterSet, String closeSession, String connectionTimeout,
+                                                          String executionTimeout){
+        final List<String> exceptions = verifyCommonSFTPInputs(host,port, username, password, proxyPort,
+                characterSet,closeSession, connectionTimeout, executionTimeout);
+
+        addVerifyNotNullOrEmpty(exceptions, remoteFile, SFTPInputs.REMOTE_FILE);
+        addVerifyNotNullOrEmpty(exceptions, newRemoteFile, SFTPInputs.NEW_REMOTE_FILE);
 
     public static List<String> verifyInputsSFTPDeleteFile(String remotePath, String host, String port,
                                                           String username, String password, String proxyPort,

@@ -76,6 +76,7 @@ public class SFTPCreateDirectory {
                                        @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
                                        @Param(value = PRIVATE_KEY, description = PRIVATE_KEY_DESC) String privateKey,
                                        @Param(value = REMOTE_PATH, description = REMOTE_PATH_CREATE_DESC, required = true) String remotePath,
+                                       @Param(value = REMOTE_FILE, description = REMOTE_FILE_DESC, required = true) String remoteFile,
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = CLOSE_SESSION, description = CLOSE_SESSION_DESC) String closeSession,
@@ -102,6 +103,7 @@ public class SFTPCreateDirectory {
 
         SFTPCreateDirectoryInputs sftpCreateDirectoryInputs = SFTPCreateDirectoryInputs.builder()
                 .remotePath(remotePath)
+                .remoteFile(remoteFile)
                 .sftpCommonInputs(SFTPCommonInputs.builder()
                         .host(host)
                         .port(port)
