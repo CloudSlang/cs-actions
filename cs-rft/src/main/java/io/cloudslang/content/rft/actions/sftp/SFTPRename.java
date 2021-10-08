@@ -70,7 +70,7 @@ public class SFTPRename {
                                        @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
                                        @Param(value = PRIVATE_KEY, description = PRIVATE_KEY_DESC) String privateKey,
                                        @Param(value = REMOTE_PATH, description = RENAME_REMOTE_PATH_DESC) String remotePath,
-                                       @Param(value = REMOTE_FILE, description = REMOTE_FILE_DESC, required = true) String remoteFile,
+                                       @Param(value = REMOTE_FILE, description = RENAME_REMOTE_FILE_DESC, required = true) String remoteFile,
                                        @Param(value = NEW_REMOTE_PATH, description = RENAME_NEW_REMOTE_PATH_DESC) String newRemotePath,
                                        @Param(value = NEW_REMOTE_FILE, description = NEW_REMOTE_FILE_DESC, required = true) String newRemoteFile,
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
