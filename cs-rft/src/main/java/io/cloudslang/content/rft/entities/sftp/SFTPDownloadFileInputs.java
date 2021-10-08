@@ -22,66 +22,81 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class SFTPDownloadFileInputs implements IHasFTPOperation {
     private final SFTPCommonInputs sftpCommonInputs;
     private final String remoteFile;
-    private final String localLocation;
+    private final String remotePath;
+    private final String localPath;
 
-    @java.beans.ConstructorProperties({"sfptCommonInputs","remoteFile","localLocation"})
 
-    public SFTPDownloadFileInputs(SFTPCommonInputs sftpCommonInputs, String remoteFile, String localLocation) {
+    @java.beans.ConstructorProperties({"sfptCommonInputs", "remoteFile", "remotePath", "localPath"})
+
+    public SFTPDownloadFileInputs(SFTPCommonInputs sftpCommonInputs, String remoteFile, String remotePath, String localPath) {
         this.sftpCommonInputs = sftpCommonInputs;
         this.remoteFile = remoteFile;
-        this.localLocation = localLocation;
+        this.remotePath = remotePath;
+        this.localPath = localPath;
     }
 
     @NotNull
-    public static SFTPGetInputsBuilder builder(){
+    public static SFTPGetInputsBuilder builder() {
         return new SFTPGetInputsBuilder();
     }
 
     @NotNull
-    public SFTPCommonInputs getSftpCommonInputs(){
+    public SFTPCommonInputs getSftpCommonInputs() {
         return this.sftpCommonInputs;
     }
 
     @NotNull
-    public String getRemoteFile(){
+    public String getRemoteFile() {
         return remoteFile;
     }
 
     @NotNull
-    public String getLocalLocation(){
-        return localLocation;
+    public String getRemotePath() {
+        return remotePath;
     }
 
-    public static class SFTPGetInputsBuilder{
+    @NotNull
+    public String getLocalPath() {
+        return localPath;
+    }
+
+
+    public static class SFTPGetInputsBuilder {
         private SFTPCommonInputs sftpCommonInputs;
         private String remoteFile = EMPTY;
-        private String localLocation = EMPTY;
+        private String remotePath = EMPTY;
+        private String localPath = EMPTY;
 
-        SFTPGetInputsBuilder(){
+        SFTPGetInputsBuilder() {
         }
 
         @NotNull
-        public SFTPDownloadFileInputs.SFTPGetInputsBuilder sftpCommonInputs(@NotNull final SFTPCommonInputs sftpCommonInputs){
-            this.sftpCommonInputs  = sftpCommonInputs;
+        public SFTPDownloadFileInputs.SFTPGetInputsBuilder sftpCommonInputs(@NotNull final SFTPCommonInputs sftpCommonInputs) {
+            this.sftpCommonInputs = sftpCommonInputs;
             return this;
         }
 
         @NotNull
-        public SFTPDownloadFileInputs.SFTPGetInputsBuilder remoteFile(@NotNull final String remoteFile){
+        public SFTPDownloadFileInputs.SFTPGetInputsBuilder remoteFile(@NotNull final String remoteFile) {
             this.remoteFile = remoteFile;
             return this;
         }
 
         @NotNull
-        public SFTPDownloadFileInputs.SFTPGetInputsBuilder localLocation(@NotNull final String localLocation){
-            this.localLocation = localLocation;
+        public SFTPDownloadFileInputs.SFTPGetInputsBuilder remotePath(@NotNull final String remotePath) {
+            this.remotePath = remotePath;
             return this;
         }
 
-        public SFTPDownloadFileInputs build(){
-            return new SFTPDownloadFileInputs(sftpCommonInputs,remoteFile,localLocation);
+        @NotNull
+        public SFTPDownloadFileInputs.SFTPGetInputsBuilder localPath(@NotNull final String localPath) {
+            this.localPath = localPath;
+            return this;
         }
 
+        public SFTPDownloadFileInputs build() {
+            return new SFTPDownloadFileInputs(sftpCommonInputs, remoteFile, remotePath, localPath);
+        }
 
     }
 }

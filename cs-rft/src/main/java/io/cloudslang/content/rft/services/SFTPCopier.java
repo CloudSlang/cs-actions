@@ -34,6 +34,8 @@ public class SFTPCopier {
     Map<String, String> result = new HashMap<>();
     private IHasFTPOperation sftpInputs;
 
+    private static final String BACK_SLASH = "/";
+
 
     public SFTPCopier(IHasFTPOperation sftpInputs) throws Exception {
 
@@ -104,14 +106,18 @@ public class SFTPCopier {
     }
 
     private void getFile(SFTPDownloadFileInputs sftpDownloadFileInputs) throws Exception {
-        if (new File(sftpDownloadFileInputs.getLocalLocation()).exists()) {
-            throw new Exception(String.format(EXCEPTION_LOCAL_FILE_EXISTS, sftpDownloadFileInputs.getLocalLocation()));
+        if (new File(sftpDownloadFileInputs.getLocalPath() + File.separator + sftpDownloadFileInputs.getRemoteFile()).exists()) {
+            throw new Exception(String.format(EXCEPTION_LOCAL_FILE_EXISTS, sftpDownloadFileInputs.getRemoteFile()));
 
         } else {
             try {
                 channel.setFilenameEncoding(sftpDownloadFileInputs.getSftpCommonInputs().getCharacterSet());
                 int iMode = ChannelSftp.OVERWRITE;
-                channel.get(sftpDownloadFileInputs.getRemoteFile(), sftpDownloadFileInputs.getLocalLocation(), null, iMode);
+
+                channel.cd(BACK_SLASH + sftpDownloadFileInputs.getRemotePath());
+                channel.lcd(BACK_SLASH + sftpDownloadFileInputs.getLocalPath());
+
+                channel.get(sftpDownloadFileInputs.getRemoteFile(), sftpDownloadFileInputs.getRemoteFile(), null, iMode);
             } catch (Throwable e) {
                 throw new Exception(EXCEPTION_UNABLE_TO_RETRIEVE, e);
             }
@@ -129,7 +135,7 @@ public class SFTPCopier {
     }
 
     private void getFilesAndFolders(SFTPGetChildrenInputs sftpGetChildrenInputs) throws Exception {
-        String remotePath = sftpGetChildrenInputs.getRemotePath();
+        String remotePath =  BACK_SLASH + sftpGetChildrenInputs.getRemotePath();
         String delimiter = sftpGetChildrenInputs.getDelimiter();
         Vector lsOutput = channel.ls(remotePath);
 
@@ -210,14 +216,18 @@ public class SFTPCopier {
     }
 
     private void putFile(SFTPUploadFileInputs sftpUploadFileInputs) throws Exception {
-        if (!(new File(sftpUploadFileInputs.getLocalFile()).exists())) {
+        if (!(new File(sftpUploadFileInputs.getLocalPath() + File.separator + sftpUploadFileInputs.getLocalFile()).exists())) {
             throw new Exception(String.format(EXCEPTION_INVALID_LOCAL_FILE, sftpUploadFileInputs.getLocalFile()));
 
         } else {
             try {
                 channel.setFilenameEncoding(sftpUploadFileInputs.getSftpCommonInputs().getCharacterSet());
                 int iMode = ChannelSftp.OVERWRITE;
-                channel.put(sftpUploadFileInputs.getLocalFile(), sftpUploadFileInputs.getRemoteLocation(), null, iMode);
+
+                channel.cd(BACK_SLASH + sftpUploadFileInputs.getRemotePath());
+                channel.lcd(BACK_SLASH + sftpUploadFileInputs.getLocalPath());
+
+                channel.put(sftpUploadFileInputs.getLocalFile(), sftpUploadFileInputs.getLocalFile(), null, iMode);
             } catch (Throwable e) {
                 throw new Exception(EXCEPTION_UNABLE_TO_STORE, e);
             }
