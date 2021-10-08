@@ -43,7 +43,7 @@ public class SFTPDeleteFileInputs implements IHasFTPOperation {
     }
 
     @NotNull
-    public String getremotePath() {
+    public String getRemotePath() {
         return remotePath;
     }
 

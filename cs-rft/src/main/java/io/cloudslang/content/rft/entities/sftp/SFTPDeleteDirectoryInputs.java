@@ -23,11 +23,13 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class SFTPDeleteDirectoryInputs implements IHasFTPOperation {
     private final SFTPCommonInputs sftpCommonInputs;
     private final String remotePath;
+    private final String remoteFile;
 
     @java.beans.ConstructorProperties({SFTP_COMMON_INPUTS, REMOTE_PATH})
-    public SFTPDeleteDirectoryInputs(SFTPCommonInputs sftpCommonInputs, String remotePath) {
+    public SFTPDeleteDirectoryInputs(SFTPCommonInputs sftpCommonInputs, String remotePath, String remoteFile) {
         this.sftpCommonInputs = sftpCommonInputs;
         this.remotePath = remotePath;
+        this.remoteFile = remoteFile;
     }
 
     @NotNull
@@ -45,9 +47,15 @@ public class SFTPDeleteDirectoryInputs implements IHasFTPOperation {
         return remotePath;
     }
 
+    @NotNull
+    public String getRemoteFile() {
+        return remoteFile;
+    }
+
     public static class SFTPDeleteDirectoryInputsBuilder {
         private SFTPCommonInputs sftpCommonInputs;
         private String remotePath = EMPTY;
+        private String remoteFile = EMPTY;
 
         SFTPDeleteDirectoryInputsBuilder() {
         }
@@ -64,9 +72,15 @@ public class SFTPDeleteDirectoryInputs implements IHasFTPOperation {
             return this;
         }
 
+        @NotNull
+        public SFTPDeleteDirectoryInputs.SFTPDeleteDirectoryInputsBuilder remoteFile(@NotNull final String remoteFile) {
+            this.remoteFile = remoteFile;
+            return this;
+        }
+
 
         public SFTPDeleteDirectoryInputs build(){
-            return new SFTPDeleteDirectoryInputs(sftpCommonInputs,remotePath);
+            return new SFTPDeleteDirectoryInputs(sftpCommonInputs, remotePath, remoteFile);
         }
 
 

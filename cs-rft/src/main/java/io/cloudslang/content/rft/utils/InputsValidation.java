@@ -305,8 +305,6 @@ public class InputsValidation {
                                                        String executionTimeout){
         final List<String> exceptions = verifyCommonSFTPInputs(host,port, username, password, proxyPort,
                 characterSet,closeSession, connectionTimeout, executionTimeout);
-
-        addVerifyNotNullOrEmpty(exceptions, remoteFile, SFTPInputs.REMOTE_FILE);
         return exceptions;
     }
 

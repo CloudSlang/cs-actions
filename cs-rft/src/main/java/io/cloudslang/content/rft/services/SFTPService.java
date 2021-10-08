@@ -133,12 +133,12 @@ public class SFTPService {
                     try {
                         if (sftpRenameInputs.getremotePath().isEmpty() && sftpRenameInputs.getNewRemotePath().isEmpty())
                             sftpCopier.channel.rename(sftpRenameInputs.getRemoteFile(), sftpRenameInputs.getNewRemoteFile());
-                        else if(sftpRenameInputs.getremotePath().isEmpty() && !sftpRenameInputs.getNewRemotePath().isEmpty())
+                        else if (sftpRenameInputs.getremotePath().isEmpty() && !sftpRenameInputs.getNewRemotePath().isEmpty())
                             sftpCopier.channel.rename(sftpRenameInputs.getRemoteFile(), BACKSLASH + sftpRenameInputs.getNewRemotePath() + BACKSLASH + sftpRenameInputs.getNewRemoteFile());
-                        else if(!sftpRenameInputs.getremotePath().isEmpty() && sftpRenameInputs.getNewRemotePath().isEmpty())
+                        else if (!sftpRenameInputs.getremotePath().isEmpty() && sftpRenameInputs.getNewRemotePath().isEmpty())
                             sftpCopier.channel.rename(BACKSLASH + sftpRenameInputs.getremotePath() + BACKSLASH + sftpRenameInputs.getRemoteFile(), sftpRenameInputs.getNewRemoteFile());
-                        else if(!sftpRenameInputs.getremotePath().isEmpty() && !sftpRenameInputs.getNewRemotePath().isEmpty())
-                            sftpCopier.channel.rename(BACKSLASH + sftpRenameInputs.getremotePath() + BACKSLASH + sftpRenameInputs.getRemoteFile(),BACKSLASH + sftpRenameInputs.getNewRemotePath() + BACKSLASH + sftpRenameInputs.getNewRemoteFile());
+                        else if (!sftpRenameInputs.getremotePath().isEmpty() && !sftpRenameInputs.getNewRemotePath().isEmpty())
+                            sftpCopier.channel.rename(BACKSLASH + sftpRenameInputs.getremotePath() + BACKSLASH + sftpRenameInputs.getRemoteFile(), BACKSLASH + sftpRenameInputs.getNewRemotePath() + BACKSLASH + sftpRenameInputs.getNewRemoteFile());
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -161,10 +161,10 @@ public class SFTPService {
             try {
                 CompletableFuture.runAsync(() -> {
                     try {
-                        if (sftpDeleteFileInputs.getremotePath().isEmpty())
+                        if (sftpDeleteFileInputs.getRemotePath().isEmpty())
                             sftpCopier.channel.rm(sftpDeleteFileInputs.getRemoteFile());
-                        else
-                            sftpCopier.channel.rm(BACKSLASH + sftpDeleteFileInputs.getremotePath() + BACKSLASH + sftpDeleteFileInputs.getRemoteFile());
+                        else if (!(sftpDeleteFileInputs.getRemotePath().isEmpty()) && !(sftpDeleteFileInputs.getRemoteFile().isEmpty()))
+                            sftpCopier.channel.rm(BACKSLASH + sftpDeleteFileInputs.getRemotePath() + BACKSLASH + sftpDeleteFileInputs.getRemoteFile());
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -177,7 +177,10 @@ public class SFTPService {
             try {
                 CompletableFuture.runAsync(() -> {
                     try {
-                        sftpCopier.channel.mkdir(sftpCreateDirectory.getRemotePath());
+                        if (sftpCreateDirectory.getRemotePath().isEmpty())
+                            sftpCopier.channel.mkdir(sftpCreateDirectory.getRemoteFile());
+                        else if (!(sftpCreateDirectory.getRemotePath().isEmpty()) && !(sftpCreateDirectory.getRemoteFile().isEmpty()))
+                            sftpCopier.channel.mkdir(BACKSLASH + sftpCreateDirectory.getRemotePath() + BACKSLASH + sftpCreateDirectory.getRemoteFile());
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -192,7 +195,10 @@ public class SFTPService {
             try {
                 CompletableFuture.runAsync(() -> {
                     try {
-                        sftpCopier.channel.rmdir(sftpDeleteDirectoryInputs.getRemotePath());
+                        if (sftpDeleteDirectoryInputs.getRemotePath().isEmpty())
+                            sftpCopier.channel.rmdir(sftpDeleteDirectoryInputs.getRemoteFile());
+                        else if (!(sftpDeleteDirectoryInputs.getRemotePath().isEmpty()) && !(sftpDeleteDirectoryInputs.getRemoteFile().isEmpty()))
+                            sftpCopier.channel.rmdir(BACKSLASH + sftpDeleteDirectoryInputs.getRemotePath() + BACKSLASH + sftpDeleteDirectoryInputs.getRemoteFile());
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
