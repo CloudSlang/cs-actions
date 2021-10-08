@@ -93,7 +93,7 @@ public class SFTPUploadFile {
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
 
         final List<String> exceptionMessages = verifySFTPUploadFileInputs(host, port, username, password, proxyPort,
-                characterSet, closeSession, remotePath, localPath, localFile, connectionTimeout, executionTimeout);
+                characterSet, closeSession, localPath, localFile, connectionTimeout, executionTimeout);
 
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
