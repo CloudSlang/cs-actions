@@ -56,6 +56,8 @@ public class Inputs extends InputNames {
         public static final String PORT = "port";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
+        public static final String REMOTE_PATH = "remotePath";
+        public static final String LOCAL_PATH = "localPath";
 
         public static final String PRIVATE_KEY = "privateKey";
         public static final String CHARACTER_SET = "characterSet";
@@ -64,18 +66,13 @@ public class Inputs extends InputNames {
         //GET ONLY
         public static final String REMOTE_FILE = "remoteFile";
         public static final String NEW_REMOTE_FILE = "newRemoteFile";
-        public static final String LOCAL_LOCATION = "localLocation";
         public static final String REMOTE_LOCATION = "remotePath";
-        public static final String LOCAL_LOCATION = "localPath";
 
         //PUT ONLY
-        public static final String REMOTE_PATH_PUT = "remotePath";
-        public static final String LOCAL_PATH_PUT = "localPath";
         public static final String LOCAL_FILE = "localFile";
 
         //GET CHILDREN ONLY
         public static final String DELIMITER = "delimiter";
-        public static final String REMOTE_PATH = "remotePath";
         public static final String NEW_REMOTE_PATH = "newRemotePath";
 
         //SFTP COMMAND

@@ -22,7 +22,6 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.sftp.SFTPCommonInputs;
 import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
-import io.cloudslang.content.rft.entities.sftp.SFTPDeleteFileInputs;
 import io.cloudslang.content.rft.entities.sftp.SFTPRenameInputs;
 import io.cloudslang.content.rft.services.SFTPService;
 import io.cloudslang.content.rft.utils.SFTPOperation;
@@ -40,14 +39,10 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.RETURN_RESULT_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
-import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteFileDescriptions.FAILURE_DESC;
-import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteFileDescriptions.SUCCESS_DESC;
-import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteFileDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPRenameDescriptions.*;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
-import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTPDeleteFile;
 import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTPRename;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -75,7 +70,7 @@ public class SFTPRename {
                                        @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
                                        @Param(value = PRIVATE_KEY, description = PRIVATE_KEY_DESC) String privateKey,
                                        @Param(value = REMOTE_PATH, description = RENAME_REMOTE_PATH_DESC) String remotePath,
-                                       @Param(value = REMOTE_FILE, description = REMOTE_FILE_DESC, required = true) String remoteFile,
+                                       @Param(value = REMOTE_FILE, description = RENAME_REMOTE_FILE_DESC, required = true) String remoteFile,
                                        @Param(value = NEW_REMOTE_PATH, description = RENAME_NEW_REMOTE_PATH_DESC) String newRemotePath,
                                        @Param(value = NEW_REMOTE_FILE, description = NEW_REMOTE_FILE_DESC, required = true) String newRemoteFile,
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
@@ -97,8 +92,8 @@ public class SFTPRename {
         connectionTimeout = defaultIfEmpty(connectionTimeout, CONNECTION_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, EXECUTION_TIMEOUT);
 
-        final List<String> exceptionMessages = verifyInputsSFTPRename(remoteFile, newRemoteFile, host, port, username, password,
-                proxyPort, characterSet, closeSession, connectionTimeout, executionTimeout);
+        final List<String> exceptionMessages = verifyInputsSFTPRename(remoteFile, remotePath, newRemoteFile, host, port,
+                username, password, proxyPort, characterSet, closeSession, connectionTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
