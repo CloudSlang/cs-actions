@@ -24,7 +24,7 @@ public class SFTPInputsValidationTest {
 
     @Test
     public void verifyValidSFTPPInputs() {
-        List<String> exceptions = InputsValidation.verifySFTPFileInputs(
+        List<String> exceptions = InputsValidation.verifySFTPUploadFileInputs(
                 "someHost",
                 "21",
                 "username",
@@ -32,7 +32,6 @@ public class SFTPInputsValidationTest {
                 "8080",
                 "UTF-8",
                 "true",
-                SFTPOperation.PUT,
                 "specificinput.txt",
                 "specificinput2.txt",
                 "specificinput3.txt",
@@ -44,7 +43,7 @@ public class SFTPInputsValidationTest {
 
     @Test
     public void verifyInvalidSFTPInputs() {
-        List<String> exceptions = InputsValidation.verifySFTPFileInputs(
+        List<String> exceptions = InputsValidation.verifySFTPUploadFileInputs(
                 null,
                 "212222",
                 null,
@@ -52,14 +51,13 @@ public class SFTPInputsValidationTest {
                 "",
                 "",
                 "",
-                SFTPOperation.GET,
                 "",
                 "",
                 "",
                 "invalid",
                 "");
         int numberOfExceptions = exceptions.size();
-        assertEquals(numberOfExceptions, 11);
+        assertEquals(numberOfExceptions, 10);
     }
 
 }

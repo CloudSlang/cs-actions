@@ -44,13 +44,6 @@ public class Descriptions {
         public static final String PRIVATE_KEY_DESC = "Absolute path for private key file for public/private key authentication.";
         public static final String REMOTE_FILE_DESC = "The remote file.";
         public static final String NEW_REMOTE_FILE_DESC = "The remote file.";
-        public static final String REMOTE_LOCATION_DESC = "The remote location where the file is to be placed.";
-        public static final String LOCAL_FILE_DESC = "The path to the file on the RAS to be copied remotely using SFTP.";
-        public static final String LOCAL_LOCATION_DESC = "The location where file is to be placed on the RAS.";
-        public static final String GLOBAL_SESSION_DESC = "The sessionObject that holds the connection if the close session is false.";
-        public static final String DELIMITER_DESC = "A delimiter to use for the result lists (returnResult, files, folders).";
-        public static final String REMOTE_PATH_DESC = "The remote file or directory name.";
-
         public static final String GLOBAL_SESSION_DESC = "The sessionObject that holds the connection if the close session is false.";
         public static final String DELIMITER_DESC = "A delimiter to use for the result lists (returnResult, files, folders).";
         public static final String REMOTE_PATH_DESC = "The full path of the remote file or directory name.";
@@ -119,7 +112,6 @@ public class Descriptions {
         public static final String TYPE_DESC = "The type of the file to get (binary or ascii).";
         public static final String SUCCESS_DESC = "The file was copied successfully.";
         public static final String FAILURE_DESC = "The file could not be copied.";
-        public static final String RETURN_RESULT_DESC= " This is the primary output and it contains the " +
         public static final String RETURN_RESULT_DESC = " This is the primary output and it contains the " +
                 "success message if the operation successfully completes, or an exception message otherwise.";
    }

@@ -97,4 +97,5 @@ public class Constants {
     public static final String EXCEPTION_EXECUTION_TIMED_OUT = "Operation timed out.";
     public static final String EXCEPTION_EXISTING_DIRECTORY = "Failed to create directory.  Directory may already exist.";
     public static final String EXCEPTION_DIRECTORY_DELETE = "Failed to delete directory.  Directory may not be empty.";
+    public static final String EXCEPTION_REMOTE_PATH_FILE = "The %s and %s inputs can't be both empty. A value must be provided for at least one.";
 }

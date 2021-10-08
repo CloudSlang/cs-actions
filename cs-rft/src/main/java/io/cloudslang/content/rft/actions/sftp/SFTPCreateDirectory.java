@@ -49,7 +49,7 @@ import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.EXECUTION_TIMEOUT;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.CLOSE_SESSION;
-import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTPDeleteFile;
+import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -95,7 +95,7 @@ public class SFTPCreateDirectory {
         connectionTimeout = defaultIfEmpty(connectionTimeout, CONNECTION_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, EXECUTION_TIMEOUT);
 
-        final List<String> exceptionMessages = verifyInputsSFTPDeleteFile(remotePath, host, port, username, password,
+        final List<String> exceptionMessages = verifyInputsSFTP(remoteFile, remotePath, host, port, username, password,
                 proxyPort, characterSet, closeSession, connectionTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
