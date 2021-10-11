@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.microsoftAD.actions.utils;
+package io.cloudslang.content.microsoftAD.actions.authorization;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
