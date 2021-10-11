@@ -65,6 +65,7 @@ public class UpdateUser {
             outputs = {
                     @Output(value = RETURN_RESULT, description = UPDATE_USER_RETURN_RESULT),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
@@ -158,17 +159,11 @@ public class UpdateUser {
                     .build());
 
             Map<String, String> finalResult = getOperationResults(result, result.get(RETURN_RESULT), result.get(RETURN_RESULT));
-
             if (!result.get(STATUS_CODE).isEmpty() && Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300) {
-
                 finalResult.put(RETURN_RESULT, UPDATE_USER_RETURN_RESULT);
-
             }
-
             parseApiExceptionMessage(finalResult);
-
             return finalResult;
-
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
