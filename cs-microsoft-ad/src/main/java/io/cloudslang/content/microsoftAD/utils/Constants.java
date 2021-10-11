@@ -83,4 +83,8 @@ public final class Constants {
     public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String UPDATE_USER_URL = "https://graph.microsoft.com/v1.0/users/";
+    public static final String ASSIGN_USER_LICENSE_URL_PRE = "https://graph.microsoft.com/v1.0/users/";
+    public static final String ASSIGN_USER_LICENSE_URL_POST = "/assignLicense";
+
+
 }

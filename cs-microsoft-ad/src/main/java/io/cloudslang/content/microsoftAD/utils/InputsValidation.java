@@ -15,6 +15,7 @@
 
 package io.cloudslang.content.microsoftAD.utils;
 
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
@@ -75,6 +76,7 @@ public final class InputsValidation {
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
         return exceptionMessages;
     }
+
 
     @NotNull
     public static List<String> verifyGetInputs(@Nullable final String userPrincipalName,
@@ -148,6 +150,28 @@ public final class InputsValidation {
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
 
         return exceptionMessages;
+    }
+
+
+    @NotNull public static List<String> verifyLicenseInputs(@Nullable final String userPrincipalName,
+                                 @Nullable final String userId,
+                                 @Nullable final String body,
+                                 @Nullable final String proxyPort,
+                                 @Nullable final String trust_all_roots,
+                                 @Nullable final String x509HostnameVerifier,
+                                 @Nullable final String connectTimeout,
+                                 @Nullable final String socketTimeout,
+                                 @Nullable final String keepAlive,
+                                 @Nullable final String connectionsMaxPerRoute,
+                                 @Nullable final String connectionsMaxTotal) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyUserInputs(exceptionMessages, userPrincipalName, userId);
+        addVerifyNotNullOrEmpty(exceptionMessages, body, HttpClientInputs.BODY);
+        exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots, x509HostnameVerifier,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
+        return exceptionMessages;
+
     }
 
 

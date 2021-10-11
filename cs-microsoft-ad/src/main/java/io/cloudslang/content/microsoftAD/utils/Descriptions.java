@@ -198,4 +198,25 @@ public class Descriptions {
 
     }
 
+    public static class AssignUserLicense {
+
+        //Descriptions
+        public static final String ASSIGN_USER_LICENSE_DESC = "Disable a user from Active Directory.";
+        public static final String ASSIGN_USER_LICENSE_NAME = "Disable User";
+
+        //Inputs
+        public static final String ASSIGNED_LICENSES = "Assigned licenses";
+        public static final String ASSIGNED_LICENSES_DESC = "AA collection of assignedLicense objects that specify " +
+                "the licenses to add. You can disable plans associated with a license by setting the disabledPlans " +
+                "property on an assignedLicense object.";
+
+        //Results
+        public static final String ASSIGN_USER_LICENSE_FAILURE_DESC = "There was an error while trying to assign license.";
+        public static final String ASSIGN_USER_LICENSE_RETURN_RESULT_DESC = "If successful, this method returns 200 " +
+                "response code and a user object in the response body.";
+        public static final String ASSIGN_USER_LICENSE_SUCCESS_RETURN_RESULT_DESC = "The license was successfully assigned.";
+
+
+    }
+
 }
