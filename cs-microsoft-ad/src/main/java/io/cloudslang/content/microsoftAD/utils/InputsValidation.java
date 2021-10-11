@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.microsoftAD.utils.Constants.ACCOUNT_ENABLED;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.EXCEPTION_INVALID_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.EXCEPTION_INVALID_TLS_VERSION;
@@ -33,9 +34,6 @@ import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PASSWO
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_ID;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.*;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.ACCOUNT_ENABLED;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_ID;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;

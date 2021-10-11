@@ -191,7 +191,7 @@ public class HttpCommons {
             HttpPost httpPost = new HttpPost(url);
             httpPost.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
             httpPost.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
-            StringEntity stringEntity = new StringEntity(body,UTF8);
+            StringEntity stringEntity = new StringEntity(body, UTF8);
             stringEntity.setContentType(APPLICATION_JSON);
             httpPost.setEntity(stringEntity);
 
@@ -261,37 +261,6 @@ public class HttpCommons {
     public static Map<String, String> httpPatch(AzureActiveDirectoryCommonInputs commonInputs, String url, String body) {
 
         Map<String, String> result = new HashMap<>();
-
-        try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
-
-            HttpPatch httpPatch = new HttpPatch(url);
-            httpPatch.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
-            httpPatch.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
-            StringEntity stringEntity = new StringEntity(body, UTF8);
-            stringEntity.setContentType(APPLICATION_JSON);
-            httpPatch.setEntity(stringEntity);
-
-            try (CloseableHttpResponse response = httpClient.execute(httpPatch)) {
-
-                result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
-//                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
-
-                return result;
-            }
-        } catch (Exception e) {
-            result.put(STATUS_CODE, EMPTY);
-            result.put(RETURN_RESULT, e.getMessage());
-            result.put(EXCEPTION, e.toString());
-
-            return result;
-        }
-    }
-
-    public static Map<String, String> httpPatch(AzureActiveDirectoryCommonInputs commonInputs, String url, String body) {
-
-        Map<String, String> result = new HashMap<>();
-        result.put(STATUS_CODE, EMPTY);
-        result.put(RETURN_RESULT, EMPTY);
 
         try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
 

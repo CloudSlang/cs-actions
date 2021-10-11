@@ -44,6 +44,7 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.ACCOUNT_ENABLED;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.BODY;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PASSWORD;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_HOST;
