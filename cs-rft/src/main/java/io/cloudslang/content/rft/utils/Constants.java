@@ -19,7 +19,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Constants {
+
+    //operation name
+    public static final String SFTP_COMMAND = "SFTP Command";
+    public static final String SFTP_DELETE_FILE = "SFTP Delete File";
+    public static final String SFTP_DELETE_FILE_DESCRIPTION = "Deletes a file remotely using Secure FTP (SFTP)";
+    public static final String SFTP_CREATE_DIRECTORY = "SFTP Create Directory";
+    public static final String SFTP_CREATE_DIRECTORY_DESCRIPTION = "Creates a directory remotely using Secure FTP (SFTP).";
+    public static final String SFTP_DELETE_DIRECTORY = "SFTP Delete Directory";
+    public static final String SFTP_DELETE_DIRECTORY_DESCRIPTION = "Deletes a directory remotely using Secure FTP (SFTP).";
+    public static final String SFTP_RENAME = "SFTP Rename";
+    public static final String SFTP_RENAME_DESCRIPTION = "Renames a file or directory remotely using Secure FTP (SFTP).";
+
     public static final String EMPTY_STRING = "";
+    public static final String BACKSLASH = "/";
     public static final String NO_ACK_RECEIVED = "No ack received";
     public static final String SSH_SESSIONS_DEFAULT_ID = "sshSessions:default-id";
 
@@ -52,6 +65,14 @@ public class Constants {
     public static final String FILES = "files";
     public static final String FOLDERS = "folders";
 
+    public static final String CHMOD = "chmod";
+    public static final String CHGRP = "chgrp";
+    public static final String CHOWN = "chown";
+    public static final String RENAME = "rename";
+    public static final String SFTP_COMMON_INPUTS = "sfptCommonInputs";
+    public static final String FAILURE = "failure";
+
+
     public static final String SUCCESS_RESULT = "The file transfer was successfully completed!";
 
     public static final String EXCEPTION_NULL_EMPTY = "The %s input value can't be null or empty.";
@@ -74,4 +95,7 @@ public class Constants {
     public static final String EXCEPTION_INVALID_NEGATIVE_NUMBER = "%s for %s input should not be a negative number.";
     public static final String EXCEPTION_INVALID_COPY_ACTION= "%s is not a valid value for the input copy_action, valid values for are: to, from.";
     public static final String EXCEPTION_EXECUTION_TIMED_OUT = "Operation timed out.";
+    public static final String EXCEPTION_EXISTING_DIRECTORY = "Failed to create directory.  Directory may already exist.";
+    public static final String EXCEPTION_DIRECTORY_DELETE = "Failed to delete directory.  Directory may not be empty.";
+    public static final String EXCEPTION_REMOTE_PATH_FILE = "The %s and %s inputs can't be both empty. A value must be provided for at least one.";
 }

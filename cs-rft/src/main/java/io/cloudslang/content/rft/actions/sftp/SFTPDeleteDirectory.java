@@ -22,7 +22,7 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.sftp.SFTPCommonInputs;
 import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
-import io.cloudslang.content.rft.entities.sftp.SFTPDownloadFileInputs;
+import io.cloudslang.content.rft.entities.sftp.SFTPDeleteDirectoryInputs;
 import io.cloudslang.content.rft.services.SFTPService;
 import io.cloudslang.content.rft.utils.SFTPOperation;
 import io.cloudslang.content.utils.StringUtilities;
@@ -38,28 +38,27 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
-import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.RETURN_RESULT_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.RETURN_RESULT_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteDirectoryDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
-import static io.cloudslang.content.rft.utils.Descriptions.SFTPDownloadFileDescriptions.LOCAL_LOCATION_DESC;
-import static io.cloudslang.content.rft.utils.Descriptions.SFTPDownloadFileDescriptions.REMOTE_FILE_DESC;
-import static io.cloudslang.content.rft.utils.Descriptions.SFTPDownloadFileDescriptions.REMOTE_LOCATION_DESC;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
-import static io.cloudslang.content.rft.utils.InputsValidation.verifySFTPDownloadFileInputs;
+import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class SFTPDownloadFile {
-    @Action(name = "SFTP Download File",
+public class SFTPDeleteDirectory {
+    @Action(name = SFTP_DELETE_DIRECTORY,
+            description = SFTP_DELETE_DIRECTORY_DESCRIPTION,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = DELETE_DIR_SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DELETE_DIR_DESC)
             })
     public Map<String, String> execute(@Param(value = HOST, description = HOST_NAME, required = true) String host,
                                        @Param(value = PORT, description = PORT_DESC) String port,
@@ -70,9 +69,8 @@ public class SFTPDownloadFile {
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
                                        @Param(value = PRIVATE_KEY, description = PRIVATE_KEY_DESC) String privateKey,
-                                       @Param(value = REMOTE_FILE, description = REMOTE_FILE_DESC) String remoteFile,
-                                       @Param(value = REMOTE_LOCATION, description = REMOTE_LOCATION_DESC) String remotePath,
-                                       @Param(value = LOCAL_PATH, description = LOCAL_LOCATION_DESC, required = true) String localPath,
+                                       @Param(value = REMOTE_PATH, description = REMOTE_PATH_DELETE_DESC) String remotePath,
+                                       @Param(value = REMOTE_FILE, description = REMOTE_FILE_DELETE_DIRECTORY, required = true) String remoteFile,
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = CLOSE_SESSION, description = CLOSE_SESSION_DESC) String closeSession,
@@ -85,25 +83,21 @@ public class SFTPDownloadFile {
         password = defaultIfEmpty(password, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
         privateKey = defaultIfEmpty(privateKey, EMPTY);
-        remoteFile = defaultIfEmpty(remoteFile, EMPTY);
         remotePath = defaultIfEmpty(remotePath, EMPTY);
-        localPath = defaultIfEmpty(localPath, EMPTY);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
-        connectionTimeout = defaultIfEmpty(connectionTimeout, DEFAULT_CONNECTION_TIMEOUT);
-        executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
+        connectionTimeout = defaultIfEmpty(connectionTimeout, CONNECTION_TIMEOUT);
+        executionTimeout = defaultIfEmpty(executionTimeout, EXECUTION_TIMEOUT);
 
-        final List<String> exceptionMessages = verifySFTPDownloadFileInputs(host, port, username, password, proxyPort,
-                characterSet, closeSession, remoteFile, remotePath, localPath, connectionTimeout, executionTimeout);
-
+        final List<String> exceptionMessages = verifyInputsSFTP(remoteFile, remotePath, host, port, username, password,
+                proxyPort, characterSet, closeSession, connectionTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
-        SFTPDownloadFileInputs sftpDownloadFileInputs = SFTPDownloadFileInputs.builder()
-                .remoteFile(remoteFile)
+        SFTPDeleteDirectoryInputs sftpDeleteDirectoryInputs = SFTPDeleteDirectoryInputs.builder()
                 .remotePath(remotePath)
-                .localPath(localPath)
+                .remoteFile(remoteFile)
                 .sftpCommonInputs(SFTPCommonInputs.builder()
                         .host(host)
                         .port(port)
@@ -122,7 +116,6 @@ public class SFTPDownloadFile {
                         .build())
                 .build();
 
-        return new SFTPService().execute(sftpDownloadFileInputs, SFTPOperation.GET);
-
+        return new SFTPService().execute(sftpDeleteDirectoryInputs, SFTPOperation.DELETE_DIRECTORY);
     }
 }

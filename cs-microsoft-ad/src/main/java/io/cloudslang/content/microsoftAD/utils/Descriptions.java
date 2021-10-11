@@ -175,4 +175,34 @@ public class Descriptions {
         public static final String UPDATE_USER_RETURN_RESULT = "The user's properties were updated successfully!";
 
     }
+    public static class EnableUser {
+
+        //Descriptions
+        public static final String ENABLE_USER_DESC = "Enable a user from Active Directory.";
+        public static final String ENABLE_USER_NAME = "Enable User";
+
+        //Results
+        public static final String ENABLE_USER_FAILURE_DESC = "There was an error while trying to enable user.";
+        public static final String ENABLE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content " +
+                "response code. It does not return anything in the response body.";
+        public static final String ENABLE_USER_SUCCESS_RETURN_RESULT_DESC = "The user was successfully enabled.";
+
+
+    }
+
+    public static class DisableUser {
+
+        //Descriptions
+        public static final String DISABLE_USER_DESC = "Disable a user from Active Directory.";
+        public static final String DISABLE_USER_NAME = "Disable User";
+
+        //Results
+        public static final String DISABLE_USER_FAILURE_DESC = "There was an error while trying to disable user.";
+        public static final String DISABLE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content " +
+                "response code. It does not return anything in the response body.";
+        public static final String DISABLE_USER_SUCCESS_RETURN_RESULT_DESC = "The user was successfully disabled.";
+
+
+    }
+
 }

@@ -26,10 +26,8 @@ import io.cloudslang.content.rft.entities.sftp.SFTPUploadFileInputs;
 import io.cloudslang.content.rft.services.SFTPService;
 import io.cloudslang.content.rft.utils.SFTPOperation;
 import io.cloudslang.content.utils.StringUtilities;
-
 import java.util.List;
 import java.util.Map;
-
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
@@ -37,11 +35,15 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
+import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.RETURN_RESULT_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPUploadFileDescriptions.LOCAL_FILE_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPUploadFileDescriptions.LOCAL_LOCATION_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPUploadFileDescriptions.REMOTE_LOCATION_DESC;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
-import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;
+import static io.cloudslang.content.rft.utils.InputsValidation.verifySFTPUploadFileInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -67,8 +69,9 @@ public class SFTPUploadFile {
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
                                        @Param(value = PRIVATE_KEY, description = PRIVATE_KEY_DESC) String privateKey,
-                                       @Param(value = REMOTE_LOCATION, description = REMOTE_LOCATION_DESC, required = true) String remoteLocation,
-                                       @Param(value = LOCAL_FILE, description = LOCAL_FILE_DESC, required = true) String localFile,
+                                       @Param(value = REMOTE_PATH, description = REMOTE_LOCATION_DESC) String remotePath,
+                                       @Param(value = LOCAL_PATH, description = LOCAL_LOCATION_DESC) String localPath,
+                                       @Param(value = LOCAL_FILE, description = LOCAL_FILE_DESC) String localFile,
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = CLOSE_SESSION, description = CLOSE_SESSION_DESC) String closeSession,
@@ -81,21 +84,24 @@ public class SFTPUploadFile {
         password = defaultIfEmpty(password, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
         privateKey = defaultIfEmpty(privateKey, EMPTY);
-        remoteLocation = defaultIfEmpty(remoteLocation, EMPTY);
+        remotePath = defaultIfEmpty(remotePath, EMPTY);
+        localPath = defaultIfEmpty(localPath, EMPTY);
         localFile = defaultIfEmpty(localFile, EMPTY);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
         connectionTimeout = defaultIfEmpty(connectionTimeout, DEFAULT_CONNECTION_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
 
-        final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, proxyPort,
-                characterSet, closeSession, SFTPOperation.PUT, remoteLocation, localFile, connectionTimeout, executionTimeout);
+        final List<String> exceptionMessages = verifySFTPUploadFileInputs(host, port, username, password, proxyPort,
+                characterSet, closeSession, localPath, localFile, connectionTimeout, executionTimeout);
+
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
         SFTPUploadFileInputs sftpUploadFileInputs = SFTPUploadFileInputs.builder()
-                .remoteLocation(remoteLocation)
+                .remotePath(remotePath)
+                .localPath(localPath)
                 .localFile(localFile)
                 .sftpCommonInputs(SFTPCommonInputs.builder()
                         .host(host)
@@ -116,6 +122,5 @@ public class SFTPUploadFile {
                 .build();
 
         return new SFTPService().execute(sftpUploadFileInputs, SFTPOperation.PUT);
-
     }
 }

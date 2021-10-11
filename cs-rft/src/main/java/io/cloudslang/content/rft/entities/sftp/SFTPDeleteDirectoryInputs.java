@@ -16,29 +16,30 @@ package io.cloudslang.content.rft.entities.sftp;
 
 import org.jetbrains.annotations.NotNull;
 
+import static io.cloudslang.content.rft.utils.Constants.SFTP_COMMON_INPUTS;
+import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.REMOTE_PATH;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class SFTPUploadFileInputs implements IHasFTPOperation {
+public class SFTPDeleteDirectoryInputs implements IHasFTPOperation {
     private final SFTPCommonInputs sftpCommonInputs;
     private final String remotePath;
-    private final String localPath;
-    private final String localFile;
+    private final String remoteFile;
 
-    public SFTPUploadFileInputs(SFTPCommonInputs sftpCommonInputs, String remotePath, String localPath, String localFile) {
+    @java.beans.ConstructorProperties({SFTP_COMMON_INPUTS, REMOTE_PATH})
+    public SFTPDeleteDirectoryInputs(SFTPCommonInputs sftpCommonInputs, String remotePath, String remoteFile) {
         this.sftpCommonInputs = sftpCommonInputs;
         this.remotePath = remotePath;
-        this.localPath = localPath;
-        this.localFile = localFile;
+        this.remoteFile = remoteFile;
     }
 
     @NotNull
-    public static SFTPPutInputsBuilder builder() {
-        return new SFTPPutInputsBuilder();
+    public static SFTPDeleteDirectoryInputsBuilder builder() {
+        return new SFTPDeleteDirectoryInputsBuilder();
     }
 
     @NotNull
     public SFTPCommonInputs getSftpCommonInputs() {
-        return sftpCommonInputs;
+        return this.sftpCommonInputs;
     }
 
     @NotNull
@@ -47,51 +48,40 @@ public class SFTPUploadFileInputs implements IHasFTPOperation {
     }
 
     @NotNull
-    public String getLocalPath() {
-        return localPath;
+    public String getRemoteFile() {
+        return remoteFile;
     }
 
-    @NotNull
-    public String getLocalFile() {
-        return localFile;
-    }
-
-    public static class SFTPPutInputsBuilder {
+    public static class SFTPDeleteDirectoryInputsBuilder {
         private SFTPCommonInputs sftpCommonInputs;
         private String remotePath = EMPTY;
-        private String localPath = EMPTY;
-        private String localFile = EMPTY;
+        private String remoteFile = EMPTY;
 
-        SFTPPutInputsBuilder() {
+        SFTPDeleteDirectoryInputsBuilder() {
         }
 
         @NotNull
-        public SFTPUploadFileInputs.SFTPPutInputsBuilder sftpCommonInputs(@NotNull final SFTPCommonInputs sftpCommonInputs) {
+        public SFTPDeleteDirectoryInputs.SFTPDeleteDirectoryInputsBuilder sftpCommonInputs(@NotNull final SFTPCommonInputs sftpCommonInputs) {
             this.sftpCommonInputs = sftpCommonInputs;
             return this;
         }
 
         @NotNull
-        public SFTPUploadFileInputs.SFTPPutInputsBuilder remotePath(@NotNull final String remotePath) {
+        public SFTPDeleteDirectoryInputs.SFTPDeleteDirectoryInputsBuilder remotePath(@NotNull final String remotePath) {
             this.remotePath = remotePath;
             return this;
         }
 
-        @NotNull
-        public SFTPUploadFileInputs.SFTPPutInputsBuilder localPath(@NotNull final String localPath) {
-            this.localPath = localPath;
+
+        public SFTPDeleteDirectoryInputs.SFTPDeleteDirectoryInputsBuilder remoteFile(@NotNull final String remoteFile) {
+            this.remoteFile = remoteFile;
             return this;
         }
 
-        @NotNull
-        public SFTPUploadFileInputs.SFTPPutInputsBuilder localFile(@NotNull final String localFile) {
-            this.localFile = localFile;
-            return this;
-        }
 
-        public SFTPUploadFileInputs build() {
-            return new SFTPUploadFileInputs(sftpCommonInputs, remotePath, localPath, localFile);
-        }
+        public SFTPDeleteDirectoryInputs build(){
+            return new SFTPDeleteDirectoryInputs(sftpCommonInputs, remotePath, remoteFile);
 
+        }
     }
 }
