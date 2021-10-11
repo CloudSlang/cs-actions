@@ -43,6 +43,7 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizat
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.UpdateUser.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.ACCOUNT_ENABLED;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.BODY;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PASSWORD;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_HOST;
