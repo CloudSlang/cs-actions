@@ -176,7 +176,13 @@ public class Descriptions {
 
     public static class SFTPDeleteFileDescriptions {
 
-        public static final String REMOTE_PATH_DELETE_FILE = "The path to the remote file that will be deleted.";
+        public static final String REMOTE_PATH_DELETE_FILE_DESC = "The path to the remote file that will be deleted." +
+                "Examples: C:/Users/Administrator, root";
+        public static final String REMOTE_FILE_DELETE_DESC = "The name and extension of the file that will be deleted." +
+                " Note: If only the file name and extension of the file to be deleted is provided, without any path to " +
+                "be populated in the remote_path input, the file with the provided information will be deleted from " +
+                "the ‘ChrootDirectory’ of the SFTP server, if any location is set." +
+                "Examples: file.txt";
         public static final String SUCCESS_DESC = "File was deleted successfully.";
         public static final String FAILURE_DESC = "The file could not be deleted.";
 
@@ -184,9 +190,11 @@ public class Descriptions {
 
     public static class SFTPCreateDirectoryDescriptions {
 
-        public static final String REMOTE_PATH_CREATE_DESC = "The path where the remote directory will be created." +
-                "Examples: C:/Users/Administrator, root/test";
-        public static final String REMOTE_FILE_CREATE_DIR = "The name of the directory that will be created.";
+        public static final String REMOTE_PATH_CREATE_DESC = "You can provide either the full path to the folder to be " +
+                "created or you can provide the direct name of the folder. Note: if only the name of the folder is" +
+                " provided, the new folder will be created in the ‘ChrootDirectory’ of the SFTP server, if any location" +
+                " is set." +
+                "Examples: C:/Users/Administrator/newFolder, root/test/newFolder , newFolder";
         public static final String CREATE_DIR_SUCCESS_DESC = "Directory was created successfully.";
         public static final String SUCCESS_DESC = "The directory was created successfully.";
         public static final String FAILURE_DESC = "The directory could not be created.";
@@ -195,8 +203,11 @@ public class Descriptions {
 
     public static class SFTPDeleteDirectoryDescriptions {
 
-        public static final String REMOTE_PATH_DELETE_DESC = "The path to the remote directory that will be deleted.";
-        public static final String REMOTE_FILE_DELETE_DIRECTORY = "The name of the directory that will be deleted.";
+        public static final String REMOTE_PATH_DELETE_DESC = "You can provide either the full path to the folder to be " +
+                "deleted or you can provide the direct name of the folder. Note: if only the name of the folder is" +
+                " provided, the folder with the provided name will be deleted from the ‘ChrootDirectory’ of the SFTP " +
+                "server, if any location is set." +
+                "Examples: C:/Users/Administrator/folder, root/test/folder , folderName";
         public static final String DELETE_DIR_SUCCESS_DESC = "Directory was deleted successfully.";
         public static final String FAILURE_DELETE_DIR_DESC = "The directory could not be deleted.";
 

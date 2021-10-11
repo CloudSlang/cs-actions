@@ -22,7 +22,7 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.sftp.SFTPCommonInputs;
 import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
-import io.cloudslang.content.rft.entities.sftp.SFTPCreateDirectoryInputs;
+import io.cloudslang.content.rft.entities.sftp.SFTPGeneralDirectoryInputs;
 import io.cloudslang.content.rft.services.SFTPService;
 import io.cloudslang.content.rft.utils.SFTPOperation;
 import io.cloudslang.content.utils.StringUtilities;
@@ -49,7 +49,7 @@ import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.EXECUTION_TIMEOUT;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.CLOSE_SESSION;
-import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;
+import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsFolders;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -75,8 +75,7 @@ public class SFTPCreateDirectory {
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
                                        @Param(value = PRIVATE_KEY, description = PRIVATE_KEY_DESC) String privateKey,
-                                       @Param(value = REMOTE_PATH, description = REMOTE_PATH_CREATE_DESC) String remotePath,
-                                       @Param(value = REMOTE_FILE, description = REMOTE_FILE_CREATE_DIR, required = true) String remoteFile,
+                                       @Param(value = REMOTE_PATH, description = REMOTE_PATH_CREATE_DESC, required = true) String remotePath,
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = CLOSE_SESSION, description = CLOSE_SESSION_DESC) String closeSession,
@@ -95,15 +94,14 @@ public class SFTPCreateDirectory {
         connectionTimeout = defaultIfEmpty(connectionTimeout, CONNECTION_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, EXECUTION_TIMEOUT);
 
-        final List<String> exceptionMessages = verifyInputsSFTP(remoteFile, remotePath, host, port, username, password,
+        final List<String> exceptionMessages = verifyInputsFolders(remotePath, host, port, username, password,
                 proxyPort, characterSet, closeSession, connectionTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
-        SFTPCreateDirectoryInputs sftpCreateDirectoryInputs = SFTPCreateDirectoryInputs.builder()
+        SFTPGeneralDirectoryInputs sftpGeneralDirectoryInputs = SFTPGeneralDirectoryInputs.builder()
                 .remotePath(remotePath)
-                .remoteFile(remoteFile)
                 .sftpCommonInputs(SFTPCommonInputs.builder()
                         .host(host)
                         .port(port)
@@ -122,6 +120,6 @@ public class SFTPCreateDirectory {
                         .build())
                 .build();
 
-        return new SFTPService().execute(sftpCreateDirectoryInputs, SFTPOperation.CREATE_DIRECTORY);
+        return new SFTPService().execute(sftpGeneralDirectoryInputs, SFTPOperation.CREATE_DIRECTORY);
     }
 }
