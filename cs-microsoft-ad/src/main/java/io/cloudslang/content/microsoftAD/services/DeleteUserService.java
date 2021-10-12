@@ -14,7 +14,7 @@
  */
 package io.cloudslang.content.microsoftAD.services;
 
-import io.cloudslang.content.microsoftAD.entities.DeleteUserInputs;
+import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -25,21 +25,21 @@ import static io.cloudslang.content.microsoftAD.utils.Constants.USERS_URL;
 
 public class DeleteUserService {
 
-    public static Map<String, String> deleteUser(@NotNull final DeleteUserInputs deleteUserInputs) throws Exception {
+    public static Map<String, String> deleteUser(@NotNull final AzureActiveDirectoryCommonInputs deleteUserInputs) throws Exception {
 
-        return httpDelete(deleteUserInputs.getCommonInputs(), getDeleteUserUrl(deleteUserInputs));
+        return httpDelete(deleteUserInputs, getDeleteUserUrl(deleteUserInputs));
 
     }
 
 
     @NotNull
-    public static String getDeleteUserUrl(@NotNull final DeleteUserInputs deleteUserInputs) {
+    public static String getDeleteUserUrl(@NotNull final AzureActiveDirectoryCommonInputs deleteUserInputs) {
         String finalUrl = USERS_URL;
 
-        if (!deleteUserInputs.getCommonInputs().getUserPrincipalName().isEmpty())
-            finalUrl = finalUrl + deleteUserInputs.getCommonInputs().getUserPrincipalName();
+        if (!deleteUserInputs.getUserPrincipalName().isEmpty())
+            finalUrl = finalUrl + deleteUserInputs.getUserPrincipalName();
         else
-            finalUrl = finalUrl + deleteUserInputs.getCommonInputs().getUserId();
+            finalUrl = finalUrl + deleteUserInputs.getUserId();
 
         return finalUrl;
     }

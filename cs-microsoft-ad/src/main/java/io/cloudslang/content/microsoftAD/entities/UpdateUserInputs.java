@@ -21,16 +21,13 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class UpdateUserInputs {
 
     private final String updatedUserPrincipalName;
-    private final CreateUserInputs createUserCommonInputs;
-    private final AzureActiveDirectoryCommonInputs commonInputs;
+    private final CommonUserInputs commonUserInputs;
 
-    @java.beans.ConstructorProperties({"updatedUserPrincipalName", "commonInputs", "createUserCommonInputs"})
+    @java.beans.ConstructorProperties({"updatedUserPrincipalName", "commonUserInputs"})
 
-    public UpdateUserInputs(String updatedUserPrincipalName, CreateUserInputs createUserCommonInputs,
-                            AzureActiveDirectoryCommonInputs commonInputs) {
+    public UpdateUserInputs(String updatedUserPrincipalName, CommonUserInputs commonUserInputs) {
         this.updatedUserPrincipalName = updatedUserPrincipalName;
-        this.createUserCommonInputs = createUserCommonInputs;
-        this.commonInputs = commonInputs;
+        this.commonUserInputs = commonUserInputs;
     }
 
     @NotNull
@@ -44,19 +41,13 @@ public class UpdateUserInputs {
     }
 
     @NotNull
-    public CreateUserInputs getCreateUserCommonInputs() {
-        return createUserCommonInputs;
-    }
-
-    @NotNull
-    public AzureActiveDirectoryCommonInputs getCommonInputs() {
-        return commonInputs;
+    public CommonUserInputs getUserCommonInputs() {
+        return commonUserInputs;
     }
 
     public static class UpdateUserInputsBuilder {
         private String updatedUserPrincipalName = EMPTY;
-        private CreateUserInputs createUserCommonInputs;
-        private AzureActiveDirectoryCommonInputs commonInputs;
+        private CommonUserInputs commonUserInputs;
 
         UpdateUserInputsBuilder() {
         }
@@ -68,20 +59,13 @@ public class UpdateUserInputs {
         }
 
         @NotNull
-        public UpdateUserInputs.UpdateUserInputsBuilder createUserCommonInputs(@NotNull final CreateUserInputs createUserCommonInputs) {
-            this.createUserCommonInputs = createUserCommonInputs;
-            return this;
-        }
-
-
-        @NotNull
-        public UpdateUserInputs.UpdateUserInputsBuilder commonInputs(@NotNull final AzureActiveDirectoryCommonInputs commonInputs) {
-            this.commonInputs = commonInputs;
+        public UpdateUserInputs.UpdateUserInputsBuilder commonUserInputs(@NotNull final CommonUserInputs commonUserInputs) {
+            this.commonUserInputs = commonUserInputs;
             return this;
         }
 
         public UpdateUserInputs build() {
-            return new UpdateUserInputs(updatedUserPrincipalName, createUserCommonInputs, commonInputs);
+            return new UpdateUserInputs(updatedUserPrincipalName, commonUserInputs);
         }
     }
 }

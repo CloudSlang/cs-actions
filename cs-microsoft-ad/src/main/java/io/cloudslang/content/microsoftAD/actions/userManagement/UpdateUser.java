@@ -20,7 +20,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
-import io.cloudslang.content.microsoftAD.entities.CreateUserInputs;
+import io.cloudslang.content.microsoftAD.entities.CommonUserInputs;
 import io.cloudslang.content.microsoftAD.entities.UpdateUserInputs;
 import io.cloudslang.content.microsoftAD.utils.Descriptions;
 import io.cloudslang.content.utils.StringUtilities;
@@ -129,7 +129,7 @@ public class UpdateUser {
         try {
             Map<String, String> result = updateUser(UpdateUserInputs.builder()
                     .updatedUserPrincipalName(updatedUserPrincipalName)
-                    .createUserCommonInputs(CreateUserInputs.builder()
+                    .commonUserInputs(CommonUserInputs.builder()
                             .accountEnabled(accountEnabled)
                             .displayName(displayName)
                             .onPremisesImmutableId(onPremisesImmutableId)
@@ -137,24 +137,24 @@ public class UpdateUser {
                             .forceChangePassword(forceChangePassword)
                             .password(password)
                             .body(body)
-                            .build())
-                    .commonInputs(AzureActiveDirectoryCommonInputs.builder()
-                            .authToken(authToken)
-                            .userId(userId)
-                            .userPrincipalName(userPrincipalName)
-                            .proxyHost(proxyHost)
-                            .proxyPort(proxyPort)
-                            .proxyUsername(proxyUsername)
-                            .proxyPassword(proxyPassword)
-                            .connectionsMaxTotal(connectionsMaxTotal)
-                            .connectionsMaxPerRoute(connectionsMaxPerRoute)
-                            .keepAlive(keepAlive)
-                            .connectTimeout(connectTimeout)
-                            .socketTimeout(socketTimeout)
-                            .trustAllRoots(trustAllRoots)
-                            .x509HostnameVerifier(x509HostnameVerifier)
-                            .trustKeystore(trustKeystore)
-                            .trustPassword(trustPassword)
+                            .commonInputs(AzureActiveDirectoryCommonInputs.builder()
+                                    .authToken(authToken)
+                                    .userId(userId)
+                                    .userPrincipalName(userPrincipalName)
+                                    .proxyHost(proxyHost)
+                                    .proxyPort(proxyPort)
+                                    .proxyUsername(proxyUsername)
+                                    .proxyPassword(proxyPassword)
+                                    .connectionsMaxTotal(connectionsMaxTotal)
+                                    .connectionsMaxPerRoute(connectionsMaxPerRoute)
+                                    .keepAlive(keepAlive)
+                                    .connectTimeout(connectTimeout)
+                                    .socketTimeout(socketTimeout)
+                                    .trustAllRoots(trustAllRoots)
+                                    .x509HostnameVerifier(x509HostnameVerifier)
+                                    .trustKeystore(trustKeystore)
+                                    .trustPassword(trustPassword)
+                                    .build())
                             .build())
                     .build());
 

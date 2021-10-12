@@ -30,37 +30,37 @@ public class UpdateUserService {
     public static Map<String, String> updateUser(UpdateUserInputs updateUserInputs) {
         String UPDATE_USERS_URL;
 
-        if (!(updateUserInputs.getCommonInputs().getUserId().isEmpty()))
-            UPDATE_USERS_URL = USERS_URL + FORWARD_SLASH + updateUserInputs.getCommonInputs().getUserId().trim();
+        if (!(updateUserInputs.getUserCommonInputs().getCommonInputs().getUserId().isEmpty()))
+            UPDATE_USERS_URL = USERS_URL + FORWARD_SLASH + updateUserInputs.getUserCommonInputs().getCommonInputs().getUserId().trim();
         else
-            UPDATE_USERS_URL = USERS_URL + FORWARD_SLASH + updateUserInputs.getCommonInputs().getUserPrincipalName().trim();
+            UPDATE_USERS_URL = USERS_URL + FORWARD_SLASH + updateUserInputs.getUserCommonInputs().getCommonInputs().getUserPrincipalName().trim();
 
-        if (!updateUserInputs.getCreateUserCommonInputs().getBody().equals(EMPTY))
-            return httpPatch(updateUserInputs.getCommonInputs(), UPDATE_USERS_URL, updateUserInputs.getCreateUserCommonInputs().getBody());
+        if (!updateUserInputs.getUserCommonInputs().getBody().equals(EMPTY))
+            return httpPatch(updateUserInputs.getUserCommonInputs().getCommonInputs(), UPDATE_USERS_URL, updateUserInputs.getUserCommonInputs().getBody());
 
         JsonObject body = new JsonObject();
-        if (!updateUserInputs.getCreateUserCommonInputs().getAccountEnabled().isEmpty())
-        body.addProperty(ACCOUNT_ENABLED, updateUserInputs.getCreateUserCommonInputs().getAccountEnabled());
-        if (!updateUserInputs.getCreateUserCommonInputs().getDisplayName().isEmpty())
-            body.addProperty(DISPLAY_NAME, updateUserInputs.getCreateUserCommonInputs().getDisplayName());
-        if (!updateUserInputs.getCreateUserCommonInputs().getOnPremisesImmutableId().isEmpty())
-            body.addProperty(ON_PREMISES_IMMUTABLE_ID, updateUserInputs.getCreateUserCommonInputs().getOnPremisesImmutableId());
-        if (!updateUserInputs.getCreateUserCommonInputs().getMailNickname().isEmpty())
-        body.addProperty(MAIL_NICKNAME, updateUserInputs.getCreateUserCommonInputs().getMailNickname());
+        if (!updateUserInputs.getUserCommonInputs().getAccountEnabled().isEmpty())
+        body.addProperty(ACCOUNT_ENABLED, updateUserInputs.getUserCommonInputs().getAccountEnabled());
+        if (!updateUserInputs.getUserCommonInputs().getDisplayName().isEmpty())
+            body.addProperty(DISPLAY_NAME, updateUserInputs.getUserCommonInputs().getDisplayName());
+        if (!updateUserInputs.getUserCommonInputs().getOnPremisesImmutableId().isEmpty())
+            body.addProperty(ON_PREMISES_IMMUTABLE_ID, updateUserInputs.getUserCommonInputs().getOnPremisesImmutableId());
+        if (!updateUserInputs.getUserCommonInputs().getMailNickname().isEmpty())
+        body.addProperty(MAIL_NICKNAME, updateUserInputs.getUserCommonInputs().getMailNickname());
         if (!updateUserInputs.getUpdatedUserPrincipalName().isEmpty())
         body.addProperty(USER_PRINCIPAL_NAME, updateUserInputs.getUpdatedUserPrincipalName());
 
-        if (!updateUserInputs.getCreateUserCommonInputs().getPassword().isEmpty()) {
+        if (!updateUserInputs.getUserCommonInputs().getPassword().isEmpty()) {
             JsonObject passwordProfile = new JsonObject();
 
-            if (!updateUserInputs.getCreateUserCommonInputs().getForceChangePassword().isEmpty())
-                passwordProfile.addProperty(FORCE_CHANGE_PASSWORD, updateUserInputs.getCreateUserCommonInputs().getForceChangePassword());
+            if (!updateUserInputs.getUserCommonInputs().getForceChangePassword().isEmpty())
+                passwordProfile.addProperty(FORCE_CHANGE_PASSWORD, updateUserInputs.getUserCommonInputs().getForceChangePassword());
             else
                 passwordProfile.addProperty(FORCE_CHANGE_PASSWORD, Boolean.FALSE);
 
-            passwordProfile.addProperty(PASSWORD, updateUserInputs.getCreateUserCommonInputs().getPassword());
+            passwordProfile.addProperty(PASSWORD, updateUserInputs.getUserCommonInputs().getPassword());
             body.add(PASSWORD_PROFILE, passwordProfile);
         }
-        return httpPatch(updateUserInputs.getCommonInputs(), UPDATE_USERS_URL, body.toString());
+        return httpPatch(updateUserInputs.getUserCommonInputs().getCommonInputs(), UPDATE_USERS_URL, body.toString());
     }
 }

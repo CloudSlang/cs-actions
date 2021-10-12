@@ -22,7 +22,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
-import io.cloudslang.content.microsoftAD.entities.CreateUserInputs;
+import io.cloudslang.content.microsoftAD.entities.CommonUserInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -142,7 +142,7 @@ public class CreateUser {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
         try {
-            Map<String, String> result = createUser(CreateUserInputs.builder()
+            Map<String, String> result = createUser(CommonUserInputs.builder()
                     .accountEnabled(accountEnabled)
                     .displayName(displayName)
                     .onPremisesImmutableId(onPremisesImmutableId)
