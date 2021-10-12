@@ -14,6 +14,11 @@
  */
 package io.cloudslang.content.microsoftAD.services;
 
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.cloudslang.content.microsoftAD.entities.AssignUserLicenseInputs;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import org.apache.commons.lang3.StringUtils;
@@ -28,13 +33,15 @@ public class AssignUserLicenseService {
     public static Map<String, String> assignUserLicense(AssignUserLicenseInputs licenseInputs) {
 
         AzureActiveDirectoryCommonInputs commonInputs = licenseInputs.getCommonInputs();
-       String body = "{\n  \""+ ADD_LICENSES + "\": [\n" +
-                licenseInputs.getBody() +
-               "  ],\n" + "  \""+
-               REMOVE_LICENSES+"\": []\n }";
+        JsonObject body = new JsonObject();
 
+        Gson gson = new Gson();
+        JsonParser jsonParser = new JsonParser();
+        JsonArray jsonArray = (JsonArray) jsonParser.parse(licenseInputs.getBody());
+        body.add(ADD_LICENSES, jsonArray);
+        body.add(REMOVE_LICENSES, new JsonArray());
 
-        return httpPost(commonInputs, getUserUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId()), body);
+        return httpPost(commonInputs, getUserUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId()), body.toString());
 
     }
 
