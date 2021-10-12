@@ -61,6 +61,8 @@ public final class Constants {
     public static final String ID = "id";
     public static final String ERROR = "error";
     public static final String MESSAGE = "message";
+    public static final String ADD_LICENSES = "addLicenses";
+    public static final String REMOVE_LICENSES = "removeLicenses";
 
     public static final String ATTACHMENTS = "/attachments";
     public static final String ATTACHMENTS_PATH = "/attachments/";
