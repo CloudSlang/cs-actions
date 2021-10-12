@@ -60,6 +60,8 @@ public final class Constants {
     public static final String ID = "id";
     public static final String ERROR = "error";
     public static final String MESSAGE = "message";
+    public static final String ADD_LICENSES = "addLicenses";
+    public static final String REMOVE_LICENSES = "removeLicenses";
 
     public static final String ATTACHMENTS = "/attachments";
     public static final String ATTACHMENTS_PATH = "/attachments/";
@@ -79,4 +81,5 @@ public final class Constants {
 
     //API URLs
     public static final String USERS_URL = "https://graph.microsoft.com/v1.0/users";
+    public static final String ASSIGN_LICENSE_URL = "https://graph.microsoft.com/v1.0/users/$usr/assignLicense";
 }

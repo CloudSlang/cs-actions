@@ -44,8 +44,7 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.AssignUserLic
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_ID;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_PRINCIPAL_NAME;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_PRINCIPAL_NAME;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
