@@ -20,7 +20,6 @@ import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInpu
 import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -192,7 +191,7 @@ public class HttpCommons {
             HttpPost httpPost = new HttpPost(url);
             httpPost.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
             httpPost.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
-            StringEntity stringEntity = new StringEntity(body,UTF8);
+            StringEntity stringEntity = new StringEntity(body, UTF8);
             stringEntity.setContentType(APPLICATION_JSON);
             httpPost.setEntity(stringEntity);
 
@@ -262,8 +261,6 @@ public class HttpCommons {
     public static Map<String, String> httpPatch(AzureActiveDirectoryCommonInputs commonInputs, String url, String body) {
 
         Map<String, String> result = new HashMap<>();
-        result.put(STATUS_CODE, EMPTY);
-        result.put(RETURN_RESULT, EMPTY);
 
         try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
 

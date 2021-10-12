@@ -20,22 +20,21 @@ public final class Constants {
     public static final String NATIVE = "native";
     public static final String NEW_LINE = "\n";
     public static final String DEFAULT_LOGIN_TYPE = "Native";
-    public static final String DEFAULT_RESOURCE = "https://graph.microsoft.com";
     public static final String DEFAULT_SCOPE = "https://graph.microsoft.com/.default";
-    public static final String DEFAULT_LOGIN_AUTHORITY_V2 = "https://login.microsoftonline.com/itomcontent.onmicrosoft.com/oauth2/v2.0/token";
     public static final String DEFAULT_PROXY_PORT = "8080";
     public static final String BOOLEAN_TRUE = "true";
     public static final String BOOLEAN_FALSE = "false";
     public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
+    public static final String EXCEPTION_USER_IDENTIFIER_NOT_SPEC = "Either %s or %s must be specified in order to update " +
+            "the user's properties.";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port.";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
-    public static final String CHARSET = "charset";
-    public static final String SEMICOLON = ";";
+    public static final String FORWARD_SLASH = "/";
     public static final String EQUALS = "=";
     public static final String CHANGEIT = "changeit";
     public static final String ZERO = "0";
@@ -79,8 +78,5 @@ public final class Constants {
     public static final String TLSV13 = "tlsv1.3";
 
     //API URLs
-    public static final String CREATE_USER_URL = "https://graph.microsoft.com/v1.0/users";
-    public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
-    public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
-    public static final String UPDATE_USER_URL = "https://graph.microsoft.com/v1.0/users/";
+    public static final String USERS_URL = "https://graph.microsoft.com/v1.0/users";
 }
