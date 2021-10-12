@@ -258,10 +258,9 @@ public final class InputsValidation {
     public static List<String> addVerifyBoolean(@NotNull List<String> exceptions,
                                                 @Nullable final String input,
                                                 @NotNull final String inputName) {
-        if (isEmpty(input)) {
-            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
-        } else if (!isValid(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_BOOLEAN, input, inputName));
+        if (!(isEmpty(input))) {
+            if (!isValid(input))
+                exceptions.add(String.format(EXCEPTION_INVALID_BOOLEAN, input, inputName));
         }
         return exceptions;
     }
