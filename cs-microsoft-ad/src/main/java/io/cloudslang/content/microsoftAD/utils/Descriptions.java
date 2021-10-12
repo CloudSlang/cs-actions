@@ -220,17 +220,17 @@ public class Descriptions {
     public static class AssignUserLicense {
 
         //Descriptions
-        public static final String ASSIGN_USER_LICENSE_DESC = "Disable a user from Active Directory.";
-        public static final String ASSIGN_USER_LICENSE_NAME = "Disable User";
+        public static final String ASSIGN_USER_LICENSE_DESC = "Assign user license";
+        public static final String ASSIGN_USER_LICENSE_NAME = "Assign user license";
 
         //Inputs
         public static final String ASSIGNED_LICENSES = "Assigned licenses";
         public static final String ASSIGNED_LICENSES_DESC = "A collection of assignedLicense objects that specify " +
                 "the licenses to add. You can disable plans associated with a license by setting the disabledPlans " +
-                "property on an assignedLicense object. [{\n" +
+                "property on an assignedLicense object. {\n" +
                 "      \"disabledPlans\": [ \"11b0131d-43c8-4bbb-b2c8-e80f9a50834a\" ],\n" +
                 "      \"skuId\": \"guid\"\n" +
-                "    }]";
+                "    }";
 
         //Results
         public static final String ASSIGN_USER_LICENSE_FAILURE_DESC = "There was an error while trying to assign license.";

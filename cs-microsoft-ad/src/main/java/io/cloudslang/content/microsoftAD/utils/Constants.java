@@ -81,5 +81,5 @@ public final class Constants {
 
     //API URLs
     public static final String USERS_URL = "https://graph.microsoft.com/v1.0/users";
-    public static final String ASSIGN_LICENSE_URL = "https://graph.microsoft.com/v1.0/users/$usr/assignLicense";
+    public static final String ASSIGN_LICENSE_URL = "/assignLicense";
 }

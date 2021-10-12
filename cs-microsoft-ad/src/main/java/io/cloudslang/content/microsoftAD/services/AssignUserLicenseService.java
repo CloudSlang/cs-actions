@@ -49,9 +49,9 @@ public class AssignUserLicenseService {
     private static String getUserUrl(String userPrincipalName, String userId) {
         String finalUrl;
         if (!StringUtils.isEmpty(userPrincipalName))
-            finalUrl = new String(ASSIGN_LICENSE_URL).replace("$usr",userPrincipalName);
+            finalUrl = USERS_URL + userPrincipalName + ASSIGN_LICENSE_URL;
         else
-            finalUrl = new String(ASSIGN_LICENSE_URL).replace("$usr",userId);
+            finalUrl = USERS_URL + userId + ASSIGN_LICENSE_URL;
         return finalUrl;
     }
 

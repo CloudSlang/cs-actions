@@ -69,7 +69,7 @@ public class AssignUserLicense {
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = Descriptions.Common.AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = USER_ID, description = USER_ID_DESC) String userId,
-                                       @Param(value = ASSIGNED_LICENSES, description = ASSIGNED_LICENSES_DESC) String assignedLicenses,
+                                       @Param(value = ASSIGNED_LICENSES, required = true, description = ASSIGNED_LICENSES_DESC) String assignedLicenses,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
