@@ -44,13 +44,17 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.ACCOUNT_ENABLED;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.BODY;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.PASSWORD;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CreateUser.*;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.ACCOUNT_ENABLED;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.BODY;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PASSWORD;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyCommonUserInputs;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyCreateUserInputs;
+import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.USER_ID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -104,7 +108,7 @@ public class CreateUser {
         onPremisesImmutableId = defaultIfEmpty(onPremisesImmutableId, EMPTY);
         mailNickname = defaultIfEmpty(mailNickname, EMPTY);
         userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
-        forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_TRUE);
+        forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_FALSE);
         password = defaultIfEmpty(password, EMPTY);
         body = defaultIfEmpty(body, EMPTY);
 
@@ -143,12 +147,12 @@ public class CreateUser {
                     .displayName(displayName)
                     .onPremisesImmutableId(onPremisesImmutableId)
                     .mailNickname(mailNickname)
-                    .userPrincipalName(userPrincipalName)
                     .forceChangePassword(forceChangePassword)
                     .password(password)
                     .body(body)
                     .commonInputs(AzureActiveDirectoryCommonInputs.builder()
                             .authToken(authToken)
+                            .userPrincipalName(userPrincipalName)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
                             .proxyUsername(proxyUsername)

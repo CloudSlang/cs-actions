@@ -19,14 +19,11 @@ import io.cloudslang.content.constants.OutputNames;
 
 public final class Outputs extends OutputNames {
 
-    public static class CommonOutputs {
+    public static class OutputNames {
+        public static final String USER_ID = "userId";
         public static final String STATUS_CODE = "statusCode";
         public static final String EXCEPTION = "exception";
-    }
-
-    public static class AuthorizationOutputs {
         public static final String AUTH_TOKEN = "authToken";
-        public static final String AUTH_TOKEN_TYPE = "authTokenType";
     }
 }
 

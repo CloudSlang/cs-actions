@@ -21,7 +21,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.DeleteUserInputs;
-import io.cloudslang.content.microsoftAD.utils.Outputs;
+import io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -41,8 +41,7 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.DeleteUser.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_ID;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.DeleteUser.USER_PRINCIPAL_NAME;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_PRINCIPAL_NAME;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyDeleteInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -51,9 +50,10 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 public class DeleteUser {
     @Action(name = DELETE_USER_NAME,
             description = DELETE_USER_DESC,
-            outputs = {@Output(value = RETURN_RESULT, description = DELETE_USER_RETURN_RESULT_DESC),
+            outputs = {
+                    @Output(value = RETURN_RESULT, description = DELETE_USER_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = OutputNames.STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
