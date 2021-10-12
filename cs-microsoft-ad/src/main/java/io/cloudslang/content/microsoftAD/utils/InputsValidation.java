@@ -195,7 +195,7 @@ public final class InputsValidation {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyUserInputs(exceptionMessages, userPrincipalName, userId);
-        addVerifyNotNullOrEmpty(exceptionMessages, body, HttpClientInputs.BODY);
+        addVerifyNotNullOrEmpty(exceptionMessages, body, Descriptions.AssignUserLicense.ASSIGNED_LICENSES);
         exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots, x509HostnameVerifier,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
         return exceptionMessages;

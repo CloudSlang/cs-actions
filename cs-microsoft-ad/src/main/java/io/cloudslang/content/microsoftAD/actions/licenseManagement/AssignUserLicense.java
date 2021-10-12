@@ -58,7 +58,6 @@ public class AssignUserLicense {
                     @Output(value = RETURN_RESULT, description = ASSIGN_USER_LICENSE_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = USER_ID, description = USER_ID_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
@@ -140,15 +139,6 @@ public class AssignUserLicense {
             Map<String, String> finalResult = getOperationResults(result, result.get(RETURN_RESULT), result.get(RETURN_RESULT));
 
             finalResult.put(USER_ID, EMPTY);
-
-           /* if (!result.get(STATUS_CODE).isEmpty() && Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300) {
-
-                JsonObject json = ((new JsonParser()).parse(result.get(RETURN_RESULT))).getAsJsonObject();
-
-                if (json.has(ID))
-                    finalResult.put(USER_ID, json.get(ID).getAsString());
-            }
-*/
             parseApiExceptionMessage(finalResult);
 
             return finalResult;
