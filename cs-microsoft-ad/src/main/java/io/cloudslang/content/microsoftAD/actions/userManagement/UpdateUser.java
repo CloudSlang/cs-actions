@@ -98,10 +98,8 @@ public class UpdateUser {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
 
-        accountEnabled = defaultIfEmpty(accountEnabled, BOOLEAN_TRUE);
         displayName = defaultIfEmpty(displayName, EMPTY);
         onPremisesImmutableId = defaultIfEmpty(onPremisesImmutableId, EMPTY);
-        forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_FALSE);
         password = defaultIfEmpty(password, EMPTY);
         updatedUserPrincipalName = defaultIfEmpty(updatedUserPrincipalName, EMPTY);
         body = defaultIfEmpty(body, EMPTY);

@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPatch;
+import static io.cloudslang.content.microsoftAD.utils.Constants.FORWARD_SLASH;
 import static io.cloudslang.content.microsoftAD.utils.Constants.USERS_URL;
 
 public class EnableDisableUserService {
@@ -39,9 +40,9 @@ public class EnableDisableUserService {
     private static String getUserUrl(String userPrincipalName, String userId) {
         String finalUrl;
         if (!StringUtils.isEmpty(userPrincipalName))
-            finalUrl = USERS_URL + userPrincipalName;
+            finalUrl = USERS_URL + FORWARD_SLASH + userPrincipalName;
         else
-            finalUrl = USERS_URL + userId;
+            finalUrl = USERS_URL + FORWARD_SLASH + userId;
         return finalUrl;
     }
 
