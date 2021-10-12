@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpDelete;
+import static io.cloudslang.content.microsoftAD.utils.Constants.FORWARD_SLASH;
 import static io.cloudslang.content.microsoftAD.utils.Constants.USERS_URL;
 
 
@@ -34,12 +35,12 @@ public class DeleteUserService {
 
     @NotNull
     public static String getDeleteUserUrl(@NotNull final AzureActiveDirectoryCommonInputs deleteUserInputs) {
-        String finalUrl = USERS_URL;
+        String finalUrl = USERS_URL + FORWARD_SLASH;
 
         if (!deleteUserInputs.getUserPrincipalName().isEmpty())
-            finalUrl = finalUrl + deleteUserInputs.getUserPrincipalName();
+            finalUrl += deleteUserInputs.getUserPrincipalName();
         else
-            finalUrl = finalUrl + deleteUserInputs.getUserId();
+            finalUrl += deleteUserInputs.getUserId();
 
         return finalUrl;
     }

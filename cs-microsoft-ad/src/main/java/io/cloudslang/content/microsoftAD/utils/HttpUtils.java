@@ -313,7 +313,7 @@ public class HttpUtils {
         try {
             result.put(RETURN_RESULT, ((new JsonParser()).parse(exception)).getAsJsonObject().getAsJsonObject(ERROR).get(MESSAGE).toString());
         } catch (JsonSyntaxException e) {
-            e.printStackTrace();
+
         }
     }
 }

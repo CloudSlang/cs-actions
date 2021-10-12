@@ -38,11 +38,11 @@ public class EnableDisableUserService {
 
     @NotNull
     private static String getUserUrl(String userPrincipalName, String userId) {
-        String finalUrl;
+        String finalUrl = USERS_URL + FORWARD_SLASH;
         if (!StringUtils.isEmpty(userPrincipalName))
-            finalUrl = USERS_URL + FORWARD_SLASH + userPrincipalName;
+            finalUrl += userPrincipalName;
         else
-            finalUrl = USERS_URL + FORWARD_SLASH + userId;
+            finalUrl += userId;
         return finalUrl;
     }
 

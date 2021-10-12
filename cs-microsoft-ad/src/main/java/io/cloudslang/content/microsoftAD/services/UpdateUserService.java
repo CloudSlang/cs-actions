@@ -28,12 +28,12 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class UpdateUserService {
 
     public static Map<String, String> updateUser(UpdateUserInputs updateUserInputs) {
-        String UPDATE_USERS_URL;
+        String UPDATE_USERS_URL = USERS_URL + FORWARD_SLASH;
 
         if (!(updateUserInputs.getUserCommonInputs().getCommonInputs().getUserId().isEmpty()))
-            UPDATE_USERS_URL = USERS_URL + FORWARD_SLASH + updateUserInputs.getUserCommonInputs().getCommonInputs().getUserId().trim();
+            UPDATE_USERS_URL += updateUserInputs.getUserCommonInputs().getCommonInputs().getUserId().trim();
         else
-            UPDATE_USERS_URL = USERS_URL + FORWARD_SLASH + updateUserInputs.getUserCommonInputs().getCommonInputs().getUserPrincipalName().trim();
+            UPDATE_USERS_URL += updateUserInputs.getUserCommonInputs().getCommonInputs().getUserPrincipalName().trim();
 
         if (!updateUserInputs.getUserCommonInputs().getBody().equals(EMPTY))
             return httpPatch(updateUserInputs.getUserCommonInputs().getCommonInputs(), UPDATE_USERS_URL, updateUserInputs.getUserCommonInputs().getBody());

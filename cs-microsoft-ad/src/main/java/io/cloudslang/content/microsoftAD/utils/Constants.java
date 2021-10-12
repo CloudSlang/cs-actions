@@ -78,5 +78,5 @@ public final class Constants {
     public static final String TLSV13 = "tlsv1.3";
 
     //API URLs
-    public static final String USERS_URL = "https://graph.microsoft.com/v1.0/users/";
+    public static final String USERS_URL = "https://graph.microsoft.com/v1.0/users";
 }
