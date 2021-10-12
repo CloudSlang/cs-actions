@@ -180,8 +180,7 @@ public class Descriptions {
         public static final String UPDATED_MAIL_NICKNAME_DESC = "The mail alias for the user. This property must be " +
                 "specified when the user is created.";
         public static final String UPDATED_ACCOUNT_ENABLED = "This property must be set to 'true' if the account is enabled; " +
-                "otherwise, 'false'. This property is required when a user is created." +
-                "Default: true.";
+                "otherwise, 'false'. This property is required when a user is created.";
         public static final String UPDATED_DISPLAY_NAME = "The name displayed in the address book for the user. This " +
                 "property is required when a user is created and it cannot be cleared during updates.";
         public static final String UPDATE_USER_RETURN_RESULT = "The user's properties were updated successfully!";
