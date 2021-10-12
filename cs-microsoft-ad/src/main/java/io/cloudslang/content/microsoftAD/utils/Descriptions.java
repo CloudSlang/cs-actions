@@ -224,7 +224,6 @@ public class Descriptions {
         public static final String ASSIGN_USER_LICENSE_NAME = "Assign user license";
 
         //Inputs
-        public static final String ASSIGNED_LICENSES = "Assigned Licenses";
         public static final String ASSIGNED_LICENSES_DESC = "A collection of assignedLicense objects that specify " +
                 "the licenses to add. You can disable plans associated with a license by setting the disabledPlans " +
                 "property on an assignedLicense object.";

@@ -50,5 +50,10 @@ public final class Inputs extends InputNames {
     public static class UpdateUserInputs {
         public static final String UPDATED_USER_PRINCIPAL_NAME = "updatedUserPrincipalName";
     }
+
+    public static class AssignUSerLicenseInputs{
+        public static final String ASSIGNED_LICENSES = "assignedLicenses";
+    }
+
 }
 

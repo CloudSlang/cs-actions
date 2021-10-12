@@ -23,7 +23,6 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AssignUserLicenseInputs;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
-import io.cloudslang.content.microsoftAD.entities.CreateUserInputs;
 import io.cloudslang.content.microsoftAD.utils.Descriptions;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -43,6 +42,7 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.AssignUserLicense.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.AssignUSerLicenseInputs.ASSIGNED_LICENSES;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_PRINCIPAL_NAME;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.*;
