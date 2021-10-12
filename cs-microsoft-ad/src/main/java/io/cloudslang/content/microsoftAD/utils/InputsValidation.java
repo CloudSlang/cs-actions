@@ -29,6 +29,7 @@ import static io.cloudslang.content.microsoftAD.utils.Constants.ACCOUNT_ENABLED;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.EXCEPTION_INVALID_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.EXCEPTION_INVALID_TLS_VERSION;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.AssignUSerLicenseInputs.ASSIGNED_LICENSES;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.USERNAME;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PASSWORD;
@@ -195,7 +196,7 @@ public final class InputsValidation {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyUserInputs(exceptionMessages, userPrincipalName, userId);
-        addVerifyNotNullOrEmpty(exceptionMessages, body, Descriptions.AssignUserLicense.ASSIGNED_LICENSES);
+        addVerifyNotNullOrEmpty(exceptionMessages, body, ASSIGNED_LICENSES);
         exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots, x509HostnameVerifier,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
         return exceptionMessages;
