@@ -20,7 +20,6 @@ import io.cloudslang.content.microsoftAD.entities.UpdateUserInputs;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPatch;
-import static io.cloudslang.content.microsoftAD.utils.Constants.FORWARD_SLASH;
 import static io.cloudslang.content.microsoftAD.utils.Constants.USERS_URL;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -31,9 +30,9 @@ public class UpdateUserService {
         String UPDATE_USERS_URL;
 
         if (!(updateUserInputs.getCommonInputs().getUserId().isEmpty()))
-            UPDATE_USERS_URL = USERS_URL + FORWARD_SLASH + updateUserInputs.getCommonInputs().getUserId().trim();
+            UPDATE_USERS_URL = USERS_URL + updateUserInputs.getCommonInputs().getUserId().trim();
         else
-            UPDATE_USERS_URL = USERS_URL + FORWARD_SLASH + updateUserInputs.getCommonInputs().getUserPrincipalName().trim();
+            UPDATE_USERS_URL = USERS_URL + updateUserInputs.getCommonInputs().getUserPrincipalName().trim();
 
         if (!updateUserInputs.getCreateUserCommonInputs().getBody().equals(EMPTY))
             return httpPatch(updateUserInputs.getCommonInputs(), UPDATE_USERS_URL, updateUserInputs.getCreateUserCommonInputs().getBody());
