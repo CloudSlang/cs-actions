@@ -137,8 +137,6 @@ public class AssignUserLicense {
                     .build());
 
             Map<String, String> finalResult = getOperationResults(result, result.get(RETURN_RESULT), result.get(RETURN_RESULT));
-
-            finalResult.put(USER_ID, EMPTY);
             parseApiExceptionMessage(finalResult);
 
             return finalResult;

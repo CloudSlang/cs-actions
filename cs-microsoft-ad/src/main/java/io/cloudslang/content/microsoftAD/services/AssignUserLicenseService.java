@@ -24,9 +24,15 @@ import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInpu
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPost;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.AssignUserLicense.INVALID_JSON_INPUT_DESC;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class AssignUserLicenseService {
 
@@ -34,14 +40,22 @@ public class AssignUserLicenseService {
 
         AzureActiveDirectoryCommonInputs commonInputs = licenseInputs.getCommonInputs();
         JsonObject body = new JsonObject();
-
         Gson gson = new Gson();
         JsonParser jsonParser = new JsonParser();
-        JsonArray jsonArray = (JsonArray) jsonParser.parse(licenseInputs.getBody());
-        body.add(ADD_LICENSES, jsonArray);
-        body.add(REMOVE_LICENSES, new JsonArray());
+        try {
+            JsonArray jsonArray = (JsonArray) jsonParser.parse(licenseInputs.getBody());
+            body.add(ADD_LICENSES, jsonArray);
+            body.add(REMOVE_LICENSES, new JsonArray());
 
-        return httpPost(commonInputs, getUserUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId()), body.toString());
+            return httpPost(commonInputs, getUserUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId()), body.toString());
+        }catch(Exception e)
+        {
+            Map<String, String> result = new HashMap<>();
+            result.put(STATUS_CODE, EMPTY);
+            result.put(RETURN_RESULT, INVALID_JSON_INPUT_DESC);
+            result.put(EXCEPTION, e.toString());
+            return result;
+        }
 
     }
 

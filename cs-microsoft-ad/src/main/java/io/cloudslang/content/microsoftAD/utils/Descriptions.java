@@ -227,6 +227,8 @@ public class Descriptions {
         public static final String ASSIGNED_LICENSES_DESC = "A collection of assignedLicense objects that specify " +
                 "the licenses to add. You can disable plans associated with a license by setting the disabledPlans " +
                 "property on an assignedLicense object.";
+        public static final String INVALID_JSON_INPUT_DESC = "The value provided for the assigned licenses input is" +
+                "an invalid JSON.";
 
         //Results
         public static final String ASSIGN_USER_LICENSE_FAILURE_DESC = "There was an error while trying to assign license.";
