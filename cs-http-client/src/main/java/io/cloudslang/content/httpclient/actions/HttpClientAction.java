@@ -28,6 +28,7 @@ import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.utils.StringUtilities;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -39,8 +40,8 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.Constants.*;
 import static io.cloudslang.content.httpclient.services.HttpClientService.*;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static io.cloudslang.content.httpclient.utils.HttpValidator.validateInputs;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -362,6 +363,13 @@ public class HttpClientAction {
         httpClientInputs.setAllowedCyphers(allowedCyphers);
         httpClientInputs.setCookieStoreSessionObject(httpClientCookieSession);
         httpClientInputs.setConnectionPoolSessionObject(httpClientPoolingConnectionManager);
+
+        List<String> exceptions = validateInputs(httpClientInputs);
+
+        if (!exceptions.isEmpty()) {
+            String errorMessage = StringUtilities.join(exceptions, NEW_LINE);
+            return exceptionResult(errorMessage, new Exception(errorMessage));
+        }
 
         if (!isEmpty(tlsVersion)) {
             if (tlsVersion.toUpperCase().contains(TLSv12.toUpperCase()) && tlsVersion.split(",").length > 1) {

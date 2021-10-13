@@ -25,4 +25,6 @@ public class Constants {
     public static final String CHANGEIT = "changeit";
     public static final String TLSv12 = "TLSv1.2";
     public static final String RESPONSE_CHARACTER_SET = "ISO-8859-1";
+    public static final String NEW_LINE = "\n";
+    public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
 }
