@@ -243,7 +243,7 @@ public class Descriptions {
     public static class AssignUserLicense {
 
         //Descriptions
-        public static final String ASSIGN_USER_LICENSE_DESC = "Assign user license";
+        public static final String ASSIGN_USER_LICENSE_DESC = "Add subscriptions for the user. You can also enable specific plans associated with a subscription.";
         public static final String ASSIGN_USER_LICENSE_NAME = "Assign user license";
 
         //Inputs
