@@ -32,8 +32,8 @@ public class AssignUserLicenseInputs {
     }
 
     @NotNull
-    public static CreateUserInputsBuilder builder() {
-        return new CreateUserInputsBuilder();
+    public static AssignUserLicenseInputs.AssignUserLicenseInputsBuilder builder() {
+        return new AssignUserLicenseInputsBuilder();
     }
 
     @NotNull
@@ -46,23 +46,23 @@ public class AssignUserLicenseInputs {
         return body;
     }
 
-    public static class CreateUserInputsBuilder {
+    public static class AssignUserLicenseInputsBuilder {
 
         private AzureActiveDirectoryCommonInputs commonInputs;
         private String body = EMPTY;
 
-        CreateUserInputsBuilder() {
+        AssignUserLicenseInputsBuilder() {
         }
 
 
         @NotNull
-        public AssignUserLicenseInputs.CreateUserInputsBuilder commonInputs(@NotNull final AzureActiveDirectoryCommonInputs commonInputs) {
+        public AssignUserLicenseInputs.AssignUserLicenseInputsBuilder commonInputs(@NotNull final AzureActiveDirectoryCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
         @NotNull
-        public AssignUserLicenseInputs.CreateUserInputsBuilder body(@NotNull final String body) {
+        public AssignUserLicenseInputs.AssignUserLicenseInputsBuilder body(@NotNull final String body) {
             this.body = body;
             return this;
         }
