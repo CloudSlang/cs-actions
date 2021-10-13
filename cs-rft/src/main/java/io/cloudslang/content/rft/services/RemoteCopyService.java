@@ -66,7 +66,7 @@ public class RemoteCopyService {
             setExecutionTimeout(src, inputs.getExecutionTimeout());
             setExecutionTimeout(dest, inputs.getExecutionTimeout());
 
-            src.copyTo(dest, BACK_SLASH + inputs.getSourcePath(), BACK_SLASH + inputs.getDestinationPath());
+            src.copyTo(dest, inputs.getSourcePath(), inputs.getDestinationPath());
             results.put(RETURN_RESULT, SUCCESS_RESULT);
             results.put(RETURN_CODE, SUCCESS_RETURN_CODE);
 
