@@ -33,6 +33,10 @@ public class SFTPCopier {
 
     private static final String BACK_SLASH = "/";
     private static final String SFTP = "sftp";
+    private static final String NULL_OUTPUT = "LS Output was null.";
+    private static final String FILES = "files";
+    private static final String FOLDERS = "folders";
+
     Session session;
     ChannelSftp channel;
     Map<String, String> result = new HashMap<>();
@@ -216,7 +220,7 @@ public class SFTPCopier {
             populateResult(fileBuffer.toString(), folderBuffer.toString(), resultBuffer.toString());
 
         } else {
-            throw new Exception("LS Output was null.");
+            throw new Exception(NULL_OUTPUT);
         }
     }
 
@@ -275,8 +279,8 @@ public class SFTPCopier {
 
     private void populateResult(String files, String folders, String returnResult) {
         result.put(RETURN_CODE, SUCCESS_RETURN_CODE);
-        result.put("files", files);
-        result.put("folders", folders);
+        result.put(FILES, files);
+        result.put(FOLDERS, folders);
         result.put(RETURN_RESULT, returnResult);
     }
 
