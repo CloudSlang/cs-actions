@@ -50,5 +50,13 @@ public final class Inputs extends InputNames {
     public static class UpdateUserInputs {
         public static final String UPDATED_USER_PRINCIPAL_NAME = "updatedUserPrincipalName";
     }
+
+    public static class IsUserInGroup {
+
+        public static final String SECURITY_ENABLED_ONLY = "securityEnabledOnly";
+        public static final String USER_ID = "userId";
+        public static final String BODY = "body";
+    }
+
 }
 
