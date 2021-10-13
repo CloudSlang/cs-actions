@@ -52,6 +52,13 @@ public final class Constants {
     public static final String SELECT_PATH = "$select=";
     public static final String AND = "&";
     public static final String QUERY = "?";
+
+    public static final String COMMA = "\",\"";
+    public static final String SIMPLE_COMMA = ",";
+    public static final String RIGHT_PARANTHESIS = "[\"";
+    public static final String LEFT_PARANTHESIS = "\"]";
+    public static final String EMPTY_STRING = "";
+
     public static final String HTTPS = "https";
     public static final String STATUS_CODE = "statusCode";
     public static final String APPLICATION_JSON = "application/json";

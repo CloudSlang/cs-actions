@@ -24,7 +24,6 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.GetMemberGroupsInputs;
-import io.cloudslang.content.microsoftAD.utils.Outputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -56,7 +55,7 @@ public class IsUserInGroup {
             description = IS_USER_IN_GROUP_DESC,
             outputs = {@Output(value = RETURN_RESULT, description = IS_USER_IN_GROUP_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = Outputs.CommonOutputs.STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
@@ -139,9 +138,9 @@ public class IsUserInGroup {
                 JsonArray tmpResponse = (JsonArray) jsonResponse.get(VALUE);
 
                 if (tmpResponse.size() != 0) {
-                    finalResult.put(RETURN_RESULT, tmpResponse.toString().replace("[\"", "").
-                            replace("\",\"", ",").
-                            replace("\"]", ""));
+                    finalResult.put(RETURN_RESULT, tmpResponse.toString().replace(RIGHT_PARANTHESIS, EMPTY_STRING).
+                                                                          replace(COMMA, SIMPLE_COMMA).
+                                                                          replace(LEFT_PARANTHESIS, EMPTY_STRING));
                 } else {
                     finalResult.put(RETURN_RESULT, NO_GROUP_MEMBER);
                 }
