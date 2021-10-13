@@ -41,8 +41,8 @@ public class SFTPCommandInputs implements IHasFTPOperation {
     }
 
     @NotNull
-    public static SFTPDeleteDirectoryInputsBuilder builder() {
-        return new SFTPDeleteDirectoryInputsBuilder();
+    public static SFTPGeneralDirectoryInputsBuilder builder() {
+        return new SFTPGeneralDirectoryInputsBuilder();
     }
 
     @NotNull
@@ -80,7 +80,7 @@ public class SFTPCommandInputs implements IHasFTPOperation {
         return gid;
     }
 
-    public static class SFTPDeleteDirectoryInputsBuilder {
+    public static class SFTPGeneralDirectoryInputsBuilder {
         private SFTPCommonInputs sftpCommonInputs;
         private String remotePath = EMPTY;
         private String newRemotePath = EMPTY;
@@ -89,47 +89,47 @@ public class SFTPCommandInputs implements IHasFTPOperation {
         private String gid = EMPTY;
         private String uid = EMPTY;
 
-        SFTPDeleteDirectoryInputsBuilder() {
+        SFTPGeneralDirectoryInputsBuilder() {
         }
 
         @NotNull
-        public SFTPCommandInputs.SFTPDeleteDirectoryInputsBuilder sftpCommonInputs(@NotNull final SFTPCommonInputs sftpCommonInputs) {
+        public SFTPCommandInputs.SFTPGeneralDirectoryInputsBuilder sftpCommonInputs(@NotNull final SFTPCommonInputs sftpCommonInputs) {
             this.sftpCommonInputs = sftpCommonInputs;
             return this;
         }
 
         @NotNull
-        public SFTPCommandInputs.SFTPDeleteDirectoryInputsBuilder remotePath(@NotNull final String remotePath) {
+        public SFTPCommandInputs.SFTPGeneralDirectoryInputsBuilder remotePath(@NotNull final String remotePath) {
             this.remotePath = remotePath;
             return this;
         }
 
         @NotNull
-        public SFTPCommandInputs.SFTPDeleteDirectoryInputsBuilder newRemotePath(@NotNull final String newRemotePath) {
+        public SFTPCommandInputs.SFTPGeneralDirectoryInputsBuilder newRemotePath(@NotNull final String newRemotePath) {
             this.newRemotePath = newRemotePath;
             return this;
         }
 
         @NotNull
-        public SFTPCommandInputs.SFTPDeleteDirectoryInputsBuilder mode(@NotNull final String mode) {
+        public SFTPCommandInputs.SFTPGeneralDirectoryInputsBuilder mode(@NotNull final String mode) {
             this.mode = mode;
             return this;
         }
 
         @NotNull
-        public SFTPCommandInputs.SFTPDeleteDirectoryInputsBuilder commandType(@NotNull final String commandType) {
+        public SFTPCommandInputs.SFTPGeneralDirectoryInputsBuilder commandType(@NotNull final String commandType) {
             this.commandType = commandType;
             return this;
         }
 
         @NotNull
-        public SFTPCommandInputs.SFTPDeleteDirectoryInputsBuilder gid(@NotNull final String gid) {
+        public SFTPCommandInputs.SFTPGeneralDirectoryInputsBuilder gid(@NotNull final String gid) {
             this.gid = gid;
             return this;
         }
 
         @NotNull
-        public SFTPCommandInputs.SFTPDeleteDirectoryInputsBuilder uid(@NotNull final String uid) {
+        public SFTPCommandInputs.SFTPGeneralDirectoryInputsBuilder uid(@NotNull final String uid) {
             this.uid = uid;
             return this;
         }
