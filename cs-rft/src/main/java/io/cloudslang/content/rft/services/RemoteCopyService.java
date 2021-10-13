@@ -69,10 +69,10 @@ public class RemoteCopyService {
             setExecutionTimeout(src, inputs.getExecutionTimeout());
             setExecutionTimeout(dest, inputs.getExecutionTimeout());
 
-            if (inputs.getSourceProtocol().toLowerCase().trim().equals(SFTP))
+            if (inputs.getSourceProtocol().toLowerCase().equals(SFTP))
                 sourcePath = BACK_SLASH + sourcePath;
 
-            if (inputs.getDestinationProtocol().toLowerCase().trim().equals(SFTP))
+            if (inputs.getDestinationProtocol().toLowerCase().equals(SFTP))
                 destPath = BACK_SLASH + destPath;
 
             src.copyTo(dest, sourcePath, destPath);
