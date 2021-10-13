@@ -72,6 +72,9 @@ public class Constants {
     public static final String SFTP_COMMON_INPUTS = "sfptCommonInputs";
     public static final String FAILURE = "failure";
 
+    //SFTP COPIER
+    public static final String SFTP = "sftp";
+    public static final String NULL_OUTPUT = "LS Output was null.";
 
     public static final String SUCCESS_RESULT = "The file transfer was successfully completed!";
 
