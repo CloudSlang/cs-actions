@@ -381,8 +381,8 @@ public class InputsValidation {
                 characterSet, closeSession, connectionTimeout, executionTimeout);
 
         addVerifyRemotePathAndFile(exceptions, remotePath, remoteFile, Inputs.SFTPInputs.REMOTE_PATH, Inputs.SFTPInputs.REMOTE_FILE);
-        addVerifyNotNullOrEmpty(exceptions, remoteFile, SFTPInputs.REMOTE_FILE);
-        addVerifyNotNullOrEmpty(exceptions, newRemoteFile, SFTPInputs.NEW_REMOTE_FILE);
+//        addVerifyNotNullOrEmpty(exceptions, remoteFile, SFTPInputs.REMOTE_FILE);
+//        addVerifyNotNullOrEmpty(exceptions, newRemoteFile, SFTPInputs.NEW_REMOTE_FILE);
 
         return exceptions;
     }

@@ -51,7 +51,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class SFTPDownloadFile {
-    @Action(name = "SFTP Download File",
+    @Action(name = SFTP_DOWNLOAD_FILE,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),

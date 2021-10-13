@@ -23,14 +23,16 @@ public class Descriptions {
         public static final String REMOTE_FILE_DESC = "The remote file.";
         public static final String USER_DESC = "The user to connect as.";
         public static final String PASSWORD_DESC = "The password for user.";
-        public static final String CHARACTER_SET_DESC = "The name of the control encoding to use. Default is ISO-8859-1 (Latin-1).";
+        public static final String CHARACTER_SET_DESC = "The name of the control encoding to use.\n" +
+                " Default is ISO-8859-1 (Latin-1).";
 
         public static final String FAILURE_DESC = "There was an error during the execution.";
         public static final String SUCCESS_DESC = "The operation was successfully executed.";
 
         public static final String FTP_REPLY_CODE_DESC = "The ftp reply code.";
         public static final String FTP_SESSION_LOG_DESC = "Log of ftp commands.";
-        public static final String RETURN_RESULT_DESC = "A message is returned in case of success, an error message is returned in case of failure.";
+        public static final String RETURN_RESULT_DESC = "A message is returned in case of success, an error message is " +
+                "returned in case of failure.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the operation.";
     }
@@ -42,16 +44,16 @@ public class Descriptions {
         public static final String PASSWORD_DESC = "Password to authenticate. If using a private key file this will be " +
                 "used as the passphrase for the file";
         public static final String PRIVATE_KEY_DESC = "Absolute path for private key file for public/private key authentication.";
-        public static final String REMOTE_FILE_DESC = "The remote file.";
         public static final String GLOBAL_SESSION_DESC = "The sessionObject that holds the connection if the close session is false.";
         public static final String DELIMITER_DESC = "A delimiter to use for the result lists (returnResult, files, folders).";
         public static final String REMOTE_PATH_DESC = "The full path of the remote file or directory name.";
         public static final String NEW_REMOTE_PATH_DESC = "The new name for the remote file or directory.";
 
-        public static final String CHARACTER_SET_DESC = "The name of the control encoding to use. Examples: UTF-8, EUC-JP," +
-                " SJIS.  Default is UTF-8.";
-        public static final String CLOSE_SESSION_DESC = "Close the SSH session at completion of operation?  " +
-                "Default value is true.  If false the SSH session can be reused by other SFTP commands in the same flow.  " +
+        public static final String CHARACTER_SET_DESC = "The name of the control encoding to use.\n" +
+                "Examples: UTF-8, EUC-JP,SJIS.  \n" +
+                "Default is UTF-8.";
+        public static final String CLOSE_SESSION_DESC = "Close the SSH session at completion of operation." +
+                "Default value is true.  If false the SSH session can be reused by other SFTP commands in the same flow.\n  " +
                 "Valid values: true, false.";
 
         public static final String RETURN_RESULT_DESC = "Remote file will be copied to local system.";
@@ -107,13 +109,14 @@ public class Descriptions {
         public static final String PROXY_PASSWORD_DESC = "The password used when connecting to the proxy.";
         public static final String CONNECTION_TIMEOUT_DESC = "Time in seconds to wait for the connection to complete.";
         public static final String EXECUTION_TIMEOUT_DESC = "Time in seconds to wait for the operation to complete.";
-        public static final String PASSIVE_DESC = "If true, passive connection mode will be enabled.  The default is active connection mode.";
+        public static final String PASSIVE_DESC = "If true, passive connection mode will be enabled.  The default is " +
+                "active connection mode.";
         public static final String TYPE_DESC = "The type of the file to get (binary or ascii).";
         public static final String SUCCESS_DESC = "The file was copied successfully.";
         public static final String FAILURE_DESC = "The file could not be copied.";
         public static final String RETURN_RESULT_DESC = " This is the primary output and it contains the " +
                 "success message if the operation successfully completes, or an exception message otherwise.";
-   }
+    }
 
     public static class SCPDescriptions {
 
@@ -124,8 +127,9 @@ public class Descriptions {
 
         public static final String SUCCESS_DESC = "The file was copied successfully.";
         public static final String FAILURE_DESC = "The file could not be copied.";
-        public static final String KNOWN_HOSTS_POLICY_DESC = "Optional - Policy used for managing known_hosts file. " +
-                "Valid: 'allow', 'strict', 'add' Default: 'allow'";
+        public static final String KNOWN_HOSTS_POLICY_DESC = "Optional - Policy used for managing known_hosts file.\n " +
+                "Valid: 'allow', 'strict', 'add'\n" +
+                "Default: 'allow'";
         public static final String KNOWN_HOSTS_PATH_DESC = "Path to the known_hosts file.";
 
         //SCP Copy File
@@ -158,7 +162,8 @@ public class Descriptions {
                 " file.";
         public static final String DESTINATION_PASSWORD_DESC = "The password for connecting to the host of the destination" +
                 " file. If using a private key file this will be used as the passphrase for the file.";
-        public static final String DESTINATION_PRIVATE_KEY_DESC = "Absolute path of the private key file for public/private key authentication on the destination host.";
+        public static final String DESTINATION_PRIVATE_KEY_DESC = "Absolute path of the private key file for " +
+                "public/private key authentication on the destination host.";
 
     }
 
@@ -176,16 +181,22 @@ public class Descriptions {
 
     public static class SFTPDeleteFileDescriptions {
 
-        public static final String REMOTE_PATH_DELETE_FILE_DESC = "The path to the remote file that will be deleted." +
+        public static final String REMOTE_PATH_DELETE_FILE_DESC = "The path to the remote file that will be deleted.\n" +
                 "Examples: C:/Users/Administrator, root";
         public static final String REMOTE_FILE_DELETE_DESC = "The name and extension of the file that will be deleted." +
                 " Note: If only the file name and extension of the file to be deleted is provided, without any path to " +
                 "be populated in the remote_path input, the file with the provided information will be deleted from " +
-                "the ‘ChrootDirectory’ of the SFTP server, if any location is set." +
+                "the ‘ChrootDirectory’ of the SFTP server, if any location is set.\n" +
                 "Examples: file.txt";
         public static final String SUCCESS_DESC = "File was deleted successfully.";
         public static final String FAILURE_DESC = "The file could not be deleted.";
 
+    }
+
+    public static class SFTPGetChildrenDescriptions {
+        public static final String REMOTE_PATH_GET_CHILDREN_DESC = "The full path of directory from where the list of" +
+                "subdirectories and files is retrieved.\n" +
+                "Example: C:/Users/Administrator/testDir, root/testDir";
     }
 
     public static class SFTPCreateDirectoryDescriptions {
@@ -193,7 +204,7 @@ public class Descriptions {
         public static final String REMOTE_PATH_CREATE_DESC = "You can provide either the full path to the folder to be " +
                 "created or you can provide the direct name of the folder. Note: if only the name of the folder is" +
                 " provided, the new folder will be created in the ‘ChrootDirectory’ of the SFTP server, if any location" +
-                " is set." +
+                " is set.\n" +
                 "Examples: C:/Users/Administrator/newFolder, root/test/newFolder , newFolder";
         public static final String CREATE_DIR_SUCCESS_DESC = "Directory was created successfully.";
         public static final String SUCCESS_DESC = "The directory was created successfully.";
@@ -206,7 +217,7 @@ public class Descriptions {
         public static final String REMOTE_PATH_DELETE_DESC = "You can provide either the full path to the folder to be " +
                 "deleted or you can provide the direct name of the folder. Note: if only the name of the folder is" +
                 " provided, the folder with the provided name will be deleted from the ‘ChrootDirectory’ of the SFTP " +
-                "server, if any location is set." +
+                "server, if any location is set.\n" +
                 "Examples: C:/Users/Administrator/folder, root/test/folder , folderName";
         public static final String DELETE_DIR_SUCCESS_DESC = "Directory was deleted successfully.";
         public static final String FAILURE_DELETE_DIR_DESC = "The directory could not be deleted.";

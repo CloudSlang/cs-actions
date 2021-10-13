@@ -24,6 +24,7 @@ public class Constants {
     public static final String SFTP_COMMAND = "SFTP Command";
     public static final String SFTP_DELETE_FILE = "SFTP Delete File";
     public static final String SFTP_DOWNLOAD_FILE = "SFTP Download File";
+    public static final String SFTP_GET_CHILDREN = "SFTP Get Children Operation";
     public static final String SFTP_DELETE_FILE_DESCRIPTION = "Deletes a file remotely using Secure FTP (SFTP)";
     public static final String SFTP_CREATE_DIRECTORY = "SFTP Create Directory";
     public static final String SFTP_CREATE_DIRECTORY_DESCRIPTION = "Creates a directory remotely using Secure FTP (SFTP).";
