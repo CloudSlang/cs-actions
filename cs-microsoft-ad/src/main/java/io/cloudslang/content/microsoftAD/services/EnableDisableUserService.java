@@ -14,38 +14,39 @@
  */
 package io.cloudslang.content.microsoftAD.services;
 
-import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
+import com.google.gson.JsonObject;
+import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
+import io.cloudslang.content.microsoftAD.utils.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpGet;
+import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPatch;
 import static io.cloudslang.content.microsoftAD.utils.Constants.FORWARD_SLASH;
 import static io.cloudslang.content.microsoftAD.utils.Constants.USERS_URL;
 
+public class EnableDisableUserService {
 
-public class GetUserService {
+    public static Map<String, String> enableDisableUser(AzureActiveDirectoryCommonInputs commonInputs, boolean enabled) {
 
-    public static Map<String, String> getUser(@NotNull final GetUserInputs getUserInputs) throws Exception {
-
-        return httpGet(getUserInputs, getUserUrl(getUserInputs.getODataQuery(), getUserInputs.getCommonInputs().getUserPrincipalName(), getUserInputs.getCommonInputs().getUserId()));
+        JsonObject body = new JsonObject();
+        body.addProperty(Constants.ACCOUNT_ENABLED, enabled);
+        return httpPatch(commonInputs, getUserUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId()), body.toString());
 
     }
 
-
     @NotNull
-    private static String getUserUrl(String oDdataQuery, String userPrincipalName, String userId) {
+    private static String getUserUrl(String userPrincipalName, String userId) {
         String finalUrl;
         if (!StringUtils.isEmpty(userPrincipalName))
             finalUrl = USERS_URL + FORWARD_SLASH + userPrincipalName;
         else
             finalUrl = USERS_URL + FORWARD_SLASH + userId;
-
-        if (!StringUtils.isEmpty(oDdataQuery))
-            finalUrl = finalUrl + "?" + oDdataQuery;
-
         return finalUrl;
     }
 
+
 }
+
+

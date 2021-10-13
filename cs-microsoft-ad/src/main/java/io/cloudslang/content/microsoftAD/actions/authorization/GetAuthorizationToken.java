@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.microsoftAD.actions.utils;
+package io.cloudslang.content.microsoftAD.actions.authorization;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -43,7 +43,6 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizat
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyAuthorizationInputs;
-import static io.cloudslang.content.microsoftAD.utils.Outputs.AuthorizationOutputs.AUTH_TOKEN;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;

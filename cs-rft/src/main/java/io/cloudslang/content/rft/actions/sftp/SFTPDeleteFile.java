@@ -37,15 +37,15 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
-import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.RETURN_RESULT_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteFileDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteFileDescriptions.FAILURE_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteFileDescriptions.SUCCESS_DESC;
-import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteFileDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
-import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTPDeleteFile;
+import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -71,7 +71,8 @@ public class SFTPDeleteFile {
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
                                        @Param(value = PRIVATE_KEY, description = PRIVATE_KEY_DESC) String privateKey,
-                                       @Param(value = REMOTE_FILE, description = REMOTE_FILE_DELETE_DESC, required = true) String remotePath,
+                                       @Param(value = REMOTE_PATH, description = REMOTE_PATH_DELETE_FILE) String remotePath,
+                                       @Param(value = REMOTE_FILE, description = REMOTE_FILE_DESC, required = true) String remoteFile,
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
                                        @Param(value = CLOSE_SESSION, description = CLOSE_SESSION_DESC) String closeSession,
@@ -90,7 +91,7 @@ public class SFTPDeleteFile {
         connectionTimeout = defaultIfEmpty(connectionTimeout, CONNECTION_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, EXECUTION_TIMEOUT);
 
-        final List<String> exceptionMessages = verifyInputsSFTPDeleteFile(remotePath, host, port, username, password,
+        final List<String> exceptionMessages = verifyInputsSFTP(remoteFile, remotePath, host, port, username, password,
                 proxyPort, characterSet, closeSession, connectionTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
@@ -98,6 +99,7 @@ public class SFTPDeleteFile {
 
         SFTPDeleteFileInputs sftpDeleteFileInputsInputs = SFTPDeleteFileInputs.builder()
                 .remotePath(remotePath)
+                .remoteFile(remoteFile)
                 .sftpCommonInputs(SFTPCommonInputs.builder()
                         .host(host)
                         .port(port)

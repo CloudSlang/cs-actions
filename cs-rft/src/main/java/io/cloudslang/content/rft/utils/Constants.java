@@ -32,6 +32,7 @@ public class Constants {
     public static final String SFTP_RENAME_DESCRIPTION = "Renames a file or directory remotely using Secure FTP (SFTP).";
 
     public static final String EMPTY_STRING = "";
+    public static final String BACKSLASH = "/";
     public static final String NO_ACK_RECEIVED = "No ack received";
     public static final String SSH_SESSIONS_DEFAULT_ID = "sshSessions:default-id";
 
@@ -71,6 +72,9 @@ public class Constants {
     public static final String SFTP_COMMON_INPUTS = "sfptCommonInputs";
     public static final String FAILURE = "failure";
 
+    //SFTP COPIER
+    public static final String SFTP = "sftp";
+    public static final String NULL_OUTPUT = "LS Output was null.";
 
     public static final String SUCCESS_RESULT = "The file transfer was successfully completed!";
 
@@ -96,4 +100,5 @@ public class Constants {
     public static final String EXCEPTION_EXECUTION_TIMED_OUT = "Operation timed out.";
     public static final String EXCEPTION_EXISTING_DIRECTORY = "Failed to create directory.  Directory may already exist.";
     public static final String EXCEPTION_DIRECTORY_DELETE = "Failed to delete directory.  Directory may not be empty.";
+    public static final String EXCEPTION_REMOTE_PATH_FILE = "The %s and %s inputs can't be both empty. A value must be provided for at least one.";
 }

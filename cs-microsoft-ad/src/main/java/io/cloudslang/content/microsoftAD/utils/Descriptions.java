@@ -57,13 +57,15 @@ public class Descriptions {
 
         //Inputs
         public static final String AUTH_TOKEN_DESC = "Token used to authenticate to Azure Active Directory.";
-        public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name. \nExample: someuser@contoso.com" +
-                "The input is mutually exclusive with the userId input.";
+        public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name. This input is mutually exclusive " +
+                "with the userId input. \n" +
+                "Example: someuser@contoso.com";
+        public static final String USER_ID_DESC = "The ID of the user to perform the action on. This input is mutually " +
+                "exclusive with the userPrincipalName input.";
 
         //Outputs
         public static final String RETURN_CODE_DESC = "0 if success, -1 if failure.";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Azure API request, successful if between 200 and 300.";
-        public static final String USER_ID_DESC = "The ID of the user to perform the action on.";
         public static final String EXCEPTION_DESC = "The error message in case of failure.";
     }
 
@@ -108,21 +110,20 @@ public class Descriptions {
 
         //Inputs
         public static final String ACCOUNT_ENABLED_DESC = "Must be true if the user wants to enable the account. " +
-                "\nDefault value: false.";
-        public static final String DISPLAY_NAME_DESC = "Required if body not set - The name to display in the " +
-                "address book for the user.";
+                "\nDefault value: true.";
+        public static final String DISPLAY_NAME_DESC = "The name to display in the address book for the user.";
         public static final String ON_PREMISES_IMMUTABLE_ID_DESC = "Only needs to be specified when creating a new " +
                 "user account if you are using a federated domain for the user's userPrincipalName (UPN) property.";
-        public static final String MAIL_NICKNAME_DESC = "Required if body not set -The mail alias for the user.";
-        public static final String USER_PRINCIPAL_NAME_DESC = "Required if body not set -The user principal name." +
+        public static final String MAIL_NICKNAME_DESC = "The mail alias for the user.";
+        public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name." +
                 "\nExample: someuser@contoso.com";
         public static final String FORCE_CHANGE_PASSWORD_DESC = "In case the value for the input is true, the user " +
                 "must change the password on the next login. \nDefault value: false. \nNOTE: For Azure B2C " +
                 "tenants, set to false and instead use custom policies and user flows to force password reset at " +
                 "first sign in.";
-        public static final String PASSWORD_DESC = "Required if body not set -The password for the user. This " +
-                "property is required when a user is created. The password must satisfy minimum requirements as " +
-                "specified by the user’s passwordPolicies property. By default, a strong password is required.";
+        public static final String PASSWORD_DESC = "The password for the user. This property is required when a user is " +
+                "created. The password must satisfy minimum requirements as specified by the user’s passwordPolicies " +
+                "property. By default, a strong password is required.";
         public static final String BODY_DESC = "Full json body if the user wants to set additional properties. " +
                 "All the other inputs are ignored if the body is given.";
 
@@ -166,6 +167,54 @@ public class Descriptions {
         public static final String IS_USER_ENABLED_FAILURE_DESC = "There was an error while trying to do the request.";
         public static final String IS_USER_ENABLED_RETURN_RESULT_DESC = "If successful, this method returns 200 " +
                 "response code.";
+    }
+
+    public static class UpdateUser {
+        public static final String UPDATE_USER_NAME = "Update User";
+        public static final String UPDATE_USER_DESC = "Updates user's properties.";
+        public static final String UPDATED_USER_PRINCIPAL_NAME_DESC = "The new User Principal Name.";
+        public static final String UPDATED_ON_PREMISES_IMMUTABLE_ID_DESC = "This property is used to associate an on-premises " +
+                "Active Directory user account to their Azure AD user object. This property must be specified when " +
+                "creating a new user account in the Graph if you are using a federated domain for the user’s userPrincipalName " +
+                "(UPN) property. Important: The $ and _ characters cannot be used when specifying this property.";
+        public static final String UPDATED_MAIL_NICKNAME_DESC = "The mail alias for the user. This property must be " +
+                "specified when the user is created.";
+        public static final String UPDATED_ACCOUNT_ENABLED = "This property must be set to 'true' if the account is enabled; " +
+                "otherwise, 'false'. This property is required when a user is created." +
+                "Default: true.";
+        public static final String UPDATED_DISPLAY_NAME = "The name displayed in the address book for the user. This " +
+                "property is required when a user is created and it cannot be cleared during updates.";
+        public static final String UPDATE_USER_RETURN_RESULT = "The user's properties were updated successfully!";
+
+    }
+    public static class EnableUser {
+
+        //Descriptions
+        public static final String ENABLE_USER_DESC = "Enable a user from Active Directory.";
+        public static final String ENABLE_USER_NAME = "Enable User";
+
+        //Results
+        public static final String ENABLE_USER_FAILURE_DESC = "There was an error while trying to enable user.";
+        public static final String ENABLE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content " +
+                "response code. It does not return anything in the response body.";
+        public static final String ENABLE_USER_SUCCESS_RETURN_RESULT_DESC = "The user was successfully enabled.";
+
+
+    }
+
+    public static class DisableUser {
+
+        //Descriptions
+        public static final String DISABLE_USER_DESC = "Disable a user from Active Directory.";
+        public static final String DISABLE_USER_NAME = "Disable User";
+
+        //Results
+        public static final String DISABLE_USER_FAILURE_DESC = "There was an error while trying to disable user.";
+        public static final String DISABLE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content " +
+                "response code. It does not return anything in the response body.";
+        public static final String DISABLE_USER_SUCCESS_RETURN_RESULT_DESC = "The user was successfully disabled.";
+
+
     }
 
     public static class IsUserInGroup {

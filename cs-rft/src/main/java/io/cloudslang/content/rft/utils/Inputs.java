@@ -37,7 +37,7 @@ public class Inputs extends InputNames {
 
     }
 
-    public static final class FTPInputs{
+    public static final class FTPInputs {
         public static final String HOST_NAME = "hostName";
         public static final String PORT = "port";
         public static final String LOCAL_FILE = "localFile";
@@ -56,6 +56,8 @@ public class Inputs extends InputNames {
         public static final String PORT = "port";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
+        public static final String REMOTE_PATH = "remotePath";
+        public static final String LOCAL_PATH = "localPath";
 
         public static final String PRIVATE_KEY = "privateKey";
         public static final String CHARACTER_SET = "characterSet";
@@ -63,15 +65,14 @@ public class Inputs extends InputNames {
 
         //GET ONLY
         public static final String REMOTE_FILE = "remoteFile";
-        public static final String LOCAL_LOCATION = "localLocation";
+        public static final String NEW_REMOTE_FILE = "newRemoteFile";
+        public static final String REMOTE_LOCATION = "remotePath";
 
         //PUT ONLY
-        public static final String REMOTE_LOCATION = "remoteLocation";
         public static final String LOCAL_FILE = "localFile";
 
         //GET CHILDREN ONLY
         public static final String DELIMITER = "delimiter";
-        public static final String REMOTE_PATH = "remotePath";
         public static final String NEW_REMOTE_PATH = "newRemotePath";
 
         //SFTP COMMAND
@@ -110,7 +111,7 @@ public class Inputs extends InputNames {
         public static final String EXECUTION_TIMEOUT = "executionTimeout";
     }
 
-    public static final class SCPInputs{
+    public static final class SCPInputs {
         public static final String KNOWN_HOSTS_POLICY = "known_hosts_policy";
         public static final String KNOWN_HOSTS_PATH = "known_hosts_path";
 

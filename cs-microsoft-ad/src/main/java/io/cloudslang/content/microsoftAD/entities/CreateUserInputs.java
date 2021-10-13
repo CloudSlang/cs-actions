@@ -24,7 +24,6 @@ public class CreateUserInputs {
     private final String displayName;
     private final String onPremisesImmutableId;
     private final String mailNickname;
-    private final String userPrincipalName;
     private final String forceChangePassword;
     private final String password;
     private final String body;
@@ -32,15 +31,15 @@ public class CreateUserInputs {
     private final AzureActiveDirectoryCommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"accountEnabled", "displayName", "onPremisesImmutableId", "mailNickname",
-            "userPrincipalName", "forceChangePassword", "password", "commonInputs", "oDataQuery"})
+            "forceChangePassword", "password", "commonInputs", "oDataQuery"})
 
     public CreateUserInputs(String accountEnabled, String displayName, String onPremisesImmutableId, String mailNickname,
-                            String userPrincipalName, String forceChangePassword, String password, AzureActiveDirectoryCommonInputs commonInputs, String body) {
+                            String forceChangePassword, String password, AzureActiveDirectoryCommonInputs commonInputs,
+                            String body) {
         this.accountEnabled = accountEnabled;
         this.displayName = displayName;
         this.onPremisesImmutableId = onPremisesImmutableId;
         this.mailNickname = mailNickname;
-        this.userPrincipalName = userPrincipalName;
         this.forceChangePassword = forceChangePassword;
         this.password = password;
         this.commonInputs = commonInputs;
@@ -73,11 +72,6 @@ public class CreateUserInputs {
     }
 
     @NotNull
-    public String getUserPrincipalName() {
-        return userPrincipalName;
-    }
-
-    @NotNull
     public String getForceChangePassword() {
         return forceChangePassword;
     }
@@ -102,7 +96,6 @@ public class CreateUserInputs {
         private String displayName = EMPTY;
         private String onPremisesImmutableId = EMPTY;
         private String mailNickname = EMPTY;
-        private String userPrincipalName = EMPTY;
         private String forceChangePassword = EMPTY;
         private String password = EMPTY;
         private AzureActiveDirectoryCommonInputs commonInputs;
@@ -136,12 +129,6 @@ public class CreateUserInputs {
         }
 
         @NotNull
-        public CreateUserInputs.CreateUserInputsBuilder userPrincipalName(@NotNull final String userPrincipalName) {
-            this.userPrincipalName = userPrincipalName;
-            return this;
-        }
-
-        @NotNull
         public CreateUserInputs.CreateUserInputsBuilder forceChangePassword(@NotNull final String forceChangePassword) {
             this.forceChangePassword = forceChangePassword;
             return this;
@@ -167,7 +154,7 @@ public class CreateUserInputs {
 
         public CreateUserInputs build() {
             return new CreateUserInputs(accountEnabled, displayName, onPremisesImmutableId, mailNickname,
-                    userPrincipalName, forceChangePassword, password, commonInputs, body);
+                     forceChangePassword, password, commonInputs, body);
 
         }
     }
