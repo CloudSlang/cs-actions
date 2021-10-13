@@ -33,6 +33,7 @@ import static io.cloudslang.content.rft.utils.Inputs.RemoteCopyInputs.SRC_CHARAC
 public class RemoteCopyService {
 
     private static final String BACK_SLASH = "/";
+    private static final String SFTP = "sftp";
 
     public Map<String, String> execute(RemoteCopyInputs inputs) {
 
@@ -41,6 +42,8 @@ public class RemoteCopyService {
         try {
             String srcProtocol = inputs.getSourceProtocol().toLowerCase().trim();
             String destProtocol = inputs.getDestinationProtocol().toLowerCase().trim();
+            String sourcePath = inputs.getSourcePath().trim();
+            String destPath = inputs.getDestinationPath().trim();
 
             ICopier src = CopierFactory.getExecutor(srcProtocol);
             src.setProtocol(srcProtocol);
@@ -66,7 +69,13 @@ public class RemoteCopyService {
             setExecutionTimeout(src, inputs.getExecutionTimeout());
             setExecutionTimeout(dest, inputs.getExecutionTimeout());
 
-            src.copyTo(dest, inputs.getSourcePath(), inputs.getDestinationPath());
+            if (inputs.getSourceProtocol().toLowerCase().trim().equals(SFTP))
+                sourcePath = BACK_SLASH + sourcePath;
+
+            if (inputs.getDestinationProtocol().toLowerCase().trim().equals(SFTP))
+                destPath = BACK_SLASH + destPath;
+
+            src.copyTo(dest, sourcePath, destPath);
             results.put(RETURN_RESULT, SUCCESS_RESULT);
             results.put(RETURN_CODE, SUCCESS_RETURN_CODE);
 
