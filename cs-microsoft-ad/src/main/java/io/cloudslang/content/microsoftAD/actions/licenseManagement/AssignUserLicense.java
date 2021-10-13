@@ -14,14 +14,12 @@
  */
 package io.cloudslang.content.microsoftAD.actions.licenseManagement;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.microsoftAD.entities.AssignUserLicenseInputs;
+import io.cloudslang.content.microsoftAD.entities.UserLicenseInputs;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.utils.Descriptions;
 import io.cloudslang.content.utils.StringUtilities;
@@ -114,7 +112,7 @@ public class AssignUserLicense {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
         try {
-            Map<String, String> result = assignUserLicense(AssignUserLicenseInputs.builder()
+            Map<String, String> result = assignUserLicense(UserLicenseInputs.builder()
                     .body(assignedLicenses)
                     .commonInputs(AzureActiveDirectoryCommonInputs.builder()
                             .authToken(authToken)

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class AssignUserLicenseInputs {
+public class UserLicenseInputs {
 
     private final String body;
 
@@ -26,13 +26,13 @@ public class AssignUserLicenseInputs {
 
     @java.beans.ConstructorProperties({"body", "commonInputs"})
 
-    public AssignUserLicenseInputs(String body, AzureActiveDirectoryCommonInputs commonInputs) {
+    public UserLicenseInputs(String body, AzureActiveDirectoryCommonInputs commonInputs) {
         this.commonInputs = commonInputs;
         this.body = body;
     }
 
     @NotNull
-    public static AssignUserLicenseInputs.AssignUserLicenseInputsBuilder builder() {
+    public static UserLicenseInputs.AssignUserLicenseInputsBuilder builder() {
         return new AssignUserLicenseInputsBuilder();
     }
 
@@ -56,19 +56,19 @@ public class AssignUserLicenseInputs {
 
 
         @NotNull
-        public AssignUserLicenseInputs.AssignUserLicenseInputsBuilder commonInputs(@NotNull final AzureActiveDirectoryCommonInputs commonInputs) {
+        public UserLicenseInputs.AssignUserLicenseInputsBuilder commonInputs(@NotNull final AzureActiveDirectoryCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
         @NotNull
-        public AssignUserLicenseInputs.AssignUserLicenseInputsBuilder body(@NotNull final String body) {
+        public UserLicenseInputs.AssignUserLicenseInputsBuilder body(@NotNull final String body) {
             this.body = body;
             return this;
         }
 
-        public AssignUserLicenseInputs build() {
-            return new AssignUserLicenseInputs(body, commonInputs);
+        public UserLicenseInputs build() {
+            return new UserLicenseInputs(body, commonInputs);
 
         }
     }

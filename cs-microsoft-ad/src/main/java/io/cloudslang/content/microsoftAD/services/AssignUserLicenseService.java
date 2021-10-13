@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import io.cloudslang.content.microsoftAD.entities.AssignUserLicenseInputs;
+import io.cloudslang.content.microsoftAD.entities.UserLicenseInputs;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +36,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class AssignUserLicenseService {
 
-    public static Map<String, String> assignUserLicense(AssignUserLicenseInputs licenseInputs) {
+    public static Map<String, String> assignUserLicense(UserLicenseInputs licenseInputs) {
 
         AzureActiveDirectoryCommonInputs commonInputs = licenseInputs.getCommonInputs();
         JsonObject body = new JsonObject();
