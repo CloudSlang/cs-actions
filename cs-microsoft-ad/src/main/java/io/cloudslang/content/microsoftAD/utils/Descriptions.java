@@ -217,6 +217,29 @@ public class Descriptions {
 
     }
 
+    public static class IsUserInGroup {
+
+        //Descriptions
+        public static final String IS_USER_IN_GROUP_DESC = "Return all the groups that the user is a member of.";
+        public static final String IS_USER_IN_GROUP_NAME = "Is User In Group";
+
+        public static final String IS_USER_ID_DESC = "The ID of the user to perform the action on.";
+
+        public static final String BODY_DESC = "Full json body, " +
+                "security_enabled_only input is ignored if the body is given.";
+
+        public static final String IS_USER_IN_GROUP_SECURITY_ENABLED = "True if only security groups that the user is a " +
+                "member of should be returned, false to specify that all groups should be returned.";
+
+        //Results
+        public static final String IS_USER_IN_GROUP_SUCCESS_DESC = "Request went successfully.";
+        public static final String NO_GROUP_MEMBER = "The user does not belong to any group.";
+        public static final String IS_USER_IN_GROUP_FAILURE_DESC = "There was an error while trying to do the request.";
+        public static final String IS_USER_IN_GROUP_RETURN_RESULT_DESC = "If successful this method returns the IDs of " +
+                "the groups that the user is a member of. If the user does not belong to any" +
+                "group, a suggestive message will be displayed.";
+    }
+
     public static class AssignUserLicense {
 
         //Descriptions

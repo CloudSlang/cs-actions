@@ -36,18 +36,17 @@ import static io.cloudslang.content.rft.utils.Descriptions.SFTPCreateDirectoryDe
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteDirectoryDescriptions.DELETE_DIR_SUCCESS_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteFileDescriptions.SUCCESS_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPRenameDescriptions.RENAME_SUCCESS_DESC;
-import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteFileDescriptions.SUCCESS_DESC;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 
 public class SFTPService {
 
     public Map<String, String> execute(IHasFTPOperation sftpInputs, SFTPOperation sftpOperation) {
         SFTPCopier sftpCopier = null;
-        String sessionId = "";
+        String sessionId = EMPTY_STRING;
         boolean providerAdded = addSecurityProvider();
 
         try {
-            sessionId = "sshSession:" + sftpInputs.getSftpCommonInputs().getHost() + "-" + sftpInputs.getSftpCommonInputs().getPort() + "-" + sftpInputs.getSftpCommonInputs().getUsername();
+            sessionId = SSH_SESSION + sftpInputs.getSftpCommonInputs().getHost() + HYPHEN + sftpInputs.getSftpCommonInputs().getPort() + HYPHEN + sftpInputs.getSftpCommonInputs().getUsername();
             sftpCopier = getSftpCopierFromCache(sftpInputs, sessionId);
 
             if (sftpCopier == null || !sftpCopier.isConnected()) {
@@ -174,14 +173,17 @@ public class SFTPService {
                 throw new Exception(EXCEPTION_EXECUTION_TIMED_OUT);
             }
         } else if (sftpOperation == SFTPOperation.CREATE_DIRECTORY) {
-            SFTPCreateDirectoryInputs sftpCreateDirectory = (SFTPCreateDirectoryInputs) sftpInputs;
+            SFTPGeneralDirectoryInputs sftpGeneralDirectoryInputs = (SFTPGeneralDirectoryInputs) sftpInputs;
             try {
                 CompletableFuture.runAsync(() -> {
                     try {
-                        if (sftpCreateDirectory.getRemotePath().isEmpty())
-                            sftpCopier.channel.mkdir(sftpCreateDirectory.getRemoteFile());
-                        else if (!(sftpCreateDirectory.getRemotePath().isEmpty()) && !(sftpCreateDirectory.getRemoteFile().isEmpty()))
-                            sftpCopier.channel.mkdir(BACKSLASH + sftpCreateDirectory.getRemotePath() + BACKSLASH + sftpCreateDirectory.getRemoteFile());
+                        String path = sftpGeneralDirectoryInputs.getRemotePath();
+                        if (path.endsWith(BACKSLASH))
+                            path = path.substring(0, path.length() - 1);
+                        if (!path.contains(BACKSLASH))
+                            sftpCopier.channel.mkdir(path);
+                        else
+                            sftpCopier.channel.mkdir(BACKSLASH + path);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -192,14 +194,17 @@ public class SFTPService {
                 throw new Exception(EXCEPTION_EXISTING_DIRECTORY);
             }
         } else if (sftpOperation == SFTPOperation.DELETE_DIRECTORY) {
-            SFTPDeleteDirectoryInputs sftpDeleteDirectoryInputs = (SFTPDeleteDirectoryInputs) sftpInputs;
+            SFTPGeneralDirectoryInputs sftpGeneralDirectoryInputs = (SFTPGeneralDirectoryInputs) sftpInputs;
             try {
                 CompletableFuture.runAsync(() -> {
                     try {
-                        if (sftpDeleteDirectoryInputs.getRemotePath().isEmpty())
-                            sftpCopier.channel.rmdir(sftpDeleteDirectoryInputs.getRemoteFile());
-                        else if (!(sftpDeleteDirectoryInputs.getRemotePath().isEmpty()) && !(sftpDeleteDirectoryInputs.getRemoteFile().isEmpty()))
-                            sftpCopier.channel.rmdir(BACKSLASH + sftpDeleteDirectoryInputs.getRemotePath() + BACKSLASH + sftpDeleteDirectoryInputs.getRemoteFile());
+                        String path = sftpGeneralDirectoryInputs.getRemotePath();
+                        if (path.endsWith(BACKSLASH))
+                            path.substring(0, sftpGeneralDirectoryInputs.getRemotePath().length() - 1);
+                        if (!path.contains(BACKSLASH))
+                            sftpCopier.channel.rmdir(path);
+                        else
+                            sftpCopier.channel.rmdir(BACKSLASH + path);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

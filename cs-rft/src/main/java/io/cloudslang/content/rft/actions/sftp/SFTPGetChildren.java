@@ -41,6 +41,7 @@ import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescripti
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.RETURN_RESULT_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPGetChildrenDescriptions.REMOTE_PATH_GET_CHILDREN_DESC;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
 import static io.cloudslang.content.rft.utils.InputsValidation.verifyGetChildrenInputsSFTP;
@@ -49,7 +50,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class SFTPGetChildren {
-    @Action(name = "SFTP Get Children Operation",
+    @Action(name = SFTP_GET_CHILDREN,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -70,7 +71,7 @@ public class SFTPGetChildren {
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
                                        @Param(value = PRIVATE_KEY, description = PRIVATE_KEY_DESC) String privateKey,
-                                       @Param(value = REMOTE_PATH, description = REMOTE_PATH_DESC, required = true) String remotePath,
+                                       @Param(value = REMOTE_PATH, description = REMOTE_PATH_GET_CHILDREN_DESC, required = true) String remotePath,
                                        @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
