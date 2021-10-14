@@ -37,7 +37,7 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.microsoftAD.services.ResetUserPasswordService.resetUserPassword;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.FORCE_CHANGE_PASSWORD_DESC;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.ResetUserPassword.FORCE_CHANGE_PASSWORD_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.PASSWORD_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.ResetUserPassword.*;
