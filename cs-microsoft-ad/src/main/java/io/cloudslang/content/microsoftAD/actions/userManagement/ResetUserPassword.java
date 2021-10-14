@@ -37,9 +37,10 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.microsoftAD.services.ResetUserPasswordService.resetUserPassword;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.USER_ID_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.FORCE_CHANGE_PASSWORD_DESC;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.PASSWORD_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.AUTH_TOKEN_DESC;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.ResetUserPassword.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PASSWORD;
@@ -56,18 +57,17 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class ResetUserPassword {
 
-    @Action(name = NAME,
-            description = DESC,
+    @Action(name = RESET_USER_PASSWORD_NAME,
+            description = RESET_USER_PASSWORD_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = RESET_USER_PASSWORD_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = USER_ID, description = USER_ID_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = RESET_USER_PASSWORD_SUCCESS_RETURN_RESULT_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = RESET_USER_PASSWORD_FAILURE_DESC)
             })
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
@@ -146,7 +146,7 @@ public class ResetUserPassword {
                             .build())
                     .build());
 
-            Map<String, String> finalResult = getOperationResults(result, result.get(RETURN_RESULT), result.get(RETURN_RESULT));
+            Map<String, String> finalResult = getOperationResults(result, RESET_USER_PASSWORD_SUCCESS_RETURN_RESULT_DESC, result.get(RETURN_RESULT));
             parseApiExceptionMessage(finalResult);
 
             return finalResult;

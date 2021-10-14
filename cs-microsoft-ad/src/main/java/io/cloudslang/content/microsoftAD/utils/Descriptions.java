@@ -217,4 +217,16 @@ public class Descriptions {
 
     }
 
+    public static class ResetUserPassword {
+
+        //Descriptions
+        public static final String RESET_USER_PASSWORD_DESC = "Reset the password for an Active Directory user.";
+        public static final String RESET_USER_PASSWORD_NAME = "Reset User Password";
+
+        //Results
+        public static final String RESET_USER_PASSWORD_FAILURE_DESC = "There was an error while trying to reset the user password.";
+        public static final String RESET_USER_PASSWORD_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content " +
+                "response code. It does not return anything in the response body.";
+        public static final String RESET_USER_PASSWORD_SUCCESS_RETURN_RESULT_DESC = "The user's password was successfully updated.";
+    }
 }
