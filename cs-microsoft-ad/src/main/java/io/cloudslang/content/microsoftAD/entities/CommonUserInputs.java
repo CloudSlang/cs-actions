@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class CreateUserInputs {
+public class CommonUserInputs {
 
     private final String accountEnabled;
     private final String displayName;
@@ -31,9 +31,9 @@ public class CreateUserInputs {
     private final AzureActiveDirectoryCommonInputs commonInputs;
 
     @java.beans.ConstructorProperties({"accountEnabled", "displayName", "onPremisesImmutableId", "mailNickname",
-            "forceChangePassword", "password", "commonInputs", "oDataQuery"})
+            "forceChangePassword", "password", "commonInputs", "body"})
 
-    public CreateUserInputs(String accountEnabled, String displayName, String onPremisesImmutableId, String mailNickname,
+    public CommonUserInputs(String accountEnabled, String displayName, String onPremisesImmutableId, String mailNickname,
                             String forceChangePassword, String password, AzureActiveDirectoryCommonInputs commonInputs,
                             String body) {
         this.accountEnabled = accountEnabled;
@@ -47,8 +47,8 @@ public class CreateUserInputs {
     }
 
     @NotNull
-    public static CreateUserInputsBuilder builder() {
-        return new CreateUserInputsBuilder();
+    public static CommonUserInputsBuilder builder() {
+        return new CommonUserInputsBuilder();
     }
 
     @NotNull
@@ -91,7 +91,7 @@ public class CreateUserInputs {
         return body;
     }
 
-    public static class CreateUserInputsBuilder {
+    public static class CommonUserInputsBuilder {
         private String accountEnabled = EMPTY;
         private String displayName = EMPTY;
         private String onPremisesImmutableId = EMPTY;
@@ -101,59 +101,59 @@ public class CreateUserInputs {
         private AzureActiveDirectoryCommonInputs commonInputs;
         private String body = EMPTY;
 
-        CreateUserInputsBuilder() {
+        CommonUserInputsBuilder() {
         }
 
         @NotNull
-        public CreateUserInputs.CreateUserInputsBuilder accountEnabled(@NotNull final String accountEnabled) {
+        public CommonUserInputs.CommonUserInputsBuilder accountEnabled(@NotNull final String accountEnabled) {
             this.accountEnabled = accountEnabled;
             return this;
         }
 
         @NotNull
-        public CreateUserInputs.CreateUserInputsBuilder displayName(@NotNull final String displayName) {
+        public CommonUserInputs.CommonUserInputsBuilder displayName(@NotNull final String displayName) {
             this.displayName = displayName;
             return this;
         }
 
         @NotNull
-        public CreateUserInputs.CreateUserInputsBuilder onPremisesImmutableId(@NotNull final String onPremisesImmutableId) {
+        public CommonUserInputs.CommonUserInputsBuilder onPremisesImmutableId(@NotNull final String onPremisesImmutableId) {
             this.onPremisesImmutableId = onPremisesImmutableId;
             return this;
         }
 
         @NotNull
-        public CreateUserInputs.CreateUserInputsBuilder mailNickname(@NotNull final String mailNickname) {
+        public CommonUserInputs.CommonUserInputsBuilder mailNickname(@NotNull final String mailNickname) {
             this.mailNickname = mailNickname;
             return this;
         }
 
         @NotNull
-        public CreateUserInputs.CreateUserInputsBuilder forceChangePassword(@NotNull final String forceChangePassword) {
+        public CommonUserInputs.CommonUserInputsBuilder forceChangePassword(@NotNull final String forceChangePassword) {
             this.forceChangePassword = forceChangePassword;
             return this;
         }
 
         @NotNull
-        public CreateUserInputs.CreateUserInputsBuilder password(@NotNull final String password) {
+        public CommonUserInputs.CommonUserInputsBuilder password(@NotNull final String password) {
             this.password = password;
             return this;
         }
 
         @NotNull
-        public CreateUserInputs.CreateUserInputsBuilder commonInputs(@NotNull final AzureActiveDirectoryCommonInputs commonInputs) {
+        public CommonUserInputs.CommonUserInputsBuilder commonInputs(@NotNull final AzureActiveDirectoryCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
         @NotNull
-        public CreateUserInputs.CreateUserInputsBuilder body(@NotNull final String body) {
+        public CommonUserInputs.CommonUserInputsBuilder body(@NotNull final String body) {
             this.body = body;
             return this;
         }
 
-        public CreateUserInputs build() {
-            return new CreateUserInputs(accountEnabled, displayName, onPremisesImmutableId, mailNickname,
+        public CommonUserInputs build() {
+            return new CommonUserInputs(accountEnabled, displayName, onPremisesImmutableId, mailNickname,
                      forceChangePassword, password, commonInputs, body);
 
         }

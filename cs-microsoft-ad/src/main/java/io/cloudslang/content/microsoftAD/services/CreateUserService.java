@@ -15,7 +15,7 @@
 package io.cloudslang.content.microsoftAD.services;
 
 import com.google.gson.JsonObject;
-import io.cloudslang.content.microsoftAD.entities.CreateUserInputs;
+import io.cloudslang.content.microsoftAD.entities.CommonUserInputs;
 
 import java.util.Map;
 
@@ -26,24 +26,24 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class CreateUserService {
 
-    public static Map<String, String> createUser(CreateUserInputs createUserInputs) {
+    public static Map<String, String> createUser(CommonUserInputs commonUserInputs) {
 
-        if (!createUserInputs.getBody().equals(EMPTY))
-            return httpPost(createUserInputs.getCommonInputs(), USERS_URL, createUserInputs.getBody());
+        if (!commonUserInputs.getBody().equals(EMPTY))
+            return httpPost(commonUserInputs.getCommonInputs(), USERS_URL, commonUserInputs.getBody());
 
         JsonObject passwordProfile = new JsonObject();
-        passwordProfile.addProperty(FORCE_CHANGE_PASSWORD, createUserInputs.getForceChangePassword());
-        passwordProfile.addProperty(PASSWORD, createUserInputs.getPassword());
+        passwordProfile.addProperty(FORCE_CHANGE_PASSWORD, commonUserInputs.getForceChangePassword());
+        passwordProfile.addProperty(PASSWORD, commonUserInputs.getPassword());
 
         JsonObject body = new JsonObject();
-        body.addProperty(ACCOUNT_ENABLED, createUserInputs.getAccountEnabled());
-        body.addProperty(DISPLAY_NAME, createUserInputs.getDisplayName());
-        if (!createUserInputs.getOnPremisesImmutableId().equals(EMPTY))
-            body.addProperty(ON_PREMISES_IMMUTABLE_ID, createUserInputs.getOnPremisesImmutableId());
-        body.addProperty(MAIL_NICKNAME, createUserInputs.getMailNickname());
-        body.addProperty(USER_PRINCIPAL_NAME, createUserInputs.getCommonInputs().getUserPrincipalName());
+        body.addProperty(ACCOUNT_ENABLED, commonUserInputs.getAccountEnabled());
+        body.addProperty(DISPLAY_NAME, commonUserInputs.getDisplayName());
+        if (!commonUserInputs.getOnPremisesImmutableId().equals(EMPTY))
+            body.addProperty(ON_PREMISES_IMMUTABLE_ID, commonUserInputs.getOnPremisesImmutableId());
+        body.addProperty(MAIL_NICKNAME, commonUserInputs.getMailNickname());
+        body.addProperty(USER_PRINCIPAL_NAME, commonUserInputs.getCommonInputs().getUserPrincipalName());
         body.add(PASSWORD_PROFILE, passwordProfile);
 
-        return httpPost(createUserInputs.getCommonInputs(), USERS_URL, body.toString());
+        return httpPost(commonUserInputs.getCommonInputs(), USERS_URL, body.toString());
     }
 }

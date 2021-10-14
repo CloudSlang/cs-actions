@@ -36,14 +36,14 @@ public class GetUserService {
 
     @NotNull
     private static String getUserUrl(String oDdataQuery, String userPrincipalName, String userId) {
-        String finalUrl;
+        String finalUrl =  USERS_URL + FORWARD_SLASH;
         if (!StringUtils.isEmpty(userPrincipalName))
-            finalUrl = USERS_URL + FORWARD_SLASH + userPrincipalName;
+            finalUrl += userPrincipalName;
         else
-            finalUrl = USERS_URL + FORWARD_SLASH + userId;
+            finalUrl = finalUrl + userId;
 
         if (!StringUtils.isEmpty(oDdataQuery))
-            finalUrl = finalUrl + "?" + oDdataQuery;
+            finalUrl += "?" + oDdataQuery;
 
         return finalUrl;
     }

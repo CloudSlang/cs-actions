@@ -159,6 +159,28 @@ public final class InputsValidation {
     }
 
     @NotNull
+    public static List<String> verifyResetUserPasswordInputs(@Nullable final String forceChangePassword,
+                                                             @Nullable final String password,
+                                                             @Nullable final String proxyPort,
+                                                             @Nullable final String trustAllRoots,
+                                                             @Nullable final String x509HostnameVerifier,
+                                                             @Nullable final String connectTimeout,
+                                                             @Nullable final String socketTimeout,
+                                                             @Nullable final String keepAlive,
+                                                             @Nullable final String connectionsMaxPerRoute,
+                                                             @Nullable final String connectionsMaxTotal) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+
+        addVerifyBoolean(exceptionMessages, forceChangePassword, FORCE_CHANGE_PASSWORD);
+        addVerifyNotNullOrEmpty(exceptionMessages, password, PASSWORD);
+
+        exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trustAllRoots, x509HostnameVerifier,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
+
+        return exceptionMessages;
+    }
+  
     public static List<String> verifyIsUserInGroupInputs(@Nullable final String userId,
                                                          @Nullable final String securityEnabledOnly,
                                                          @Nullable final String proxyPort,
@@ -180,7 +202,6 @@ public final class InputsValidation {
 
         return exceptionMessages;
     }
-
 
     @NotNull
     public static List<String> verifyUpdateUserInputs(@Nullable final String accountEnabled,
