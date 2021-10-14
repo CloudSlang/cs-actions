@@ -75,7 +75,7 @@ public class ResetUserPassword {
                                        @Param(value = USER_PRINCIPAL_NAME, description = Descriptions.Common.USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = USER_ID, description = Descriptions.Common.USER_ID_DESC) String userId,
                                        @Param(value = FORCE_CHANGE_PASSWORD, description = FORCE_CHANGE_PASSWORD_DESC) String forceChangePassword,
-                                       @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
+                                       @Param(value = PASSWORD, required = true, encrypted = true, description = PASSWORD_DESC) String password,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
