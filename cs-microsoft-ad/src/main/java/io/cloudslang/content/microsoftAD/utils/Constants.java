@@ -52,6 +52,13 @@ public final class Constants {
     public static final String SELECT_PATH = "$select=";
     public static final String AND = "&";
     public static final String QUERY = "?";
+
+    public static final String COMMA = "\",\"";
+    public static final String SIMPLE_COMMA = ",";
+    public static final String RIGHT_PARANTHESIS = "[\"";
+    public static final String LEFT_PARANTHESIS = "\"]";
+    public static final String EMPTY_STRING = "";
+
     public static final String HTTPS = "https";
     public static final String STATUS_CODE = "statusCode";
     public static final String APPLICATION_JSON = "application/json";
@@ -60,6 +67,8 @@ public final class Constants {
     public static final String ID = "id";
     public static final String ERROR = "error";
     public static final String MESSAGE = "message";
+    public static final String ADD_LICENSES = "addLicenses";
+    public static final String REMOVE_LICENSES = "removeLicenses";
 
     public static final String ATTACHMENTS = "/attachments";
     public static final String ATTACHMENTS_PATH = "/attachments/";
@@ -67,6 +76,10 @@ public final class Constants {
     public static final String ACCOUNT_ENABLED_OUT = "accountEnabled";
     public static final String USER_ID = "userId";
     public static final String ACCOUNT_ENABLED = "accountEnabled";
+
+    public static final String VALUE = "value";
+    public static final String GET_MEMBER_GROUPS = "/getMemberGroups";
+    public static final String SECURITY_ENABLED_ONLY = "securityEnabledOnly";
 
     public static final String STRICT = "strict";
     public static final String ALLOW_ALL = "allow_all";
@@ -78,5 +91,10 @@ public final class Constants {
     public static final String TLSV13 = "tlsv1.3";
 
     //API URLs
+    public static final String CREATE_USER_URL = "https://graph.microsoft.com/v1.0/users";
+    public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
+    public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
+    public static final String GET_MEMBER_GROUPS_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String USERS_URL = "https://graph.microsoft.com/v1.0/users";
+    public static final String ASSIGN_LICENSE_URL = "/assignLicense";
 }

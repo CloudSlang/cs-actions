@@ -229,4 +229,49 @@ public class Descriptions {
                 "response code. It does not return anything in the response body.";
         public static final String RESET_USER_PASSWORD_SUCCESS_RETURN_RESULT_DESC = "The user's password was successfully updated.";
     }
+
+    public static class IsUserInGroup {
+
+        //Descriptions
+        public static final String IS_USER_IN_GROUP_DESC = "Return all the groups that the user is a member of.";
+        public static final String IS_USER_IN_GROUP_NAME = "Is User In Group";
+
+        public static final String IS_USER_ID_DESC = "The ID of the user to perform the action on.";
+
+        public static final String BODY_DESC = "Full json body, " +
+                "security_enabled_only input is ignored if the body is given.";
+
+        public static final String IS_USER_IN_GROUP_SECURITY_ENABLED = "True if only security groups that the user is a " +
+                "member of should be returned, false to specify that all groups should be returned.";
+
+        //Results
+        public static final String IS_USER_IN_GROUP_SUCCESS_DESC = "Request went successfully.";
+        public static final String NO_GROUP_MEMBER = "The user does not belong to any group.";
+        public static final String IS_USER_IN_GROUP_FAILURE_DESC = "There was an error while trying to do the request.";
+        public static final String IS_USER_IN_GROUP_RETURN_RESULT_DESC = "If successful this method returns the IDs of " +
+                "the groups that the user is a member of. If the user does not belong to any" +
+                "group, a suggestive message will be displayed.";
+    }
+
+    public static class AssignUserLicense {
+
+        //Descriptions
+        public static final String ASSIGN_USER_LICENSE_DESC = "Add subscriptions for the user. You can also enable specific plans associated with a subscription.";
+        public static final String ASSIGN_USER_LICENSE_NAME = "Assign user license";
+
+        //Inputs
+        public static final String ASSIGNED_LICENSES_DESC = "A collection of assignedLicense objects that specify " +
+                "the licenses to add. You can disable plans associated with a license by setting the disabledPlans " +
+                "property on an assignedLicense object.";
+        public static final String INVALID_JSON_INPUT_DESC = "The value provided for the assigned licenses input is " +
+                "an invalid JSON.";
+
+        //Results
+        public static final String ASSIGN_USER_LICENSE_FAILURE_DESC = "There was an error while trying to assign license.";
+        public static final String ASSIGN_USER_LICENSE_RETURN_RESULT_DESC = "If successful, this method returns 200 " +
+                "response code and a user object in the response body.";
+        public static final String ASSIGN_USER_LICENSE_SUCCESS_RETURN_RESULT_DESC = "The license was successfully assigned.";
+
+
+    }
 }
