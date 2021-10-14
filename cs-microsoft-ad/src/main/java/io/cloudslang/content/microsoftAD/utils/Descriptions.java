@@ -240,4 +240,26 @@ public class Descriptions {
                 "group, a suggestive message will be displayed.";
     }
 
+    public static class AssignUserLicense {
+
+        //Descriptions
+        public static final String ASSIGN_USER_LICENSE_DESC = "Add subscriptions for the user. You can also enable specific plans associated with a subscription.";
+        public static final String ASSIGN_USER_LICENSE_NAME = "Assign user license";
+
+        //Inputs
+        public static final String ASSIGNED_LICENSES_DESC = "A collection of assignedLicense objects that specify " +
+                "the licenses to add. You can disable plans associated with a license by setting the disabledPlans " +
+                "property on an assignedLicense object.";
+        public static final String INVALID_JSON_INPUT_DESC = "The value provided for the assigned licenses input is " +
+                "an invalid JSON.";
+
+        //Results
+        public static final String ASSIGN_USER_LICENSE_FAILURE_DESC = "There was an error while trying to assign license.";
+        public static final String ASSIGN_USER_LICENSE_RETURN_RESULT_DESC = "If successful, this method returns 200 " +
+                "response code and a user object in the response body.";
+        public static final String ASSIGN_USER_LICENSE_SUCCESS_RETURN_RESULT_DESC = "The license was successfully assigned.";
+
+
+    }
+
 }

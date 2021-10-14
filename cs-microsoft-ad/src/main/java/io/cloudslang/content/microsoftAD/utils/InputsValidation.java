@@ -15,6 +15,7 @@
 
 package io.cloudslang.content.microsoftAD.utils;
 
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +29,7 @@ import static io.cloudslang.content.microsoftAD.utils.Constants.ACCOUNT_ENABLED;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.EXCEPTION_INVALID_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.EXCEPTION_INVALID_TLS_VERSION;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.AssignUSerLicenseInputs.ASSIGNED_LICENSES;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.USERNAME;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PASSWORD;
@@ -80,6 +82,7 @@ public final class InputsValidation {
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
         return exceptionMessages;
     }
+
 
     @NotNull
     public static List<String> verifyGetInputs(@Nullable final String userPrincipalName,
@@ -202,6 +205,28 @@ public final class InputsValidation {
 
         return exceptionMessages;
     }
+
+    @NotNull public static List<String> verifyLicenseInputs(@Nullable final String userPrincipalName,
+                                 @Nullable final String userId,
+                                 @Nullable final String body,
+                                 @Nullable final String proxyPort,
+                                 @Nullable final String trust_all_roots,
+                                 @Nullable final String x509HostnameVerifier,
+                                 @Nullable final String connectTimeout,
+                                 @Nullable final String socketTimeout,
+                                 @Nullable final String keepAlive,
+                                 @Nullable final String connectionsMaxPerRoute,
+                                 @Nullable final String connectionsMaxTotal) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyUserInputs(exceptionMessages, userPrincipalName, userId);
+        addVerifyNotNullOrEmpty(exceptionMessages, body, ASSIGNED_LICENSES);
+        exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots, x509HostnameVerifier,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
+        return exceptionMessages;
+
+    }
+
 
     @NotNull
     private static List<String> addVerifyUserInputs(@NotNull List<String> exceptions,

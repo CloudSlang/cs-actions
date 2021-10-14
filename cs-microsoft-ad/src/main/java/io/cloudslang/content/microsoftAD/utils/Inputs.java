@@ -58,5 +58,10 @@ public final class Inputs extends InputNames {
         public static final String BODY = "body";
     }
 
+
+    public static class AssignUSerLicenseInputs{
+        public static final String ASSIGNED_LICENSES = "assignedLicenses";
+    }
+
 }
 
