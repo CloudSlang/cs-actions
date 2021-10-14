@@ -21,6 +21,7 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.database.services.databases.*;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType;
 import io.cloudslang.content.utils.CollectionUtilities;
+import org.apache.commons.lang3.SystemUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ import java.util.*;
 
 import static io.cloudslang.content.database.constants.DBExceptionValues.INVALID_DB_TYPE;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
+import static io.cloudslang.content.database.utils.Constants.JTDS_JDBC_DRIVER;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.isValidDbType;
 import static org.apache.commons.lang3.StringUtils.*;
 
@@ -56,7 +58,10 @@ public class SQLInputsUtils {
             return dbClass;
         }
         if (isValidDbType(dbType)) {
-            return DB_ClASSES.get(dbType);
+            if(SystemUtils.IS_OS_LINUX && dbType.equalsIgnoreCase(MSSQL_DB_TYPE))
+                return JTDS_JDBC_DRIVER;
+            else
+                return DB_ClASSES.get(dbType);
         }
         return EMPTY;
     }

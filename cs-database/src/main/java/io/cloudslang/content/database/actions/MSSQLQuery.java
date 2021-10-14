@@ -44,8 +44,9 @@ import static io.cloudslang.content.database.constants.DBOutputNames.*;
 import static io.cloudslang.content.database.constants.DBResponseNames.*;
 import static io.cloudslang.content.database.services.databases.MSSqlDatabase.exportPathToAuthDll;
 import static io.cloudslang.content.database.utils.Constants.AUTH_WINDOWS;
+import static io.cloudslang.content.database.utils.Constants.JTDS_JDBC_DRIVER;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
-import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryInputs;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.*;
 import static io.cloudslang.content.database.utils.SQLUtils.getRowsFromGlobalSessionMap;
 import static io.cloudslang.content.database.utils.SQLUtils.getStrColumns;
 import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
@@ -147,8 +148,9 @@ public class MSSQLQuery {
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
         ignoreCase = defaultIfEmpty(ignoreCase, TRUE);
+        dbClass = getOrDefaultDBClass(dbClass, dbType);
 
-        if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType) && MSSQL_DB_TYPE.equalsIgnoreCase(dbType)){
+        if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)){
             try {
                 authLibraryPath =  exportPathToAuthDll();
             } catch (Exception e) {
@@ -176,7 +178,7 @@ public class MSSQLQuery {
                 .dbPort(getOrDefaultDBPort(dbPort, dbType))
                 .dbName(getOrLower(defaultIfEmpty(databaseName, EMPTY), ignoreCaseBool))
                 .authenticationType(authenticationType)
-                .dbClass(getOrDefaultDBClass(dbClass, dbType))
+                .dbClass(dbClass)
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .sqlCommand(command)
                 .trustAllRoots(toBoolean(trustAllRoots))

@@ -32,6 +32,7 @@ public class Constants {
     public static final String AUTH_WINDOWS = "Windows";
     public static final String TRIM_ROWSTAT = "trimRowstat";
     public static final String MSSQL_URL = "jdbc:sqlserver://";
+    public static final String JTDS_MSSQL_URL = "jdbc:jtds:sqlserver://";
     public static final String TRUST_SERVER_CERTIFICATE = "trustServerCertificate";
     public static final String JTDS_JDBC_DRIVER = "net.sourceforge.jtds.jdbc.Driver";
     public static final String ENCRYPT = "encrypt";
@@ -41,6 +42,11 @@ public class Constants {
     public static final String TRUSTORE_PARAMS = SEMI_COLON + TRUST_STORE + EQUALS + STRING_PARAMETER + SEMI_COLON + TRUST_STORE_PASSWORD + EQUALS + STRING_PARAMETER;
     public static final String COLON = ":";
     public static final String INTEGRATED_SECURITY = "integratedSecurity";
+    public static final String INSTANCE = "instance";
+    public static final String DOMAIN = "domain";
+    public static final String USE_NTLMv2 = "useNTLMv2";
+    public static final String CORP = "CORP";
+
 
     public static final String TRUE = Boolean.TRUE.toString();
     public static final String EMPTY_DRIVER_PATH_EXCEPTION = "The authDriverPath is empty.";

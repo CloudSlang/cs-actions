@@ -14,9 +14,9 @@
  */
 
 
-
 package io.cloudslang.content.database.services.databases;
 
+import io.cloudslang.content.constants.BooleanValues;
 import io.cloudslang.content.database.utils.Address;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.SQLInputs;
@@ -121,7 +121,7 @@ public class MSSqlDatabase implements SqlDatabase {
             //If dll was not found, create it
             stream = MSSqlDatabase.class.getResourceAsStream(MSSQL_FILE_DRIVER);
             if (stream == null) {
-                throw new Exception("Cannot get resource \"" +MSSQL_FILE_DRIVER + "\" from dll file.");
+                throw new Exception("Cannot get resource \"" + MSSQL_FILE_DRIVER + "\" from dll file.");
             }
 
             int readBytes;
@@ -186,7 +186,7 @@ public class MSSqlDatabase implements SqlDatabase {
         }
         if (driverFound) {
             Class.forName(dbClass);
-            if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)) {
+            if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType) && dbClass.equalsIgnoreCase(SQLSERVER_JDBC_DRIVER)) {
                 loadWindowsAuthentication(sqlJdbcAuthFilePath);
             }
         } else {
@@ -227,30 +227,75 @@ public class MSSqlDatabase implements SqlDatabase {
 
             //instance is included in the host name
             //todo check if mssql dbName can be null, the other operation "supported" it
-            if (isValidAuthType(sqlInputs.getAuthenticationType())) {
-                final StringBuilder dbUrlMSSQL = new StringBuilder(Constants.MSSQL_URL + host + COLON + sqlInputs.getDbPort()
-                        + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + sqlInputs.getDbName());
 
-                if (serverInstanceComponents != null) {
-                    dbUrlMSSQL.append(SEMI_COLON + INSTANCE + EQUALS)
-                            .append(serverInstanceComponents[1]);
-                } else if (isNoneEmpty(sqlInputs.getInstance())) {
-                    dbUrlMSSQL.append(SEMI_COLON + INSTANCE + EQUALS)
-                            .append(sqlInputs.getInstance());
-                }
-                if (AUTH_WINDOWS.equalsIgnoreCase(sqlInputs.getAuthenticationType())) {
-                    dbUrlMSSQL.append(SEMI_COLON + INTEGRATED_SECURITY + EQUALS).append(TRUE);
-                }
-                final String connectionString = addSslEncryptionToConnection(sqlInputs.isTrustAllRoots(), sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), dbUrlMSSQL.toString());
+            if (SQLSERVER_JDBC_DRIVER.equalsIgnoreCase(sqlInputs.getDbClass())) {
+                if (isValidAuthType(sqlInputs.getAuthenticationType())) {
+                    final StringBuilder dbUrlMSSQL = new StringBuilder(Constants.MSSQL_URL + host + COLON + sqlInputs.getDbPort()
+                            + SEMI_COLON + DATABASE_NAME_CAP + EQUALS + sqlInputs.getDbName());
+
+                    if (serverInstanceComponents != null) {
+                        dbUrlMSSQL.append(SEMI_COLON + INSTANCE + EQUALS)
+                                .append(serverInstanceComponents[1]);
+                    } else if (isNoneEmpty(sqlInputs.getInstance())) {
+                        dbUrlMSSQL.append(SEMI_COLON + INSTANCE + EQUALS)
+                                .append(sqlInputs.getInstance());
+                    }
+                    if (AUTH_WINDOWS.equalsIgnoreCase(sqlInputs.getAuthenticationType())) {
+                        dbUrlMSSQL.append(SEMI_COLON + INTEGRATED_SECURITY + EQUALS).append(TRUE);
+                    }
+                    final String connectionString = addSslEncryptionToConnection(sqlInputs.isTrustAllRoots(), sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), dbUrlMSSQL.toString());
 //                sqlInputs.getDbUrls().add(connectionString);
 
-                dbUrls.add(connectionString);
+                    dbUrls.add(connectionString);
 
+                } else
+                    throw new SQLException(INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL + sqlInputs.getAuthenticationType());
+
+                return dbUrls;
             } else {
-                throw new SQLException(INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL + sqlInputs.getAuthenticationType());
-            }
+                if (isValidAuthType(sqlInputs.getAuthenticationType())) {
+                    final StringBuilder dbUrlMSSQL = new StringBuilder(Constants.JTDS_MSSQL_URL + host + COLON + sqlInputs.getDbPort() + FORWARD_SLASH
+                            + sqlInputs.getDbName());
 
-            return dbUrls;
+                    //instance is included in the host name
+                    if (serverInstanceComponents != null) {
+                        //removed username and password form the url, since
+                        //driver manager will use url , username and password later
+                        dbUrlMSSQL.append(SEMI_COLON + INSTANCE + EQUALS).append(serverInstanceComponents[1]).append(SEMI_COLON);
+                    }
+                    //has instance input
+                    else if (!StringUtils.isEmpty(sqlInputs.getInstance()))
+                        dbUrlMSSQL.append(SEMI_COLON + INSTANCE + EQUALS).append(sqlInputs.getInstance()).append(SEMI_COLON);
+
+
+                    if (Constants.AUTH_WINDOWS.equalsIgnoreCase(sqlInputs.getAuthenticationType())) {
+                        String domain = CORP;
+                        // If present and the user name and password are provided, jTDS uses Windows (NTLM) authentication instead of the usual SQL Server authentication
+//                        if (windowsDomain != null) {
+//                            domain = windowsDomain;
+//                        }
+                        //instance is included in the host name
+                        if (serverInstanceComponents != null)
+                            dbUrlMSSQL.append(SEMI_COLON + INSTANCE + EQUALS).append(serverInstanceComponents[1]).append(SEMI_COLON).append(DOMAIN).append(EQUALS).append(domain);
+
+                        //has instance input
+                        else if (!StringUtils.isEmpty(sqlInputs.getInstance()))
+                            dbUrlMSSQL.append(SEMI_COLON + INSTANCE + EQUALS).append(sqlInputs.getInstance()).append(SEMI_COLON).append(DOMAIN).append(EQUALS).append(domain);
+
+                        //no instance
+                        else
+                            dbUrlMSSQL.append(SEMI_COLON + DOMAIN + EQUALS).append(domain);
+
+                        // Set to true to send LMv2/NTLMv2 responses when using Windows authentication
+                        dbUrlMSSQL.append(SEMI_COLON + USE_NTLMv2 + EQUALS + BooleanValues.TRUE);
+
+                        final String connectionString = addSslEncryptionToConnection(sqlInputs.isTrustAllRoots(), sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), dbUrlMSSQL.toString());
+                        dbUrls.add(connectionString);
+                    }
+                } else
+                    throw new SQLException(INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL + sqlInputs.getAuthenticationType());
+                return dbUrls;
+            }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e.getCause());
         }
