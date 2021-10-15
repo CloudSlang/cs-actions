@@ -185,6 +185,7 @@ public class Descriptions {
         public static final String UPDATED_DISPLAY_NAME = "The name displayed in the address book for the user. This " +
                 "property is required when a user is created and it cannot be cleared during updates.";
         public static final String UPDATE_USER_RETURN_RESULT = "The user's properties were updated successfully!";
+        public static final String UPDATE_USER_FAILURE_RETURN_RESULT = "There was an error while updating the user's properties!";
 
     }
     public static class EnableUser {
@@ -278,5 +279,24 @@ public class Descriptions {
         public static final String ASSIGN_USER_LICENSE_SUCCESS_RETURN_RESULT_DESC = "The license was successfully assigned.";
 
 
+    }
+
+    public static class ChangeUserPassword {
+
+        //Descriptions
+        public static final String CHANGE_USER_PASSWORD_NAME = "Change User Password";
+        public static final String CHANGE_USER_PASSWORD_DESC = "Enables the user to update their own password. Any user " +
+                "can update their password without belonging to any administrator role.";
+
+        //Inputs
+        public static final String CURRENT_PASSWORD_DESC = "The user's current password.";
+        public static final String NEW_PASSWORD_DESC = "The new password. The password must satisfy minimum requirements " +
+                "as specified by the user’s passwordPolicies property. By default, a strong password is required.";
+
+        //Results
+        public static final String CHANGE_USER_PASSWORD_FAILURE_DESC = "There was an error while trying to change the user's password.";
+        public static final String CHANGE_USER_PASSWORD_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content " +
+                "response code. It does not return anything in the response body.";
+        public static final String CHANGE_USER_PASSWORD_SUCCESS_RETURN_RESULT_DESC = "The user's password was successfully changed.";
     }
 }
