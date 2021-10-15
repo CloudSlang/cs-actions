@@ -19,12 +19,15 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import io.cloudslang.content.microsoftAD.entities.UserLicenseInputs;
+import io.cloudslang.content.microsoftAD.entities.AssignUserLicenseInputs;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
+import io.cloudslang.content.microsoftAD.entities.RemoveUserLicenseInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
@@ -32,27 +35,58 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPost;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.AssignUserLicense.INVALID_JSON_INPUT_DESC;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.RemoveUserLicense.INVALID_STRING_ARRAY_INPUT_DESC;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class AssignUserLicenseService {
+public class AssignRemoveUserLicenseService {
 
-    public static Map<String, String> assignUserLicense(UserLicenseInputs licenseInputs) {
+    public static Map<String, String> assignUserLicense(AssignUserLicenseInputs assignedLicenseInputs) {
 
-        AzureActiveDirectoryCommonInputs commonInputs = licenseInputs.getCommonInputs();
+        AzureActiveDirectoryCommonInputs commonInputs = assignedLicenseInputs.getCommonInputs();
         JsonObject body = new JsonObject();
-        Gson gson = new Gson();
-        JsonParser jsonParser = new JsonParser();
         try {
-            JsonArray jsonArray = (JsonArray) jsonParser.parse(licenseInputs.getBody());
+
+            JsonParser jsonParser = new JsonParser();
+            JsonArray jsonArray = (JsonArray) jsonParser.parse(assignedLicenseInputs.getAssignedLicenses());
             body.add(ADD_LICENSES, jsonArray);
             body.add(REMOVE_LICENSES, new JsonArray());
 
-            return httpPost(commonInputs, getUserUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId()), body.toString());
+            return httpPost(commonInputs, getUserUrl(commonInputs.getUserPrincipalName(),
+                                                    commonInputs.getUserId()),
+                                                    body.toString());
+
         }catch(Exception e)
         {
             Map<String, String> result = new HashMap<>();
             result.put(STATUS_CODE, EMPTY);
             result.put(RETURN_RESULT, INVALID_JSON_INPUT_DESC);
+            result.put(EXCEPTION, e.toString());
+            return result;
+        }
+
+    }
+
+    public static Map<String, String> removeUserLicense(RemoveUserLicenseInputs removedLicenseInputs) {
+
+        AzureActiveDirectoryCommonInputs commonInputs = removedLicenseInputs.getCommonInputs();
+        JsonObject body = new JsonObject();
+        try {
+
+            Gson gson = new Gson();
+            List<String> removedLicenses = Arrays.asList(removedLicenseInputs.getRemovedLicenses().split(",", -1));
+            JsonArray removedLicensesJson = gson.toJsonTree(removedLicenses).getAsJsonArray();
+            body.add(ADD_LICENSES, new JsonArray());
+            body.add(REMOVE_LICENSES, removedLicensesJson);
+
+            return httpPost(commonInputs, getUserUrl(commonInputs.getUserPrincipalName(),
+                                                        commonInputs.getUserId()),
+                                                        body.toString());
+
+        }catch(Exception e)
+        {
+            Map<String, String> result = new HashMap<>();
+            result.put(STATUS_CODE, EMPTY);
+            result.put(RETURN_RESULT, INVALID_STRING_ARRAY_INPUT_DESC);
             result.put(EXCEPTION, e.toString());
             return result;
         }

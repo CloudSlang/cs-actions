@@ -18,21 +18,21 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class UserLicenseInputs {
+public class RemoveUserLicenseInputs {
 
-    private final String body;
+    private final String removedLicenses;
 
     private final AzureActiveDirectoryCommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"body", "commonInputs"})
+    @java.beans.ConstructorProperties({"removedLicenses", "commonInputs"})
 
-    public UserLicenseInputs(String body, AzureActiveDirectoryCommonInputs commonInputs) {
+    public RemoveUserLicenseInputs(String removedLicenses, AzureActiveDirectoryCommonInputs commonInputs) {
         this.commonInputs = commonInputs;
-        this.body = body;
+        this.removedLicenses = removedLicenses;
     }
 
     @NotNull
-    public static UserLicenseInputs.AssignUserLicenseInputsBuilder builder() {
+    public static RemoveUserLicenseInputs.AssignUserLicenseInputsBuilder builder() {
         return new AssignUserLicenseInputsBuilder();
     }
 
@@ -42,33 +42,33 @@ public class UserLicenseInputs {
     }
 
     @NotNull
-    public String getBody() {
-        return body;
+    public String getRemovedLicenses() {
+        return removedLicenses;
     }
 
     public static class AssignUserLicenseInputsBuilder {
 
         private AzureActiveDirectoryCommonInputs commonInputs;
-        private String body = EMPTY;
+        private String removedLicenses = EMPTY;
 
         AssignUserLicenseInputsBuilder() {
         }
 
 
         @NotNull
-        public UserLicenseInputs.AssignUserLicenseInputsBuilder commonInputs(@NotNull final AzureActiveDirectoryCommonInputs commonInputs) {
+        public RemoveUserLicenseInputs.AssignUserLicenseInputsBuilder commonInputs(@NotNull final AzureActiveDirectoryCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
         @NotNull
-        public UserLicenseInputs.AssignUserLicenseInputsBuilder body(@NotNull final String body) {
-            this.body = body;
+        public RemoveUserLicenseInputs.AssignUserLicenseInputsBuilder removedLicenses(@NotNull final String removedLicenses) {
+            this.removedLicenses = removedLicenses;
             return this;
         }
 
-        public UserLicenseInputs build() {
-            return new UserLicenseInputs(body, commonInputs);
+        public RemoveUserLicenseInputs build() {
+            return new RemoveUserLicenseInputs(removedLicenses, commonInputs);
 
         }
     }
