@@ -239,8 +239,7 @@ public class Descriptions {
 
     public static class SFTPUploadFileDescriptions {
 
-        public static final String REMOTE_LOCATION_DESC = "The remote directory path, the remote location where the file " +
-                "will be uploaded. \n" +
+        public static final String REMOTE_LOCATION_DESC = "The remote directory path where the file will be uploaded. \n" +
                 "Examples: C:/Users/Administrator, root/test";
         public static final String LOCAL_LOCATION_DESC = "The local directory path of the file that will be copied. \n" +
                 "Examples: C:/Users/Administrator, root/test";
@@ -251,10 +250,9 @@ public class Descriptions {
 
     public static class SFTPDownloadFileDescriptions {
 
-        public static final String REMOTE_FILE_DESC = "The file that will be downloaded remotely using SFTP. \n" +
+        public static final String REMOTE_FILE_DESC = "The file to be downloaded remotely using SFTP. \n" +
                 "Example: test.txt";
-        public static final String REMOTE_LOCATION_DESC = "The remote directory path, the remote location from where the file " +
-                "will be downloaded. \n" +
+        public static final String REMOTE_LOCATION_DESC = "The remote directory path from where the file will be downloaded. \n" +
                 "Examples: C:/Users/Administrator, root/test";
         public static final String LOCAL_LOCATION_DESC = "The local directory path where the file will be downloaded. \n" +
                 "Examples: C:/Users/Administrator, root/test";

@@ -21,7 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpGet;
-import static io.cloudslang.content.microsoftAD.utils.Constants.GET_USER_REQUEST_URL;
+import static io.cloudslang.content.microsoftAD.utils.Constants.FORWARD_SLASH;
+import static io.cloudslang.content.microsoftAD.utils.Constants.USERS_URL;
 
 
 public class GetUserService {
@@ -35,14 +36,14 @@ public class GetUserService {
 
     @NotNull
     private static String getUserUrl(String oDdataQuery, String userPrincipalName, String userId) {
-        String finalUrl;
+        String finalUrl =  USERS_URL + FORWARD_SLASH;
         if (!StringUtils.isEmpty(userPrincipalName))
-            finalUrl = GET_USER_REQUEST_URL + userPrincipalName;
+            finalUrl += userPrincipalName;
         else
-            finalUrl = GET_USER_REQUEST_URL + userId;
+            finalUrl = finalUrl + userId;
 
         if (!StringUtils.isEmpty(oDdataQuery))
-            finalUrl = finalUrl + "?" + oDdataQuery;
+            finalUrl += "?" + oDdataQuery;
 
         return finalUrl;
     }

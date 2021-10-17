@@ -31,8 +31,6 @@ import static io.cloudslang.content.rft.utils.Constants.*;
 
 public class SFTPCopier {
 
-    private static final String BACK_SLASH = "/";
-    private static final String SFTP = "sftp";
     Session session;
     ChannelSftp channel;
     Map<String, String> result = new HashMap<>();
@@ -116,10 +114,11 @@ public class SFTPCopier {
                 channel.setFilenameEncoding(sftpDownloadFileInputs.getSftpCommonInputs().getCharacterSet());
                 int iMode = ChannelSftp.OVERWRITE;
 
-                channel.cd(BACK_SLASH + sftpDownloadFileInputs.getRemotePath());
-                channel.lcd(BACK_SLASH + sftpDownloadFileInputs.getLocalPath());
+                channel.cd(BACKSLASH + sftpDownloadFileInputs.getRemotePath());
+                channel.lcd(BACKSLASH + sftpDownloadFileInputs.getLocalPath());
 
                 channel.get(sftpDownloadFileInputs.getRemoteFile(), sftpDownloadFileInputs.getRemoteFile(), null, iMode);
+
             } catch (Throwable e) {
                 throw new Exception(EXCEPTION_UNABLE_TO_RETRIEVE, e);
             }
@@ -137,7 +136,7 @@ public class SFTPCopier {
     }
 
     private void getFilesAndFolders(SFTPGetChildrenInputs sftpGetChildrenInputs) throws Exception {
-        String remotePath = BACK_SLASH + sftpGetChildrenInputs.getRemotePath();
+        String remotePath = BACKSLASH + sftpGetChildrenInputs.getRemotePath();
         String delimiter = sftpGetChildrenInputs.getDelimiter();
         Vector lsOutput = channel.ls(remotePath);
 
@@ -156,40 +155,40 @@ public class SFTPCopier {
                         if (((ChannelSftp.LsEntry) lineObj).getAttrs().isDir()) {
                             //a directory
                             folderBuffer.append(remotePath);
-                            if (!remotePath.endsWith(BACK_SLASH)) {
-                                folderBuffer.append(BACK_SLASH);
+                            if (!remotePath.endsWith(BACKSLASH)) {
+                                folderBuffer.append(BACKSLASH);
                             }
                             folderBuffer.append(item);
                             folderBuffer.append(delimiter);
                         } else if (((ChannelSftp.LsEntry) lineObj).getAttrs().isLink()) {
-                            String linkPath = remotePath + BACK_SLASH + ((ChannelSftp.LsEntry) lineObj).getFilename();
+                            String linkPath = remotePath + BACKSLASH + ((ChannelSftp.LsEntry) lineObj).getFilename();
                             Vector linkLs = channel.ls(linkPath);
                             if (linkLs.size() > 1) {
                                 folderBuffer.append(remotePath);
-                                if (!remotePath.endsWith(BACK_SLASH))
-                                    folderBuffer.append(BACK_SLASH);
+                                if (!remotePath.endsWith(BACKSLASH))
+                                    folderBuffer.append(BACKSLASH);
                                 folderBuffer.append(item);
                                 folderBuffer.append(delimiter);
                             } else {
                                 fileBuffer.append(remotePath);
-                                if (!remotePath.endsWith(BACK_SLASH))
-                                    fileBuffer.append(BACK_SLASH);
+                                if (!remotePath.endsWith(BACKSLASH))
+                                    fileBuffer.append(BACKSLASH);
                                 fileBuffer.append(item);
                                 fileBuffer.append(delimiter);
                             }
                         } else {
                             //a file
                             fileBuffer.append(remotePath);
-                            if (!remotePath.endsWith(BACK_SLASH))
-                                fileBuffer.append(BACK_SLASH);
+                            if (!remotePath.endsWith(BACKSLASH))
+                                fileBuffer.append(BACKSLASH);
 
                             fileBuffer.append(item);
                             fileBuffer.append(delimiter);
                         }
 
                         resultBuffer.append(remotePath);
-                        if (!remotePath.endsWith(BACK_SLASH)) {
-                            resultBuffer.append(BACK_SLASH);
+                        if (!remotePath.endsWith(BACKSLASH)) {
+                            resultBuffer.append(BACKSLASH);
                         }
                         resultBuffer.append(item);
                         if (i != lsOutput.size() - 1) {
@@ -208,7 +207,7 @@ public class SFTPCopier {
             populateResult(fileBuffer.toString(), folderBuffer.toString(), resultBuffer.toString());
 
         } else {
-            throw new Exception("LS Output was null.");
+            throw new Exception(NULL_OUTPUT);
         }
     }
 
@@ -226,15 +225,11 @@ public class SFTPCopier {
                 channel.setFilenameEncoding(sftpUploadFileInputs.getSftpCommonInputs().getCharacterSet());
                 int iMode = ChannelSftp.OVERWRITE;
 
-                if (!(sftpUploadFileInputs.getRemotePath().isEmpty())) {
-                    channel.cd(BACK_SLASH + sftpUploadFileInputs.getRemotePath());
-                    channel.lcd(BACK_SLASH + sftpUploadFileInputs.getLocalPath());
-                    channel.put(sftpUploadFileInputs.getLocalFile(), sftpUploadFileInputs.getLocalFile(), null, iMode);
-                } else
-                    channel.put(sftpUploadFileInputs.getLocalPath() + BACK_SLASH + sftpUploadFileInputs.getLocalFile(),
-                            sftpUploadFileInputs.getLocalFile(),
-                            null,
-                            iMode);
+                channel.cd(BACKSLASH + sftpUploadFileInputs.getRemotePath());
+                channel.lcd(BACKSLASH + sftpUploadFileInputs.getLocalPath());
+
+                channel.put(sftpUploadFileInputs.getLocalFile(), sftpUploadFileInputs.getLocalFile(), null, iMode);
+
             } catch (Throwable e) {
                 throw new Exception(EXCEPTION_UNABLE_TO_STORE, e);
             }
@@ -264,8 +259,8 @@ public class SFTPCopier {
 
     private void populateResult(String files, String folders, String returnResult) {
         result.put(RETURN_CODE, SUCCESS_RETURN_CODE);
-        result.put("files", files);
-        result.put("folders", folders);
+        result.put(FILES, files);
+        result.put(FOLDERS, folders);
         result.put(RETURN_RESULT, returnResult);
     }
 

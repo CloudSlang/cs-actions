@@ -20,6 +20,17 @@ import io.cloudslang.content.constants.InputNames;
 public final class Inputs extends InputNames {
 
     public static class CommonInputs {
+
+        public static final String USER_ID = "userId";
+        public static final String USER_PRINCIPAL_NAME = "userPrincipalName";
+        public static final String ACCOUNT_ENABLED = "accountEnabled";
+        public static final String DISPLAY_NAME = "displayName";
+        public static final String ON_PREMISES_IMMUTABLE_ID = "onPremisesImmutableId";
+        public static final String MAIL_NICKNAME = "mailNickname";
+        public static final String FORCE_CHANGE_PASSWORD = "forceChangePasswordNextSignIn";
+        public static final String PASSWORD = "password";
+        public static final String PASSWORD_PROFILE = "passwordProfile";
+        public static final String BODY = "body";
         public static final String PROXY_HOST = "proxyHost";
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
@@ -32,27 +43,25 @@ public final class Inputs extends InputNames {
         public static final String CLIENT_ID = "clientId";
         public static final String CLIENT_SECRET = "clientSecret";
         public static final String USERNAME = "username";
-        public static final String PASSWORD = "password";
         public static final String LOGIN_AUTHORITY = "loginAuthority";
         public static final String SCOPE = "scope";
     }
 
-    public static class CreateUser {
-        public static final String ACCOUNT_ENABLED = "accountEnabled";
-        public static final String DISPLAY_NAME = "displayName";
-        public static final String ON_PREMISES_IMMUTABLE_ID = "onPremisesImmutableId";
-        public static final String MAIL_NICKNAME = "mailNickname";
-        public static final String FORCE_CHANGE_PASSWORD = "forceChangePasswordNextSignIn";
-        public static final String PASSWORD = "password";
-        public static final String USER_PRINCIPAL_NAME = "userPrincipalName";
-        public static final String PASSWORD_PROFILE = "passwordProfile";
+    public static class UpdateUserInputs {
+        public static final String UPDATED_USER_PRINCIPAL_NAME = "updatedUserPrincipalName";
+    }
+
+    public static class IsUserInGroup {
+
+        public static final String SECURITY_ENABLED_ONLY = "securityEnabledOnly";
+        public static final String USER_ID = "userId";
         public static final String BODY = "body";
     }
 
-    public static class DeleteUser {
 
-        public static final String USER_PRINCIPAL_NAME = "userPrincipalName";
-        public static final String USER_ID = "userId";
+    public static class AssignUSerLicenseInputs{
+        public static final String ASSIGNED_LICENSES = "assignedLicenses";
     }
+
 }
 

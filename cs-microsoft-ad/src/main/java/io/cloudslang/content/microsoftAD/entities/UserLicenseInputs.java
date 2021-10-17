@@ -16,38 +16,60 @@ package io.cloudslang.content.microsoftAD.entities;
 
 import org.jetbrains.annotations.NotNull;
 
-public class DeleteUserInputs {
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
+public class UserLicenseInputs {
+
+    private final String body;
+
     private final AzureActiveDirectoryCommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"commonInputs"})
-    public DeleteUserInputs(AzureActiveDirectoryCommonInputs commonInputs) {
+    @java.beans.ConstructorProperties({"body", "commonInputs"})
+
+    public UserLicenseInputs(String body, AzureActiveDirectoryCommonInputs commonInputs) {
         this.commonInputs = commonInputs;
+        this.body = body;
     }
 
     @NotNull
-    public static DeleteUserInputsBuilder builder() {
-        return new DeleteUserInputsBuilder();
+    public static UserLicenseInputs.AssignUserLicenseInputsBuilder builder() {
+        return new AssignUserLicenseInputsBuilder();
     }
 
     @NotNull
     public AzureActiveDirectoryCommonInputs getCommonInputs() {
-        return this.commonInputs;
+        return commonInputs;
     }
 
-    public static class DeleteUserInputsBuilder {
-        private AzureActiveDirectoryCommonInputs commonInputs;
+    @NotNull
+    public String getBody() {
+        return body;
+    }
 
-        DeleteUserInputsBuilder() {
+    public static class AssignUserLicenseInputsBuilder {
+
+        private AzureActiveDirectoryCommonInputs commonInputs;
+        private String body = EMPTY;
+
+        AssignUserLicenseInputsBuilder() {
         }
 
+
         @NotNull
-        public DeleteUserInputs.DeleteUserInputsBuilder commonInputs(@NotNull final AzureActiveDirectoryCommonInputs commonInputs) {
+        public UserLicenseInputs.AssignUserLicenseInputsBuilder commonInputs(@NotNull final AzureActiveDirectoryCommonInputs commonInputs) {
             this.commonInputs = commonInputs;
             return this;
         }
 
-        public DeleteUserInputs build() {
-            return new DeleteUserInputs(commonInputs);
+        @NotNull
+        public UserLicenseInputs.AssignUserLicenseInputsBuilder body(@NotNull final String body) {
+            this.body = body;
+            return this;
+        }
+
+        public UserLicenseInputs build() {
+            return new UserLicenseInputs(body, commonInputs);
+
         }
     }
 }

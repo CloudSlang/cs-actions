@@ -20,22 +20,21 @@ public final class Constants {
     public static final String NATIVE = "native";
     public static final String NEW_LINE = "\n";
     public static final String DEFAULT_LOGIN_TYPE = "Native";
-    public static final String DEFAULT_RESOURCE = "https://graph.microsoft.com";
     public static final String DEFAULT_SCOPE = "https://graph.microsoft.com/.default";
-    public static final String DEFAULT_LOGIN_AUTHORITY_V2 = "https://login.microsoftonline.com/itomcontent.onmicrosoft.com/oauth2/v2.0/token";
     public static final String DEFAULT_PROXY_PORT = "8080";
     public static final String BOOLEAN_TRUE = "true";
     public static final String BOOLEAN_FALSE = "false";
     public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
+    public static final String EXCEPTION_USER_IDENTIFIER_NOT_SPEC = "Either %s or %s must be specified in order to update " +
+            "the user's properties.";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port.";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
-    public static final String CHARSET = "charset";
-    public static final String SEMICOLON = ";";
+    public static final String FORWARD_SLASH = "/";
     public static final String EQUALS = "=";
     public static final String CHANGEIT = "changeit";
     public static final String ZERO = "0";
@@ -53,6 +52,13 @@ public final class Constants {
     public static final String SELECT_PATH = "$select=";
     public static final String AND = "&";
     public static final String QUERY = "?";
+
+    public static final String COMMA = "\",\"";
+    public static final String SIMPLE_COMMA = ",";
+    public static final String RIGHT_PARANTHESIS = "[\"";
+    public static final String LEFT_PARANTHESIS = "\"]";
+    public static final String EMPTY_STRING = "";
+
     public static final String HTTPS = "https";
     public static final String STATUS_CODE = "statusCode";
     public static final String APPLICATION_JSON = "application/json";
@@ -61,6 +67,8 @@ public final class Constants {
     public static final String ID = "id";
     public static final String ERROR = "error";
     public static final String MESSAGE = "message";
+    public static final String ADD_LICENSES = "addLicenses";
+    public static final String REMOVE_LICENSES = "removeLicenses";
 
     public static final String ATTACHMENTS = "/attachments";
     public static final String ATTACHMENTS_PATH = "/attachments/";
@@ -68,6 +76,10 @@ public final class Constants {
     public static final String ACCOUNT_ENABLED_OUT = "accountEnabled";
     public static final String USER_ID = "userId";
     public static final String ACCOUNT_ENABLED = "accountEnabled";
+
+    public static final String VALUE = "value";
+    public static final String GET_MEMBER_GROUPS = "/getMemberGroups";
+    public static final String SECURITY_ENABLED_ONLY = "securityEnabledOnly";
 
     public static final String STRICT = "strict";
     public static final String ALLOW_ALL = "allow_all";
@@ -82,5 +94,7 @@ public final class Constants {
     public static final String CREATE_USER_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
-    public static final String UPDATE_USER_URL = "https://graph.microsoft.com/v1.0/users/";
+    public static final String GET_MEMBER_GROUPS_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
+    public static final String USERS_URL = "https://graph.microsoft.com/v1.0/users";
+    public static final String ASSIGN_LICENSE_URL = "/assignLicense";
 }

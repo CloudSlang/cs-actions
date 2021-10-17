@@ -20,6 +20,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
+import io.cloudslang.content.microsoftAD.entities.CommonUserInputs;
 import io.cloudslang.content.microsoftAD.utils.Descriptions;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -33,39 +34,48 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.microsoftAD.services.EnableDisableUserService.enableDisableUser;
+import static io.cloudslang.content.microsoftAD.services.ResetUserPasswordService.resetUserPassword;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.USER_ID_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.DisableUser.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.ResetUserPassword.FORCE_CHANGE_PASSWORD_DESC;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.CreateUser.PASSWORD_DESC;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.AUTH_TOKEN_DESC;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.ResetUserPassword.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_PRINCIPAL_NAME;
-import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyGetInputs;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PASSWORD;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyResetUserPasswordInputs;
+import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.USER_ID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DisableUser {
-    @Action(name = DISABLE_USER_NAME,
-            description = DISABLE_USER_DESC,
+public class ResetUserPassword {
+
+    @Action(name = RESET_USER_PASSWORD_NAME,
+            description = RESET_USER_PASSWORD_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = DISABLE_USER_RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = RESET_USER_PASSWORD_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = DISABLE_USER_SUCCESS_RETURN_RESULT_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = DISABLE_USER_FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = RESET_USER_PASSWORD_SUCCESS_RETURN_RESULT_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = RESET_USER_PASSWORD_FAILURE_DESC)
             })
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
 
                                        @Param(value = USER_PRINCIPAL_NAME, description = Descriptions.Common.USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
-                                       @Param(value = USER_ID, description = USER_ID_DESC) String userId,
+                                       @Param(value = USER_ID, description = Descriptions.Common.USER_ID_DESC) String userId,
+                                       @Param(value = FORCE_CHANGE_PASSWORD, description = FORCE_CHANGE_PASSWORD_DESC) String forceChangePassword,
+                                       @Param(value = PASSWORD, required = true, encrypted = true, description = PASSWORD_DESC) String password,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -83,9 +93,10 @@ public class DisableUser {
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
 
-
         userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         userId = defaultIfEmpty(userId, EMPTY);
+        forceChangePassword = defaultIfEmpty(forceChangePassword, BOOLEAN_FALSE);
+        password = defaultIfEmpty(password, EMPTY);
 
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -103,38 +114,43 @@ public class DisableUser {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
 
-        final List<String> exceptionMessages = verifyGetInputs(userPrincipalName, userId, proxyPort, trustAllRoots, x509HostnameVerifier,
-                connectTimeout, socketTimeout, keepAlive,
-                connectionsMaxPerRoute, connectionsMaxTotal);
+        final List<String> exceptionMessages;
+
+        exceptionMessages = verifyResetUserPasswordInputs(forceChangePassword, password, proxyPort, trustAllRoots, x509HostnameVerifier,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
 
         if (!exceptionMessages.isEmpty())
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
         try {
-            final Map<String, String> result = enableDisableUser(AzureActiveDirectoryCommonInputs.builder()
-                    .authToken(authToken)
-                    .proxyHost(proxyHost)
-                    .proxyPort(proxyPort)
-                    .proxyUsername(proxyUsername)
-                    .proxyPassword(proxyPassword)
-                    .connectionsMaxTotal(connectionsMaxTotal)
-                    .connectionsMaxPerRoute(connectionsMaxPerRoute)
-                    .keepAlive(keepAlive)
-                    .connectTimeout(connectTimeout)
-                    .socketTimeout(socketTimeout)
-                    .trustAllRoots(trustAllRoots)
-                    .userId(userId)
-                    .userPrincipalName(userPrincipalName)
-                    .x509HostnameVerifier(x509HostnameVerifier)
-                    .trustKeystore(trustKeystore)
-                    .trustPassword(trustPassword)
-                    .build(), false);
+            Map<String, String> result = resetUserPassword(CommonUserInputs.builder()
+                    .forceChangePassword(forceChangePassword)
+                    .password(password)
+                    .commonInputs(AzureActiveDirectoryCommonInputs.builder()
+                            .authToken(authToken)
+                            .userPrincipalName(userPrincipalName)
+                            .userId(userId)
+                            .proxyHost(proxyHost)
+                            .proxyPort(proxyPort)
+                            .proxyUsername(proxyUsername)
+                            .proxyPassword(proxyPassword)
+                            .connectionsMaxTotal(connectionsMaxTotal)
+                            .connectionsMaxPerRoute(connectionsMaxPerRoute)
+                            .keepAlive(keepAlive)
+                            .connectTimeout(connectTimeout)
+                            .socketTimeout(socketTimeout)
+                            .trustAllRoots(trustAllRoots)
+                            .x509HostnameVerifier(x509HostnameVerifier)
+                            .trustKeystore(trustKeystore)
+                            .trustPassword(trustPassword)
+                            .build())
+                    .build());
 
+            Map<String, String> finalResult = getOperationResults(result, RESET_USER_PASSWORD_SUCCESS_RETURN_RESULT_DESC, result.get(RETURN_RESULT));
+            parseApiExceptionMessage(finalResult);
 
-            final Map<String, String> results = getOperationResults(result, DISABLE_USER_SUCCESS_RETURN_RESULT_DESC,  result.get(RETURN_RESULT));
-            parseApiExceptionMessage(results);
+            return finalResult;
 
-            return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
