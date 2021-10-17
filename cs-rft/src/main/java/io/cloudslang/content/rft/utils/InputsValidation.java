@@ -365,9 +365,27 @@ public class InputsValidation {
         return exceptions;
     }
 
-    public static List<String> verifyInputsSFTPRename(String remoteFile,
-                                                      String remotePath,
-                                                      String newRemoteFile,
+    public static List<String> verifyDeleteFileInputs(String remoteFile,
+                                                String remotePath,
+                                                String host,
+                                                String port,
+                                                String username,
+                                                String password,
+                                                String proxyPort,
+                                                String characterSet,
+                                                String closeSession,
+                                                String connectionTimeout,
+                                                String executionTimeout) {
+        final List<String> exceptions = verifyCommonSFTPInputs(host, port, username, password, proxyPort,
+                characterSet, closeSession, connectionTimeout, executionTimeout);
+
+        addVerifyNotNullOrEmpty(exceptions, remotePath, SFTPInputs.REMOTE_PATH);
+        addVerifyNotNullOrEmpty(exceptions, remoteFile, SFTPInputs.REMOTE_FILE);
+        return exceptions;
+    }
+
+    public static List<String> verifyInputsSFTPRename(String remotePath,
+                                                      String newRemotePath,
                                                       String host,
                                                       String port,
                                                       String username,
@@ -380,9 +398,8 @@ public class InputsValidation {
         final List<String> exceptions = verifyCommonSFTPInputs(host, port, username, password, proxyPort,
                 characterSet, closeSession, connectionTimeout, executionTimeout);
 
-        addVerifyRemotePathAndFile(exceptions, remotePath, remoteFile, Inputs.SFTPInputs.REMOTE_PATH, Inputs.SFTPInputs.REMOTE_FILE);
-//        addVerifyNotNullOrEmpty(exceptions, remoteFile, SFTPInputs.REMOTE_FILE);
-//        addVerifyNotNullOrEmpty(exceptions, newRemoteFile, SFTPInputs.NEW_REMOTE_FILE);
+        addVerifyNotNullOrEmpty(exceptions, remotePath, SFTPInputs.REMOTE_PATH);
+        addVerifyNotNullOrEmpty(exceptions, newRemotePath, SFTPInputs.NEW_REMOTE_PATH);
 
         return exceptions;
     }

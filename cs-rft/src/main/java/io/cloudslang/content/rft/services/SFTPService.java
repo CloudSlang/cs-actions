@@ -148,14 +148,20 @@ public class SFTPService {
             }
         } else if (sftpOperation == SFTPOperation.COMMAND) {
             SFTPCommandInputs sftpCommandInputs = (SFTPCommandInputs) sftpInputs;
-            if (sftpCommandInputs.getCommandType().equals(CHMOD))
-                sftpCopier.channel.chmod(Integer.parseInt(sftpCommandInputs.getMode()), sftpCommandInputs.getremotePath());
-            else if (sftpCommandInputs.getCommandType().equals(CHGRP))
-                sftpCopier.channel.chgrp(Integer.parseInt(sftpCommandInputs.getGid()), sftpCommandInputs.getremotePath());
-            else if (sftpCommandInputs.getCommandType().equals(CHOWN))
-                sftpCopier.channel.chown(Integer.parseInt(sftpCommandInputs.getUid()), sftpCommandInputs.getremotePath());
-            else if (sftpCommandInputs.getCommandType().equals(RENAME))
-                sftpCopier.channel.rename(sftpCommandInputs.getremotePath(), sftpCommandInputs.getnewRemotePath());
+            switch (sftpCommandInputs.getCommandType()) {
+                case CHMOD:
+                    sftpCopier.channel.chmod(Integer.parseInt(sftpCommandInputs.getMode()), sftpCommandInputs.getremotePath());
+                    break;
+                case CHGRP:
+                    sftpCopier.channel.chgrp(Integer.parseInt(sftpCommandInputs.getGid()), sftpCommandInputs.getremotePath());
+                    break;
+                case CHOWN:
+                    sftpCopier.channel.chown(Integer.parseInt(sftpCommandInputs.getUid()), sftpCommandInputs.getremotePath());
+                    break;
+                case RENAME:
+                    sftpCopier.channel.rename(sftpCommandInputs.getremotePath(), sftpCommandInputs.getnewRemotePath());
+                    break;
+            }
         } else if (sftpOperation == SFTPOperation.DELETE_FILE) {
             SFTPDeleteFileInputs sftpDeleteFileInputs = (SFTPDeleteFileInputs) sftpInputs;
             try {
@@ -200,7 +206,7 @@ public class SFTPService {
                     try {
                         String path = sftpGeneralDirectoryInputs.getRemotePath();
                         if (path.endsWith(BACKSLASH))
-                            path.substring(0, sftpGeneralDirectoryInputs.getRemotePath().length() - 1);
+                           path =  path.substring(0, sftpGeneralDirectoryInputs.getRemotePath().length() - 1);
                         if (!path.contains(BACKSLASH))
                             sftpCopier.channel.rmdir(path);
                         else
