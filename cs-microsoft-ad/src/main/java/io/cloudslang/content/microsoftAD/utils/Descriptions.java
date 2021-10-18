@@ -150,7 +150,6 @@ public class Descriptions {
                 "response code. It does not return anything in the response body.";
         public static final String SUCCESS_RETURN_RESULT_DESC = "The user was successfully deleted.";
 
-
     }
 
     public static class IsUserEnabled {
@@ -188,6 +187,7 @@ public class Descriptions {
         public static final String UPDATE_USER_FAILURE_RETURN_RESULT = "There was an error while updating the user's properties!";
 
     }
+
     public static class EnableUser {
 
         //Descriptions
@@ -199,7 +199,6 @@ public class Descriptions {
         public static final String ENABLE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content " +
                 "response code. It does not return anything in the response body.";
         public static final String ENABLE_USER_SUCCESS_RETURN_RESULT_DESC = "The user was successfully enabled.";
-
 
     }
 
@@ -214,7 +213,6 @@ public class Descriptions {
         public static final String DISABLE_USER_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content " +
                 "response code. It does not return anything in the response body.";
         public static final String DISABLE_USER_SUCCESS_RETURN_RESULT_DESC = "The user was successfully disabled.";
-
 
     }
 
@@ -277,7 +275,6 @@ public class Descriptions {
         public static final String ASSIGN_USER_LICENSE_RETURN_RESULT_DESC = "If successful, this method returns 200 " +
                 "response code and a user object in the response body.";
         public static final String ASSIGN_USER_LICENSE_SUCCESS_RETURN_RESULT_DESC = "The license was successfully assigned.";
-
 
     }
 
