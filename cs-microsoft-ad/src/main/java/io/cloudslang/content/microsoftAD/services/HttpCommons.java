@@ -198,8 +198,8 @@ public class HttpCommons {
             try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
 
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
-                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
-
+                if (!(response.getEntity() == null))
+                    result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
                 return result;
             }
         } catch (Exception e) {
