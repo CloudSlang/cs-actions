@@ -198,7 +198,7 @@ public class HttpCommons {
             try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
 
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
-                if (!(response.getEntity() == null))
+                if (!(response.getEntity() == null) || !(EntityUtils.toString(response.getEntity()).isEmpty()))
                     result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
                 return result;
             }
