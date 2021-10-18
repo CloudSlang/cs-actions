@@ -224,7 +224,7 @@ public class Descriptions {
         public static final String RENAME_NEW_REMOTE_PATH_DESC = "The path to the new file or directory.\n";
         public static final String NEW_REMOTE_FILE_DESC = "The new file or directory name.\n" +
                 "Example: newFileName.txt, newFolderName";
-        public static final String RENAME_SUCCESS_DESC = "Remote file or directory was renamed.";
+        public static final String RENAME_SUCCESS_DESC = "Remote file or directory was renamed successfully.";
         public static final String RENAME_FAILURE_DESC = "Remote file or directory couldn't be renamed.";
 
     }
