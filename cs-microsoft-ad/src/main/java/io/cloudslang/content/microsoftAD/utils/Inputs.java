@@ -59,8 +59,12 @@ public final class Inputs extends InputNames {
     }
 
 
-    public static class AssignUSerLicenseInputs{
+    public static class AssignUserLicenseInputs {
         public static final String ASSIGNED_LICENSES = "assignedLicenses";
+    }
+
+    public static class RemoveUserLicenseInputs{
+        public static final String REMOVED_LICENSES = "removedLicenses";
     }
 
     public static class ChangeUserPasswordInputs{

@@ -261,7 +261,7 @@ public class Descriptions {
 
         //Descriptions
         public static final String ASSIGN_USER_LICENSE_DESC = "Add subscriptions for the user. You can also enable specific plans associated with a subscription.";
-        public static final String ASSIGN_USER_LICENSE_NAME = "Assign user license";
+        public static final String ASSIGN_USER_LICENSE_NAME = "Assign User License";
 
         //Inputs
         public static final String ASSIGNED_LICENSES_DESC = "A collection of assignedLicense objects that specify " +
@@ -295,5 +295,25 @@ public class Descriptions {
         public static final String CHANGE_USER_PASSWORD_RETURN_RESULT_DESC = "If successful, this method returns 204 No Content " +
                 "response code. It does not return anything in the response body.";
         public static final String CHANGE_USER_PASSWORD_SUCCESS_RETURN_RESULT_DESC = "The user's password was successfully changed.";
+    }
+
+    public static class RemoveUserLicense {
+
+        //Descriptions
+        public static final String REMOVE_USER_LICENSE_DESC = "Remove subscriptions for the user.";
+        public static final String REMOVE_USER_LICENSE_NAME = "Remove User License";
+
+        //Inputs
+        public static final String REMOVED_LICENSES_DESC = "A comma separated list of skuIds that need to be removed.";
+        public static final String INVALID_STRING_ARRAY_INPUT_DESC = "The value provided for the removed licenses input is " +
+                "an invalid string array.";
+
+        //Results
+        public static final String REMOVE_USER_LICENSE_FAILURE_DESC = "There was an error while trying to remove license.";
+        public static final String REMOVE_USER_LICENSE_RETURN_RESULT_DESC = "If successful, this method returns 200 " +
+                "response code and a user object in the response body.";
+        public static final String REMOVE_USER_LICENSE_SUCCESS_RETURN_RESULT_DESC = "The license was successfully removed.";
+
+
     }
 }

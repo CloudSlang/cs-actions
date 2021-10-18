@@ -19,8 +19,8 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.microsoftAD.entities.AssignUserLicenseInputs;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
+import io.cloudslang.content.microsoftAD.entities.RemoveUserLicenseInputs;
 import io.cloudslang.content.microsoftAD.utils.Descriptions;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -34,39 +34,40 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.microsoftAD.services.AssignRemoveUserLicenseService.assignUserLicense;
+import static io.cloudslang.content.microsoftAD.services.AssignRemoveUserLicenseService.removeUserLicense;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.RemoveUserLicense.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.AssignUserLicense.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.RemoveUserLicense.REMOVE_USER_LICENSE_DESC;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.AssignUserLicenseInputs.ASSIGNED_LICENSES;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_PRINCIPAL_NAME;
-import static io.cloudslang.content.microsoftAD.utils.InputsValidation.*;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.RemoveUserLicenseInputs.REMOVED_LICENSES;
+import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyLicenseInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class AssignUserLicense {
+public class RemoveUserLicense {
 
-    @Action(name = ASSIGN_USER_LICENSE_NAME,
-            description = ASSIGN_USER_LICENSE_DESC,
+    @Action(name = REMOVE_USER_LICENSE_NAME,
+            description = REMOVE_USER_LICENSE_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = ASSIGN_USER_LICENSE_RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = REMOVE_USER_LICENSE_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = ASSIGN_USER_LICENSE_SUCCESS_RETURN_RESULT_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = ASSIGN_USER_LICENSE_FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = REMOVE_USER_LICENSE_SUCCESS_RETURN_RESULT_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = REMOVE_USER_LICENSE_FAILURE_DESC)
             })
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = Descriptions.Common.AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = USER_ID, description = USER_ID_DESC) String userId,
-                                       @Param(value = ASSIGNED_LICENSES, required = true, description = ASSIGNED_LICENSES_DESC) String assignedLicenses,
+                                       @Param(value = REMOVED_LICENSES, required = true, description = REMOVED_LICENSES_DESC) String removedLicenses,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -87,7 +88,7 @@ public class AssignUserLicense {
 
         userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         userId = defaultIfEmpty(userId, EMPTY);
-        assignedLicenses = defaultIfEmpty(assignedLicenses,EMPTY);
+        removedLicenses = defaultIfEmpty(removedLicenses,EMPTY);
 
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -105,15 +106,15 @@ public class AssignUserLicense {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
 
-        final List<String> exceptionMessages = verifyLicenseInputs(userPrincipalName, userId, assignedLicenses, proxyPort, trustAllRoots, x509HostnameVerifier,
+        final List<String> exceptionMessages = verifyLicenseInputs(userPrincipalName, userId, removedLicenses, proxyPort, trustAllRoots, x509HostnameVerifier,
                     connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
 
         if (!exceptionMessages.isEmpty())
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
         try {
-            Map<String, String> result = assignUserLicense(AssignUserLicenseInputs.builder()
-                    .assignedLicenses(assignedLicenses)
+            Map<String, String> result = removeUserLicense(RemoveUserLicenseInputs.builder()
+                    .removedLicenses(removedLicenses)
                     .commonInputs(AzureActiveDirectoryCommonInputs.builder()
                             .authToken(authToken)
                             .proxyHost(proxyHost)
