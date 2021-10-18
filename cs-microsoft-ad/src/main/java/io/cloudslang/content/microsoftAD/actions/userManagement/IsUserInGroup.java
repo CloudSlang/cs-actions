@@ -42,7 +42,7 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserInGroup.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.IsUserInGroup.BODY;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_PRINCIPAL_NAME;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.IsUserInGroup.SECURITY_ENABLED_ONLY;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.IsUserInGroup.USER_ID;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyIsUserInGroupInputs;
@@ -63,10 +63,10 @@ public class IsUserInGroup {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = IS_USER_IN_GROUP_FAILURE_DESC)
             })
 
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true) String authToken,
+                                       @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = USER_ID, description = IS_USER_ID_DESC) String userId,
-                                       @Param(value = BODY, description = BODY_DESC) String body,
-                                       @Param(value = SECURITY_ENABLED_ONLY, description = IS_USER_IN_GROUP_SECURITY_ENABLED) String securityEnabledOnly,
+                                       @Param(value = SECURITY_ENABLED_ONLY, description = IS_USER_IN_GROUP_SECURITY_ENABLED) String securityEnableGroups,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -82,9 +82,9 @@ public class IsUserInGroup {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
 
         //inputs validation
+        userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         userId = defaultIfEmpty(userId, EMPTY);
-        body = defaultIfEmpty(body, EMPTY);
-        securityEnabledOnly = defaultIfEmpty(securityEnabledOnly, BOOLEAN_FALSE);
+        securityEnableGroups = defaultIfEmpty(securityEnableGroups, BOOLEAN_FALSE);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -99,7 +99,7 @@ public class IsUserInGroup {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
 
-        final List<String> exceptionMessages = verifyIsUserInGroupInputs(userId, securityEnabledOnly,
+        final List<String> exceptionMessages = verifyIsUserInGroupInputs(userPrincipalName, userId, securityEnableGroups,
                 proxyPort, trustAllRoots, x509HostnameVerifier, connectTimeout, socketTimeout, keepAlive,
                 connectionsMaxPerRoute, connectionsMaxTotal);
 
@@ -109,10 +109,10 @@ public class IsUserInGroup {
 
         try {
             final Map<String, String> result = getMemberGroups(GetMemberGroupsInputs.builder()
-                    .body(body)
-                    .securityEnabledOnly(securityEnabledOnly)
+                    .securityEnabledOnly(securityEnableGroups)
                     .commonInputs(AzureActiveDirectoryCommonInputs.builder()
                             .authToken(authToken)
+                            .userPrincipalName(userPrincipalName)
                             .userId(userId)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)

@@ -181,8 +181,9 @@ public final class InputsValidation {
 
         return exceptionMessages;
     }
-  
-    public static List<String> verifyIsUserInGroupInputs(@Nullable final String userId,
+
+    public static List<String> verifyIsUserInGroupInputs(@Nullable final String userPrincipalName,
+                                                         @Nullable final String userId,
                                                          @Nullable final String securityEnabledOnly,
                                                          @Nullable final String proxyPort,
                                                          @Nullable final String trust_all_roots,
@@ -195,7 +196,7 @@ public final class InputsValidation {
 
         final List<String> exceptionMessages = new ArrayList<>();
 
-        addVerifyNotNullOrEmpty(exceptionMessages, userId, USER_ID);
+        addVerifyIdOrPrincipalName(exceptionMessages, userPrincipalName, userId);
         addVerifyBoolean(exceptionMessages, securityEnabledOnly, SECURITY_ENABLED_ONLY);
 
         exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots, x509HostnameVerifier,
@@ -228,17 +229,18 @@ public final class InputsValidation {
         return exceptionMessages;
     }
 
-    @NotNull public static List<String> verifyLicenseInputs(@Nullable final String userPrincipalName,
-                                 @Nullable final String userId,
-                                 @Nullable final String licenses,
-                                 @Nullable final String proxyPort,
-                                 @Nullable final String trust_all_roots,
-                                 @Nullable final String x509HostnameVerifier,
-                                 @Nullable final String connectTimeout,
-                                 @Nullable final String socketTimeout,
-                                 @Nullable final String keepAlive,
-                                 @Nullable final String connectionsMaxPerRoute,
-                                 @Nullable final String connectionsMaxTotal) {
+    @NotNull
+    public static List<String> verifyLicenseInputs(@Nullable final String userPrincipalName,
+                                                   @Nullable final String userId,
+                                                   @Nullable final String licenses,
+                                                   @Nullable final String proxyPort,
+                                                   @Nullable final String trust_all_roots,
+                                                   @Nullable final String x509HostnameVerifier,
+                                                   @Nullable final String connectTimeout,
+                                                   @Nullable final String socketTimeout,
+                                                   @Nullable final String keepAlive,
+                                                   @Nullable final String connectionsMaxPerRoute,
+                                                   @Nullable final String connectionsMaxTotal) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyUserInputs(exceptionMessages, userPrincipalName, userId);
@@ -249,16 +251,17 @@ public final class InputsValidation {
 
     }
 
-    @NotNull public static List<String> verifyChangePasswordInputs(@Nullable final String currentPassword,
-                                                                   @Nullable final String newPassword,
-                                                                   @Nullable final String proxyPort,
-                                                                   @Nullable final String trust_all_roots,
-                                                                   @Nullable final String x509HostnameVerifier,
-                                                                   @Nullable final String connectTimeout,
-                                                                   @Nullable final String socketTimeout,
-                                                                   @Nullable final String keepAlive,
-                                                                   @Nullable final String connectionsMaxPerRoute,
-                                                                   @Nullable final String connectionsMaxTotal) {
+    @NotNull
+    public static List<String> verifyChangePasswordInputs(@Nullable final String currentPassword,
+                                                          @Nullable final String newPassword,
+                                                          @Nullable final String proxyPort,
+                                                          @Nullable final String trust_all_roots,
+                                                          @Nullable final String x509HostnameVerifier,
+                                                          @Nullable final String connectTimeout,
+                                                          @Nullable final String socketTimeout,
+                                                          @Nullable final String keepAlive,
+                                                          @Nullable final String connectionsMaxPerRoute,
+                                                          @Nullable final String connectionsMaxTotal) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyNotNullOrEmpty(exceptionMessages, currentPassword, CURRENT_PASSWORD);
@@ -287,6 +290,17 @@ public final class InputsValidation {
         if (isEmpty(userPrincipalName) && isEmpty(userId)) {
             exceptions.add(String.format(EXCEPTION_USER_IDENTIFIER_NOT_SPEC, USER_PRINCIPAL_NAME, USER_ID));
         }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyIdOrPrincipalName(@NotNull List<String> exceptions,
+                                                           @Nullable final String userPrincipalName,
+                                                           @Nullable final String userId) {
+        if (isEmpty(userPrincipalName) && isEmpty(userId)) {
+            exceptions.add(String.format(EXCEPTION_NAME_OR_ID_NOT_SPEC, USER_PRINCIPAL_NAME, USER_ID));
+        }
+
         return exceptions;
     }
 

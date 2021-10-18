@@ -22,15 +22,13 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class GetMemberGroupsInputs {
 
     private final String securityEnabledOnly;
-    private final String body;
 
     private final AzureActiveDirectoryCommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"securityEnabledOnly", "body", "commonInputs"})
+    @java.beans.ConstructorProperties({"securityEnabledOnly", "commonInputs"})
 
-    public GetMemberGroupsInputs(String securityEnabledOnly, String body, AzureActiveDirectoryCommonInputs commonInputs) {
+    public GetMemberGroupsInputs(String securityEnabledOnly, AzureActiveDirectoryCommonInputs commonInputs) {
         this.securityEnabledOnly = securityEnabledOnly;
-        this.body = body;
         this.commonInputs = commonInputs;
     }
 
@@ -45,18 +43,12 @@ public class GetMemberGroupsInputs {
     }
 
     @NotNull
-    public String getBody() {
-        return body;
-    }
-
-    @NotNull
     public AzureActiveDirectoryCommonInputs getCommonInputs() {
         return commonInputs;
     }
 
     public static class GetMemberGroupsInputsBuilder {
         private String securityEnabledOnly = EMPTY;
-        private String body = EMPTY;
         private AzureActiveDirectoryCommonInputs commonInputs;
 
         GetMemberGroupsInputsBuilder() {
@@ -74,15 +66,8 @@ public class GetMemberGroupsInputs {
             return this;
         }
 
-        @NotNull
-        public GetMemberGroupsInputs.GetMemberGroupsInputsBuilder body(@NotNull final String body) {
-            this.body = body;
-            return this;
-        }
-
         public GetMemberGroupsInputs build() {
-            return new GetMemberGroupsInputs(securityEnabledOnly, body, commonInputs);
-
+            return new GetMemberGroupsInputs(securityEnabledOnly, commonInputs);
         }
     }
 

@@ -55,7 +55,6 @@ public final class Inputs extends InputNames {
 
         public static final String SECURITY_ENABLED_ONLY = "securityEnabledOnly";
         public static final String USER_ID = "userId";
-        public static final String BODY = "body";
     }
 
 
@@ -63,11 +62,11 @@ public final class Inputs extends InputNames {
         public static final String ASSIGNED_LICENSES = "assignedLicenses";
     }
 
-    public static class RemoveUserLicenseInputs{
+    public static class RemoveUserLicenseInputs {
         public static final String REMOVED_LICENSES = "removedLicenses";
     }
 
-    public static class ChangeUserPasswordInputs{
+    public static class ChangeUserPasswordInputs {
         public static final String CURRENT_PASSWORD = "currentPassword";
         public static final String NEW_PASSWORD = "newPassword";
     }
