@@ -182,11 +182,8 @@ public class Descriptions {
     public static class SFTPDeleteFileDescriptions {
 
         public static final String REMOTE_PATH_DELETE_FILE_DESC = "The path to the remote file that will be deleted.\n" +
-                "Examples: C:/Users/Administrator, root";
-        public static final String REMOTE_FILE_DELETE_DESC = "The name and extension of the file that will be deleted." +
-                " Note: If only the file name and extension of the file to be deleted is provided, without any path to " +
-                "be populated in the remote_path input, the file with the provided information will be deleted from " +
-                "the ‘ChrootDirectory’ of the SFTP server, if any location is set.\n" +
+                "Examples: C:/Users/Administrator, root/testFolder";
+        public static final String REMOTE_FILE_DELETE_DESC = "The name and extension of the file that will be deleted.\n" +
                 "Examples: file.txt";
         public static final String SUCCESS_DESC = "File was deleted successfully.";
         public static final String FAILURE_DESC = "The file could not be deleted.";
@@ -201,11 +198,8 @@ public class Descriptions {
 
     public static class SFTPCreateDirectoryDescriptions {
 
-        public static final String REMOTE_PATH_CREATE_DESC = "You can provide either the full path to the folder to be " +
-                "created or you can provide the direct name of the folder. Note: if only the name of the folder is" +
-                " provided, the new folder will be created in the ‘ChrootDirectory’ of the SFTP server, if any location" +
-                " is set.\n" +
-                "Examples: C:/Users/Administrator/newFolder, root/test/newFolder , newFolder";
+        public static final String REMOTE_PATH_CREATE_DESC = "The path where the new directory will be created.\n" +
+                "Examples: C:/Users/Administrator/newFolder, root/test/newFolder";
         public static final String CREATE_DIR_SUCCESS_DESC = "Directory was created successfully.";
         public static final String SUCCESS_DESC = "The directory was created successfully.";
         public static final String FAILURE_DESC = "The directory could not be created.";
@@ -214,11 +208,8 @@ public class Descriptions {
 
     public static class SFTPDeleteDirectoryDescriptions {
 
-        public static final String REMOTE_PATH_DELETE_DESC = "You can provide either the full path to the folder to be " +
-                "deleted or you can provide the direct name of the folder. Note: if only the name of the folder is" +
-                " provided, the folder with the provided name will be deleted from the ‘ChrootDirectory’ of the SFTP " +
-                "server, if any location is set.\n" +
-                "Examples: C:/Users/Administrator/folder, root/test/folder , folderName";
+        public static final String REMOTE_PATH_DELETE_DESC = "The absolute path to the directory to be deleted.\n" +
+                "Examples: C:/Users/Administrator/folder, root/test/folder";
         public static final String DELETE_DIR_SUCCESS_DESC = "Directory was deleted successfully.";
         public static final String FAILURE_DELETE_DIR_DESC = "The directory could not be deleted.";
 
@@ -226,13 +217,14 @@ public class Descriptions {
 
     public static class SFTPRenameDescriptions {
 
-        public static final String RENAME_REMOTE_PATH_DESC = "The remote file path containing the file or directory that " +
-                "will be renamed.";
-        public static final String RENAME_REMOTE_FILE_DESC = "The name of the file or directory that will be renamed.";
-        public static final String RENAME_NEW_REMOTE_PATH_DESC = "The new name of the file or directory path containing " +
-                "the file that will be renamed.";
-        public static final String NEW_REMOTE_FILE_DESC = "The new file or directory name.";
-        public static final String RENAME_SUCCESS_DESC = "Remote file or directory will be renamed.";
+        public static final String RENAME_REMOTE_PATH_DESC = "The path to the file or directory to be renamed.\n" +
+                "Example: C:/Users/Administrator, root/test";
+        public static final String RENAME_REMOTE_FILE_DESC = "The name of the file or directory that will be renamed.\n" +
+                "Example: oldFileName.txt, oldFoladerName";
+        public static final String RENAME_NEW_REMOTE_PATH_DESC = "The path to the new file or directory.\n";
+        public static final String NEW_REMOTE_FILE_DESC = "The new file or directory name.\n" +
+                "Example: newFileName.txt, newFolderName";
+        public static final String RENAME_SUCCESS_DESC = "Remote file or directory was renamed successfully.";
         public static final String RENAME_FAILURE_DESC = "Remote file or directory couldn't be renamed.";
 
     }

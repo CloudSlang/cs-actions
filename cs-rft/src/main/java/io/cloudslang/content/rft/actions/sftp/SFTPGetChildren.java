@@ -39,7 +39,6 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.RETURN_RESULT_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
-import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.RETURN_RESULT_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPGetChildrenDescriptions.REMOTE_PATH_GET_CHILDREN_DESC;
 import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
