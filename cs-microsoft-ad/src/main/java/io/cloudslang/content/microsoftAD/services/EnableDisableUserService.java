@@ -20,11 +20,14 @@ import io.cloudslang.content.microsoftAD.utils.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPatch;
 import static io.cloudslang.content.microsoftAD.utils.Constants.FORWARD_SLASH;
 import static io.cloudslang.content.microsoftAD.utils.Constants.USERS_URL;
+import static org.apache.commons.lang3.CharEncoding.UTF_8;
 
 public class EnableDisableUserService {
 
@@ -39,10 +42,15 @@ public class EnableDisableUserService {
     @NotNull
     private static String getUserUrl(String userPrincipalName, String userId) {
         String finalUrl = USERS_URL + FORWARD_SLASH;
-        if (!StringUtils.isEmpty(userPrincipalName))
-            finalUrl += userPrincipalName;
+        if (!StringUtils.isEmpty(userPrincipalName)) {
+            try {
+                finalUrl += URLEncoder.encode(userPrincipalName.trim(), UTF_8);
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
         else
-            finalUrl += userId;
+            finalUrl += userId.trim();
         return finalUrl;
     }
 

@@ -15,25 +15,26 @@
 package io.cloudslang.content.microsoftAD.services;
 
 import com.google.gson.JsonObject;
+import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.UpdateUserInputs;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPatch;
 import static io.cloudslang.content.microsoftAD.utils.Constants.FORWARD_SLASH;
 import static io.cloudslang.content.microsoftAD.utils.Constants.USERS_URL;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
+import static org.apache.commons.lang3.CharEncoding.UTF_8;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class UpdateUserService {
 
     public static Map<String, String> updateUser(UpdateUserInputs updateUserInputs) {
-        String UPDATE_USERS_URL = USERS_URL + FORWARD_SLASH;
 
-        if (!(updateUserInputs.getUserCommonInputs().getCommonInputs().getUserId().isEmpty()))
-            UPDATE_USERS_URL += updateUserInputs.getUserCommonInputs().getCommonInputs().getUserId().trim();
-        else
-            UPDATE_USERS_URL += updateUserInputs.getUserCommonInputs().getCommonInputs().getUserPrincipalName().trim();
+        String UPDATE_USERS_URL = getUpdateUserUrl(updateUserInputs);
 
         if (!updateUserInputs.getUserCommonInputs().getBody().equals(EMPTY))
             return httpPatch(updateUserInputs.getUserCommonInputs().getCommonInputs(), UPDATE_USERS_URL, updateUserInputs.getUserCommonInputs().getBody());
@@ -62,5 +63,24 @@ public class UpdateUserService {
             body.add(PASSWORD_PROFILE, passwordProfile);
         }
         return httpPatch(updateUserInputs.getUserCommonInputs().getCommonInputs(), UPDATE_USERS_URL, body.toString());
+    }
+
+    @NotNull
+    public static String getUpdateUserUrl(@NotNull final UpdateUserInputs updateUserInputs) {
+
+        String UPDATE_USERS_URL = USERS_URL + FORWARD_SLASH;
+
+        if (!(updateUserInputs.getUserCommonInputs().getCommonInputs().getUserId().isEmpty()))
+            UPDATE_USERS_URL += updateUserInputs.getUserCommonInputs().getCommonInputs().getUserId().trim();
+        else
+        {
+            try {
+                UPDATE_USERS_URL += URLEncoder.encode(updateUserInputs.getUserCommonInputs().getCommonInputs().getUserPrincipalName().trim(), UTF_8);
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return UPDATE_USERS_URL;
     }
 }

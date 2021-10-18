@@ -19,12 +19,15 @@ import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInpu
 import io.cloudslang.content.microsoftAD.entities.CommonUserInputs;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPatch;
 import static io.cloudslang.content.microsoftAD.utils.Constants.FORWARD_SLASH;
 import static io.cloudslang.content.microsoftAD.utils.Constants.USERS_URL;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
+import static org.apache.commons.lang3.CharEncoding.UTF_8;
 
 public class ResetUserPasswordService {
 
@@ -46,9 +49,15 @@ public class ResetUserPasswordService {
         String finalUrl = USERS_URL + FORWARD_SLASH;
 
         if (!commonInputs.getUserPrincipalName().isEmpty())
-            finalUrl += commonInputs.getUserPrincipalName();
+        {
+            try {
+                finalUrl += URLEncoder.encode(commonInputs.getUserPrincipalName(), UTF_8);
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
         else
-            finalUrl += commonInputs.getUserId();
+            finalUrl += commonInputs.getUserId().trim();
 
         return finalUrl;
     }

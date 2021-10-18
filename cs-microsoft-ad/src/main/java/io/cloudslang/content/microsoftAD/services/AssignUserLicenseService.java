@@ -24,6 +24,8 @@ import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInpu
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +34,7 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPost;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.AssignUserLicense.INVALID_JSON_INPUT_DESC;
+import static org.apache.commons.lang3.CharEncoding.UTF_8;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class AssignUserLicenseService {
@@ -63,9 +66,16 @@ public class AssignUserLicenseService {
     private static String getUserUrl(String userPrincipalName, String userId) {
         String finalUrl;
         if (!StringUtils.isEmpty(userPrincipalName))
-            finalUrl = USERS_URL + FORWARD_SLASH + userPrincipalName + ASSIGN_LICENSE_URL;
+        {
+            try {
+                finalUrl = USERS_URL + FORWARD_SLASH + URLEncoder.encode(userPrincipalName.trim(), UTF_8) + ASSIGN_LICENSE_URL;
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         else
-            finalUrl = USERS_URL + FORWARD_SLASH + userId + ASSIGN_LICENSE_URL;
+            finalUrl = USERS_URL + FORWARD_SLASH + userId.trim() + ASSIGN_LICENSE_URL;
         return finalUrl;
     }
 
