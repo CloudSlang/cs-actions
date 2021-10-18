@@ -63,5 +63,10 @@ public final class Inputs extends InputNames {
         public static final String ASSIGNED_LICENSES = "assignedLicenses";
     }
 
+    public static class ChangeUserPasswordInputs{
+        public static final String CURRENT_PASSWORD = "currentPassword";
+        public static final String NEW_PASSWORD = "newPassword";
+    }
+
 }
 
