@@ -69,9 +69,9 @@ public class SFTPRename {
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
                                        @Param(value = PRIVATE_KEY, description = PRIVATE_KEY_DESC) String privateKey,
-                                       @Param(value = REMOTE_PATH, description = RENAME_REMOTE_PATH_DESC) String remotePath,
+                                       @Param(value = REMOTE_PATH, description = RENAME_REMOTE_PATH_DESC, required = true) String remotePath,
                                        @Param(value = REMOTE_FILE, description = RENAME_REMOTE_FILE_DESC) String remoteFile,
-                                       @Param(value = NEW_REMOTE_PATH, description = RENAME_NEW_REMOTE_PATH_DESC) String newRemotePath,
+                                       @Param(value = NEW_REMOTE_PATH, description = RENAME_NEW_REMOTE_PATH_DESC, required = true) String newRemotePath,
                                        @Param(value = NEW_REMOTE_FILE, description = NEW_REMOTE_FILE_DESC) String newRemoteFile,
                                        @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
                                        @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
@@ -92,7 +92,7 @@ public class SFTPRename {
         connectionTimeout = defaultIfEmpty(connectionTimeout, CONNECTION_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, EXECUTION_TIMEOUT);
 
-        final List<String> exceptionMessages = verifyInputsSFTPRename(remoteFile, remotePath, newRemoteFile, host, port,
+        final List<String> exceptionMessages = verifyInputsSFTPRename(remotePath, newRemotePath, host, port,
                 username, password, proxyPort, characterSet, closeSession, connectionTimeout, executionTimeout);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));

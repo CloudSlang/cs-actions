@@ -21,8 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPost;
-import static io.cloudslang.content.microsoftAD.utils.Constants.GET_MEMBER_GROUPS;
-import static io.cloudslang.content.microsoftAD.utils.Constants.GET_MEMBER_GROUPS_REQUEST_URL;
+import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.IsUserInGroup.SECURITY_ENABLED_ONLY;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
@@ -42,7 +41,7 @@ public class GetMemberGroupsService {
 
     @NotNull
     private static String getUrl(String userId) {
-        return GET_MEMBER_GROUPS_REQUEST_URL + userId + GET_MEMBER_GROUPS;
+        return USERS_URL + FORWARD_SLASH + userId + GET_MEMBER_GROUPS;
     }
 
 }

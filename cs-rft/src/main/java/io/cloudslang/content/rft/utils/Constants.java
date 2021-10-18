@@ -63,6 +63,7 @@ public class Constants {
     public static final String DEFAULT_EXECUTION_TIMEOUT = "60";
 
     public static final String NEW_LINE = "\n";
+    public static final String LOCALHOST = "localhost";
 
     public static final String FTP_REPLY_CODE = "ftpReplyCode";
     public static final String FTP_SESSION_LOG = "ftpSessionLog";
@@ -105,5 +106,6 @@ public class Constants {
     public static final String EXCEPTION_EXISTING_DIRECTORY = "Failed to create directory. Directory may already exist" +
             " or the path to the new folder is invalid.";
     public static final String EXCEPTION_DIRECTORY_DELETE = "Failed to delete directory. Directory may not be empty.";
+    public static final String EXCEPTION_LOCAL_HOST = "When the protocol is local, the host must be localhost!\\n";
     public static final String EXCEPTION_REMOTE_PATH_FILE = "The %s and %s inputs can't be both empty. A value must be provided for at least one.";
 }

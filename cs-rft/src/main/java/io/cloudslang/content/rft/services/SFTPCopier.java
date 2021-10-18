@@ -114,18 +114,11 @@ public class SFTPCopier {
                 channel.setFilenameEncoding(sftpDownloadFileInputs.getSftpCommonInputs().getCharacterSet());
                 int iMode = ChannelSftp.OVERWRITE;
 
-                if (!(sftpDownloadFileInputs.getRemotePath().isEmpty())) {
+                channel.cd(BACKSLASH + sftpDownloadFileInputs.getRemotePath());
+                channel.lcd(BACKSLASH + sftpDownloadFileInputs.getLocalPath());
 
-                    channel.cd(BACKSLASH + sftpDownloadFileInputs.getRemotePath());
-                    channel.lcd(BACKSLASH + sftpDownloadFileInputs.getLocalPath());
-                    channel.get(sftpDownloadFileInputs.getRemoteFile(), sftpDownloadFileInputs.getRemoteFile(), null, iMode);
+                channel.get(sftpDownloadFileInputs.getRemoteFile(), sftpDownloadFileInputs.getRemoteFile(), null, iMode);
 
-                } else {
-                    channel.get(sftpDownloadFileInputs.getRemoteFile(),
-                            sftpDownloadFileInputs.getLocalPath() + BACKSLASH + sftpDownloadFileInputs.getRemoteFile(),
-                            null,
-                            iMode);
-                }
             } catch (Throwable e) {
                 throw new Exception(EXCEPTION_UNABLE_TO_RETRIEVE, e);
             }
@@ -232,18 +225,11 @@ public class SFTPCopier {
                 channel.setFilenameEncoding(sftpUploadFileInputs.getSftpCommonInputs().getCharacterSet());
                 int iMode = ChannelSftp.OVERWRITE;
 
-                if (!(sftpUploadFileInputs.getRemotePath().isEmpty())) {
+                channel.cd(BACKSLASH + sftpUploadFileInputs.getRemotePath());
+                channel.lcd(BACKSLASH + sftpUploadFileInputs.getLocalPath());
 
-                    channel.cd(BACKSLASH + sftpUploadFileInputs.getRemotePath());
-                    channel.lcd(BACKSLASH + sftpUploadFileInputs.getLocalPath());
-                    channel.put(sftpUploadFileInputs.getLocalFile(), sftpUploadFileInputs.getLocalFile(), null, iMode);
+                channel.put(sftpUploadFileInputs.getLocalFile(), sftpUploadFileInputs.getLocalFile(), null, iMode);
 
-                } else {
-                    channel.put(sftpUploadFileInputs.getLocalPath() + BACKSLASH + sftpUploadFileInputs.getLocalFile(),
-                            sftpUploadFileInputs.getLocalFile(),
-                            null,
-                            iMode);
-                }
             } catch (Throwable e) {
                 throw new Exception(EXCEPTION_UNABLE_TO_STORE, e);
             }

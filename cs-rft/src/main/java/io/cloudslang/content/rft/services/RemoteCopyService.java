@@ -32,8 +32,6 @@ import static io.cloudslang.content.rft.utils.Inputs.RemoteCopyInputs.SRC_CHARAC
 
 public class RemoteCopyService {
 
-    private static final String BACK_SLASH = "/";
-    private static final String SFTP = "sftp";
 
     public Map<String, String> execute(RemoteCopyInputs inputs) {
 
@@ -70,10 +68,10 @@ public class RemoteCopyService {
             setExecutionTimeout(dest, inputs.getExecutionTimeout());
 
             if (inputs.getSourceProtocol().toLowerCase().equals(SFTP))
-                sourcePath = BACK_SLASH + sourcePath;
+                sourcePath = BACKSLASH + sourcePath;
 
             if (inputs.getDestinationProtocol().toLowerCase().equals(SFTP))
-                destPath = BACK_SLASH + destPath;
+                destPath = BACKSLASH + destPath;
 
             src.copyTo(dest, sourcePath, destPath);
             results.put(RETURN_RESULT, SUCCESS_RESULT);
@@ -103,8 +101,8 @@ public class RemoteCopyService {
     public static void checkOptions(String copier, String host) throws Exception {
         switch (copiers.valueOf(copier)) {
             case local:
-                if (host == null || !host.trim().equalsIgnoreCase("localhost")) {
-                    throw new Exception("When the protocol is local, the host must be localhost!\n");
+                if (host == null || !host.trim().equalsIgnoreCase(LOCALHOST)) {
+                    throw new Exception(EXCEPTION_LOCAL_HOST);
                 }
                 break;
             case scp:

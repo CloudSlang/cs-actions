@@ -25,6 +25,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
 
+import static io.cloudslang.content.rft.utils.Constants.BACKSLASH;
+
 /**
  * Date: 7/30/2015
  *
@@ -104,8 +106,8 @@ public class SCPCopier {
             long filesize = srcFile.length();
             command = "C0644 " + filesize + " ";
 
-            if (srcPath.lastIndexOf('/') > 0) {
-                command += srcPath.substring(srcPath.lastIndexOf('/') + 1);
+            if (srcPath.lastIndexOf(BACKSLASH) > 0) {
+                command += srcPath.substring(srcPath.lastIndexOf(BACKSLASH) + 1);
             } else {
                 command += srcPath;
             }

@@ -91,10 +91,7 @@ public final class Constants {
     public static final String TLSV13 = "tlsv1.3";
 
     //API URLs
-    public static final String CREATE_USER_URL = "https://graph.microsoft.com/v1.0/users";
-    public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
-    public static final String GET_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
-    public static final String GET_MEMBER_GROUPS_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
     public static final String USERS_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String ASSIGN_LICENSE_URL = "/assignLicense";
+    public static final String CHANGE_USER_PASSWORD_URL = "https://graph.microsoft.com/v1.0/me/changePassword";
 }
