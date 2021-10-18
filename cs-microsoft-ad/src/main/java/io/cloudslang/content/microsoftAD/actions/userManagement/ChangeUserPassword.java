@@ -38,7 +38,6 @@ import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.ChangeUserPassword.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizationToken.AUTH_TOKEN_DESC;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.ResetUserPassword.RESET_USER_PASSWORD_SUCCESS_RETURN_RESULT_DESC;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.ChangeUserPasswordInputs.CURRENT_PASSWORD;
@@ -69,20 +68,16 @@ public class ChangeUserPassword {
             })
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
-
                                        @Param(value = CURRENT_PASSWORD, required = true, description = CURRENT_PASSWORD_DESC) String currentPassword,
                                        @Param(value = NEW_PASSWORD, required = true, encrypted = true, description = NEW_PASSWORD_DESC) String newPassword,
-
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
-
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,
                                        @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
                                        @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
-
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
@@ -93,12 +88,10 @@ public class ChangeUserPassword {
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
         proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
-
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
         trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
-
         connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
         socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
@@ -135,11 +128,11 @@ public class ChangeUserPassword {
                             .build())
                     .build());
 
-            Map<String, String> finalResult = getOperationResults(result, RESET_USER_PASSWORD_SUCCESS_RETURN_RESULT_DESC, result.get(RETURN_RESULT));
+            Map<String, String> finalResult = getOperationResults(result, CHANGE_USER_PASSWORD_SUCCESS_RETURN_RESULT_DESC,
+                    result.get(RETURN_RESULT));
             parseApiExceptionMessage(finalResult);
 
             return finalResult;
-
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }
