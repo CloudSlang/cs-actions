@@ -33,9 +33,11 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port.";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
+    public static final String EXCEPTION_NO_PROPERTIES_SET = "You must provide at least one property in order to update " +
+            "the user's details.";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String FORWARD_SLASH = "/";
-    public static final String EQUALS = "=";
+    public static final String CODE_404 = "404";
     public static final String CHANGEIT = "changeit";
     public static final String ZERO = "0";
     public static final String UTF8 = "UTF-8";
