@@ -23,7 +23,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
-import io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames;
+import io.cloudslang.content.microsoftAD.utils.Inputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -35,19 +35,20 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.microsoftAD.services.GetUserService.getUser;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserEnabled.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_PRINCIPAL_NAME;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyGetInputs;
+import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.ACCOUNT_ENABLED_OUT;
+import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.STATUS_CODE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_ID;
 
 public class IsUserEnabled {
     @Action(name = IS_USER_ENABLED_NAME,
@@ -55,7 +56,7 @@ public class IsUserEnabled {
             outputs = {
                     @Output(value = RETURN_RESULT, description = IS_USER_ENABLED_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = OutputNames.STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = ACCOUNT_ENABLED_OUT, description = ACCOUNT_ENABLED_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
