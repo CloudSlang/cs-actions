@@ -196,7 +196,7 @@ public final class InputsValidation {
 
         final List<String> exceptionMessages = new ArrayList<>();
 
-        addVerifyIdOrPrincipalName(exceptionMessages, userPrincipalName, userId);
+        addVerifyUserIdOrPrincipalName(exceptionMessages, userId, userPrincipalName);
         addVerifyBoolean(exceptionMessages, securityEnabledOnly, SECURITY_ENABLED_ONLY);
 
         exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots, x509HostnameVerifier,
@@ -290,17 +290,6 @@ public final class InputsValidation {
         if (isEmpty(userPrincipalName) && isEmpty(userId)) {
             exceptions.add(String.format(EXCEPTION_USER_IDENTIFIER_NOT_SPEC, USER_PRINCIPAL_NAME, USER_ID));
         }
-        return exceptions;
-    }
-
-    @NotNull
-    private static List<String> addVerifyIdOrPrincipalName(@NotNull List<String> exceptions,
-                                                           @Nullable final String userPrincipalName,
-                                                           @Nullable final String userId) {
-        if (isEmpty(userPrincipalName) && isEmpty(userId)) {
-            exceptions.add(String.format(EXCEPTION_NAME_OR_ID_NOT_SPEC, USER_PRINCIPAL_NAME, USER_ID));
-        }
-
         return exceptions;
     }
 
