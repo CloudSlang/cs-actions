@@ -122,7 +122,7 @@ public class HttpClientAction {
      *                                           If keepAlive is false, the already open connection will be used and after execution it will close it.
      *                                           The operation will use a connection pool stored in a GlobalSessionObject that will be available throughout
      *                                           the execution (the flow and subflows, between parallel split lanes). Default value: true. Valid values: true, false.
-     * @param connectionsMaxPerRoot              The maximum limit of connections on a per route basis.
+     * @param connectionsMaxPerRoute             The maximum limit of connections on a per route basis.
      *                                           The default will create no more than 2 concurrent connections per given route. Default value: 2
      * @param connectionsMaxTotal                The maximum limit of connections in total.
      *                                           The default will create no more than 2 concurrent connections in total. Default value: 20
@@ -289,7 +289,7 @@ public class HttpClientAction {
             @Param(HttpClientInputs.SOCKET_TIMEOUT) String socketTimeout,
             @Param(HttpClientInputs.USE_COOKIES) String useCookies,
             @Param(HttpClientInputs.KEEP_ALIVE) String keepAlive,
-            @Param(HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoot,
+            @Param(HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoute,
             @Param(HttpClientInputs.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
             @Param(HttpClientInputs.HEADERS) String headers,
             @Param(HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet,
@@ -337,7 +337,7 @@ public class HttpClientAction {
         httpClientInputs.setSocketTimeout(socketTimeout);
         httpClientInputs.setUseCookies(useCookies);
         httpClientInputs.setKeepAlive(keepAlive);
-        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
+        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoute);
         httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
         httpClientInputs.setHeaders(headers);
         httpClientInputs.setResponseCharacterSet(defaultIfEmpty(responseCharacterSet, RESPONSE_CHARACTER_SET));
