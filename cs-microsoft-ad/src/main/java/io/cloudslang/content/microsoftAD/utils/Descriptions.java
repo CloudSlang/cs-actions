@@ -116,13 +116,20 @@ public class Descriptions {
                 "user account if you are using a federated domain for the user's userPrincipalName (UPN) property.";
         public static final String MAIL_NICKNAME_DESC = "The mail alias for the user.";
         public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name." +
-                "\nExample: someuser@contoso.com";
+                "\n" + "The principal name needs to comply with the format accepted by Active Directory. " +
+                "The allowed characters are A-Z, a-z, 0-9 and ' . - _ ! # ^ ~ . The length must not exceed " +
+                "113 characters in total, and there should be 64 characters or less before @ .\n" +
+                "Example: someuser@contoso.com";
         public static final String FORCE_CHANGE_PASSWORD_DESC = "In case the value for the input is true, the user " +
                 "must change the password on the next login. \nDefault value: false. \nNOTE: For Azure B2C " +
                 "tenants, set to false and instead use custom policies and user flows to force password reset at " +
                 "first sign in.";
         public static final String PASSWORD_DESC = "The password for the user. This property is required when a user is " +
-                "created. The password must satisfy minimum requirements as specified by the user’s passwordPolicies " +
+                "created.\n The password needs to comply with the format accepted by Active Directory. " +
+                "The allowed characters are A-Z, a-z, 0-9, blank space and @ # $ % ^ & * - _ ! + = [ ] { } | \\ : ' , . ? /" +
+                " ` ~ \" ( ) ; < >. The length must be between 8 and 256 characters in total, and at least three of the" +
+                " following conditions must be met: lowercase characters, uppercase characters, numbers, symbols." +
+                " The password must also satisfy minimum requirements as specified by the user’s passwordPolicies " +
                 "property. By default, a strong password is required.";
         public static final String BODY_DESC = "Full json body if the user wants to set additional properties. " +
                 "All the other inputs are ignored if the body is given.";
@@ -171,7 +178,11 @@ public class Descriptions {
     public static class UpdateUser {
         public static final String UPDATE_USER_NAME = "Update User";
         public static final String UPDATE_USER_DESC = "Updates user's properties.";
-        public static final String UPDATED_USER_PRINCIPAL_NAME_DESC = "The new User Principal Name.";
+        public static final String UPDATED_USER_PRINCIPAL_NAME_DESC = "The new User Principal Name." +
+                "The principal name needs to comply with the format accepted by Active Directory. " +
+                "The allowed characters are A-Z, a-z, 0-9 and ' . - _ ! # ^ ~ . The length must not " +
+                "exceed 113 characters in total, and there should be 64 characters or less before @ .\n"+
+                "Example: someuser@contoso.com";
         public static final String UPDATED_ON_PREMISES_IMMUTABLE_ID_DESC = "This property is used to associate an on-premises " +
                 "Active Directory user account to their Azure AD user object. This property must be specified when " +
                 "creating a new user account in the Graph if you are using a federated domain for the user’s userPrincipalName " +
@@ -242,7 +253,10 @@ public class Descriptions {
 
         public static final String IS_USER_ID_DESC = "The ID of the user to perform the action on.";
 
-        public static final String IS_USER_IN_GROUP_SECURITY_GROUPS = "True if only security groups that the user is a " +
+        public static final String BODY_DESC = "Full json body, " +
+                "security_enabled_only input is ignored if the body is given.";
+
+        public static final String IS_USER_IN_GROUP_SECURITY_ENABLED = "True if only security groups that the user is a " +
                 "member of should be returned, false to specify that all groups should be returned.";
 
         //Results
