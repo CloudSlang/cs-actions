@@ -15,24 +15,19 @@
 package io.cloudslang.content.microsoftAD.services;
 
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
-import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpGet;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
-import static org.apache.commons.lang3.CharEncoding.UTF_8;
 
 
-public class GetSubscribedSkusService {
+public class ListSubscribedSkusService {
 
     public static Map<String, String> getSubscribedSkus(@NotNull final AzureActiveDirectoryCommonInputs commonInputs) throws Exception {
 
-        return httpGet(commonInputs, GET_SUBSCRIVED_SKUS_URL);
+        return httpGet(commonInputs, LIST_SUBSCRIBED_SKUS_URL);
 
     }
 
