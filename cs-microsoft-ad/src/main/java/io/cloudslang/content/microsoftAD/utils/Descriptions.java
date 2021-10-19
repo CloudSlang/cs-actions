@@ -327,4 +327,23 @@ public class Descriptions {
 
 
     }
+
+    public static class ListAvailableSkus {
+
+        //Descriptions
+        public static final String LIST_AVAILABLE_SKUS_DESC = "Get the list of commercial subscriptions that " +
+                "an organization has acquired.";
+        public static final String LIST_AVAILABLE_SKUS_NAME = "List Available Skus";
+
+        //Output descriptions
+        public static final String AVAILABLE_SKUS_LIST_DESC = "Get the list of commercial subscriptions " +
+                "that an organization has acquired.";
+
+        //Results
+        public static final String LIST_AVAILABLE_SKUS_SUCCESS_DESC = "Request went successfully.";
+        public static final String LIST_AVAILABLE_SKUS_FAILURE_DESC = "There was an error while trying to do the request.";
+        public static final String LIST_AVAILABLE_SKUS_RETURN_RESULT_DESC = "If successful, this method returns 200 " +
+                "response code.";
+    }
+
 }

@@ -77,6 +77,7 @@ public final class Constants {
     public static final String ACCOUNT_ENABLED_OUT = "accountEnabled";
     public static final String USER_ID = "userId";
     public static final String ACCOUNT_ENABLED = "accountEnabled";
+    public static final String SKUID = "skuId";
 
     public static final String VALUE = "value";
     public static final String GET_MEMBER_GROUPS = "/getMemberGroups";
@@ -95,4 +96,5 @@ public final class Constants {
     public static final String USERS_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String ASSIGN_LICENSE_URL = "/assignLicense";
     public static final String CHANGE_USER_PASSWORD_URL = "https://graph.microsoft.com/v1.0/me/changePassword";
+    public static final String GET_SUBSCRIVED_SKUS_URL = "https://graph.microsoft.com/v1.0/subscribedSkus";
 }

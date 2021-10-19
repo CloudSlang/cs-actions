@@ -236,13 +236,13 @@ public class HttpCommons {
         }
     }
 
-    public static Map<String, String> httpGet(GetUserInputs getUserInputsInputs, String url) {
+    public static Map<String, String> httpGet(AzureActiveDirectoryCommonInputs commonInputs, String url) {
         Map<String, String> result = new HashMap<>();
         result.put(STATUS_CODE, EMPTY);
         result.put(RETURN_RESULT, EMPTY);
-        try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(getUserInputsInputs.getCommonInputs())) {
+        try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
             HttpGet httpGet = new HttpGet(url);
-            httpGet.setHeader(HttpHeaders.AUTHORIZATION, BEARER + getUserInputsInputs.getCommonInputs().getAuthToken());
+            httpGet.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
             httpGet.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
             try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);

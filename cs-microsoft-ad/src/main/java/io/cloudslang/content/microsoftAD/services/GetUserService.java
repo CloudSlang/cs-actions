@@ -32,7 +32,7 @@ public class GetUserService {
 
     public static Map<String, String> getUser(@NotNull final GetUserInputs getUserInputs) throws Exception {
 
-        return httpGet(getUserInputs, getUserUrl(getUserInputs.getODataQuery(), getUserInputs.getCommonInputs().getUserPrincipalName(), getUserInputs.getCommonInputs().getUserId()));
+        return httpGet(getUserInputs.getCommonInputs(), getUserUrl(getUserInputs.getODataQuery(), getUserInputs.getCommonInputs().getUserPrincipalName(), getUserInputs.getCommonInputs().getUserId()));
 
     }
 
