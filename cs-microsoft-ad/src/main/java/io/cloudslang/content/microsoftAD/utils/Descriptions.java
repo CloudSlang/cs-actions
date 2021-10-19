@@ -253,10 +253,7 @@ public class Descriptions {
 
         public static final String IS_USER_ID_DESC = "The ID of the user to perform the action on.";
 
-        public static final String BODY_DESC = "Full json body, " +
-                "security_enabled_only input is ignored if the body is given.";
-
-        public static final String IS_USER_IN_GROUP_SECURITY_ENABLED = "True if only security groups that the user is a " +
+        public static final String IS_USER_IN_GROUP_SECURITY_GROUPS = "True if only security groups that the user is a " +
                 "member of should be returned, false to specify that all groups should be returned.";
 
         //Results
