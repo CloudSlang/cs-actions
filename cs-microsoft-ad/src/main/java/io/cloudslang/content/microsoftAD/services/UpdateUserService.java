@@ -17,18 +17,21 @@ package io.cloudslang.content.microsoftAD.services;
 import com.google.gson.JsonObject;
 import io.cloudslang.content.microsoftAD.entities.UpdateUserInputs;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPatch;
-import static io.cloudslang.content.microsoftAD.utils.Constants.FORWARD_SLASH;
-import static io.cloudslang.content.microsoftAD.utils.Constants.USERS_URL;
+import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.ACCOUNT_ENABLED;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class UpdateUserService {
 
     public static Map<String, String> updateUser(UpdateUserInputs updateUserInputs) {
         String UPDATE_USERS_URL = USERS_URL + FORWARD_SLASH;
+        Map<String, String> result = new HashMap<>();
 
         if (!(updateUserInputs.getUserCommonInputs().getCommonInputs().getUserId().isEmpty()))
             UPDATE_USERS_URL += updateUserInputs.getUserCommonInputs().getCommonInputs().getUserId().trim();
@@ -40,15 +43,15 @@ public class UpdateUserService {
 
         JsonObject body = new JsonObject();
         if (!updateUserInputs.getUserCommonInputs().getAccountEnabled().isEmpty())
-        body.addProperty(ACCOUNT_ENABLED, updateUserInputs.getUserCommonInputs().getAccountEnabled());
+            body.addProperty(ACCOUNT_ENABLED, updateUserInputs.getUserCommonInputs().getAccountEnabled());
         if (!updateUserInputs.getUserCommonInputs().getDisplayName().isEmpty())
             body.addProperty(DISPLAY_NAME, updateUserInputs.getUserCommonInputs().getDisplayName());
         if (!updateUserInputs.getUserCommonInputs().getOnPremisesImmutableId().isEmpty())
             body.addProperty(ON_PREMISES_IMMUTABLE_ID, updateUserInputs.getUserCommonInputs().getOnPremisesImmutableId());
         if (!updateUserInputs.getUserCommonInputs().getMailNickname().isEmpty())
-        body.addProperty(MAIL_NICKNAME, updateUserInputs.getUserCommonInputs().getMailNickname());
+            body.addProperty(MAIL_NICKNAME, updateUserInputs.getUserCommonInputs().getMailNickname());
         if (!updateUserInputs.getUpdatedUserPrincipalName().isEmpty())
-        body.addProperty(USER_PRINCIPAL_NAME, updateUserInputs.getUpdatedUserPrincipalName());
+            body.addProperty(USER_PRINCIPAL_NAME, updateUserInputs.getUpdatedUserPrincipalName());
 
         if (!updateUserInputs.getUserCommonInputs().getPassword().isEmpty()) {
             JsonObject passwordProfile = new JsonObject();
@@ -61,6 +64,13 @@ public class UpdateUserService {
             passwordProfile.addProperty(PASSWORD, updateUserInputs.getUserCommonInputs().getPassword());
             body.add(PASSWORD_PROFILE, passwordProfile);
         }
+
+        if (body.size() == 0) {
+            result.put(RETURN_RESULT, EXCEPTION_NO_PROPERTIES_SET);
+            result.put(STATUS_CODE, CODE_404);
+            return result;
+        }
+
         return httpPatch(updateUserInputs.getUserCommonInputs().getCommonInputs(), UPDATE_USERS_URL, body.toString());
     }
 }
