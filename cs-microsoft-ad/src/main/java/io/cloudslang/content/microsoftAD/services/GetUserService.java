@@ -18,11 +18,14 @@ import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpGet;
 import static io.cloudslang.content.microsoftAD.utils.Constants.FORWARD_SLASH;
 import static io.cloudslang.content.microsoftAD.utils.Constants.USERS_URL;
+import static org.apache.commons.lang3.CharEncoding.UTF_8;
 
 
 public class GetUserService {
@@ -37,10 +40,15 @@ public class GetUserService {
     @NotNull
     private static String getUserUrl(String oDdataQuery, String userPrincipalName, String userId) {
         String finalUrl =  USERS_URL + FORWARD_SLASH;
-        if (!StringUtils.isEmpty(userPrincipalName))
-            finalUrl += userPrincipalName;
+        if (!StringUtils.isEmpty(userPrincipalName)){
+            try {
+                finalUrl += URLEncoder.encode(userPrincipalName.trim(), UTF_8);
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
         else
-            finalUrl = finalUrl + userId;
+            finalUrl = finalUrl + userId.trim();
 
         if (!StringUtils.isEmpty(oDdataQuery))
             finalUrl += "?" + oDdataQuery;

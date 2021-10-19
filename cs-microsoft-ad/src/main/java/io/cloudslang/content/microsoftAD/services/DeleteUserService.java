@@ -17,11 +17,14 @@ package io.cloudslang.content.microsoftAD.services;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpDelete;
 import static io.cloudslang.content.microsoftAD.utils.Constants.FORWARD_SLASH;
 import static io.cloudslang.content.microsoftAD.utils.Constants.USERS_URL;
+import static org.apache.commons.lang3.CharEncoding.UTF_8;
 
 
 public class DeleteUserService {
@@ -38,9 +41,15 @@ public class DeleteUserService {
         String finalUrl = USERS_URL + FORWARD_SLASH;
 
         if (!deleteUserInputs.getUserPrincipalName().isEmpty())
-            finalUrl += deleteUserInputs.getUserPrincipalName();
+        {
+            try {
+                finalUrl += URLEncoder.encode(deleteUserInputs.getUserPrincipalName().trim(), UTF_8);
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
         else
-            finalUrl += deleteUserInputs.getUserId();
+            finalUrl += deleteUserInputs.getUserId().trim();
 
         return finalUrl;
     }
