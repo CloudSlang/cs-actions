@@ -59,9 +59,6 @@ public class Descriptions {
         public static final String AUTH_TOKEN_DESC = "Token used to authenticate to Azure Active Directory.";
         public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name. This input is mutually exclusive " +
                 "with the userId input. \n" +
-                "The principal name needs to comply with the format accepted by Active Directory. " +
-                "The allowed characters are A-Z, a-z, 0-9 and ' . - _ ! # ^ ~ . The length must not exceed " +
-                "113 characters in total, and there should be 64 characters or less before @ . \n" +
                 "Example: someuser@contoso.com";
         public static final String USER_ID_DESC = "The ID of the user to perform the action on. This input is mutually " +
                 "exclusive with the userPrincipalName input.";
