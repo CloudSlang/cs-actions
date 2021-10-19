@@ -78,7 +78,7 @@ public final class Constants {
 
     public static final String VALUE = "value";
     public static final String GET_MEMBER_GROUPS = "/getMemberGroups";
-    public static final String SECURITY_ENABLED_ONLY = "securityEnabledOnly";
+    public static final String SECURITY_ENABLED_GROUPS = "securityEnabledOnly";
 
     public static final String STRICT = "strict";
     public static final String ALLOW_ALL = "allow_all";

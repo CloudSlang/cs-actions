@@ -30,7 +30,7 @@ public class GetMemberGroupsService {
     public static Map<String, String> getMemberGroups(GetMemberGroupsInputs getMemberGroupsInputs) {
 
         JsonObject body = new JsonObject();
-        body.addProperty(SECURITY_ENABLED_ONLY, getMemberGroupsInputs.getSecurityEnabledGroups());
+        body.addProperty(SECURITY_ENABLED_GROUPS, getMemberGroupsInputs.getSecurityEnabledGroups());
 
         return httpPost(getMemberGroupsInputs.getCommonInputs(),
                 getUrl(getMemberGroupsInputs.getCommonInputs().getUserPrincipalName(),

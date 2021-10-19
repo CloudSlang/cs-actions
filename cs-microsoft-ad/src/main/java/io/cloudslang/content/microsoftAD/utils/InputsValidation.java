@@ -197,7 +197,7 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
 
         addVerifyUserIdOrPrincipalName(exceptionMessages, userId, userPrincipalName);
-        addVerifyBoolean(exceptionMessages, securityEnabledGroups, SECURITY_ENABLED_ONLY);
+        addVerifyBoolean(exceptionMessages, securityEnabledGroups, SECURITY_ENABLED_GROUPS);
 
         exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots, x509HostnameVerifier,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
