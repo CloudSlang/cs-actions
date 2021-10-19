@@ -23,8 +23,6 @@ import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPost;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.IsUserInGroup.SECURITY_ENABLED_ONLY;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 
 public class GetMemberGroupsService {
@@ -32,12 +30,12 @@ public class GetMemberGroupsService {
     public static Map<String, String> getMemberGroups(GetMemberGroupsInputs getMemberGroupsInputs) {
 
         JsonObject body = new JsonObject();
-        body.addProperty(SECURITY_ENABLED_ONLY, getMemberGroupsInputs.getSecurityEnabledOnly());
+        body.addProperty(SECURITY_ENABLED_ONLY, getMemberGroupsInputs.getSecurityEnabledGroups());
 
         return httpPost(getMemberGroupsInputs.getCommonInputs(),
-                        getUrl(getMemberGroupsInputs.getCommonInputs().getUserPrincipalName(),
-                               getMemberGroupsInputs.getCommonInputs().getUserId()),
-                        body.toString());
+                getUrl(getMemberGroupsInputs.getCommonInputs().getUserPrincipalName(),
+                        getMemberGroupsInputs.getCommonInputs().getUserId()),
+                body.toString());
     }
 
     @NotNull

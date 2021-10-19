@@ -21,14 +21,13 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class GetMemberGroupsInputs {
 
-    private final String securityEnabledOnly;
+    private final String securityEnabledGroups;
 
     private final AzureActiveDirectoryCommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"securityEnabledOnly", "commonInputs"})
-
-    public GetMemberGroupsInputs(String securityEnabledOnly, AzureActiveDirectoryCommonInputs commonInputs) {
-        this.securityEnabledOnly = securityEnabledOnly;
+    @java.beans.ConstructorProperties({"securityEnabledGroups", "commonInputs"})
+    public GetMemberGroupsInputs(String securityEnabledGroups, AzureActiveDirectoryCommonInputs commonInputs) {
+        this.securityEnabledGroups = securityEnabledGroups;
         this.commonInputs = commonInputs;
     }
 
@@ -38,8 +37,8 @@ public class GetMemberGroupsInputs {
     }
 
     @NotNull
-    public String getSecurityEnabledOnly() {
-        return securityEnabledOnly;
+    public String getSecurityEnabledGroups() {
+        return securityEnabledGroups;
     }
 
     @NotNull
@@ -48,15 +47,15 @@ public class GetMemberGroupsInputs {
     }
 
     public static class GetMemberGroupsInputsBuilder {
-        private String securityEnabledOnly = EMPTY;
+        private String securityEnabledGroups = EMPTY;
         private AzureActiveDirectoryCommonInputs commonInputs;
 
         GetMemberGroupsInputsBuilder() {
         }
 
         @NotNull
-        public GetMemberGroupsInputs.GetMemberGroupsInputsBuilder securityEnabledOnly(@NotNull final String securityEnabledOnly) {
-            this.securityEnabledOnly = securityEnabledOnly;
+        public GetMemberGroupsInputs.GetMemberGroupsInputsBuilder securityEnabledGroups(@NotNull final String securityEnabledGroups) {
+            this.securityEnabledGroups = securityEnabledGroups;
             return this;
         }
 
@@ -67,7 +66,7 @@ public class GetMemberGroupsInputs {
         }
 
         public GetMemberGroupsInputs build() {
-            return new GetMemberGroupsInputs(securityEnabledOnly, commonInputs);
+            return new GetMemberGroupsInputs(securityEnabledGroups, commonInputs);
         }
     }
 

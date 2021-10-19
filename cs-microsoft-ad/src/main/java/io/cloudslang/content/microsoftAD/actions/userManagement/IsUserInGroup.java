@@ -43,7 +43,7 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserInGroup
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_PRINCIPAL_NAME;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.IsUserInGroup.SECURITY_ENABLED_ONLY;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.IsUserInGroup.SECURITY_ENABLED_GROUPS;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.IsUserInGroup.USER_ID;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyIsUserInGroupInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -66,7 +66,7 @@ public class IsUserInGroup {
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true) String authToken,
                                        @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
                                        @Param(value = USER_ID, description = IS_USER_ID_DESC) String userId,
-                                       @Param(value = SECURITY_ENABLED_ONLY, description = IS_USER_IN_GROUP_SECURITY_ENABLED) String securityEnableGroups,
+                                       @Param(value = SECURITY_ENABLED_GROUPS, description = IS_USER_IN_GROUP_SECURITY_GROUPS) String securityEnableGroups,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -109,7 +109,7 @@ public class IsUserInGroup {
 
         try {
             final Map<String, String> result = getMemberGroups(GetMemberGroupsInputs.builder()
-                    .securityEnabledOnly(securityEnableGroups)
+                    .securityEnabledGroups(securityEnableGroups)
                     .commonInputs(AzureActiveDirectoryCommonInputs.builder()
                             .authToken(authToken)
                             .userPrincipalName(userPrincipalName)

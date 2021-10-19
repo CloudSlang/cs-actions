@@ -53,7 +53,7 @@ public final class Inputs extends InputNames {
 
     public static class IsUserInGroup {
 
-        public static final String SECURITY_ENABLED_ONLY = "securityEnabledOnly";
+        public static final String SECURITY_ENABLED_GROUPS = "securityEnabledOnly";
         public static final String USER_ID = "userId";
     }
 
