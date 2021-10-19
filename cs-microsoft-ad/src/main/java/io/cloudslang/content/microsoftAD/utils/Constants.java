@@ -74,7 +74,6 @@ public final class Constants {
     public static final String ATTACHMENTS = "/attachments";
     public static final String ATTACHMENTS_PATH = "/attachments/";
     public static final String IS_USER_ENABLED_ODATA_QUERY = "$select=accountEnabled";
-    public static final String ACCOUNT_ENABLED_OUT = "accountEnabled";
     public static final String USER_ID = "userId";
     public static final String ACCOUNT_ENABLED = "accountEnabled";
 
