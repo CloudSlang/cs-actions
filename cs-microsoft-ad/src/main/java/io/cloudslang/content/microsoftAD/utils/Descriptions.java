@@ -59,6 +59,9 @@ public class Descriptions {
         public static final String AUTH_TOKEN_DESC = "Token used to authenticate to Azure Active Directory.";
         public static final String USER_PRINCIPAL_NAME_DESC = "The user principal name. This input is mutually exclusive " +
                 "with the userId input. \n" +
+                "The principal name needs to comply with the format accepted by Active Directory. " +
+                "The allowed characters are A-Z, a-z, 0-9 and ' . - _ ! # ^ ~ . The length must not exceed " +
+                "113 characters in total, and there should be 64 characters or less before @ . \n" +
                 "Example: someuser@contoso.com";
         public static final String USER_ID_DESC = "The ID of the user to perform the action on. This input is mutually " +
                 "exclusive with the userPrincipalName input.";
@@ -284,8 +287,11 @@ public class Descriptions {
 
         //Inputs
         public static final String CURRENT_PASSWORD_DESC = "The user's current password.";
-        public static final String NEW_PASSWORD_DESC = "The new password. The password must satisfy minimum requirements " +
-                "as specified by the user’s passwordPolicies property. By default, a strong password is required.";
+        public static final String NEW_PASSWORD_DESC = "The new password. The password needs to comply with the " +
+                "format accepted by Active Directory. The allowed characters are A-Z, a-z, 0-9, blank " +
+                "space and @ # $ % ^ & * - _ ! + = [ ] { } | \\ : ' , . ? / ` ~ \" ( ) ; < >. The length " +
+                "must be between 8 and 256 characters in total, and at least three of the following conditions " +
+                "must be met: lowercase characters, uppercase characters, numbers, symbols.";
 
         //Results
         public static final String CHANGE_USER_PASSWORD_FAILURE_DESC = "There was an error while trying to change the user's password.";
