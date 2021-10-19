@@ -16,32 +16,39 @@ package io.cloudslang.content.microsoftAD.services;
 
 import com.google.gson.JsonObject;
 import io.cloudslang.content.microsoftAD.entities.GetMemberGroupsInputs;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPost;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.IsUserInGroup.SECURITY_ENABLED_ONLY;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 
 public class GetMemberGroupsService {
 
     public static Map<String, String> getMemberGroups(GetMemberGroupsInputs getMemberGroupsInputs) {
 
-        if (!getMemberGroupsInputs.getBody().equals(EMPTY))
-            return httpPost(getMemberGroupsInputs.getCommonInputs(), getUrl(getMemberGroupsInputs.getCommonInputs().getUserId()), getMemberGroupsInputs.getBody());
-
         JsonObject body = new JsonObject();
-        body.addProperty(SECURITY_ENABLED_ONLY, getMemberGroupsInputs.getSecurityEnabledOnly());
+        body.addProperty(SECURITY_ENABLED_GROUPS, getMemberGroupsInputs.getSecurityEnabledGroups());
 
-        return httpPost(getMemberGroupsInputs.getCommonInputs(), getUrl(getMemberGroupsInputs.getCommonInputs().getUserId()), body.toString());
+        return httpPost(getMemberGroupsInputs.getCommonInputs(),
+                getUrl(getMemberGroupsInputs.getCommonInputs().getUserPrincipalName(),
+                        getMemberGroupsInputs.getCommonInputs().getUserId()),
+                body.toString());
     }
 
     @NotNull
-    private static String getUrl(String userId) {
-        return USERS_URL + FORWARD_SLASH + userId + GET_MEMBER_GROUPS;
+    private static String getUrl(String userPrincipalName, String userId) {
+
+        String finalUrl = USERS_URL + FORWARD_SLASH;
+
+        if (!StringUtils.isEmpty(userPrincipalName))
+            finalUrl += userPrincipalName + GET_MEMBER_GROUPS;
+        else
+            finalUrl += userId + GET_MEMBER_GROUPS;
+
+        return finalUrl;
     }
 
 }

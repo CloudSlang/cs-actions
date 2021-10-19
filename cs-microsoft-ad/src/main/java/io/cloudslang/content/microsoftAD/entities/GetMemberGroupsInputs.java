@@ -21,16 +21,13 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class GetMemberGroupsInputs {
 
-    private final String securityEnabledOnly;
-    private final String body;
+    private final String securityEnabledGroups;
 
     private final AzureActiveDirectoryCommonInputs commonInputs;
 
-    @java.beans.ConstructorProperties({"securityEnabledOnly", "body", "commonInputs"})
-
-    public GetMemberGroupsInputs(String securityEnabledOnly, String body, AzureActiveDirectoryCommonInputs commonInputs) {
-        this.securityEnabledOnly = securityEnabledOnly;
-        this.body = body;
+    @java.beans.ConstructorProperties({"securityEnabledGroups", "commonInputs"})
+    public GetMemberGroupsInputs(String securityEnabledGroups, AzureActiveDirectoryCommonInputs commonInputs) {
+        this.securityEnabledGroups = securityEnabledGroups;
         this.commonInputs = commonInputs;
     }
 
@@ -40,13 +37,8 @@ public class GetMemberGroupsInputs {
     }
 
     @NotNull
-    public String getSecurityEnabledOnly() {
-        return securityEnabledOnly;
-    }
-
-    @NotNull
-    public String getBody() {
-        return body;
+    public String getSecurityEnabledGroups() {
+        return securityEnabledGroups;
     }
 
     @NotNull
@@ -55,16 +47,15 @@ public class GetMemberGroupsInputs {
     }
 
     public static class GetMemberGroupsInputsBuilder {
-        private String securityEnabledOnly = EMPTY;
-        private String body = EMPTY;
+        private String securityEnabledGroups = EMPTY;
         private AzureActiveDirectoryCommonInputs commonInputs;
 
         GetMemberGroupsInputsBuilder() {
         }
 
         @NotNull
-        public GetMemberGroupsInputs.GetMemberGroupsInputsBuilder securityEnabledOnly(@NotNull final String securityEnabledOnly) {
-            this.securityEnabledOnly = securityEnabledOnly;
+        public GetMemberGroupsInputs.GetMemberGroupsInputsBuilder securityEnabledGroups(@NotNull final String securityEnabledGroups) {
+            this.securityEnabledGroups = securityEnabledGroups;
             return this;
         }
 
@@ -74,15 +65,8 @@ public class GetMemberGroupsInputs {
             return this;
         }
 
-        @NotNull
-        public GetMemberGroupsInputs.GetMemberGroupsInputsBuilder body(@NotNull final String body) {
-            this.body = body;
-            return this;
-        }
-
         public GetMemberGroupsInputs build() {
-            return new GetMemberGroupsInputs(securityEnabledOnly, body, commonInputs);
-
+            return new GetMemberGroupsInputs(securityEnabledGroups, commonInputs);
         }
     }
 

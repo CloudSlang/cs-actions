@@ -181,9 +181,10 @@ public final class InputsValidation {
 
         return exceptionMessages;
     }
-  
-    public static List<String> verifyIsUserInGroupInputs(@Nullable final String userId,
-                                                         @Nullable final String securityEnabledOnly,
+
+    public static List<String> verifyIsUserInGroupInputs(@Nullable final String userPrincipalName,
+                                                         @Nullable final String userId,
+                                                         @Nullable final String securityEnabledGroups,
                                                          @Nullable final String proxyPort,
                                                          @Nullable final String trust_all_roots,
                                                          @Nullable final String x509HostnameVerifier,
@@ -195,8 +196,8 @@ public final class InputsValidation {
 
         final List<String> exceptionMessages = new ArrayList<>();
 
-        addVerifyNotNullOrEmpty(exceptionMessages, userId, USER_ID);
-        addVerifyBoolean(exceptionMessages, securityEnabledOnly, SECURITY_ENABLED_ONLY);
+        addVerifyUserIdOrPrincipalName(exceptionMessages, userId, userPrincipalName);
+        addVerifyBoolean(exceptionMessages, securityEnabledGroups, SECURITY_ENABLED_GROUPS);
 
         exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trust_all_roots, x509HostnameVerifier,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
@@ -228,17 +229,18 @@ public final class InputsValidation {
         return exceptionMessages;
     }
 
-    @NotNull public static List<String> verifyLicenseInputs(@Nullable final String userPrincipalName,
-                                 @Nullable final String userId,
-                                 @Nullable final String licenses,
-                                 @Nullable final String proxyPort,
-                                 @Nullable final String trust_all_roots,
-                                 @Nullable final String x509HostnameVerifier,
-                                 @Nullable final String connectTimeout,
-                                 @Nullable final String socketTimeout,
-                                 @Nullable final String keepAlive,
-                                 @Nullable final String connectionsMaxPerRoute,
-                                 @Nullable final String connectionsMaxTotal) {
+    @NotNull
+    public static List<String> verifyLicenseInputs(@Nullable final String userPrincipalName,
+                                                   @Nullable final String userId,
+                                                   @Nullable final String licenses,
+                                                   @Nullable final String proxyPort,
+                                                   @Nullable final String trust_all_roots,
+                                                   @Nullable final String x509HostnameVerifier,
+                                                   @Nullable final String connectTimeout,
+                                                   @Nullable final String socketTimeout,
+                                                   @Nullable final String keepAlive,
+                                                   @Nullable final String connectionsMaxPerRoute,
+                                                   @Nullable final String connectionsMaxTotal) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyUserInputs(exceptionMessages, userPrincipalName, userId);
@@ -249,16 +251,17 @@ public final class InputsValidation {
 
     }
 
-    @NotNull public static List<String> verifyChangePasswordInputs(@Nullable final String currentPassword,
-                                                                   @Nullable final String newPassword,
-                                                                   @Nullable final String proxyPort,
-                                                                   @Nullable final String trust_all_roots,
-                                                                   @Nullable final String x509HostnameVerifier,
-                                                                   @Nullable final String connectTimeout,
-                                                                   @Nullable final String socketTimeout,
-                                                                   @Nullable final String keepAlive,
-                                                                   @Nullable final String connectionsMaxPerRoute,
-                                                                   @Nullable final String connectionsMaxTotal) {
+    @NotNull
+    public static List<String> verifyChangePasswordInputs(@Nullable final String currentPassword,
+                                                          @Nullable final String newPassword,
+                                                          @Nullable final String proxyPort,
+                                                          @Nullable final String trust_all_roots,
+                                                          @Nullable final String x509HostnameVerifier,
+                                                          @Nullable final String connectTimeout,
+                                                          @Nullable final String socketTimeout,
+                                                          @Nullable final String keepAlive,
+                                                          @Nullable final String connectionsMaxPerRoute,
+                                                          @Nullable final String connectionsMaxTotal) {
 
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyNotNullOrEmpty(exceptionMessages, currentPassword, CURRENT_PASSWORD);
