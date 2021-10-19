@@ -35,9 +35,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class UpdateUserService {
 
     public static Map<String, String> updateUser(UpdateUserInputs updateUserInputs) {
-        String UPDATE_USERS_URL = USERS_URL + FORWARD_SLASH;
-        Map<String, String> result = new HashMap<>();
 
+        Map<String, String> result = new HashMap<>();
         String UPDATE_USERS_URL = getUpdateUserUrl(updateUserInputs);
 
         if (!updateUserInputs.getUserCommonInputs().getBody().equals(EMPTY))
