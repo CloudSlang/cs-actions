@@ -25,6 +25,8 @@ public final class Outputs extends OutputNames {
         public static final String EXCEPTION = "exception";
         public static final String AUTH_TOKEN = "authToken";
         public static final String ACCOUNT_ENABLED_OUT = "accountEnabledOut";
+        public static final String AVAILABLE_SKUS_LIST = "availableSkusList";
+
     }
 }
 
