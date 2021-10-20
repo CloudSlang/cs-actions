@@ -43,6 +43,7 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetAuthorizat
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyAuthorizationInputs;
+import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.AUTH_TOKEN;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
