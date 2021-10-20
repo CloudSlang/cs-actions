@@ -80,6 +80,27 @@ public final class InputsValidation {
         return exceptionMessages;
     }
 
+    @NotNull
+    public static List<String> verifyGetUserDetailsInputs(@Nullable final String userId,
+                                                          @Nullable final String proxyPort,
+                                                          @Nullable final String trustAllRoots,
+                                                          @Nullable final String x509HostnameVerifier,
+                                                          @Nullable final String connectTimeout,
+                                                          @Nullable final String socketTimeout,
+                                                          @Nullable final String keepAlive,
+                                                          @Nullable final String connectionsMaxPerRoute,
+                                                          @Nullable final String connectionsMaxTotal) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+
+        addVerifyNotNullOrEmpty(exceptionMessages, userId, USER_ID);
+
+        exceptionMessages.addAll(verifyCommonUserInputs(proxyPort, trustAllRoots, x509HostnameVerifier,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal));
+
+        return exceptionMessages;
+    }
+
 
     @NotNull
     public static List<String> verifyGetInputs(@Nullable final String userPrincipalName,

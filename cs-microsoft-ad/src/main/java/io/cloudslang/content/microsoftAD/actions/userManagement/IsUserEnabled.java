@@ -54,15 +54,15 @@ public class IsUserEnabled {
     @Action(name = IS_USER_ENABLED_NAME,
             description = IS_USER_ENABLED_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = IS_USER_ENABLED_RETURN_RESULT_DESC),
+                    @Output(value = RETURN_RESULT, description = STATUS_CODE_200_OK_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = ACCOUNT_ENABLED_OUT, description = ACCOUNT_ENABLED_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = IS_USER_ENABLED_SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = IS_USER_ENABLED_FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESCRIPTION),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESCRIPTION)
             })
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
@@ -135,7 +135,7 @@ public class IsUserEnabled {
                     .build());
 
             final String returnMessage = result.get(RETURN_RESULT);
-            final Map<String, String> results = getOperationResults(result, IS_USER_ENABLED_SUCCESS_DESC, result.get(RETURN_RESULT));
+            final Map<String, String> results = getOperationResults(result, SUCCESS_DESCRIPTION, result.get(RETURN_RESULT));
 
             if (!result.get(STATUS_CODE).isEmpty()) {
                 final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
