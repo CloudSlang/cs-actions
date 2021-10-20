@@ -36,6 +36,16 @@ public final class Inputs extends InputNames {
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String AUTH_TOKEN = "authToken";
+
+        public static final String TRUST_ALL_ROOTS = "trustAllRoots";
+        public static final String X509_HOSTNAME_VERIFIER = "x509HostnameVerifier";
+        public static final String TRUST_KEYSTORE = "trustKeystore";
+        public static final String TRUST_PASSWORD = "trustPassword";
+        public static final String CONNECT_TIMEOUT = "connectTimeout";
+        public static final String SOCKET_TIMEOUT = "socketTimeout";
+        public static final String KEEP_ALIVE = "keepAlive";
+        public static final String CONNECTIONS_MAX_PER_ROUTE = "connectionsMaxPerRoute";
+        public static final String CONNECTIONS_MAX_TOTAL = "connectionsMaxTotal";
     }
 
     public static class AuthorizationInputs {
@@ -52,9 +62,7 @@ public final class Inputs extends InputNames {
     }
 
     public static class IsUserInGroup {
-
         public static final String SECURITY_ENABLED_GROUPS = "securityEnabledOnly";
-        public static final String USER_ID = "userId";
     }
 
 
