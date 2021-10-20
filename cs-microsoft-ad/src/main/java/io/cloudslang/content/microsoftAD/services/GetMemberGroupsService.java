@@ -54,7 +54,7 @@ public class GetMemberGroupsService {
             }
         }
         else
-            finalUrl += userId + GET_MEMBER_GROUPS;
+            finalUrl += userId.trim() + GET_MEMBER_GROUPS;
 
         return finalUrl;
     }
