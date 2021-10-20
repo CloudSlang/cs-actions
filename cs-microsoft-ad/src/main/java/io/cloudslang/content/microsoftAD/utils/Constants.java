@@ -58,8 +58,6 @@ public final class Constants {
     public static final String SIMPLE_COMMA = ",";
     public static final String RIGHT_PARANTHESIS = "[\"";
     public static final String LEFT_PARANTHESIS = "\"]";
-    public static final String RIGHT_PAR = "[";
-    public static final String LEFT_PAR = "]";
     public static final String EMPTY_STRING = "";
 
     public static final String HTTPS = "https";

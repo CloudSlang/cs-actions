@@ -70,8 +70,8 @@ public class Descriptions {
 
         public static final String SUCCESS_DESCRIPTION = "Request went successfully.";
         public static final String FAILURE_DESCRIPTION = "There was an error while trying to do the request.";
-        public static final String STATUS_CODE_200_OK_DESC = "If successful, this method returns 200 " +
-                "response code.";
+        public static final String STATUS_CODE_200_OK_DESC = "The HTTP status code for Azure API request, if successful, " +
+                "this method returns 200 response code.";
     }
 
     public static class GetAuthorizationToken {
