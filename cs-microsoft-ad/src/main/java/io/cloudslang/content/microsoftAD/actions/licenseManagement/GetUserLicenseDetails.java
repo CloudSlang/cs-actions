@@ -12,18 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.microsoftAD.actions.userManagement;
+package io.cloudslang.content.microsoftAD.actions.licenseManagement;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
-import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
-import io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames;
+import io.cloudslang.content.microsoftAD.entities.GetUserLicenseDetailsInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -36,27 +33,26 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.microsoftAD.services.GetUserService.getUser;
+import static io.cloudslang.content.microsoftAD.services.GetUserLicenseDetailsService.getUserLicenseDetails;
+import static io.cloudslang.content.microsoftAD.utils.Constants.QUERY_PARAMS;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
-import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserEnabled.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetUserLicenseDetails.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_PRINCIPAL_NAME;
-import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyGetInputs;
+import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyGetUserDetailsInputs;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class IsUserEnabled {
-    @Action(name = IS_USER_ENABLED_NAME,
-            description = IS_USER_ENABLED_DESC,
+public class GetUserLicenseDetails {
+    @Action(name = GET_USER_LICENSE_DETAILS_NAME,
+            description = GET_USER_LICENSE_DETAILS_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = STATUS_CODE_200_OK_DESC),
+                    @Output(value = RETURN_RESULT, description = GET_USER_LICENSE_DETAILS_RETURN_RESULT),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = ACCOUNT_ENABLED_OUT, description = ACCOUNT_ENABLED_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_200_OK_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
@@ -65,8 +61,10 @@ public class IsUserEnabled {
             })
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = USER_PRINCIPAL_NAME, description = USER_PRINCIPAL_NAME_DESC) String userPrincipalName,
+
                                        @Param(value = USER_ID, description = USER_ID_DESC) String userId,
+                                       @Param(value = QUERY_PARAMS, description = QUERY_PARAMS_DESCRIPTION) String queryParams,
+
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -85,8 +83,9 @@ public class IsUserEnabled {
 
 
         //inputs validation
-        userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         userId = defaultIfEmpty(userId, EMPTY);
+        queryParams = defaultIfEmpty(queryParams, EMPTY);
+
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -102,17 +101,16 @@ public class IsUserEnabled {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
 
 
-        final List<String> exceptionMessages = verifyGetInputs(userPrincipalName, userId, proxyPort, trustAllRoots, x509HostnameVerifier,
-                connectTimeout, socketTimeout, keepAlive,
-                connectionsMaxPerRoute, connectionsMaxTotal);
+        final List<String> exceptionMessages = verifyGetUserDetailsInputs(userId, proxyPort, trustAllRoots, x509HostnameVerifier,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
 
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
         try {
-            final Map<String, String> result = getUser(GetUserInputs.builder()
-                    .oDataQuery(IS_USER_ENABLED_ODATA_QUERY)
+            final Map<String, String> result = getUserLicenseDetails(GetUserLicenseDetailsInputs.builder()
+                    .queryParams(queryParams)
                     .commonInputs(AzureActiveDirectoryCommonInputs.builder()
                             .authToken(authToken)
                             .proxyHost(proxyHost)
@@ -126,35 +124,17 @@ public class IsUserEnabled {
                             .socketTimeout(socketTimeout)
                             .trustAllRoots(trustAllRoots)
                             .userId(userId)
-                            .userPrincipalName(userPrincipalName)
                             .x509HostnameVerifier(x509HostnameVerifier)
                             .trustKeystore(trustKeystore)
                             .trustPassword(trustPassword)
                             .build())
                     .build());
 
-            final String returnMessage = result.get(RETURN_RESULT);
-            final Map<String, String> results = getOperationResults(result, SUCCESS_DESCRIPTION, result.get(RETURN_RESULT));
+            Map<String, String> finalResult = getOperationResults(result, result.get(RETURN_RESULT), result.get(RETURN_RESULT));
 
-            if (!result.get(STATUS_CODE).isEmpty()) {
-                final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            parseApiExceptionMessage(finalResult);
 
-
-                if (statusCode >= 200 && statusCode < 300) {
-                    final JsonParser parser = new JsonParser();
-                    final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
-                    if (responseJson.has(ACCOUNT_ENABLED_OUT)) {
-                        final String accountEnabled = responseJson.get(ACCOUNT_ENABLED_OUT).getAsString();
-                        results.put(ACCOUNT_ENABLED_OUT, accountEnabled);
-                    } else
-                        results.put(ACCOUNT_ENABLED_OUT, EMPTY);
-
-                }
-            }
-
-            parseApiExceptionMessage(results);
-
-            return results;
+            return finalResult;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

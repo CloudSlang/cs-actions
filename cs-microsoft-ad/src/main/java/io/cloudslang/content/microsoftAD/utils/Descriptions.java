@@ -67,6 +67,11 @@ public class Descriptions {
         public static final String RETURN_CODE_DESC = "0 if success, -1 if failure.";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Azure API request, successful if between 200 and 300.";
         public static final String EXCEPTION_DESC = "The error message in case of failure.";
+
+        public static final String SUCCESS_DESCRIPTION = "Request went successfully.";
+        public static final String FAILURE_DESCRIPTION = "There was an error while trying to do the request.";
+        public static final String STATUS_CODE_200_OK_DESC = "If successful, this method returns 200 " +
+                "response code.";
     }
 
     public static class GetAuthorizationToken {
@@ -168,11 +173,7 @@ public class Descriptions {
         //Outputs
         public static final String ACCOUNT_ENABLED_DESC = "True if the account is enabled, false otherwise.";
 
-        //Results
-        public static final String IS_USER_ENABLED_SUCCESS_DESC = "Request went successfully.";
-        public static final String IS_USER_ENABLED_FAILURE_DESC = "There was an error while trying to do the request.";
-        public static final String IS_USER_ENABLED_RETURN_RESULT_DESC = "If successful, this method returns 200 " +
-                "response code.";
+
     }
 
     public static class UpdateUser {
@@ -181,7 +182,7 @@ public class Descriptions {
         public static final String UPDATED_USER_PRINCIPAL_NAME_DESC = "The new User Principal Name." +
                 "The principal name needs to comply with the format accepted by Active Directory. " +
                 "The allowed characters are A-Z, a-z, 0-9 and ' . - _ ! # ^ ~ . The length must not " +
-                "exceed 113 characters in total, and there should be 64 characters or less before @ .\n"+
+                "exceed 113 characters in total, and there should be 64 characters or less before @ .\n" +
                 "Example: someuser@contoso.com";
         public static final String UPDATED_ON_PREMISES_IMMUTABLE_ID_DESC = "This property is used to associate an on-premises " +
                 "Active Directory user account to their Azure AD user object. This property must be specified when " +
@@ -257,9 +258,7 @@ public class Descriptions {
                 "member of should be returned, false to specify that all groups should be returned.";
 
         //Results
-        public static final String IS_USER_IN_GROUP_SUCCESS_DESC = "Request went successfully.";
         public static final String NO_GROUP_MEMBER = "The user does not belong to any group.";
-        public static final String IS_USER_IN_GROUP_FAILURE_DESC = "There was an error while trying to do the request.";
         public static final String IS_USER_IN_GROUP_RETURN_RESULT_DESC = "If successful this method returns the IDs of " +
                 "the groups that the user is a member of. If the user does not belong to any" +
                 "group, a suggestive message will be displayed.";
@@ -327,4 +326,18 @@ public class Descriptions {
 
 
     }
+
+    public static class GetUserLicenseDetails {
+
+        public static final String GET_USER_LICENSE_DETAILS_NAME = "Get User License Details";
+        public static final String GET_USER_LICENSE_DETAILS_DESC = "Retrieve a list of license details objects for a given user.";
+
+        public static final String GET_USER_LICENSE_DETAILS_RETURN_RESULT = "A list of license details objects for a given user.";
+
+        public static final String QUERY_PARAMS_DESCRIPTION = "This input can be used to filter the response using query " +
+                "parameters in the form of a comma delimited list. \n" +
+                "For a complete list of available query parameters please check the Microsoft Graph documentation. \n" +
+                "Example: id,skuId,skuPartNumber";
+    }
+
 }

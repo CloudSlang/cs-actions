@@ -18,6 +18,7 @@ package io.cloudslang.content.microsoftAD.services;
 
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
+import io.cloudslang.content.microsoftAD.entities.GetUserLicenseDetailsInputs;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -254,6 +255,27 @@ public class HttpCommons {
             result.put(RETURN_RESULT, e.getMessage());
             result.put(EXCEPTION, e.toString());
 
+            return result;
+        }
+    }
+
+    public static Map<String, String> httpGetUserDetails(GetUserLicenseDetailsInputs getUserLicenseDetailsInputs, String url) {
+        Map<String, String> result = new HashMap<>();
+        result.put(STATUS_CODE, EMPTY);
+        result.put(RETURN_RESULT, EMPTY);
+        try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(getUserLicenseDetailsInputs.getCommonInputs())) {
+            HttpGet httpGet = new HttpGet(url);
+            httpGet.setHeader(HttpHeaders.AUTHORIZATION, BEARER + getUserLicenseDetailsInputs.getCommonInputs().getAuthToken());
+            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+            try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
+                result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
+                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
+                return result;
+            }
+        } catch (Exception e) {
+            result.put(STATUS_CODE, EMPTY);
+            result.put(RETURN_RESULT, e.getMessage());
+            result.put(EXCEPTION, e.toString());
             return result;
         }
     }

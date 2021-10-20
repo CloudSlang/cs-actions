@@ -55,12 +55,12 @@ public class IsUserInGroup {
             description = IS_USER_IN_GROUP_DESC,
             outputs = {@Output(value = RETURN_RESULT, description = IS_USER_IN_GROUP_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_200_OK_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = IS_USER_IN_GROUP_SUCCESS_DESC),
-                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = IS_USER_IN_GROUP_FAILURE_DESC)
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESCRIPTION),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESCRIPTION)
             })
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true) String authToken,

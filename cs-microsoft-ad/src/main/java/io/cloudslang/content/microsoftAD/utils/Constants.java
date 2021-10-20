@@ -58,6 +58,8 @@ public final class Constants {
     public static final String SIMPLE_COMMA = ",";
     public static final String RIGHT_PARANTHESIS = "[\"";
     public static final String LEFT_PARANTHESIS = "\"]";
+    public static final String RIGHT_PAR = "[";
+    public static final String LEFT_PAR = "]";
     public static final String EMPTY_STRING = "";
 
     public static final String HTTPS = "https";
@@ -80,7 +82,10 @@ public final class Constants {
 
     public static final String VALUE = "value";
     public static final String GET_MEMBER_GROUPS = "/getMemberGroups";
+    public static final String LICENSE_DETAILS = "/licenseDetails";
     public static final String SECURITY_ENABLED_GROUPS = "securityEnabledOnly";
+
+    public static final String QUERY_PARAMS = "$select=";
 
     public static final String STRICT = "strict";
     public static final String ALLOW_ALL = "allow_all";
