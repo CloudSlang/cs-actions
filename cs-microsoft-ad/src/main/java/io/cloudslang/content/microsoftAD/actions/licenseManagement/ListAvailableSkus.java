@@ -127,6 +127,7 @@ public class ListAvailableSkus {
 
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage);
+            results.put(AVAILABLE_SKUS_LIST, EMPTY);
 
             if (!result.get(STATUS_CODE).isEmpty()) {
                 final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
