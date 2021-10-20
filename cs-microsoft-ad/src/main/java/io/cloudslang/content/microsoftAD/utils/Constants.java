@@ -95,5 +95,5 @@ public final class Constants {
     public static final String USERS_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String ASSIGN_LICENSE_URL = "/assignLicense";
     public static final String CHANGE_USER_PASSWORD_URL = "https://graph.microsoft.com/v1.0/me/changePassword";
-    public static final String LIST_SUBSCRIBED_SKUS_URL = "https://graph.microsoft.com/v1.0/subscribedSkus?$select=skuId";
+    public static final String LIST_SUBSCRIBED_SKUS_URL = "https://graph.microsoft.com/v1.0/subscribedSkus?$select=skuId,skuPartNumber";
 }

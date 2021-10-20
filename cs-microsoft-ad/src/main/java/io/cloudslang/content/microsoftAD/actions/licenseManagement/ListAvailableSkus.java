@@ -36,7 +36,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.microsoftAD.services.ListSubscribedSkusService.getSubscribedSkus;
+import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpGet;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.ListAvailableSkus.*;
@@ -106,7 +106,7 @@ public class ListAvailableSkus {
         }
 
         try {
-            final Map<String, String> result = getSubscribedSkus(AzureActiveDirectoryCommonInputs.builder()
+            final Map<String, String> result = httpGet(AzureActiveDirectoryCommonInputs.builder()
                             .authToken(authToken)
                             .proxyHost(proxyHost)
                             .proxyPort(proxyPort)
@@ -123,7 +123,7 @@ public class ListAvailableSkus {
                             .x509HostnameVerifier(x509HostnameVerifier)
                             .trustKeystore(trustKeystore)
                             .trustPassword(trustPassword)
-                            .build());
+                            .build(), LIST_SUBSCRIBED_SKUS_URL);
 
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage);
