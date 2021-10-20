@@ -38,7 +38,9 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpGet;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
+import static io.cloudslang.content.microsoftAD.utils.Constants.QUERY_PARAMS;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
+import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetUserLicenseDetails.QUERY_PARAMS_DESCRIPTION;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.ListAvailableSkus.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
@@ -64,6 +66,9 @@ public class ListAvailableSkus {
             })
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
+
+                                       @Param(value = QUERY_PARAMS, description = QUERY_PARAMS_DESCRIPTION) String queryParams,
+
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -82,6 +87,8 @@ public class ListAvailableSkus {
 
 
         //inputs validation
+        queryParams = defaultIfEmpty(queryParams, EMPTY);
+
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -123,7 +130,7 @@ public class ListAvailableSkus {
                             .x509HostnameVerifier(x509HostnameVerifier)
                             .trustKeystore(trustKeystore)
                             .trustPassword(trustPassword)
-                            .build(), LIST_SUBSCRIBED_SKUS_URL);
+                            .build(), LIST_SUBSCRIBED_SKUS_URL + QUERY + QUERY_PARAMS + queryParams);
 
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage);
