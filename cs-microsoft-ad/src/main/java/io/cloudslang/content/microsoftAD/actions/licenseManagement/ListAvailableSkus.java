@@ -38,6 +38,7 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpGet;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
+import static io.cloudslang.content.microsoftAD.utils.Constants.QUERY_PARAMS;
 import static io.cloudslang.content.microsoftAD.utils.Constants.QUERY_PARAMS_SELECT;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.GetUserLicenseDetails.QUERY_PARAMS_DESCRIPTION;
