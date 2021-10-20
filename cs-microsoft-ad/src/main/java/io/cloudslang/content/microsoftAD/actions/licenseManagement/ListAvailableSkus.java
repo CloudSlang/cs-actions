@@ -126,11 +126,10 @@ public class ListAvailableSkus {
                             .build());
 
             final String returnMessage = result.get(RETURN_RESULT);
-            final Map<String, String> results = getOperationResults(result, LIST_AVAILABLE_SKUS_SUCCESS_DESC, result.get(RETURN_RESULT));
+            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage);
 
             if (!result.get(STATUS_CODE).isEmpty()) {
                 final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
-
 
                 if (statusCode >= 200 && statusCode < 300) {
                     try
