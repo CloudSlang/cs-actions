@@ -47,7 +47,7 @@ import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResu
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyCommonUserInputs;
-import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.AVAILABLE_SKUS_LIST;
+import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.AVAILABLE_SKUIDS_LIST;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
 
@@ -58,7 +58,7 @@ public class ListAvailableSkus {
                     @Output(value = RETURN_RESULT, description = LIST_AVAILABLE_SKUS_RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = OutputNames.STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = AVAILABLE_SKUS_LIST, description = AVAILABLE_SKUS_LIST_DESC),
+                    @Output(value = AVAILABLE_SKUIDS_LIST, description = AVAILABLE_SKUIDS_LIST_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
@@ -135,7 +135,7 @@ public class ListAvailableSkus {
 
             final String returnMessage = result.get(RETURN_RESULT);
             final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage);
-            results.put(AVAILABLE_SKUS_LIST, EMPTY);
+            results.put(AVAILABLE_SKUIDS_LIST, EMPTY);
 
             if (!result.get(STATUS_CODE).isEmpty()) {
                 final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
@@ -155,14 +155,14 @@ public class ListAvailableSkus {
 
                         }
                         if(skuListString.toString().length() > 0)
-                            results.put(AVAILABLE_SKUS_LIST, skuListString.toString()
+                            results.put(AVAILABLE_SKUIDS_LIST, skuListString.toString()
                                 .substring(0,skuListString.toString().length()-1)); //take last comma
                         else
-                            results.put(AVAILABLE_SKUS_LIST, EMPTY);
+                            results.put(AVAILABLE_SKUIDS_LIST, EMPTY);
                     }
                     catch(Exception e)
                     {
-                        results.put(AVAILABLE_SKUS_LIST, EMPTY);
+                        results.put(AVAILABLE_SKUIDS_LIST, EMPTY);
                     }
                 }
             }

@@ -349,7 +349,7 @@ public class Descriptions {
         public static final String LIST_AVAILABLE_SKUS_NAME = "List Available Skus";
 
         //Output descriptions
-        public static final String AVAILABLE_SKUS_LIST_DESC = "Get a comma separated list of skuIds. " +
+        public static final String AVAILABLE_SKUIDS_LIST_DESC = "Get a comma separated list of skuIds. " +
                 "If the query parameter does not select skuIds, this " +
                 "field will be empty";
 
