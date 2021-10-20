@@ -342,8 +342,8 @@ public class Descriptions {
         //Results
         public static final String LIST_AVAILABLE_SKUS_SUCCESS_DESC = "Request went successfully.";
         public static final String LIST_AVAILABLE_SKUS_FAILURE_DESC = "There was an error while trying to do the request.";
-        public static final String LIST_AVAILABLE_SKUS_RETURN_RESULT_DESC = "If successful, this method returns 200 " +
-                "response code.";
+        public static final String LIST_AVAILABLE_SKUS_RETURN_RESULT_DESC = "If successful, this method returns the " +
+                "complete API response.";
     }
 
 }
