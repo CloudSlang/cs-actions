@@ -76,6 +76,7 @@ public final class Constants {
     public static final String IS_USER_ENABLED_ODATA_QUERY = "$select=accountEnabled";
     public static final String USER_ID = "userId";
     public static final String ACCOUNT_ENABLED = "accountEnabled";
+    public static final String SKUID = "skuId";
 
     public static final String VALUE = "value";
     public static final String GET_MEMBER_GROUPS = "/getMemberGroups";
@@ -95,7 +96,9 @@ public final class Constants {
     public static final String TLSV13 = "tlsv1.3";
 
     //API URLs
-    public static final String USERS_URL = "https://graph.microsoft.com/v1.0/users";
+    public static final String GRAPH_URL = "https://graph.microsoft.com/v1.0";
+    public static final String USERS_URL = GRAPH_URL + "/users";
     public static final String ASSIGN_LICENSE_URL = "/assignLicense";
-    public static final String CHANGE_USER_PASSWORD_URL = "https://graph.microsoft.com/v1.0/me/changePassword";
+    public static final String CHANGE_USER_PASSWORD_URL = GRAPH_URL + "/me/changePassword";
+    public static final String LIST_SUBSCRIBED_SKUS_URL = GRAPH_URL + "/subscribedSkus";
 }
