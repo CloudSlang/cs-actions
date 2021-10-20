@@ -33,7 +33,6 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.microsoftAD.services.ResetUserPasswordService.resetUserPassword;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
@@ -50,7 +49,8 @@ import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_USERNAME;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyResetUserPasswordInputs;
-import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.USER_ID;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_ID;
+import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.STATUS_CODE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;

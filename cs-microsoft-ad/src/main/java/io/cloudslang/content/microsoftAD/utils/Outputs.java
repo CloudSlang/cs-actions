@@ -24,6 +24,7 @@ public final class Outputs extends OutputNames {
         public static final String STATUS_CODE = "statusCode";
         public static final String EXCEPTION = "exception";
         public static final String AUTH_TOKEN = "authToken";
+        public static final String ACCOUNT_ENABLED_OUT = "accountEnabledOut";
     }
 }
 

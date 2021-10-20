@@ -23,18 +23,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.Constants.ACCOUNT_ENABLED;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.EXCEPTION_INVALID_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.EXCEPTION_INVALID_TLS_VERSION;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AssignUserLicenseInputs.ASSIGNED_LICENSES;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.USERNAME;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.AuthorizationInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.ChangeUserPasswordInputs.CURRENT_PASSWORD;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.ChangeUserPasswordInputs.NEW_PASSWORD;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PASSWORD;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_ID;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
