@@ -52,8 +52,7 @@ public class GetMemberGroupsService {
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }
-        }
-        else
+        } else
             finalUrl += userId.trim() + GET_MEMBER_GROUPS;
 
         return finalUrl;
