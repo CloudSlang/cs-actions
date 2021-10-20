@@ -20,15 +20,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpGetUserDetails;
+import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpGet;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 
 public class GetUserLicenseDetailsService {
 
     public static Map<String, String> getUserLicenseDetails(GetUserLicenseDetailsInputs getUserLicenseDetailsInputs) {
 
-
-        return httpGetUserDetails(getUserLicenseDetailsInputs,
+        return httpGet(getUserLicenseDetailsInputs.getCommonInputs(),
                 getUrl(getUserLicenseDetailsInputs.getQueryParams(),
                         getUserLicenseDetailsInputs.getCommonInputs().getUserId())
         );
@@ -40,9 +39,9 @@ public class GetUserLicenseDetailsService {
         String finalUrl = USERS_URL + FORWARD_SLASH;
 
         if (!StringUtils.isEmpty(queryParams))
-            finalUrl += userId + FORWARD_SLASH + LICENSE_DETAILS + QUERY + QUERY_PARAMS + queryParams;
+            finalUrl += userId.trim() + FORWARD_SLASH + LICENSE_DETAILS + QUERY + QUERY_PARAMS + queryParams;
         else
-            finalUrl += userId + FORWARD_SLASH + LICENSE_DETAILS;
+            finalUrl += userId.trim() + FORWARD_SLASH + LICENSE_DETAILS;
 
         return finalUrl;
     }

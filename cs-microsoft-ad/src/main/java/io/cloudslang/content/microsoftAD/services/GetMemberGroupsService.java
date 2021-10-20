@@ -19,10 +19,13 @@ import io.cloudslang.content.microsoftAD.entities.GetMemberGroupsInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpPost;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
+import static org.apache.commons.lang3.CharEncoding.UTF_8;
 
 
 public class GetMemberGroupsService {
@@ -43,10 +46,14 @@ public class GetMemberGroupsService {
 
         String finalUrl = USERS_URL + FORWARD_SLASH;
 
-        if (!StringUtils.isEmpty(userPrincipalName))
-            finalUrl += userPrincipalName + GET_MEMBER_GROUPS;
-        else
-            finalUrl += userId + GET_MEMBER_GROUPS;
+        if (!StringUtils.isEmpty(userPrincipalName)) {
+            try {
+                finalUrl += URLEncoder.encode(userPrincipalName.trim(), UTF_8) + GET_MEMBER_GROUPS;
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        } else
+            finalUrl += userId.trim() + GET_MEMBER_GROUPS;
 
         return finalUrl;
     }

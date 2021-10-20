@@ -237,13 +237,13 @@ public class HttpCommons {
         }
     }
 
-    public static Map<String, String> httpGet(GetUserInputs getUserInputsInputs, String url) {
+    public static Map<String, String> httpGet(AzureActiveDirectoryCommonInputs commonInputs, String url) {
         Map<String, String> result = new HashMap<>();
         result.put(STATUS_CODE, EMPTY);
         result.put(RETURN_RESULT, EMPTY);
-        try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(getUserInputsInputs.getCommonInputs())) {
+        try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
             HttpGet httpGet = new HttpGet(url);
-            httpGet.setHeader(HttpHeaders.AUTHORIZATION, BEARER + getUserInputsInputs.getCommonInputs().getAuthToken());
+            httpGet.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
             httpGet.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
             try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
                 result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
@@ -255,27 +255,6 @@ public class HttpCommons {
             result.put(RETURN_RESULT, e.getMessage());
             result.put(EXCEPTION, e.toString());
 
-            return result;
-        }
-    }
-
-    public static Map<String, String> httpGetUserDetails(GetUserLicenseDetailsInputs getUserLicenseDetailsInputs, String url) {
-        Map<String, String> result = new HashMap<>();
-        result.put(STATUS_CODE, EMPTY);
-        result.put(RETURN_RESULT, EMPTY);
-        try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(getUserLicenseDetailsInputs.getCommonInputs())) {
-            HttpGet httpGet = new HttpGet(url);
-            httpGet.setHeader(HttpHeaders.AUTHORIZATION, BEARER + getUserLicenseDetailsInputs.getCommonInputs().getAuthToken());
-            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
-            try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
-                result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
-                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
-                return result;
-            }
-        } catch (Exception e) {
-            result.put(STATUS_CODE, EMPTY);
-            result.put(RETURN_RESULT, e.getMessage());
-            result.put(EXCEPTION, e.toString());
             return result;
         }
     }
