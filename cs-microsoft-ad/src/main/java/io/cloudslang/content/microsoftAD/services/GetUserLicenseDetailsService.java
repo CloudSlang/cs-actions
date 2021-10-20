@@ -39,7 +39,7 @@ public class GetUserLicenseDetailsService {
         String finalUrl = USERS_URL + FORWARD_SLASH;
 
         if (!StringUtils.isEmpty(queryParams))
-            finalUrl += userId.trim() + FORWARD_SLASH + LICENSE_DETAILS + QUERY + QUERY_PARAMS + queryParams;
+            finalUrl += userId.trim() + FORWARD_SLASH + LICENSE_DETAILS + QUERY + QUERY_PARAMS_SELECT + queryParams;
         else
             finalUrl += userId.trim() + FORWARD_SLASH + LICENSE_DETAILS;
 
