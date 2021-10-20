@@ -83,7 +83,7 @@ public final class Constants {
     public static final String LICENSE_DETAILS = "/licenseDetails";
     public static final String SECURITY_ENABLED_GROUPS = "securityEnabledOnly";
 
-    public static final String QUERY_PARAMS = "$select=";
+    public static final String QUERY_PARAMS_SELECT = "$select=";
 
     public static final String STRICT = "strict";
     public static final String ALLOW_ALL = "allow_all";
