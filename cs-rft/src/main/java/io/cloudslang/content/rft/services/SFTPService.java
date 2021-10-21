@@ -35,6 +35,7 @@ import static io.cloudslang.content.rft.utils.Constants.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPCreateDirectoryDescriptions.CREATE_DIR_SUCCESS_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteDirectoryDescriptions.DELETE_DIR_SUCCESS_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDeleteFileDescriptions.SUCCESS_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPGetChildrenDescriptions.NO_FILES_AND_FOLDERS_DESC;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPRenameDescriptions.RENAME_SUCCESS_DESC;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 
@@ -54,8 +55,12 @@ public class SFTPService {
             }
 
             performSFTPOperation(sftpInputs, sftpOperation, sftpCopier, sessionId);
-            if (sftpOperation == SFTPOperation.GET_CHILDREN)
-                return sftpCopier.getResult();
+            if (sftpOperation == SFTPOperation.GET_CHILDREN) {
+                if (sftpCopier.getResult().get(RETURN_RESULT).length() == 0)
+                    return getSuccessResultsMap(NO_FILES_AND_FOLDERS_DESC);
+                else
+                    return sftpCopier.getResult();
+            }
             if (sftpOperation == SFTPOperation.DELETE_FILE)
                 return getSuccessResultsMap(SUCCESS_DESC);
             else if (sftpOperation == SFTPOperation.CREATE_DIRECTORY)
@@ -206,7 +211,7 @@ public class SFTPService {
                     try {
                         String path = sftpGeneralDirectoryInputs.getRemotePath();
                         if (path.endsWith(BACKSLASH))
-                           path =  path.substring(0, sftpGeneralDirectoryInputs.getRemotePath().length() - 1);
+                            path = path.substring(0, sftpGeneralDirectoryInputs.getRemotePath().length() - 1);
                         if (!path.contains(BACKSLASH))
                             sftpCopier.channel.rmdir(path);
                         else

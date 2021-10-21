@@ -194,6 +194,7 @@ public class Descriptions {
         public static final String REMOTE_PATH_GET_CHILDREN_DESC = "The full path of directory from where the list of" +
                 "subdirectories and files is retrieved.\n" +
                 "Example: C:/Users/Administrator/testDir, root/testDir";
+        public static final String NO_FILES_AND_FOLDERS_DESC = "No files or folders were found at the provided path.";
     }
 
     public static class SFTPCreateDirectoryDescriptions {
@@ -234,7 +235,7 @@ public class Descriptions {
         public static final String REMOTE_LOCATION_DESC = "The remote directory path where the file will be uploaded. \n" +
                 "Examples: C:/Users/Administrator, root/test";
         public static final String LOCAL_LOCATION_DESC = "The local directory path of the file that will be copied. \n" +
-                "Examples: C:/Users/Administrator, root/test";
+                "Examples: C:/Users/Administrator, /root/test";
         public static final String LOCAL_FILE_DESC = "The file to be copied remotely using SFTP. \n" +
                 "Example: test.txt";
 
@@ -247,7 +248,7 @@ public class Descriptions {
         public static final String REMOTE_LOCATION_DESC = "The remote directory path from where the file will be downloaded. \n" +
                 "Examples: C:/Users/Administrator, root/test";
         public static final String LOCAL_LOCATION_DESC = "The local directory path where the file will be downloaded. \n" +
-                "Examples: C:/Users/Administrator, root/test";
+                "Examples: C:/Users/Administrator, /root/test";
 
     }
 }
