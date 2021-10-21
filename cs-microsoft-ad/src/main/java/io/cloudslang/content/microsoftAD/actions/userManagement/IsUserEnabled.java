@@ -23,7 +23,6 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
-import io.cloudslang.content.microsoftAD.utils.Inputs;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -32,7 +31,8 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.microsoftAD.services.GetUserService.getUser;
@@ -41,14 +41,16 @@ import static io.cloudslang.content.microsoftAD.utils.Descriptions.Common.*;
 import static io.cloudslang.content.microsoftAD.utils.Descriptions.IsUserEnabled.*;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.getOperationResults;
 import static io.cloudslang.content.microsoftAD.utils.HttpUtils.parseApiExceptionMessage;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.AUTH_TOKEN;
+import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_ID;
 import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.microsoftAD.utils.InputsValidation.verifyGetInputs;
-import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.ACCOUNT_ENABLED_OUT;
+import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.ACCOUNT_ENABLED;
 import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.STATUS_CODE;
+import static io.cloudslang.content.microsoftAD.utils.Outputs.OutputNames.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static io.cloudslang.content.microsoftAD.utils.Inputs.CommonInputs.USER_ID;
 
 public class IsUserEnabled {
     @Action(name = IS_USER_ENABLED_NAME,
@@ -57,7 +59,7 @@ public class IsUserEnabled {
                     @Output(value = RETURN_RESULT, description = STATUS_CODE_200_OK_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
-                    @Output(value = ACCOUNT_ENABLED_OUT, description = ACCOUNT_ENABLED_DESC),
+                    @Output(value = ACCOUNT_ENABLED, description = ACCOUNT_ENABLED_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
@@ -144,11 +146,11 @@ public class IsUserEnabled {
                 if (statusCode >= 200 && statusCode < 300) {
                     final JsonParser parser = new JsonParser();
                     final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
-                    if (responseJson.has(ACCOUNT_ENABLED_OUT)) {
-                        final String accountEnabled = responseJson.get(ACCOUNT_ENABLED_OUT).getAsString();
-                        results.put(ACCOUNT_ENABLED_OUT, accountEnabled);
+                    if (responseJson.has(ACCOUNT_ENABLED)) {
+                        final String accountEnabled = responseJson.get(ACCOUNT_ENABLED).getAsString();
+                        results.put(ACCOUNT_ENABLED, accountEnabled);
                     } else
-                        results.put(ACCOUNT_ENABLED_OUT, EMPTY);
+                        results.put(ACCOUNT_ENABLED, EMPTY);
 
                 }
             }
