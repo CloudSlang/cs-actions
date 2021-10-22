@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.httpclient.entities.Constants.EXCEPTION_INVALID_BOOLEAN;
+import static io.cloudslang.content.httpclient.entities.Constants.NTLM_AUTH;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -31,7 +33,11 @@ public class HttpValidator {
     public static List<String> validateInputs(HttpClientInputs clientInputs) {
 
             List<String> exceptions = new ArrayList<>();
-
+            //TODO - this will need further investigations in the future if we can change the lib we use.
+            //for the NTLM authentication the keepAlive must be set on true due to multiple connections between the
+            //client and server.
+            if(clientInputs.getAuthType().toUpperCase().trim().equals(NTLM_AUTH))
+                clientInputs.setKeepAlive(TRUE);
             if (isEmpty(clientInputs.getKeepAlive()))
                 defaultIfEmpty(clientInputs.getKeepAlive(), FALSE);
             else if (!isValid(clientInputs.getKeepAlive()))
