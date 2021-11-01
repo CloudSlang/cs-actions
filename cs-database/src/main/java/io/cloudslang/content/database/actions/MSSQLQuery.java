@@ -148,7 +148,7 @@ public class MSSQLQuery {
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
         ignoreCase = defaultIfEmpty(ignoreCase, TRUE);
-        dbClass = getOrDefaultDBClass(dbClass, dbType);
+        dbClass = getOrDefaultDBClassMSSQLQuery(dbClass, dbType, authenticationType);
 
         if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)){
             try {

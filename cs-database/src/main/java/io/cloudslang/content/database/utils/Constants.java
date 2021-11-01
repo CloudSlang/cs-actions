@@ -36,6 +36,7 @@ public class Constants {
     public static final String TRUST_SERVER_CERTIFICATE = "trustServerCertificate";
     public static final String JTDS_JDBC_DRIVER = "net.sourceforge.jtds.jdbc.Driver";
     public static final String ENCRYPT = "encrypt";
+    public static final String AUTH_SQL = "sql";
 
     public static final String EQUALS = "=";
     public static final String STRING_PARAMETER = "%s";

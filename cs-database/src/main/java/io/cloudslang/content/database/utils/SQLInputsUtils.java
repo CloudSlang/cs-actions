@@ -32,7 +32,7 @@ import java.util.*;
 
 import static io.cloudslang.content.database.constants.DBExceptionValues.INVALID_DB_TYPE;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
-import static io.cloudslang.content.database.utils.Constants.JTDS_JDBC_DRIVER;
+import static io.cloudslang.content.database.utils.Constants.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.isValidDbType;
 import static org.apache.commons.lang3.StringUtils.*;
 
@@ -58,8 +58,26 @@ public class SQLInputsUtils {
             return dbClass;
         }
         if (isValidDbType(dbType)) {
-            if(SystemUtils.IS_OS_LINUX && dbType.equalsIgnoreCase(MSSQL_DB_TYPE))
-                return JTDS_JDBC_DRIVER;
+            if(dbType.equalsIgnoreCase(MSSQL_DB_TYPE))
+                return DB_ClASSES.get(dbType);
+                //return JTDS_JDBC_DRIVER;
+            else
+                return DB_ClASSES.get(dbType);
+        }
+        return EMPTY;
+    }
+
+    @NotNull
+    public static String getOrDefaultDBClassMSSQLQuery(final String dbClass, final String dbType, final String authType) {
+        if (isNoneEmpty(dbClass)) {
+            return dbClass;
+        }
+        if (isValidDbType(dbType)) {
+            if(dbType.equalsIgnoreCase(MSSQL_DB_TYPE))
+                if(authType.equalsIgnoreCase(AUTH_SQL))
+                      return DB_ClASSES.get(dbType);
+                else if(authType.equalsIgnoreCase(AUTH_WINDOWS))
+                      return JTDS_JDBC_DRIVER;
             else
                 return DB_ClASSES.get(dbType);
         }
