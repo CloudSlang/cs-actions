@@ -149,18 +149,17 @@ public class MSSQLQuery {
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
         ignoreCase = defaultIfEmpty(ignoreCase, TRUE);
         dbClass = getOrDefaultDBClassMSSQLQuery(dbClass, dbType, authenticationType);
+        String windowsDomain = null;
 
-        if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)){
-            try {
-                authLibraryPath =  exportPathToAuthDll();
-            } catch (Exception e) {
-                return getFailureResultsMap(e);
-            }
+
+        if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)&& username.contains("\\")){
+             windowsDomain = username.substring(0, username.indexOf("\\"));
+             username = username.substring(username.indexOf("\\") + 1);
         }
 
-        final List<String> preInputsValidation = validateSqlQueryInputs(dbServerName, dbType, username, password, instance, dbPort,
+        final List<String> preInputsValidation = validateMSSqlQueryInputs(dbServerName, dbType, username, password, instance, dbPort,
                 databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
-                timeout, resultSetType, resultSetConcurrency, ignoreCase, authLibraryPath);
+                timeout, resultSetType, resultSetConcurrency, ignoreCase);
 
         if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
@@ -193,6 +192,7 @@ public class MSSQLQuery {
                 .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
                 .ignoreCase(ignoreCaseBool)
                 .isNetcool(checkIsNetcool(dbType))
+                .windowsDomain(windowsDomain)
                 .build();
 
 
@@ -210,6 +210,13 @@ public class MSSQLQuery {
                 sqlInputs.setStrColumns(getStrColumns(globalSessionObject, strKeyCol));
 
             } else {
+                if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)){
+                    try {
+                        sqlInputs.setAuthLibraryPath(exportPathToAuthDll());
+                    } catch (Exception e) {
+                        return getFailureResultsMap(e);
+                    }
+                }
                 SQLQueryService.executeSqlQuery(sqlInputs);
             }
 

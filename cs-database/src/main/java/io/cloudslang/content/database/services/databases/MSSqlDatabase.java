@@ -270,6 +270,9 @@ public class MSSqlDatabase implements SqlDatabase {
 
                     if (Constants.AUTH_WINDOWS.equalsIgnoreCase(sqlInputs.getAuthenticationType())) {
                         String domain = CORP;
+                        if (sqlInputs.getWindowsDomain()!=null){
+                            domain = sqlInputs.getWindowsDomain();
+                        }
                         // If present and the user name and password are provided, jTDS uses Windows (NTLM) authentication instead of the usual SQL Server authentication
 //                        if (windowsDomain != null) {
 //                            domain = windowsDomain;
@@ -289,8 +292,9 @@ public class MSSqlDatabase implements SqlDatabase {
                         // Set to true to send LMv2/NTLMv2 responses when using Windows authentication
                         dbUrlMSSQL.append(SEMI_COLON + USE_NTLMv2 + EQUALS + BooleanValues.TRUE);
 
-                        final String connectionString = addSslEncryptionToConnection(sqlInputs.isTrustAllRoots(), sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), dbUrlMSSQL.toString());
-                        dbUrls.add(connectionString);
+                        //final String connectionString = addSslEncryptionToConnection(sqlInputs.isTrustAllRoots(), sqlInputs.getTrustStore(), sqlInputs.getTrustStorePassword(), dbUrlMSSQL.toString());
+                        //dbUrls.add(connectionString);
+                        dbUrls.add(dbUrlMSSQL.toString());
                     }
                 } else
                     throw new SQLException(INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL + sqlInputs.getAuthenticationType());

@@ -61,9 +61,10 @@ public class SQLInputs {
     private Integer resultSetType;
     private Integer resultSetConcurrency;
     private List<String> sqlCommands = new ArrayList<>();
+    private String windowsDomain;
 
     @java.beans.ConstructorProperties({"sqlCommand", "dbServer", "dbName", "dbPort", "dbType", "key", "username", "password", "authenticationType", "instance", "ignoreCase", "timeout", "dbUrl", "dbClass", "isNetcool", "lRowsFiles", "lRowsNames", "skip", "strDelim", "strColumns", "lRows", "iUpdateCount", "databasePoolingProperties", "trustStore", "trustStorePassword", "trustAllRoots", "authLibraryPath", "colDelimiter", "rowDelimiter", "resultSetType", "resultSetConcurrency", "sqlCommands"})
-    SQLInputs(String sqlCommand, String dbServer, String dbName, int dbPort, String dbType, String key, String username, String password, String authenticationType, String instance, boolean ignoreCase, int timeout, String dbUrl, String dbClass, boolean isNetcool, List<List<String>> lRowsFiles, List<List<String>> lRowsNames, long skip, String strDelim, String strColumns, List<String> lRows, int iUpdateCount, Properties databasePoolingProperties, String trustStore, String trustStorePassword, boolean trustAllRoots, String authLibraryPath, String colDelimiter, String rowDelimiter, Integer resultSetType, Integer resultSetConcurrency, List<String> sqlCommands) {
+    SQLInputs(String sqlCommand, String dbServer, String dbName, int dbPort, String dbType, String key, String username, String password, String authenticationType, String instance, boolean ignoreCase, int timeout, String dbUrl, String dbClass, boolean isNetcool, List<List<String>> lRowsFiles, List<List<String>> lRowsNames, long skip, String strDelim, String strColumns, List<String> lRows, int iUpdateCount, Properties databasePoolingProperties, String trustStore, String trustStorePassword, boolean trustAllRoots, String authLibraryPath, String colDelimiter, String rowDelimiter, Integer resultSetType, Integer resultSetConcurrency, List<String> sqlCommands, String windowsDomain) {
         this.sqlCommand = sqlCommand;
         this.dbServer = dbServer;
         this.dbName = dbName;
@@ -96,6 +97,7 @@ public class SQLInputs {
         this.resultSetType = resultSetType;
         this.resultSetConcurrency = resultSetConcurrency;
         this.sqlCommands = sqlCommands == null ? new ArrayList<String>() : sqlCommands;
+        this.windowsDomain = windowsDomain;
     }
 
     public static SQLInputsBuilder builder() {
@@ -350,6 +352,14 @@ public class SQLInputs {
         this.resultSetConcurrency = resultSetConcurrency;
     }
 
+    public String getWindowsDomain(){
+        return this.windowsDomain;
+    }
+
+    public void setWindowsDomain(String windowsDomain){
+        this.windowsDomain = windowsDomain;
+    }
+
     public List<String> getSqlCommands() {
         return this.sqlCommands;
     }
@@ -562,6 +572,7 @@ public class SQLInputs {
         private Integer resultSetType;
         private Integer resultSetConcurrency;
         private List<String> sqlCommands;
+        private String windowsDomain;
 
         SQLInputsBuilder() {
         }
@@ -697,8 +708,13 @@ public class SQLInputs {
             return this;
         }
 
+        public SQLInputs.SQLInputsBuilder windowsDomain(String windowsDomain) {
+            this.windowsDomain = windowsDomain;
+            return this;
+        }
+
         public SQLInputs build() {
-            return new SQLInputs(sqlCommand, dbServer, dbName, dbPort, dbType, key, username, password, authenticationType, instance, ignoreCase, timeout, dbUrl, dbClass, isNetcool, lRowsFiles, lRowsNames, skip, strDelim, strColumns, lRows, iUpdateCount, databasePoolingProperties, trustStore, trustStorePassword, trustAllRoots, authLibraryPath, colDelimiter, rowDelimiter, resultSetType, resultSetConcurrency, sqlCommands);
+            return new SQLInputs(sqlCommand, dbServer, dbName, dbPort, dbType, key, username, password, authenticationType, instance, ignoreCase, timeout, dbUrl, dbClass, isNetcool, lRowsFiles, lRowsNames, skip, strDelim, strColumns, lRows, iUpdateCount, databasePoolingProperties, trustStore, trustStorePassword, trustAllRoots, authLibraryPath, colDelimiter, rowDelimiter, resultSetType, resultSetConcurrency, sqlCommands, windowsDomain);
         }
 
         public String toString() {

@@ -66,6 +66,19 @@ public class SQLInputsValidator {
         return validationList;
     }
 
+    public static List<String> validateMSSqlQueryInputs(String dbServerName, String dbType, String username, String password,
+                                                      String instance, String dbPort, String database, String authenticationType, String command,
+                                                      String trustAllRoots, String trustStore, String trustStorePassword,
+                                                      String timeout, String resultSetType, String resultSetConcurrency, String ignoreCase) {
+        final List<String> validationList = validateCommonMSSqlInputs(dbServerName, dbType, username, password, instance, dbPort,
+                database, authenticationType, trustAllRoots, trustStore, trustStorePassword, resultSetType, resultSetConcurrency);
+        validateIgnoreCase(ignoreCase, validationList);
+        validateNoneEmpty(command, INVALID_COMMAND, validationList);
+        validateTimeout(timeout, validationList);
+        return validationList;
+    }
+
+
     public static List<String> validateSqlQueryAllRowsInputs(String dbServerName, String dbType, String username, String password,
                                                              String instance, String dbPort, String database, String authenticationType, String command,
                                                              String trustAllRoots, String trustStore, String trustStorePassword,
@@ -125,6 +138,31 @@ public class SQLInputsValidator {
             validateDbName(database, dbType, validationList);
             validateAuthType(authenticationType, dbType, validationList);
             validateAuthLibraryPath(authenticationType, dbType, authLibraryPath, validationList);
+        }
+        if (BooleanUtilities.isValid(trustAllRoots)) {
+            validateTrustAllRootsRequire(BooleanUtilities.toBoolean(trustAllRoots), trustStore, trustStorePassword, validationList);
+        }
+        return validationList;
+    }
+
+    private static List<String> validateCommonMSSqlInputs(String dbServerName, String dbType, String username, String password, String instance, String dbPort, String database, String authenticationType,
+                                                        String trustAllRoots, String trustStore, String trustStorePassword,
+                                                        String resultSetType, String resultSetConcurrency) {
+        final List<String> validationList = new ArrayList<>();
+        validateDbType(dbType, validationList);
+        validateNoneEmpty(dbServerName, INVALID_DB_SERVER_NAME, validationList);
+        if (!(AUTH_WINDOWS.equalsIgnoreCase(authenticationType) && MSSQL_DB_TYPE.equalsIgnoreCase(dbType))) {
+            validateNoneEmpty(username, INVALID_USERNAME, validationList);
+            validateNoneEmpty(password, INVALID_PASSWORD, validationList);
+        }
+        validateTrustAllRoots(trustAllRoots, validationList);
+        validateResultSetType(resultSetType, validationList);
+        validateResultSetConcurrency(resultSetConcurrency, validationList);
+        validateDbPort(dbPort, validationList);
+        if (isValidDbType(dbType)) {
+            validateInstance(instance, dbType, validationList);
+            validateDbName(database, dbType, validationList);
+            validateAuthType(authenticationType, dbType, validationList);
         }
         if (BooleanUtilities.isValid(trustAllRoots)) {
             validateTrustAllRootsRequire(BooleanUtilities.toBoolean(trustAllRoots), trustStore, trustStorePassword, validationList);
