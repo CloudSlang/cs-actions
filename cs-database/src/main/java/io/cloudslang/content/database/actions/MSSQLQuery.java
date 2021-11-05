@@ -42,8 +42,11 @@ import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBOutputNames.*;
 import static io.cloudslang.content.database.constants.DBResponseNames.*;
+import static io.cloudslang.content.database.services.databases.MSSqlDatabase.exportPathToAuthDll;
+import static io.cloudslang.content.database.utils.Constants.AUTH_WINDOWS;
+import static io.cloudslang.content.database.utils.Constants.JTDS_JDBC_DRIVER;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
-import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlQueryInputs;
+import static io.cloudslang.content.database.utils.SQLInputsValidator.*;
 import static io.cloudslang.content.database.utils.SQLUtils.getRowsFromGlobalSessionMap;
 import static io.cloudslang.content.database.utils.SQLUtils.getStrColumns;
 import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
@@ -145,10 +148,18 @@ public class MSSQLQuery {
         resultSetType = defaultIfEmpty(resultSetType, TYPE_SCROLL_INSENSITIVE);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
         ignoreCase = defaultIfEmpty(ignoreCase, TRUE);
+        dbClass = getOrDefaultDBClassMSSQLQuery(dbClass, dbType, authenticationType);
+        String windowsDomain = null;
 
-        final List<String> preInputsValidation = validateSqlQueryInputs(dbServerName, dbType, username, password, instance, dbPort,
+
+        if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)&& username.contains("\\")){
+             windowsDomain = username.substring(0, username.indexOf("\\"));
+             username = username.substring(username.indexOf("\\") + 1);
+        }
+
+        final List<String> preInputsValidation = validateMSSqlQueryInputs(dbServerName, dbType, username, password, instance, dbPort,
                 databaseName, authenticationType, command, trustAllRoots, trustStore, trustStorePassword,
-                timeout, resultSetType, resultSetConcurrency, ignoreCase, authLibraryPath);
+                timeout, resultSetType, resultSetConcurrency, ignoreCase);
 
         if (!preInputsValidation.isEmpty()) {
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
@@ -166,7 +177,7 @@ public class MSSQLQuery {
                 .dbPort(getOrDefaultDBPort(dbPort, dbType))
                 .dbName(getOrLower(defaultIfEmpty(databaseName, EMPTY), ignoreCaseBool))
                 .authenticationType(authenticationType)
-                .dbClass(getOrDefaultDBClass(dbClass, dbType))
+                .dbClass(dbClass)
                 .dbUrl(defaultIfEmpty(dbURL, EMPTY))
                 .sqlCommand(command)
                 .trustAllRoots(toBoolean(trustAllRoots))
@@ -181,6 +192,7 @@ public class MSSQLQuery {
                 .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
                 .ignoreCase(ignoreCaseBool)
                 .isNetcool(checkIsNetcool(dbType))
+                .windowsDomain(windowsDomain)
                 .build();
 
 
@@ -198,6 +210,13 @@ public class MSSQLQuery {
                 sqlInputs.setStrColumns(getStrColumns(globalSessionObject, strKeyCol));
 
             } else {
+                if (AUTH_WINDOWS.equalsIgnoreCase(authenticationType)){
+                    try {
+                        sqlInputs.setAuthLibraryPath(exportPathToAuthDll());
+                    } catch (Exception e) {
+                        return getFailureResultsMap(e);
+                    }
+                }
                 SQLQueryService.executeSqlQuery(sqlInputs);
             }
 
