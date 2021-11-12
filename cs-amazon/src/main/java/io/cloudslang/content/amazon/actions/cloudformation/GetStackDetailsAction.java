@@ -35,7 +35,6 @@ import io.cloudslang.content.amazon.factory.CloudFormationClientBuilder;
 import io.cloudslang.content.amazon.utils.DefaultValues;
 import io.cloudslang.content.amazon.utils.OutputsUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -114,9 +113,9 @@ public class GetStackDetailsAction {
         try {
             final DescribeStacksRequest describeStacksRequest = new DescribeStacksRequest().withStackName(stackName);
 
-            final Stack stack =  stackBuilder.describeStacks(describeStacksRequest).getStacks().get(0);
+            //final Stack stack =  stackBuilder.describeStacks(describeStacksRequest).getStacks().get(0);
 
-            //for (Stack stack : stackBuilder.describeStacks(describeStacksRequest).getStacks()) {
+            for (Stack stack : stackBuilder.describeStacks(describeStacksRequest).getStacks()) {
                 results.put(Outputs.RETURN_RESULT, stack.getStackName() + "[" + stack.getStackStatus() + "]" );
                 results.put(Outputs.STACK_NAME_RESULT, stack.getStackName());
                 results.put(Outputs.STACK_ID_RESULT,stack.getStackId());
@@ -129,7 +128,7 @@ public class GetStackDetailsAction {
 
                 results.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
                 results.put(Outputs.EXCEPTION, StringUtils.EMPTY);
-            //}
+            }
         } catch (Exception e) {
             results.put(Outputs.RETURN_RESULT, e.getMessage());
             results.put(Outputs.STACK_ID_RESULT, StringUtils.EMPTY);
@@ -146,7 +145,6 @@ public class GetStackDetailsAction {
         return results;
     }
 
-    @NotNull
     private String getStackResources(String stackName, AmazonCloudFormation stackBuilder) throws IOException {
         final DescribeStackResourcesRequest stackResourceRequest = new DescribeStackResourcesRequest()
             .withStackName(stackName);

@@ -35,6 +35,7 @@ import io.cloudslang.content.amazon.utils.DefaultValues;
 import io.cloudslang.content.amazon.utils.ParametersLine;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.routines.UrlValidator;
 
 import java.util.*;
 
@@ -93,7 +94,8 @@ public class CreateStackAction {
             @Param(value = CONNECT_TIMEOUT)              String connectTimeoutMs,
             @Param(value = EXECUTION_TIMEOUT)            String execTimeoutMs,
             @Param(value = STACK_NAME, required = true)  String stackName,
-            @Param(value = TEMPLATE_BODY, required = true) String templateBody,
+            @Param(value = TEMPLATE_BODY)                String templateBody,
+            @Param(value = TEMPLATE_URL)                 String templateUrl,
             @Param(value = PARAMETERS)                   String parameters,
             @Param(value = CAPABILITIES)                 String capabilities) {
 
@@ -102,11 +104,23 @@ public class CreateStackAction {
         execTimeoutMs = defaultIfEmpty(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
 
         try {
+
             final CreateStackRequest createRequest = new CreateStackRequest()
                     .withStackName(stackName)
-                    .withTemplateBody(templateBody)
                     .withParameters(toArrayOfParameters(parameters))
                     .withCapabilities(toArrayOfString(capabilities));
+
+            if (StringUtils.isNotEmpty(templateUrl)) {
+                UrlValidator urlValidator = new UrlValidator();
+                if (!urlValidator.isValid(templateUrl)) {
+                    throw new IllegalArgumentException("templateUrl value is not a valid URL");
+                }
+                createRequest.setTemplateURL(templateUrl);
+            } else if (StringUtils.isNotEmpty(templateBody)) {
+                createRequest.setTemplateURL(templateBody);
+            } else {
+                throw new IllegalArgumentException("templateUrl or templateBody should be specified");
+            }
 
             final AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
 
