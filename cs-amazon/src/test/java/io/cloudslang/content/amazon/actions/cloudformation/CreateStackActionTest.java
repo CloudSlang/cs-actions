@@ -16,81 +16,70 @@ package io.cloudslang.content.amazon.actions.cloudformation;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import org.json.JSONException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.skyscreamer.jsonassert.comparator.ArraySizeComparator;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
-public class GetStackDetailsActionTest {
-    public static final String RETURN_CODE = "returnCode";
-    public static final String EXCEPTION = "exception";
+public class CreateStackActionTest {
     public static final String RETURN_RESULT = "returnResult";
-    public static final String STACK_NAME_RESULT = "stackName";
-    public static final String STACK_ID_RESULT = "stackId";
-    public static final String STACK_STATUS_RESULT = "stackStatus";
-    public static final String STACK_STATUS_RESULT_REASON = "stackStatusReason";
-    public static final String STACK_CREATION_TIME_RESULT = "stackCreationTime";
-    public static final String STACK_DESCRIPTION_RESULT = "stackDescription";
-    public static final String STACK_OUTPUTS_RESULT = "stackOutputs";
-    public static final String STACK_RESOURCES_RESULT = "stackResources";
-    public static final String OUTPUTS_EXPECTED_INSIDE_JSON = "[5]";
-
+    public static final String US_EAST_1 = "us-east-1";
+    public static final String PROXY_USERNAME = "";
+    public static final String PROXY_PASSWORD = "";
+    public static final String CONNECT_TIMEOUT_MS = "10000";
+    public static final String EXEC_TIMEOUT_MS = "60000";
+    public static final String TEMPLATE_BODY = "";
+    public static final String TEMPLATE_URL = "https://s3-external-1.amazonaws.com/cf-templates-1if2yhb1djnlp-us-east-1/2021316v6u-ec2_instance_testtbg18g5efi";
+    public static final String TEMPLATE_PARAMETERS = "";
+    public static final String TEMPLATE_CAPABILITIES = "";
+    public static String proxyHost = null;
+    public static String proxyPort = null;
+    public static String TEST_STACK_NAME = "CloudSlang-Test-Stack";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
+        try {
+            String proxy = System.getenv().get("HTTP_PROXY");
+            proxyHost = new URL(proxy).getHost();
+            proxyPort = String.valueOf(new URL(proxy).getPort());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        TEST_STACK_NAME = TEST_STACK_NAME + "-" + UUID.randomUUID();
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
+        proxyHost = proxyPort = null;
     }
 
     @Test
     public void execute() {
-        String proxy = System.getenv().get("HTTP_PROXY");
-        String proxyHost = proxy.substring(proxy.lastIndexOf("/") + 1, proxy.lastIndexOf(":"));
-        String proxyPort = proxy.substring(proxy.lastIndexOf(":") + 1);
-
         AWSCredentialsProvider awsCreds = new DefaultAWSCredentialsProviderChain();
-
-        GetStackDetailsAction getStackDetailsAction = new GetStackDetailsAction();
-        Map<String, String> getStackDetailsResult = getStackDetailsAction.execute(
+        CreateStackAction createStackAction = new CreateStackAction();
+        Map<String, String> createStackResults = createStackAction.execute(
                 awsCreds.getCredentials().getAWSAccessKeyId(),
                 awsCreds.getCredentials().getAWSSecretKey(),
-                "us-east-1",
+                US_EAST_1,
                 proxyHost,
                 proxyPort,
-                "",
-                "",
-                "10000",
-                "60000",
-                "AWS-Resource-Scheduler");
-
-        System.out.println(getStackDetailsResult);
-
-        assertNotNull(getStackDetailsResult);
-        assertNotNull(getStackDetailsResult.get(RETURN_RESULT));
-        assertNotNull(getStackDetailsResult.get(STACK_NAME_RESULT));
-        assertNotNull(getStackDetailsResult.get(STACK_ID_RESULT));
-        assertNotNull(getStackDetailsResult.get(STACK_OUTPUTS_RESULT));
-        assertNotNull(getStackDetailsResult.get(STACK_RESOURCES_RESULT));
-        try {
-            JSONAssert.assertEquals(OUTPUTS_EXPECTED_INSIDE_JSON,
-                    getStackDetailsResult.get(STACK_OUTPUTS_RESULT),
-                    new ArraySizeComparator(JSONCompareMode.LENIENT));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Test
-    public void getStackOutputs() {
+                PROXY_USERNAME,
+                PROXY_PASSWORD,
+                CONNECT_TIMEOUT_MS,
+                EXEC_TIMEOUT_MS,
+                TEST_STACK_NAME,
+                TEMPLATE_BODY,
+                TEMPLATE_URL,
+                TEMPLATE_PARAMETERS,
+                TEMPLATE_CAPABILITIES
+                );
+        assertNotNull(createStackResults);
+        assertNotNull(createStackResults.get(RETURN_RESULT));
     }
 }
