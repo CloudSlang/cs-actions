@@ -18,8 +18,12 @@ package io.cloudslang.content.amazon.actions.cloudformation;
 
 import com.amazonaws.services.cloudformation.AmazonCloudFormation;
 import com.amazonaws.services.cloudformation.model.DescribeStackResourcesRequest;
+import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
 import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
 import com.amazonaws.services.cloudformation.model.Stack;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -29,9 +33,12 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.factory.CloudFormationClientBuilder;
 import io.cloudslang.content.amazon.utils.DefaultValues;
+import io.cloudslang.content.amazon.utils.OutputsUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.STACK_NAME;
@@ -104,10 +111,9 @@ public class GetStackDetailsAction {
         final Map<String, String> results = new HashMap();
 
         try {
-            final DescribeStacksRequest describeStacksRequest = new DescribeStacksRequest();
-            describeStacksRequest.withStackName(stackName);
+            final DescribeStacksRequest describeStacksRequest = new DescribeStacksRequest().withStackName(stackName);
 
-            final DescribeStackResourcesRequest stackResourceRequest = new DescribeStackResourcesRequest();
+            //final Stack stack =  stackBuilder.describeStacks(describeStacksRequest).getStacks().get(0);
 
             for (Stack stack : stackBuilder.describeStacks(describeStacksRequest).getStacks()) {
                 results.put(Outputs.RETURN_RESULT, stack.getStackName() + "[" + stack.getStackStatus() + "]" );
@@ -117,10 +123,8 @@ public class GetStackDetailsAction {
                 results.put(Outputs.STACK_STATUS_RESULT_REASON,stack.getStackStatusReason());
                 results.put(Outputs.STACK_CREATION_TIME_RESULT,stack.getCreationTime().toString());
                 results.put(Outputs.STACK_DESCRIPTION_RESULT,stack.getDescription());
-                results.put(Outputs.STACK_OUTPUTS_RESULT,stack.getOutputs().toString());
-
-                stackResourceRequest.setStackName(stack.getStackName());
-                results.put(Outputs.STACK_RESOURCES_RESULT,stackBuilder.describeStackResources(stackResourceRequest).getStackResources().toString());
+                results.put(Outputs.STACK_OUTPUTS_RESULT, getStackOutputs(stack));
+                results.put(Outputs.STACK_RESOURCES_RESULT, getStackResources(stackName, stackBuilder));
 
                 results.put(Outputs.RETURN_CODE, Outputs.SUCCESS_RETURN_CODE);
                 results.put(Outputs.EXCEPTION, StringUtils.EMPTY);
@@ -139,5 +143,22 @@ public class GetStackDetailsAction {
         }
 
         return results;
+    }
+
+    private String getStackResources(String stackName, AmazonCloudFormation stackBuilder) throws IOException {
+        final DescribeStackResourcesRequest stackResourceRequest = new DescribeStackResourcesRequest()
+            .withStackName(stackName);
+
+        DescribeStackResourcesResult describeStackResourcesResult = stackBuilder.describeStackResources(stackResourceRequest);
+        String stackResources= OutputsUtil.getStackResourcesToJson(describeStackResourcesResult);
+        return stackResources;
+    }
+
+    public static String getStackOutputs(Stack stack) throws IOException {
+        List<com.amazonaws.services.cloudformation.model.Output> stackOutputs = stack.getOutputs();
+        final ObjectMapper om = new ObjectMapper();
+        om.enable(SerializationFeature.INDENT_OUTPUT);
+        final String outputsAsJson = om.writeValueAsString(stackOutputs);
+        return outputsAsJson;
     }
 }
