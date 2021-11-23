@@ -29,9 +29,9 @@ public final class Constants {
         public static final String NEW_PROPERTY_VALUE = "newPropertyValue";
         public static final String OBJECT = "object";
         public static final String KEY = "key";
-        public static final String ARRAY = "array";
         public static final String FROM_INDEX = "fromIndex";
         public static final String TO_INDEX = "toIndex";
+        public static final String ARRAY = "array";
         public static final String ARRAY1 = "array1";
         public static final String ARRAY2 = "array2";
         public static final String ACTION = "action";
@@ -74,5 +74,17 @@ public final class Constants {
         public static final String INVALID_TO_INDEX_VALUE = "The value for toIndex input exceeded the length of the array.";
 
 
+    }
+
+    public static final class ArrayIteratorAction{
+        public static final String GLOBAL_SESSION_OBJECT = "globalSessionObject";
+        public static final String HAS_MORE = "has more";
+        public static final String NO_MORE = "no more";
+        public static final String RESULT_TEXT = "result";
+        public static final String JSON_ARRAY = "iterate_json_array";
+        public static final String STRING_LIST = "string_list";
+        public static final String JSON_ARRAY_LENGTH = "json_array_length";
+        public static final String JSON_ARRAY_OP = "Array Iterator";
+        public static final String INDEX = "index";
     }
 }

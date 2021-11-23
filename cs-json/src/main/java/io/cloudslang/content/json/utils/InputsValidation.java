@@ -18,11 +18,14 @@ package io.cloudslang.content.json.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static io.cloudslang.content.json.utils.Constants.AddPropertyToObject.EMPTY_JSON;
 import static io.cloudslang.content.json.utils.Constants.AddPropertyToObject.JSON_EXCEPTION;

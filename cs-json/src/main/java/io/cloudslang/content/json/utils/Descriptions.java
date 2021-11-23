@@ -34,6 +34,22 @@ public class Descriptions {
         public static final String NEW_PROPERTY_VALUE_DESC = "The value for the new property. This is interpreted as a string, no matter what the contents of the input. Examples: value, 1, [1,2,3]";
     }
 
+    public static class ArrayIteratorDescription {
+        public static final String ARRAY_ITERATOR_DESCRIPTION = "This operation iterates through a string that contains" +
+                " an array in the JavaScript Object Notation format (JSON).  Each time  this operation is called, it " +
+                "places the value of the current array element into the \"returnResult\" output and advances the " +
+                "iterator to the next array element.\n";
+        public static final String HAS_MORE_DESC = "The iterator has not yet reached the end of the array. " +
+                "The \"returnResult\" output will be populated with the value of the current element in the array, and" +
+                " the iterator will advance to the next element in the array.";
+        public static final String NO_MORE_DESC = "The iterator has reached the end of the array, and there is no more" +
+                " data to return. The iterator will become undefined after this call, which basically will reset it so " +
+                "that if called again, this operation will begin another iteration at the beginning of the array.";
+        public static final String FAILURE_DESC = "There was some error in iterating through the list, and the " +
+                "\"returnResult\" output will contain information about the error. This will occur if the input array " +
+                "is not a valid JavaScript array.";
+    }
+
     public static class GetObjectKeys {
         public static final String GET_OBJECT_KEYS = "Get Object Keys";
 

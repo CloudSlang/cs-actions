@@ -18,7 +18,9 @@ public final class ExceptionMsgs {
     public static final String EXCEPTION_WHILE_PARSING = "Exception occurred while parsing input '%s': %s";
     public static final String NULL_OR_EMPTY_INPUT = "Value of input '%s' was null or empty.";
     public static final String JSON_OBJECT_SHOULD_BE_OBJECT_OR_ARRAY = "Json object should be object or array.";
-
+    public static final String NOT_A_VALID_JSON_ARRAY_MESSAGE = "The input value is not a valid JavaScript array!";
+    public static final String DIFFERENT_ARRAY = "List under iteration was changed between successive iteration steps";
+    public static final String INVALID_JSON_ARRAY = "Input value is not a valid JavaScript array";
     private ExceptionMsgs() {
 
     }
