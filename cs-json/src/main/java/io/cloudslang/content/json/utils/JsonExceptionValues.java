@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,10 +13,9 @@
  * limitations under the License.
  */
 
-
 package io.cloudslang.content.json.utils;
 
-import io.cloudslang.content.constants.ExceptionValues;
+import io.cloudslang.content.constants.*;
 
 /**
  * Created by victor on 9/12/16.

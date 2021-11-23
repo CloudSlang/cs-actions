@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.json.utils;
 
 public final class ExceptionMsgs {
@@ -21,6 +22,7 @@ public final class ExceptionMsgs {
     public static final String NOT_A_VALID_JSON_ARRAY_MESSAGE = "The input value is not a valid JavaScript array!";
     public static final String DIFFERENT_ARRAY = "List under iteration was changed between successive iteration steps";
     public static final String INVALID_JSON_ARRAY = "Input value is not a valid JavaScript array";
+    public static final String EMPTY_JSON = "Empty jsonObject provided!";
     private ExceptionMsgs() {
 
     }
