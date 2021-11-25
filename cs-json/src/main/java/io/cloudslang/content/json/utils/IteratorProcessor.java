@@ -43,15 +43,14 @@ public class IteratorProcessor {
         }
 
 
-
         index = Integer.parseInt(String.valueOf(sessionMap.get(INDEX)));
 
         try {
-        jsonElements = new Gson().fromJson(array, JsonArray.class);
-        }catch (Exception ex) {
+            jsonElements = new Gson().fromJson(array, JsonArray.class);
+        } catch (Exception ex) {
             throw new Exception(INVALID_JSON_ARRAY);
         }
-        if(jsonElements.size() == 0)
+        if (jsonElements.size() == 0)
             throw new Exception(EMPTY_JSON_ARRAY);
     }
 
