@@ -34,6 +34,8 @@ import io.cloudslang.content.utils.StringUtilities;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.json.utils.JsonExceptionValues.EMPTY_OBJECT;
+import static io.cloudslang.content.json.utils.JsonExceptionValues.NULL_KEY;
 import static io.cloudslang.content.json.utils.JsonUtils.populateResult;
 
 /**
@@ -79,10 +81,10 @@ public class GetValueFromObject {
         Map<String, String> returnResult = new HashMap<>();
 
         if (StringUtilities.isBlank(object)) {
-            return populateResult(returnResult, new Exception("Empty object provided!"));
+            return populateResult(returnResult, new Exception(EMPTY_OBJECT));
         }
         if (key == null) {
-            return populateResult(returnResult, new Exception("Null key provided!"));
+            return populateResult(returnResult, new Exception(NULL_KEY));
         }
 
         final JsonNode jsonRoot;

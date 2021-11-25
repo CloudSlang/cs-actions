@@ -21,6 +21,14 @@ import io.cloudslang.content.constants.*;
  * Created by victor on 9/12/16.
  */
 public final class JsonExceptionValues extends ExceptionValues {
-    public static final String INVALID_JSONOBJECT = "Invalid jsonObject provided!";
+    public static final String INVALID_JSONOBJECT = "Invalid jsonObject provided! ";
     public static final String INVALID_JSONPATH = "Invalid jsonPath provided!";
+    public static final String EMPTY_JSONPATH = "Empty jsonPath provided!";
+    public static final String EMPTY_JSONOBJECT = "Empty jsonObject provided!";
+    public static final String EMPTY_OBJECT = "Empty object provided!";
+    public static final String NULL_KEY = "Null key provided!";
+    public static final String EMPTY_ACTION = "Empty action provided!";
+    public static final String CANNOT_ADD_VALUE = "The value cannot be added!";
+    public static final String NOT_A_VALID_JSON_ARRAY_MESSAGE = "The input value is not a valid JavaScript array";
+
 }

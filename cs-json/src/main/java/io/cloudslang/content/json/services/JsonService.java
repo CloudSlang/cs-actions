@@ -43,6 +43,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static io.cloudslang.content.json.utils.Constants.InputNames.EMPTY_STRING;
+
 /**
  * Created by Folea Ilie Cristian on 2/3/2016.
  */
@@ -80,7 +82,7 @@ public class JsonService {
                 removeEmptyElementsFromMap(jsonMap);
                 return jsonMap.isEmpty() ?
                         generateResultingJsonString(wrappingQuote, new JSONArray()) :
-                        generateResultingJsonString(wrappingQuote, (JSONArray)jsonMap.get(""));
+                        generateResultingJsonString(wrappingQuote, (JSONArray)jsonMap.get(EMPTY_STRING));
             } else {
                 throw new RemoveEmptyElementException(ExceptionMsgs.JSON_OBJECT_SHOULD_BE_OBJECT_OR_ARRAY);
             }

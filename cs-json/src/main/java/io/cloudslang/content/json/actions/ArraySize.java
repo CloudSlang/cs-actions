@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONOBJECT;
 import static io.cloudslang.content.json.utils.JsonUtils.populateResult;
 
 /**
@@ -81,7 +82,7 @@ public class ArraySize {
             ObjectMapper mapper = new ObjectMapper();
             jsonNode = mapper.readTree(array);
         } catch (IOException exception) {
-            final String value = "Invalid jsonObject provided! " + exception.getMessage();
+            final String value = INVALID_JSONOBJECT + exception.getMessage();
             return populateResult(returnResult, value, exception);
         }
         final String result;

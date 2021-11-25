@@ -35,6 +35,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OtherValues.EMPTY_STRING;
+import static io.cloudslang.content.json.utils.Constants.InputNames.*;
+import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONOBJECT;
+import static io.cloudslang.content.json.utils.JsonExceptionValues.NOT_A_VALID_JSON_ARRAY_MESSAGE;
 import static io.cloudslang.content.json.utils.JsonUtils.populateResult;
 
 /**
@@ -42,12 +45,6 @@ import static io.cloudslang.content.json.utils.JsonUtils.populateResult;
  * Date 1/12/2015.
  */
 public class MergeArrays {
-
-    public static final String NOT_A_VALID_JSON_ARRAY_MESSAGE = "The input value is not a valid JavaScript array";
-    public static final String INVALID_JSON_OBJECT_PROVIDED_EXCEPTION_MESSAGE = "Invalid jsonObject provided! ";
-    public static final String ARRAY1_MESSAGE = " array1=";
-    public static final String ARRAY2_MESSAGE = " array2=";
-
 
     /**
      * This operation merge the contents of two JSON arrays. This operation does not modify either of the input arrays.
@@ -83,12 +80,12 @@ public class MergeArrays {
 
         Map<String, String> returnResult = new HashMap<>();
         if (StringUtilities.isBlank(array1)) {
-            final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE + ARRAY1_MESSAGE.replaceFirst("=", EMPTY_STRING);
+            final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE + ARRAY1_MESSAGE.replaceFirst(EQUAL, EMPTY_STRING);
             return populateResult(returnResult, exceptionValue, new Exception(exceptionValue));
         }
 
         if (StringUtilities.isBlank(array2)) {
-            final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE + ARRAY2_MESSAGE.replaceFirst("=", EMPTY_STRING);
+            final String exceptionValue = NOT_A_VALID_JSON_ARRAY_MESSAGE + ARRAY2_MESSAGE.replaceFirst(EQUAL, EMPTY_STRING);
             return populateResult(returnResult, new Exception(exceptionValue));
         }
 
@@ -98,13 +95,13 @@ public class MergeArrays {
         try {
             jsonNode1 = mapper.readTree(array1);
         } catch (IOException exception) {
-            final String value = INVALID_JSON_OBJECT_PROVIDED_EXCEPTION_MESSAGE + ARRAY1_MESSAGE + array1;
+            final String value = INVALID_JSONOBJECT + ARRAY1_MESSAGE + array1;
             return populateResult(returnResult, value, exception);
         }
         try {
             jsonNode2 = mapper.readTree(array2);
         } catch (IOException exception) {
-            final String value = INVALID_JSON_OBJECT_PROVIDED_EXCEPTION_MESSAGE + ARRAY2_MESSAGE + array2;
+            final String value = INVALID_JSONOBJECT + ARRAY2_MESSAGE + array2;
             return populateResult(returnResult, value, exception);
         }
 

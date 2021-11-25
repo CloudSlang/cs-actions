@@ -21,11 +21,11 @@ import io.cloudslang.content.utils.*;
 import java.util.*;
 
 import static io.cloudslang.content.json.utils.Constants.ArrayIteratorAction.*;
+import static io.cloudslang.content.json.utils.ExceptionMsgs.EMPTY_JSON_ARRAY;
 import static io.cloudslang.content.json.utils.ExceptionMsgs.INVALID_JSON_ARRAY;
 
 public class IteratorProcessor {
 
-    private String arrayElement;
     private int index;
     private JsonArray jsonElements;
 
@@ -42,6 +42,8 @@ public class IteratorProcessor {
             throw new Exception(String.format(ExceptionMsgs.NULL_OR_EMPTY_INPUT, Constants.InputNames.ARRAY));
         }
 
+
+
         index = Integer.parseInt(String.valueOf(sessionMap.get(INDEX)));
 
         try {
@@ -49,10 +51,16 @@ public class IteratorProcessor {
         }catch (Exception ex) {
             throw new Exception(INVALID_JSON_ARRAY);
         }
+        if(jsonElements.size() == 0)
+            throw new Exception(EMPTY_JSON_ARRAY);
     }
 
     public boolean hasNext() {
         return index < jsonElements.size();
+    }
+
+    public int getLength() {
+        return jsonElements.size();
     }
 
     public int getIndex() {

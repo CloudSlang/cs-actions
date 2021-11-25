@@ -36,8 +36,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 import static io.cloudslang.content.json.utils.ActionsEnum.insert;
-import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONOBJECT;
-import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONPATH;
+import static io.cloudslang.content.json.utils.Constants.InputNames.EMPTY_STRING;
+import static io.cloudslang.content.json.utils.JsonExceptionValues.*;
 
 /**
  * Created by ioanvranauhp
@@ -68,19 +68,19 @@ public class JsonUtils {
 
     public static void validateEditJsonInputs(String jsonObject, String jsonPath, String action, String name, String value) throws Exception {
         if (StringUtilities.isBlank(jsonObject)) {
-            throw new Exception("Empty jsonObject provided!");
+            throw new Exception(EMPTY_JSONOBJECT);
         }
         if (StringUtilities.isBlank(jsonPath)) {
-            throw new Exception("Empty jsonPath provided!");
+            throw new Exception(EMPTY_JSONPATH);
         }
         if (StringUtilities.isBlank(action)) {
-            throw new Exception("Empty action provided!");
+            throw new Exception(EMPTY_ACTION);
         }
 
         final String actionString = action.toLowerCase().trim();
 
         boolean exists = false;
-        String actionEnumValues = "";
+        String actionEnumValues = EMPTY_STRING;
         for (ActionsEnum actionsEnum : ActionsEnum.values()) {
             final String actionEnumValue = actionsEnum.getValue();
             actionEnumValues += actionEnumValue + " ";

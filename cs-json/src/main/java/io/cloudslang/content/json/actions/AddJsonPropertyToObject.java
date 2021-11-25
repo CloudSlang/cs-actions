@@ -39,6 +39,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.json.utils.JsonExceptionValues.CANNOT_ADD_VALUE;
+import static io.cloudslang.content.json.utils.JsonExceptionValues.EMPTY_JSONOBJECT;
 import static io.cloudslang.content.json.utils.JsonUtils.populateResult;
 import static io.cloudslang.content.json.utils.Constants.AddPropertyToObject.*;
 
@@ -88,7 +90,7 @@ public class AddJsonPropertyToObject {
 
         Map<String, String> returnResult = new HashMap<>();
         if (jsonObject == null || jsonObject.trim().equals(OtherValues.EMPTY_STRING)) {
-            return populateResult(returnResult, new Exception("Empty jsonObject provided!"));
+            return populateResult(returnResult, new Exception(EMPTY_JSONOBJECT));
         }
 
         ObjectMapper mapper = new ObjectMapper().configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
@@ -131,7 +133,7 @@ public class AddJsonPropertyToObject {
         }
 
         if (jsonNodes == null) {
-            return populateResult(returnResult, new Exception("The value cannot be added!"));
+            return populateResult(returnResult, new Exception(CANNOT_ADD_VALUE));
         }
         return populateResult(returnResult, jsonNodes.toString(), null);
     }

@@ -22,7 +22,7 @@ public final class ExceptionMsgs {
     public static final String NOT_A_VALID_JSON_ARRAY_MESSAGE = "The input value is not a valid JavaScript array!";
     public static final String DIFFERENT_ARRAY = "List under iteration was changed between successive iteration steps";
     public static final String INVALID_JSON_ARRAY = "Input value is not a valid JavaScript array";
-    public static final String EMPTY_JSON = "Empty jsonObject provided!";
+    public static final String EMPTY_JSON_ARRAY = "JSON array is empty.";
     private ExceptionMsgs() {
 
     }

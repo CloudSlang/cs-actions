@@ -30,6 +30,7 @@ public final class Constants {
         public static final String NEW_PROPERTY_VALUE = "newPropertyValue";
         public static final String OBJECT = "object";
         public static final String KEY = "key";
+        public static final String EQUAL = "=";
         public static final String FROM_INDEX = "fromIndex";
         public static final String TO_INDEX = "toIndex";
         public static final String ARRAY = "array";
@@ -45,6 +46,17 @@ public final class Constants {
         public static final String DOUBLE_QUOTES = "\"";
         public static final String BRACKET = "{";
         public static final String SQUARE_BRACKET = "[";
+        public static final String ARRAY1_MESSAGE = " array1=";
+        public static final String ARRAY2_MESSAGE = " array2=";
+        public static final String ZERO = "0";
+        public static final String ONE = "1";
+        public static final String MINUS_ONE = "-1";
+        public static final String NO_MORE = "no more";
+        public static final String FAILED = "failed";
+        public static final String RESULT_STRING = "resultString";
+        public static final String HAS_MORE = "has more";
+        public static final String EMPTY_STRING = "";
+        public static final String SPACE = " ";
     }
 
     static final class EditJsonOperations {
@@ -81,10 +93,7 @@ public final class Constants {
         public static final String GLOBAL_SESSION_OBJECT = "globalSessionObject";
         public static final String HAS_MORE = "has more";
         public static final String NO_MORE = "no more";
-        public static final String RESULT_TEXT = "result";
-        public static final String JSON_ARRAY = "iterate_json_array";
-        public static final String STRING_LIST = "string_list";
-        public static final String JSON_ARRAY_LENGTH = "json_array_length";
+        public static final String RESULT_TEXT = "returnResult";
         public static final String JSON_ARRAY_OP = "Array Iterator";
         public static final String INDEX = "index";
     }
