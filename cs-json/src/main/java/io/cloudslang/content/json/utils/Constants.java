@@ -93,7 +93,7 @@ public final class Constants {
         public static final String GLOBAL_SESSION_OBJECT = "globalSessionObject";
         public static final String HAS_MORE = "has more";
         public static final String NO_MORE = "no more";
-        public static final String RESULT_TEXT = "returnResult";
+        public static final String RETURN_RESULT = "returnResult";
         public static final String JSON_ARRAY_OP = "Array Iterator";
         public static final String INDEX = "index";
     }

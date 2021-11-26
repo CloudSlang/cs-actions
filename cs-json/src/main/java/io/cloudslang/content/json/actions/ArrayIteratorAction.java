@@ -37,9 +37,9 @@ public class ArrayIteratorAction {
                     @Output(OutputNames.EXCEPTION)
             },
             responses = {
-                    @Response(text = HAS_MORE, field = RESULT_TEXT, value = HAS_MORE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = HAS_MORE_DESC),
-                    @Response(text = NO_MORE, field = RESULT_TEXT, value = NO_MORE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = NO_MORE_DESC),
-                    @Response(text = FAILURE, field = RESULT_TEXT, value = FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true, description = FAILURE_DESC)})
+                    @Response(text = HAS_MORE, field = RETURN_RESULT, value = HAS_MORE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = HAS_MORE_DESC),
+                    @Response(text = NO_MORE, field = RETURN_RESULT, value = NO_MORE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = NO_MORE_DESC),
+                    @Response(text = FAILURE, field = RETURN_RESULT, value = FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true, description = FAILURE_DESC)})
 
     public Map<String, String> execute(@Param(value = Constants.InputNames.ARRAY, required = true) String array,
                                        @Param(value = GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {

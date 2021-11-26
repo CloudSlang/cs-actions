@@ -21,37 +21,37 @@ import java.util.*;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.json.utils.Constants.ArrayIteratorAction.INDEX;
-import static io.cloudslang.content.json.utils.Constants.ArrayIteratorAction.RESULT_TEXT;
+import static io.cloudslang.content.json.utils.Constants.ArrayIteratorAction.RETURN_RESULT;
 import static io.cloudslang.content.json.utils.Constants.InputNames.*;
 
 public class ArrayListService {
     public static Map<String, String> iterate(String array, GlobalSessionObject<Map<String, Object>> globalSessionObject){
         IteratorProcessor iterate = new IteratorProcessor();
         Map<String, String> returnResult = new HashMap<>();
-        returnResult.put(RESULT_TEXT, FAILED);
+        returnResult.put(RETURN_RESULT, FAILED);
 
         try {
             iterate.init(array,  globalSessionObject);
             if (iterate.getIndex() == 0 && iterate.getLength() == 1 || iterate.getIndex() == iterate.getLength()-1) {
-                returnResult.put(RESULT_TEXT, NO_MORE);
+                returnResult.put(RETURN_RESULT, NO_MORE);
                 returnResult.put(RESULT_STRING, iterate.getNext(globalSessionObject));
                 returnResult.put(RETURN_CODE, ONE);
             } else if (iterate.hasNext()) {
                 returnResult.put(INDEX, Integer.toString(iterate.getIndex()));
                 returnResult.put(RESULT_STRING, iterate.getNext(globalSessionObject));
                 if (iterate.hasNext()) {
-                    returnResult.put(RESULT_TEXT, HAS_MORE);
+                    returnResult.put(RETURN_RESULT, HAS_MORE);
                     returnResult.put(RETURN_CODE, ZERO);
                 } else {
                         returnResult.put(RESULT_STRING, EMPTY_STRING);
                         returnResult.put(RETURN_CODE, ONE);
                         iterate.setStepSessionEnd(globalSessionObject);
-                        returnResult.put(RESULT_TEXT, NO_MORE);
+                        returnResult.put(RETURN_RESULT, NO_MORE);
                     }
                 }
         } catch (Exception e) {
-            returnResult.put(RESULT_TEXT, FAILED);
-            returnResult.put(RESULT_STRING, e.getMessage());
+            returnResult.put(RETURN_RESULT, e.getMessage());
+            returnResult.put(RESULT_STRING, EMPTY_STRING);
             returnResult.put(RETURN_CODE, MINUS_ONE);
         }
         return returnResult;
