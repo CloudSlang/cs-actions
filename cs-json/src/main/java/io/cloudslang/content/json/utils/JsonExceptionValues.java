@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,15 +13,22 @@
  * limitations under the License.
  */
 
-
 package io.cloudslang.content.json.utils;
 
-import io.cloudslang.content.constants.ExceptionValues;
+import io.cloudslang.content.constants.*;
 
 /**
  * Created by victor on 9/12/16.
  */
 public final class JsonExceptionValues extends ExceptionValues {
-    public static final String INVALID_JSONOBJECT = "Invalid jsonObject provided!";
+    public static final String INVALID_JSONOBJECT = "Invalid jsonObject provided! ";
     public static final String INVALID_JSONPATH = "Invalid jsonPath provided!";
+    public static final String EMPTY_JSONPATH = "Empty jsonPath provided!";
+    public static final String EMPTY_JSONOBJECT = "Empty jsonObject provided!";
+    public static final String EMPTY_OBJECT = "Empty object provided!";
+    public static final String NULL_KEY = "Null key provided!";
+    public static final String EMPTY_ACTION = "Empty action provided!";
+    public static final String CANNOT_ADD_VALUE = "The value cannot be added!";
+    public static final String NOT_A_VALID_JSON_ARRAY_MESSAGE = "The input value is not a valid JavaScript array";
+
 }

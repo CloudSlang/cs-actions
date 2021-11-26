@@ -13,21 +13,28 @@
  * limitations under the License.
  */
 
+package io.cloudslang.content.json.utils;
 
+import com.hp.oo.sdk.content.plugin.*;
 
-package io.cloudslang.content.json.exceptions;
+import java.util.*;
 
-/**
- * Created by Folea Ilie Cristian on 2/4/2016.
- */
-public class RemoveEmptyElementException extends Exception {
+public class IteratorSessionResource extends SessionResource<Map<String, Object>> {
 
-    public RemoveEmptyElementException(String message) {
-        super(message);
+    private Map<String, Object> iteratorMap;
+
+    IteratorSessionResource(final Map<String, Object> iteratorMap) {
+        this.iteratorMap = iteratorMap;
     }
 
+    @Override
+    public Map<String, Object> get() {
+        return iteratorMap;
+    }
 
-    public RemoveEmptyElementException(Exception ex) {
-        super(ex);
+    @Override
+    public void release() {
+        iteratorMap = null;
     }
 }
+

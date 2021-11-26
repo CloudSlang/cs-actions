@@ -17,16 +17,18 @@ package io.cloudslang.content.json.entities;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-public class GetArrayEntryInput {
+import java.util.Map;
+
+public class ArrayIteratorInput {
     private JsonArray array;
-    private Integer index;
+    private GlobalSessionObject<Map<String, Object>> globalSessionObject;
 
 
-    private GetArrayEntryInput() {
-
+    private ArrayIteratorInput() {
     }
 
 
@@ -34,15 +36,10 @@ public class GetArrayEntryInput {
         return array;
     }
 
-
-    public Integer getIndex() {
-        return index;
-    }
-
-
     public static class Builder {
+        private final JsonParser jsonParser = new JsonParser();
+
         private String array;
-        private String index;
 
 
         public Builder array(String array) {
@@ -51,21 +48,11 @@ public class GetArrayEntryInput {
         }
 
 
-        public Builder index(String index) {
-            this.index = index;
-            return this;
-        }
-
-
-        public @NotNull GetArrayEntryInput build() throws Exception {
-            GetArrayEntryInput input = new GetArrayEntryInput();
+        public @NotNull ArrayIteratorInput build() throws Exception {
+            ArrayIteratorInput input = new ArrayIteratorInput();
 
             if (StringUtils.isNotBlank(this.array)) {
-                input.array = new JsonParser().parse(this.array).getAsJsonArray();
-            }
-
-            if (StringUtils.isNotBlank(this.index)) {
-                input.index = Integer.parseInt(this.index);
+                input.array = this.jsonParser.parse(this.array).getAsJsonArray();
             }
 
             return input;

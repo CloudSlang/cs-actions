@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,36 +13,27 @@
  * limitations under the License.
  */
 
-
 package io.cloudslang.content.json.actions;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.json.entities.AddPropertyToObjectInputs;
-import io.cloudslang.content.json.services.AddPropertyToObjectImpl;
-import io.cloudslang.content.utils.StringUtilities;
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.databind.*;
+import com.hp.oo.sdk.content.annotations.*;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.*;
+import io.cloudslang.content.constants.*;
+import io.cloudslang.content.json.entities.*;
+import io.cloudslang.content.json.services.*;
+import io.cloudslang.content.utils.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.constants.ResponseNames.FAILURE;
-import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.json.utils.Constants.AddPropertyToObject.NEW_LINE;
+import static io.cloudslang.content.constants.ResponseNames.*;
+import static io.cloudslang.content.json.utils.Constants.AddPropertyToObject.*;
 import static io.cloudslang.content.json.utils.Constants.InputNames.*;
 import static io.cloudslang.content.json.utils.Descriptions.AddPropertyToObject.*;
-import static io.cloudslang.content.json.utils.InputsValidation.verifyJsonObject;
-import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+import static io.cloudslang.content.json.utils.InputsValidation.*;
+import static io.cloudslang.content.utils.OutputUtilities.*;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class AddPropertyToObject {
 

@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 
 package io.cloudslang.content.json.utils;
@@ -32,6 +33,23 @@ public class Descriptions {
                 "a single string or any valid JSON object or array. Examples: {\"one\":1, \"two\":2}, {\"one\":{\"a\":\"a\",\"B\":\"B\"}, \"two\":\"two\", \"three\":[1,2,3.4]}";
         public static final String NEW_PROPERTY_NAME_DESC = "The name of the new property to add to the JSON object. There is no rule as to which character to use. Examples: property1, some_property, another property";
         public static final String NEW_PROPERTY_VALUE_DESC = "The value for the new property. This is interpreted as a string, no matter what the contents of the input. Examples: value, 1, [1,2,3]";
+
+    }
+
+    public static class ArrayIteratorDescription {
+        public static final String ARRAY_ITERATOR_DESCRIPTION = "This operation iterates through a string that contains" +
+                " an array in the JavaScript Object Notation format (JSON).  Each time  this operation is called, it " +
+                "places the value of the current array element into the \"returnResult\" output and advances the " +
+                "iterator to the next array element.\n";
+        public static final String HAS_MORE_DESC = "The iterator has not yet reached the end of the array. " +
+                "The \"returnResult\" output will be populated with the value of the current element in the array, and" +
+                " the iterator will advance to the next element in the array.";
+        public static final String NO_MORE_DESC = "The iterator has reached the end of the array, and there is no more" +
+                " data to return. The iterator will become undefined after this call, which basically will reset it so " +
+                "that if called again, this operation will begin another iteration at the beginning of the array.";
+        public static final String FAILURE_DESC = "There was some error in iterating through the list, and the " +
+                "\"returnResult\" output will contain information about the error. This will occur if the input array " +
+                "is not a valid JavaScript array.";
     }
 
     public static class GetObjectKeys {

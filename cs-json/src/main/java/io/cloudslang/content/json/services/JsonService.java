@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 
 package io.cloudslang.content.json.services;
@@ -41,6 +42,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+
+import static io.cloudslang.content.json.utils.Constants.InputNames.EMPTY_STRING;
 
 /**
  * Created by Folea Ilie Cristian on 2/3/2016.
@@ -79,7 +82,7 @@ public class JsonService {
                 removeEmptyElementsFromMap(jsonMap);
                 return jsonMap.isEmpty() ?
                         generateResultingJsonString(wrappingQuote, new JSONArray()) :
-                        generateResultingJsonString(wrappingQuote, (JSONArray)jsonMap.get(""));
+                        generateResultingJsonString(wrappingQuote, (JSONArray)jsonMap.get(EMPTY_STRING));
             } else {
                 throw new RemoveEmptyElementException(ExceptionMsgs.JSON_OBJECT_SHOULD_BE_OBJECT_OR_ARRAY);
             }
