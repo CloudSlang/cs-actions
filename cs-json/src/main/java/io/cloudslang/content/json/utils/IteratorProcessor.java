@@ -21,8 +21,8 @@ import io.cloudslang.content.utils.*;
 import java.util.*;
 
 import static io.cloudslang.content.json.utils.Constants.ArrayIteratorAction.*;
-import static io.cloudslang.content.json.utils.ExceptionMsgs.EMPTY_JSON_ARRAY;
-import static io.cloudslang.content.json.utils.ExceptionMsgs.INVALID_JSON_ARRAY;
+import static io.cloudslang.content.json.utils.Constants.InputNames.ARRAY;
+import static io.cloudslang.content.json.utils.ExceptionMsgs.*;
 
 public class IteratorProcessor {
 
@@ -32,14 +32,19 @@ public class IteratorProcessor {
     public void init(String array, GlobalSessionObject<Map<String, Object>> session) throws Exception {
 
         if (session.get() == null) {
-            Map<String, Object> initialIndex = new HashMap<String, Object>();
-            initialIndex.put(INDEX, 0);
-            session.setResource(new IteratorSessionResource(initialIndex));
+            Map<String, Object> initialData = new HashMap<String, Object>();
+            initialData.put(INDEX, 0);
+            initialData.put(LENGTH, array.length());
+            session.setResource(new IteratorSessionResource(initialData));
         }
 
         Map<String, Object> sessionMap = session.get();
+
+        if ((Integer) sessionMap.get(LENGTH) != array.length())
+            throw new Exception(DIFFERENT_ARRAY);
+
         if (StringUtilities.isBlank(array)) {
-            throw new Exception(String.format(ExceptionMsgs.NULL_OR_EMPTY_INPUT, Constants.InputNames.ARRAY));
+            throw new Exception(String.format(ExceptionMsgs.NULL_OR_EMPTY_INPUT, ARRAY));
         }
 
 

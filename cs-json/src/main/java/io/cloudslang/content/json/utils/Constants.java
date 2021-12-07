@@ -96,5 +96,6 @@ public final class Constants {
         public static final String RETURN_RESULT = "returnResult";
         public static final String JSON_ARRAY_OP = "Array Iterator";
         public static final String INDEX = "index";
+        public static final String LENGTH = "length";
     }
 }
