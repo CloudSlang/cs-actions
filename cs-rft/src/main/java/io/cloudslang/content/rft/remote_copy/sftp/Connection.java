@@ -15,11 +15,12 @@
 package io.cloudslang.content.rft.remote_copy.sftp;
 
 import com.jcraft.jsch.*;
-import org.apache.log4j.Logger;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 public class Connection {
 
-    private static Logger logger = Logger.getLogger(Connection.class);
+   // private static Logger logger = LoggerFactory.getLogger(Connection.class);
     private String username;
     private String password;
     private String host;
@@ -36,7 +37,7 @@ public class Connection {
 
     public Connection(Session existingSession) {
         if (existingSession != null && existingSession.isConnected()) {
-            logger.debug("using existing ssh session");
+    //        logger.debug("using existing ssh session");
             this.session = existingSession;
         } else {
             throw new RuntimeException("Invalid ssh session");
@@ -44,13 +45,13 @@ public class Connection {
     }
 
     public void disconnect() {
-        logger.debug("disconnect()");
+   //     logger.debug("disconnect()");
         //Session object handles if it's already connected
         this.session.disconnect();
     }
 
     public void disconnectChannel() {
-        logger.debug("disconnectChannel()");
+    //    logger.debug("disconnectChannel()");
         //Session object handles if it's already connected
         this.secureChannel.disconnect();
     }
@@ -60,7 +61,7 @@ public class Connection {
     }
 
     public void connect(boolean connectChannel) throws Exception {
-        logger.debug("connect()");
+    //    logger.debug("connect()");
 
         if (session == null || !session.isConnected()) {
             JSch jsch = new JSch();
@@ -95,7 +96,7 @@ public class Connection {
             Channel channel = session.openChannel("sftp");
             channel.connect();
             secureChannel = (ChannelSftp) channel;
-            logger.debug("Connected to sftp server version: " + secureChannel.getServerVersion());
+    //        logger.debug("Connected to sftp server version: " + secureChannel.getServerVersion());
         }
     }
 
