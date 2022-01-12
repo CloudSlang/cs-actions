@@ -317,7 +317,7 @@ public class HttpClientAction {
 
         HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(url);
-        httpClientInputs.setAuthType(authType);
+        httpClientInputs.setAuthType(defaultIfEmpty(authType, BASIC_AUTH));
         httpClientInputs.setPreemptiveAuth(preemptiveAuth);
         httpClientInputs.setUsername(username);
         httpClientInputs.setPassword(password);
