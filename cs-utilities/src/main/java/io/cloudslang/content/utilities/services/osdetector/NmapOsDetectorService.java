@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
-import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_HOST;
-import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
