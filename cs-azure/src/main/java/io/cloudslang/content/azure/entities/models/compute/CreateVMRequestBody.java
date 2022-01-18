@@ -21,11 +21,11 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class CreateVMRequestBody {
 
-    String id;
-    String name;
-    String type;
-    String location;
-    Map<String,String> tags;
+    private String id;
+    private String name;
+    private String type;
+    private String location;
+    private Map<String,String> tags;
 
     CreateVMRequestBody.Plan plan;
 
@@ -89,11 +89,11 @@ public class CreateVMRequestBody {
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public static class Properties {
-        CreateVMRequestBody.Properties.availabilitySet availabilitySet;
-        CreateVMRequestBody.Properties.hardwareProfile hardwareProfile;
-        CreateVMRequestBody.Properties.storageProfile storageProfile;
-        CreateVMRequestBody.Properties.osProfile osProfile;
-        CreateVMRequestBody.Properties.networkProfile networkProfile;
+        private CreateVMRequestBody.Properties.availabilitySet availabilitySet;
+        private CreateVMRequestBody.Properties.hardwareProfile hardwareProfile;
+        private CreateVMRequestBody.Properties.storageProfile storageProfile;
+        private CreateVMRequestBody.Properties.osProfile osProfile;
+        private CreateVMRequestBody.Properties.networkProfile networkProfile;
 
         public Properties.availabilitySet getAvailabilitySet() {
             return availabilitySet;
@@ -136,10 +136,10 @@ public class CreateVMRequestBody {
         }
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public static class osProfile {
-            String computerName;
-            String adminUsername;
-            String adminPassword;
-            CreateVMRequestBody.Properties.osProfile.linuxConfiguration linuxConfiguration;
+            private String computerName;
+            private String adminUsername;
+            private String adminPassword;
+            private CreateVMRequestBody.Properties.osProfile.linuxConfiguration linuxConfiguration;
 
             public String getComputerName() {
                 return computerName;
@@ -174,8 +174,8 @@ public class CreateVMRequestBody {
             }
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)
             public static class linuxConfiguration {
-                boolean disablePasswordAuthentication;
-                CreateVMRequestBody.Properties.osProfile.linuxConfiguration.ssh ssh;
+                private boolean disablePasswordAuthentication;
+                private CreateVMRequestBody.Properties.osProfile.linuxConfiguration.ssh ssh;
 
                 public boolean getDisablePasswordAuthentication() {
                     return disablePasswordAuthentication;
@@ -194,7 +194,7 @@ public class CreateVMRequestBody {
                 }
                 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
                 public static class ssh {
-                    CreateVMRequestBody.Properties.osProfile.linuxConfiguration.ssh.publicKeys publicKeys[];
+                    private CreateVMRequestBody.Properties.osProfile.linuxConfiguration.ssh.publicKeys publicKeys[];
 
                     public Properties.osProfile.linuxConfiguration.ssh.publicKeys[] getPublicKeys() {
                         return publicKeys;
@@ -205,8 +205,8 @@ public class CreateVMRequestBody {
                     }
                     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
                     public static class publicKeys {
-                        String path;
-                        String keyData;
+                        private String path;
+                        private String keyData;
 
                         public String getPath() {
                             return path;
@@ -231,7 +231,7 @@ public class CreateVMRequestBody {
         }
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public static class networkProfile {
-            CreateVMRequestBody.Properties.networkProfile.networkInterfaces[] networkInterfaces;
+            private CreateVMRequestBody.Properties.networkProfile.networkInterfaces[] networkInterfaces;
 
             public Properties.networkProfile.networkInterfaces[] getNetworkInterfaces() {
                 return networkInterfaces;
@@ -242,8 +242,8 @@ public class CreateVMRequestBody {
             }
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)
             public static class networkInterfaces {
-                String id;
-                CreateVMRequestBody.Properties.networkProfile.networkInterfaces.properties properties;
+                private String id;
+                private CreateVMRequestBody.Properties.networkProfile.networkInterfaces.properties properties;
 
                 public String getId() {
                     return id;
@@ -262,7 +262,7 @@ public class CreateVMRequestBody {
                 }
 
                 public static class properties {
-                    boolean primary;
+                    private boolean primary;
 
                     public boolean isPrimary() {
                         return primary;
@@ -278,7 +278,7 @@ public class CreateVMRequestBody {
         }
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public static class availabilitySet {
-            String id;
+            private String id;
 
             public String getId() {
                 return id;
@@ -290,7 +290,7 @@ public class CreateVMRequestBody {
         }
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public static class hardwareProfile {
-            String vmSize;
+            private String vmSize;
 
             public String getVmSize() {
                 return vmSize;
@@ -302,9 +302,9 @@ public class CreateVMRequestBody {
         }
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public static class storageProfile {
-            CreateVMRequestBody.Properties.storageProfile.imageReference imageReference;
-            CreateVMRequestBody.Properties.storageProfile.osDisk osDisk;
-            CreateVMRequestBody.Properties.storageProfile.dataDisks dataDisks[];
+            private CreateVMRequestBody.Properties.storageProfile.imageReference imageReference;
+            private CreateVMRequestBody.Properties.storageProfile.osDisk osDisk;
+            private CreateVMRequestBody.Properties.storageProfile.dataDisks dataDisks[];
 
             public Properties.storageProfile.imageReference getImageReference() {
                 return imageReference;
@@ -332,13 +332,13 @@ public class CreateVMRequestBody {
 
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)
             public static class dataDisks {
-                String name;
-                int diskSizeGB;
+                private String name;
+                private int diskSizeGB;
                 @JsonInclude()
-                int lun;
-                String createOption;
-                CreateVMRequestBody.Properties.storageProfile.dataDisks.managedDisk managedDisk;
-                CreateVMRequestBody.Properties.storageProfile.dataDisks.vhd vhd;
+                private int lun;
+                private String createOption;
+                private CreateVMRequestBody.Properties.storageProfile.dataDisks.managedDisk managedDisk;
+                private CreateVMRequestBody.Properties.storageProfile.dataDisks.vhd vhd;
 
                 public CreateVMRequestBody.Properties.storageProfile.dataDisks.vhd getVhd() {
                     return vhd;
@@ -389,7 +389,7 @@ public class CreateVMRequestBody {
                 }
                 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
                 public static class vhd {
-                    String uri;
+                    private String uri;
 
                     public String getUri() {
                         return uri;
@@ -401,7 +401,7 @@ public class CreateVMRequestBody {
                 }
                 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
                 public static class managedDisk {
-                    String storageAccountType;
+                    private String storageAccountType;
 
                     public String getStorageAccountType() {
                         return storageAccountType;
@@ -414,11 +414,11 @@ public class CreateVMRequestBody {
             }
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)
             public static class imageReference {
-                String publisher;
-                String offer;
-                String sku;
-                String version;
-                String id;
+                private String publisher;
+                private String offer;
+                private String sku;
+                private String version;
+                private String id;
 
                 public String getId() {
                     return id;
@@ -462,9 +462,9 @@ public class CreateVMRequestBody {
             }
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)
             public static class osDisk {
-                String caching;
-                String name;
-                String createOption;
+                private String caching;
+                private String name;
+                private String createOption;
                 CreateVMRequestBody.Properties.storageProfile.osDisk.vhd vhd;
 
                 public CreateVMRequestBody.Properties.storageProfile.osDisk.vhd getVhd() {
@@ -510,7 +510,7 @@ public class CreateVMRequestBody {
                 }
                 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
                 public static class vhd {
-                    String uri;
+                    private String uri;
 
                     public String getUri() {
                         return uri;
@@ -522,7 +522,7 @@ public class CreateVMRequestBody {
                 }
                 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
                 public static class managedDisk {
-                    String storageAccountType;
+                    private String storageAccountType;
 
                     public String getStorageAccountType() {
                         return storageAccountType;
@@ -539,9 +539,9 @@ public class CreateVMRequestBody {
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public static class Plan {
-        String name;
-        String product;
-        String publisher;
+        private String name;
+        private String product;
+        private String publisher;
 
         public String getName() {
             return name;
