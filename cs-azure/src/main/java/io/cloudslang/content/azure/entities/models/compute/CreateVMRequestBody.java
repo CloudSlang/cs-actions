@@ -27,9 +27,9 @@ public class CreateVMRequestBody {
     private String location;
     private Map<String,String> tags;
 
-    CreateVMRequestBody.Plan plan;
+    private CreateVMRequestBody.Plan plan;
 
-    CreateVMRequestBody.Properties Properties;
+    private CreateVMRequestBody.Properties Properties;
 
     public CreateVMRequestBody.Properties getProperties() {
         return Properties;
