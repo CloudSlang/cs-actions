@@ -14,26 +14,29 @@
  */
 package io.cloudslang.content.azure.services;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.azure.entities.CreateStreamingJobInputs;
 import io.cloudslang.content.azure.entities.CreateTransformationInputs;
-import io.cloudslang.content.azure.entities.models.streamanalytics.CreateStreamingJobRequestBody;
 import io.cloudslang.content.azure.entities.models.streamanalytics.CreateTransformationRequestBody;
 import io.cloudslang.content.azure.utils.HttpUtils;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.parser.JSONParser;
 
 import java.util.Map;
 
-import static io.cloudslang.content.azure.utils.Constants.*;
-import static io.cloudslang.content.azure.utils.Constants.Common.*;
+import static io.cloudslang.content.azure.utils.Constants.Common.ANONYMOUS;
+import static io.cloudslang.content.azure.utils.Constants.Common.CONTENT_TYPE;
+import static io.cloudslang.content.azure.utils.Constants.Common.PUT;
 import static io.cloudslang.content.azure.utils.Constants.CreateTransformationsConstants.TRANSFORMATION_JOBS_PATH;
+import static io.cloudslang.content.azure.utils.Constants.DEFAULT_RESOURCE;
+import static io.cloudslang.content.azure.utils.Constants.RESOURCE_GROUPS_PATH;
+import static io.cloudslang.content.azure.utils.Constants.STREAMING_JOBS_PATH;
+import static io.cloudslang.content.azure.utils.Constants.STREAM_ANALYTICS_PATH;
+import static io.cloudslang.content.azure.utils.Constants.SUBSCRIPTION_PATH;
 import static io.cloudslang.content.azure.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.azure.utils.HttpUtils.setAPIVersion;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class TransformationImpl {
 
@@ -42,7 +45,7 @@ public class TransformationImpl {
             throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(getCreateTransformationUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
-                inputs.getAzureCommonInputs().getJobName(),inputs.getTransformationName()));
+                inputs.getAzureCommonInputs().getJobName(), inputs.getTransformationName()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(PUT);
         httpClientInputs.setContentType(CONTENT_TYPE);
@@ -52,10 +55,11 @@ public class TransformationImpl {
         httpClientInputs.setBody(createTransformationRequestBody(inputs));
         return new HttpClientService().execute(httpClientInputs);
     }
+
     @NotNull
     private static String getCreateTransformationUrl(String subscriptionId, String resourceGroupName, String jobName, String transformationName) throws Exception {
         final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath(getTransformationURLPath(subscriptionId, resourceGroupName, jobName,transformationName).toString());
+        uriBuilder.setPath(getTransformationURLPath(subscriptionId, resourceGroupName, jobName, transformationName).toString());
         return uriBuilder.build().toURL().toString();
     }
 
@@ -84,7 +88,10 @@ public class TransformationImpl {
         properties.setStreamingUnits(Integer.parseInt(inputs.getStreamingUnits()));
 
         createTransformationRequestBody.setProperties(properties);
+
         ObjectMapper createInstanceMapper = new ObjectMapper();
+        createInstanceMapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
+
         return createInstanceMapper.writeValueAsString(createTransformationRequestBody);
 
     }

@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.azure.services;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.azure.entities.AzureComputeCommonInputs;
@@ -33,8 +34,35 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static io.cloudslang.content.azure.utils.Constants.Common.*;
-import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.*;
+import static io.cloudslang.content.azure.utils.Constants.Common.ANONYMOUS;
+import static io.cloudslang.content.azure.utils.Constants.Common.CONTENT_TYPE;
+import static io.cloudslang.content.azure.utils.Constants.Common.DEFAULT_COMPUTE_SSH_API_VERSION;
+import static io.cloudslang.content.azure.utils.Constants.Common.DELETE;
+import static io.cloudslang.content.azure.utils.Constants.Common.DOT;
+import static io.cloudslang.content.azure.utils.Constants.Common.GET;
+import static io.cloudslang.content.azure.utils.Constants.Common.HTTP;
+import static io.cloudslang.content.azure.utils.Constants.Common.PUT;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_AVAILABILITY_SET_SKU_JSON_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_AVAILABILITY_SET_TYPE;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_CREATE_VM_AVAILABILITY_SET_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_CREATE_VM_DATA_DISK_VHD_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_CREATE_VM_NETWORK_INTERFACES_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_CREATE_VM_OS_DISK_CACHING_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_CREATE_VM_OS_DISK_CREATION_OPTION_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_CREATE_VM_OS_DISK_VHD_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_CREATE_VM_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_CREATE_VM_SSH_PUBLIC_KEYS_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_CREATE_VM_TYPE_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_CREATE_VM_USING_CUSTOM_IMAGE_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_CREATE_VM_VHD_URI_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_DATA_DISK_CREATE_OPTION;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_DISK_TYPE_MANAGED;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_PROTOCOL_PREFIX;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.AZURE_SSH_PUBLIC_KEYS_JSON_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.DEFAULT_DATA_DISK_NAME;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.DEFAULT_OS_DISK_NAME;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.DEFAULT_SSH_PUBLIC_KEY_HOME_PATH;
+import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.DEFAULT_SSH_PUBLIC_KEY_PATH;
 import static io.cloudslang.content.azure.utils.Constants.RESOURCE_GROUPS_PATH;
 import static io.cloudslang.content.azure.utils.Constants.SUBSCRIPTION_PATH;
 import static io.cloudslang.content.azure.utils.HttpUtils.getAuthHeaders;
@@ -269,9 +297,9 @@ public class AzureComputeImpl {
 
         CreateVMRequestBody.Properties.osProfile osProfile = new
                 CreateVMRequestBody.Properties.osProfile();
-        if(inputs.getAzureComputeCommonInputs().getVmName().length()>14) {
-            osProfile.setComputerName(inputs.getAzureComputeCommonInputs().getVmName().substring(0,13));
-        }else{
+        if (inputs.getAzureComputeCommonInputs().getVmName().length() > 14) {
+            osProfile.setComputerName(inputs.getAzureComputeCommonInputs().getVmName().substring(0, 13));
+        } else {
             osProfile.setComputerName(inputs.getAzureComputeCommonInputs().getVmName());
         }
         osProfile.setAdminUsername(inputs.getAdminUsername());
@@ -378,7 +406,10 @@ public class AzureComputeImpl {
         properties.setOsProfile(osProfile);
         properties.setNetworkProfile(networkProfile);
         createVMRequestBody.setProperties(properties);
+
         ObjectMapper createInstanceMapper = new ObjectMapper();
+        createInstanceMapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
+
         return createInstanceMapper.writeValueAsString(createVMRequestBody);
     }
 }

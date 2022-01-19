@@ -14,7 +14,6 @@
  */
 package io.cloudslang.content.azure.entities.models.compute;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Map;
@@ -32,8 +31,8 @@ public class CreateVMRequestBody {
 
     CreateVMRequestBody.Properties Properties;
 
-    @JsonCreator
-    public CreateVMRequestBody() { }
+    public CreateVMRequestBody() {
+    }
 
     public CreateVMRequestBody.Properties getProperties() {
         return Properties;

@@ -15,6 +15,7 @@
 package io.cloudslang.content.azure.services;
 
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.azure.entities.AzureCommonInputs;
 import io.cloudslang.content.azure.entities.CreateStreamingJobInputs;
@@ -33,8 +34,17 @@ import org.json.simple.parser.ParseException;
 
 import java.util.Map;
 
-import static io.cloudslang.content.azure.utils.Constants.Common.*;
-import static io.cloudslang.content.azure.utils.Constants.*;
+import static io.cloudslang.content.azure.utils.Constants.Common.ANONYMOUS;
+import static io.cloudslang.content.azure.utils.Constants.Common.CONTENT_TYPE;
+import static io.cloudslang.content.azure.utils.Constants.Common.EMPTY_JSON;
+import static io.cloudslang.content.azure.utils.Constants.Common.GET;
+import static io.cloudslang.content.azure.utils.Constants.Common.POST;
+import static io.cloudslang.content.azure.utils.Constants.Common.PUT;
+import static io.cloudslang.content.azure.utils.Constants.DEFAULT_RESOURCE;
+import static io.cloudslang.content.azure.utils.Constants.RESOURCE_GROUPS_PATH;
+import static io.cloudslang.content.azure.utils.Constants.STREAMING_JOBS_PATH;
+import static io.cloudslang.content.azure.utils.Constants.STREAM_ANALYTICS_PATH;
+import static io.cloudslang.content.azure.utils.Constants.SUBSCRIPTION_PATH;
 import static io.cloudslang.content.azure.utils.Constants.StartStreamingJobConstants.START_STREAMING_JOB_PATH;
 import static io.cloudslang.content.azure.utils.Constants.StopStreamingJobConstants.STOP_STREAMING_JOB_PATH;
 import static io.cloudslang.content.azure.utils.HttpUtils.getAuthHeaders;
@@ -176,7 +186,10 @@ public class StreamingJobImpl {
             createStreamingJobRequestBody.setTags(stringToJSON(jsonParser, inputs.getTags()));
         }
         createStreamingJobRequestBody.setProperties(properties);
+
         ObjectMapper createInstanceMapper = new ObjectMapper();
+        createInstanceMapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
+
         return createInstanceMapper.writeValueAsString(createStreamingJobRequestBody);
 
     }
@@ -187,7 +200,10 @@ public class StreamingJobImpl {
         if (!isEmpty(inputs.getOutputStartTime())) {
             startStreamingJobRequestBody.setOutputStartTime(inputs.getOutputStartTime());
         }
+
         ObjectMapper createInstanceMapper = new ObjectMapper();
+        createInstanceMapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
+
         return createInstanceMapper.writeValueAsString(startStreamingJobRequestBody);
     }
 

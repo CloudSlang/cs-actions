@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.azure.services;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.azure.entities.CreateStreamingOutputJobInputs;
 import io.cloudslang.content.azure.entities.models.streamanalytics.CreateStreamingOutputJobRequestBody;
@@ -26,8 +27,22 @@ import org.json.simple.JSONArray;
 
 import java.util.Map;
 
-import static io.cloudslang.content.azure.utils.Constants.Common.*;
-import static io.cloudslang.content.azure.utils.Constants.*;
+import static io.cloudslang.content.azure.utils.Constants.Common.ANONYMOUS;
+import static io.cloudslang.content.azure.utils.Constants.Common.CONTENT_TYPE;
+import static io.cloudslang.content.azure.utils.Constants.Common.DEFAULT_DATE_FORMAT;
+import static io.cloudslang.content.azure.utils.Constants.Common.DEFAULT_TIME_FORMAT;
+import static io.cloudslang.content.azure.utils.Constants.Common.ENCODING;
+import static io.cloudslang.content.azure.utils.Constants.Common.FIELD_DELIMETER;
+import static io.cloudslang.content.azure.utils.Constants.Common.PATH_PATTERN;
+import static io.cloudslang.content.azure.utils.Constants.Common.PUT;
+import static io.cloudslang.content.azure.utils.Constants.Common.SET_TYPE;
+import static io.cloudslang.content.azure.utils.Constants.Common.TYPE;
+import static io.cloudslang.content.azure.utils.Constants.DEFAULT_RESOURCE;
+import static io.cloudslang.content.azure.utils.Constants.OUTPUTS_JOBS_PATH;
+import static io.cloudslang.content.azure.utils.Constants.RESOURCE_GROUPS_PATH;
+import static io.cloudslang.content.azure.utils.Constants.STREAMING_JOBS_PATH;
+import static io.cloudslang.content.azure.utils.Constants.STREAM_ANALYTICS_PATH;
+import static io.cloudslang.content.azure.utils.Constants.SUBSCRIPTION_PATH;
 import static io.cloudslang.content.azure.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.azure.utils.HttpUtils.setAPIVersion;
 
@@ -99,7 +114,10 @@ public class StreamingOutputJobImpl {
         serialization.setProperties(serializationprop);
         properties.setSerialization(serialization);
         createStreamingOutputJobRequestBody.setProperties(properties);
+
         ObjectMapper createInstanceMapper = new ObjectMapper();
+        createInstanceMapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
+
         return createInstanceMapper.writeValueAsString(createStreamingOutputJobRequestBody);
 
     }
