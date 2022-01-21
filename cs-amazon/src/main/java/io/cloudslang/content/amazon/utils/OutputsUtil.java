@@ -188,11 +188,11 @@ public class OutputsUtil {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         final ObjectMapper mapper = new ObjectMapper();
-
+        mapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
         mapper.writeValue(out, describeStackResources.getStackResources());
+
         final byte[] stackResources = out.toByteArray();
 
-        mapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
         return new String(stackResources);
     }
 
@@ -200,11 +200,11 @@ public class OutputsUtil {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         final ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
         mapper.writeValue(out, stack.getOutputs());
 
         final byte[] stackOutputs = out.toByteArray();
 
-        mapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
         return new String(stackOutputs);
     }
 }
