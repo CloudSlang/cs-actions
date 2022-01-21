@@ -22,7 +22,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-amazon</artifactId>
-    <version>1.0.51523</version>
+    <version>1.0.51524</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
