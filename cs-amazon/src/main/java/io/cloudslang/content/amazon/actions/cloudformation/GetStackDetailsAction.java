@@ -164,7 +164,7 @@ public class GetStackDetailsAction {
     public static String getStackOutputs(Stack stack) throws IOException {
         List<com.amazonaws.services.cloudformation.model.Output> stackOutputs = stack.getOutputs();
 
-        ObjectMapper om = new ObjectMapper();
+        final ObjectMapper om = new ObjectMapper();
         om.enable(SerializationFeature.INDENT_OUTPUT);
 
         final String outputsAsJson = om.writeValueAsString(stackOutputs);

@@ -187,7 +187,7 @@ public class OutputsUtil {
     public static String getStackResourcesToJson(DescribeStackResourcesResult describeStackResources) throws IOException {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = new ObjectMapper();
 
         mapper.writeValue(out, describeStackResources.getStackResources());
         final byte[] stackResources = out.toByteArray();
@@ -199,7 +199,7 @@ public class OutputsUtil {
     public static String getStackOutputsToJson(Stack stack) throws IOException {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(out, stack.getOutputs());
 
         final byte[] stackOutputs = out.toByteArray();
