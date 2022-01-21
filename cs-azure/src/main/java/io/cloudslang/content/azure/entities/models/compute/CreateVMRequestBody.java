@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.azure.entities.models.compute;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Map;
@@ -25,11 +26,15 @@ public class CreateVMRequestBody {
     String name;
     String type;
     String location;
-    Map<String,String> tags;
+    Map<String, String> tags;
 
     CreateVMRequestBody.Plan plan;
 
     CreateVMRequestBody.Properties Properties;
+
+    @JsonCreator
+    public CreateVMRequestBody() {
+    }
 
     public CreateVMRequestBody.Properties getProperties() {
         return Properties;
@@ -71,11 +76,11 @@ public class CreateVMRequestBody {
         this.location = location;
     }
 
-    public Map<String,String> getTags() {
+    public Map<String, String> getTags() {
         return tags;
     }
 
-    public void setTags(Map<String,String> tags) {
+    public void setTags(Map<String, String> tags) {
         this.tags = tags;
     }
 
@@ -134,6 +139,7 @@ public class CreateVMRequestBody {
         public void setNetworkProfile(Properties.networkProfile networkProfile) {
             this.networkProfile = networkProfile;
         }
+
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public static class osProfile {
             String computerName;
@@ -172,6 +178,7 @@ public class CreateVMRequestBody {
             public void setLinuxConfiguration(Properties.osProfile.linuxConfiguration linuxConfiguration) {
                 this.linuxConfiguration = linuxConfiguration;
             }
+
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)
             public static class linuxConfiguration {
                 boolean disablePasswordAuthentication;
@@ -192,6 +199,7 @@ public class CreateVMRequestBody {
                 public void setSsh(Properties.osProfile.linuxConfiguration.ssh ssh) {
                     this.ssh = ssh;
                 }
+
                 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
                 public static class ssh {
                     CreateVMRequestBody.Properties.osProfile.linuxConfiguration.ssh.publicKeys publicKeys[];
@@ -203,6 +211,7 @@ public class CreateVMRequestBody {
                     public void setPublicKeys(Properties.osProfile.linuxConfiguration.ssh.publicKeys[] publicKeys) {
                         this.publicKeys = publicKeys;
                     }
+
                     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
                     public static class publicKeys {
                         String path;
@@ -229,6 +238,7 @@ public class CreateVMRequestBody {
 
             }
         }
+
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public static class networkProfile {
             CreateVMRequestBody.Properties.networkProfile.networkInterfaces[] networkInterfaces;
@@ -240,6 +250,7 @@ public class CreateVMRequestBody {
             public void setNetworkInterfaces(Properties.networkProfile.networkInterfaces[] networkInterfaces) {
                 this.networkInterfaces = networkInterfaces;
             }
+
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)
             public static class networkInterfaces {
                 String id;
@@ -276,6 +287,7 @@ public class CreateVMRequestBody {
             }
 
         }
+
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public static class availabilitySet {
             String id;
@@ -288,6 +300,7 @@ public class CreateVMRequestBody {
                 this.id = id;
             }
         }
+
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public static class hardwareProfile {
             String vmSize;
@@ -300,6 +313,7 @@ public class CreateVMRequestBody {
                 this.vmSize = vmSize;
             }
         }
+
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public static class storageProfile {
             CreateVMRequestBody.Properties.storageProfile.imageReference imageReference;
@@ -387,6 +401,7 @@ public class CreateVMRequestBody {
                 public void setManagedDisk(Properties.storageProfile.dataDisks.managedDisk managedDisk) {
                     this.managedDisk = managedDisk;
                 }
+
                 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
                 public static class vhd {
                     String uri;
@@ -399,6 +414,7 @@ public class CreateVMRequestBody {
                         this.uri = uri;
                     }
                 }
+
                 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
                 public static class managedDisk {
                     String storageAccountType;
@@ -412,6 +428,7 @@ public class CreateVMRequestBody {
                     }
                 }
             }
+
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)
             public static class imageReference {
                 String publisher;
@@ -460,6 +477,7 @@ public class CreateVMRequestBody {
                     this.version = version;
                 }
             }
+
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)
             public static class osDisk {
                 String caching;
@@ -508,6 +526,7 @@ public class CreateVMRequestBody {
                 public void setCreateOption(String createOption) {
                     this.createOption = createOption;
                 }
+
                 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
                 public static class vhd {
                     String uri;
@@ -520,6 +539,7 @@ public class CreateVMRequestBody {
                         this.uri = uri;
                     }
                 }
+
                 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
                 public static class managedDisk {
                     String storageAccountType;
