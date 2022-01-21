@@ -165,10 +165,12 @@ public class GetStackDetailsAction {
         List<com.amazonaws.services.cloudformation.model.Output> stackOutputs = stack.getOutputs();
 
         final ObjectMapper om = new ObjectMapper();
-        om.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
         om.enable(SerializationFeature.INDENT_OUTPUT);
 
         final String outputsAsJson = om.writeValueAsString(stackOutputs);
+
+        om.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
+
         return outputsAsJson;
     }
 }
