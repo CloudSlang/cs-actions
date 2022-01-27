@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-amazon</artifactId>
-    <version>1.0.39-SNAPSHOT</version>
+    <version>1.0.47</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -95,7 +95,7 @@
         <cs-http-client.version>0.1.77</cs-http-client.version>
         <cs-commons.version>0.0.7</cs-commons.version>
         <junit.version>4.13.1</junit.version>
-        <aws-sdk.version>1.11.1000</aws-sdk.version>
+        <aws-sdk.version>1.12.147</aws-sdk.version>
         <httpcomponents.httpclient.version>4.5.5</httpcomponents.httpclient.version>
         <httpcomponents.httpcore.version>4.4.9</httpcomponents.httpcore.version>
         <!--Misc properties-->
