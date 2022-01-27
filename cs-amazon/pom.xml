@@ -32,7 +32,7 @@
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>http:/a/www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
 
@@ -96,7 +96,7 @@
         <cs-http-client.version>0.1.77</cs-http-client.version>
         <cs-commons.version>0.0.7</cs-commons.version>
         <junit.version>4.13.1</junit.version>
-        <aws-sdk.version>1.11.1000</aws-sdk.version>
+        <aws-sdk.version>1.12.148</aws-sdk.version>
         <httpcomponents.httpclient.version>4.5.5</httpcomponents.httpclient.version>
         <httpcomponents.httpcore.version>4.4.9</httpcomponents.httpcore.version>
         <!--Misc properties-->
