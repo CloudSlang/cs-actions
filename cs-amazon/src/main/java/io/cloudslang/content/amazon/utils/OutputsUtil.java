@@ -14,7 +14,6 @@
  */
 
 
-
 package io.cloudslang.content.amazon.utils;
 
 import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
@@ -22,6 +21,7 @@ import com.amazonaws.services.cloudformation.model.Stack;
 import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
 import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
 import com.amazonaws.services.servicecatalog.model.UpdateProvisionedProductResult;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
@@ -34,7 +34,22 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SIGNATURE_RESULT;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.*;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.CREATED_TIME;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PATH_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PRODUCT_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_ARN;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_CREATED_TIME;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_NAME;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_STATUS;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONED_PRODUCT_TYPE;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.PROVISIONING_ARTIFACT_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.RECORD_ERRORS;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.RECORD_ID;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.RECORD_TAGS;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.RECORD_TYPE;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.STATUS;
+import static io.cloudslang.content.amazon.entities.constants.Outputs.UPDATE_TIME;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -171,8 +186,11 @@ public class OutputsUtil {
 
     public static String getStackResourcesToJson(DescribeStackResourcesResult describeStackResources) throws IOException {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
         final ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
         mapper.writeValue(out, describeStackResources.getStackResources());
+
         final byte[] stackResources = out.toByteArray();
 
         return new String(stackResources);
@@ -180,8 +198,11 @@ public class OutputsUtil {
 
     public static String getStackOutputsToJson(Stack stack) throws IOException {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
         final ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
         mapper.writeValue(out, stack.getOutputs());
+
         final byte[] stackOutputs = out.toByteArray();
 
         return new String(stackOutputs);

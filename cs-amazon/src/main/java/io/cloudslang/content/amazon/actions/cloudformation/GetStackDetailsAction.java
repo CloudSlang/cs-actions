@@ -21,8 +21,8 @@ import com.amazonaws.services.cloudformation.model.DescribeStackResourcesRequest
 import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
 import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
 import com.amazonaws.services.cloudformation.model.Stack;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -42,8 +42,15 @@ import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CloudFormationInputs.STACK_NAME;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.CREDENTIAL;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.EXECUTION_TIMEOUT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.IDENTITY;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.REGION;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class GetStackDetailsAction {
@@ -116,13 +123,13 @@ public class GetStackDetailsAction {
             //final Stack stack =  stackBuilder.describeStacks(describeStacksRequest).getStacks().get(0);
 
             for (Stack stack : stackBuilder.describeStacks(describeStacksRequest).getStacks()) {
-                results.put(Outputs.RETURN_RESULT, stack.getStackName() + "[" + stack.getStackStatus() + "]" );
+                results.put(Outputs.RETURN_RESULT, stack.getStackName() + "[" + stack.getStackStatus() + "]");
                 results.put(Outputs.STACK_NAME_RESULT, stack.getStackName());
-                results.put(Outputs.STACK_ID_RESULT,stack.getStackId());
-                results.put(Outputs.STACK_STATUS_RESULT,stack.getStackStatus());
-                results.put(Outputs.STACK_STATUS_RESULT_REASON,stack.getStackStatusReason());
-                results.put(Outputs.STACK_CREATION_TIME_RESULT,stack.getCreationTime().toString());
-                results.put(Outputs.STACK_DESCRIPTION_RESULT,stack.getDescription());
+                results.put(Outputs.STACK_ID_RESULT, stack.getStackId());
+                results.put(Outputs.STACK_STATUS_RESULT, stack.getStackStatus());
+                results.put(Outputs.STACK_STATUS_RESULT_REASON, stack.getStackStatusReason());
+                results.put(Outputs.STACK_CREATION_TIME_RESULT, stack.getCreationTime().toString());
+                results.put(Outputs.STACK_DESCRIPTION_RESULT, stack.getDescription());
                 results.put(Outputs.STACK_OUTPUTS_RESULT, getStackOutputs(stack));
                 results.put(Outputs.STACK_RESOURCES_RESULT, getStackResources(stackName, stackBuilder));
 
@@ -132,12 +139,12 @@ public class GetStackDetailsAction {
         } catch (Exception e) {
             results.put(Outputs.RETURN_RESULT, e.getMessage());
             results.put(Outputs.STACK_ID_RESULT, StringUtils.EMPTY);
-            results.put(Outputs.STACK_STATUS_RESULT,StringUtils.EMPTY);
-            results.put(Outputs.STACK_STATUS_RESULT_REASON,StringUtils.EMPTY);
-            results.put(Outputs.STACK_CREATION_TIME_RESULT,StringUtils.EMPTY);
-            results.put(Outputs.STACK_DESCRIPTION_RESULT,StringUtils.EMPTY);
-            results.put(Outputs.STACK_OUTPUTS_RESULT,StringUtils.EMPTY);
-            results.put(Outputs.STACK_RESOURCES_RESULT,StringUtils.EMPTY);
+            results.put(Outputs.STACK_STATUS_RESULT, StringUtils.EMPTY);
+            results.put(Outputs.STACK_STATUS_RESULT_REASON, StringUtils.EMPTY);
+            results.put(Outputs.STACK_CREATION_TIME_RESULT, StringUtils.EMPTY);
+            results.put(Outputs.STACK_DESCRIPTION_RESULT, StringUtils.EMPTY);
+            results.put(Outputs.STACK_OUTPUTS_RESULT, StringUtils.EMPTY);
+            results.put(Outputs.STACK_RESOURCES_RESULT, StringUtils.EMPTY);
             results.put(Outputs.RETURN_CODE, Outputs.FAILURE_RETURN_CODE);
             results.put(Outputs.EXCEPTION, e.getStackTrace().toString());
         }
@@ -147,18 +154,22 @@ public class GetStackDetailsAction {
 
     private String getStackResources(String stackName, AmazonCloudFormation stackBuilder) throws IOException {
         final DescribeStackResourcesRequest stackResourceRequest = new DescribeStackResourcesRequest()
-            .withStackName(stackName);
+                .withStackName(stackName);
 
         DescribeStackResourcesResult describeStackResourcesResult = stackBuilder.describeStackResources(stackResourceRequest);
-        String stackResources= OutputsUtil.getStackResourcesToJson(describeStackResourcesResult);
+        String stackResources = OutputsUtil.getStackResourcesToJson(describeStackResourcesResult);
         return stackResources;
     }
 
     public static String getStackOutputs(Stack stack) throws IOException {
         List<com.amazonaws.services.cloudformation.model.Output> stackOutputs = stack.getOutputs();
+
         final ObjectMapper om = new ObjectMapper();
+        om.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
         om.enable(SerializationFeature.INDENT_OUTPUT);
+
         final String outputsAsJson = om.writeValueAsString(stackOutputs);
+
         return outputsAsJson;
     }
 }
