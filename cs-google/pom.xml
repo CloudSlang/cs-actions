@@ -87,7 +87,7 @@
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <google-api-services-compute.version>v1-rev160-1.23.0</google-api-services-compute.version>
+        <google-api-services-compute.version>v1-rev235-1.25.0</google-api-services-compute.version>
         <google-api-services-sqladmin.version>v1beta4-rev76-1.25.0</google-api-services-sqladmin.version>
         <google-api-services-storage.version>v1-rev171-1.25.0</google-api-services-storage.version>
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
