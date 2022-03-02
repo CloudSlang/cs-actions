@@ -22,8 +22,7 @@ import java.util.List;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
-import static io.cloudslang.content.httpclient.entities.Constants.EXCEPTION_INVALID_BOOLEAN;
-import static io.cloudslang.content.httpclient.entities.Constants.NTLM_AUTH;
+import static io.cloudslang.content.httpclient.entities.Constants.*;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -43,6 +42,13 @@ public class HttpValidator {
                 defaultIfEmpty(clientInputs.getKeepAlive(), FALSE);
             else if (!isValid(clientInputs.getKeepAlive()))
                 exceptions.add(String.format(EXCEPTION_INVALID_BOOLEAN, clientInputs.getKeepAlive(), KEEP_ALIVE));
+
+            try {
+                if (Integer.parseInt(clientInputs.getExecutionTimeout()) <0)
+                    exceptions.add(String.format(EXCEPTION_NEGATIVE_VALUE, clientInputs.getExecutionTimeout()));
+            } catch (Exception e) {
+                exceptions.add(String.format(EXCEPTION_INVALID_VALUE, clientInputs.getExecutionTimeout()));
+            }
 
             return exceptions;
     }
