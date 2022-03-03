@@ -26,7 +26,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public enum AmazonApi {
     EC2("ec2"),
     ELASTIC_LOAD_BALANCING("elasticloadbalancing"),
-    S3("s3");
+    S3("s3"),
+    RDS("rds");
 
     private final String value;
 
