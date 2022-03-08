@@ -196,4 +196,9 @@ public class Constants {
 
 
     }
+
+    public static class AWSRDSActions {
+        public static final String SKIP_FINAL_SNAPSHOT_CONST = "false";
+        public static final String DELETE_AUTOMATED_BACKUPS_CONST = "false";
+    }
 }

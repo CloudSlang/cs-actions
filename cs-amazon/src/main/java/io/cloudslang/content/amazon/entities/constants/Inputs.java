@@ -302,4 +302,34 @@ public class Inputs {
 
     }
 
+    public static class DBInstanceCommonInputs {
+        public static final String DB_INSTANCE_IDENTIFIER = "dbInstanceIdentifier";
+        public static final String ACCESS_KEY_ID = "accessKeyID";
+        public static final String ACCESS_KEY = "accessKey";
+
+    }
+
+    public static class DescribeDBInstanceInputs {
+        public static final String DESCRIBE_DB_INSTANCE = "Describe DB Instance";
+        public static final String AVAILABLE = "available";
+    }
+
+    public static class DeleteDBInstanceInputs {
+        public static final String DELETE_DB_INSTANCE = "Delete DB Instance";
+        public static final String SKIP_FINAL_SNAPSHOT = "skipFinalSnapshot";
+        public static final String FINAL_DB_SNAPSHOT_IDENTIFIER = "finalDBSnapshotIdentifier";
+        public static final String DELETE_AUTOMATED_BACKUPS = "deleteAutomatedBackups";
+    }
+
+
+    public static class CreateDBInstanceInputs {
+        public static final String CREATE_DB_INSTANCE = "Create DB Instance";
+        public static final String DB_ENGINE_NAME = "dbEngineName";
+        public static final String DB_ENGINE_VERSION = "dbEngineVersion";
+        public static final String DB_INSTANCE_SIZE = "dbInstanceSize";
+        public static final String DB_STORAGE_SIZE = "dbStorageSize";
+        public static final String DB_USERNAME = "dbUsername";
+        public static final String DB_PASSWORD = "dbPassword";
+        public static final String LICENSE_MODEL = "licenseModel";
+    }
 }

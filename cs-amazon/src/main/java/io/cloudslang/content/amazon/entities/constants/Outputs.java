@@ -67,4 +67,9 @@ public class Outputs {
 
     public static final String SUCCESS_RETURN_CODE = "0";
     public static final String FAILURE_RETURN_CODE = "-1";
+
+    public static final String DB_INSTANCE_STATUS = "dbInstanceStatus";
+    public static final String ENDPOINT_ADDRESS = "endpointAddress";
+    public static final String DB_INSTANCE_ARN = "dbInstanceArn";
+
 }
