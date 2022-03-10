@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -35,12 +35,10 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AWSRDSAc
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.DBInstanceCommon.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.DeleteDBInstanceAction.*;
-import static io.cloudslang.content.amazon.entities.constants.Descriptions.DescribeDBInstanceAction.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.DBInstanceCommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.DeleteDBInstanceInputs.*;
-import static io.cloudslang.content.amazon.entities.constants.Outputs.*;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapDBInstance;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
