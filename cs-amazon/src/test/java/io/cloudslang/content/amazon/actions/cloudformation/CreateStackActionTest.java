@@ -42,44 +42,44 @@ public class CreateStackActionTest {
     public static String proxyPort = null;
     public static String TEST_STACK_NAME = "CloudSlang-Test-Stack";
 
-    @Before
-    public void setUp() {
-        try {
-            String proxy = System.getenv().get("HTTP_PROXY");
-            proxyHost = new URL(proxy).getHost();
-            proxyPort = String.valueOf(new URL(proxy).getPort());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        TEST_STACK_NAME = TEST_STACK_NAME + "-" + UUID.randomUUID();
-    }
-
-    @After
-    public void tearDown() {
-        proxyHost = proxyPort = null;
-    }
-
-    @Test
-    public void execute() {
-        AWSCredentialsProvider awsCreds = new DefaultAWSCredentialsProviderChain();
-        CreateStackAction createStackAction = new CreateStackAction();
-        Map<String, String> createStackResults = createStackAction.execute(
-                awsCreds.getCredentials().getAWSAccessKeyId(),
-                awsCreds.getCredentials().getAWSSecretKey(),
-                US_EAST_1,
-                proxyHost,
-                proxyPort,
-                PROXY_USERNAME,
-                PROXY_PASSWORD,
-                CONNECT_TIMEOUT_MS,
-                EXEC_TIMEOUT_MS,
-                TEST_STACK_NAME,
-                TEMPLATE_BODY,
-                TEMPLATE_URL,
-                TEMPLATE_PARAMETERS,
-                TEMPLATE_CAPABILITIES
-                );
-        assertNotNull(createStackResults);
-        assertNotNull(createStackResults.get(RETURN_RESULT));
-    }
+//    @Before
+//    public void setUp() {
+//        try {
+//            String proxy = System.getenv().get("HTTP_PROXY");
+//            proxyHost = new URL(proxy).getHost();
+//            proxyPort = String.valueOf(new URL(proxy).getPort());
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+//        TEST_STACK_NAME = TEST_STACK_NAME + "-" + UUID.randomUUID();
+//    }
+//
+//    @After
+//    public void tearDown() {
+//        proxyHost = proxyPort = null;
+//    }
+//
+//    @Test
+//    public void execute() {
+//        AWSCredentialsProvider awsCreds = new DefaultAWSCredentialsProviderChain();
+//        CreateStackAction createStackAction = new CreateStackAction();
+//        Map<String, String> createStackResults = createStackAction.execute(
+//                awsCreds.getCredentials().getAWSAccessKeyId(),
+//                awsCreds.getCredentials().getAWSSecretKey(),
+//                US_EAST_1,
+//                proxyHost,
+//                proxyPort,
+//                PROXY_USERNAME,
+//                PROXY_PASSWORD,
+//                CONNECT_TIMEOUT_MS,
+//                EXEC_TIMEOUT_MS,
+//                TEST_STACK_NAME,
+//                TEMPLATE_BODY,
+//                TEMPLATE_URL,
+//                TEMPLATE_PARAMETERS,
+//                TEMPLATE_CAPABILITIES
+//                );
+//        assertNotNull(createStackResults);
+//        assertNotNull(createStackResults.get(RETURN_RESULT));
+//    }
 }
