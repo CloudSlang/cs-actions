@@ -81,7 +81,7 @@ public class GetStackDetailsActionTest {
 
         assertNotNull(getStackDetailsResult);
         assertNotNull(getStackDetailsResult.get(RETURN_RESULT));
-        assertNotNull(getStackDetailsResult.get(STACK_NAME_RESULT));
+//        assertNotNull(getStackDetailsResult.get(STACK_NAME_RESULT));
         assertNotNull(getStackDetailsResult.get(STACK_ID_RESULT));
         assertNotNull(getStackDetailsResult.get(STACK_OUTPUTS_RESULT));
         assertNotNull(getStackDetailsResult.get(STACK_RESOURCES_RESULT));
