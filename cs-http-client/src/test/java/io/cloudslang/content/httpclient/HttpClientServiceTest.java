@@ -98,13 +98,14 @@ public class HttpClientServiceTest {
         PowerMockito.when(httpComponents.getCookieStore()).thenReturn(cookieStore);
         PowerMockito.when(httpComponents.getConnManager()).thenReturn(connManager);
 
+        PowerMockito.when(httpClientInputs.getExecutionTimeout()).thenReturn("0");
         PowerMockito.when(httpClientInputs.getResponseCharacterSet()).thenReturn(responseCharacterSet);
         PowerMockito.when(httpClientInputs.getDestinationFile()).thenReturn(destinationFile);
         PowerMockito.when(httpClientInputs.getCookieStoreSessionObject()).thenReturn(serializableSessionObject);
     }
 
     @Test
-    public void executeKeepAliveTrue() {
+    public void executeKeepAliveTrue() throws Exception {
         PowerMockito.when(httpClientInputs.getKeepAlive()).thenReturn("true");
         Map<String, String> result1 = httpClientService.execute(httpClientInputs);
         assertEquals(result, result1);
@@ -112,7 +113,7 @@ public class HttpClientServiceTest {
     }
 
     @Test
-    public void executeKeepAliveFalse() throws IOException {
+    public void executeKeepAliveFalse() throws Exception {
         PowerMockito.when(httpClientInputs.getKeepAlive()).thenReturn("false");
         Map<String, String> result1 = httpClientService.execute(httpClientInputs);
         assertEquals(result, result1);

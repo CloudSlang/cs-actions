@@ -33,6 +33,7 @@ import io.cloudslang.content.httpclient.consume.HeadersConsumer;
 import io.cloudslang.content.httpclient.consume.HttpResponseConsumer;
 import io.cloudslang.content.httpclient.consume.StatusConsumer;
 import io.cloudslang.content.httpclient.execute.HttpClientExecutor;
+import io.cloudslang.content.httpclient.utils.ExecutionTimeout;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -58,6 +59,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -94,28 +96,53 @@ public class HttpClientService {
     private HeadersConsumer headersConsumer;
     private StatusConsumer statusConsumer;
 
-    public Map<String, String> execute(HttpClientInputs httpClientInputs) {
+    public Map<String, String> execute(HttpClientInputs httpClientInputs) throws Exception {
         initSessionsObjects(httpClientInputs);
         HttpComponents httpComponents = buildHttpComponents(httpClientInputs);
+        final Map<String, String>[] result = new Map[]{new HashMap<>()};
 
-        CloseableHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
-                httpComponents.getHttpRequestBase(),
-                httpComponents.getHttpClientContext());
+        if (httpClientInputs.getExecutionTimeout().equals("0")) {
+                    CloseableHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
+                            httpComponents.getHttpRequestBase(),
+                            httpComponents.getHttpClientContext());
 
-        Map<String, String> result = parseResponse(httpResponse,
-                httpClientInputs.getResponseCharacterSet(),
-                httpClientInputs.getDestinationFile(),
-                httpComponents.getUri(),
-                httpComponents.getHttpClientContext(),
-                httpComponents.getCookieStore(),
-                httpClientInputs.getCookieStoreSessionObject());
+                     result[0] = parseResponse(httpResponse,
+                            httpClientInputs.getResponseCharacterSet(),
+                            httpClientInputs.getDestinationFile(),
+                            httpComponents.getUri(),
+                            httpComponents.getHttpClientContext(),
+                            httpComponents.getCookieStore(),
+                            httpClientInputs.getCookieStoreSessionObject());
 
-        checkKeepAlive(httpComponents.getHttpRequestBase(),
-                httpComponents.getConnManager(),
-                httpClientInputs.getKeepAlive(),
-                httpResponse);
+                    checkKeepAlive(httpComponents.getHttpRequestBase(),
+                            httpComponents.getConnManager(),
+                            httpClientInputs.getKeepAlive(),
+                            httpResponse);
+        } else {
+            ExecutionTimeout.runWithTimeout(new Runnable() {
+                @Override
+                public void run() {
+                    CloseableHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
+                            httpComponents.getHttpRequestBase(),
+                            httpComponents.getHttpClientContext());
 
-        return result;
+                     result[0] = parseResponse(httpResponse,
+                            httpClientInputs.getResponseCharacterSet(),
+                            httpClientInputs.getDestinationFile(),
+                            httpComponents.getUri(),
+                            httpComponents.getHttpClientContext(),
+                            httpComponents.getCookieStore(),
+                            httpClientInputs.getCookieStoreSessionObject());
+
+                    checkKeepAlive(httpComponents.getHttpRequestBase(),
+                            httpComponents.getConnManager(),
+                            httpClientInputs.getKeepAlive(),
+                            httpResponse);
+                }
+            }, Integer.parseInt(httpClientInputs.getExecutionTimeout()), TimeUnit.SECONDS);
+        }
+
+        return result[0];
     }
 
     private void initSessionsObjects(HttpClientInputs httpClientInputs) {

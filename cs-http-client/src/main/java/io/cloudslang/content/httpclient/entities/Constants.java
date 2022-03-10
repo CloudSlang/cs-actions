@@ -30,4 +30,6 @@ public class Constants {
     public static final String RESPONSE_CHARACTER_SET = "ISO-8859-1";
     public static final String NEW_LINE = "\n";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
+    public static final String EXCEPTION_INVALID_VALUE = "%s is not a valid value for executionTimeout. The value must be a positive number.";
+    public static final String EXCEPTION_NEGATIVE_VALUE = "%s is not a valid timeout value. The value must be bigger or equal to 0.";
 }

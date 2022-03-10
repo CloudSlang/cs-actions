@@ -30,10 +30,13 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.utils.StringUtilities;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -288,6 +291,7 @@ public class HttpClientAction {
             @Param(HttpClientInputs.KEYSTORE_PASSWORD) String keystorePassword,
             @Param(HttpClientInputs.CONNECT_TIMEOUT) String connectTimeout,
             @Param(HttpClientInputs.SOCKET_TIMEOUT) String socketTimeout,
+            @Param(HttpClientInputs.EXECUTION_TIMEOUT) String executionTimeout,
             @Param(HttpClientInputs.USE_COOKIES) String useCookies,
             @Param(HttpClientInputs.KEEP_ALIVE) String keepAlive,
             @Param(HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoute,
@@ -336,6 +340,13 @@ public class HttpClientAction {
         httpClientInputs.setKeystorePassword(defaultIfEmpty(keystorePassword, CHANGEIT));
         httpClientInputs.setConnectTimeout(connectTimeout);
         httpClientInputs.setSocketTimeout(socketTimeout);
+
+        if (StringUtils.isNotEmpty(executionTimeout)) {
+            httpClientInputs.setExecutionTimeout(executionTimeout);
+        } else {
+            httpClientInputs.setExecutionTimeout("0");
+        }
+
         httpClientInputs.setUseCookies(useCookies);
         httpClientInputs.setKeepAlive(keepAlive);
         httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoute);

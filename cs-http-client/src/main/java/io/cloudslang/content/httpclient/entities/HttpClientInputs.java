@@ -59,6 +59,7 @@ public class HttpClientInputs {
     public static final String KEYSTORE_PASSWORD = "keystorePassword";
     public static final String CONNECT_TIMEOUT = "connectTimeout";
     public static final String SOCKET_TIMEOUT = "socketTimeout";
+    public static final String EXECUTION_TIMEOUT = "executionTimeout";
     public static final String USE_COOKIES = "useCookies";
     public static final String KEEP_ALIVE = "keepAlive";
     public static final String CONNECTIONS_MAX_PER_ROUTE = "connectionsMaxPerRoute";
@@ -96,6 +97,7 @@ public class HttpClientInputs {
     private String keystorePassword;
     private String connectTimeout;
     private String socketTimeout;
+    private String executionTimeout;
     private String useCookies;
     private String keepAlive;
     private String connectionsMaxPerRoute;
@@ -300,6 +302,14 @@ public class HttpClientInputs {
 
     public void setSocketTimeout(String socketTimeout) {
         this.socketTimeout = socketTimeout;
+    }
+
+    public String getExecutionTimeout() {
+        return executionTimeout;
+    }
+
+    public void setExecutionTimeout(String executionTimeout) {
+        this.executionTimeout = executionTimeout;
     }
 
     public String getUseCookies() {
