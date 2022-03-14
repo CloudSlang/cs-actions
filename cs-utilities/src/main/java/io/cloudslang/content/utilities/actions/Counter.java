@@ -27,7 +27,11 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.utilities.util.Constants.CounterConstants.*;
+
+
 
 import static io.cloudslang.content.utilities.util.Descriptions.Counter.*;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -37,7 +41,7 @@ public class Counter {
 
     @Action(name = COUNTER_OPERATION_NAME, description = COUNTER_DESC,
             outputs = {
-                    @Output(value = RESULT_STRING, description = RESULT_STRING_DESC),
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RESULT, description = RESULT_DESC)},
             responses = {
                     @Response(text = HASMORE, field = RESULT, value = HASMORE, matchType = MatchType.COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),

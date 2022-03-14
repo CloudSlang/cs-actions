@@ -15,11 +15,15 @@
 package io.cloudslang.content.utilities.entities;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.utilities.exceptions.CounterImplException;
 import io.cloudslang.content.utilities.util.CounterProcessor;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.utilities.util.Constants.CounterConstants.INDEX;
+import static io.cloudslang.content.utilities.util.Constants.CounterConstants.RESULT;
+import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_RESULT;
 
 public class CounterImpl {
     public static Map<String, String> counter(String to, String from, String by, boolean reset, GlobalSessionObject<Map<String, Object>> globalSessionObject) {
@@ -31,22 +35,22 @@ public class CounterImpl {
         try {
             counter.init(to, from, by, reset, globalSessionObject);
             if (counter.hasNext()) {
-                returnResult.put("index", Integer.toString(counter.getIndex()));
-                returnResult.put("resultString", counter.getNext(globalSessionObject));
+                returnResult.put(INDEX, Integer.toString(counter.getIndex()));
+                returnResult.put(RETURN_RESULT, counter.getNext(globalSessionObject));
                 if (counter.hasNext()) {
-                    returnResult.put("result", "has more");
-                    returnResult.put("returnCode", "0");
+                    returnResult.put(RESULT, "has more");
+                    returnResult.put(RETURN_CODE, "0");
                 } else {
-                    returnResult.put("resultString", "");
-                    returnResult.put("returnCode", "1");
+                    returnResult.put(RETURN_RESULT, "");
+                    returnResult.put(RETURN_CODE, "1");
                     counter.setStepSessionEnd(globalSessionObject);
-                    returnResult.put("result", "no more");
+                    returnResult.put(RESULT, "no more");
                 }
             }
-        } catch (CounterImplException e) {
-            returnResult.put("result", "failed");
-            returnResult.put("resultString", e.getMessage());
-            returnResult.put("returnCode", "-1");
+        } catch (Exception e) {
+            returnResult.put(RESULT, "failed");
+            returnResult.put(RETURN_RESULT, e.getMessage());
+            returnResult.put(RETURN_CODE, "-1");
         }
         return returnResult;
     }

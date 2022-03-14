@@ -48,7 +48,7 @@ public class Descriptions {
 
     }
 
-    public static class RandomPasswordGeneratorDescriptions{
+    public static class RandomPasswordGeneratorDescriptions {
         public static final String RANDOM_PASSWORD_GENERATOR = "Random Password Generator";
         public static final String SUCCESS_DESC = "The password was generated successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to generate the password.";
@@ -66,7 +66,7 @@ public class Descriptions {
         public static final String FORBIDDEN_CHARACTERS_DESC = "A list of characters that the password should not contain. Example: []{}.";
     }
 
-    public static class StringEqualsDescriptions{
+    public static class StringEqualsDescriptions {
         public static final String FIRST_STRING_DESC = "First string to compare.";
         public static final String SECOND_STRING_DESC = "Second string to compare.";
         public static final String IGNORE_CASE_DESC = "If set to 'true', then the comparison ignores case considerations. The two strings are\n" +
@@ -75,13 +75,14 @@ public class Descriptions {
                 "match exactly to be considered equal";
     }
 
-    public static class IsTrueDescriptions{
+    public static class IsTrueDescriptions {
         public static final String BOOL_VALUE_DESC = "Boolean value to check.";
     }
 
-    public static class Counter{
+    public static class Counter {
         public static final String FAILURE_DESC = "There was an error while executing the request.";
         public static final String SUCCESS_DESC = "The request was successfully executed.";
+        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
         public static final String COUNTER_DESC = "Counts from one number to another number.";
         public static final String RESULT_STRING_DESC = "The primary result is resultString, Result can also be used. result (All lower case) should not be used as it is the response code.";
         public static final String RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
@@ -89,6 +90,7 @@ public class Descriptions {
         public static final String TO_DESC = "The number to count to.";
         public static final String RESET_DESC = "If true, then the counter will restart counting from the beginning.";
         public static final String INCREMENT_BY_DESC = "The number to increment by while counting. If unspecified this is 1. If you wanted to count 2,4,6,8 this would be 2.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
 
 
     }

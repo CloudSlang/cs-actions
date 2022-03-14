@@ -38,7 +38,7 @@ public class CounterProcessor {
 
     }
 
-    public void init(String to, String from, String by, boolean reset, GlobalSessionObject<Map<String, Object>> session) throws CounterImplException {
+    public void init(String to, String from, String by, boolean reset, GlobalSessionObject<Map<String, Object>> session) throws Exception {
         /*
          * If the session resource is not ini
          */
