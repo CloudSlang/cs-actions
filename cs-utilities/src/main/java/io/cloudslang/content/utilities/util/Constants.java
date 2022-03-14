@@ -40,4 +40,22 @@ public final class Constants {
     static final String EXCEPTION_NUMBER_FORMAT = "Wrong input number provided.";
 
     public static final String DEFAULT_IGNORE_CASE = "false";
+
+    public static class CounterConstants{
+        public static final String RESULT_STRING="resultString";
+        public static final String INCREMENT_BY_DEFAULT_VALUE="1";
+        public static final String RESULT="result";
+        public static final String HASMORE="has more";
+        public static final String NOMORE="no more";
+        public static final String FAILURE="failure";
+        public static final String EXCEPTION="exception";
+        public static final String COUNTER_OPERATION_NAME="Counter";
+        public static final String TO="to";
+        public static final String FROM="from";
+        public static final String INCREMENT_BY="incrementBy";
+        public static final String BOOLEAN_FALSE = "false";
+        public static final String RESET="reset";
+
+
+    }
 }
