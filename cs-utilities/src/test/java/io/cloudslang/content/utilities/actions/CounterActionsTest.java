@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -17,7 +17,6 @@ package io.cloudslang.content.utilities.actions;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import java.util.Map;
 
-import io.cloudslang.content.utilities.services.osdetector.OsDetectorHelperService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
