@@ -163,7 +163,7 @@
         <dependency>
             <groupId>com.hp.oo.contentcommons</groupId>
             <artifactId>ssh-commons</artifactId>
-            <version>1.6.46</version>
+            <version>1.6.47</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.hp.oo.sdk</groupId>
