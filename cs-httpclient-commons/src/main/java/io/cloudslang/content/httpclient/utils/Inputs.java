@@ -5,7 +5,7 @@ public class Inputs {
     public static class HTTPInputs {
 
         //FROM WIKI
-        //==================================================================================================================
+        //==============================================================================================================
         public static final String HOST = "host";
         public static final String PROTOCOL = "protocol";
 
@@ -26,7 +26,7 @@ public class Inputs {
         public static final String KEEP_ALIVE = "keepAlive";
         public static final String CONNECTIONS_MAX_PER_ROUTE = "connectionsMaxPerRoute";
         public static final String CONNECTIONS_MAX_TOTAL = "connectionsMaxTotal";
-        //==================================================================================================================
+        //==============================================================================================================
 
         public static final String URL = "url";
         public static final String METHOD = "method";
@@ -44,9 +44,6 @@ public class Inputs {
         public static final String PREEMPTIVE_AUTH = "preemptiveAuth";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
-        public static final String KERBEROS_CONFIG_FILE = "kerberosConfFile";
-        public static final String KERBEROS_LOGIN_CONFIG_FILE = "kerberosLoginConfFile";
-        public static final String KERBEROS_SKIP_PORT_CHECK = "kerberosSkipPortForLookup";
         public static final String SOCKET_TIMEOUT = "socketTimeout";
         public static final String USE_COOKIES = "useCookies";
         public static final String HEADERS = "headers";
