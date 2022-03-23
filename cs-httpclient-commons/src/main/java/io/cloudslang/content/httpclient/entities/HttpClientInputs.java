@@ -63,7 +63,7 @@ public class HttpClientInputs {
     private final String chunkedRequestEntity;
     private final String method;
     private final String tlsVersion;
-    private final String allowedCyphers;
+    private final String allowedCiphers;
 
     private final SerializableSessionObject cookieStoreSessionObject;
     private final GlobalSessionObject<?> connectionPoolSessionObject;
@@ -79,7 +79,7 @@ public class HttpClientInputs {
             "followRedirects", "queryParams", "queryParamsAreURLEncoded", "formParams", "formParamsAreURLEncoded",
             "sourceFile", "body", "contentType", "requestCharacterSet", "multipartBodies", "multipartFiles",
             "multipartValuesAreURLEncoded", "multipartBodiesContentType", "multipartFilesContentType",
-            "chunkedRequestEntity", "method", "tlsVersion", "allowedCyphers", "cookieStoreSessionObject",
+            "chunkedRequestEntity", "method", "tlsVersion", "allowedCiphers", "cookieStoreSessionObject",
             "connectionPoolSessionObject", "queryParamsAreFormEncoded"})
     public HttpClientInputs(String url, String authType, String preemptiveAuth, String username, String password,
                             String proxyHost, String proxyPort, String proxyUsername, String proxyPassword,
@@ -92,7 +92,7 @@ public class HttpClientInputs {
                             String requestCharacterSet, String multipartBodies, String multipartFiles,
                             String multipartValuesAreURLEncoded, String multipartBodiesContentType,
                             String multipartFilesContentType, String chunkedRequestEntity, String method,
-                            String tlsVersion, String allowedCyphers, SerializableSessionObject cookieStoreSessionObject,
+                            String tlsVersion, String allowedCiphers, SerializableSessionObject cookieStoreSessionObject,
                             GlobalSessionObject<?> connectionPoolSessionObject, String queryParamsAreFormEncoded) {
         this.url = url;
         this.authType = authType;
@@ -136,15 +136,15 @@ public class HttpClientInputs {
         this.chunkedRequestEntity = chunkedRequestEntity;
         this.method = method;
         this.tlsVersion = tlsVersion;
-        this.allowedCyphers = allowedCyphers;
+        this.allowedCiphers = allowedCiphers;
         this.cookieStoreSessionObject = cookieStoreSessionObject;
         this.connectionPoolSessionObject = connectionPoolSessionObject;
         this.queryParamsAreFormEncoded = queryParamsAreFormEncoded;
     }
 
     @NotNull
-    public String getAllowedCyphers() {
-        return allowedCyphers;
+    public String getAllowedCiphers() {
+        return allowedCiphers;
     }
 
     @NotNull
@@ -415,7 +415,7 @@ public class HttpClientInputs {
         private String chunkedRequestEntity = EMPTY;
         private String method = EMPTY;
         private String tlsVersion = EMPTY;
-        private String allowedCyphers = EMPTY;
+        private String allowedCiphers = EMPTY;
 
         private SerializableSessionObject cookieStoreSessionObject;
         private GlobalSessionObject<?> connectionPoolSessionObject;
@@ -666,8 +666,8 @@ public class HttpClientInputs {
         }
 
         @NotNull
-        public HttpClientInputsBuilder allowedCyphers(@NotNull final String allowedCyphers){
-            this.allowedCyphers = allowedCyphers;
+        public HttpClientInputsBuilder allowedCiphers(@NotNull final String allowedCiphers){
+            this.allowedCiphers = allowedCiphers;
             return this;
         }
 
@@ -696,7 +696,7 @@ public class HttpClientInputs {
                     connectionsMaxTotal, headers, responseCharacterSet, destinationFile, followRedirects, queryParams,
                     queryParamsAreURLEncoded, formParams, formParamsAreURLEncoded, sourceFile, body, contentType,
                     requestCharacterSet, multipartBodies, multipartFiles, multipartValuesAreURLEncoded, multipartBodiesContentType,
-                    multipartFilesContentType, chunkedRequestEntity, method, tlsVersion, allowedCyphers, cookieStoreSessionObject,
+                    multipartFilesContentType, chunkedRequestEntity, method, tlsVersion, allowedCiphers, cookieStoreSessionObject,
                     connectionPoolSessionObject, queryParamsAreFormEncoded);
         }
     }
