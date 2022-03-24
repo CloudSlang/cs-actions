@@ -33,6 +33,7 @@ public class Inputs {
         public static final String FOLLOW_REDIRECTS = "followRedirects";
         public static final String QUERY_PARAMS = "queryParams";
         public static final String QUERY_PARAMS_ARE_URLENCODED = "queryParamsAreURLEncoded";
+
         public static final String QUERY_PARAMS_ARE_FORM_ENCODED = "queryParamsAreFormEncoded";
         public static final String FORM_PARAMS = "formParams";
         public static final String FORM_PARAMS_ARE_URLENCODED = "formParamsAreURLEncoded";
@@ -44,6 +45,7 @@ public class Inputs {
         public static final String PREEMPTIVE_AUTH = "preemptiveAuth";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
+
         public static final String SOCKET_TIMEOUT = "socketTimeout";
         public static final String USE_COOKIES = "useCookies";
         public static final String HEADERS = "headers";
@@ -53,6 +55,7 @@ public class Inputs {
         public static final String MULTIPART_BODIES_CONTENT_TYPE = "multipartBodiesContentType";
         public static final String MULTIPART_FILES = "multipartFiles";
         public static final String MULTIPART_FILES_CONTENT_TYPE = "multipartFilesContentType";
+
         public static final String MULTIPART_VALUES_ARE_URLENCODED = "multipartValuesAreURLEncoded";
         public static final String CHUNKED_REQUEST_ENTITY = "chunkedRequestEntity";
         public final static String SESSION_CONNECTION_POOL = "httpClientPoolingConnectionManager";
