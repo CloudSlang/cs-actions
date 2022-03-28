@@ -222,5 +222,8 @@ public class Descriptions {
         public static final String RETURN_CODE_DESC = "The return_code of the operation: 0 for success, -1 for failure.";
         public static final String EXCEPTION_DESC = "In case of success response, this result is empty. In case of " +
                 "failure response, this result contains the java stack trace of the runtime exception.";
+
+        //Descriptions on messages for users
+        public static final String INVALID_STRING_ARRAY_INPUT_DESC = "The value provided is an invalid string array.";
     }
 }

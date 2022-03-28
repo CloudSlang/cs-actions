@@ -20,12 +20,14 @@ public class Constants {
     public static final String ALLOW_ALL = "allow_all";
     public static final String UTF_8 = "UTF-8";
     public static final String COMMA = ",";
+    public static final String MINUS_1 = "-1";
     public static final String NTLM_AUTH = "NTLM";
     public static final String BASIC_AUTH = "Basic";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String CHANGEIT = "changeit";
     public static final String TLSv12 = "TLSv1.2";
     public static final String NEW_LINE = "\n";
+    public static final String HTTP_CLIENT_GET_ACTION = "HTTP Client Get";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_VALUE = "%s is not a valid value for executionTimeout. The value must be a positive number.";
     public static final String EXCEPTION_NEGATIVE_VALUE = "%s is not a valid timeout value. The value must be bigger or equal to 0.";

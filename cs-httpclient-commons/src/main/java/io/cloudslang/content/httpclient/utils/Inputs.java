@@ -2,7 +2,7 @@ package io.cloudslang.content.httpclient.utils;
 
 public class Inputs {
 
-    public static class HTTPInputs {
+    public class HTTPInputs {
 
         //FROM WIKI
         //==============================================================================================================
