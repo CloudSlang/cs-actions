@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class HttpClientInputs {
-    private final String url;
+    private final String host;
     private final String authType;
     private final String preemptiveAuth;
     private final String username;
@@ -72,7 +72,7 @@ public class HttpClientInputs {
     @NotNull
     public static HttpClientInputsBuilder builder(){return new HttpClientInputsBuilder();}
 
-    @java.beans.ConstructorProperties({"url","authType","preemptiveAuth","username","password","proxyHost","proxyPort",
+    @java.beans.ConstructorProperties({"host","authType","preemptiveAuth","username","password","proxyHost","proxyPort",
             "proxyUsername", "proxyPassword", "trustAllRoots","x509HostnameVerifier", "trustKeystore", "trustPassword",
             "keystore","keystorePassword","connectTimeout","socketTimeout","executionTimeout","useCookies","keepAlive",
             "connectionsMaxPerRoute", "connectionsMaxTotal", "headers", "responseCharacterSet", "destinationFile",
@@ -81,7 +81,7 @@ public class HttpClientInputs {
             "multipartValuesAreURLEncoded", "multipartBodiesContentType", "multipartFilesContentType",
             "chunkedRequestEntity", "method", "tlsVersion", "allowedCiphers", "cookieStoreSessionObject",
             "connectionPoolSessionObject", "queryParamsAreFormEncoded"})
-    public HttpClientInputs(String url, String authType, String preemptiveAuth, String username, String password,
+    public HttpClientInputs(String host, String authType, String preemptiveAuth, String username, String password,
                             String proxyHost, String proxyPort, String proxyUsername, String proxyPassword,
                             String trustAllRoots, String x509HostnameVerifier, String trustKeystore, String trustPassword,
                             String keystore, String keystorePassword, String connectTimeout, String socketTimeout,
@@ -94,7 +94,7 @@ public class HttpClientInputs {
                             String multipartFilesContentType, String chunkedRequestEntity, String method,
                             String tlsVersion, String allowedCiphers, SerializableSessionObject cookieStoreSessionObject,
                             GlobalSessionObject<?> connectionPoolSessionObject, String queryParamsAreFormEncoded) {
-        this.url = url;
+        this.host = host;
         this.authType = authType;
         this.preemptiveAuth = preemptiveAuth;
         this.username = username;
@@ -148,8 +148,8 @@ public class HttpClientInputs {
     }
 
     @NotNull
-    public String getUrl() {
-        return url;
+    public String getHost() {
+        return host;
     }
 
     @NotNull
@@ -373,7 +373,7 @@ public class HttpClientInputs {
     }
 
     public static class HttpClientInputsBuilder {
-        private String url = EMPTY;
+        private String host = EMPTY;
         private String authType = EMPTY;
         private String preemptiveAuth = EMPTY;
         private String username = EMPTY;
@@ -425,8 +425,8 @@ public class HttpClientInputs {
         }
 
         @NotNull
-        public HttpClientInputsBuilder url(@NotNull final String url){
-            this.url = url;
+        public HttpClientInputsBuilder host(@NotNull final String host){
+            this.host = host;
             return this;
         }
 
@@ -690,7 +690,7 @@ public class HttpClientInputs {
         }
 
         public HttpClientInputs build(){
-            return new HttpClientInputs(url, authType, preemptiveAuth, username, password, proxyHost, proxyPort, proxyUsername,
+            return new HttpClientInputs(host, authType, preemptiveAuth, username, password, proxyHost, proxyPort, proxyUsername,
                     proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, keystore, keystorePassword,
                     connectTimeout, socketTimeout, executionTimeout, useCookies, keepAlive, connectionsMaxPerRoute,
                     connectionsMaxTotal, headers, responseCharacterSet, destinationFile, followRedirects, queryParams,
