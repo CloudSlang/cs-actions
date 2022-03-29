@@ -17,12 +17,20 @@ package io.cloudslang.content.httpclient.utils;
 public class Constants {
 
     public static final String STRICT = "strict";
+
+    public static final String BASIC = "Basic";
+    public static final String DIGEST = "Digest";
+    public static final String NTLM = "NTLM";
+    public static final String SPNEGO = "Negotiate";
+    public static final String CREDSSP = "CredSSP";
+    public static final String ANY = "ANY";
+    public static final String ANONYMOUS = "ANONYMOUS";
+
+
     public static final String ALLOW_ALL = "allow_all";
     public static final String UTF_8 = "UTF-8";
     public static final String COMMA = ",";
     public static final String MINUS_1 = "-1";
-    public static final String NTLM_AUTH = "NTLM";
-    public static final String BASIC_AUTH = "Basic";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String CHANGEIT = "changeit";
     public static final String TLSv12 = "TLSv1.2";

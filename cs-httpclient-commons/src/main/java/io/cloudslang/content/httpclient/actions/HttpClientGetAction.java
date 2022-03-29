@@ -142,7 +142,7 @@ public class HttpClientGetAction {
 
         try {
             Map<String, String> result = httpClientGet(HttpClientInputs.builder()
-                    .url(host)
+                    .host(host)
                     //.protocol(protocol)
 
                     .authType(authType)
