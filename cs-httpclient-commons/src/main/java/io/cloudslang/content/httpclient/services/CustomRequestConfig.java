@@ -2,12 +2,13 @@ package io.cloudslang.content.httpclient.services;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.client5.http.cookie.StandardCookieSpec;
 import org.apache.hc.core5.http.HttpHost;
-
+import org.apache.hc.core5.util.Timeout;
+import java.util.Arrays;
 import java.util.Collections;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static io.cloudslang.content.httpclient.utils.Constants.ANONYMOUS;
+import static io.cloudslang.content.httpclient.utils.Constants.ANY;
 import static org.apache.hc.client5.http.auth.StandardAuthScheme.*;
 
 public class CustomRequestConfig {
@@ -20,34 +21,34 @@ public class CustomRequestConfig {
                 return NTLM;
             case "DIGEST":
                 return DIGEST;
+            case "ANY":
+                return ANY;
             case "ANONYMOUS":
-                return EMPTY;
+                return ANONYMOUS;
             default:
                 throw new IllegalStateException("Unexpected value: " + authType.toUpperCase());
         }
     }
 
-    public static RequestConfig getDefaultRequestConfig(HttpClientInputs httpClientInputs) {
+    public static RequestConfig getDefaultRequestConfig(HttpClientInputs httpClientInputs){
+        RequestConfig.Builder requestConfigBuilder;
         String authType = getAuthType(httpClientInputs.getAuthType());
-        RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()
-                .setCookieSpec(StandardCookieSpec.STRICT)
-                .setExpectContinueEnabled(true);
-//                .setConnectTimeout()
-//                .setRedirectsEnabled()
-//                .setResponseTimeout()
-//                .setAuthenticationEnabled()
 
+        requestConfigBuilder = RequestConfig.custom()
+                .setConnectTimeout(Timeout.ofSeconds(Long.parseLong((httpClientInputs.getConnectTimeout()))))
+                .setResponseTimeout(Timeout.ofSeconds(Long.parseLong((httpClientInputs.getResponseTimeout()))))
+                .setRedirectsEnabled(Boolean.parseBoolean(httpClientInputs.getFollowRedirects()));
 
+        if (!authType.equalsIgnoreCase(ANONYMOUS))
+            if (authType.equalsIgnoreCase(ANY))
+                requestConfigBuilder.setTargetPreferredAuthSchemes(Arrays.asList(BASIC, NTLM, DIGEST));
+            else
+                requestConfigBuilder.setTargetPreferredAuthSchemes(Collections.singletonList(authType));
 
-        if (!authType.isEmpty()) {
-            requestConfigBuilder.setTargetPreferredAuthSchemes(Collections.singletonList(authType));
-        }
         if (!httpClientInputs.getProxyHost().isEmpty()) {
             requestConfigBuilder.setProxyPreferredAuthSchemes(Collections.singletonList(BASIC));
-            requestConfigBuilder.setProxy(new HttpHost("myproxy", 8080));
+            requestConfigBuilder.setProxy(new HttpHost(httpClientInputs.getProxyHost(), httpClientInputs.getProxyPort()));
         }
-
-
         return requestConfigBuilder.build();
     }
 }

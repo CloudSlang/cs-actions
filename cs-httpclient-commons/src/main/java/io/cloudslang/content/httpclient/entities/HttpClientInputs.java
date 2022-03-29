@@ -233,7 +233,7 @@ public class HttpClientInputs {
     }
 
     @NotNull
-    public String getresponseTimeout() {
+    public String getResponseTimeout() {
         return responseTimeout;
     }
 
