@@ -89,9 +89,6 @@ public class CustomConnectionManager {
 
             connManager.setMaxTotal(Integer.parseInt(httpClientInputs.getConnectionsMaxTotal()));
             connManager.setDefaultMaxPerRoute(Integer.parseInt(httpClientInputs.getConnectionsMaxPerRoute()));
-            connManager.setMaxPerRoute(new HttpRoute(new HttpHost(httpClientInputs.getHost(), uri.getPort())),
-                    Integer.parseInt(httpClientInputs.getConnectionsMaxPerRoute()));
-
             return connManager;
         }
         return null;

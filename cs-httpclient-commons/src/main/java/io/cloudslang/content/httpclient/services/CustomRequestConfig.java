@@ -3,6 +3,7 @@ package io.cloudslang.content.httpclient.services;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,8 +16,6 @@ public class CustomRequestConfig {
 
     private static String getAuthType(String authType) {
         switch (authType.toUpperCase()) {
-            case "BASIC":
-                return BASIC;
             case "NTLM":
                 return NTLM;
             case "DIGEST":
@@ -26,11 +25,11 @@ public class CustomRequestConfig {
             case "ANONYMOUS":
                 return ANONYMOUS;
             default:
-                throw new IllegalStateException("Unexpected value: " + authType.toUpperCase());
+                return BASIC;
         }
     }
 
-    public static RequestConfig getDefaultRequestConfig(HttpClientInputs httpClientInputs){
+    public static RequestConfig getDefaultRequestConfig(HttpClientInputs httpClientInputs) {
         RequestConfig.Builder requestConfigBuilder;
         String authType = getAuthType(httpClientInputs.getAuthType());
 
@@ -38,6 +37,9 @@ public class CustomRequestConfig {
                 .setConnectTimeout(Timeout.ofSeconds(Long.parseLong((httpClientInputs.getConnectTimeout()))))
                 .setResponseTimeout(Timeout.ofSeconds(Long.parseLong((httpClientInputs.getResponseTimeout()))))
                 .setRedirectsEnabled(Boolean.parseBoolean(httpClientInputs.getFollowRedirects()));
+
+        if(Boolean.parseBoolean(httpClientInputs.getKeepAlive()))
+            requestConfigBuilder.setConnectionKeepAlive((TimeValue.ofSeconds(-1)));
 
         if (!authType.equalsIgnoreCase(ANONYMOUS))
             if (authType.equalsIgnoreCase(ANY))
