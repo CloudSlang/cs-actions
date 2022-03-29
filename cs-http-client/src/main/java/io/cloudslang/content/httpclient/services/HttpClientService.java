@@ -262,11 +262,8 @@ public class HttpClientService {
                 httpClientInputs.getX509HostnameVerifier(),
                 httpClientInputs.getKeystore(),
                 httpClientInputs.getTrustKeystore());
-
         PoolingHttpClientConnectionManager connManager = poolingHttpClientConnectionManagerBuilder
-
                 .setConnectionManagerMapKey(connectionKey)
-
                 .setConnectionPoolHolder(httpClientInputs.getConnectionPoolSessionObject())
                 .setSslsf(sslConnectionSocketFactory)
                 .setDefaultMaxPerRoute(httpClientInputs.getConnectionsMaxPerRoute())
