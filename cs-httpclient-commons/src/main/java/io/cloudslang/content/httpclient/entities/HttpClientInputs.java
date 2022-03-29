@@ -37,7 +37,7 @@ public class HttpClientInputs {
     private final String keystore;
     private final String keystorePassword;
     private final String connectTimeout;
-    private final String socketTimeout;
+    private final String responseTimeout;
     private final String executionTimeout;
     private final String useCookies;
     private final String keepAlive;
@@ -74,7 +74,7 @@ public class HttpClientInputs {
 
     @java.beans.ConstructorProperties({"host","authType","preemptiveAuth","username","password","proxyHost","proxyPort",
             "proxyUsername", "proxyPassword", "trustAllRoots","x509HostnameVerifier", "trustKeystore", "trustPassword",
-            "keystore","keystorePassword","connectTimeout","socketTimeout","executionTimeout","useCookies","keepAlive",
+            "keystore","keystorePassword","connectTimeout","responseTimeout","executionTimeout","useCookies","keepAlive",
             "connectionsMaxPerRoute", "connectionsMaxTotal", "headers", "responseCharacterSet", "destinationFile",
             "followRedirects", "queryParams", "queryParamsAreURLEncoded", "formParams", "formParamsAreURLEncoded",
             "sourceFile", "body", "contentType", "requestCharacterSet", "multipartBodies", "multipartFiles",
@@ -84,7 +84,7 @@ public class HttpClientInputs {
     public HttpClientInputs(String host, String authType, String preemptiveAuth, String username, String password,
                             String proxyHost, String proxyPort, String proxyUsername, String proxyPassword,
                             String trustAllRoots, String x509HostnameVerifier, String trustKeystore, String trustPassword,
-                            String keystore, String keystorePassword, String connectTimeout, String socketTimeout,
+                            String keystore, String keystorePassword, String connectTimeout, String responseTimeout,
                             String executionTimeout, String useCookies, String keepAlive, String connectionsMaxPerRoute,
                             String connectionsMaxTotal, String headers, String responseCharacterSet, String destinationFile,
                             String followRedirects, String queryParams, String queryParamsAreURLEncoded, String formParams,
@@ -110,7 +110,7 @@ public class HttpClientInputs {
         this.keystore = keystore;
         this.keystorePassword = keystorePassword;
         this.connectTimeout = connectTimeout;
-        this.socketTimeout = socketTimeout;
+        this.responseTimeout = responseTimeout;
         this.executionTimeout = executionTimeout;
         this.useCookies = useCookies;
         this.keepAlive = keepAlive;
@@ -233,8 +233,8 @@ public class HttpClientInputs {
     }
 
     @NotNull
-    public String getSocketTimeout() {
-        return socketTimeout;
+    public String getresponseTimeout() {
+        return responseTimeout;
     }
 
     @NotNull
@@ -389,7 +389,7 @@ public class HttpClientInputs {
         private String keystore = EMPTY;
         private String keystorePassword = EMPTY;
         private String connectTimeout = EMPTY;
-        private String socketTimeout = EMPTY;
+        private String responseTimeout = EMPTY;
         private String executionTimeout = EMPTY;
         private String useCookies = EMPTY;
         private String keepAlive = EMPTY;
@@ -522,8 +522,8 @@ public class HttpClientInputs {
         }
 
         @NotNull
-        public HttpClientInputsBuilder socketTimeout(@NotNull final String socketTimeout){
-            this.socketTimeout = socketTimeout;
+        public HttpClientInputsBuilder responseTimeout(@NotNull final String responseTimeout){
+            this.responseTimeout = responseTimeout;
             return this;
         }
 
@@ -692,7 +692,7 @@ public class HttpClientInputs {
         public HttpClientInputs build(){
             return new HttpClientInputs(host, authType, preemptiveAuth, username, password, proxyHost, proxyPort, proxyUsername,
                     proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, keystore, keystorePassword,
-                    connectTimeout, socketTimeout, executionTimeout, useCookies, keepAlive, connectionsMaxPerRoute,
+                    connectTimeout, responseTimeout, executionTimeout, useCookies, keepAlive, connectionsMaxPerRoute,
                     connectionsMaxTotal, headers, responseCharacterSet, destinationFile, followRedirects, queryParams,
                     queryParamsAreURLEncoded, formParams, formParamsAreURLEncoded, sourceFile, body, contentType,
                     requestCharacterSet, multipartBodies, multipartFiles, multipartValuesAreURLEncoded, multipartBodiesContentType,
