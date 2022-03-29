@@ -32,7 +32,7 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.utils.Constants.HTTP_CLIENT_GET_ACTION;
+import static io.cloudslang.content.httpclient.utils.Constants.*;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.ALLOWED_CIPHERS_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.AUTH_TYPE_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.CONNECTIONS_MAX_DESC;
@@ -92,6 +92,8 @@ import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.USERNAME;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class HttpClientGetAction {
     @Action(name = HTTP_CLIENT_GET_ACTION,
@@ -139,6 +141,14 @@ public class HttpClientGetAction {
 //        if (!exceptionMessages.isEmpty()) {
 //            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 //        }
+
+        proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
+        proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
+        x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
+        connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
+        keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
+
 
         try {
             Map<String, String> result = HttpClientService.execute(HttpClientInputs.builder()

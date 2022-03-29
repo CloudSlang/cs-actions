@@ -16,8 +16,14 @@ package io.cloudslang.content.httpclient.utils;
 
 public class Constants {
 
-    public static final String STRICT = "strict";
+//DEFAULT VALUES
 
+    public static final String STRICT = "strict";
+    public static final String BOOLEAN_FALSE = "false";
+    public static final String  DEFAULT_PROXY_PORT = "8080";
+    public static final String  CONNECT_TIMEOUT_CONST = "0";
+
+//AUTH TYPE
     public static final String BASIC = "Basic";
     public static final String DIGEST = "Digest";
     public static final String NTLM = "NTLM";
