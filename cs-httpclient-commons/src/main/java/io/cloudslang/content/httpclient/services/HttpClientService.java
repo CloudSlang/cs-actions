@@ -15,7 +15,25 @@
 package io.cloudslang.content.httpclient.services;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import org.apache.hc.client5.http.auth.CredentialsProvider;
+import org.apache.hc.client5.http.auth.StandardAuthScheme;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.cookie.BasicCookieStore;
+import org.apache.hc.client5.http.cookie.StandardCookieSpec;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,10 +44,50 @@ import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.S
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class HttpClientService {
-
-    public static Map<String, String> httpClientGet(HttpClientInputs httpClientInputs) {
+    public static Map<String, String> execute(HttpClientInputs httpClientInputs) {
 
         try {
+            URI uri = URI.create(httpClientInputs.getHost());
+            HttpUriRequestBase httpRequest = new HttpUriRequestBase(httpClientInputs.getMethod(), uri);
+            SSLConnectionSocketFactory socketFactory = CustomSSLSocketFactory.createSSLSocketFactory(httpClientInputs);
+            CredentialsProvider credentialsProvider = CustomCredentialsProvider.getCredentialsProvider(httpClientInputs,uri);
+            RequestConfig requestConfig = CustomRequestConfig.getDefaultRequestConfig(httpClientInputs);
+
+            final HttpClientContext context = HttpClientContext.create();
+            // Contextual attributes set the local context level will take
+            // precedence over those set at the client level.
+            context.setCookieStore(new BasicCookieStore());
+            context.setCredentialsProvider(credentialsProvider);
+
+            CloseableHttpClient httpclient = HttpClients.custom()
+                    .setDefaultCredentialsProvider(credentialsProvider)
+                    //.setConnectionManager(cm)
+                    .setDefaultRequestConfig(requestConfig)
+
+                    .build();
+
+            try (final CloseableHttpResponse response = httpclient.execute(httpRequest, context)) {
+                System.out.println("----------------------------------------");
+                System.out.println(response.getCode() + " " + response.getReasonPhrase());
+                System.out.println(EntityUtils.toString(response.getEntity()));
+
+                // Once the request has been executed the local context can
+                // be used to examine updated state and various objects affected
+                // by the request execution.
+
+                // Last executed request
+                context.getRequest();
+                // Execution route
+                context.getHttpRoute();
+                // Auth exchanges
+                context.getAuthExchanges();
+                // Cookie origin
+                context.getCookieOrigin();
+                // Cookie spec used
+                context.getCookieSpec();
+                // User security token
+                context.getUserToken();
+            }
 
             return null;
 

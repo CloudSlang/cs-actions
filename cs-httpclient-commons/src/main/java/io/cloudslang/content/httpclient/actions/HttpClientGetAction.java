@@ -20,6 +20,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
 
 import java.util.Map;
 
@@ -31,7 +32,6 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.services.HttpClientService.httpClientGet;
 import static io.cloudslang.content.httpclient.utils.Constants.HTTP_CLIENT_GET_ACTION;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.ALLOWED_CIPHERS_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.AUTH_TYPE_DESC;
@@ -141,7 +141,7 @@ public class HttpClientGetAction {
 //        }
 
         try {
-            Map<String, String> result = httpClientGet(HttpClientInputs.builder()
+            Map<String, String> result = HttpClientService.execute(HttpClientInputs.builder()
                     .host(host)
                     //.protocol(protocol)
 
