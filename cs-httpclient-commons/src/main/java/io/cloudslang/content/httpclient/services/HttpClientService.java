@@ -25,6 +25,7 @@ import org.apache.hc.client5.http.cookie.StandardCookieSpec;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
@@ -52,23 +53,19 @@ public class HttpClientService {
             URI uri = URI.create(httpClientInputs.getHost());
             HttpUriRequestBase httpRequest = new HttpUriRequestBase(httpClientInputs.getMethod(), uri);
             SSLConnectionSocketFactory socketFactory = CustomSSLSocketFactory.createSSLSocketFactory(httpClientInputs);
+            PoolingHttpClientConnectionManager connectionManager = CustomConnectionManager.getConnectionManager(httpClientInputs, socketFactory,uri);
             CredentialsProvider credentialsProvider = CustomCredentialsProvider.getCredentialsProvider(httpClientInputs,uri);
             RequestConfig requestConfig = CustomRequestConfig.getDefaultRequestConfig(httpClientInputs);
+            HttpClientContext context = CustomHttpClientContext.getHttpClientContext(httpClientInputs, credentialsProvider, uri);
 
-            httpRequest.setHeaders();
+            //httpRequest.setHeaders();
 
-            final HttpClientContext context = HttpClientContext.create();
-            // Contextual attributes set the local context level will take
-            // precedence over those set at the client level.
-            context.setCookieStore(new BasicCookieStore());
-            context.setCredentialsProvider(credentialsProvider);
+
 
             CloseableHttpClient httpclient = HttpClients.custom()
                     .setDefaultCredentialsProvider(credentialsProvider)
-                    //.setConnectionManager(cm)
+                    .setConnectionManager(connectionManager)
                     .setDefaultRequestConfig(requestConfig)
-
-
                     .build();
 
             try (final CloseableHttpResponse response = httpclient.execute(httpRequest, context)) {

@@ -23,8 +23,8 @@ import static io.cloudslang.content.httpclient.utils.Constants.POINTS;
 
 public class CustomConnectionManager {
 
-    private GlobalSessionObject<Map<String, PoolingHttpClientConnectionManager>> connectionPoolHolder;
-    private String connectionManagerMapKey;
+    private static GlobalSessionObject<Map<String, PoolingHttpClientConnectionManager>> connectionPoolHolder;
+    private static String connectionManagerMapKey;
 
     public CustomConnectionManager setConnectionPoolHolder(GlobalSessionObject connectionPoolHolder) {
         this.connectionPoolHolder = connectionPoolHolder;
@@ -47,7 +47,7 @@ public class CustomConnectionManager {
         return keyBuilder.toString();
     }
 
-    public PoolingHttpClientConnectionManager buildConnectionManager(HttpClientInputs httpClientInputs,
+    public static PoolingHttpClientConnectionManager getConnectionManager(HttpClientInputs httpClientInputs,
                                                                      SSLConnectionSocketFactory sslConnectionSocketFactory,
                                                                      URI uri) {
         if (connectionPoolHolder != null) {

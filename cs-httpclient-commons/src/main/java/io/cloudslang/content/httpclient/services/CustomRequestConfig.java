@@ -20,8 +20,6 @@ public class CustomRequestConfig {
                 return NTLM;
             case "DIGEST":
                 return DIGEST;
-            case "ANY":
-                return ANY;
             case "ANONYMOUS":
                 return ANONYMOUS;
             default:
@@ -42,9 +40,6 @@ public class CustomRequestConfig {
             requestConfigBuilder.setConnectionKeepAlive((TimeValue.ofSeconds(-1)));
 
         if (!authType.equalsIgnoreCase(ANONYMOUS))
-            if (authType.equalsIgnoreCase(ANY))
-                requestConfigBuilder.setTargetPreferredAuthSchemes(Arrays.asList(BASIC, NTLM, DIGEST));
-            else
                 requestConfigBuilder.setTargetPreferredAuthSchemes(Collections.singletonList(authType));
 
         if (!httpClientInputs.getProxyHost().isEmpty()) {
