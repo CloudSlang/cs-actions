@@ -51,7 +51,7 @@ public class HttpClientService {
     public static Map<String, String> execute(HttpClientInputs httpClientInputs) {
 
         try {
-            URI uri = URI.create(httpClientInputs.getHost());
+            URI uri = UriBuilder.getUri(httpClientInputs);
             HttpUriRequestBase httpRequest = new HttpUriRequestBase(httpClientInputs.getMethod(), uri);
             SSLConnectionSocketFactory socketFactory = CustomSSLSocketFactory.createSSLSocketFactory(httpClientInputs);
             PoolingHttpClientConnectionManager connectionManager = CustomConnectionManager.getConnectionManager(httpClientInputs, socketFactory,uri);
