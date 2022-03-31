@@ -24,10 +24,10 @@ public class HttpValidator {
         }
 
         try {
-            if (Integer.parseInt(clientInputs.getSocketTimeout()) < 0)
-                exceptions.add(String.format(EXCEPTION_NEGATIVE_VALUE, clientInputs.getSocketTimeout()));
+            if (Integer.parseInt(clientInputs.getResponseTimeout()) < 0)
+                exceptions.add(String.format(EXCEPTION_NEGATIVE_VALUE, clientInputs.getResponseTimeout()));
         } catch (Exception e) {
-            exceptions.add(String.format(EXCEPTION_INVALID_VALUE, clientInputs.getSocketTimeout()));
+            exceptions.add(String.format(EXCEPTION_INVALID_VALUE, clientInputs.getResponseTimeout()));
         }
 
         final int portNumber;
