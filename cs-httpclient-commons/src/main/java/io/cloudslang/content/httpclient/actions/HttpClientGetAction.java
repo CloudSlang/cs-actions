@@ -119,14 +119,12 @@ public class HttpClientGetAction {
         final List<String> exceptionMessages = verifyHttpCommonInputs(authType, preemptiveAuth, proxyPort, tlsVersion,
                 trustAllRoots, x509HostnameVerifier, useCookies, keepAlive, connectionsMaxPerRoute,
                 connectionsMaxTotal, followRedirects, connectTimeout, responseTimeout, connectTimeout);
-        if (!exceptionMessages.isEmpty()) {
+        if (!exceptionMessages.isEmpty())
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
-        }
 
 
         HttpClientInputs httpClientInputs = HttpClientInputs.builder()
                 .host(host)
-
                 .authType(authType)
                 .username(username)
                 .password(password)
@@ -177,6 +175,5 @@ public class HttpClientGetAction {
             results.put(EXCEPTION, ExceptionUtils.getStackTrace(exception));
             return results;
         }
-
     }
 }
