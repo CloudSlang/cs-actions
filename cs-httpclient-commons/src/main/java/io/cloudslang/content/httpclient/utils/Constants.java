@@ -39,6 +39,8 @@ public class Constants {
 
     public static final String ALLOW_ALL = "allow_all";
     public static final String UTF_8 = "UTF-8";
+    public static final String AND = "&";
+    public static final String EQUAL = "=";
     public static final String COMMA = ",";
     public static final String POINTS = ":";
     public static final String MINUS_1 = "-1";
