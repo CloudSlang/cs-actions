@@ -15,19 +15,35 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.List;
 
-import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.FORM_PARAMS;
-import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.FORM_PARAMS_ARE_URLENCODED;
-import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.MULTIPART_BODIES;
-import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.MULTIPART_FILES;
-import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.MULTIPART_VALUES_ARE_URLENCODED;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
 
 public class CustomEntity {
 
-    public HttpEntity getHttpEntity(HttpClientInputs httpClientInputs) {
-
+    public static HttpEntity getHttpEntity(HttpClientInputs httpClientInputs) {
+        ContentType parsedContentType = null;
         AbstractHttpEntity httpEntity = null;
+
+        if (StringUtils.isEmpty(httpClientInputs.getContentType())) {
+            try {
+                parsedContentType = ContentType.parse(httpClientInputs.getContentType());
+            } catch (UnsupportedCharsetException e) {
+                throw new IllegalArgumentException("Could not parse input '"
+                        + CONTENT_TYPE + "'. " + e.getMessage(), e);
+            }
+
+            if (!StringUtils.isEmpty(httpClientInputs.getRequestCharacterSet())) {
+                try {
+                    parsedContentType = parsedContentType.withCharset(httpClientInputs.getRequestCharacterSet());
+                } catch (UnsupportedCharsetException e) {
+                    throw new IllegalArgumentException("Could not parse input '" + REQUEST_CHARACTER_SET
+                            + "'. " + e.getMessage(), e);
+                }
+            }
+        }
+
         if (!StringUtils.isEmpty(httpClientInputs.getFormParams())) {
 
             List<? extends NameValuePair> list;
@@ -36,18 +52,17 @@ public class CustomEntity {
                     FORM_PARAMS,
                     FORM_PARAMS_ARE_URLENCODED);
 
-            Charset charset = ContentType.parse(httpClientInputs.getContentType()) != null ?
-                    ContentType.parse(httpClientInputs.getContentType()).getCharset() : null;
+            Charset charset = parsedContentType != null ? parsedContentType.getCharset() : null;
 
             httpEntity = new UrlEncodedFormEntity(list, charset);
 
         } else if (!StringUtils.isEmpty(httpClientInputs.getBody())) {
 
-            httpEntity = new StringEntity(httpClientInputs.getBody(), ContentType.parse(httpClientInputs.getContentType()));
+            httpEntity = new StringEntity(httpClientInputs.getBody(), parsedContentType);
 
         } else if (!StringUtils.isEmpty(httpClientInputs.getSourceFile())) {
             File file = new File(httpClientInputs.getSourceFile());
-            httpEntity = new FileEntity(file, ContentType.parse(httpClientInputs.getContentType()));
+            httpEntity = new FileEntity(file, parsedContentType);
         }
 
         if (httpEntity != null) {
@@ -89,11 +104,10 @@ public class CustomEntity {
             }
             return multipartEntityBuilder.build();
         }
-
         return null;
     }
 
-    private List<? extends NameValuePair> getNameValuePairs(String theInput, boolean encode, String constInput, String constEncode) {
+    private static List<? extends NameValuePair> getNameValuePairs(String theInput, boolean encode, String constInput, String constEncode) {
         List<? extends NameValuePair> list;
         try {
             list = HttpUtils.urlEncodeMultipleParams(theInput, encode);

@@ -31,6 +31,7 @@ import org.apache.hc.client5.http.io.HttpClientConnectionManager;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.HeaderValueFormatter;
 
@@ -57,6 +58,11 @@ public class HttpClientService {
             CredentialsProvider credentialsProvider = CustomCredentialsProvider.getCredentialsProvider(httpClientInputs,uri);
             RequestConfig requestConfig = CustomRequestConfig.getDefaultRequestConfig(httpClientInputs);
             HttpClientContext context = CustomHttpClientContext.getHttpClientContext(httpClientInputs, credentialsProvider, uri);
+            HttpEntity httpEntity = CustomEntity.getHttpEntity(httpClientInputs);
+
+
+            httpRequest.setEntity(httpEntity);
+            httpRequest.setHeaders();
 
             //httpRequest.setHeaders();
 
@@ -71,7 +77,7 @@ public class HttpClientService {
             try (final CloseableHttpResponse response = httpclient.execute(httpRequest, context)) {
                 System.out.println("----------------------------------------");
                 System.out.println(response.getCode() + " " + response.getReasonPhrase());
-                System.out.println(EntityUtils.toString(response.getEntity(),"UTF-8"));
+                System.out.println(EntityUtils.toString(response.getEntity(),httpClientInputs.getResponseCharacterSet()));
 
                 // Once the request has been executed the local context can
                 // be used to examine updated state and various objects affected
