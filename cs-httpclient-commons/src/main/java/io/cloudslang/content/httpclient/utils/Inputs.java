@@ -23,6 +23,7 @@ public class Inputs {
         public static final String KEYSTORE_PASSWORD = "keystorePassword";
         public static final String CONNECT_TIMEOUT = "connectTimeout";
         public static final String EXECUTION_TIMEOUT = "executionTimeout";
+        public static final String RESPONSE_TIMEOUT = "responseTimeout";
         public static final String KEEP_ALIVE = "keepAlive";
         public static final String CONNECTIONS_MAX_PER_ROUTE = "connectionsMaxPerRoute";
         public static final String CONNECTIONS_MAX_TOTAL = "connectionsMaxTotal";
@@ -46,7 +47,6 @@ public class Inputs {
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
 
-        public static final String SOCKET_TIMEOUT = "socketTimeout";
         public static final String USE_COOKIES = "useCookies";
         public static final String HEADERS = "headers";
         public static final String RESPONSE_CHARACTER_SET = "responseCharacterSet";

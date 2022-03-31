@@ -3,6 +3,7 @@ package io.cloudslang.content.httpclient.utils;
 public class Descriptions {
 
     public static class HTTPClient {
+        public static final String HTTP_CLIENT_GET_ACTION = "HTTP Client Get";
 
         //Inputs
         public static final String HTTP_CLIENT_ACTION_DESC = "This operation does an http request and a parsing of " +
