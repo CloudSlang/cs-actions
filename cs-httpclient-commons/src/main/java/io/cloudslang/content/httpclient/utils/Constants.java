@@ -16,8 +16,14 @@ package io.cloudslang.content.httpclient.utils;
 
 public class Constants {
 
-//DEFAULT VALUES
+    //Methods
+    public static final String GET = "GET";
+    public static final String POST = "POST";
+    public static final String PUT = "PUT";
+    public static final String DELETE = "DELETE";
+    public static final String PATCH = "PATCH";
 
+    //DEFAULT VALUES
     public static final String STRICT = "strict";
     public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
@@ -41,7 +47,6 @@ public class Constants {
             "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384," +
             "TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256";
 
-
     public static final String DEFAULT_MULTIPART_BODIES_CONTENT_TYPE = "text/plain; charset=ISO-8859-1";
     public static final String DEFAULT_MULTIPART_FILES_CONTENT_TYPE = "application/octet-stream";
 
@@ -49,9 +54,6 @@ public class Constants {
     public static final String BASIC = "Basic";
     public static final String DIGEST = "Digest";
     public static final String NTLM = "NTLM";
-    public static final String SPNEGO = "Negotiate";
-    public static final String CREDSSP = "CredSSP";
-    public static final String ANY = "ANY";
     public static final String ANONYMOUS = "ANONYMOUS";
 
     public static final String ALLOW_ALL = "allow_all";
@@ -66,7 +68,6 @@ public class Constants {
     public static final String HTTP = "http";
     public static final String HTTPS = "https";
     public static final String CONTENT_TYPE = "Content-Type";
-
 
     //Exceptions
     public static final String EXCEPTION_NULL_EMPTY = "%s can't be null or empty.";

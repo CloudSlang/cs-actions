@@ -12,13 +12,20 @@ import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.io.entity.AbstractHttpEntity;
 import org.apache.hc.core5.http.io.entity.FileEntity;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+import java.util.ArrayList;
 import java.util.List;
 
+import static io.cloudslang.content.httpclient.utils.Constants.*;
+import static io.cloudslang.content.httpclient.utils.Constants.UTF_8;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONTENT_TYPE;
 
 public class CustomEntity {
 
@@ -116,6 +123,34 @@ public class CustomEntity {
                     " is 'false' but " + constInput + " are not properly encoded. "
                     + e.getMessage(), e);
         }
+        return list;
+    }
+
+    public static List<? extends NameValuePair> urlEncodeMultipleParams(String params, boolean urlEncode) throws UrlEncodeException {
+        List<BasicNameValuePair> list = new ArrayList<>();
+
+        String[] pairs = params.split(AND);
+        for (String pair : pairs) {
+            String[] nameValue = pair.split(EQUAL, 2);
+            String name = nameValue[0];
+            String value = nameValue.length == 2 ? nameValue[1] : null;
+
+            if (!urlEncode) {
+                try {
+                    name = URLDecoder.decode(name, UTF_8);
+                    if (value != null) {
+                        value = URLDecoder.decode(value, UTF_8);
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    //never happens
+                    throw new RuntimeException(e);
+                } catch (IllegalArgumentException ie) {
+                    throw new UrlEncodeException(ie.getMessage(), ie);
+                }
+            }
+            list.add(new BasicNameValuePair(name, value));
+        }
+
         return list;
     }
 }

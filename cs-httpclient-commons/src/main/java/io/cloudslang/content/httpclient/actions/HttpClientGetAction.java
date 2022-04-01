@@ -18,6 +18,8 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
@@ -84,13 +86,18 @@ public class HttpClientGetAction {
                                        @Param(value = FOLLOW_REDIRECTS, description = FOLLOW_REDIRECTS_DESC) String followRedirects,
                                        @Param(value = HEADERS, description = HEADERS_DESC) String headers,
                                        @Param(value = DESTINATION_FILE, description = DESTINATION_FILE_DESC) String destinationFile,
+
+                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet,
                                        @Param(value = QUERY_PARAMS, description = QUERY_PARAMS_DESC) String queryParams,
                                        @Param(value = QUERY_PARAMS_ARE_URLENCODED, description = QUERY_PARAMS_ARE_URLENCODED_DESC) String queryParamsAreURLEncoded,
                                        @Param(value = QUERY_PARAMS_ARE_FORM_ENCODED, description = QUERY_PARAMS_ARE_FORM_ENCODED_DESC) String queryParamsAreFormEncoded,
 
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = RESPONSE_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String responseTimeout,
-                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
+                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
+
+    @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
+    @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
 
         preemptiveAuth = defaultIfEmpty(preemptiveAuth, BOOLEAN_TRUE);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -106,6 +113,7 @@ public class HttpClientGetAction {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, DEFAULT_CONNECTIONS_MAX_PER_ROUTE);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, DEFAULT_CONNECTIONS_MAX_TOTAL);
 
+        responseCharacterSet = defaultIfEmpty(responseCharacterSet,UTF_8);
         queryParamsAreFormEncoded = defaultIfEmpty(queryParamsAreFormEncoded, BOOLEAN_TRUE);
         queryParamsAreURLEncoded = defaultIfEmpty(queryParamsAreURLEncoded, BOOLEAN_FALSE);
 
@@ -122,9 +130,10 @@ public class HttpClientGetAction {
         if (!exceptionMessages.isEmpty())
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
-
         HttpClientInputs httpClientInputs = HttpClientInputs.builder()
                 .host(host)
+                .method(GET)
+
                 .authType(authType)
                 .username(username)
                 .password(password)
@@ -152,6 +161,8 @@ public class HttpClientGetAction {
                 .followRedirects(followRedirects)
                 .headers(headers)
                 .destinationFile(destinationFile)
+
+                .responseCharacterSet(responseCharacterSet)
                 .queryParams(queryParams)
                 .queryParamsAreFormEncoded(queryParamsAreFormEncoded)
                 .queryParamsAreURLEncoded(queryParamsAreURLEncoded)
@@ -159,6 +170,9 @@ public class HttpClientGetAction {
                 .connectTimeout(connectTimeout)
                 .responseTimeout(responseTimeout)
                 .executionTimeout(executionTimeout)
+
+                .cookieStoreSessionObject(sessionCookies)
+                .connectionPoolSessionObject(sessionConnectionPool)
 
                 .build();
 
