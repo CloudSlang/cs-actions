@@ -15,6 +15,7 @@
 package io.cloudslang.content.httpclient.services;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.utils.*;
 import org.apache.hc.client5.http.auth.CredentialsProvider;
 import org.apache.hc.client5.http.auth.StandardAuthScheme;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -36,10 +37,7 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.HeaderValueFormatter;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
@@ -62,11 +60,8 @@ public class HttpClientService {
 
 
             httpRequest.setEntity(httpEntity);
-            httpRequest.setHeaders();
 
-            //httpRequest.setHeaders();
-
-
+            HeaderBuilder.headerBuiler(httpRequest,httpClientInputs);
 
             CloseableHttpClient httpclient = HttpClients.custom()
                     .setDefaultCredentialsProvider(credentialsProvider)

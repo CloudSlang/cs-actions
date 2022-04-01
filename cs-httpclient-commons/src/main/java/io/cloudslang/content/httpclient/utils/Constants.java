@@ -59,12 +59,13 @@ public class Constants {
     public static final String AND = "&";
     public static final String EQUAL = "=";
     public static final String COMMA = ",";
-    public static final String POINTS = ":";
+    public static final String COLON = ":";
     public static final String MINUS_1 = "-1";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String NEW_LINE = "\n";
     public static final String HTTP = "http";
     public static final String HTTPS = "https";
+    public static final String CONTENT_TYPE = "Content-Type";
 
 
     //Exceptions
