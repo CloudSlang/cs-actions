@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.httpclient.utils.Constants.HTTP;
 import static io.cloudslang.content.httpclient.utils.Constants.HTTPS;
-import static io.cloudslang.content.httpclient.utils.Constants.POINTS;
+import static io.cloudslang.content.httpclient.utils.Constants.COLON;
 
 public class CustomConnectionManager {
 
@@ -39,7 +39,7 @@ public class CustomConnectionManager {
     public static String buildConnectionManagerMapKey(String... connectionManagerMapKeys) {
         StringBuilder keyBuilder = new StringBuilder();
         for (String token : connectionManagerMapKeys) {
-            keyBuilder.append(token).append(POINTS);
+            keyBuilder.append(token).append(COLON);
         }
         if (keyBuilder.length() > 0) {
             keyBuilder.deleteCharAt(keyBuilder.length() - 1);
