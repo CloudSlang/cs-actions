@@ -56,6 +56,7 @@ public class Constants {
     public static final String NTLM = "NTLM";
     public static final String ANONYMOUS = "ANONYMOUS";
 
+    public static final String ZERO = "0";
     public static final String ALLOW_ALL = "allow_all";
     public static final String UTF_8 = "UTF-8";
     public static final String AND = "&";

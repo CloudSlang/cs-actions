@@ -17,6 +17,7 @@ package io.cloudslang.content.httpclient.services;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.utils.ExecutionTimeout;
 import io.cloudslang.content.httpclient.utils.HeaderBuilder;
 import org.apache.hc.client5.http.auth.CredentialsProvider;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
@@ -33,15 +34,16 @@ import org.apache.hc.core5.http.HttpEntity;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
+import static io.cloudslang.content.httpclient.utils.Constants.ZERO;
 
 public class HttpClientService {
-    public static Map<String, String> execute(HttpClientInputs httpClientInputs) throws URISyntaxException, IOException {
+    public static Map<String, String> execute(HttpClientInputs httpClientInputs) throws Exception {
 
         URI uri = UriBuilder.getUri(httpClientInputs);
         HttpUriRequestBase httpRequest = new HttpUriRequestBase(httpClientInputs.getMethod(), uri);
@@ -91,12 +93,29 @@ public class HttpClientService {
 
         Map<String, String> result = new HashMap<>();
 
-        try (final CloseableHttpResponse response = httpclient.execute(httpRequest, context)) {
-            ResponseHandler.consume(result, response, httpClientInputs.getResponseCharacterSet(), httpClientInputs.getDestinationFile());
-            ResponseHandler.getResponseHeaders(result, response.getHeaders());
-            ResponseHandler.getStatusResponse(result, response);
-            ResponseHandler.getFinalLocationResponse(result, uri, context.getRedirectLocations().getAll());
-        }
+        if (httpClientInputs.getExecutionTimeout().equals(ZERO))
+            try (final CloseableHttpResponse response = httpclient.execute(httpRequest, context)) {
+                ResponseHandler.consume(result, response, httpClientInputs.getResponseCharacterSet(), httpClientInputs.getDestinationFile());
+                ResponseHandler.getResponseHeaders(result, response.getHeaders());
+                ResponseHandler.getStatusResponse(result, response);
+                ResponseHandler.getFinalLocationResponse(result, uri, context.getRedirectLocations().getAll());
+            }
+        else
+            ExecutionTimeout.runWithTimeout(new Runnable() {
+                @Override
+                public void run() {
+                    try (final CloseableHttpResponse response = httpclient.execute(httpRequest, context)) {
+                        ResponseHandler.consume(result, response, httpClientInputs.getResponseCharacterSet(), httpClientInputs.getDestinationFile());
+                        ResponseHandler.getResponseHeaders(result, response.getHeaders());
+                        ResponseHandler.getStatusResponse(result, response);
+                        ResponseHandler.getFinalLocationResponse(result, uri, context.getRedirectLocations().getAll());
+
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }, Integer.parseInt(httpClientInputs.getExecutionTimeout()), TimeUnit.SECONDS);
+
 
         if (cookieStore != null) {
             try {

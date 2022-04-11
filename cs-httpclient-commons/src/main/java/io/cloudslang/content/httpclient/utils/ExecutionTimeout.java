@@ -5,9 +5,12 @@ import java.util.concurrent.*;
 public class ExecutionTimeout {
 
     public static void runWithTimeout(final Runnable runnable, long timeout, TimeUnit timeUnit) throws Exception {
-        runWithTimeout(() -> {
-            runnable.run();
-            return null;
+        runWithTimeout(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                runnable.run();
+                return null;
+            }
         }, timeout, timeUnit);
     }
 

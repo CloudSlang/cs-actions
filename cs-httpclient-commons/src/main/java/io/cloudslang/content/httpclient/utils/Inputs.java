@@ -57,7 +57,6 @@ public class Inputs {
         public static final String MULTIPART_FILES_CONTENT_TYPE = "multipartFilesContentType";
 
         public static final String MULTIPART_VALUES_ARE_URLENCODED = "multipartValuesAreURLEncoded";
-        public static final String CHUNKED_REQUEST_ENTITY = "chunkedRequestEntity";
         public final static String SESSION_CONNECTION_POOL = "httpClientPoolingConnectionManager";
         public final static String SESSION_COOKIES = "httpClientCookieSession";
 

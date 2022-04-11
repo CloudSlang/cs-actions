@@ -1,17 +1,3 @@
-/*
- * (c) Copyright 2022 Micro Focus
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.cloudslang.content.httpclient.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -44,8 +30,8 @@ import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.*
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class HttpClientGetAction {
-    @Action(name = HTTP_CLIENT_GET_ACTION,
+public class HttpClientDeleteAction {
+    @Action(name = HTTP_CLIENT_DELETE_ACTION,
             description = HTTP_CLIENT_ACTION_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
@@ -87,14 +73,10 @@ public class HttpClientGetAction {
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONNECTIONS_MAX_DESC) String connectionsMaxTotal,
 
                                        @Param(value = USE_COOKIES, description = USE_COOKIES_DESC) String useCookies,
-                                       @Param(value = FOLLOW_REDIRECTS, description = FOLLOW_REDIRECTS_DESC) String followRedirects,
                                        @Param(value = HEADERS, description = HEADERS_DESC) String headers,
                                        @Param(value = DESTINATION_FILE, description = DESTINATION_FILE_DESC) String destinationFile,
 
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet,
-                                       @Param(value = QUERY_PARAMS, description = QUERY_PARAMS_DESC) String queryParams,
-                                       @Param(value = QUERY_PARAMS_ARE_URLENCODED, description = QUERY_PARAMS_ARE_URLENCODED_DESC) String queryParamsAreURLEncoded,
-                                       @Param(value = QUERY_PARAMS_ARE_FORM_ENCODED, description = QUERY_PARAMS_ARE_FORM_ENCODED_DESC) String queryParamsAreFormEncoded,
 
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = RESPONSE_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String responseTimeout,
@@ -118,11 +100,8 @@ public class HttpClientGetAction {
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, DEFAULT_CONNECTIONS_MAX_TOTAL);
 
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF_8);
-        queryParamsAreFormEncoded = defaultIfEmpty(queryParamsAreFormEncoded, BOOLEAN_TRUE);
-        queryParamsAreURLEncoded = defaultIfEmpty(queryParamsAreURLEncoded, BOOLEAN_FALSE);
 
         useCookies = defaultIfEmpty(useCookies, BOOLEAN_TRUE);
-        followRedirects = defaultIfEmpty(followRedirects, BOOLEAN_TRUE);
 
         connectTimeout = defaultIfEmpty(connectTimeout, DEFAULT_CONNECT_TIMEOUT);
         responseTimeout = defaultIfEmpty(responseTimeout, DEFAULT_CONNECT_TIMEOUT);
@@ -130,13 +109,13 @@ public class HttpClientGetAction {
 
         final List<String> exceptionMessages = verifyHttpCommonInputs(authType, preemptiveAuth, proxyPort, tlsVersion,
                 trustAllRoots, x509HostnameVerifier, useCookies, keepAlive, connectionsMaxPerRoute,
-                connectionsMaxTotal, followRedirects, connectTimeout, responseTimeout, connectTimeout);
+                connectionsMaxTotal, BOOLEAN_FALSE, connectTimeout, responseTimeout, connectTimeout);
         if (!exceptionMessages.isEmpty())
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
         HttpClientInputs httpClientInputs = HttpClientInputs.builder()
                 .host(host)
-                .method(GET)
+                .method(DELETE)
 
                 .authType(authType)
                 .username(username)
@@ -162,14 +141,10 @@ public class HttpClientGetAction {
                 .connectionsMaxTotal(connectionsMaxTotal)
 
                 .useCookies(useCookies)
-                .followRedirects(followRedirects)
                 .headers(headers)
                 .destinationFile(destinationFile)
 
                 .responseCharacterSet(responseCharacterSet)
-                .queryParams(queryParams)
-                .queryParamsAreFormEncoded(queryParamsAreFormEncoded)
-                .queryParamsAreURLEncoded(queryParamsAreURLEncoded)
 
                 .connectTimeout(connectTimeout)
                 .responseTimeout(responseTimeout)

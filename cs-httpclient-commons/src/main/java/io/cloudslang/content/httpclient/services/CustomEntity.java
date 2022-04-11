@@ -31,7 +31,7 @@ public class CustomEntity {
 
     public static HttpEntity getHttpEntity(HttpClientInputs httpClientInputs) {
         ContentType parsedContentType = null;
-        AbstractHttpEntity httpEntity = null;
+        HttpEntity httpEntity = null;
 
         if (StringUtils.isEmpty(httpClientInputs.getContentType())) {
             try {
@@ -73,10 +73,6 @@ public class CustomEntity {
         }
 
         if (httpEntity != null) {
-            if (!StringUtils.isEmpty(httpClientInputs.getChunkedRequestEntity()) &&
-                    Boolean.parseBoolean(httpClientInputs.getChunkedRequestEntity()) == true) {
-                httpEntity.isChunked();
-            }
             return httpEntity;
         }
 

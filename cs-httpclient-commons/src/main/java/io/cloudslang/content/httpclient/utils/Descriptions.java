@@ -4,6 +4,10 @@ public class Descriptions {
 
     public static class HTTPClient {
         public static final String HTTP_CLIENT_GET_ACTION = "HTTP Client Get";
+        public static final String HTTP_CLIENT_POST_ACTION = "HTTP Client Post";
+        public static final String HTTP_CLIENT_PUT_ACTION = "HTTP Client Put";
+        public static final String HTTP_CLIENT_PATCH_ACTION = "HTTP Client Put";
+        public static final String HTTP_CLIENT_DELETE_ACTION = "HTTP Client Put";
 
         //Inputs
         public static final String HTTP_CLIENT_ACTION_DESC = "This operation does an http request and a parsing of " +
@@ -223,8 +227,19 @@ public class Descriptions {
         public static final String RETURN_CODE_DESC = "The return_code of the operation: 0 for success, -1 for failure.";
         public static final String EXCEPTION_DESC = "In case of success response, this result is empty. In case of " +
                 "failure response, this result contains the java stack trace of the runtime exception.";
-
-        //Descriptions on messages for users
-        public static final String INVALID_STRING_ARRAY_INPUT_DESC = "The value provided is an invalid string array.";
+        public static final String FINAL_LOCATION_DESC = "The final location after redirects.";
+        public static final String RESPONSE_HEADERS_DESC = "The list containing the headers of the response message, separated by newline.\n" +
+                "Format: This is conforming with HTTP standard for headers (RFC 2616).";
+        public static final String PROTOCOL_VERSION_DESC = "The HTTP protocol version.\n"+
+                "Examples: HTTP/1.1";
+        public static final String REASON_PHRASE_DESC = "  reasonPhrase - The reason phrase from the origin HTTP response. This depends on the status code and are according to RFC 1945 and RFC 2048\n" +
+                "Examples: (HTTP 1.0): OK, Created, Accepted, No Content, Moved Permanently, Moved Temporarily," +
+                " Not Modified, Bad Request, Unauthorized, Forbidden, Not Found, Internal Server Error," +
+                " Not Implemented, Bad Gateway, Service Unavailable\tValues (HTTP 1.1): Continue, Temporary Redirect," +
+                " Method Not Allowed, Conflict, Precondition Failed, Request Too Long, Request-URI Too Long," +
+                " Unsupported Media Type, Multiple Choices, See Other, Use Proxy, Payment Required, Not Acceptable," +
+                " Proxy Authentication Required, Request Timeout, Switching Protocols, Non Authoritative Information," +
+                " Reset Content, Partial Content, Gateway Timeout, Http Version Not Supported, Gone, Length Required," +
+                " Requested Range Not Satisfiable, Expectation Failed";
     }
 }
