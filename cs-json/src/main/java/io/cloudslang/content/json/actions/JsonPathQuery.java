@@ -16,7 +16,6 @@
 
 package io.cloudslang.content.json.actions;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -28,6 +27,7 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.json.services.JsonService;
 import io.cloudslang.content.json.utils.Constants;
+import io.cloudslang.content.json.utils.StringUtils;
 import io.cloudslang.content.utils.OutputUtilities;
 
 import java.util.Map;
@@ -61,8 +61,8 @@ public class JsonPathQuery {
             @Param(value = Constants.InputNames.JSON_OBJECT, required = true) String jsonObject,
             @Param(value = Constants.InputNames.JSON_PATH, required = true) String jsonPath) {
         try {
-            final JsonNode jsonNode = JsonService.evaluateJsonPathQuery(jsonObject, jsonPath);
-            if (!jsonNode.isNull()) {
+            final Object jsonNode = JsonService.evaluateJsonPathQuery(jsonObject, jsonPath);
+            if (!StringUtils.isEmpty(jsonNode)) {
                 return OutputUtilities.getSuccessResultsMap(jsonNode.toString());
             }
             return OutputUtilities.getSuccessResultsMap(NULL_STRING);

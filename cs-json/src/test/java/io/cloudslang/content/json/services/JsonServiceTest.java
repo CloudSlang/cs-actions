@@ -202,13 +202,13 @@ public class JsonServiceTest {
 
     @Test
     public void evaluateSimpleJsonPathQuery() throws Exception {
-        JsonNode jsonNode = JsonService.evaluateJsonPathQuery("{'key1': 'value1','key2': 'value2', 'key3': { 'key31': 'value31'}}", "$.key3.key31");
+        Object jsonNode = JsonService.evaluateJsonPathQuery("{'key1': 'value1','key2': 'value2', 'key3': { 'key31': 'value31'}}", "$.key3.key31");
         assertEquals(jsonNode.toString(), "\"value31\"");
     }
 
     @Test
     public void evaluateComplexJsonPathQuery() throws Exception {
-        JsonNode jsonNode = JsonService.evaluateJsonPathQuery("{ \"store\": {\n" +
+        Object jsonNode = JsonService.evaluateJsonPathQuery("{ \"store\": {\n" +
                 "    \"book\": [ \n" +
                 "      { \"category\": \"reference\",\n" +
                 "        \"author\": \"Nigel Rees\",\n" +
