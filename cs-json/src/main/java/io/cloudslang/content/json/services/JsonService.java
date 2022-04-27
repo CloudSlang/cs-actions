@@ -17,10 +17,6 @@
 
 package io.cloudslang.content.json.services;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.InvalidJsonException;
@@ -41,7 +37,10 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static io.cloudslang.content.json.utils.Constants.InputNames.EMPTY_STRING;
 
@@ -51,7 +50,7 @@ import static io.cloudslang.content.json.utils.Constants.InputNames.EMPTY_STRING
 public class JsonService {
 
     @NotNull
-    public static JsonNode evaluateJsonPathQuery(@Nullable final String jsonObject, @Nullable final String jsonPath) {
+    public static Object evaluateJsonPathQuery(@Nullable final String jsonObject, @Nullable final String jsonPath) {
         final JsonContext jsonContext = JsonUtils.getValidJsonContext(jsonObject);
         final JsonPath path = JsonUtils.getValidJsonPath(jsonPath);
         return jsonContext.read(path);

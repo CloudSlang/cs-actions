@@ -128,8 +128,11 @@ public class JsonUtils {
             final AbstractJsonProvider provider = new JacksonJsonNodeJsonProvider(objectMapper);
             final Configuration configuration = Configuration.defaultConfiguration()
                     .jsonProvider(provider);
-            final JsonContext jsonContext = new JsonContext(configuration);
-            jsonContext.parse(jsonObject);
+
+
+            final JsonContext jsonContext = (JsonContext)  JsonPath
+                    .using(configuration)
+                    .parse(jsonObject);
             return jsonContext;
         } catch (IllegalArgumentException iae) {
             throw hammerIllegalArgumentExceptionWithMessage(INVALID_JSONOBJECT, iae);
