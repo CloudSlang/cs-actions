@@ -15,7 +15,7 @@
 package io.cloudslang.content.google.actions.databases.sql.instances
 
 import java.util
-
+import com.google.api.client.json.gson.GsonFactory
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.BooleanValues.TRUE
@@ -108,7 +108,7 @@ class StartSQLInstance {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostStr, proxyPortVal, proxyUsernameOpt,
         proxyPasswordStr)
-      val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
+      val jsonFactory = GsonFactory.getDefaultInstance
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       SQLOperationStatus(SQLDatabaseInstanceService.instanceOperation(httpTransport, jsonFactory, credential, projectId,

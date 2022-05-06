@@ -2,6 +2,7 @@ package io.cloudslang.content.google.actions.authentication;
 
 public class Inputs {
     public static final String PROJECT_ID = "projectId";
+    public static final String JSON_TOKEN = "jsonToken";
     public static final String ZONE = "zone";
     public static final String FILTER = "filter";
     public static final String ORDER_BY = "orderBy";

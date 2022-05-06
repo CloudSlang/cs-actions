@@ -18,7 +18,7 @@
 package io.cloudslang.content.google.actions.compute.compute_engine.networks
 
 import java.util
-
+import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.compute.model.Network
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
@@ -123,7 +123,7 @@ class NetworksList {
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
-      val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
+      val jsonFactory = GsonFactory.getDefaultInstance
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val resultList = NetworkService.list(httpTransport, jsonFactory, credential, projectId, filterOpt, orderByOpt)

@@ -20,6 +20,7 @@ package io.cloudslang.content.google.actions.authentication
 import java.nio.charset.StandardCharsets
 import java.util
 
+import com.google.api.client.json.gson.GsonFactory
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType
@@ -101,7 +102,7 @@ class GetAccessToken {
 
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
-      val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
+      val jsonFactory = GsonFactory.getDefaultInstance
 
       val credential = GoogleAuth.fromJsonWithScopes(IOUtils.toInputStream(jsonToken, StandardCharsets.UTF_8),
         httpTransport, jsonFactory, scopes.split(scopesDel), timeout)

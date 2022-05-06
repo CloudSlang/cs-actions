@@ -18,7 +18,7 @@
 package io.cloudslang.content.google.actions.compute.compute_engine.instances
 
 import java.util
-
+import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.compute.model.Metadata.Items
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
@@ -151,7 +151,7 @@ class InstancesSetMetadata {
       val prettyPrint = toBoolean(prettyPrintStr)
 
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, toInteger(proxyPortStr), proxyUsernameOpt, proxyPassword)
-      val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
+      val jsonFactory = GsonFactory.getDefaultInstance
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val items: List[Items] = InstanceController.createMetadataItems(itemsKeysList, itemsValuesList, itemsDelimiter)

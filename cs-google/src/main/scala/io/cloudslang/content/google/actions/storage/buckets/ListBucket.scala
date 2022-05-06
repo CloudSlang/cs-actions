@@ -15,7 +15,7 @@
 package io.cloudslang.content.google.actions.storage.buckets
 
 import java.util
-
+import com.google.api.client.json.gson.GsonFactory
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
@@ -89,7 +89,7 @@ class ListBucket {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostStr, proxyPortVal, proxyUsernameOpt,
         proxyPasswordStr)
-      val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
+      val jsonFactory = GsonFactory.getDefaultInstance
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val listBucketDetails = BucketService.list(httpTransport, jsonFactory, credential, projectId, maxresultsInt,

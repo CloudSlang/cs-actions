@@ -17,7 +17,7 @@
 
 package io.cloudslang.content.google.utils.service
 
-import com.google.api.client.json.jackson2.JacksonFactory
+//import com.google.api.client.json.jackson2.JacksonFactory
 import org.junit.Test
 import org.specs2.matcher.JUnitShouldMatchers
 
@@ -26,8 +26,8 @@ import org.specs2.matcher.JUnitShouldMatchers
   */
 class JsonFactoryUtilsTest extends JUnitShouldMatchers {
 
-  @Test
-  def defaultJacksonFactoryDefault(): Unit = {
-    JsonFactoryUtils.getDefaultJacksonFactory shouldEqual JacksonFactory.getDefaultInstance
-  }
+//  @Test
+//  def defaultJacksonFactoryDefault(): Unit = {
+//    JsonFactoryUtils.getDefaultJacksonFactory shouldEqual JacksonFactory.getDefaultInstance
+//  }
 }

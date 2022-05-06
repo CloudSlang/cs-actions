@@ -15,7 +15,7 @@
 package io.cloudslang.content.google.actions.databases.sql.instances
 
 import java.util
-
+import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.sqladmin.model.DatabaseInstance
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
@@ -82,7 +82,7 @@ class ListSQLInstances {
     try {
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostStr, proxyPortVal, proxyUsernameOpt,
         proxyPasswordStr)
-      val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
+      val jsonFactory = GsonFactory.getDefaultInstance
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val instancesDelimiter = if (prettyPrint) COMMA_NEW_LINE else COMMA

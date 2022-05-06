@@ -19,6 +19,7 @@ package io.cloudslang.content.google.actions.compute.compute_engine.disks
 
 import java.util
 
+import com.google.api.client.json.gson.GsonFactory
 import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
 import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.BooleanValues.TRUE
@@ -138,7 +139,7 @@ class DetachDisk {
       val pollingIntervalMilli = convertSecondsToMilli(toDouble(pollingIntervalStr))
 
       val httpTransport = HttpTransportUtils.getNetHttpTransport(proxyHostOpt, proxyPort, proxyUsernameOpt, proxyPassword)
-      val jsonFactory = JsonFactoryUtils.getDefaultJacksonFactory
+      val jsonFactory = GsonFactory.getDefaultInstance
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       OperationStatus(InstanceService.detachDisk(httpTransport, jsonFactory, credential, projectId, zone, instanceName,

@@ -22,13 +22,14 @@ import java.security._
 import java.security.spec.RSAPublicKeySpec
 import java.text.SimpleDateFormat
 import java.util.{Date, TimeZone}
+
 import javax.crypto.Cipher
 import javax.crypto.Cipher.DECRYPT_MODE
-
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
-import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64.decodeBase64
+import com.google.api.client.util.Base64
+//import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64.decodeBase64
 import com.google.api.services.compute.model.Metadata
 import com.google.common.io.BaseEncoding.base64
 import io.cloudslang.content.google.utils.Constants._
@@ -168,7 +169,7 @@ object WindowsService {
   }
 
   private def decryptPassword(message: String, keys: KeyPair): String = {
-    val rawMessage = decodeBase64(message)
+    val rawMessage = Base64.decodeBase64(message)
     val decryptedText = rsaOaepPaddingCipher(keys, rawMessage)
     new String(decryptedText, UTF_8)
   }
