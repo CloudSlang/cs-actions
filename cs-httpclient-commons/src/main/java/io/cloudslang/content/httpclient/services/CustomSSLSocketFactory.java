@@ -8,11 +8,11 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.security.KeyStore;
 
-import static io.cloudslang.content.httpclient.utils.Constants.ALLOW_ALL;
-import static io.cloudslang.content.httpclient.utils.Constants.COMMA;
+import static io.cloudslang.content.httpclient.utils.Constants.*;
 
 public class CustomSSLSocketFactory {
 
@@ -36,6 +36,8 @@ public class CustomSSLSocketFactory {
                 sslContextBuilder.loadKeyMaterial(keyStore, httpClientInputs.getKeystorePassword().toCharArray());
 
                 return sslContextBuilder.build();
+            }catch(FileNotFoundException exception){
+                throw new RuntimeException(EXCEPTION_CERTIFICATE_NOT_FOUND);
             } catch (Exception exception) {
                 throw new RuntimeException(exception);
             }

@@ -20,7 +20,7 @@ public class HeaderBuilder {
                         counter = true;
                     } else {
                         String[] headerListSingle = eachHeader.split(COLON);
-                        httpRequest.setHeader(new HeaderObj(headerListSingle[0], headerListSingle[1]));
+                        httpRequest.setHeader(new HeaderObj(headerListSingle[0].trim(), headerListSingle[1]));
                     }
                 }
                 if(!counter)
@@ -29,7 +29,7 @@ public class HeaderBuilder {
                 String[] listheader = httpClientInputs.getHeaders().split(COMMA);
                 for (String list : listheader) {
                     String[] headerListSingle = list.split(COLON);
-                    httpRequest.setHeader(new HeaderObj(headerListSingle[0], headerListSingle[1]));
+                    httpRequest.setHeader(new HeaderObj(headerListSingle[0].trim(), headerListSingle[1]));
                 }
             }
         } else if (!httpClientInputs.getContentType().isEmpty())
