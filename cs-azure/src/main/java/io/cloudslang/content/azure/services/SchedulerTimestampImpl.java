@@ -49,6 +49,7 @@ public class SchedulerTimestampImpl {
 
         map.put(SCHEDULER_START_TIME, localDateTime.withSecond(seconds).withNano(66).format(formatter) + utcTime);
         map.put(TIME_ZONE, timeZone);
+        map.put("returnCode", "-1");
         return map;
     }
 }
