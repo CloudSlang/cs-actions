@@ -14,7 +14,6 @@
  */
 
 
-
 package io.cloudslang.content.azure.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
@@ -23,8 +22,14 @@ import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.CLIENT_ID;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.EXPIRY;
@@ -34,6 +39,7 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PRIMARY_
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PORT;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.USERNAME;
 import static io.cloudslang.content.azure.utils.Constants.*;
+import static io.cloudslang.content.azure.utils.Constants.SchedulerTimeConstants.*;
 import static io.cloudslang.content.azure.utils.Inputs.CreateVMInputs.*;
 import static io.cloudslang.content.azure.utils.StorageInputNames.BLOB_NAME;
 import static io.cloudslang.content.azure.utils.StorageInputNames.CONTAINER_NAME;
@@ -70,21 +76,21 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifyComputeInputs(@NotNull List<String> exceptions, @Nullable final String availabilitySetName, @Nullable final String diskType, @Nullable final String adminPassword, @Nullable final String sshPublicKeyName,
-                                                   @Nullable final String storageAccount, @Nullable final String storageAccountType,@Nullable final String privateImageName, @Nullable final String publisher,@Nullable final String offer, @Nullable final String sku,
+                                                   @Nullable final String storageAccount, @Nullable final String storageAccountType, @Nullable final String privateImageName, @Nullable final String publisher, @Nullable final String offer, @Nullable final String sku,
                                                    @Nullable final String diskSize) {
 
 
-       if(isEmpty(availabilitySetName) && isEmpty(diskType)){
-           exceptions.add(String.format(EXCEPTION_NULL_EMPTY_TWO_VALUES, AVAILABILITY_SET_NAME, DISK_TYPE));
-       }
-        if(isEmpty(adminPassword) && isEmpty(sshPublicKeyName)){
+        if (isEmpty(availabilitySetName) && isEmpty(diskType)) {
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY_TWO_VALUES, AVAILABILITY_SET_NAME, DISK_TYPE));
+        }
+        if (isEmpty(adminPassword) && isEmpty(sshPublicKeyName)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY_TWO_VALUES, ADMIN_PASSWORD, SSH_PUBLIC_KEY_NAME));
         }
-        if(isEmpty(storageAccount) && isEmpty(storageAccountType)){
+        if (isEmpty(storageAccount) && isEmpty(storageAccountType)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY_TWO_VALUES, STORAGE_ACCOUNT, STORAGE_ACCOUNT_TYPE));
         }
-        if(isEmpty(privateImageName) && (isEmpty(publisher) || isEmpty(offer) || isEmpty(sku))){
-            exceptions.add(String.format(EXCEPTION_NULL_EMPTY_TWO_VALUES, PRIVATE_IMAGE_NAME, (PUBLISHER + COMMA + SPACE +OFFER + COMMA + SPACE + "and " + SPACE + SKU)));
+        if (isEmpty(privateImageName) && (isEmpty(publisher) || isEmpty(offer) || isEmpty(sku))) {
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY_TWO_VALUES, PRIVATE_IMAGE_NAME, (PUBLISHER + COMMA + SPACE + OFFER + COMMA + SPACE + "and " + SPACE + SKU)));
         }
 
         if (StringUtilities.isEmpty(diskSize)) {
@@ -93,6 +99,14 @@ public final class InputsValidation {
             exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, DISK_SIZE_IN_GB));
         }
         return exceptions;
+    }
+
+    @NotNull
+    public static List<String> verifySchedulerInputs(@NotNull final String schedulerTime, @NotNull final String schedulerTimeZone) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifySchedulerTime(exceptionMessages, schedulerTime);
+        addVerifySchedulerTimezone(exceptionMessages, schedulerTimeZone);
+        return exceptionMessages;
     }
 
     @NotNull
@@ -173,5 +187,47 @@ public final class InputsValidation {
             exceptions.add(String.format(EXCEPTION_INVALID_PROXY, PROXY_PORT));
         }
         return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifySchedulerTime(@NotNull List<String> exceptions, @NotNull final String input) {
+
+        String[] timeFormat = input.split(COLON);
+        if (timeFormat.length != 3) {
+            exceptions.add(String.format(EXCEPTION_SCHEDULER_TIME, SchedulerTimeConstants.SCHEDULER_TIME));
+        } else if (!NumberUtilities.isValidInt(timeFormat[0], 0, 24)) {
+            exceptions.add(String.format(EXCEPTION_SCHEDULER_TIME, SchedulerTimeConstants.SCHEDULER_TIME));
+        } else if (!NumberUtilities.isValidInt(timeFormat[1], 0, 60)) {
+            exceptions.add(String.format(EXCEPTION_SCHEDULER_TIME, SchedulerTimeConstants.SCHEDULER_TIME));
+        } else if (!NumberUtilities.isValidInt(timeFormat[2], 0, 60)) {
+            exceptions.add(String.format(EXCEPTION_SCHEDULER_TIME, SchedulerTimeConstants.SCHEDULER_TIME));
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifySchedulerTimezone(@NotNull List<String> exceptions, @NotNull final String input) {
+        boolean flag = false;
+
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        for (String zoneId : ZoneId.getAvailableZoneIds()) {
+
+            ZoneId id = ZoneId.of(zoneId);
+            ZonedDateTime zonedDateTime = localDateTime.atZone(id);
+            ZoneOffset zoneOffset = zonedDateTime.getOffset();
+
+            String offset = zoneOffset.getId().replaceAll("Z", "+00:00");
+            if (input.equalsIgnoreCase(String.format("(UTC%s) %s", offset, id.toString()))) {
+                flag = true;
+                break;
+            }
+
+        }
+        if (!flag)
+            exceptions.add(String.format(EXCEPTION_SCHEDULER_TIMEZONE, SchedulerTimeConstants.TIME_ZONE));
+        return exceptions;
+
     }
 }
