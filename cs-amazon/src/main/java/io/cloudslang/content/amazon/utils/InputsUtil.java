@@ -25,64 +25,22 @@ import org.apache.commons.validator.routines.InetAddressValidator;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SignatureException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.S3_API;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AVAILABILITY_ZONES;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.BLOCK_DEVICE_MAPPING;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DELETE_ON_TERMINATION;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DESCRIPTION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.DEVICE_INDEX;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FILTER;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.FIXED_PREFIX;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.KEY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.LISTENERS;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NAME;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NETWORK_INTERFACE;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.REGION_NAME;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.RESOURCE_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.STANDARD;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SUBNET_ID;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.TAG;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUE;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUES;
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.ZONE_NAME;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMAZON_HOSTNAME;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.AMPERSAND;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COLON;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.COMMA_DELIMITER;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EBS;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.*;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EQUAL;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NETWORK;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Values.DEFAULT_MAX_KEYS;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.*;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Values.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.ElasticIpInputs.PRIVATE_IP_ADDRESSES_STRING;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
-
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.*;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.quote;
-
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
-import static org.apache.commons.lang3.StringUtils.indexOf;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.split;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * Created by Mihai Tusa.
@@ -413,6 +371,10 @@ public final class InputsUtil {
             return REGION_NAME + DOT + valueOf(index + ONE);
         } else if (ZONE_NAME.equalsIgnoreCase(specificArea)) {
             return ZONE_NAME + DOT + valueOf(index + ONE);
+        } else if (SECURITY_GROUP_ID_CONST.equalsIgnoreCase(specificArea)) {
+            return SECURITY_GROUP_ID_CONST + DOT + (index + ONE);
+        } else if (SECURITY_GROUP_NAME_CONST.equalsIgnoreCase(specificArea)) {
+            return SECURITY_GROUP_NAME_CONST + DOT + (index + ONE);
         } else {
             return EMPTY;
         }

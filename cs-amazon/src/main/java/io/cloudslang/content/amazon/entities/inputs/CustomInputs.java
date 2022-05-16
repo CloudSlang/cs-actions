@@ -77,6 +77,8 @@ public class CustomInputs {
     private final String valueFiltersString;
     private final String availabilityZonesString;
     private final String vpcId;
+    private final String securityGroupIdsString;
+    private final String securityGroupNamesString;
 
     private CustomInputs(Builder builder) {
         this.instanceId = builder.instanceId;
@@ -121,6 +123,8 @@ public class CustomInputs {
         this.valueFiltersString = builder.valueFiltersString;
         this.availabilityZonesString = builder.availabilityZonesString;
         this.vpcId = builder.vpcId;
+        this.securityGroupIdsString = builder.securityGroupIdsString;
+        this.securityGroupNamesString = builder.securityGroupNamesString;
     }
 
     public String getInstanceId() {
@@ -291,6 +295,14 @@ public class CustomInputs {
         return vpcId;
     }
 
+    public String getSecurityGroupIdsString() {
+        return securityGroupIdsString;
+    }
+
+    public String getSecurityGroupNamesString() {
+        return securityGroupNamesString;
+    }
+
     public static class Builder {
         private String instanceId;
         private String imageId;
@@ -334,6 +346,8 @@ public class CustomInputs {
         private String valueFiltersString;
         private String availabilityZonesString;
         private String vpcId;
+        private String securityGroupIdsString;
+        private String securityGroupNamesString;
 
         public CustomInputs build() {
             return new CustomInputs(this);
@@ -546,6 +560,16 @@ public class CustomInputs {
 
         public Builder withVpcId(String inputValue) {
             vpcId = inputValue;
+            return this;
+        }
+
+        public Builder withSecurityGroupIdsString(String inputValue) {
+            securityGroupIdsString = inputValue;
+            return this;
+        }
+
+        public Builder withSecurityGroupNamesString(String inputValue) {
+            securityGroupNamesString = inputValue;
             return this;
         }
     }

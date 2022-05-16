@@ -119,6 +119,8 @@ public class Constants {
         public static final String SECURITY_GROUP = "SecurityGroup";
         public static final String SECURITY_GROUPS = "SecurityGroups";
         public static final String SECURITY_GROUP_ID = "SecurityGroupId";
+        public static final String SECURITY_GROUP_ID_CONST = "GroupId";
+        public static final String SECURITY_GROUP_NAME_CONST = "GroupName";
         public static final String SIGNATURE_RESULT = "signature";
         public static final String SNAPSHOT_ID = "SnapshotId";
         public static final String STANDARD = "standard";
@@ -157,6 +159,7 @@ public class Constants {
         public static final String DESCRIBE_IMAGES = "DescribeImages";
         public static final String DESCRIBE_IMAGE_ATTRIBUTE = "DescribeImageAttribute";
         public static final String DESCRIBE_INSTANCES = "DescribeInstances";
+        public static final String DESCRIBE_SECURITY_GROUPS = "DescribeSecurityGroups";
         public static final String DESCRIBE_REGIONS = "DescribeRegions";
         public static final String DESCRIBE_NETWORK_INTERFACES = "DescribeNetworkInterfaces";
         public static final String DESCRIBE_TAGS = "DescribeTags";
