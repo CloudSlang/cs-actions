@@ -77,6 +77,7 @@ public class Inputs {
         public static final String PRODUCT_CODE_TYPE = "productCodeType";
         public static final String RAMDISK_ID = "ramdiskId";
         public static final String REGIONS_STRING = "regionsString";
+        public static final String SUBNET_IDS = "subnetIdsString";
         public static final String RESOURCE_IDS_STRING = "resourceIdsString";
         public static final String ROOT_DEVICE_NAME = "rootDeviceName";
         public static final String ROOT_DEVICE_TYPE = "rootDeviceType";
@@ -95,6 +96,8 @@ public class Inputs {
         public static final String FUNCTION_NAME = "function";
         public static final String FUNCTION_QUALIFIER = "qualifier";
         public static final String FUNCTION_PAYLOAD = "functionPayload";
+        public static final String DESCRIBE_SUBNET_FILTER_NAMES_STRING = "filterNamesString";
+        public static final String DESCRIBE_SUBNET_FILTER_VALUES_STRING = "filterValuesString";
     }
 
     public static class ElasticIpInputs {

@@ -84,6 +84,8 @@ class Ec2QueryParamsMapBuilder {
                 return new TagUtils().getDescribeTagsQueryParamsMap(wrapper);
             case DESCRIBE_VOLUMES:
                 return new VolumeUtils().getDescribeVolumesQueryParamsMap(wrapper);
+            case DESCRIBE_SUBNETS:
+                return new SubnetUtils().getDescribeSubnetQueryParamsMap(wrapper);
             case DEREGISTER_IMAGE:
                 return new ImageUtils().getDeregisterImageQueryParamsMap(wrapper);
             case DETACH_NETWORK_INTERFACE:

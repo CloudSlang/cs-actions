@@ -413,7 +413,10 @@ public final class InputsUtil {
             return REGION_NAME + DOT + valueOf(index + ONE);
         } else if (ZONE_NAME.equalsIgnoreCase(specificArea)) {
             return ZONE_NAME + DOT + valueOf(index + ONE);
-        } else {
+        }else if (SUBNET_ID.equalsIgnoreCase(specificArea)) {
+            return SUBNET_ID + DOT + valueOf(index + ONE) ;
+        }
+        else {
             return EMPTY;
         }
     }
