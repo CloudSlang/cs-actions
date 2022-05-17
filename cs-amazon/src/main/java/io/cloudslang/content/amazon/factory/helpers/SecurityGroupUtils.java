@@ -23,10 +23,12 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.*;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.*;
 import static io.cloudslang.content.amazon.utils.InputsUtil.*;
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Created by Mantesh Patil.
@@ -35,6 +37,8 @@ import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 
 public class SecurityGroupUtils {
     private static final String STATE = "state";
+    private static final String MAX_RESULTS = "MaxResults";
+    private static final String NEXT_TOKEN = "NextToken";
 
     public Map<String, String> getDescribeSecurityGroupsQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
@@ -51,6 +55,12 @@ public class SecurityGroupUtils {
         setFilters(queryParamsMap, wrapper.getCustomInputs().getKeyFiltersString(), wrapper.getCustomInputs().getValueFiltersString(),
                 wrapper.getCommonInputs().getDelimiter());
 
+        setOptionalMapEntry(queryParamsMap, MAX_RESULTS, wrapper.getFilterInputs().getMaxResults(),
+                !NOT_RELEVANT.equalsIgnoreCase(wrapper.getFilterInputs().getMaxResults()));
+
+        setOptionalMapEntry(queryParamsMap, NEXT_TOKEN, wrapper.getFilterInputs().getNextToken(),
+                isNotBlank(wrapper.getFilterInputs().getNextToken()));
+
         return queryParamsMap;
     }
 
@@ -59,6 +69,12 @@ public class SecurityGroupUtils {
             for (int index = START_INDEX; index < inputArray.length; index++) {
                 queryParamsMap.put(getQueryParamsSpecificString(specificString, index), inputArray[index]);
             }
+        }
+    }
+
+    public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
+        if (condition) {
+            inputMap.put(key, value);
         }
     }
 

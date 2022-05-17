@@ -42,7 +42,7 @@ public class CreateStackActionTest {
     public static String proxyPort = null;
     public static String TEST_STACK_NAME = "CloudSlang-Test-Stack";
 
-    @Before
+    //@Before
     public void setUp() {
         try {
             String proxy = System.getenv().get("HTTP_PROXY");
@@ -54,12 +54,12 @@ public class CreateStackActionTest {
         TEST_STACK_NAME = TEST_STACK_NAME + "-" + UUID.randomUUID();
     }
 
-    @After
+   // @After
     public void tearDown() {
         proxyHost = proxyPort = null;
     }
 
-    @Test
+   // @Test
     public void execute() {
         AWSCredentialsProvider awsCreds = new DefaultAWSCredentialsProviderChain();
         CreateStackAction createStackAction = new CreateStackAction();
