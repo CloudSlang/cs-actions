@@ -17,13 +17,12 @@
 
 package io.cloudslang.content.amazon.entities.inputs;
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.aws.AmazonApi;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.jetbrains.annotations.NotNull;
 
-import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
-
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.SCOPE_SEPARATOR;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 
 /**
  * Created by Mihai Tusa.
@@ -40,6 +39,7 @@ public class InputsWrapper {
     private InstanceInputs instanceInputs;
     private LoadBalancerInputs loadBalancerInputs;
     private NetworkInputs networkInputs;
+    private SecurityGroupInputs securityGroupInputs;
     private StorageInputs storageInputs;
     private VolumeInputs volumeInputs;
     private FilterInputs filterInputs;
@@ -145,6 +145,14 @@ public class InputsWrapper {
 
     public void setNetworkInputs(NetworkInputs networkInputs) {
         this.networkInputs = networkInputs;
+    }
+
+    public SecurityGroupInputs getSecurityGroupInputs() {
+        return securityGroupInputs;
+    }
+
+    public void setSecurityGroupInputs(SecurityGroupInputs securityGroupInputs) {
+        this.securityGroupInputs = securityGroupInputs;
     }
 
     public VolumeInputs getVolumeInputs() {
