@@ -46,6 +46,8 @@ public class Constants {
         public static final String STORAGE_DEFAULT_API_VERSION = "2006-03-01";
         public static final String TAGS_DEFAULT_API_VERSION = "2016-11-15";
         public static final String VOLUMES_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String SECURITY_GROUPS_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String VPC_DEFAULT_API_VERSION = "2016-11-15";
     }
 
     public static class ErrorMessages {
@@ -164,6 +166,7 @@ public class Constants {
         public static final String DESCRIBE_NETWORK_INTERFACES = "DescribeNetworkInterfaces";
         public static final String DESCRIBE_TAGS = "DescribeTags";
         public static final String DESCRIBE_VOLUMES = "DescribeVolumes";
+        public static final String DESCRIBE_VPCS = "DescribeVpcs";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
         public static final String DETACH_VOLUME = "DetachVolume";
         public static final String DISASSOCIATE_ADDRESS = "DisassociateAddress";
