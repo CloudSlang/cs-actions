@@ -139,6 +139,7 @@ public class DescribeSubnetsAction {
 
         try {
             version = getDefaultStringInput(version, DESCRIBE_SUBNET_DEFAULT_API_VERSION);
+
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)
