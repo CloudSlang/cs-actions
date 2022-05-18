@@ -23,6 +23,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.CustomInputs;
+import io.cloudslang.content.amazon.entities.inputs.FilterInputs;
 import io.cloudslang.content.amazon.entities.inputs.SecurityGroupInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;
 import io.cloudslang.content.amazon.utils.ExceptionProcessor;
@@ -37,6 +38,8 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2Query
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.*;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.MAX_RESULTS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.NEXT_TOKEN;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
@@ -103,6 +106,14 @@ public class DescribeSecurityGroupsAction {
      * @param filterValuesString       Optional - String that contains one or more values that represents filters values.
      *                                 For a complete list of valid filters see: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSecurityGroups.html
      *                                 Default (describes all your security groups): ""
+     * @param maxResults               Optional - The maximum number of results to return in a single call. To retrieve the
+     *                                 remaining results, make another call with the returned NextToken value. This value can
+     *                                 be between 5 and 1000. You cannot specify this parameter and the instance IDs parameter
+     *                                 or tag filters in the same call.
+     *                                 Default: ""
+     * @param nextToken                Optional - The token to use to retrieve the next page of results. This value is null when
+     *                                 there are no more results to return.
+     *                                 Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
@@ -133,7 +144,9 @@ public class DescribeSecurityGroupsAction {
                                        @Param(value = VERSION) String version,
                                        @Param(value = DELIMITER) String delimiter,
                                        @Param(value = SECURITY_GROUP_FILTER_NAMES_STRING) String filterNamesString,
-                                       @Param(value = SECURITY_GROUP_FILTER_VALUES_STRING) String filterValuesString) {
+                                       @Param(value = SECURITY_GROUP_FILTER_VALUES_STRING) String filterValuesString,
+                                       @Param(value = MAX_RESULTS) String maxResults,
+                                       @Param(value = NEXT_TOKEN) String nextToken) {
 
         try {
             version = getDefaultStringInput(version, SECURITY_GROUPS_DEFAULT_API_VERSION);
@@ -156,21 +169,26 @@ public class DescribeSecurityGroupsAction {
                     .withHttpClientMethod(HTTP_CLIENT_METHOD_GET)
                     .build();
 
-            final CustomInputs customInputs = new CustomInputs.Builder()
-                    .withKeyFiltersString(filterNamesString)
-                    .withValueFiltersString(filterValuesString)
-                    .build();
-
             final SecurityGroupInputs securityGroupInputs = new SecurityGroupInputs.Builder()
                     .withSecurityGroupIdsString(securityGroupIdsString)
                     .withSecurityGroupNamesString(securityGroupNamesString)
                     .build();
 
-            return new QueryApiExecutor().execute(commonInputs, customInputs, securityGroupInputs);
+            final CustomInputs customInputs = new CustomInputs.Builder()
+                    .withKeyFiltersString(filterNamesString)
+                    .withValueFiltersString(filterValuesString)
+                    .build();
+
+            final FilterInputs filterInputs = new FilterInputs.Builder()
+                    .withMaxResults(maxResults)
+                    .withNextToken(nextToken)
+                    .build();
+
+
+            return new QueryApiExecutor().execute(commonInputs, securityGroupInputs, customInputs, filterInputs);
         } catch (Exception e) {
             return ExceptionProcessor.getExceptionResult(e);
         }
     }
 }
-
 
