@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -33,7 +33,6 @@ import java.util.Map;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
 import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.DESCRIBE_SUBNET_DEFAULT_API_VERSION;
-import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.IMAGES_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.DESCRIBE_SUBNETS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
@@ -96,14 +95,14 @@ public class DescribeSubnetsAction {
      *                           Default: ""
      * @param filterValuesString Optional - String that contains one or more values that represents filters values.
      *                           Default: ""
-     * @param maxResults               Optional - The maximum number of results to return in a single call. To retrieve the
-     *                                 remaining results, make another call with the returned NextToken value. This value can
-     *                                 be between 5 and 1000. You cannot specify this parameter and the instance IDs parameter
-     *                                 or tag filters in the same call.
-     *                                 Default: ""
-     * @param nextToken                Optional - The token to use to retrieve the next page of results. This value is null when
-     *                                 there are no more results to return.
-     *                                 Default: ""
+     * @param maxResults         Optional - The maximum number of results to return in a single call. To retrieve the
+     *                           remaining results, make another call with the returned NextToken value. This value can
+     *                           be between 5 and 1000. You cannot specify this parameter and the instance IDs parameter
+     *                           or tag filters in the same call.
+     *                           Default: ""
+     * @param nextToken          Optional - The token to use to retrieve the next page of results. This value is null when
+     *                           there are no more results to return.
+     *                           Default: ""
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
