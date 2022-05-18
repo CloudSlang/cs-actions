@@ -191,16 +191,24 @@ public final class InputsValidation {
 
     @NotNull
     private static List<String> addVerifySchedulerTime(@NotNull List<String> exceptions, @NotNull final String input) {
-
         String[] timeFormat = input.split(COLON);
         if (timeFormat.length != 3) {
             exceptions.add(String.format(EXCEPTION_SCHEDULER_TIME, SchedulerTimeConstants.SCHEDULER_TIME));
-        } else if (!NumberUtilities.isValidInt(timeFormat[0], 0, 24)) {
-            exceptions.add(String.format(EXCEPTION_SCHEDULER_TIME, SchedulerTimeConstants.SCHEDULER_TIME));
-        } else if (!NumberUtilities.isValidInt(timeFormat[1], 0, 60)) {
-            exceptions.add(String.format(EXCEPTION_SCHEDULER_TIME, SchedulerTimeConstants.SCHEDULER_TIME));
-        } else if (!NumberUtilities.isValidInt(timeFormat[2], 0, 60)) {
-            exceptions.add(String.format(EXCEPTION_SCHEDULER_TIME, SchedulerTimeConstants.SCHEDULER_TIME));
+        } else {
+            try {
+                int hour = Integer.parseInt(timeFormat[0]);
+                int minutes = Integer.parseInt(timeFormat[1]);
+                int seconds = Integer.parseInt(timeFormat[2]);
+                if (!NumberUtilities.isValidInt(String.valueOf(hour), 0, 24)) {
+                    exceptions.add(String.format(EXCEPTION_SCHEDULER_HOUR_TIME, "Hour"));
+                } else if (!NumberUtilities.isValidInt(String.valueOf(minutes), 0, 60)) {
+                    exceptions.add(String.format(EXCEPTION_SCHEDULER_MINUTES_TIME, "Minutes"));
+                } else if (!NumberUtilities.isValidInt(String.valueOf(seconds), 0, 60)) {
+                    exceptions.add(String.format(EXCEPTION_SCHEDULER_MINUTES_TIME, "Seconds"));
+                }
+            } catch (Exception e) {
+                exceptions.add(String.format(EXCEPTION_SCHEDULER_TIME, SchedulerTimeConstants.SCHEDULER_TIME));
+            }
         }
         return exceptions;
     }
