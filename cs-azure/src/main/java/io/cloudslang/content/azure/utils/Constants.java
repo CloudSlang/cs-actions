@@ -54,9 +54,9 @@ public final class Constants {
     public static class Common {
         public static final String SET_TYPE = "Microsoft.Storage/Blob";
         public static final String PATH_PATTERN = " ";
-        public static final String TYPE ="Csv";
-        public static final String ENCODING ="UTF8";
-        public static final String FIELD_DELIMETER =",";
+        public static final String TYPE = "Csv";
+        public static final String ENCODING = "UTF8";
+        public static final String FIELD_DELIMETER = ",";
         public static final String API = "/api";
         public static final String NEW_LINE = "\n";
         public static final String DEFAULT_API_VERSION = "2016-03-01";
@@ -120,11 +120,13 @@ public final class Constants {
         public static final String EMPTY_JSON = "{}";
 
     }
+
     public static class DeleteVMConstants {
         public static final String DELETE_VM = "Delete VM";
 
     }
-    public static class CreateVMConstants{
+
+    public static class CreateVMConstants {
         public static final String CREATE_VM = "Create VM";
         public static final String AZURE_PROTOCOL_PREFIX = "://";
         public static final String AZURE_CREATE_VM_PATH = "/providers/Microsoft.Compute/virtualMachines/";
@@ -170,7 +172,7 @@ public final class Constants {
     }
 
     public static class CreateStreamingInputJobConstants {
-        public static final String CREATE_STREAMING_INPUT_JOB_OPERATION_NAME = "Create Streaming Job Input" ;
+        public static final String CREATE_STREAMING_INPUT_JOB_OPERATION_NAME = "Create Streaming Job Input";
         public static final String DEFAULT_SOURCE_TYPE = "Stream";
         public static final String STREAM_JOB_INPUT_NAME_PATH = "$.name";
     }
@@ -203,20 +205,39 @@ public final class Constants {
         public static final String TRANSFORMATION_ID_JSON_PATH = "$.id";
     }
 
-    public static class CounterConstants{
-        public static final String RESULT_STRING="resultString";
-        public static final String INCREMENT_BY_DEFAULT_VALUE="1";
-        public static final String RESULT="result";
-        public static final String HASMORE="has more";
-        public static final String NOMORE="no more";
-        public static final String FAILURE="failure";
-        public static final String EXCEPTION="exception";
-        public static final String COUNTER_OPERATION_NAME="Counter";
-        public static final String TO="to";
-        public static final String FROM="from";
-        public static final String INCREMENT_BY="incrementBy";
-        public static final String SESSION_COUNTER="sessionCounter";
-        public static final String RESET="reset";
+    public static class CounterConstants {
+        public static final String RESULT_STRING = "resultString";
+        public static final String INCREMENT_BY_DEFAULT_VALUE = "1";
+        public static final String RESULT = "result";
+        public static final String HASMORE = "has more";
+        public static final String NOMORE = "no more";
+        public static final String FAILURE = "failure";
+        public static final String EXCEPTION = "exception";
+        public static final String COUNTER_OPERATION_NAME = "Counter";
+        public static final String TO = "to";
+        public static final String FROM = "from";
+        public static final String INCREMENT_BY = "incrementBy";
+        public static final String SESSION_COUNTER = "sessionCounter";
+        public static final String RESET = "reset";
+
+
+    }
+
+    public static class SchedulerTimeConstants {
+        public static final String SCHEDULER_START_TIME = "schedulerStartTime";
+        public static final String SCHEDULER_TIME_ZONE = "schedulerTimeZone";
+        public static final String TIME_ZONE = "timeZone";
+        public static final String TRIGGER_EXPRESSION = "triggerExpression";
+        public static final String SCHEDULER_TIME = "schedulerTime";
+        public static final String COLON = ":";
+        public static final String FAILURE = "failure";
+        public static final String EXCEPTION = "exception";
+        public static final String SCHEDULER_TIME_OPERATION_NAME = "Scheduler Time";
+
+        public static final String EXCEPTION_SCHEDULER_TIME = "The %s format should be in HH:MM:SS format.";
+        public static final String EXCEPTION_SCHEDULER_HOUR_TIME = "The %s format should be in between 0 to 23.";
+        public static final String EXCEPTION_SCHEDULER_MINUTES_TIME = "The %s format should be in between 0 to 59.";
+        public static final String EXCEPTION_SCHEDULER_TIMEZONE = "The %s is not a valid.";
 
 
     }

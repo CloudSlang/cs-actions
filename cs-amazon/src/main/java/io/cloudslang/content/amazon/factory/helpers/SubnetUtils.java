@@ -12,54 +12,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.aws.AvailabilityZoneState;
+import io.cloudslang.content.amazon.entities.constants.Constants;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.*;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NAME;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUES;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
-import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.*;
 import static io.cloudslang.content.amazon.utils.InputsUtil.*;
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-/**
- * Created by Mantesh Patil.
- * 16/05/2022.
- */
-
-public class SecurityGroupUtils {
+public class SubnetUtils {
     private static final String STATE = "state";
-    private static final String MAX_RESULTS = "MaxResults";
-    private static final String NEXT_TOKEN = "NextToken";
-    public Map<String, String> getDescribeSecurityGroupsQueryParamsMap(InputsWrapper wrapper) {
+
+    @NotNull
+    public Map<String, String> getDescribeSubnetQueryParamsMap(@NotNull InputsWrapper wrapper) {
+/*        final Map<String, String> queryParamsMap = new LinkedHashMap<>();
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+
+        final List<String> networkInterfaceIds = getStringsList(wrapper.getNetworkInputs().getNetworkInterfaceId(), wrapper.getCommonInputs().getDelimiter());
+        putCollectionInQueryMap(queryParamsMap, NETWORK_INTERFACE_ID, networkInterfaceIds);
+
+        final Map<String, String> filterQueryMap = getFiltersQueryMap(wrapper.getFilterInputs(), new NetworkFilterValidator());
+        queryParamsMap.putAll(filterQueryMap);
+
+        return queryParamsMap;*/
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
         setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
 
-        String[] securityGroupIdsArray = getArrayWithoutDuplicateEntries(wrapper.getSecurityGroupInputs().getSecurityGroupIdsString(),
-                SECURITY_GROUP_IDS, wrapper.getCommonInputs().getDelimiter());
-        setSpecificQueryParamsMap(queryParamsMap, securityGroupIdsArray, SECURITY_GROUP_ID_CONST);
-
-        String[] securityGroupNamesArray = getArrayWithoutDuplicateEntries(wrapper.getSecurityGroupInputs().getSecurityGroupNamesString(),
-                SECURITY_GROUP_NAMES, wrapper.getCommonInputs().getDelimiter());
-        setSpecificQueryParamsMap(queryParamsMap, securityGroupNamesArray, SECURITY_GROUP_NAME_CONST);
+        String[] subnetIdsArray = getArrayWithoutDuplicateEntries(wrapper.getNetworkInputs().getSubnetIdsString(),
+                SUBNET_IDS, wrapper.getCommonInputs().getDelimiter());
+        setSpecificQueryParamsMap(queryParamsMap, subnetIdsArray, Constants.AwsParams.SUBNET_ID);
 
         setFilters(queryParamsMap, wrapper.getCustomInputs().getKeyFiltersString(), wrapper.getCustomInputs().getValueFiltersString(),
                 wrapper.getCommonInputs().getDelimiter());
 
-        setOptionalMapEntry(queryParamsMap, MAX_RESULTS, wrapper.getFilterInputs().getMaxResults(),
-                !NOT_RELEVANT.equalsIgnoreCase(wrapper.getFilterInputs().getMaxResults()));
-
-        setOptionalMapEntry(queryParamsMap, NEXT_TOKEN, wrapper.getFilterInputs().getNextToken(),
-                isNotBlank(wrapper.getFilterInputs().getNextToken()));
-      
         return queryParamsMap;
     }
 
@@ -68,12 +63,6 @@ public class SecurityGroupUtils {
             for (int index = START_INDEX; index < inputArray.length; index++) {
                 queryParamsMap.put(getQueryParamsSpecificString(specificString, index), inputArray[index]);
             }
-        }
-    }
-
-    public static void setOptionalMapEntry(Map<String, String> inputMap, String key, String value, boolean condition) {
-        if (condition) {
-            inputMap.put(key, value);
         }
     }
 
@@ -91,4 +80,5 @@ public class SecurityGroupUtils {
             }
         }
     }
+
 }
