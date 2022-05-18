@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -46,6 +46,7 @@ public class Constants {
         public static final String STORAGE_DEFAULT_API_VERSION = "2006-03-01";
         public static final String TAGS_DEFAULT_API_VERSION = "2016-11-15";
         public static final String VOLUMES_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String DESCRIBE_SUBNET_DEFAULT_API_VERSION = "2016-11-15";
     }
 
     public static class ErrorMessages {
@@ -162,6 +163,7 @@ public class Constants {
         public static final String DESCRIBE_SECURITY_GROUPS = "DescribeSecurityGroups";
         public static final String DESCRIBE_REGIONS = "DescribeRegions";
         public static final String DESCRIBE_NETWORK_INTERFACES = "DescribeNetworkInterfaces";
+        public static final String DESCRIBE_SUBNETS="DescribeSubnets";
         public static final String DESCRIBE_TAGS = "DescribeTags";
         public static final String DESCRIBE_VOLUMES = "DescribeVolumes";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";

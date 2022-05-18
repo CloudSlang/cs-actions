@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -371,6 +371,8 @@ public final class InputsUtil {
             return REGION_NAME + DOT + valueOf(index + ONE);
         } else if (ZONE_NAME.equalsIgnoreCase(specificArea)) {
             return ZONE_NAME + DOT + valueOf(index + ONE);
+        }else if (SUBNET_ID.equalsIgnoreCase(specificArea)) {
+            return SUBNET_ID + DOT + valueOf(index + ONE) ;
         } else if (SECURITY_GROUP_ID_CONST.equalsIgnoreCase(specificArea)) {
             return SECURITY_GROUP_ID_CONST + DOT + (index + ONE);
         } else if (SECURITY_GROUP_NAME_CONST.equalsIgnoreCase(specificArea)) {
