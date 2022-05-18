@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.amazon.actions.subnets;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -18,12 +32,15 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Apis.EC2_API;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.HTTP_CLIENT_METHOD_GET;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.DESCRIBE_SUBNET_DEFAULT_API_VERSION;
+import static io.cloudslang.content.amazon.entities.constants.Constants.DefaultApiVersion.IMAGES_DEFAULT_API_VERSION;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.DESCRIBE_SUBNETS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.MAX_RESULTS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.NEXT_TOKEN;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
@@ -90,7 +107,7 @@ public class DescribeSubnetsAction {
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      * operation, or failure message and the exception if there is one
      */
-    @Action(name = "Describe Subnet",
+    @Action(name = "Describe Subnets",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
@@ -121,7 +138,7 @@ public class DescribeSubnetsAction {
                                        @Param(value = NEXT_TOKEN) String nextToken) {
 
         try {
-
+            version = getDefaultStringInput(version, DESCRIBE_SUBNET_DEFAULT_API_VERSION);
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withEndpoint(endpoint, EC2_API, EMPTY)
                     .withIdentity(identity)

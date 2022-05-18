@@ -41,7 +41,7 @@ public class Constants {
         public static final String INSTANCES_DEFAULT_API_VERSION = "2016-11-15";
         public static final String LOAD_BALANCER_DEFAULT_API_VERSION = "2015-12-01";
         public static final String NETWORK_DEFAULT_API_VERSION = "2016-11-15";
-        public static final String DESCRIBE_SUBNET_DEFAULT_API_VERSION = "2014_06_15";
+        public static final String DESCRIBE_SUBNET_DEFAULT_API_VERSION = "2016-11-15";
         public static final String REGIONS_DEFAULT_API_VERSION = "2016-11-15";
         public static final String SNAPSHOTS_DEFAULT_API_VERSION = "2016-11-15";
         public static final String STORAGE_DEFAULT_API_VERSION = "2006-03-01";
