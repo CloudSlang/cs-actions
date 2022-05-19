@@ -40,6 +40,7 @@ public class InputsWrapper {
     private LoadBalancerInputs loadBalancerInputs;
     private NetworkInputs networkInputs;
     private SecurityGroupInputs securityGroupInputs;
+    private VPCInputs vpcInputs;
     private StorageInputs storageInputs;
     private VolumeInputs volumeInputs;
     private FilterInputs filterInputs;
@@ -153,6 +154,14 @@ public class InputsWrapper {
 
     public void setSecurityGroupInputs(SecurityGroupInputs securityGroupInputs) {
         this.securityGroupInputs = securityGroupInputs;
+    }
+
+    public VPCInputs getVpcInputs() {
+        return vpcInputs;
+    }
+
+    public void setVpcInputs(VPCInputs vpcInputs) {
+        this.vpcInputs = vpcInputs;
     }
 
     public VolumeInputs getVolumeInputs() {
