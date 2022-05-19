@@ -48,7 +48,7 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 
 /**
  * Created by Amey Dwivedi.
- * 17/05/2022.
+ * 17/05/2022 (DD/MM/YYYY).
  */
 
 public class DescribeVpcsAction {

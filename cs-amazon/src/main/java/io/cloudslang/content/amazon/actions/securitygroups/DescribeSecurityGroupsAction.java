@@ -47,7 +47,7 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 
 /**
  * Created by Mantesh Patil.
- * 16/05/2022.
+ * 16/05/2022 (DD/MM/YYYY).
  */
 public class DescribeSecurityGroupsAction {
     /**
