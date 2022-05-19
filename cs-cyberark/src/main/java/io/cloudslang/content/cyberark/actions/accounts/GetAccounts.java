@@ -1,3 +1,31 @@
+/*
+ * (c) Copyright 2022 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+/*
+ * (c) Copyright 2022 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.cyberark.actions.accounts;
 
 
@@ -10,10 +38,29 @@ import io.cloudslang.content.utils.*;
 
 import java.util.*;
 
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.CONNECTIONS_MAX_PER_ROUTE;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.CONNECTIONS_MAX_TOTAL;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.CONNECT_TIMEOUT;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.EXECUTION_TIMEOUT;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.HOST;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.KEEP_ALIVE;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.KEYSTORE;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROTOCOL;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROXY_HOST;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROXY_PASSWORD;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROXY_PORT;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROXY_USERNAME;
 import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.*;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.TLS_VERSION;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.TRUST_KEYSTORE;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.TRUST_PASSWORD;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.cyberark.utils.Constants.GetAccountsConstants.*;
 import static io.cloudslang.content.cyberark.utils.Constants.OtherConstants.*;
 import static io.cloudslang.content.cyberark.utils.CyberarkUtils.*;
+import static io.cloudslang.content.httpclient.utils.Constants.CONTENT_TYPE;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
 import static org.apache.commons.lang3.StringUtils.*;
