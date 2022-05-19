@@ -17,30 +17,31 @@ import static io.cloudslang.content.httpclient.utils.Constants.*;
 public class CustomSSLSocketFactory {
 
     private static SSLContext createSSLContext(HttpClientInputs httpClientInputs) {
+        SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
+        KeyStore keyStore;
 
-
-        if (Boolean.parseBoolean(httpClientInputs.getTrustAllRoots())) {
-            try {
-                return new SSLContextBuilder().loadTrustMaterial(null, new TrustAllStrategy()).build();
-            } catch (Exception exception) {
-                throw new RuntimeException(exception);
-            }
-        } else {
-            try {
-                KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        try {
+            if (!httpClientInputs.getKeystore().isEmpty()) {
+                keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
                 try (InputStream in = new FileInputStream(httpClientInputs.getKeystore())) {
                     keyStore.load(in, httpClientInputs.getKeystorePassword().toCharArray());
                 }
-                SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
-                sslContextBuilder.loadTrustMaterial(new File(httpClientInputs.getTrustKeystore()), httpClientInputs.getTrustPassword().toCharArray());
                 sslContextBuilder.loadKeyMaterial(keyStore, httpClientInputs.getKeystorePassword().toCharArray());
-
-                return sslContextBuilder.build();
-            }catch(FileNotFoundException exception){
-                throw new RuntimeException(EXCEPTION_CERTIFICATE_NOT_FOUND);
-            } catch (Exception exception) {
-                throw new RuntimeException(exception);
             }
+
+            if (Boolean.parseBoolean(httpClientInputs.getTrustAllRoots())) {
+                if (httpClientInputs.getTrustKeystore().isEmpty())
+                    sslContextBuilder.loadTrustMaterial(new TrustAllStrategy());
+                else
+                    sslContextBuilder.loadTrustMaterial(new File(httpClientInputs.getTrustKeystore()), httpClientInputs.getTrustPassword().toCharArray(), new TrustAllStrategy());
+            } else if (!httpClientInputs.getTrustKeystore().isEmpty())
+                sslContextBuilder.loadTrustMaterial(new File(httpClientInputs.getTrustKeystore()), httpClientInputs.getTrustPassword().toCharArray());
+
+            return sslContextBuilder.build();
+        } catch (FileNotFoundException exception) {
+            throw new RuntimeException(EXCEPTION_CERTIFICATE_NOT_FOUND);
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
         }
     }
 
