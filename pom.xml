@@ -347,6 +347,7 @@
         <module>cs-vmware</module>
         <module>cs-winrm</module>
         <module>cs-xml</module>
+        <module>cs-cyberark</module>
     </modules>
 
 </project>
