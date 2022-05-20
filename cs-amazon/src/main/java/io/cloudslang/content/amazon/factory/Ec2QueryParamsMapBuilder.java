@@ -90,6 +90,8 @@ class Ec2QueryParamsMapBuilder {
                 return new VpcUtils().getDescribeVpcsQueryParamsMap(wrapper);
             case DESCRIBE_SUBNETS:
                 return new SubnetUtils().getDescribeSubnetQueryParamsMap(wrapper);
+            case DESCRIBE_KEYPAIRS:
+                return new KeyPairsUtils().getDescribeKeyPairsQueryParamsMap(wrapper);
             case DEREGISTER_IMAGE:
                 return new ImageUtils().getDeregisterImageQueryParamsMap(wrapper);
             case DETACH_NETWORK_INTERFACE:
