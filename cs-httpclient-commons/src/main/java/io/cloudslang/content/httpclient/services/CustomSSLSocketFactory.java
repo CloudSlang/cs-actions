@@ -30,10 +30,7 @@ public class CustomSSLSocketFactory {
             }
 
             if (Boolean.parseBoolean(httpClientInputs.getTrustAllRoots())) {
-                if (httpClientInputs.getTrustKeystore().isEmpty())
                     sslContextBuilder.loadTrustMaterial(new TrustAllStrategy());
-                else
-                    sslContextBuilder.loadTrustMaterial(new File(httpClientInputs.getTrustKeystore()), httpClientInputs.getTrustPassword().toCharArray(), new TrustAllStrategy());
             } else if (!httpClientInputs.getTrustKeystore().isEmpty())
                 sslContextBuilder.loadTrustMaterial(new File(httpClientInputs.getTrustKeystore()), httpClientInputs.getTrustPassword().toCharArray());
 
