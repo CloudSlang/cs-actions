@@ -104,8 +104,6 @@ public class HttpClientPatchAction {
 
         tlsVersion = defaultIfEmpty(tlsVersion, TLSv12);
         allowedCiphers = defaultIfEmpty(allowedCiphers, DEFAULT_ALLOWED_CIPHERS);
-        trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
-        keystorePassword = defaultIfEmpty(keystorePassword, CHANGEIT);
 
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, DEFAULT_CONNECTIONS_MAX_PER_ROUTE);

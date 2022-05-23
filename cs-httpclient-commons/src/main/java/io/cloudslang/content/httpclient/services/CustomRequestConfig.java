@@ -43,7 +43,7 @@ public class CustomRequestConfig {
 
         if (!httpClientInputs.getProxyHost().isEmpty()) {
             requestConfigBuilder.setProxyPreferredAuthSchemes(Collections.singletonList(BASIC));
-            requestConfigBuilder.setProxy(new HttpHost(httpClientInputs.getProxyHost(), httpClientInputs.getProxyPort()));
+            requestConfigBuilder.setProxy(new HttpHost(httpClientInputs.getProxyHost(), Integer.parseInt(httpClientInputs.getProxyPort())));
         }
         return requestConfigBuilder.build();
     }
