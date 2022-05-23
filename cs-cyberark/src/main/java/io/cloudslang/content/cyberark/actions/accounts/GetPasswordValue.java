@@ -1,17 +1,3 @@
-/*
- * (c) Copyright 2022 Micro Focus
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
 package io.cloudslang.content.cyberark.actions.accounts;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -70,7 +56,7 @@ public class GetPasswordValue {
             @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESCRIPTION) String proxyUsername,
             @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESCRIPTION) String proxyPassword,
             @Param(value = TLS_VERSION, description = TLS_VERSION_DESCRIPTION) String tlsVersion,
-            @Param(value = ALLOWED_CYPHERS, description = ALLOWED_CYPHERS_DESCRIPTION) String allowedCyphers,
+            @Param(value = ALLOWED_CIPHERS, description = ALLOWED_CIPHERS_DESCRIPTION) String allowedCiphers,
             @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESCRIPTION) String trustAllRoots,
             @Param(value = X509_HOSTNAME_VERIFIER, description = X509_HOSTNAME_VERIFIER_DESCRIPTION) String x509HostnameVerifier,
             @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESCRIPTION) String trustKeystore,
@@ -105,7 +91,7 @@ public class GetPasswordValue {
                     proxyUsername,
                     proxyPassword,
                     tlsVersion,
-                    allowedCyphers,
+                    allowedCiphers,
                     trustAllRoots,
                     x509HostnameVerifier,
                     trustKeystore,
@@ -130,11 +116,13 @@ public class GetPasswordValue {
                     sessionConnectionPool
             );
 
-            removeUnusedHttpResults(result);
+            processHttpResult(result);
 
-            JSONParser parser = new JSONParser();
-            JSONObject json = (JSONObject) parser.parse(result.get(RETURN_RESULT));
-            result.put(PASSWORD_VALUE, json.getAsString(CONTENT));
+            if (result.get(RETURN_CODE).equals("0")) {
+                JSONParser parser = new JSONParser();
+                JSONObject json = (JSONObject) parser.parse(result.get(RETURN_RESULT));
+                result.put(PASSWORD_VALUE, json.getAsString(CONTENT));
+            }
 
             return result;
 

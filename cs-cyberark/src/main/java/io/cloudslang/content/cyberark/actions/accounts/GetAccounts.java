@@ -1,69 +1,32 @@
-/*
- * (c) Copyright 2022 Micro Focus
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
-/*
- * (c) Copyright 2022 Micro Focus
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.cloudslang.content.cyberark.actions.accounts;
 
 
-import com.hp.oo.sdk.content.annotations.*;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.*;
-import com.hp.oo.sdk.content.plugin.*;
-import io.cloudslang.content.constants.*;
-import io.cloudslang.content.httpclient.actions.*;
-import io.cloudslang.content.utils.*;
+import com.hp.oo.sdk.content.annotations.Action;
+import com.hp.oo.sdk.content.annotations.Output;
+import com.hp.oo.sdk.content.annotations.Param;
+import com.hp.oo.sdk.content.annotations.Response;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+import io.cloudslang.content.constants.OutputNames;
+import io.cloudslang.content.constants.ResponseNames;
+import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
+import io.cloudslang.content.utils.OutputUtilities;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.CONNECTIONS_MAX_PER_ROUTE;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.CONNECTIONS_MAX_TOTAL;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.CONNECT_TIMEOUT;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.EXECUTION_TIMEOUT;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.HOST;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.KEEP_ALIVE;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.KEYSTORE;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.KEYSTORE_PASSWORD;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROTOCOL;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROXY_HOST;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROXY_PASSWORD;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROXY_PORT;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROXY_USERNAME;
 import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.*;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.TLS_VERSION;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.TRUST_ALL_ROOTS;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.TRUST_KEYSTORE;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.TRUST_PASSWORD;
-import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.cyberark.utils.Constants.GetAccountsConstants.*;
 import static io.cloudslang.content.cyberark.utils.Constants.OtherConstants.*;
 import static io.cloudslang.content.cyberark.utils.CyberarkUtils.*;
-import static io.cloudslang.content.httpclient.utils.Constants.CONTENT_TYPE;
-import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
-import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
-import static org.apache.commons.lang3.StringUtils.*;
+import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_CONNECTION_POOL_DESC;
+import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_COOKIES_DESC;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_CONNECTION_POOL;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_COOKIES;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class GetAccounts {
 
@@ -86,6 +49,7 @@ public class GetAccounts {
             @Param(value = SEARCH, description = SEARCH_DESCRIPTION) String search,
             @Param(value = SEARCH_TYPE, description = SEARCH_TYPE_DESCRIPTION) String searchType,
             @Param(value = SORT, description = SORT_DESCRIPTION) String sort,
+            @Param(value = OFFSET, description = OFFSET_DESCRIPTION) String offset,
             @Param(value = LIMIT, description = LIMIT_DESCRIPTION) String limit,
             @Param(value = FILTER, description = FILTER_DESCRIPTION) String filter,
             @Param(value = SAVED_FILTER, description = SAVED_FILTER_DESCRIPTION) String savedFilter,
@@ -94,7 +58,7 @@ public class GetAccounts {
             @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESCRIPTION) String proxyUsername,
             @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESCRIPTION) String proxyPassword,
             @Param(value = TLS_VERSION, description = TLS_VERSION_DESCRIPTION) String tlsVersion,
-            @Param(value = ALLOWED_CYPHERS, description = ALLOWED_CYPHERS_DESCRIPTION) String allowedCyphers,
+            @Param(value = ALLOWED_CIPHERS, description = ALLOWED_CIPHERS_DESCRIPTION) String allowedCiphers,
             @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESCRIPTION) String trustAllRoots,
             @Param(value = X509_HOSTNAME_VERIFIER, description = X509_HOSTNAME_VERIFIER_DESCRIPTION) String x509HostnameVerifier,
             @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESCRIPTION) String trustKeystore,
@@ -113,6 +77,7 @@ public class GetAccounts {
         queryParams.put(SEARCH, search);
         queryParams.put(SEARCH_TYPE, searchType);
         queryParams.put(SORT, sort);
+        queryParams.put(OFFSET, offset);
         queryParams.put(LIMIT, limit);
         queryParams.put(FILTER, filter);
         queryParams.put(SAVED_FILTER, savedFilter);
@@ -132,7 +97,7 @@ public class GetAccounts {
                     proxyUsername,
                     proxyPassword,
                     tlsVersion,
-                    allowedCyphers,
+                    allowedCiphers,
                     trustAllRoots,
                     x509HostnameVerifier,
                     trustKeystore,
@@ -157,7 +122,7 @@ public class GetAccounts {
                     sessionConnectionPool
             );
 
-            removeUnusedHttpResults(result);
+            processHttpResult(result);
             return result;
 
         } catch (Exception exception) {

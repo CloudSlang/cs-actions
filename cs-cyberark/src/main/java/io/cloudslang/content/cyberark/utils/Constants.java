@@ -1,17 +1,3 @@
-/*
- * (c) Copyright 2022 Micro Focus
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
 package io.cloudslang.content.cyberark.utils;
 
 public final class Constants {
@@ -27,7 +13,7 @@ public final class Constants {
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String TLS_VERSION = "tlsVersion";
-        public static final String ALLOWED_CYPHERS = "allowedCyphers";
+        public static final String ALLOWED_CIPHERS = "allowedCiphers";
         public static final String TRUST_ALL_ROOTS = "trustAllRoots";
         public static final String X509_HOSTNAME_VERIFIER = "x509HostnameVerifier";
         public static final String TRUST_KEYSTORE = "trustKeystore";
@@ -53,7 +39,7 @@ public final class Constants {
                 "is set to 'HTTP'. This capability is provided “as is”, please see product documentation for further information." +
                 "Valid values: TLSv1, TLSv1.1, TLSv1.2. \n" +
                 "Default value: TLSv1.2.  \n";
-        public static final String ALLOWED_CYPHERS_DESCRIPTION = "A list of ciphers to use. The value of this input will be ignored " +
+        public static final String ALLOWED_CIPHERS_DESCRIPTION = "A list of ciphers to use. The value of this input will be ignored " +
                 "if 'tlsVersion' does " +
                 "not contain 'TLSv1.2'. This capability is provided “as is”, please see product documentation for further security considerations." +
                 "In order to connect successfully to the target host, it should accept at least one of the following ciphers. If this is not the case, it is " +
