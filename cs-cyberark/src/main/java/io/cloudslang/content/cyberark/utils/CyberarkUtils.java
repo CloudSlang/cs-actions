@@ -33,8 +33,9 @@ public class CyberarkUtils {
         String statusCode = httpResults.get(STATUS_CODE);
 
         if (StringUtils.isEmpty(statusCode) || Integer.parseInt(statusCode) < 200 || Integer.parseInt(statusCode) >= 300) {
+            if(httpResults.get(EXCEPTION).isEmpty())
+                httpResults.put(EXCEPTION, httpResults.get(RETURN_RESULT));
             httpResults.put(RETURN_CODE, "-1");
-           // httpResults.put(EXCEPTION, httpResults.get(EXCEPTION));
         }
     }
 
