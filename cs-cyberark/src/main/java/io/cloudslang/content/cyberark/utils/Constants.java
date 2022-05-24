@@ -22,8 +22,8 @@ public final class Constants {
         public static final String HOST = "hostname";
         public static final String PROTOCOL = "protocol";
         public static final String AUTH_TOKEN = "authToken";
-        public static final String PROXY_HOST = "proxy_host";
-        public static final String PROXY_PORT = "proxy_port";
+        public static final String PROXY_HOST = "proxyHost";
+        public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String TLS_VERSION = "tlsVersion";
