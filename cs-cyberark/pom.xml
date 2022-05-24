@@ -22,7 +22,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-cyberark</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
 
 
 
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-httpclient-commons</artifactId>
-            <version>0.0.1-RC3</version>
+            <version>0.0.1-RC4</version>
         </dependency>
         <dependency>
             <groupId>net.minidev</groupId>
