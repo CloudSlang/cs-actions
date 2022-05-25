@@ -47,6 +47,7 @@ public class Constants {
         public static final String TAGS_DEFAULT_API_VERSION = "2016-11-15";
         public static final String VOLUMES_DEFAULT_API_VERSION = "2016-11-15";
         public static final String VPC_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String DESCRIBE_KEYPAIR_DEFAULT_API_VERSION = "2016-11-15";
     }
 
     public static class ErrorMessages {
@@ -180,6 +181,7 @@ public class Constants {
         public static final String START_INSTANCES = "StartInstances";
         public static final String STOP_INSTANCES = "StopInstances";
         public static final String TERMINATE_INSTANCES = "TerminateInstances";
+        public static final String DESCRIBE_KEYPAIRS="DescribeKeyPairs";
     }
 
     public static class LoadBalancingQueryApiActions {

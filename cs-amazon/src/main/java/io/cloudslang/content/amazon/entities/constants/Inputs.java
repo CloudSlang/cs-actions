@@ -99,6 +99,8 @@ public class Inputs {
         public static final String SECURITY_GROUP_NAMES = "securityGroupNamesString";
         public static final String SECURITY_GROUP_FILTER_NAMES_STRING = "filterNamesString";
         public static final String SECURITY_GROUP_FILTER_VALUES_STRING = "filterValuesString";
+        public static final String DESCRIBE_KEYPAIRS_FILTER_NAMES_STRING = "filterNamesString";
+        public static final String DESCRIBE_KEYPAIRS_FILTER_VALUES_STRING = "filterValuesString";
     }
 
     public static class ElasticIpInputs {

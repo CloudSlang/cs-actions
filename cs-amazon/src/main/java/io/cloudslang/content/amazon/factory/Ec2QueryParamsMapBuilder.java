@@ -81,6 +81,8 @@ class Ec2QueryParamsMapBuilder {
                 return new InstanceUtils().getDescribeInstanceTypeOfferingsQueryParamsMap(wrapper);
             case DESCRIBE_SECURITY_GROUPS:
                 return new SecurityGroupUtils().getDescribeSecurityGroupsQueryParamsMap(wrapper);
+            case DESCRIBE_KEYPAIRS:
+                return new KeyPairsUtils().getDescribeKeyPairsQueryParamsMap(wrapper);
             case DESCRIBE_NETWORK_INTERFACES:
                 return new NetworkUtils().getDescribeNetworkInterfacesQueryParamsMap(wrapper);
             case DESCRIBE_REGIONS:
