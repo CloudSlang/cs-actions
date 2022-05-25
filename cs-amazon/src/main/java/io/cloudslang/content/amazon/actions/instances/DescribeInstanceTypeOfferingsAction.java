@@ -56,9 +56,6 @@ public class DescribeInstanceTypeOfferingsAction {
      *                           Example: "AKIAIOSFODNN7EXAMPLE"
      * @param credential         Secret access key associated with your Amazon AWS or IAM account.
      *                           Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-//     * @param region             The region where to deploy the instance.
-//     *                           Example: "us-west-1"
-//     *                           Example: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
      * @param proxyHost          Optional - proxy server used to connect to Amazon API. If empty no proxy
      *                           will be used.
      *                           Default: ""
