@@ -122,6 +122,15 @@ public class Inputs {
         public static final String VOLUME_TYPES_STRING = "volumeTypesString";
     }
 
+    public static class VpcInputs {
+        public static final String VPC_IDS = "vpcIds";
+        public static final String VPC_FILTER_NAMES_STRING = "filterNamesString";
+        public static final String VPC_FILTER_VALUES_STRING = "filterValuesString";
+        public static final String MAX_RESULTS = "maxResults";
+        public static final String NEXT_TOKEN = "nextToken";
+
+    }
+
     public static class IamInputs {
         public static final String IAM_INSTANCE_PROFILE_ARN = "iamInstanceProfileArn";
         public static final String IAM_INSTANCE_PROFILE_NAME = "iamInstanceProfileName";

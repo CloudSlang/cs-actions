@@ -81,6 +81,8 @@ public class InputsWrapperBuilder {
                     wrapper.setVolumeInputs((VolumeInputs) builder);
                 } else if (builder instanceof FilterInputs) {
                     wrapper.setFilterInputs((FilterInputs) builder);
+                } else if (builder instanceof VPCInputs) {
+                    wrapper.setVpcInputs((VPCInputs) builder);
                 } else {
                     throw new RuntimeException(UNKNOWN_BUILDER_TYPE);
                 }

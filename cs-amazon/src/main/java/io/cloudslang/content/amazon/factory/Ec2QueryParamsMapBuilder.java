@@ -23,6 +23,7 @@ import io.cloudslang.content.amazon.factory.helpers.*;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.*;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.DESCRIBE_INSTANCE_TYPE_OFFERINGS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.ErrorMessages.UNSUPPORTED_QUERY_API;
 
 /**
@@ -76,6 +77,8 @@ class Ec2QueryParamsMapBuilder {
                 return new ImageUtils().getDescribeImageAttributeQueryParamsMap(wrapper);
             case DESCRIBE_INSTANCES:
                 return new InstanceUtils().getDescribeInstancesQueryParamsMap(wrapper);
+            case DESCRIBE_INSTANCE_TYPE_OFFERINGS:
+                return new InstanceUtils().getDescribeInstanceTypeOfferingsQueryParamsMap(wrapper);
             case DESCRIBE_SECURITY_GROUPS:
                 return new SecurityGroupUtils().getDescribeSecurityGroupsQueryParamsMap(wrapper);
             case DESCRIBE_NETWORK_INTERFACES:
@@ -112,6 +115,8 @@ class Ec2QueryParamsMapBuilder {
                 return new InstanceUtils().getStopInstancesQueryParamsMap(wrapper);
             case TERMINATE_INSTANCES:
                 return new InstanceUtils().getTerminateInstancesQueryParamsMap(wrapper);
+            case DESCRIBE_VPCS:
+                return new VpcUtils().getDescribeVpcsQueryParamsMap(wrapper);
             default:
                 throw new RuntimeException(UNSUPPORTED_QUERY_API);
         }

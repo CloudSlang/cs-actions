@@ -48,6 +48,9 @@ public class InstanceInputs {
     private final String instanceIdsString;
     private final String maxResults;
     private final String nextToken;
+    private final String region;
+    private final String connectTimeout;
+    private final String executionTimeout;
 
     private final int maxCount;
     private final int minCount;
@@ -75,6 +78,9 @@ public class InstanceInputs {
         this.filterNamesString = builder.filterNamesString;
         this.filterValuesString = builder.filterValuesString;
         this.nextToken = builder.nextToken;
+        this.region = builder.region;
+        this.connectTimeout = builder.connectTimeout;
+        this.executionTimeout = builder.executionTimeout;
 
         this.minCount = builder.minCount;
         this.maxCount = builder.maxCount;
@@ -153,6 +159,18 @@ public class InstanceInputs {
         return nextToken;
     }
 
+    public String getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    public String getExecutionTimeout() {
+        return executionTimeout;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
     public int getMaxCount() {
         return maxCount;
     }
@@ -195,6 +213,9 @@ public class InstanceInputs {
         private String instanceIdsString;
         private String maxResults;
         private String nextToken;
+        private String connectTimeout;
+        private String executionTimeout;
+        private String region;
 
         private int maxCount;
         private int minCount;
@@ -290,6 +311,21 @@ public class InstanceInputs {
 
         public Builder withNextToken(String inputValue) {
             nextToken = inputValue;
+            return this;
+        }
+
+        public Builder withConnectTimeout(String inputValue) {
+            connectTimeout = inputValue;
+            return this;
+        }
+
+        public Builder withExecutionTimeout(String inputValue) {
+            executionTimeout = inputValue;
+            return this;
+        }
+
+        public Builder withRegion(String inputValue) {
+            region = inputValue;
             return this;
         }
 
