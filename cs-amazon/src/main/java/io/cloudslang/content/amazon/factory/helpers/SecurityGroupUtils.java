@@ -60,7 +60,7 @@ public class SecurityGroupUtils {
 
         setOptionalMapEntry(queryParamsMap, NEXT_TOKEN, wrapper.getFilterInputs().getNextToken(),
                 isNotBlank(wrapper.getFilterInputs().getNextToken()));
-
+  
         return queryParamsMap;
     }
 

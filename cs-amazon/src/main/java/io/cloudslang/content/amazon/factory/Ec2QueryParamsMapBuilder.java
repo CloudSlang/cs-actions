@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -91,6 +91,10 @@ class Ec2QueryParamsMapBuilder {
                 return new TagUtils().getDescribeTagsQueryParamsMap(wrapper);
             case DESCRIBE_VOLUMES:
                 return new VolumeUtils().getDescribeVolumesQueryParamsMap(wrapper);
+            case DESCRIBE_VPCS:
+                return new VpcUtils().getDescribeVpcsQueryParamsMap(wrapper);
+            case DESCRIBE_SUBNETS:
+                return new SubnetUtils().getDescribeSubnetQueryParamsMap(wrapper);
             case DEREGISTER_IMAGE:
                 return new ImageUtils().getDeregisterImageQueryParamsMap(wrapper);
             case DETACH_NETWORK_INTERFACE:

@@ -106,6 +106,7 @@ public class Descriptions {
         public static final String COMPUTE_API_VERSION_DESC = "Client Api Version." +
                 "Default: 2019-07-01";
     }
+
     public static class DeleteVMDescriptions {
 
         public static final String DELETE_VM_DESC = "The operation delete a virtual machine.";
@@ -117,7 +118,7 @@ public class Descriptions {
         public static final String CREATE_VM_DESC = "The operation to create a virtual machine.";
         public static final String NIC_NAME_DESC = "This is the user entered NIC name for the VM.";
         public static final String AVAILABILITY_SET_NAME_DESC = "Name of the Availability set in which the VM  to be deploy.";
-        public static final String DISK_TYPE_DESC = "Type of disk.\n"+
+        public static final String DISK_TYPE_DESC = "Type of disk.\n" +
                 "Allowed Values: Managed, Unmanaged \n" +
                 "Default: Managed";
         public static final String ADMIN_USERNAME_DESC = "Admin Username of the VM to be provided by the User. The user " +
@@ -133,7 +134,8 @@ public class Descriptions {
         public static final String IMAGE_VERSION_DESC = "version of the image.\n" +
                 "Default: latest";
         public static final String DISK_SIZE_IN_GB_DESC = "Size of the disk in GB. \n" +
-                 "Default: 10";;
+                "Default: 10";
+        ;
         public static final String STORAGE_ACCOUNT_DESC = "Name of the storageAccount. If availabilitySet is classic, " +
                 "then storageAccount is used.";
         public static final String STORAGE_ACCOUNT_TYPE_DESC = "Type of the storageAccount. If availabilitySet is " +
@@ -159,6 +161,7 @@ public class Descriptions {
                 "lengths of these two list must be the same, and the order of the tag values has to correspond the " +
                 "order of the tag keys.";
     }
+
     public static class CreateStreamingJob {
         public static final String CREATE_STREAMING_JOB_OPERATION_DESC = "Creates a streaming job.";
         public static final String JOB_NAME_DESC = "The name of the streaming job.";
@@ -258,7 +261,7 @@ public class Descriptions {
         public static final String TRANSFORMATION_ID_DESC = "Transformation Resource Id.";
     }
 
-    public static class Counter{
+    public static class Counter {
         public static final String FAILURE_MESSAGE = "Something went wrong";
         public static final String COUNTER_DESC = "Counts from one number to another number.";
         public static final String RESULT_STRING_DESC = "The primary result is resultString, Result can also be used. result (All lower case) should not be used as it is the response code.";
@@ -267,6 +270,17 @@ public class Descriptions {
         public static final String TO_DESC = "The number to count to.";
         public static final String RESET_DESC = "If true, then the counter will restart counting from the beginning.";
         public static final String INCREMENT_BY_DESC = "The number to increment by while counting. If unspecified this is 1. If you wanted to count 2,4,6,8 this would be 2.";
+
+
+    }
+
+    public static class SchedulerTime {
+
+        public static final String SCHEDULER_TIME_OPERATION_DESC = "Converts time with specified timezone and return the scheduler time.";
+        public static final String SCHEDULER_START_TIME_DESC = "Scheduler start time.";
+        public static final String TIME_ZONE_DESC = "Scheduler timeZone.";
+        public static final String TRIGGER_EXPRESSION_DESC = "Scheduler trigger expression.";
+        public static final String SCHEDULER_TIME_DESC = "Scheduler time in HH:MM:SS format";
 
 
     }

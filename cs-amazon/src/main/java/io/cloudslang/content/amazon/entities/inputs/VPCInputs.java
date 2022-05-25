@@ -46,6 +46,7 @@ public class VPCInputs {
         private String maxResults;
         private String nextToken;
 
+
         public VPCInputs build() {
             return new VPCInputs(this);
         }
@@ -64,5 +65,6 @@ public class VPCInputs {
             nextToken = inputValue;
             return this;
         }
+
     }
 }
