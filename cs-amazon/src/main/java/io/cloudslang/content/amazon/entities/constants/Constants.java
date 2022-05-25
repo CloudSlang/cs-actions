@@ -184,9 +184,7 @@ public class Constants {
         public static final String START_INSTANCES = "StartInstances";
         public static final String STOP_INSTANCES = "StopInstances";
         public static final String TERMINATE_INSTANCES = "TerminateInstances";
-        public static final String 
-          
-          ="DescribeKeyPairs";
+        public static final String DESCRIBE_KEYPAIRS ="DescribeKeyPairs";
     }
 
     public static class LoadBalancingQueryApiActions {
