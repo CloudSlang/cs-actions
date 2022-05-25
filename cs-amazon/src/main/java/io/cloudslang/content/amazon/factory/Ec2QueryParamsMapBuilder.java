@@ -106,6 +106,8 @@ class Ec2QueryParamsMapBuilder {
                 return new InstanceUtils().getRebootInstancesQueryParamsMap(wrapper);
             case RELEASE_ADDRESS:
                 return new ElasticIpUtils().getReleaseAddressQueryParamsMap(wrapper);
+            case DESCRIBE_KEYPAIRS:
+                return new KeyPairsUtils().getDescribeKeyPairsQueryParamsMap(wrapper);
             case RESET_IMAGE_ATTRIBUTE:
                 return new ImageUtils().getResetImageAttributeQueryParamsMap(wrapper);
             case RUN_INSTANCES:
