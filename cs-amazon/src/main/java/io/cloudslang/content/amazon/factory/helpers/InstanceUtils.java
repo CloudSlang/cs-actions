@@ -101,6 +101,20 @@ public class InstanceUtils {
         return queryParamsMap;
     }
 
+    public Map<String, String> getDescribeInstanceTypeOfferingsQueryParamsMap(InputsWrapper wrapper) {
+        Map<String, String> queryParamsMap = new LinkedHashMap<>();
+        setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
+        setInstanceIdsQueryParams(wrapper, queryParamsMap);
+//        queryParamsMap.put(REGION, wrapper.getInstanceInputs().getRegion());
+        setOptionalMapEntry(queryParamsMap, MAX_RESULTS, wrapper.getInstanceInputs().getMaxResults(),
+                !NOT_RELEVANT.equalsIgnoreCase(wrapper.getInstanceInputs().getMaxResults()));
+        setOptionalMapEntry(queryParamsMap, NEXT_TOKEN, wrapper.getInstanceInputs().getNextToken(),
+                isNotBlank(wrapper.getInstanceInputs().getNextToken()));
+        setDescribeInstancesQueryParamsFilter(queryParamsMap, wrapper);
+
+        return queryParamsMap;
+    }
+
     public Map<String, String> getModifyInstanceAttributeQueryParamsMap(InputsWrapper wrapper) {
         Map<String, String> queryParamsMap = new HashMap<>();
         setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());

@@ -15,19 +15,37 @@
 
 package io.cloudslang.content.amazon.entities.inputs;
 
+import static io.cloudslang.content.amazon.utils.InputsUtil.getMaxResultsCount;
+
 public class VPCInputs {
     private final String vpcIds;
+    private final String maxResults;
+    private final String nextToken;
 
     private VPCInputs(VPCInputs.Builder builder) {
+
         this.vpcIds = builder.vpcIds;
+        this.maxResults = builder.maxResults;
+        this.nextToken = builder.nextToken;
     }
 
     public String getVpcIds() {
         return vpcIds;
     }
 
+    public String getMaxResults() {
+        return maxResults;
+    }
+
+    public String getNextToken() {
+        return nextToken;
+    }
+
     public static class Builder {
         private String vpcIds;
+        private String maxResults;
+        private String nextToken;
+
 
         public VPCInputs build() {
             return new VPCInputs(this);
@@ -37,5 +55,16 @@ public class VPCInputs {
             vpcIds = inputValue;
             return this;
         }
+
+        public VPCInputs.Builder withMaxResults(String inputValue) {
+            maxResults = getMaxResultsCount(inputValue);
+            return this;
+        }
+
+        public VPCInputs.Builder withNextToken(String inputValue) {
+            nextToken = inputValue;
+            return this;
+        }
+
     }
 }

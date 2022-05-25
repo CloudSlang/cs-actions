@@ -21,15 +21,16 @@ import io.cloudslang.content.amazon.entities.inputs.VPCInputs;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.*;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.NAME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.VALUES;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.*;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KEY_FILTERS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VALUE_FILTERS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.VpcInputs.VPC_IDS;
 import static io.cloudslang.content.amazon.utils.InputsUtil.*;
+import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.*;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.*;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getQueryParamsSpecificString;
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 

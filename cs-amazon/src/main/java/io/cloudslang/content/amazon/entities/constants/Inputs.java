@@ -102,6 +102,8 @@ public class Inputs {
         public static final String SECURITY_GROUP_NAMES = "securityGroupNamesString";
         public static final String SECURITY_GROUP_FILTER_NAMES_STRING = "filterNamesString";
         public static final String SECURITY_GROUP_FILTER_VALUES_STRING = "filterValuesString";
+        public static final String DESCRIBE_KEYPAIRS_FILTER_NAMES_STRING = "filterNamesString";
+        public static final String DESCRIBE_KEYPAIRS_FILTER_VALUES_STRING = "filterValuesString";
     }
 
     public static class ElasticIpInputs {
@@ -123,6 +125,15 @@ public class Inputs {
         public static final String VOLUME_IDS_STRING = "volumeIdsString";
         public static final String VOLUME_SIZES_STRING = "volumeSizesString";
         public static final String VOLUME_TYPES_STRING = "volumeTypesString";
+    }
+
+    public static class VpcInputs {
+        public static final String VPC_IDS = "vpcIds";
+        public static final String VPC_FILTER_NAMES_STRING = "filterNamesString";
+        public static final String VPC_FILTER_VALUES_STRING = "filterValuesString";
+        public static final String MAX_RESULTS = "maxResults";
+        public static final String NEXT_TOKEN = "nextToken";
+
     }
 
     public static class IamInputs {
