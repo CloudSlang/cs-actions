@@ -282,12 +282,6 @@ public class Inputs {
         public static final String FILTER_VOLUME_TYPE = "filterVolumeType";
     }
 
-    public static class VpcInputs {
-        public static final String VPC_IDS = "vpcIds";
-        public static final String VPC_FILTER_NAMES_STRING = "filterNamesString";
-        public static final String VPC_FILTER_VALUES_STRING = "filterValuesString";
-    }
-
     public static class TagsInputs {
         public static final String FILTER_KEY = "filterKey";
         public static final String FILTER_RESOURCE_ID = "filterResourceId";
