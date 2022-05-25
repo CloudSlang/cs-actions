@@ -97,7 +97,7 @@ public class DescribeInstanceTypeOfferingsAction {
      * @return A map with strings as keys and strings as values that contains: outcome of the action, returnCode of the
      *         operation, or failure message and the exception if there is one
      */
-    @Action(name = "Describe Instances",
+    @Action(name = "Describe Instance Type Offerings",
             outputs = {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
