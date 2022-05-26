@@ -293,6 +293,39 @@ public final class Constants {
                 "as part of the response. If not sent, the value is True.";
     }
 
+    public static class AddMemberConstants {
+
+        public static final String ADD_MEMBER = "Add Member";
+        public static final String ADD_MEMBER_DESCRIPTION = "This method adds an existing user or group as a Safe member.\n" +
+                "The user who runs this web service must have Manage Safe Members permissions in Privilege Cloud.";
+
+        //Inputs
+        public static final String SAFE_URL_ID = "safeUrlId";
+        public static final String MEMBER_NAME = "memberName";
+        public static final String SEARCH_IN = "searchIn";
+        public static final String MEMBERSHIP_EXPIRATION_DATE = "membershipExpirationDate";
+        public static final String PERMISSIONS = "permissions";
+        public static final String IS_READ_ONLY = "isReadOnly";
+        public static final String MEMBER_TYPE = "memberType";
+
+        //Input descriptions
+        public static final String SAFE_URL_ID_DESCRIPTION = "safeUrlId";
+        public static final String MEMBER_NAME_DESCRIPTION = "Privilege Cloud user name, Domain user name or group name of the Safe member.\n" +
+                "The following characters cannot be used in the Safe member name: \\ / : * < > “ | ? % & +";
+        public static final String SEARCH_IN_DESCRIPTION  = "Privilege Cloud (Vault) or the domain where the user or group was found.\n" +
+                "Default value: Vault";
+        public static final String MEMBERSHIP_EXPIRATION_DATE_DESCRIPTION  = "The member's expiration date for this Safe. For members that do not have an expiration date, this value will be null.";
+        public static final String PERMISSIONS_DESCRIPTION  = "The permissions that the user or group has on this Safe.\n" +
+                "List of key=value pairs delimited by ';'.\n"+
+                "Example: useAccounts=true;retrieveAccounts=false;listAccounts=false";
+        public static final String IS_READ_ONLY_DESCRIPTION  = "Whether or not the current user can update the permissions of the member.\n" +
+                "Valid values: true, false\n" +
+                "Default value: false";
+        public static final String MEMBER_TYPE_DESCRIPTION  = "The member type.\n" +
+                "Valid values: User, Group\n" +
+                "Default value: User";
+    }
+
     public static final class OtherConstants {
 
         //API endpoints
@@ -302,12 +335,10 @@ public final class Constants {
         public static final String ADD_ACCOUNT_ENDPOINT = "/PasswordVault/API/Accounts";
         public static final String DELETE_ACCOUNT_ENDPOINT = "/PasswordVault/API/Accounts";
         public static final String GET_ALL_SAFES_ENDPOINT = "/PasswordVault/API/safes";
-
+        public static final String ADD_MEMBER_ENDPOINT = "/PasswordVault/API/Safes/";
 
         //Common inputs
         public static final String USERNAME = "username";
-
-
 
         //Other
         public static final String PROTOCOL_DELIMITER = "://";
@@ -318,6 +349,9 @@ public final class Constants {
         public static final String COMMA = ",";
         public static final String AUTHORIZATION = "Authorization:";
         public static final String CONTENT = "Content";
+        public static final String MEMBERS = "/Members";
+        public static final String EQUALS = "=";
+        public static final String SEMICOLON = ";";
     }
 }
 
