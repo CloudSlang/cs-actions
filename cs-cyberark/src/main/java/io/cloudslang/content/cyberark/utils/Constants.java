@@ -319,5 +319,19 @@ public final class Constants {
         public static final String AUTHORIZATION = "Authorization:";
         public static final String CONTENT = "Content";
     }
+
+    public static final class GetSafeDetailsConstants {
+        public static final String GET_SAFE_DETAILS_ENDPOINT = "/PasswordVault/api/Safes/";
+
+        public static final String GET_SAFE_DETAILS = "Get Safe Details";
+        public static final String GET_SAFE_DETAILS_DESCRIPTION = "This operation returns information about a specific Safe in Privilege Cloud.";
+
+        public static final String SAFE_URL_ID = "safeUrlId";
+        public static final String SAFE_URL_ID_DESCRIPTION = "The unique ID of the Safe.";
+        public static final String INCLUDE_ACCOUNTS = "includeAccounts";
+        public static final String INCLUDE_ACCOUNTS_DESCRIPTION = "Whether or not to return accounts for each Safe as part of the response. If not sent, the value will be False.";
+        public static final String USE_CACHE = "useCache";
+        public static final String USE_CACHE_DESCRIPTION = "Whether or not to retrieve the cache from a session.";
+    }
 }
 
