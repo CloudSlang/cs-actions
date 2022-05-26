@@ -346,8 +346,7 @@ public final class Constants {
         public static final String SAFE_NAME_DESCRIPTION = "The unique name of the Safe.\n" +
                 "The following characters cannot be used in the Safe name: \\ / : * < > . | ? “% & +";
         public static final String DESCRIPTION_DESCRIPTION = "The description of the Safe.";
-        public static final String LOCATION_DESCRIPTION = "The location of the Safe in the Vault.\n" +
-                "Default value: \\\\";
+        public static final String LOCATION_DESCRIPTION = "The location of the Safe in the Vault.";
         public static final String OLAC_ENABLED_DESCRIPTION = "Whether or not to enable Object Level Access Control for the new Safe.\n" +
                 "Valid values: true, false\n" +
                 "Default value: false";
