@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package io.cloudslang.content.cyberark.actions.safemembers;
+package io.cloudslang.content.cyberark.actions.safes;
 
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -26,16 +26,13 @@ import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.cyberark.utils.StringUtils;
-import io.cloudslang.content.httpclient.actions.HttpClientPostAction;
+import io.cloudslang.content.httpclient.actions.HttpClientDeleteAction;
 import io.cloudslang.content.utils.OutputUtilities;
-import net.minidev.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.Map;
 
-import static io.cloudslang.content.cyberark.utils.Constants.AddMemberConstants.*;
 import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.*;
+import static io.cloudslang.content.cyberark.utils.Constants.DeleteSafeConstants.*;
 import static io.cloudslang.content.cyberark.utils.Constants.OtherConstants.*;
 import static io.cloudslang.content.cyberark.utils.CyberarkUtils.processHttpResult;
 import static io.cloudslang.content.cyberark.utils.CyberarkUtils.validateProtocol;
@@ -45,10 +42,10 @@ import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_C
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_COOKIES;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class AddMember {
+public class DeleteSafe {
 
-    @Action(name = ADD_MEMBER,
-            description = ADD_MEMBER_DESCRIPTION,
+    @Action(name = DELETE_SAFE,
+            description = DELETE_SAFE_DESCRIPTION,
             outputs = {
                     @Output(RETURN_RESULT),
                     @Output(STATUS_CODE),
@@ -60,16 +57,10 @@ public class AddMember {
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> execute(
-            @Param(value = HOST, description = HOST_DESCRIPTION, required = true) String hostName,
+            @Param(value = HOST, description = HOST_DESCRIPTION, required = true) String hostname,
             @Param(value = PROTOCOL, description = PROTOCOL_DESCRIPTION) String protocol,
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESCRIPTION, required = true) String authToken,
             @Param(value = SAFE_URL_ID, description = SAFE_URL_ID_DESCRIPTION, required = true) String safeUrlId,
-            @Param(value = MEMBER_NAME, description = MEMBER_NAME_DESCRIPTION, required = true) String memberName,
-            @Param(value = SEARCH_IN, description = SEARCH_IN_DESCRIPTION) String searchIn,
-            @Param(value = MEMBERSHIP_EXPIRATION_DATE, description = MEMBERSHIP_EXPIRATION_DATE_DESCRIPTION) String membershipExpirationDate,
-            @Param(value = PERMISSIONS, description = PERMISSIONS_DESCRIPTION) String permissions,
-            @Param(value = IS_READ_ONLY, description = IS_READ_ONLY_DESCRIPTION) String isReadOnly,
-            @Param(value = MEMBER_TYPE, description = MEMBER_TYPE_DESCRIPTION) String memberType,
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESCRIPTION) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESCRIPTION) String proxyPort,
             @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESCRIPTION) String proxyUsername,
@@ -90,31 +81,13 @@ public class AddMember {
             @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
             @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
 
+
         try {
 
             validateProtocol(protocol);
-            
-            JSONObject body = new JSONObject();
 
-            body.put(MEMBER_NAME, memberName);
-            body.put(SEARCH_IN, searchIn);
-
-            if (!StringUtils.isEmpty(membershipExpirationDate))
-                body.put(MEMBERSHIP_EXPIRATION_DATE, membershipExpirationDate);
-
-            JSONObject permissionsJson = new JSONObject();
-
-            if (!StringUtils.isEmpty(permissions))
-                Arrays.stream(permissions.trim().split(SEMICOLON))
-                        .map(permission -> permission.split(EQUALS))
-                        .forEach(permission -> permissionsJson.put(permission[0], permission[1]));
-
-            body.put(PERMISSIONS, permissionsJson);
-            body.put(IS_READ_ONLY, isReadOnly);
-            body.put(MEMBER_TYPE, memberType);
-                        
-            Map<String, String> result = new HttpClientPostAction().execute(
-                    protocol + PROTOCOL_DELIMITER + hostName + ADD_MEMBER_ENDPOINT + safeUrlId + MEMBERS,
+            Map<String, String> result = new HttpClientDeleteAction().execute(
+                    protocol + PROTOCOL_DELIMITER + hostname + DELETE_SAFE_ENDPOINT + safeUrlId,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
@@ -135,18 +108,8 @@ public class AddMember {
                     connectionsMaxPerRoute,
                     connectionsMaxTotal,
                     EMPTY,
-                    EMPTY,
                     CONTENT_TYPE + APPLICATION_JSON + COMMA + AUTHORIZATION + authToken,
                     EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    body.toString(),
-                    APPLICATION_JSON,
                     EMPTY,
                     connectTimeout,
                     EMPTY,

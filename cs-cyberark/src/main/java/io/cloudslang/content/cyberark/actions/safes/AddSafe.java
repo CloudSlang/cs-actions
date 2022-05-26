@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package io.cloudslang.content.cyberark.actions.safemembers;
+package io.cloudslang.content.cyberark.actions.safes;
 
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -31,10 +31,9 @@ import io.cloudslang.content.httpclient.actions.HttpClientPostAction;
 import io.cloudslang.content.utils.OutputUtilities;
 import net.minidev.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.Map;
 
-import static io.cloudslang.content.cyberark.utils.Constants.AddMemberConstants.*;
+import static io.cloudslang.content.cyberark.utils.Constants.AddSafeConstants.*;
 import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.*;
 import static io.cloudslang.content.cyberark.utils.Constants.OtherConstants.*;
 import static io.cloudslang.content.cyberark.utils.CyberarkUtils.processHttpResult;
@@ -45,10 +44,10 @@ import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_C
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_COOKIES;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class AddMember {
+public class AddSafe {
 
-    @Action(name = ADD_MEMBER,
-            description = ADD_MEMBER_DESCRIPTION,
+    @Action(name = ADD_SAFE,
+            description = ADD_SAFE_DESCRIPTION,
             outputs = {
                     @Output(RETURN_RESULT),
                     @Output(STATUS_CODE),
@@ -63,13 +62,14 @@ public class AddMember {
             @Param(value = HOST, description = HOST_DESCRIPTION, required = true) String hostName,
             @Param(value = PROTOCOL, description = PROTOCOL_DESCRIPTION) String protocol,
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESCRIPTION, required = true) String authToken,
-            @Param(value = SAFE_URL_ID, description = SAFE_URL_ID_DESCRIPTION, required = true) String safeUrlId,
-            @Param(value = MEMBER_NAME, description = MEMBER_NAME_DESCRIPTION, required = true) String memberName,
-            @Param(value = SEARCH_IN, description = SEARCH_IN_DESCRIPTION) String searchIn,
-            @Param(value = MEMBERSHIP_EXPIRATION_DATE, description = MEMBERSHIP_EXPIRATION_DATE_DESCRIPTION) String membershipExpirationDate,
-            @Param(value = PERMISSIONS, description = PERMISSIONS_DESCRIPTION) String permissions,
-            @Param(value = IS_READ_ONLY, description = IS_READ_ONLY_DESCRIPTION) String isReadOnly,
-            @Param(value = MEMBER_TYPE, description = MEMBER_TYPE_DESCRIPTION) String memberType,
+            @Param(value = SAFE_NAME, description = SAFE_NAME_DESCRIPTION, required = true) String safeName,
+            @Param(value = DESCRIPTION, description = DESCRIPTION_DESCRIPTION) String description,
+            @Param(value = LOCATION, description = LOCATION_DESCRIPTION) String location,
+            @Param(value = OLAC_ENABLED, description = OLAC_ENABLED_DESCRIPTION) String olacEnabled,
+            @Param(value = MANAGING_CPM, description = MANAGING_CPM_DESCRIPTION) String managingCPM,
+            @Param(value = NUMBER_OF_VERSION_RETENTION, description = NUMBER_OF_VERSION_RETENTION_DESCRIPTION) String numberOfVersionsRetention,
+            @Param(value = NUMBER_OF_DAYS_RETENTION, description = NUMBER_OF_DAYS_RETENTION_DESCRIPTION) String numberOfDaysRetention,
+            @Param(value = AUTO_PURGE_ENABLED, description = AUTO_PURGE_ENABLED_DESCRIPTION) String autoPurgeEnabled,
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESCRIPTION) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESCRIPTION) String proxyPort,
             @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESCRIPTION) String proxyUsername,
@@ -96,25 +96,31 @@ public class AddMember {
             
             JSONObject body = new JSONObject();
 
-            body.put(MEMBER_NAME, memberName);
-            body.put(SEARCH_IN, searchIn);
+            body.put(SAFE_NAME, safeName);
 
-            if (!StringUtils.isEmpty(membershipExpirationDate))
-                body.put(MEMBERSHIP_EXPIRATION_DATE, membershipExpirationDate);
+            if (!StringUtils.isEmpty(description))
+                body.put(DESCRIPTION, description);
 
-            JSONObject permissionsJson = new JSONObject();
+            if (!StringUtils.isEmpty(location))
+                body.put(LOCATION, location);
 
-            if (!StringUtils.isEmpty(permissions))
-                Arrays.stream(permissions.trim().split(SEMICOLON))
-                        .map(permission -> permission.split(EQUALS))
-                        .forEach(permission -> permissionsJson.put(permission[0], permission[1]));
+            if (!StringUtils.isEmpty(olacEnabled))
+                body.put(OLAC_ENABLED, olacEnabled);
 
-            body.put(PERMISSIONS, permissionsJson);
-            body.put(IS_READ_ONLY, isReadOnly);
-            body.put(MEMBER_TYPE, memberType);
-                        
+            if (!StringUtils.isEmpty(managingCPM))
+                body.put(MANAGING_CPM, managingCPM);
+
+            if (!StringUtils.isEmpty(numberOfVersionsRetention))
+                body.put(NUMBER_OF_VERSION_RETENTION, numberOfVersionsRetention);
+
+            if (!StringUtils.isEmpty(numberOfDaysRetention))
+                body.put(NUMBER_OF_DAYS_RETENTION, numberOfDaysRetention);
+
+            if (!StringUtils.isEmpty(autoPurgeEnabled))
+                body.put(AUTO_PURGE_ENABLED, autoPurgeEnabled);
+
             Map<String, String> result = new HttpClientPostAction().execute(
-                    protocol + PROTOCOL_DELIMITER + hostName + ADD_MEMBER_ENDPOINT + safeUrlId + MEMBERS,
+                    protocol + PROTOCOL_DELIMITER + hostName + ADD_SAFE_ENDPOINT,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
