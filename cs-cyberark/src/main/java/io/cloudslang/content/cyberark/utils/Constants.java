@@ -12,6 +12,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+/*
+ * (c) Copyright 2022 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.cyberark.utils;
 
 public final class Constants {
@@ -208,8 +222,23 @@ public final class Constants {
                 "Favorites";
     }
 
-    public static final class AddAccountConstants
-    {
+    public static final class ChangeCredentialsInVault{
+        public static final String CHANGE_CREDENTIALS_IN_SAFE = "Change Credentials In Vault";
+
+        public static final String CHANGE_CREDENTIALS_IN_SAFE_DESCRIPTION = "This method enables users to set account credentials and change them in the Safe. This will not affect credentials on the target device.\n" +
+                "\n" +
+                "The user who runs this web service requires Update password value permission in the Safe where the privileged account is stored";
+        public static final String NEW_CREDENTIALS = "newCredentials";
+
+        public static final String NEW_CREDENTIALS_DESCRIPTION = "The new account credentials that will be allocated to the account in the Vault.\n" +
+                "\n" +
+                "Note: \n" +
+                "\n" +
+                "Digits are never placed as the first or last character of the password, regardless of the password policy or specifications.\n" +
+                "If the specified password contains leading and/or trailing white spaces, they will automatically be removed.";
+    }
+
+    public static final class AddAccountConstants {
         public static final String ADD_ACCOUNT = "Add Account";
         public static final String ADD_ACCOUNT_DESCRIPTION = "This method adds a new privileged account to Privilege Cloud.";
 
@@ -228,7 +257,7 @@ public final class Constants {
 
         //Input descriptions
         public static final String NAME_DESCRIPTION = "The name of the account.";
-        public static final String ADDRESS_DESCRIPTION = "The name or address of the machine where the account will be used." ;
+        public static final String ADDRESS_DESCRIPTION = "The name or address of the machine where the account will be used.";
         public static final String USERNAME_DESCRIPTION = "Account's user name.";
         public static final String PLATFORM_ID_DESCRIPTION = "The platform assigned to this account.";
         public static final String SAFE_NAME_DESCRIPTION = "The Safe where the account is created.";
@@ -243,13 +272,9 @@ public final class Constants {
         public static final String REMOTE_MACHINE_ACCESS_DESCRIPTION = "JSON having remote machine access properties";
 
 
-
-
-
     }
 
-    public static final class DeleteAccountConstants
-    {
+    public static final class DeleteAccountConstants {
         public static final String DELETE_ACCOUNT = "Delete Account";
         public static final String DELETE_ACCOUNT_DESCRIPTION = "This method deletes a specific account in the Vault";
 
@@ -303,12 +328,10 @@ public final class Constants {
         public static final String DELETE_ACCOUNT_ENDPOINT = "/PasswordVault/API/Accounts";
         public static final String GET_ALL_SAFES_ENDPOINT = "/PasswordVault/API/safes";
 
+        public static final String CHANGE_CREDENTIALS_IN_VAULT_ENDPOINT = "/Password/Update";
 
         //Common inputs
         public static final String USERNAME = "username";
-
-
-
         //Other
         public static final String PROTOCOL_DELIMITER = "://";
         public static final String FORWARD_SLASH = "/";
