@@ -318,6 +318,87 @@ public final class Constants {
                 "as part of the response. If not sent, the value is True.";
     }
 
+    public static class AddMemberConstants {
+
+        public static final String ADD_MEMBER = "Add Member";
+        public static final String ADD_MEMBER_DESCRIPTION = "This method adds an existing user or group as a Safe member.\n" +
+                "The user who runs this web service must have Manage Safe Members permissions in Privilege Cloud.";
+
+        //Inputs
+        public static final String SAFE_URL_ID = "safeUrlId";
+        public static final String MEMBER_NAME = "memberName";
+        public static final String SEARCH_IN = "searchIn";
+        public static final String MEMBERSHIP_EXPIRATION_DATE = "membershipExpirationDate";
+        public static final String PERMISSIONS = "permissions";
+        public static final String IS_READ_ONLY = "isReadOnly";
+        public static final String MEMBER_TYPE = "memberType";
+
+        //Input descriptions
+        public static final String SAFE_URL_ID_DESCRIPTION = "safeUrlId";
+        public static final String MEMBER_NAME_DESCRIPTION = "Privilege Cloud user name, Domain user name or group name of the Safe member.\n" +
+                "The following characters cannot be used in the Safe member name: \\ / : * < > “ | ? % & +";
+        public static final String SEARCH_IN_DESCRIPTION  = "Privilege Cloud (Vault) or the domain where the user or group was found.\n" +
+                "Default value: Vault";
+        public static final String MEMBERSHIP_EXPIRATION_DATE_DESCRIPTION  = "The member's expiration date for this Safe. For members that do not have an expiration date, this value will be null.";
+        public static final String PERMISSIONS_DESCRIPTION  = "The permissions that the user or group has on this Safe.\n" +
+                "List of key=value pairs delimited by ';'.\n"+
+                "Example: useAccounts=true;retrieveAccounts=false;listAccounts=false";
+        public static final String IS_READ_ONLY_DESCRIPTION  = "Whether or not the current user can update the permissions of the member.\n" +
+                "Valid values: true, false\n" +
+                "Default value: false";
+        public static final String MEMBER_TYPE_DESCRIPTION  = "The member type.\n" +
+                "Valid values: User, Group\n" +
+                "Default value: User";
+    }
+
+    public static class AddSafeConstants {
+
+        public static final String ADD_SAFE = "Add Safe";
+        public static final String ADD_SAFE_DESCRIPTION = "This method adds a new Safe to Privilege Cloud.\n" +
+                "The user who runs this web service must have Add Safes permissions in Privilege Cloud.";
+
+        //Inputs
+        public static final String SAFE_NAME = "safeName";
+        public static final String DESCRIPTION = "description";
+        public static final String LOCATION = "location";
+        public static final String OLAC_ENABLED = "olacEnabled";
+        public static final String MANAGING_CPM = "managingCPM";
+        public static final String NUMBER_OF_VERSION_RETENTION = "numberOfVersionsRetention";
+        public static final String NUMBER_OF_DAYS_RETENTION = "numberOfDaysRetention";
+        public static final String AUTO_PURGE_ENABLED = "autoPurgeEnabled";
+
+        //Input descriptions
+        public static final String SAFE_NAME_DESCRIPTION = "The unique name of the Safe.\n" +
+                "The following characters cannot be used in the Safe name: \\ / : * < > . | ? “% & +";
+        public static final String DESCRIPTION_DESCRIPTION = "The description of the Safe.";
+        public static final String LOCATION_DESCRIPTION = "The location of the Safe in the Vault.";
+        public static final String OLAC_ENABLED_DESCRIPTION = "Whether or not to enable Object Level Access Control for the new Safe.\n" +
+                "Valid values: true, false\n" +
+                "Default value: false";
+        public static final String MANAGING_CPM_DESCRIPTION = "The name of the CPM user who will manage the new Safe.";
+        public static final String NUMBER_OF_VERSION_RETENTION_DESCRIPTION = "The number of retained versions of every password that is stored in the Safe.";
+        public static final String NUMBER_OF_DAYS_RETENTION_DESCRIPTION = "The number of days that password versions are saved in the Safe.\n" +
+                "Default value: 7";
+        public static final String AUTO_PURGE_ENABLED_DESCRIPTION = "Whether or not to automatically purge files after the end of the Object History Retention Period defined in the Safe properties.\n" +
+                "Report Safes and PSM Recording Safes are created automatically with AutoPurgeEnabled set to Yes.\n" +
+                "These Safes cannot be managed by the CPM.\n" +
+                "Valid values: true, false\n" +
+                "Default value: false";
+    }
+
+    public static class DeleteSafeConstants {
+
+        public static final String DELETE_SAFE = "Delete Safe";
+        public static final String DELETE_SAFE_DESCRIPTION = "This method deletes a Safe from the Vault.\n" +
+                "The user who runs this web service must have Manage Safe permissions in the Safe.";
+
+        //Inputs
+        public static final String SAFE_URL_ID = "safeUrlId";
+
+        //Input descriptions
+        public static final String SAFE_URL_ID_DESCRIPTION = "The unique ID of the Safe.";
+    }
+
     public static final class OtherConstants {
 
         //API endpoints
@@ -327,11 +408,14 @@ public final class Constants {
         public static final String ADD_ACCOUNT_ENDPOINT = "/PasswordVault/API/Accounts";
         public static final String DELETE_ACCOUNT_ENDPOINT = "/PasswordVault/API/Accounts";
         public static final String GET_ALL_SAFES_ENDPOINT = "/PasswordVault/API/safes";
-
+        public static final String ADD_MEMBER_ENDPOINT = "/PasswordVault/API/Safes/";
+        public static final String ADD_SAFE_ENDPOINT = "/PasswordVault/API/Safes";
+        public static final String DELETE_SAFE_ENDPOINT = "/PasswordVault/API/Safes/";
         public static final String CHANGE_CREDENTIALS_IN_VAULT_ENDPOINT = "/Password/Update";
 
         //Common inputs
         public static final String USERNAME = "username";
+
         //Other
         public static final String PROTOCOL_DELIMITER = "://";
         public static final String FORWARD_SLASH = "/";
@@ -341,6 +425,9 @@ public final class Constants {
         public static final String COMMA = ",";
         public static final String AUTHORIZATION = "Authorization:";
         public static final String CONTENT = "Content";
+        public static final String MEMBERS = "/Members";
+        public static final String EQUALS = "=";
+        public static final String SEMICOLON = ";";
     }
 
     public static final class GetSafeDetailsConstants {
