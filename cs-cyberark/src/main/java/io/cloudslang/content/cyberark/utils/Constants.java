@@ -432,16 +432,40 @@ public final class Constants {
 
     public static final class GetSafeDetailsConstants {
         public static final String GET_SAFE_DETAILS_ENDPOINT = "/PasswordVault/api/Safes/";
-
         public static final String GET_SAFE_DETAILS = "Get Safe Details";
         public static final String GET_SAFE_DETAILS_DESCRIPTION = "This operation returns information about a specific Safe in Privilege Cloud.";
-
         public static final String SAFE_URL_ID = "safeUrlId";
         public static final String SAFE_URL_ID_DESCRIPTION = "The unique ID of the Safe.";
         public static final String INCLUDE_ACCOUNTS = "includeAccounts";
         public static final String INCLUDE_ACCOUNTS_DESCRIPTION = "Whether or not to return accounts for each Safe as part of the response. If not sent, the value will be False.";
         public static final String USE_CACHE = "useCache";
         public static final String USE_CACHE_DESCRIPTION = "Whether or not to retrieve the cache from a session.";
+    }
+
+    public static final class GetAllSafeMembersConstants{
+        public static final String GET_ALL_SAFE_MEMBERS = "Get All Safe Members";
+
+        public static final String GET_ALL_SAFE_MEMBERS_DESCRIPTION = "This method returns a list of the members of a Safe.\n" +
+                "\n" +
+                "The user who runs this web service must have View Safe Members permissions in the Safe.";
+
+        public static final String SAFE_URL_ID = "safeUrlId";
+
+        public static final String SAFE_URL_ID_DESCRIPTION = "The unique ID of the Safe used when calling Safe APIs.";
+
+        public static final String SEARCH_DESCRIPTION = "Searches according to the Safe name. Search is performed according to the REST standard (search=\"search word\").";
+
+        public static final String SORT_DESCRIPTION = "Sorts according to the memberName property in ascending order (default) or descending order to control the sort direction.";
+        public static final String OFFSET_DESCRIPTION = "Offset of the first member that is returned in the collection of results.\n" +
+                "Default value: 0";
+        public static final String LIMIT_DESCRIPTION = "The maximum number of  of members that are returned." +
+                " When used together with the offset parameter, this value determines the number of Safes to return," +
+                " starting from the first Safe that is returned.\n"+
+                "Default value: 25";
+        public static final String FILTER_DESCRIPTION = "Search for accounts using a filter.\n" +
+                "To use more than one filter, use the AND operator.";
+
+
     }
 }
 
