@@ -63,7 +63,7 @@ public class GeneratePassword {
             @Param(value = HOST, description = HOST_DESCRIPTION, required = true) String hostName,
             @Param(value = PROTOCOL, description = PROTOCOL_DESCRIPTION) String protocol,
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESCRIPTION, required = true) String authToken,
-            @Param(value = ACCOUNT_ID, description = ACCOUNT_ID_DESCRIPTION, required = true) String name,
+            @Param(value = ACCOUNT_ID, description = ACCOUNT_ID_DESCRIPTION, required = true) String accountId,
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESCRIPTION) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESCRIPTION) String proxyPort,
             @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESCRIPTION) String proxyUsername,
@@ -91,7 +91,7 @@ public class GeneratePassword {
 
             Map<String, String> result = new HttpClientPostAction().execute(
                     protocol + PROTOCOL_DELIMITER + hostName +
-                            GENERATE_PASSWORD_ENDPOINT_BEFORE + ACCOUNT_ID + GENERATE_PASSWORD_ENDPOINT_AFTER,
+                            GENERATE_PASSWORD_ENDPOINT_BEFORE + accountId + GENERATE_PASSWORD_ENDPOINT_AFTER,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
