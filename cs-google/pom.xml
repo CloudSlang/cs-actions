@@ -112,27 +112,27 @@
             <version>${scala-library.version}</version>
         </dependency>
         <!-- Google cloud api -->
-        <dependency>
-            <groupId>com.google.api-client</groupId>
-            <artifactId>google-api-client</artifactId>
-            <version>1.34.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.http-client</groupId>
-                    <artifactId>google-http-client-bom</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.google.api-client</groupId>-->
+<!--            <artifactId>google-api-client</artifactId>-->
+<!--            <version>1.34.1</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>com.google.http-client</groupId>-->
+<!--                    <artifactId>google-http-client-bom</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-compute</artifactId>
-            <version>${google-api-services-compute.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.api-client</groupId>
-                    <artifactId>google-api-client</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>v1-rev20220517-1.32.1</version>
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>com.google.api-client</groupId>-->
+<!--                    <artifactId>google-api-client</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>com.google.apis</groupId>
