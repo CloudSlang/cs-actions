@@ -289,7 +289,22 @@ public final class Constants {
 
     }
 
-    public static class GetAllSafesConstants {
+    public static final class GeneratePasswordConstants {
+        public static final String GENERATE_PASSWORD = "Generate Password";
+        public static final String GENERATE_PASSWORD_DESCRIPTION = "This method generates a new password for an existing account.";
+
+
+        //Inputs
+        public static final String ACCOUNT_ID = "accountId";
+
+        //Input Descriptions
+        public static final String ACCOUNT_ID_DESCRIPTION = "The ID of the account to which the password will be generated.";
+
+        //Outputs
+        public static final String PASSWORD_CAPITALIZED = "Password";
+
+    }
+        public static class GetAllSafesConstants {
         public static final String GET_ALL_SAFES = "Get All Safes";
         public static final String GET_ALL_SAFES_DESCRIPTION = "This method returns a list of all Safes in the Vault that the user has permissions for.";
 
@@ -412,6 +427,10 @@ public final class Constants {
         public static final String ADD_SAFE_ENDPOINT = "/PasswordVault/API/Safes";
         public static final String DELETE_SAFE_ENDPOINT = "/PasswordVault/API/Safes/";
         public static final String CHANGE_CREDENTIALS_IN_VAULT_ENDPOINT = "/Password/Update";
+        public static final String GENERATE_PASSWORD_ENDPOINT_BEFORE = "/Secret/Generate/";
+        public static final String GENERATE_PASSWORD_ENDPOINT_AFTER = "/Secret/Generate";
+
+
 
         //Common inputs
         public static final String USERNAME = "username";
