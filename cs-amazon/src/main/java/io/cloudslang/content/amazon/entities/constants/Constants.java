@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -46,6 +46,10 @@ public class Constants {
         public static final String STORAGE_DEFAULT_API_VERSION = "2006-03-01";
         public static final String TAGS_DEFAULT_API_VERSION = "2016-11-15";
         public static final String VOLUMES_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String VPC_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String DESCRIBE_KEYPAIR_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String SECURITY_GROUPS_DEFAULT_API_VERSION = "2016-11-15";
+        public static final String DESCRIBE_SUBNET_DEFAULT_API_VERSION = "2016-11-15";
     }
 
     public static class ErrorMessages {
@@ -114,11 +118,14 @@ public class Constants {
         public static final String PRIVATE_IP_ADDRESS = "PrivateIpAddress";
         public static final String PUBLIC_IP = "PublicIp";
         public static final String REGION_NAME = "RegionName";
+        public static final String REGION= "region";
         public static final String REMOVE_OPERATION_TYPE = "remove";
         public static final String RESOURCE_ID = "ResourceId";
         public static final String SECURITY_GROUP = "SecurityGroup";
         public static final String SECURITY_GROUPS = "SecurityGroups";
         public static final String SECURITY_GROUP_ID = "SecurityGroupId";
+        public static final String SECURITY_GROUP_ID_CONST = "GroupId";
+        public static final String SECURITY_GROUP_NAME_CONST = "GroupName";
         public static final String SIGNATURE_RESULT = "signature";
         public static final String SNAPSHOT_ID = "SnapshotId";
         public static final String STANDARD = "standard";
@@ -157,10 +164,14 @@ public class Constants {
         public static final String DESCRIBE_IMAGES = "DescribeImages";
         public static final String DESCRIBE_IMAGE_ATTRIBUTE = "DescribeImageAttribute";
         public static final String DESCRIBE_INSTANCES = "DescribeInstances";
+        public static final String DESCRIBE_INSTANCE_TYPE_OFFERINGS = "DescribeInstanceTypeOfferings";
+        public static final String DESCRIBE_SECURITY_GROUPS = "DescribeSecurityGroups";
         public static final String DESCRIBE_REGIONS = "DescribeRegions";
         public static final String DESCRIBE_NETWORK_INTERFACES = "DescribeNetworkInterfaces";
+        public static final String DESCRIBE_SUBNETS="DescribeSubnets";
         public static final String DESCRIBE_TAGS = "DescribeTags";
         public static final String DESCRIBE_VOLUMES = "DescribeVolumes";
+        public static final String DESCRIBE_VPCS = "DescribeVpcs";
         public static final String DETACH_NETWORK_INTERFACE = "DetachNetworkInterface";
         public static final String DETACH_VOLUME = "DetachVolume";
         public static final String DISASSOCIATE_ADDRESS = "DisassociateAddress";
@@ -173,6 +184,7 @@ public class Constants {
         public static final String START_INSTANCES = "StartInstances";
         public static final String STOP_INSTANCES = "StopInstances";
         public static final String TERMINATE_INSTANCES = "TerminateInstances";
+        public static final String DESCRIBE_KEYPAIRS ="DescribeKeyPairs";
     }
 
     public static class LoadBalancingQueryApiActions {

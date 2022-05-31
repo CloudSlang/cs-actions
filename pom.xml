@@ -6,6 +6,14 @@
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-actions</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>net.minidev</groupId>
+            <artifactId>json-smart</artifactId>
+            <version>2.2.1</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
     <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -327,6 +335,7 @@
         <module>cs-google</module>
         <module>cs-hashicorp-terraform</module>
         <module>cs-http-client</module>
+        <module>cs-httpclient-commons</module>
         <module>cs-json</module>
         <module>cs-lists</module>
         <module>cs-mail</module>
@@ -347,6 +356,7 @@
         <module>cs-vmware</module>
         <module>cs-winrm</module>
         <module>cs-xml</module>
+        <module>cs-cyberark</module>
     </modules>
 
 </project>
