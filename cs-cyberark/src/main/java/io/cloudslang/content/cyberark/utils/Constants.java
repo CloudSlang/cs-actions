@@ -427,7 +427,7 @@ public final class Constants {
         public static final String ADD_SAFE_ENDPOINT = "/PasswordVault/API/Safes";
         public static final String DELETE_SAFE_ENDPOINT = "/PasswordVault/API/Safes/";
         public static final String CHANGE_CREDENTIALS_IN_VAULT_ENDPOINT = "/Password/Update";
-        public static final String GENERATE_PASSWORD_ENDPOINT_BEFORE = "/Secret/Generate/";
+        public static final String GENERATE_PASSWORD_ENDPOINT_BEFORE = "/PasswordVault/API/Accounts/";
         public static final String GENERATE_PASSWORD_ENDPOINT_AFTER = "/Secret/Generate";
 
 

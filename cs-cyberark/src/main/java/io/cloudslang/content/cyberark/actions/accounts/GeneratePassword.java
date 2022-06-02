@@ -86,8 +86,12 @@ public class GeneratePassword {
 
         try {
 
+            JSONObject body = new JSONObject();
+            body.put(ACCOUNT_ID, accountId);
             validateProtocol(protocol);
 
+//            System.out.println(protocol + PROTOCOL_DELIMITER + hostName +
+//                            GENERATE_PASSWORD_ENDPOINT_BEFORE + accountId + GENERATE_PASSWORD_ENDPOINT_AFTER);
 
             Map<String, String> result = new HttpClientPostAction().execute(
                     protocol + PROTOCOL_DELIMITER + hostName +
@@ -122,7 +126,7 @@ public class GeneratePassword {
                     EMPTY,
                     EMPTY,
                     EMPTY,
-                    EMPTY,
+                    body.toString(),
                     APPLICATION_JSON,
                     EMPTY,
                     connectTimeout,
