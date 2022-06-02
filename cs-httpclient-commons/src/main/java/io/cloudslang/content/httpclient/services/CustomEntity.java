@@ -40,6 +40,7 @@ import static io.cloudslang.content.httpclient.utils.Constants.*;
 import static io.cloudslang.content.httpclient.utils.Constants.UTF_8;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONTENT_TYPE;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class CustomEntity {
 
@@ -121,7 +122,7 @@ public class CustomEntity {
             }
             return multipartEntityBuilder.build();
         }
-        return null;
+        return new StringEntity(EMPTY);
     }
 
     private static List<? extends NameValuePair> getNameValuePairs(String theInput, boolean encode, String constInput, String constEncode) {
