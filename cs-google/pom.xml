@@ -135,6 +135,13 @@
 <!--            </exclusions>-->
         </dependency>
         <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client-bom</artifactId>
+            <version>1.41.7</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-sqladmin</artifactId>
             <version>${google-api-services-sqladmin.version}</version>
