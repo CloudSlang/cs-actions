@@ -96,7 +96,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-httpclient-commons</artifactId>
-            <version>0.0.1-RC4</version>
+            <version>0.0.1-RC5</version>
         </dependency>
         <dependency>
             <groupId>net.minidev</groupId>
