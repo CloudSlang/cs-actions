@@ -168,6 +168,21 @@ public final class Constants {
         public static final String PASSWORD_VALUE = "passwordValue";
     }
 
+    public static final class GetAccountDetails {
+        public static final String GET_ACCOUNT_DETAILS = "Get Account Details";
+        public static final String GET_ACCOUNT_DETAILS_DESCRIPTION = "This method returns information about an account identified by its ID.";
+
+
+        //Inputs
+        public static final String ACCOUNT_ID = "id";
+
+
+        //Input descriptions
+        public static final String ACCOUNT_ID_DESCRIPTION = "The account's unique ID.";
+
+
+    }
+
     public static final class GetAccountsConstants {
 
         public static final String GET_ACCOUNTS = "Get Accounts";
@@ -429,6 +444,7 @@ public final class Constants {
         public static final String CHANGE_CREDENTIALS_IN_VAULT_ENDPOINT = "/Password/Update";
         public static final String GENERATE_PASSWORD_ENDPOINT_BEFORE = "/PasswordVault/API/Accounts/";
         public static final String GENERATE_PASSWORD_ENDPOINT_AFTER = "/Secret/Generate";
+        public static final String GET_ACCOUNT_DETAILS_ENDPOINT = "/PasswordVault/API/Accounts/";
 
 
 
