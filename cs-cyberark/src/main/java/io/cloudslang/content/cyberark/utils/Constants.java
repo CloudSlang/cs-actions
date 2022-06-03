@@ -289,6 +289,21 @@ public final class Constants {
 
     }
 
+    public static final class GetAccountDetails {
+        public static final String GET_ACCOUNT_DETAILS = "Get Account Details";
+        public static final String GET_ACCOUNT_DETAILS_DESCRIPTION = "This method returns information about an account identified by its ID.";
+
+
+        //Inputs
+        public static final String ACCOUNT_ID = "id";
+
+
+        //Input descriptions
+        public static final String ACCOUNT_ID_DESCRIPTION = "The account's unique ID.";
+
+
+    }
+
     public static class GetAllSafesConstants {
         public static final String GET_ALL_SAFES = "Get All Safes";
         public static final String GET_ALL_SAFES_DESCRIPTION = "This method returns a list of all Safes in the Vault that the user has permissions for.";
@@ -404,6 +419,7 @@ public final class Constants {
         //API endpoints
         public static final String GET_AUTH_TOKEN_ENDPOINT = "/PasswordVault/API/auth/Cyberark/Logon";
         public static final String GET_ACCOUNTS_ENDPOINT = "/PasswordVault/API/Accounts";
+        public static final String GET_ACCOUNT_DETAILS_ENDPOINT = "/PasswordVault/API/Accounts/";
         public static final String GET_PASSWORD_VALUE_ENDPOINT = "/AIMWebService/api/Accounts";
         public static final String ADD_ACCOUNT_ENDPOINT = "/PasswordVault/API/Accounts";
         public static final String DELETE_ACCOUNT_ENDPOINT = "/PasswordVault/API/Accounts";

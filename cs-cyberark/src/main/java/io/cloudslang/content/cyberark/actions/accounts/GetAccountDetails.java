@@ -12,44 +12,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package io.cloudslang.content.cyberark.actions.safes;
+package io.cloudslang.content.cyberark.actions.accounts;
 
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
-import io.cloudslang.content.constants.OutputNames;
-import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
-import io.cloudslang.content.utils.OutputUtilities;
+import com.hp.oo.sdk.content.annotations.*;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.*;
+import com.hp.oo.sdk.content.plugin.*;
+import io.cloudslang.content.constants.*;
+import io.cloudslang.content.httpclient.actions.*;
+import io.cloudslang.content.utils.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.ALLOWED_CIPHERS;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.CONNECTIONS_MAX_PER_ROUTE;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.CONNECTIONS_MAX_TOTAL;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.CONNECT_TIMEOUT;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.EXECUTION_TIMEOUT;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.HOST;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.KEEP_ALIVE;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.KEYSTORE;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROTOCOL;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROXY_HOST;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROXY_PASSWORD;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROXY_PORT;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROXY_USERNAME;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.TLS_VERSION;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.TRUST_KEYSTORE;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.TRUST_PASSWORD;
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.*;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAccountsConstants.*;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.FILTER_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.LIMIT_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.OFFSET_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.SEARCH_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.SORT_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.*;
+import static io.cloudslang.content.cyberark.utils.Constants.GetAccountDetails.*;
+import static io.cloudslang.content.cyberark.utils.Constants.OtherConstants.CONTENT_TYPE;
 import static io.cloudslang.content.cyberark.utils.Constants.OtherConstants.*;
 import static io.cloudslang.content.cyberark.utils.CyberarkUtils.*;
-import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_CONNECTION_POOL_DESC;
-import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_COOKIES_DESC;
-import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_CONNECTION_POOL;
-import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_COOKIES;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
+import static org.apache.commons.lang3.StringUtils.*;
 
-public class GetAllSafeMembers {
-    @Action(name = GET_ALL_SAFE_MEMBERS,
-            description = GET_ALL_SAFE_MEMBERS_DESCRIPTION,
+public class GetAccountDetails {
+
+    @Action(name = GET_ACCOUNT_DETAILS,
+            description = GET_ACCOUNT_DETAILS_DESCRIPTION,
             outputs = {
                     @Output(RETURN_RESULT),
                     @Output(STATUS_CODE),
@@ -64,12 +69,7 @@ public class GetAllSafeMembers {
             @Param(value = HOST, description = HOST_DESCRIPTION, required = true) String hostname,
             @Param(value = PROTOCOL, description = PROTOCOL_DESCRIPTION) String protocol,
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESCRIPTION, required = true) String authToken,
-            @Param(value = SAFE_URL_ID, description = SAFE_URL_ID_DESCRIPTION, required = true) String safeUrlId,
-            @Param(value = FILTER, description = FILTER_DESCRIPTION) String filter,
-            @Param(value = SEARCH, description = SEARCH_DESCRIPTION) String search,
-            @Param(value = OFFSET, description = OFFSET_DESCRIPTION) String offset,
-            @Param(value = LIMIT, description = LIMIT_DESCRIPTION) String limit,
-            @Param(value = SORT, description = SORT_DESCRIPTION) String sort,
+            @Param(value = ACCOUNT_ID, description = ACCOUNT_ID_DESCRIPTION) String accountId,
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESCRIPTION) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESCRIPTION) String proxyPort,
             @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESCRIPTION) String proxyUsername,
@@ -90,20 +90,12 @@ public class GetAllSafeMembers {
             @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
             @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
 
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(FILTER, filter);
-        queryParams.put(SEARCH, search);
-        queryParams.put(OFFSET, offset);
-        queryParams.put(LIMIT, limit);
-        queryParams.put(SORT, sort);
-
-
         try {
 
             validateProtocol(protocol);
 
             Map<String, String> result = new HttpClientGetAction().execute(
-                    protocol + PROTOCOL_DELIMITER + hostname + GET_ALL_SAFES_ENDPOINT + FORWARD_SLASH + safeUrlId + MEMBERS + FORWARD_SLASH,
+                    protocol + PROTOCOL_DELIMITER + hostname + GET_ACCOUNT_DETAILS_ENDPOINT + accountId,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
@@ -128,7 +120,7 @@ public class GetAllSafeMembers {
                     CONTENT_TYPE + APPLICATION_JSON + COMMA + AUTHORIZATION + authToken,
                     EMPTY,
                     EMPTY,
-                    getQueryParamsString(queryParams),
+                    EMPTY,
                     EMPTY,
                     EMPTY,
                     connectTimeout,
