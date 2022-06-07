@@ -12,7 +12,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package io.cloudslang.content.database.utils;
+/*
+ * (c) Copyright 2022 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.cloudslang.content.database.entities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +34,10 @@ import java.util.List;
 public class OracleCloudInputs {
     //Inputs
     private String connectionString;
-    private String user;
+    private String username;
     private String password;
+
+    private String walletPath;
     private String sqlCommand;
     private String delimiter;
     private String trustStore;
@@ -34,10 +50,11 @@ public class OracleCloudInputs {
     private String columnNames;
     private List<String> rowsLeft = new ArrayList<>();
 
-    @java.beans.ConstructorProperties({"connectionString", "user", "password", "sqlCommand", "delimiter", "trustStore", "trustStorePassword", "keyStore", "keyStorePassword", "timeout"})
+    @java.beans.ConstructorProperties({"connectionString", "username", "password", "walletPath", "sqlCommand", "delimiter", "trustStore", "trustStorePassword", "keyStore", "keyStorePassword", "timeout"})
     public OracleCloudInputs(String connectionString,
-                             String user,
+                             String username,
                              String password,
+                             String walletPath,
                              String sqlCommand,
                              String delimiter,
                              String trustStore,
@@ -47,8 +64,9 @@ public class OracleCloudInputs {
                              int timeout) {
 
         this.connectionString = connectionString;
-        this.user = user;
+        this.username = username;
         this.password = password;
+        this.walletPath = walletPath;
         this.sqlCommand = sqlCommand;
         this.delimiter = delimiter;
         this.trustStore = trustStore;
@@ -66,12 +84,16 @@ public class OracleCloudInputs {
         return sqlCommand;
     }
 
-    public String getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
         return password;
+    }
+
+    public String getWalletPath(){
+        return walletPath;
     }
 
     public String getTrustStore() {
@@ -121,8 +143,9 @@ public class OracleCloudInputs {
     public static class OracleCloudInputsBuilder {
 
         private String connectionString;
-        private String user;
+        private String username;
         private String password;
+        private String walletPath;
         private String sqlCommand;
         private String delimiter;
         private String trustStore;
@@ -131,7 +154,7 @@ public class OracleCloudInputs {
         private String keyStorePassword;
         private int timeout;
 
-        OracleCloudInputsBuilder() {
+        public OracleCloudInputsBuilder() {
         }
 
         public OracleCloudInputsBuilder connectionString(String connectionString) {
@@ -149,8 +172,13 @@ public class OracleCloudInputs {
             return this;
         }
 
-        public OracleCloudInputsBuilder user(String sqlCommand) {
-            this.user = user;
+        public OracleCloudInputsBuilder walletPath(String walletPath) {
+            this.walletPath = walletPath;
+            return this;
+        }
+
+        public OracleCloudInputsBuilder username(String sqlCommand) {
+            this.username = username;
             return this;
         }
 
@@ -187,8 +215,9 @@ public class OracleCloudInputs {
         public OracleCloudInputs build() {
             return new OracleCloudInputs(
                     connectionString,
-                    user,
+                    username,
                     password,
+                    walletPath,
                     sqlCommand,
                     delimiter,
                     trustStore,
