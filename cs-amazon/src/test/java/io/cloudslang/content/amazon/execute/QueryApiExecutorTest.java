@@ -306,15 +306,6 @@ public class QueryApiExecutorTest {
     }
 
     @Test
-    public void testDescribeImages() throws Exception {
-        toTest.execute(getCommonInputs("DescribeImages", HEADERS), getDescribeImagesInputs(), getDescribeImagesCustomInputs());
-
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
-                eq(getQueryParamsMap("DescribeImages")));
-        runCommonVerifiersForQueryApi();
-    }
-
-    @Test
     public void testDescribeVolumes() throws Exception {
         final VolumeInputs volumeInputs = new VolumeInputs.Builder()
                 .withVolumeIdsString("1,2,3")
