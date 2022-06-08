@@ -1414,7 +1414,7 @@ public class QueryApiExecutorTest {
                 .withProductCodeType("devpay")
                 .withRamdiskId("id-ram")
                 .withRootDeviceName("/dev/sda1")
-                .withRootDeviceType("available")
+                .withRootDeviceType("ebs")
                 .withStateReasonCode("r-code")
                 .withStateReasonMessage("r-message")
                 .withKeyTagsString("my-key-tags")
