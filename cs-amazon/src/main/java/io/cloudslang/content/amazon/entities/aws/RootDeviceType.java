@@ -45,6 +45,6 @@ public enum RootDeviceType {
             }
         }
 
-        throw new RuntimeException("Unrecognized root device type value: [" + input + "]. Valid values are: available, in-use.");
+        throw new RuntimeException("Unrecognized root device type value: [" + input + "]. Valid values are: ebs, instance-store.");
     }
 }
