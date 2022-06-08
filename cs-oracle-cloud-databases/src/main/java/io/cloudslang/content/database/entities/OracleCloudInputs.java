@@ -11,7 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 /*
  * (c) Copyright 2022 Micro Focus
  * All rights reserved. This program and the accompanying materials
@@ -92,7 +92,7 @@ public class OracleCloudInputs {
         return password;
     }
 
-    public String getWalletPath(){
+    public String getWalletPath() {
         return walletPath;
     }
 

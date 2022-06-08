@@ -11,7 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 
 package io.cloudslang.content.database.actions;
@@ -35,8 +35,10 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.utils.Constants.MINUS_1;
+import static io.cloudslang.content.database.utils.Constants.ZERO;
 import static io.cloudslang.content.database.utils.Inputs.*;
 import static io.cloudslang.content.database.utils.Outputs.UPDATE_COUNT;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 
 public class SQLCommand {
@@ -61,6 +63,9 @@ public class SQLCommand {
                                        @Param(value = KEYSTORE) String keystore,
                                        @Param(value = KEYSTORE_PASSWORD) String keystorePassword,
                                        @Param(value = TIMEOUT) String timeout) {
+
+        timeout = defaultIfEmpty(timeout, ZERO);
+
         try {
             OracleCloudInputs oracleCloudInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
                     .connectionString(connectionString)

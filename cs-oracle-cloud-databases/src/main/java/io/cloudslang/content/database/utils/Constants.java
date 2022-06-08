@@ -11,9 +11,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.cloudslang.content.database.utils;
 
 public class Constants {
     public static final String MINUS_1 = "-1";
+    public static final String ZERO = "0";
+    public static final String DBMS_OUTPUT = "dbms_output";
+    public static final String ORACLE_URL = "jdbc:oracle:thin:@";
+    public static final String SUCCESS_MESSAGE = "Command completed successfully.";
 }
