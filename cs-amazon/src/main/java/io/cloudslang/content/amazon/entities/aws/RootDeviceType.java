@@ -25,8 +25,8 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
  * 6/17/2016.
  */
 public enum RootDeviceType {
-    AVAILABLE("available"),
-    IN_USE("in-use");
+    EBS("ebs"),
+    INSTANCE_STORE("instance-store");
 
     private final String value;
 

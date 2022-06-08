@@ -42,6 +42,8 @@ public class ImageInputs {
     private final String isPublic;
     private final String manifestLocation;
     private final String state;
+    private final String owners;
+    private final String executableBy;
 
     private final boolean imageNoReboot;
 
@@ -57,6 +59,8 @@ public class ImageInputs {
         this.isPublic = builder.isPublic;
         this.manifestLocation = builder.manifestLocation;
         this.state = builder.state;
+        this.owners = builder.owners;
+        this.executableBy = builder.executableBy;
 
         this.imageNoReboot = builder.imageNoReboot;
     }
@@ -101,6 +105,10 @@ public class ImageInputs {
         return state;
     }
 
+    public String getOwners(){ return owners;}
+
+    public String getExecutableBy(){ return executableBy;}
+
     public boolean isImageNoReboot() {
         return imageNoReboot;
     }
@@ -116,6 +124,8 @@ public class ImageInputs {
         private String isPublic;
         private String manifestLocation;
         private String state;
+        private String owners;
+        private String executableBy;
 
         private boolean imageNoReboot;
 
@@ -133,10 +143,10 @@ public class ImageInputs {
             return this;
         }
 
-        public Builder withOwnersString(String inputValue) {
-            ownersString = getDefaultStringInput(inputValue, EMPTY);
-            return this;
-        }
+//        public Builder withOwnersString(String inputValue) {
+//            ownersString = getDefaultStringInput(inputValue, EMPTY);
+//            return this;
+//        }
 
         public Builder withUserIdsString(String inputValue) {
             userIdsString = inputValue;
@@ -165,6 +175,16 @@ public class ImageInputs {
 
         public Builder withManifestLocation(String inputValue) {
             manifestLocation = inputValue;
+            return this;
+        }
+
+        public Builder withOwners(String inputValue) {
+            owners = getDefaultStringInput(inputValue, NOT_RELEVANT);
+            return this;
+        }
+
+        public Builder withExecutableBy(String inputValue) {
+            executableBy = getDefaultStringInput(inputValue, NOT_RELEVANT);
             return this;
         }
 
