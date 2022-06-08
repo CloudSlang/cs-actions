@@ -66,6 +66,7 @@ public class SQLCommand {
                     .connectionString(connectionString)
                     .username(username)
                     .password(password)
+                    .walletPath(walletPath)
                     .sqlCommand(command)
                     .trustStore(trustStore)
                     .trustStorePassword(trustStorePassword)

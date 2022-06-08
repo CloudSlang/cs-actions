@@ -111,8 +111,6 @@
             <artifactId>osdt_core</artifactId>
             <version>21.5.0.0</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
@@ -242,6 +240,5 @@
             </build>
         </profile>
     </profiles>
-
 </project>
 

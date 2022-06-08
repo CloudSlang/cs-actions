@@ -177,12 +177,12 @@ public class OracleCloudInputs {
             return this;
         }
 
-        public OracleCloudInputsBuilder username(String sqlCommand) {
+        public OracleCloudInputsBuilder username(String username) {
             this.username = username;
             return this;
         }
 
-        public OracleCloudInputsBuilder password(String sqlCommand) {
+        public OracleCloudInputsBuilder password(String password) {
             this.password = password;
             return this;
         }

@@ -36,8 +36,8 @@ public class Main {
                 "",
                 0);
 
-//           Map<String,String> result = OracleCloudQueryService.executeSqlCommand(inputs);
-//           result.forEach((k, v) -> System.out.println((k + ":" + v)));
+           Map<String,String> result = OracleCloudQueryService.executeSqlCommand(inputs);
+           result.forEach((k, v) -> System.out.println((k + ":" + v)));
 
         OracleCloudQueryService.executeSqlQuery(inputs);
         System.out.println(inputs.getColumnNames());
