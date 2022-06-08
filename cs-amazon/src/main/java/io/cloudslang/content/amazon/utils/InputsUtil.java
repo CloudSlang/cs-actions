@@ -379,6 +379,10 @@ public final class InputsUtil {
             return SECURITY_GROUP_NAME_CONST + DOT + (index + ONE);
         } else if (VPC_ID.equalsIgnoreCase(specificArea)) {
             return VPC_ID + DOT + valueOf(index + ONE);
+        } else if (OWNERS.equalsIgnoreCase(specificArea)) {
+            return OWNERS + DOT + valueOf(index + ONE);
+        } else if (EXECUTABLE_BY.equalsIgnoreCase(specificArea)) {
+            return EXECUTABLE_BY + DOT + valueOf(index + ONE);
         } else {
             return EMPTY;
         }
