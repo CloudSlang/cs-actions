@@ -1427,7 +1427,6 @@ public class QueryApiExecutorTest {
         return new ImageInputs.Builder()
                 .withDescription("some-desc")
                 .withImageIdsString("i_id1,i_id2")
-                .withOwnersString("o_id1,o_id2")
                 .withType("machine")
                 .withIsPublic("true")
                 .withManifestLocation("manif-location")
