@@ -33,10 +33,15 @@ public class ArrayListService {
         try {
             iterate.init(array,  globalSessionObject);
             if (iterate.getIndex() == 0 && iterate.getLength() == 1 || iterate.getIndex() == iterate.getLength()-1) {
-                returnResult.put(RETURN_RESULT, NO_MORE);
+                returnResult.put(RETURN_RESULT, HAS_MORE);
                 returnResult.put(RESULT_STRING, iterate.getNext(globalSessionObject));
+                returnResult.put(RETURN_CODE, ZERO);
+            } else if (iterate.getIndex() == 1 && iterate.getLength() == 1 || iterate.getIndex() == iterate.getLength()) {
+                returnResult.put(RETURN_RESULT, NO_MORE);
+                returnResult.put(RESULT_STRING, EMPTY_STRING);
                 returnResult.put(RETURN_CODE, ONE);
-            } else if (iterate.hasNext()) {
+            }
+            else if (iterate.hasNext()) {
                 returnResult.put(INDEX, Integer.toString(iterate.getIndex()));
                 returnResult.put(RESULT_STRING, iterate.getNext(globalSessionObject));
                 if (iterate.hasNext()) {
