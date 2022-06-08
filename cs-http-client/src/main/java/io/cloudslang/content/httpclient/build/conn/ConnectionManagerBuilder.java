@@ -77,10 +77,9 @@ public class ConnectionManagerBuilder {
 
     public PoolingHttpClientConnectionManager buildConnectionManager() {
         if (connectionPoolHolder != null) {
-            PoolingHttpClientConnectionManager connManager = null;
+            PoolingHttpClientConnectionManager connManager;
             synchronized (connectionPoolHolder) {
-                Map<String, PoolingHttpClientConnectionManager> connectionManagerMap
-                        = connectionPoolHolder.get();
+                Map<String, PoolingHttpClientConnectionManager> connectionManagerMap = connectionPoolHolder.get();
 
                 if (connectionManagerMap == null) {
                     final HashMap<String, PoolingHttpClientConnectionManager> connectionManagerMapFinal = new HashMap<>();

@@ -17,15 +17,13 @@
 
 package io.cloudslang.content.amazon.factory;
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.amazon.entities.inputs.*;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import static io.cloudslang.content.amazon.utils.InputsUtil.getUrlFromApiService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
+import static io.cloudslang.content.amazon.utils.InputsUtil.getUrlFromApiService;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Created by Mihai Tusa.
@@ -75,12 +73,16 @@ public class InputsWrapperBuilder {
                     wrapper.setLoadBalancerInputs((LoadBalancerInputs) builder);
                 } else if (builder instanceof NetworkInputs) {
                     wrapper.setNetworkInputs((NetworkInputs) builder);
+                } else if (builder instanceof SecurityGroupInputs) {
+                    wrapper.setSecurityGroupInputs((SecurityGroupInputs) builder);
                 } else if (builder instanceof StorageInputs) {
                     wrapper.setStorageInputs((StorageInputs) builder);
                 } else if (builder instanceof VolumeInputs) {
                     wrapper.setVolumeInputs((VolumeInputs) builder);
                 } else if (builder instanceof FilterInputs) {
                     wrapper.setFilterInputs((FilterInputs) builder);
+                } else if (builder instanceof VPCInputs) {
+                    wrapper.setVpcInputs((VPCInputs) builder);
                 } else {
                     throw new RuntimeException(UNKNOWN_BUILDER_TYPE);
                 }

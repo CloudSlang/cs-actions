@@ -20,7 +20,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-hashicorp-terraform</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.6-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Terraform Integration</description>
@@ -142,7 +142,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.10.8</version>
+            <version>2.9.10.9-mf</version>
             <scope>compile</scope>
         </dependency>
 
