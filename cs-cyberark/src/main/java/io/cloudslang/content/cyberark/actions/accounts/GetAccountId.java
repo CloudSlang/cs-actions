@@ -21,6 +21,7 @@ import net.minidev.json.parser.JSONParser;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.*;
 import static io.cloudslang.content.cyberark.utils.Constants.GetAccountIdConstants.*;
@@ -52,7 +53,7 @@ public class GetAccountId {
             @Param(value = HOST, description = HOST_DESCRIPTION, required = true) String hostname,
             @Param(value = PROTOCOL, description = PROTOCOL_DESCRIPTION) String protocol,
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESCRIPTION, required = true) String authToken,
-            @Param(value = USERNAME, description = USERNAME_DESCRIPTION,required = true) String userName,
+            @Param(value = USERNAME, description = USERNAME_DESCRIPTION,required = true) String username,
             @Param(value = SAFE, description = SAFE_DESCRIPTION,required = true) String safe,
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESCRIPTION) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESCRIPTION) String proxyPort,
@@ -75,7 +76,7 @@ public class GetAccountId {
             @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
 
         Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(SEARCH, userName);
+        queryParams.put(SEARCH, username);
         queryParams.put(FILTER, SAFE_NAME + SPACE + EQ + SPACE + safe);
 
 
@@ -124,7 +125,7 @@ public class GetAccountId {
 
 
 
-            if (result.get(RETURN_CODE) == "0")
+            if (Objects.equals(result.get(RETURN_CODE), "0"))
             {
                 JSONObject resultJson = (JSONObject) new JSONParser().parse( result.get(RETURN_RESULT) );
                 StringBuilder idStringBuilder = new StringBuilder();
