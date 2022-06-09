@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -45,6 +45,6 @@ public enum RootDeviceType {
             }
         }
 
-        throw new RuntimeException("Unrecognized root device type value: [" + input + "]. Valid values are: available, in-use.");
+        throw new RuntimeException("Unrecognized root device type value: [" + input + "]. Valid values are: ebs, instance-store.");
     }
 }
