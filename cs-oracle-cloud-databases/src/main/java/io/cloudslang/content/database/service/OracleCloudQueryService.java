@@ -11,7 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 package io.cloudslang.content.database.service;
 
@@ -19,16 +19,22 @@ import io.cloudslang.content.database.entities.OracleCloudInputs;
 import io.cloudslang.content.database.utils.OracleDbmsOutput;
 import oracle.jdbc.driver.OracleConnection;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static io.cloudslang.content.database.utils.Constants.*;
 import static io.cloudslang.content.database.utils.Outputs.UPDATE_COUNT;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class OracleCloudQueryService {
-
 
     public static Map<String, String> executeSqlCommand(OracleCloudInputs sqlInputs) throws SQLException {
 
@@ -106,15 +112,20 @@ public class OracleCloudQueryService {
         Properties props = new Properties();
         props.setProperty(OracleConnection.CONNECTION_PROPERTY_USER_NAME, sqlInputs.getUsername());
         props.setProperty(OracleConnection.CONNECTION_PROPERTY_PASSWORD, sqlInputs.getPassword());
+        props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_KEYSTORETYPE, JKS);
+        props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_TRUSTSTORETYPE, JKS);
 
-        if (!isEmpty(sqlInputs.getTrustStore()))
+        if (!isEmpty(sqlInputs.getTrustStore())) {
             props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_TRUSTSTORE, sqlInputs.getTrustStore());
+        }
 
         if (!isEmpty(sqlInputs.getTrustStorePassword()))
             props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_TRUSTSTOREPASSWORD, sqlInputs.getTrustStorePassword());
 
-        if (!isEmpty(sqlInputs.getKeyStore()))
+        if (!isEmpty(sqlInputs.getKeyStore())) {
+
             props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_KEYSTORE, sqlInputs.getKeyStore());
+        }
 
         if (!isEmpty(sqlInputs.getKeyStorePassword()))
             props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_KEYSTOREPASSWORD, sqlInputs.getKeyStorePassword());
@@ -123,10 +134,6 @@ public class OracleCloudQueryService {
             props.setProperty(OracleConnection.CONNECTION_PROPERTY_TNS_ADMIN, sqlInputs.getWalletPath());
 
         return props;
-    }
-
-    static boolean isEmpty(String string) {
-        return string == null || string.length() == 0;
     }
 }
 

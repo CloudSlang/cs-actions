@@ -42,4 +42,5 @@ public class Inputs {
     public static final String TIMEOUT = "timeout";
 
     public static final String WALLET_PATH = "walletPath";
+    public static final String OVERWRITE = "overwrite";
 }

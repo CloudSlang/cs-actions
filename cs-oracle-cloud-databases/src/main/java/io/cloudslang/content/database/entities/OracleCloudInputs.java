@@ -11,7 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.cloudslang.content.database.entities;
 
 import java.util.ArrayList;
@@ -32,17 +32,20 @@ public class OracleCloudInputs {
     private String keyStorePassword;
     private int timeout;
 
+    private boolean overwrite;
+
     //Outputs
     private String columnNames;
     private List<String> rowsLeft = new ArrayList<>();
 
-    @java.beans.ConstructorProperties({"connectionString", "username", "password", "walletPath", "sqlCommand", "delimiter", "trustStore", "trustStorePassword", "keyStore", "keyStorePassword", "timeout"})
+    @java.beans.ConstructorProperties({"connectionString", "username", "password", "walletPath", "sqlCommand", "delimiter", "overwrite", "trustStore", "trustStorePassword", "keyStore", "keyStorePassword", "timeout"})
     public OracleCloudInputs(String connectionString,
                              String username,
                              String password,
                              String walletPath,
                              String sqlCommand,
                              String delimiter,
+                             boolean overwrite,
                              String trustStore,
                              String trustStorePassword,
                              String keyStore,
@@ -55,6 +58,7 @@ public class OracleCloudInputs {
         this.walletPath = walletPath;
         this.sqlCommand = sqlCommand;
         this.delimiter = delimiter;
+        this.overwrite = overwrite;
         this.trustStore = trustStore;
         this.trustStorePassword = trustStorePassword;
         this.keyStore = keyStore;
@@ -81,6 +85,8 @@ public class OracleCloudInputs {
     public String getWalletPath() {
         return walletPath;
     }
+
+    public boolean getOverwrite() {return overwrite;}
 
     public String getTrustStore() {
         return trustStore;
@@ -139,6 +145,7 @@ public class OracleCloudInputs {
         private String keyStore;
         private String keyStorePassword;
         private int timeout;
+        boolean overwrite;
 
         public OracleCloudInputsBuilder() {
         }
@@ -155,6 +162,11 @@ public class OracleCloudInputs {
 
         public OracleCloudInputsBuilder delimiter(String delimiter) {
             this.delimiter = delimiter;
+            return this;
+        }
+
+        public OracleCloudInputsBuilder overwrite(boolean overwrite) {
+            this.overwrite = overwrite;
             return this;
         }
 
@@ -206,6 +218,7 @@ public class OracleCloudInputs {
                     walletPath,
                     sqlCommand,
                     delimiter,
+                    overwrite,
                     trustStore,
                     trustStorePassword,
                     keyStore,

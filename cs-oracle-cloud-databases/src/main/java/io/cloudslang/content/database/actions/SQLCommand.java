@@ -25,12 +25,14 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.entities.OracleCloudInputs;
 import io.cloudslang.content.database.service.OracleCloudQueryService;
+import io.cloudslang.content.database.utils.Utils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
@@ -38,6 +40,7 @@ import static io.cloudslang.content.database.utils.Constants.MINUS_1;
 import static io.cloudslang.content.database.utils.Constants.ZERO;
 import static io.cloudslang.content.database.utils.Inputs.*;
 import static io.cloudslang.content.database.utils.Outputs.UPDATE_COUNT;
+import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 
@@ -58,15 +61,18 @@ public class SQLCommand {
                                        @Param(value = PASSWORD, encrypted = true, required = true) String password,
                                        @Param(value = WALLET_PATH) String walletPath,
                                        @Param(value = COMMAND, required = true) String command,
+                                       @Param(value = OVERWRITE) String overwrite,
                                        @Param(value = TRUST_STORE) String trustStore,
                                        @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
                                        @Param(value = KEYSTORE) String keystore,
                                        @Param(value = KEYSTORE_PASSWORD) String keystorePassword,
                                        @Param(value = TIMEOUT) String timeout) {
 
-        timeout = defaultIfEmpty(timeout, ZERO);
-
         try {
+            overwrite = defaultIfEmpty(overwrite, FALSE);
+            timeout = defaultIfEmpty(timeout, ZERO);
+            walletPath = Utils.unzip(walletPath,Boolean.parseBoolean(overwrite));
+
             OracleCloudInputs oracleCloudInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
                     .connectionString(connectionString)
                     .username(username)
