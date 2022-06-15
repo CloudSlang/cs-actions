@@ -32,14 +32,12 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class OracleCloudQueryService {
 
     public static Map<String, String> executeSqlCommand(OracleCloudInputs sqlInputs) throws SQLException {
-
         Properties props = getProperties(sqlInputs);
         try (Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props);
              final OracleDbmsOutput oracleDbmsOutput = new OracleDbmsOutput(connection)) {
 
-
             try (final PreparedStatement statement = connection.prepareStatement(sqlInputs.getSqlCommand())) {
-                statement.setQueryTimeout(sqlInputs.getTimeout());
+                statement.setQueryTimeout(sqlInputs.getExecutionTimeout());
                 statement.executeQuery();
                 int updateCount = statement.getUpdateCount();
                 Map<String, String> result = getSuccessResultsMap(SUCCESS_MESSAGE);
@@ -58,7 +56,7 @@ public class OracleCloudQueryService {
         Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props);
 
         Statement statement = connection.createStatement();
-        statement.setQueryTimeout(sqlInputs.getTimeout());
+        statement.setQueryTimeout(sqlInputs.getExecutionTimeout());
 
         final ResultSet results = statement.executeQuery(sqlInputs.getSqlCommand());
         final ResultSetMetaData metaData = results.getMetaData();
@@ -117,8 +115,6 @@ public class OracleCloudQueryService {
 
         if (!isEmpty(sqlInputs.getWalletPath()))
             props.setProperty(OracleConnection.CONNECTION_PROPERTY_TNS_ADMIN, sqlInputs.getWalletPath());
-
-        props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_NET_CONNECT_TIMEOUT, sqlInputs.getConnectionTimeout());
 
         return props;
     }

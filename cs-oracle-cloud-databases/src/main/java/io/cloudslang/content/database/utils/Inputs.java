@@ -38,7 +38,7 @@ public class Inputs {
     public static final String TRUST_STORE_PASSWORD = "trustKeystorePassword";
     public static final String KEYSTORE = "keystore";
     public static final String KEYSTORE_PASSWORD = "keystorePassword";
-    public static final String TIMEOUT = "timeout";
+    public static final String EXECUTION_TIMEOUT = "executionTimeout";
     public static final String WALLET_PATH = "walletPath";
     public static final String OVERWRITE = "overwrite";
     public static final String CONNECTION_TIMEOUT = "connectTimeout";

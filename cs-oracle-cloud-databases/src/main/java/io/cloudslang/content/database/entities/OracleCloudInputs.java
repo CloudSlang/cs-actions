@@ -30,8 +30,7 @@ public class OracleCloudInputs {
     private String trustStorePassword;
     private String keyStore;
     private String keyStorePassword;
-    private int timeout;
-    private String connectionTimeout;
+    private int executionTimeout;
 
     private boolean overwrite;
 
@@ -39,7 +38,7 @@ public class OracleCloudInputs {
     private String columnNames;
     private List<String> rowsLeft = new ArrayList<>();
 
-    @java.beans.ConstructorProperties({"connectionString", "username", "password", "walletPath", "sqlCommand", "delimiter", "overwrite", "trustStore", "trustStorePassword", "keyStore", "keyStorePassword","connectionTimeout", "timeout"})
+    @java.beans.ConstructorProperties({"connectionString", "username", "password", "walletPath", "sqlCommand", "delimiter", "overwrite", "trustStore", "trustStorePassword", "keyStore", "keyStorePassword", "executionTimeout"})
     public OracleCloudInputs(String connectionString,
                              String username,
                              String password,
@@ -51,8 +50,7 @@ public class OracleCloudInputs {
                              String trustStorePassword,
                              String keyStore,
                              String keyStorePassword,
-                             String connectionTimeout,
-                             int timeout) {
+                             int executionTimeout) {
 
         this.connectionString = connectionString;
         this.username = username;
@@ -65,8 +63,7 @@ public class OracleCloudInputs {
         this.trustStorePassword = trustStorePassword;
         this.keyStore = keyStore;
         this.keyStorePassword = keyStorePassword;
-        this.connectionTimeout = connectionTimeout;
-        this.timeout = timeout;
+        this.executionTimeout = executionTimeout;
     }
 
     public static OracleCloudInputsBuilder builder() {
@@ -107,8 +104,8 @@ public class OracleCloudInputs {
         return keyStorePassword;
     }
 
-    public int getTimeout() {
-        return timeout;
+    public int getExecutionTimeout() {
+        return executionTimeout;
     }
 
     public String getConnectionString() {
@@ -131,8 +128,6 @@ public class OracleCloudInputs {
         return rowsLeft;
     }
 
-    public String getConnectionTimeout(){return connectionTimeout;}
-
     public void setRowsLeft(List<String> rowsLeft) {
         this.rowsLeft = rowsLeft;
     }
@@ -149,9 +144,8 @@ public class OracleCloudInputs {
         private String trustStorePassword;
         private String keyStore;
         private String keyStorePassword;
-        private int timeout;
+        private int executionTimeout;
         private boolean overwrite;
-        private String connectionTimeout;
 
         public OracleCloudInputsBuilder() {
         }
@@ -211,13 +205,8 @@ public class OracleCloudInputs {
             return this;
         }
 
-        public OracleCloudInputsBuilder connectionTimeout(String connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
-            return this;
-        }
-
-        public OracleCloudInputsBuilder timeout(int timeout) {
-            this.timeout = timeout;
+        public OracleCloudInputsBuilder executionTimeout(int executionTimeout) {
+            this.executionTimeout = executionTimeout;
             return this;
         }
 
@@ -234,8 +223,7 @@ public class OracleCloudInputs {
                     trustStorePassword,
                     keyStore,
                     keyStorePassword,
-                    connectionTimeout,
-                    timeout
+                    executionTimeout
             );
         }
     }

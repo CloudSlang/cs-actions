@@ -67,13 +67,11 @@ public class SQLCommand {
                                        @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
                                        @Param(value = KEYSTORE) String keystore,
                                        @Param(value = KEYSTORE_PASSWORD) String keystorePassword,
-                                       @Param(value = CONNECTION_TIMEOUT) String connectionTimeout,
-                                       @Param(value = TIMEOUT) String timeout) {
+                                       @Param(value = EXECUTION_TIMEOUT) String executionTimeout) {
 
         try {
             overwrite = defaultIfEmpty(overwrite, FALSE);
-            timeout = defaultIfEmpty(timeout, ZERO);
-            connectionTimeout = defaultIfEmpty(connectionTimeout, ZERO);
+            executionTimeout = defaultIfEmpty(executionTimeout, ZERO);
             walletPath = Utils.unzip(walletPath,Boolean.parseBoolean(overwrite));
 
             OracleCloudInputs oracleCloudInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
@@ -86,8 +84,7 @@ public class SQLCommand {
                     .trustStorePassword(trustStorePassword)
                     .keyStore(keystore)
                     .keyStorePassword(keystorePassword)
-                    .timeout(Integer.parseInt(timeout))
-                    .connectionTimeout(connectionTimeout)
+                    .executionTimeout(Integer.parseInt(executionTimeout))
                     .build();
             DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
             return OracleCloudQueryService.executeSqlCommand(oracleCloudInputs);

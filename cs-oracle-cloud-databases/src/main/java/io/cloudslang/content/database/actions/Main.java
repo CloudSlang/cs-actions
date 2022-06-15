@@ -34,10 +34,9 @@ public class Main {
                 "B33f34t3r",
                 "C:\\Users\\boicu\\Desktop\\Wallet_DB202203311236\\keystore.jks",
                 "B33f34t3r",
-                "0",
                 0);
 
-        Map<String, String> result = new SQLCommand().execute("(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.eu-frankfurt-1.oraclecloud.com))(connect_data=(service_name=gde34672fa25a61_db202203311236_low.adb.oraclecloud.com))(security=(ssl_server_cert_dn=\"CN=adwc.eucom-central-1.oraclecloud.com, OU=Oracle BMCS FRANKFURT, O=Oracle Corporation, L=Redwood City, ST=California, C=US\")))",
+        Map<String, String> result = new SQLCommand().execute("db202203311236_high",
                 "ADMIN",
                 "B33f34t3r!123",
                 "C:\\Users\\boicu\\Desktop\\Wallet_DB202203311236.zip",
@@ -65,7 +64,6 @@ public class Main {
                 "",
                 "",
                 "",
-                "0",
                 "0");
         result.forEach((k, v) -> System.out.println((k + ":" + v)));
 
