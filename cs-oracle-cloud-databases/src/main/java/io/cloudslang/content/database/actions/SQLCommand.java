@@ -39,8 +39,8 @@ import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.utils.Constants.MINUS_1;
 import static io.cloudslang.content.database.utils.Constants.ZERO;
 import static io.cloudslang.content.database.utils.Inputs.*;
+import static io.cloudslang.content.database.utils.Outputs.OUTPUT_TEXT;
 import static io.cloudslang.content.database.utils.Outputs.UPDATE_COUNT;
-import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 
@@ -50,6 +50,7 @@ public class SQLCommand {
                     @Output(RETURN_CODE),
                     @Output(RETURN_RESULT),
                     @Output(UPDATE_COUNT),
+                    @Output(OUTPUT_TEXT),
                     @Output(EXCEPTION),
             },
             responses = {
@@ -66,11 +67,13 @@ public class SQLCommand {
                                        @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
                                        @Param(value = KEYSTORE) String keystore,
                                        @Param(value = KEYSTORE_PASSWORD) String keystorePassword,
+                                       @Param(value = CONNECTION_TIMEOUT) String connectionTimeout,
                                        @Param(value = TIMEOUT) String timeout) {
 
         try {
             overwrite = defaultIfEmpty(overwrite, FALSE);
             timeout = defaultIfEmpty(timeout, ZERO);
+            connectionTimeout = defaultIfEmpty(connectionTimeout, ZERO);
             walletPath = Utils.unzip(walletPath,Boolean.parseBoolean(overwrite));
 
             OracleCloudInputs oracleCloudInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
@@ -84,6 +87,7 @@ public class SQLCommand {
                     .keyStore(keystore)
                     .keyStorePassword(keystorePassword)
                     .timeout(Integer.parseInt(timeout))
+                    .connectionTimeout(connectionTimeout)
                     .build();
             DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
             return OracleCloudQueryService.executeSqlCommand(oracleCloudInputs);

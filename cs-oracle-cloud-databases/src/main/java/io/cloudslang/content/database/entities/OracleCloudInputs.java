@@ -31,6 +31,7 @@ public class OracleCloudInputs {
     private String keyStore;
     private String keyStorePassword;
     private int timeout;
+    private String connectionTimeout;
 
     private boolean overwrite;
 
@@ -38,7 +39,7 @@ public class OracleCloudInputs {
     private String columnNames;
     private List<String> rowsLeft = new ArrayList<>();
 
-    @java.beans.ConstructorProperties({"connectionString", "username", "password", "walletPath", "sqlCommand", "delimiter", "overwrite", "trustStore", "trustStorePassword", "keyStore", "keyStorePassword", "timeout"})
+    @java.beans.ConstructorProperties({"connectionString", "username", "password", "walletPath", "sqlCommand", "delimiter", "overwrite", "trustStore", "trustStorePassword", "keyStore", "keyStorePassword","connectionTimeout", "timeout"})
     public OracleCloudInputs(String connectionString,
                              String username,
                              String password,
@@ -50,6 +51,7 @@ public class OracleCloudInputs {
                              String trustStorePassword,
                              String keyStore,
                              String keyStorePassword,
+                             String connectionTimeout,
                              int timeout) {
 
         this.connectionString = connectionString;
@@ -63,6 +65,7 @@ public class OracleCloudInputs {
         this.trustStorePassword = trustStorePassword;
         this.keyStore = keyStore;
         this.keyStorePassword = keyStorePassword;
+        this.connectionTimeout = connectionTimeout;
         this.timeout = timeout;
     }
 
@@ -128,6 +131,8 @@ public class OracleCloudInputs {
         return rowsLeft;
     }
 
+    public String getConnectionTimeout(){return connectionTimeout;}
+
     public void setRowsLeft(List<String> rowsLeft) {
         this.rowsLeft = rowsLeft;
     }
@@ -145,7 +150,8 @@ public class OracleCloudInputs {
         private String keyStore;
         private String keyStorePassword;
         private int timeout;
-        boolean overwrite;
+        private boolean overwrite;
+        private String connectionTimeout;
 
         public OracleCloudInputsBuilder() {
         }
@@ -205,6 +211,11 @@ public class OracleCloudInputs {
             return this;
         }
 
+        public OracleCloudInputsBuilder connectionTimeout(String connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
         public OracleCloudInputsBuilder timeout(int timeout) {
             this.timeout = timeout;
             return this;
@@ -223,6 +234,7 @@ public class OracleCloudInputs {
                     trustStorePassword,
                     keyStore,
                     keyStorePassword,
+                    connectionTimeout,
                     timeout
             );
         }

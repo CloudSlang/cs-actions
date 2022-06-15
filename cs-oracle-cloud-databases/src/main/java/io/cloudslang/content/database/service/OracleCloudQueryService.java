@@ -19,17 +19,12 @@ import io.cloudslang.content.database.entities.OracleCloudInputs;
 import io.cloudslang.content.database.utils.OracleDbmsOutput;
 import oracle.jdbc.driver.OracleConnection;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import static io.cloudslang.content.database.utils.Constants.*;
+import static io.cloudslang.content.database.utils.Outputs.OUTPUT_TEXT;
 import static io.cloudslang.content.database.utils.Outputs.UPDATE_COUNT;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -39,32 +34,22 @@ public class OracleCloudQueryService {
     public static Map<String, String> executeSqlCommand(OracleCloudInputs sqlInputs) throws SQLException {
 
         Properties props = getProperties(sqlInputs);
-        try (Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props)) {
+        try (Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props);
+             final OracleDbmsOutput oracleDbmsOutput = new OracleDbmsOutput(connection)) {
 
-            if (sqlInputs.getSqlCommand().contains(DBMS_OUTPUT)) {
-                try (final PreparedStatement statement = connection.prepareStatement(sqlInputs.getSqlCommand());
-                     final OracleDbmsOutput oracleDbmsOutput = new OracleDbmsOutput(connection)) {
 
-                    statement.setQueryTimeout(sqlInputs.getTimeout());
-                    statement.executeQuery();
-                    int updateCount = statement.getUpdateCount();
-                    Map<String, String> result = getSuccessResultsMap(oracleDbmsOutput.getOutput());
-                    result.put(UPDATE_COUNT, String.valueOf(updateCount));
-                    return result;
-                }
-            } else {
-                try (final Statement statement = connection.createStatement()) {
-
-                    statement.setQueryTimeout(sqlInputs.getTimeout());
-                    statement.executeUpdate(sqlInputs.getSqlCommand());
-                    int updateCount = statement.getUpdateCount();
-                    Map<String, String> result = getSuccessResultsMap(SUCCESS_MESSAGE);
-                    result.put(UPDATE_COUNT, String.valueOf(updateCount));
-                    return result;
-                }
-            }
+            try (final PreparedStatement statement = connection.prepareStatement(sqlInputs.getSqlCommand())) {
+                statement.setQueryTimeout(sqlInputs.getTimeout());
+                statement.executeQuery();
+                int updateCount = statement.getUpdateCount();
+                Map<String, String> result = getSuccessResultsMap(SUCCESS_MESSAGE);
+                if (sqlInputs.getSqlCommand().contains(DBMS_OUTPUT))
+                    result.put(OUTPUT_TEXT, oracleDbmsOutput.getOutput());
+                result.put(UPDATE_COUNT, String.valueOf(updateCount));
+                return result;
         }
     }
+}
 
     public static void executeSqlQuery(final OracleCloudInputs sqlInputs) throws Exception {
 
@@ -132,6 +117,8 @@ public class OracleCloudQueryService {
 
         if (!isEmpty(sqlInputs.getWalletPath()))
             props.setProperty(OracleConnection.CONNECTION_PROPERTY_TNS_ADMIN, sqlInputs.getWalletPath());
+
+        props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_NET_CONNECT_TIMEOUT, sqlInputs.getConnectionTimeout());
 
         return props;
     }

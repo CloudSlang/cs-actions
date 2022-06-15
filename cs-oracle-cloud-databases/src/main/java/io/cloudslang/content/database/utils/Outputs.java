@@ -16,5 +16,5 @@ package io.cloudslang.content.database.utils;
 
 public class Outputs {
     public static final String UPDATE_COUNT="updateCount";
-    public static final String OUTPUT_TEST="outputText";
+    public static final String OUTPUT_TEXT="outputText";
 }

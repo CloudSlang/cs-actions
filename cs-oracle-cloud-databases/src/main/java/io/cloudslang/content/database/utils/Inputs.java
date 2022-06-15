@@ -33,14 +33,13 @@ public class Inputs {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String COMMAND = "command";
-
     public static final String DELIMITER = "delimiter";
-    public static final String TRUST_STORE = "truststore";
-    public static final String TRUST_STORE_PASSWORD = "truststorePassword";
+    public static final String TRUST_STORE = "trustKeystore";
+    public static final String TRUST_STORE_PASSWORD = "trustKeystorePassword";
     public static final String KEYSTORE = "keystore";
     public static final String KEYSTORE_PASSWORD = "keystorePassword";
     public static final String TIMEOUT = "timeout";
-
     public static final String WALLET_PATH = "walletPath";
     public static final String OVERWRITE = "overwrite";
+    public static final String CONNECTION_TIMEOUT = "connectTimeout";
 }
