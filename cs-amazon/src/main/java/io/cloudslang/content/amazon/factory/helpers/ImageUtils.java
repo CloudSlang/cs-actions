@@ -158,7 +158,7 @@ public class ImageUtils {
             queryParamsMap.remove("ExecutableBy.1");
         }
         int currentIndex = ONE;
-        if(wrapper.getCustomInputs().getRootDeviceType()!="Not relevant")
+        if(wrapper.getCustomInputs().getPlatform()!="Not relevant")
         {currentIndex = appendOptionalFilters(queryParamsMap, PLATFORM, currentIndex, wrapper.getCustomInputs().getPlatform());}
         if(wrapper.getCustomInputs().getRootDeviceType()!="Not relevant")
         {currentIndex = appendOptionalFilters(queryParamsMap, ROOT_DEVICE_TYPE, currentIndex, wrapper.getCustomInputs().getRootDeviceType());}
