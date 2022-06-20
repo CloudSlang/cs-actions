@@ -19,7 +19,7 @@ public class Utils {
         File destDir = new File(destDirPath);
         if (overwrite && destDir.exists())
             deleteDirectory(destDirPath);
-        if(destDir.isDirectory())
+        if(new File(fileZip).isDirectory())
             return destDirPath;
         if (!destDir.exists()) {
             byte[] buffer = new byte[1024];

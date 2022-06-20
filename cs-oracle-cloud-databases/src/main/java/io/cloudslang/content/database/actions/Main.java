@@ -15,6 +15,7 @@
 package io.cloudslang.content.database.actions;
 
 import io.cloudslang.content.database.entities.OracleCloudInputs;
+import io.cloudslang.content.database.service.OracleCloudQueryService;
 
 import java.util.Map;
 
@@ -36,31 +37,13 @@ public class Main {
                 "B33f34t3r",
                 0);
 
-        Map<String, String> result = new SQLCommand().execute("db202203311236_high",
+        Map<String, String> result = new SQLCommand().execute("(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.us-ashburn-1.oraclecloud.com))(connect_data=(service_name=g8da38bc37f2611_atpdb202205_high.adb.oraclecloud.com))(security=(ssl_server_cert_dn=\"CN=adwc.uscom-east-1.oraclecloud.com, OU=Oracle BMCS US, O=Oracle Corporation, L=Redwood City, ST=California, C=US\")))",
                 "ADMIN",
-                "B33f34t3r!123",
-                "C:\\Users\\boicu\\Desktop\\Wallet_DB202203311236.zip",
-                "DECLARE \n" +
-                        "   lines dbms_output.chararr; \n" +
-                        "   num_lines number; \n" +
-                        "BEGIN \n" +
-                        "   -- enable the buffer with default size 20000 \n" +
-                        "   dbms_output.enable; \n" +
-                        "   \n" +
-                        "   dbms_output.put_line('Hello Reader!'); \n" +
-                        "   dbms_output.put_line('Hope you have enjoyed the tutorials!'); \n" +
-                        "   dbms_output.put_line('Have a great time exploring pl/sql!'); \n" +
-                        "  \n" +
-                        "   num_lines := 3; \n" +
-                        "  \n" +
-                        "   dbms_output.get_lines(lines, num_lines); \n" +
-                        "  \n" +
-                        "   FOR i IN 1..num_lines LOOP \n" +
-                        "      dbms_output.put_line(lines(i)); \n" +
-                        "   END LOOP; \n" +
-                        "END; ",
+                "OracleATP20#",
+                "C:\\Users\\boicu\\Desktop\\work\\oracle cloud databases\\Wallet_ATPDB202205.zip",
+                "CREATE TABLE Persons ( PersonID int, LastName varchar(255), FirstName varchar(255),City varchar(255));",
                 "false",
-                "B33f34t3r",
+                "",
                 "",
                 "",
                 "",
@@ -71,6 +54,8 @@ public class Main {
 //        System.out.println(inputs.getColumnNames());
 //        System.out.println(inputs.getRowsLeft());
 
+
+        //"CREATE TABLE Persons ( PersonID int, LastName varchar(255), FirstName varchar(255),City varchar(255));",
 
     }
 }
