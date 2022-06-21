@@ -40,9 +40,9 @@ public class Main {
         Map<String, String> result = new SQLCommand().execute("(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.us-ashburn-1.oraclecloud.com))(connect_data=(service_name=g8da38bc37f2611_db20220621115401_high.adb.oraclecloud.com))(security=(ssl_server_cert_dn=\"CN=adwc.uscom-east-1.oraclecloud.com, OU=Oracle BMCS US, O=Oracle Corporation, L=Redwood City, ST=California, C=US\")))",
                 "ADMIN",
                 "B33f34t3r!123",
-                "C:\\Users\\boicu\\Desktop\\work\\oracle cloud databases\\Wallet_DB20220621115401",
+                "C:\\Users\\boicu\\Desktop\\work\\oracle cloud databases\\Wallet_DB20220621115401.zip",
                 "INSERT INTO Persons\n" +
-                        "VALUES (3, 'John', 'Smith', 'SUA')",
+                        "VALUES (4, 'John', 'Joe', 'SUA')",
                 "false",
                 "",
                 "B33f34t3r!123",

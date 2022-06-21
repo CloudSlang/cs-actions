@@ -26,7 +26,7 @@ public class Utils {
             ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
             ZipEntry zipEntry = zis.getNextEntry();
             while (zipEntry != null) {
-                File newFile = newFile(new File(TEMP_PATH), zipEntry);
+                File newFile = newFile(new File(destDirPath), zipEntry);
                 if (zipEntry.isDirectory()) {
                     if (!newFile.isDirectory() && !newFile.mkdirs()) {
                         throw new IOException("Failed to create directory " + newFile);
