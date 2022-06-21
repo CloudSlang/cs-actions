@@ -11,7 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 
 package io.cloudslang.content.database.actions;
@@ -25,22 +25,26 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.entities.OracleCloudInputs;
 import io.cloudslang.content.database.service.OracleCloudQueryService;
+import io.cloudslang.content.database.utils.InputsValidation;
 import io.cloudslang.content.database.utils.Utils;
+import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.sql.DriverManager;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static io.cloudslang.content.database.utils.Constants.MINUS_1;
-import static io.cloudslang.content.database.utils.Constants.ZERO;
+import static io.cloudslang.content.database.utils.Constants.*;
 import static io.cloudslang.content.database.utils.Inputs.*;
 import static io.cloudslang.content.database.utils.Outputs.OUTPUT_TEXT;
 import static io.cloudslang.content.database.utils.Outputs.UPDATE_COUNT;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 
@@ -71,8 +75,16 @@ public class SQLCommand {
 
         try {
             overwrite = defaultIfEmpty(overwrite, FALSE);
-            executionTimeout = defaultIfEmpty(executionTimeout, ZERO);
-            walletPath = Utils.unzip(walletPath,Boolean.parseBoolean(overwrite));
+            executionTimeout = defaultIfEmpty(executionTimeout, TIMEOUT_DEFAULT);
+            trustStore = defaultIfEmpty(trustStore, EMPTY);
+            keystore = defaultIfEmpty(keystore, EMPTY);
+            walletPath = defaultIfEmpty(Utils.unzip(walletPath, Boolean.parseBoolean(overwrite)), EMPTY);
+
+            final List<String> exceptionMessages = InputsValidation.verifySqlCommand(walletPath, trustStore, keystore, overwrite, executionTimeout);
+            if (!exceptionMessages.isEmpty()) {
+                return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+            }
+
 
             OracleCloudInputs oracleCloudInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
                     .connectionString(connectionString)

@@ -31,9 +31,20 @@ package io.cloudslang.content.database.utils;
 public class Constants {
     public static final String MINUS_1 = "-1";
     public static final String ZERO = "0";
+    public static final String NEW_LINE = "\n";
+    public static final String TIMEOUT_DEFAULT = "90";
     public static final String DBMS_OUTPUT = "dbms_output";
     public static final String ORACLE_URL = "jdbc:oracle:thin:@";
     public static final String SUCCESS_MESSAGE = "Command completed successfully.";
     public static final String JKS = "JKS";
     public static final String TEMP_PATH = System.getProperty("java.io.tmpdir")+"content-java/";
+
+    static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid value. Valid values are: true, false";
+    public static final String EXCEPTION_INVALID_NUMBER = "%s for %s input is not a valid number value.";
+    public static final String EXCEPTION_INVALID_PATH = "%s for %s input is not a valid path.";
+    static final String EXCEPTION_INVALID_FILE = "The value '%s' for %s input is not a valid file path.";
+
+
+    public static final String EXCEPTION_NEGATIVE_VALUE = "%s is not a valid timeout value for input %s. The value must be bigger or equal to 0.";
+
 }

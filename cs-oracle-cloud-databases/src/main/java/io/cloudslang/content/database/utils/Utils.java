@@ -17,10 +17,10 @@ public class Utils {
         String fileName = new File(fileZip).getName();
         String destDirPath = TEMP_PATH + fileName.replaceFirst("[.][^.]+$", "");
         File destDir = new File(destDirPath);
+        if(new File(fileZip).isDirectory())
+            return fileZip;
         if (overwrite && destDir.exists())
             deleteDirectory(destDirPath);
-        if(new File(fileZip).isDirectory())
-            return destDirPath;
         if (!destDir.exists()) {
             byte[] buffer = new byte[1024];
             ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));

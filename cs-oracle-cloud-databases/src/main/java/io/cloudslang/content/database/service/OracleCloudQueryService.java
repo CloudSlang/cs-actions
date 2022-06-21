@@ -45,9 +45,9 @@ public class OracleCloudQueryService {
                     result.put(OUTPUT_TEXT, oracleDbmsOutput.getOutput());
                 result.put(UPDATE_COUNT, String.valueOf(updateCount));
                 return result;
+            }
         }
     }
-}
 
     public static void executeSqlQuery(final OracleCloudInputs sqlInputs) throws Exception {
 
@@ -98,23 +98,21 @@ public class OracleCloudQueryService {
         props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_KEYSTORETYPE, JKS);
         props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_TRUSTSTORETYPE, JKS);
 
-        if (!isEmpty(sqlInputs.getTrustStore())) {
-            props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_TRUSTSTORE, sqlInputs.getTrustStore());
-        }
-
-        if (!isEmpty(sqlInputs.getTrustStorePassword()))
-            props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_TRUSTSTOREPASSWORD, sqlInputs.getTrustStorePassword());
-
-        if (!isEmpty(sqlInputs.getKeyStore())) {
-
-            props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_KEYSTORE, sqlInputs.getKeyStore());
-        }
-
-        if (!isEmpty(sqlInputs.getKeyStorePassword()))
-            props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_KEYSTOREPASSWORD, sqlInputs.getKeyStorePassword());
-
         if (!isEmpty(sqlInputs.getWalletPath()))
             props.setProperty(OracleConnection.CONNECTION_PROPERTY_TNS_ADMIN, sqlInputs.getWalletPath());
+        else {
+            if (!isEmpty(sqlInputs.getTrustStore()))
+                props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_TRUSTSTORE, sqlInputs.getTrustStore());
+
+            if (!isEmpty(sqlInputs.getTrustStorePassword()))
+                props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_TRUSTSTOREPASSWORD, sqlInputs.getTrustStorePassword());
+
+            if (!isEmpty(sqlInputs.getKeyStore()))
+                props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_KEYSTORE, sqlInputs.getKeyStore());
+
+            if (!isEmpty(sqlInputs.getKeyStorePassword()))
+                props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_KEYSTOREPASSWORD, sqlInputs.getKeyStorePassword());
+        }
 
         return props;
     }
