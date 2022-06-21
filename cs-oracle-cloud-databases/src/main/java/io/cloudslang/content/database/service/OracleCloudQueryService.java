@@ -32,6 +32,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class OracleCloudQueryService {
 
     public static Map<String, String> executeSqlCommand(OracleCloudInputs sqlInputs) throws SQLException {
+
         Properties props = getProperties(sqlInputs);
         try (Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props);
              final OracleDbmsOutput oracleDbmsOutput = new OracleDbmsOutput(connection)) {
@@ -52,7 +53,6 @@ public class OracleCloudQueryService {
     public static void executeSqlQuery(final OracleCloudInputs sqlInputs) throws Exception {
 
         Properties props = getProperties(sqlInputs);
-
         try (Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props)) {
             Statement statement = connection.createStatement(sqlInputs.getResultSetType(),sqlInputs.getResultSetConcurrency());
             statement.setQueryTimeout(sqlInputs.getExecutionTimeout());
@@ -112,7 +112,6 @@ public class OracleCloudQueryService {
             if (!isEmpty(sqlInputs.getKeyStorePassword()))
                 props.setProperty(OracleConnection.CONNECTION_PROPERTY_THIN_JAVAX_NET_SSL_KEYSTOREPASSWORD, sqlInputs.getKeyStorePassword());
         }
-
         return props;
     }
 }

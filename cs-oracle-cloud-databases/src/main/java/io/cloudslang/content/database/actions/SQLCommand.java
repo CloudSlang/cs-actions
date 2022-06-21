@@ -11,7 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+*/
 
 
 package io.cloudslang.content.database.actions;
@@ -81,9 +81,9 @@ public class SQLCommand {
         walletPath = defaultIfEmpty(Utils.unzip(walletPath, Boolean.parseBoolean(overwrite)), EMPTY);
 
         final List<String> exceptionMessages = InputsValidation.verifySqlCommand(walletPath, trustStore, keystore, overwrite, executionTimeout);
-        if (!exceptionMessages.isEmpty()) {
+        if (!exceptionMessages.isEmpty())
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
-        }
+
 
         OracleCloudInputs oracleCloudInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
                 .connectionString(connectionString)

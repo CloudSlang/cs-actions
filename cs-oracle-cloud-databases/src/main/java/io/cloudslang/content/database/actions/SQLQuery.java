@@ -1,3 +1,17 @@
+/*
+ * (c) Copyright 2022 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 package io.cloudslang.content.database.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -15,6 +29,7 @@ import io.cloudslang.content.database.utils.SQLSessionResource;
 import io.cloudslang.content.database.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,9 +70,9 @@ public class SQLQuery {
                                        @Param(value = DELIMITER, required = true) String delimiter,
                                        @Param(value = KEY, required = true) String key,
                                        @Param(value = TRUST_STORE) String trustStore,
-                                       @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
+                                       @Param(value = TRUST_STORE_PASSWORD, encrypted = true) String trustStorePassword,
                                        @Param(value = KEYSTORE) String keystore,
-                                       @Param(value = KEYSTORE_PASSWORD) String keystorePassword,
+                                       @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
                                        @Param(value = EXECUTION_TIMEOUT) String executionTimeout,
                                        @Param(value = RESULT_SET_TYPE) String resultSetType,
                                        @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency,
@@ -76,10 +91,8 @@ public class SQLQuery {
 
         final List<String> preInputsValidation = InputsValidation.verifySqlQuery(walletPath, trustStore, keystore, overwrite, executionTimeout, resultSetConcurrency, resultSetType);
 
-        if (!preInputsValidation.isEmpty()) {
+        if (!preInputsValidation.isEmpty())
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
-        }
-
 
         OracleCloudInputs sqlInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
                 .connectionString(connectionString)
@@ -99,7 +112,7 @@ public class SQLQuery {
                 .build();
 
         try {
-
+            DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
             final String aKey = getSqlKey(sqlInputs);
             globalSessionObject = getOrDefaultGlobalSessionObj(globalSessionObject);
 
