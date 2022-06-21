@@ -1,11 +1,20 @@
 package io.cloudslang.content.database.utils;
 
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.database.entities.OracleCloudInputs;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -13,45 +22,94 @@ import static io.cloudslang.content.database.utils.Constants.TEMP_PATH;
 
 public class Utils {
 
-    public static String unzip(String fileZip, boolean overwrite) throws IOException {
+    @NotNull
+    public static List<String> getRowsFromGlobalSessionMap(@NotNull final GlobalSessionObject<Map<String, Object>> globalSessionObject, @NotNull final String aKey) {
+        final Map<String, Object> globalMap = globalSessionObject.get();
+        if (globalMap.containsKey(aKey)) {
+            try {
+                return (List<String>) globalMap.get(aKey);
+            } catch (Exception e) {
+                globalMap.remove(aKey);
+                globalSessionObject.setResource(new SQLSessionResource(globalMap));
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    @NotNull
+    public static String getSqlKey(@NotNull final OracleCloudInputs sqlInputs) {
+
+        return computeSessionId(sqlInputs.getConnectionString() + sqlInputs.getUsername() +
+                sqlInputs.getWalletPath() + sqlInputs.getSqlCommand() + sqlInputs.getKey());
+    }
+
+    @NotNull
+    public static String computeSessionId(@NotNull final String aString) {
+        final byte[] byteData = DigestUtils.sha256(aString.getBytes());
+        final StringBuilder sb = new StringBuilder("SQLQuery:");
+
+        for (final byte aByteData : byteData) {
+            final String hex = Integer.toHexString(0xFF & aByteData);
+            if (hex.length() == 1) {
+                sb.append('0');
+            }
+            sb.append(hex);
+        }
+        return sb.toString();
+    }
+
+    @NotNull
+    public static GlobalSessionObject<Map<String, Object>> getOrDefaultGlobalSessionObj(@NotNull final GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+        if (globalSessionObject.get() != null) {
+            return globalSessionObject;
+        }
+        globalSessionObject.setResource(new SQLSessionResource(new HashMap<String, Object>()));
+        return globalSessionObject;
+    }
+
+    public static String unzip(String fileZip, boolean overwrite) {
         String fileName = new File(fileZip).getName();
         String destDirPath = TEMP_PATH + fileName.replaceFirst("[.][^.]+$", "");
         File destDir = new File(destDirPath);
-        if(new File(fileZip).isDirectory())
+        if (new File(fileZip).isDirectory())
             return fileZip;
-        if (overwrite && destDir.exists())
-            deleteDirectory(destDirPath);
-        if (!destDir.exists()) {
-            byte[] buffer = new byte[1024];
-            ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
-            ZipEntry zipEntry = zis.getNextEntry();
-            while (zipEntry != null) {
-                File newFile = newFile(new File(destDirPath), zipEntry);
-                if (zipEntry.isDirectory()) {
-                    if (!newFile.isDirectory() && !newFile.mkdirs()) {
-                        throw new IOException("Failed to create directory " + newFile);
-                    }
-                } else {
-                    // fix for Windows-created archives
-                    File parent = newFile.getParentFile();
-                    if (!parent.isDirectory() && !parent.mkdirs()) {
-                        throw new IOException("Failed to create directory " + parent);
-                    }
+        try {
+            if (overwrite && destDir.exists())
+                deleteDirectory(destDirPath);
+            if (!destDir.exists()) {
+                byte[] buffer = new byte[1024];
+                ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
+                ZipEntry zipEntry = zis.getNextEntry();
+                while (zipEntry != null) {
+                    File newFile = newFile(new File(destDirPath), zipEntry);
+                    if (zipEntry.isDirectory()) {
+                        if (!newFile.isDirectory() && !newFile.mkdirs()) {
+                            throw new IOException("Failed to create directory " + newFile);
+                        }
+                    } else {
+                        // fix for Windows-created archives
+                        File parent = newFile.getParentFile();
+                        if (!parent.isDirectory() && !parent.mkdirs()) {
+                            throw new IOException("Failed to create directory " + parent);
+                        }
 
-                    // write file content
-                    FileOutputStream fos = new FileOutputStream(newFile);
-                    int len;
-                    while ((len = zis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
+                        // write file content
+                        FileOutputStream fos = new FileOutputStream(newFile);
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                        fos.close();
                     }
-                    fos.close();
+                    zipEntry = zis.getNextEntry();
                 }
-                zipEntry = zis.getNextEntry();
+                zis.closeEntry();
+                zis.close();
             }
-            zis.closeEntry();
-            zis.close();
+            return destDirPath;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return destDirPath;
     }
 
     public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {

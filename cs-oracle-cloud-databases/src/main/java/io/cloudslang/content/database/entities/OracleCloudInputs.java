@@ -34,11 +34,18 @@ public class OracleCloudInputs {
 
     private boolean overwrite;
 
+    private int resultSetType;
+    private int resultSetConcurrency;
+
+    private String key;
+
     //Outputs
     private String columnNames;
     private List<String> rowsLeft = new ArrayList<>();
 
-    @java.beans.ConstructorProperties({"connectionString", "username", "password", "walletPath", "sqlCommand", "delimiter", "overwrite", "trustStore", "trustStorePassword", "keyStore", "keyStorePassword", "executionTimeout"})
+    @java.beans.ConstructorProperties({"connectionString", "username", "password", "walletPath", "sqlCommand",
+            "delimiter", "overwrite", "trustStore", "trustStorePassword", "keyStore", "keyStorePassword",
+            "executionTimeout", "resultSetType", "resultSetConcurrency","key"})
     public OracleCloudInputs(String connectionString,
                              String username,
                              String password,
@@ -50,7 +57,10 @@ public class OracleCloudInputs {
                              String trustStorePassword,
                              String keyStore,
                              String keyStorePassword,
-                             int executionTimeout) {
+                             int executionTimeout,
+                             int resultSetType,
+                             int resultSetConcurrency,
+                             String key) {
 
         this.connectionString = connectionString;
         this.username = username;
@@ -64,6 +74,9 @@ public class OracleCloudInputs {
         this.keyStore = keyStore;
         this.keyStorePassword = keyStorePassword;
         this.executionTimeout = executionTimeout;
+        this.resultSetType = resultSetType;
+        this.resultSetConcurrency = resultSetConcurrency;
+        this.key=key;
     }
 
     public static OracleCloudInputsBuilder builder() {
@@ -86,7 +99,9 @@ public class OracleCloudInputs {
         return walletPath;
     }
 
-    public boolean getOverwrite() {return overwrite;}
+    public boolean getOverwrite() {
+        return overwrite;
+    }
 
     public String getTrustStore() {
         return trustStore;
@@ -127,9 +142,20 @@ public class OracleCloudInputs {
     public List<String> getRowsLeft() {
         return rowsLeft;
     }
-
     public void setRowsLeft(List<String> rowsLeft) {
         this.rowsLeft = rowsLeft;
+    }
+
+    public int getResultSetType() {
+        return resultSetType;
+    }
+
+    public int getResultSetConcurrency() {
+        return resultSetConcurrency;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public static class OracleCloudInputsBuilder {
@@ -145,7 +171,10 @@ public class OracleCloudInputs {
         private String keyStore;
         private String keyStorePassword;
         private int executionTimeout;
+        private int resultSetType;
+        private int resultSetConcurrency;
         private boolean overwrite;
+        private String key;
 
         public OracleCloudInputsBuilder() {
         }
@@ -210,9 +239,23 @@ public class OracleCloudInputs {
             return this;
         }
 
+        public OracleCloudInputsBuilder resultSetType(int resultSetType) {
+            this.resultSetType = resultSetType;
+            return this;
+        }
+
+        public OracleCloudInputsBuilder  resultSetConcurrency(int resultSetConcurrency) {
+            this.resultSetConcurrency = resultSetConcurrency;
+            return this;
+        }
+
+        public OracleCloudInputsBuilder  key(String key) {
+            this.key = key;
+            return this;
+        }
+
         public OracleCloudInputs build() {
-            return new OracleCloudInputs(
-                    connectionString,
+            return new OracleCloudInputs(connectionString,
                     username,
                     password,
                     walletPath,
@@ -223,8 +266,10 @@ public class OracleCloudInputs {
                     trustStorePassword,
                     keyStore,
                     keyStorePassword,
-                    executionTimeout
-            );
+                    executionTimeout,
+                    resultSetType,
+                    resultSetConcurrency,
+                    key);
         }
     }
 }

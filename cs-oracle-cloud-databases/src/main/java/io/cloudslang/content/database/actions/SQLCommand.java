@@ -73,31 +73,32 @@ public class SQLCommand {
                                        @Param(value = KEYSTORE_PASSWORD) String keystorePassword,
                                        @Param(value = EXECUTION_TIMEOUT) String executionTimeout) {
 
+
+        overwrite = defaultIfEmpty(overwrite, FALSE);
+        executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_TIMEOUT);
+        trustStore = defaultIfEmpty(trustStore, EMPTY);
+        keystore = defaultIfEmpty(keystore, EMPTY);
+        walletPath = defaultIfEmpty(Utils.unzip(walletPath, Boolean.parseBoolean(overwrite)), EMPTY);
+
+        final List<String> exceptionMessages = InputsValidation.verifySqlCommand(walletPath, trustStore, keystore, overwrite, executionTimeout);
+        if (!exceptionMessages.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
+        }
+
+        OracleCloudInputs oracleCloudInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
+                .connectionString(connectionString)
+                .username(username)
+                .password(password)
+                .walletPath(walletPath)
+                .sqlCommand(command)
+                .trustStore(trustStore)
+                .trustStorePassword(trustStorePassword)
+                .keyStore(keystore)
+                .keyStorePassword(keystorePassword)
+                .executionTimeout(Integer.parseInt(executionTimeout))
+                .build();
+
         try {
-            overwrite = defaultIfEmpty(overwrite, FALSE);
-            executionTimeout = defaultIfEmpty(executionTimeout, TIMEOUT_DEFAULT);
-            trustStore = defaultIfEmpty(trustStore, EMPTY);
-            keystore = defaultIfEmpty(keystore, EMPTY);
-            walletPath = defaultIfEmpty(Utils.unzip(walletPath, Boolean.parseBoolean(overwrite)), EMPTY);
-
-            final List<String> exceptionMessages = InputsValidation.verifySqlCommand(walletPath, trustStore, keystore, overwrite, executionTimeout);
-            if (!exceptionMessages.isEmpty()) {
-                return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
-            }
-
-
-            OracleCloudInputs oracleCloudInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
-                    .connectionString(connectionString)
-                    .username(username)
-                    .password(password)
-                    .walletPath(walletPath)
-                    .sqlCommand(command)
-                    .trustStore(trustStore)
-                    .trustStorePassword(trustStorePassword)
-                    .keyStore(keystore)
-                    .keyStorePassword(keystorePassword)
-                    .executionTimeout(Integer.parseInt(executionTimeout))
-                    .build();
             DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
             return OracleCloudQueryService.executeSqlCommand(oracleCloudInputs);
 

@@ -53,43 +53,42 @@ public class OracleCloudQueryService {
 
         Properties props = getProperties(sqlInputs);
 
-        Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props);
+        try (Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props)) {
+            Statement statement = connection.createStatement(sqlInputs.getResultSetType(),sqlInputs.getResultSetConcurrency());
+            statement.setQueryTimeout(sqlInputs.getExecutionTimeout());
 
-        Statement statement = connection.createStatement();
-        statement.setQueryTimeout(sqlInputs.getExecutionTimeout());
+            final ResultSet results = statement.executeQuery(sqlInputs.getSqlCommand());
+            final ResultSetMetaData metaData = results.getMetaData();
 
-        final ResultSet results = statement.executeQuery(sqlInputs.getSqlCommand());
-        final ResultSetMetaData metaData = results.getMetaData();
-
-        final StringBuilder strColumns = new StringBuilder();
-
-        for (int i = 1; i <= metaData.getColumnCount(); i++) {
-
-            if (i > 1)
-                strColumns.append(sqlInputs.getDelimiter());
-
-            strColumns.append(metaData.getColumnLabel(i));
-        }
-
-        sqlInputs.setColumnNames(strColumns.toString());
-
-        while (results.next()) {
-
-            final StringBuilder strRowHolder = new StringBuilder();
+            final StringBuilder strColumns = new StringBuilder();
 
             for (int i = 1; i <= metaData.getColumnCount(); i++) {
 
                 if (i > 1)
-                    strRowHolder.append(sqlInputs.getDelimiter());
+                    strColumns.append(sqlInputs.getDelimiter());
 
-                if (results.getString(i) != null)
-                    strRowHolder.append(results.getString(i).trim());
+                strColumns.append(metaData.getColumnLabel(i));
             }
 
-            sqlInputs.getRowsLeft().add(strRowHolder.toString());
+            sqlInputs.setColumnNames(strColumns.toString());
+
+            while (results.next()) {
+
+                final StringBuilder strRowHolder = new StringBuilder();
+
+                for (int i = 1; i <= metaData.getColumnCount(); i++) {
+
+                    if (i > 1)
+                        strRowHolder.append(sqlInputs.getDelimiter());
+
+                    if (results.getString(i) != null)
+                        strRowHolder.append(results.getString(i).trim());
+                }
+
+                sqlInputs.getRowsLeft().add(strRowHolder.toString());
+            }
         }
     }
-
 
     private static Properties getProperties(OracleCloudInputs sqlInputs) {
         Properties props = new Properties();

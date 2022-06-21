@@ -17,4 +17,16 @@ package io.cloudslang.content.database.utils;
 public class Outputs {
     public static final String UPDATE_COUNT="updateCount";
     public static final String OUTPUT_TEXT="outputText";
+
+    public static final String ROWS_LEFT="rowsLeft";
+
+    public static final String COLUMN_NAMES="columnNames";
+
+    //RESPONSES
+    public static final String HAS_MORE = "has more";
+    public static final String NO_MORE = "no more";
+
+
+    //RETURN CODE
+    public static final String RETURN_CODE_NO_MORE = "1";
 }

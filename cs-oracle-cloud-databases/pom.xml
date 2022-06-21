@@ -86,6 +86,11 @@
             <artifactId>score-content-sdk</artifactId>
             <version>${score-content-sdk.version}</version>
         </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8 -->
         <dependency>
@@ -110,6 +115,12 @@
             <groupId>com.oracle.database.security</groupId>
             <artifactId>osdt_core</artifactId>
             <version>21.5.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

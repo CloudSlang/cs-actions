@@ -41,5 +41,10 @@ public class Inputs {
     public static final String EXECUTION_TIMEOUT = "executionTimeout";
     public static final String WALLET_PATH = "walletPath";
     public static final String OVERWRITE = "overwrite";
-    public static final String CONNECTION_TIMEOUT = "connectTimeout";
+    public static final String KEY  = "key";
+    public static final String GLOBAL_SESSION_OBJECT = "globalSessionObject";
+    public static final String RESULT_SET_TYPE = "resultSetType";
+    public static final String RESULT_SET_CONCURRENCY = "resultSetConcurrency";
+    public static final String IGNORE_CASE = "ignoreCase";
+
 }
