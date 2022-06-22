@@ -136,6 +136,7 @@ public class SQLQuery {
                 result.put(ROWS_LEFT, String.valueOf(sqlInputs.getRowsLeft().size()));
 
                 globalMap.put(aKey, sqlInputs.getRowsLeft());
+                globalMap.put(strKeyCol, sqlInputs.getColumnNames());
 
                 globalSessionObject.setResource(new SQLSessionResource(globalMap));
 
