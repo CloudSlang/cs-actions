@@ -33,6 +33,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static io.cloudslang.content.database.utils.Constants.TEMP_PATH;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class Utils {
 
@@ -48,6 +49,21 @@ public class Utils {
             }
         }
         return new ArrayList<>();
+    }
+
+    @NotNull
+    public static String getStrColumns(@NotNull final GlobalSessionObject<Map<String, Object>> globalSessionObject, @NotNull final String strKeyCol) {
+        final Map<String, Object> globalMap = globalSessionObject.get();
+        if (globalMap.containsKey(strKeyCol) && globalMap.get(strKeyCol) instanceof String) {
+            try {
+                return (String) globalMap.get(strKeyCol);
+            } catch (Exception e) {
+                globalMap.remove(strKeyCol);
+                globalSessionObject.setResource(new SQLSessionResource(globalMap));
+            }
+        }
+        return EMPTY;
+
     }
 
     @NotNull

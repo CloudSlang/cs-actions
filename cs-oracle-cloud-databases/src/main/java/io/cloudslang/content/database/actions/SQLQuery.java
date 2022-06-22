@@ -44,6 +44,7 @@ import static io.cloudslang.content.database.utils.Outputs.*;
 import static io.cloudslang.content.database.utils.Utils.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -114,12 +115,14 @@ public class SQLQuery {
         try {
             DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
             final String aKey = getSqlKey(sqlInputs);
+            final String strKeyCol = format(KEY_COLUMNS, aKey);
             globalSessionObject = getOrDefaultGlobalSessionObj(globalSessionObject);
 
             final Map<String, Object> globalMap = globalSessionObject.get();
 
             if (globalMap.containsKey(aKey)) {
                 sqlInputs.setRowsLeft(getRowsFromGlobalSessionMap(globalSessionObject, aKey));
+                sqlInputs.setColumnNames(getStrColumns(globalSessionObject, strKeyCol));
             } else {
                 OracleCloudQueryService.executeSqlQuery(sqlInputs);
             }

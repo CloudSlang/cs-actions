@@ -24,10 +24,9 @@ public class Constants {
     public static final String SUCCESS_MESSAGE = "Command completed successfully.";
     public static final String JKS = "JKS";
     public static final String TEMP_PATH = System.getProperty("java.io.tmpdir") + "content-java/";
-
+    public static final String KEY_COLUMNS = "%s - Columns";
     public static final String CONCUR_READ_ONLY = "CONCUR_READ_ONLY";
     public static final String CONCUR_UPDATABLE = "CONCUR_UPDATABLE";
-
     public static final String TYPE_FORWARD_ONLY = "TYPE_FORWARD_ONLY";
     public static final String TYPE_SCROLL_INSENSITIVE = "TYPE_SCROLL_INSENSITIVE";
     public static final String TYPE_SCROLL_SENSITIVE = "TYPE_SCROLL_SENSITIVE";
