@@ -11,8 +11,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
-package io.cloudslang.content.cyberark.actions.safes;
+ */
+package io.cloudslang.content.cyberark.actions.accounts;
+
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -25,31 +26,29 @@ import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
+import io.cloudslang.content.httpclient.actions.HttpClientPostAction;
 import io.cloudslang.content.utils.OutputUtilities;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.PROXY_PASSWORD;
+import static io.cloudslang.content.cyberark.utils.Constants.GeneratePasswordConstants.*;
 import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.*;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAccountsConstants.*;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.FILTER_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.LIMIT_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.OFFSET_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.SEARCH_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.SORT_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.*;
 import static io.cloudslang.content.cyberark.utils.Constants.OtherConstants.*;
-import static io.cloudslang.content.cyberark.utils.CyberarkUtils.*;
+import static io.cloudslang.content.cyberark.utils.CyberarkUtils.processHttpResult;
+import static io.cloudslang.content.cyberark.utils.CyberarkUtils.validateProtocol;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_CONNECTION_POOL_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_COOKIES_DESC;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_CONNECTION_POOL;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_COOKIES;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class GetAllSafeMembers {
-    @Action(name = GET_ALL_SAFE_MEMBERS,
-            description = GET_ALL_SAFE_MEMBERS_DESCRIPTION,
+public class GeneratePassword {
+
+    @Action(name = GENERATE_PASSWORD,
+            description = GENERATE_PASSWORD_DESCRIPTION,
             outputs = {
                     @Output(RETURN_RESULT),
                     @Output(STATUS_CODE),
@@ -61,15 +60,10 @@ public class GetAllSafeMembers {
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> execute(
-            @Param(value = HOST, description = HOST_DESCRIPTION, required = true) String hostname,
+            @Param(value = HOST, description = HOST_DESCRIPTION, required = true) String hostName,
             @Param(value = PROTOCOL, description = PROTOCOL_DESCRIPTION) String protocol,
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESCRIPTION, required = true) String authToken,
-            @Param(value = SAFE_URL_ID, description = SAFE_URL_ID_DESCRIPTION, required = true) String safeUrlId,
-            @Param(value = FILTER, description = FILTER_DESCRIPTION) String filter,
-            @Param(value = SEARCH, description = SEARCH_DESCRIPTION) String search,
-            @Param(value = OFFSET, description = OFFSET_DESCRIPTION) String offset,
-            @Param(value = LIMIT, description = LIMIT_DESCRIPTION) String limit,
-            @Param(value = SORT, description = SORT_DESCRIPTION) String sort,
+            @Param(value = ACCOUNT_ID, description = ACCOUNT_ID_DESCRIPTION, required = true) String accountId,
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESCRIPTION) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESCRIPTION) String proxyPort,
             @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESCRIPTION) String proxyUsername,
@@ -90,20 +84,13 @@ public class GetAllSafeMembers {
             @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
             @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
 
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(FILTER, filter);
-        queryParams.put(SEARCH, search);
-        queryParams.put(OFFSET, offset);
-        queryParams.put(LIMIT, limit);
-        queryParams.put(SORT, sort);
-
-
         try {
 
             validateProtocol(protocol);
 
-            Map<String, String> result = new HttpClientGetAction().execute(
-                    protocol + PROTOCOL_DELIMITER + hostname + GET_ALL_SAFES_ENDPOINT + FORWARD_SLASH + safeUrlId + MEMBERS + FORWARD_SLASH,
+            Map<String, String> result = new HttpClientPostAction().execute(
+                    protocol + PROTOCOL_DELIMITER + hostName +
+                            GENERATE_PASSWORD_ENDPOINT_BEFORE + accountId + GENERATE_PASSWORD_ENDPOINT_AFTER,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
@@ -128,8 +115,14 @@ public class GetAllSafeMembers {
                     CONTENT_TYPE + APPLICATION_JSON + COMMA + AUTHORIZATION + authToken,
                     EMPTY,
                     EMPTY,
-                    getQueryParamsString(queryParams),
                     EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    APPLICATION_JSON,
                     EMPTY,
                     connectTimeout,
                     EMPTY,
@@ -139,6 +132,15 @@ public class GetAllSafeMembers {
             );
 
             processHttpResult(result);
+            if (result.get(RETURN_CODE) == "0")
+            {
+                JSONObject password = (JSONObject) new JSONParser().parse(
+                        result.get(RETURN_RESULT).toString()
+                        );
+
+                result.put(RETURN_RESULT,  password.get(PASSWORD_CAPITALIZED).toString());
+            }
+            
             return result;
 
         } catch (Exception exception) {

@@ -12,9 +12,10 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
  */
-package io.cloudslang.content.httpclient.utils;
+package io.cloudslang.content.httpclient.services;
 
 import io.cloudslang.content.httpclient.entities.*;
+import io.cloudslang.content.httpclient.utils.HeaderObj;
 import org.apache.commons.lang3.*;
 import org.apache.hc.client5.http.classic.methods.*;
 

@@ -63,7 +63,6 @@ public class GetAuthToken {
             @Param(value = PROTOCOL, description = PROTOCOL_DESCRIPTION) String protocol,
             @Param(value = USERNAME, description = USERNAME_DESCRIPTION, required = true) String username,
             @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESCRIPTION, required = true) String password,
-            @Param(value = NEW_PASSWORD, encrypted = true, description = NEW_PASSWORD_DESCRIPTION) String newPassword,
             @Param(value = CONCURRENT_SESSION, description = CONCURRENT_SESSION_DESCRIPTION) String concurrentSession,
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESCRIPTION) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESCRIPTION) String proxyPort,
@@ -92,9 +91,6 @@ public class GetAuthToken {
 
         if (!StringUtils.isEmpty(concurrentSession))
             body.put(CONCURRENT_SESSION, concurrentSession);
-
-        if (!StringUtils.isEmpty(concurrentSession))
-            body.put(NEW_PASSWORD, newPassword);
 
         try {
 

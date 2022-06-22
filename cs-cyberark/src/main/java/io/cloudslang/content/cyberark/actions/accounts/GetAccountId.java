@@ -1,18 +1,5 @@
-/*
- * (c) Copyright 2022 Micro Focus
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
-package io.cloudslang.content.cyberark.actions.safes;
+package io.cloudslang.content.cyberark.actions.accounts;
+
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -27,18 +14,17 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
 import io.cloudslang.content.utils.OutputUtilities;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.*;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAccountsConstants.*;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.FILTER_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.LIMIT_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.OFFSET_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.SEARCH_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.SORT_DESCRIPTION;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAllSafeMembersConstants.*;
+import static io.cloudslang.content.cyberark.utils.Constants.GetAccountIdConstants.*;
 import static io.cloudslang.content.cyberark.utils.Constants.OtherConstants.*;
 import static io.cloudslang.content.cyberark.utils.CyberarkUtils.*;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_CONNECTION_POOL_DESC;
@@ -46,11 +32,14 @@ import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SES
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_CONNECTION_POOL;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_COOKIES;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.SPACE;
 
-public class GetAllSafeMembers {
-    @Action(name = GET_ALL_SAFE_MEMBERS,
-            description = GET_ALL_SAFE_MEMBERS_DESCRIPTION,
+public class GetAccountId {
+
+    @Action(name = GET_ACCOUNT_ID,
+            description = GET_ACCOUNT_ID_DESCRIPTION,
             outputs = {
+                    @Output(ACCOUNT_ID),
                     @Output(RETURN_RESULT),
                     @Output(STATUS_CODE),
                     @Output(RETURN_CODE),
@@ -64,12 +53,8 @@ public class GetAllSafeMembers {
             @Param(value = HOST, description = HOST_DESCRIPTION, required = true) String hostname,
             @Param(value = PROTOCOL, description = PROTOCOL_DESCRIPTION) String protocol,
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESCRIPTION, required = true) String authToken,
-            @Param(value = SAFE_URL_ID, description = SAFE_URL_ID_DESCRIPTION, required = true) String safeUrlId,
-            @Param(value = FILTER, description = FILTER_DESCRIPTION) String filter,
-            @Param(value = SEARCH, description = SEARCH_DESCRIPTION) String search,
-            @Param(value = OFFSET, description = OFFSET_DESCRIPTION) String offset,
-            @Param(value = LIMIT, description = LIMIT_DESCRIPTION) String limit,
-            @Param(value = SORT, description = SORT_DESCRIPTION) String sort,
+            @Param(value = USERNAME, description = USERNAME_DESCRIPTION,required = true) String username,
+            @Param(value = SAFE, description = SAFE_DESCRIPTION,required = true) String safe,
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESCRIPTION) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESCRIPTION) String proxyPort,
             @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESCRIPTION) String proxyUsername,
@@ -91,11 +76,9 @@ public class GetAllSafeMembers {
             @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
 
         Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(FILTER, filter);
-        queryParams.put(SEARCH, search);
-        queryParams.put(OFFSET, offset);
-        queryParams.put(LIMIT, limit);
-        queryParams.put(SORT, sort);
+        queryParams.put(SEARCH, username);
+        queryParams.put(FILTER, SAFE_NAME + SPACE + EQ + SPACE + safe);
+
 
 
         try {
@@ -103,7 +86,7 @@ public class GetAllSafeMembers {
             validateProtocol(protocol);
 
             Map<String, String> result = new HttpClientGetAction().execute(
-                    protocol + PROTOCOL_DELIMITER + hostname + GET_ALL_SAFES_ENDPOINT + FORWARD_SLASH + safeUrlId + MEMBERS + FORWARD_SLASH,
+                    protocol + PROTOCOL_DELIMITER + hostname + GET_ACCOUNTS_ENDPOINT,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
@@ -139,6 +122,26 @@ public class GetAllSafeMembers {
             );
 
             processHttpResult(result);
+
+
+
+            if (Objects.equals(result.get(RETURN_CODE), "0"))
+            {
+                JSONObject resultJson = (JSONObject) new JSONParser().parse( result.get(RETURN_RESULT) );
+                StringBuilder idStringBuilder = new StringBuilder();
+                JSONArray contents = (JSONArray) resultJson.get(VALUE);
+                for (int i = 0; i < contents.size(); i++) {
+                    JSONObject item = (JSONObject) contents.get(i);
+                    String id = String.valueOf(item.get(ID));
+                    idStringBuilder.append(id).append(COMMA);
+                }
+
+                if(idStringBuilder.length() > 0)
+                    idStringBuilder = idStringBuilder.deleteCharAt(idStringBuilder.length() - 1);
+
+                result.put(ACCOUNT_ID, idStringBuilder.toString());
+
+            }
             return result;
 
         } catch (Exception exception) {
