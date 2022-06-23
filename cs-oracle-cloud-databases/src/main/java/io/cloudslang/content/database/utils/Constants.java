@@ -18,6 +18,7 @@ public class Constants {
     public static final String MINUS_1 = "-1";
     public static final String ZERO = "0";
     public static final String NEW_LINE = "\n";
+    public static final String COMMA = ",";
     public static final String DEFAULT_TIMEOUT = "90";
     public static final String DBMS_OUTPUT = "dbms_output";
     public static final String ORACLE_URL = "jdbc:oracle:thin:@";
