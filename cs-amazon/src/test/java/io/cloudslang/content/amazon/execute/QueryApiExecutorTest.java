@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -302,15 +302,6 @@ public class QueryApiExecutorTest {
 
         verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeAvailabilityZones")));
-        runCommonVerifiersForQueryApi();
-    }
-
-    @Test
-    public void testDescribeImages() throws Exception {
-        toTest.execute(getCommonInputs("DescribeImages", HEADERS), getDescribeImagesInputs(), getDescribeImagesCustomInputs());
-
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
-                eq(getQueryParamsMap("DescribeImages")));
         runCommonVerifiersForQueryApi();
     }
 
@@ -1414,7 +1405,7 @@ public class QueryApiExecutorTest {
                 .withProductCodeType("devpay")
                 .withRamdiskId("id-ram")
                 .withRootDeviceName("/dev/sda1")
-                .withRootDeviceType("available")
+                .withRootDeviceType("ebs")
                 .withStateReasonCode("r-code")
                 .withStateReasonMessage("r-message")
                 .withKeyTagsString("my-key-tags")
@@ -1427,7 +1418,6 @@ public class QueryApiExecutorTest {
         return new ImageInputs.Builder()
                 .withDescription("some-desc")
                 .withImageIdsString("i_id1,i_id2")
-                .withOwnersString("o_id1,o_id2")
                 .withType("machine")
                 .withIsPublic("true")
                 .withManifestLocation("manif-location")

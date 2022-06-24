@@ -94,7 +94,6 @@ public class Constants {
         public static final String DESCRIPTION = "Description";
         public static final String DEVICE_INDEX = "DeviceIndex";
         public static final String ENCRYPTED = "Encrypted";
-        public static final String EXECUTABLE_BY = "ExecutableBy";
         public static final String FILTER = "Filter";
         public static final String FILTER_NAME = "Filter.%d.Name";
         public static final String FILTER_VALUE = "Filter.%d.Value";
@@ -140,6 +139,8 @@ public class Constants {
         public static final String VOLUME_TYPE = "VolumeType";
         public static final String VPC_ID = "VpcId";
         public static final String ZONE_NAME = "ZoneName";
+        public static final String OWNERS = "Owner";
+        public static final String EXECUTABLE_BY = "ExecutableBy";
     }
 
     public static class Ec2QueryApiActions {

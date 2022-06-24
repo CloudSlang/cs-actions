@@ -1,18 +1,5 @@
-/*
- * (c) Copyright 2022 Micro Focus
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
-package io.cloudslang.content.cyberark.actions.authorization;
+package io.cloudslang.content.cyberark.actions.accounts;
+
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -25,30 +12,34 @@ import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.cyberark.utils.StringUtils;
-import io.cloudslang.content.httpclient.actions.HttpClientPostAction;
+import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
 import io.cloudslang.content.utils.OutputUtilities;
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
 
+
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static io.cloudslang.content.cyberark.utils.Constants.CommonConstants.*;
-import static io.cloudslang.content.cyberark.utils.Constants.GetAuthTokenConstants.*;
+import static io.cloudslang.content.cyberark.utils.Constants.GetAccountIdConstants.*;
 import static io.cloudslang.content.cyberark.utils.Constants.OtherConstants.*;
-import static io.cloudslang.content.cyberark.utils.CyberarkUtils.processHttpResult;
-import static io.cloudslang.content.cyberark.utils.CyberarkUtils.validateProtocol;
+import static io.cloudslang.content.cyberark.utils.CyberarkUtils.*;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_CONNECTION_POOL_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_COOKIES_DESC;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_CONNECTION_POOL;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_COOKIES;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.SPACE;
 
+public class GetAccountId {
 
-public class GetAuthToken {
-
-    @Action(name = GET_AUTH_TOKEN,
-            description = GET_AUTH_TOKEN_DESCRIPTION,
+    @Action(name = GET_ACCOUNT_ID,
+            description = GET_ACCOUNT_ID_DESCRIPTION,
             outputs = {
+                    @Output(ACCOUNT_ID),
                     @Output(RETURN_RESULT),
                     @Output(STATUS_CODE),
                     @Output(RETURN_CODE),
@@ -61,9 +52,9 @@ public class GetAuthToken {
     public Map<String, String> execute(
             @Param(value = HOST, description = HOST_DESCRIPTION, required = true) String hostname,
             @Param(value = PROTOCOL, description = PROTOCOL_DESCRIPTION) String protocol,
-            @Param(value = USERNAME, description = USERNAME_DESCRIPTION, required = true) String username,
-            @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESCRIPTION, required = true) String password,
-            @Param(value = CONCURRENT_SESSION, description = CONCURRENT_SESSION_DESCRIPTION) String concurrentSession,
+            @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESCRIPTION, required = true) String authToken,
+            @Param(value = USERNAME, description = USERNAME_DESCRIPTION,required = true) String username,
+            @Param(value = SAFE, description = SAFE_DESCRIPTION,required = true) String safe,
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESCRIPTION) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESCRIPTION) String proxyPort,
             @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESCRIPTION) String proxyUsername,
@@ -84,20 +75,18 @@ public class GetAuthToken {
             @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
             @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
 
-        JSONObject body = new JSONObject();
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put(SEARCH, username);
+        queryParams.put(FILTER, SAFE_NAME + SPACE + EQ + SPACE + safe);
 
-        body.put(USERNAME, username);
-        body.put(PASSWORD, password);
 
-        if (!StringUtils.isEmpty(concurrentSession))
-            body.put(CONCURRENT_SESSION, concurrentSession);
 
         try {
 
             validateProtocol(protocol);
 
-            Map<String, String> result = new HttpClientPostAction().execute(
-                    protocol + PROTOCOL_DELIMITER + hostname + GET_AUTH_TOKEN_ENDPOINT,
+            Map<String, String> result = new HttpClientGetAction().execute(
+                    protocol + PROTOCOL_DELIMITER + hostname + GET_ACCOUNTS_ENDPOINT,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
@@ -119,17 +108,11 @@ public class GetAuthToken {
                     connectionsMaxTotal,
                     EMPTY,
                     EMPTY,
+                    CONTENT_TYPE + APPLICATION_JSON + COMMA + AUTHORIZATION + authToken,
                     EMPTY,
                     EMPTY,
+                    getQueryParamsString(queryParams),
                     EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    body.toString(),
-                    APPLICATION_JSON,
                     EMPTY,
                     connectTimeout,
                     EMPTY,
@@ -139,10 +122,26 @@ public class GetAuthToken {
             );
 
             processHttpResult(result);
-            
-            if (result.get(RETURN_CODE) == "0")
-                result.put(RETURN_RESULT, result.get(RETURN_RESULT).substring(1, result.get(RETURN_RESULT).length() - 1));
 
+
+
+            if (Objects.equals(result.get(RETURN_CODE), "0"))
+            {
+                JSONObject resultJson = (JSONObject) new JSONParser().parse( result.get(RETURN_RESULT) );
+                StringBuilder idStringBuilder = new StringBuilder();
+                JSONArray contents = (JSONArray) resultJson.get(VALUE);
+                for (int i = 0; i < contents.size(); i++) {
+                    JSONObject item = (JSONObject) contents.get(i);
+                    String id = String.valueOf(item.get(ID));
+                    idStringBuilder.append(id).append(COMMA);
+                }
+
+                if(idStringBuilder.length() > 0)
+                    idStringBuilder = idStringBuilder.deleteCharAt(idStringBuilder.length() - 1);
+
+                result.put(ACCOUNT_ID, idStringBuilder.toString());
+
+            }
             return result;
 
         } catch (Exception exception) {

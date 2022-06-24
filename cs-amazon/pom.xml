@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-amazon</artifactId>
-    <version>1.0.41-SNAPSHOT</version>
+    <version>1.0.43-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -94,7 +94,7 @@
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <cs-http-client.version>0.1.77</cs-http-client.version>
         <cs-commons.version>0.0.7</cs-commons.version>
-        <junit.version>4.13.1</junit.version>
+        <junit.version>4.13.2</junit.version>
         <aws-sdk.version>1.11.1000</aws-sdk.version>
         <httpcomponents.httpclient.version>4.5.5</httpcomponents.httpclient.version>
         <httpcomponents.httpcore.version>4.4.9</httpcomponents.httpcore.version>
@@ -140,7 +140,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-xml</artifactId>
-            <version>0.0.16</version>
+            <version>0.0.18</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
@@ -162,7 +162,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.13.2.1</version>
+            <version>2.13.3</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>

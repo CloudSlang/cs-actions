@@ -144,6 +144,31 @@ public final class Constants {
                 "Default: False";
     }
 
+    public static final class GetAccountIdConstants
+    {
+        public static final String GET_ACCOUNT_ID = "Get Account ID";
+        public static final String GET_ACCOUNT_ID_DESCRIPTION = "This operation returns the ID's of requested accounts.";
+
+
+        //Inputs
+        public static final String USERNAME_DESCRIPTION = "Account's username.";
+        public static final String SAFE = "safe";
+        public static final String SAFE_DESCRIPTION = "The safe in which the user is located.";
+
+        public static final String SEARCH = "search";
+        public static final String FILTER = "filter";
+        public static final String SAFE_NAME = "safeName";
+        public static final String EQ = "eq";
+        public static final String VALUE = "value";
+
+
+        //Outputs
+        public static final String ACCOUNT_ID = "accountId";
+        public static final String ID = "id";
+
+
+    }
+
     public static final class GetPasswordValueConstants {
 
         public static final String GET_PASSWORD_VALUE = "Get Password Value";

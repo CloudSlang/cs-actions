@@ -129,9 +129,9 @@ public class DescribeRegionsAction {
                                        @Param(value = QUERY_PARAMS) String queryParams,
                                        @Param(value = VERSION) String version,
                                        @Param(value = DELIMITER) String delimiter,
-                                       @Param(value = KEY_FILTERS_STRING, required = true) String keyFiltersString,
-                                       @Param(value = VALUE_FILTERS_STRING, required = true) String valueFiltersString,
-                                       @Param(value = REGIONS_STRING, required = true) String regionsString) {
+                                       @Param(value = KEY_FILTERS_STRING, required = false) String keyFiltersString,
+                                       @Param(value = VALUE_FILTERS_STRING, required = false) String valueFiltersString,
+                                       @Param(value = REGIONS_STRING, required = false) String regionsString) {
         try {
             version = getDefaultStringInput(version, REGIONS_DEFAULT_API_VERSION);
 

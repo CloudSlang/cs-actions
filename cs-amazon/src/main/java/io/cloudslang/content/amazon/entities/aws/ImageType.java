@@ -31,6 +31,7 @@ public enum ImageType {
 
     public static String getValue(String input) {
         if (isBlank(input)) {
+           // return "";
             return NOT_RELEVANT;
         }
 

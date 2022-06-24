@@ -157,6 +157,8 @@ public class Inputs {
         public static final String TYPE = "type";
         public static final String USER_GROUPS_STRING = "userGroupsString";
         public static final String USER_IDS_STRING = "userIdsString";
+        public static final String EXECUTABLE_BY = "executableBy";
+        public static final String OWNERS = "owner";
     }
 
     public static class InstanceInputs {
