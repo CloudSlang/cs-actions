@@ -17,6 +17,7 @@ package io.cloudslang.content.database.service;
 
 import io.cloudslang.content.database.entities.OracleCloudInputs;
 import io.cloudslang.content.database.utils.OracleDbmsOutput;
+import io.cloudslang.content.database.utils.Outputs;
 import oracle.jdbc.driver.OracleConnection;
 
 import java.sql.*;
@@ -24,8 +25,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import static io.cloudslang.content.database.utils.Constants.*;
-import static io.cloudslang.content.database.utils.Outputs.OUTPUT_TEXT;
-import static io.cloudslang.content.database.utils.Outputs.UPDATE_COUNT;
+import static io.cloudslang.content.database.utils.Outputs.*;
+import static io.cloudslang.content.database.utils.Outputs.DBMS_OUTPUT;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -39,11 +40,18 @@ public class OracleCloudQueryService {
 
             try (final PreparedStatement statement = connection.prepareStatement(sqlInputs.getSqlCommand())) {
                 statement.setQueryTimeout(sqlInputs.getExecutionTimeout());
-                statement.executeQuery();
+                ResultSet resultSet = statement.executeQuery();
+
                 int updateCount = statement.getUpdateCount();
                 Map<String, String> result = getSuccessResultsMap(SUCCESS_MESSAGE);
-                if (sqlInputs.getSqlCommand().contains(DBMS_OUTPUT))
-                    result.put(OUTPUT_TEXT, oracleDbmsOutput.getOutput());
+
+                if (resultSet.getMetaData().getColumnCount() > 0) {
+                    resultSet.next();
+                    if (resultSet.getString(1) != null)
+                        result.put(OUTPUT_TEXT, resultSet.getString(1));
+                }
+                if (sqlInputs.getSqlCommand().contains(DBMS_OUTPUT_TEXT))
+                    result.put(DBMS_OUTPUT, oracleDbmsOutput.getOutput());
                 result.put(UPDATE_COUNT, String.valueOf(updateCount));
                 return result;
             }
@@ -54,7 +62,8 @@ public class OracleCloudQueryService {
 
         Properties props = getProperties(sqlInputs);
         try (Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props)) {
-            Statement statement = connection.createStatement(sqlInputs.getResultSetType(),sqlInputs.getResultSetConcurrency());
+            connection.setReadOnly(true);
+            Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency());
             statement.setQueryTimeout(sqlInputs.getExecutionTimeout());
 
             final ResultSet results = statement.executeQuery(sqlInputs.getSqlCommand());

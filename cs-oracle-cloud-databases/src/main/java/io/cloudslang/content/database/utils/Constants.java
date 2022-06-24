@@ -20,7 +20,7 @@ public class Constants {
     public static final String NEW_LINE = "\n";
     public static final String COMMA = ",";
     public static final String DEFAULT_TIMEOUT = "90";
-    public static final String DBMS_OUTPUT = "dbms_output";
+    public static final String DBMS_OUTPUT_TEXT = "dbms_output";
     public static final String ORACLE_URL = "jdbc:oracle:thin:@";
     public static final String SUCCESS_MESSAGE = "Command completed successfully.";
     public static final String JKS = "JKS";

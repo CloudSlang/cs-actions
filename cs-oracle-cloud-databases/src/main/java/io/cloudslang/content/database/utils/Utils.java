@@ -68,9 +68,12 @@ public class Utils {
 
     @NotNull
     public static String getSqlKey(@NotNull final OracleCloudInputs sqlInputs) {
-
-        return computeSessionId(sqlInputs.getConnectionString() + sqlInputs.getUsername() +
-                sqlInputs.getWalletPath() + sqlInputs.getSqlCommand() + sqlInputs.getKey());
+        if (!sqlInputs.getKey().isEmpty())
+            return computeSessionId(sqlInputs.getConnectionString() + sqlInputs.getUsername() +
+                    sqlInputs.getWalletPath() + sqlInputs.getSqlCommand() + sqlInputs.getKey());
+        else
+            return computeSessionId(sqlInputs.getConnectionString() + sqlInputs.getUsername() +
+                    sqlInputs.getWalletPath() + sqlInputs.getSqlCommand());
     }
 
     @NotNull
@@ -174,7 +177,7 @@ public class Utils {
         }
     }
 
-    static boolean isEmpty(String string) {
+    public static boolean isEmpty(String string) {
         return string == null || string.length() == 0;
     }
 }

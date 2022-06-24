@@ -41,7 +41,7 @@ public class Inputs {
     public static final String EXECUTION_TIMEOUT = "executionTimeout";
     public static final String WALLET_PATH = "walletPath";
     public static final String OVERWRITE = "overwrite";
-    public static final String KEY  = "key";
+    public static final String SESSION_KEY = "sessionKey";
     public static final String GLOBAL_SESSION_OBJECT = "globalSessionObject";
     public static final String RESULT_SET_TYPE = "resultSetType";
     public static final String RESULT_SET_CONCURRENCY = "resultSetConcurrency";

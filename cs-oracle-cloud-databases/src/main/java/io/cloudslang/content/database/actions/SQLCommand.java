@@ -26,6 +26,7 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.entities.OracleCloudInputs;
 import io.cloudslang.content.database.service.OracleCloudQueryService;
 import io.cloudslang.content.database.utils.InputsValidation;
+import io.cloudslang.content.database.utils.Outputs;
 import io.cloudslang.content.database.utils.Utils;
 import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -41,8 +42,8 @@ import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.database.utils.Constants.*;
 import static io.cloudslang.content.database.utils.Inputs.*;
-import static io.cloudslang.content.database.utils.Outputs.OUTPUT_TEXT;
-import static io.cloudslang.content.database.utils.Outputs.UPDATE_COUNT;
+import static io.cloudslang.content.database.utils.Outputs.*;
+import static io.cloudslang.content.database.utils.Outputs.DBMS_OUTPUT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -55,6 +56,7 @@ public class SQLCommand {
                     @Output(RETURN_RESULT),
                     @Output(UPDATE_COUNT),
                     @Output(OUTPUT_TEXT),
+                    @Output(DBMS_OUTPUT),
                     @Output(EXCEPTION),
             },
             responses = {
