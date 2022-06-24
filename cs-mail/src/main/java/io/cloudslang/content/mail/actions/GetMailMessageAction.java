@@ -28,6 +28,7 @@ import io.cloudslang.content.mail.entities.GetMailMessageInput;
 import io.cloudslang.content.mail.services.GetMailMessageService;
 import io.cloudslang.content.mail.constants.InputNames;
 import io.cloudslang.content.mail.utils.ResultUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -184,10 +185,22 @@ public class GetMailMessageAction {
                 .proxyPassword(proxyPassword)
                 .tlsVersion(tlsVersion)
                 .allowedCiphers(encryptionAlgorithm);
-        try {
-            return new GetMailMessageService().execute(inputBuilder.build());
-        } catch (Exception e) {
-            return ResultUtils.fromException(e);
+        if(StringUtils.isEmpty(tlsVersion))
+            try {
+                return new GetMailMessageService().execute(inputBuilder.tlsVersion("TLSv1.2").build());
+            } catch (Exception ex) {
+                try {
+                    return new GetMailMessageService().execute(inputBuilder.build());
+                } catch (Exception e){
+                    return ResultUtils.fromException(ex);
+                }
+            }
+        else {
+            try {
+                return new GetMailMessageService().execute(inputBuilder.build());
+            } catch (Exception e) {
+                return ResultUtils.fromException(e);
+            }
         }
     }
 }

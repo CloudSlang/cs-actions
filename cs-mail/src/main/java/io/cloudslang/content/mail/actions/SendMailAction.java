@@ -30,6 +30,7 @@ import io.cloudslang.content.mail.entities.SendMailInput;
 import io.cloudslang.content.mail.services.SendMailService;
 import io.cloudslang.content.mail.constants.InputNames;
 import io.cloudslang.content.mail.utils.ResultUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -174,10 +175,23 @@ public class SendMailAction {
                 .proxyPassword(proxyPassword)
                 .tlsVersion(tlsVersion)
                 .allowedCiphers(encryptionAlgorithm);
-        try {
-            return new SendMailService().execute(inputBuilder.build());
-        } catch (Exception e) {
-            return ResultUtils.fromException(e);
+        if(StringUtils.isEmpty(tlsVersion))
+            try {
+                return new SendMailService().execute(inputBuilder.tlsVersion("TLSv1.2").build());
+            } catch (Exception e) {
+                try{
+                    return new SendMailService().execute(inputBuilder.build());
+                } catch (Exception ex) {
+                    return ResultUtils.fromException(ex);
+                }
+            }
+        else {
+            try {
+                return new SendMailService().execute(inputBuilder.build());
+            } catch (Exception e) {
+                return ResultUtils.fromException(e);
+            }
         }
+
     }
 }
