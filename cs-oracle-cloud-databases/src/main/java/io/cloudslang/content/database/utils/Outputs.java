@@ -18,6 +18,8 @@ public class Outputs {
     public static final String UPDATE_COUNT="updateCount";
     public static final String OUTPUT_TEXT="outputText";
 
+    public static final String DBMS_OUTPUT ="dbmsOutput";
+
     public static final String ROWS_LEFT="rowsLeft";
 
     public static final String COLUMN_NAMES="columnNames";
