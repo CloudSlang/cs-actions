@@ -88,6 +88,7 @@ public class SQLQuery {
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
         overwrite = defaultIfEmpty(overwrite, FALSE);
         delimiter = defaultIfEmpty(delimiter,COMMA);
+        sessionKey = defaultIfEmpty(sessionKey,EMPTY);
         walletPath = defaultIfEmpty(Utils.unzip(walletPath, Boolean.parseBoolean(overwrite)), EMPTY);
 
 
