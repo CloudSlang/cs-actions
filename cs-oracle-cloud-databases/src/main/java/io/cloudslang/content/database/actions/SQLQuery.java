@@ -69,7 +69,7 @@ public class SQLQuery {
                                        @Param(value = WALLET_PATH) String walletPath,
                                        @Param(value = OVERWRITE) String overwrite,
                                        @Param(value = DELIMITER, required = true) String delimiter,
-                                       @Param(value = SESSION_KEY, required = true) String sessionKey,
+                                       @Param(value = SESSION_KEY) String sessionKey,
                                        @Param(value = TRUST_STORE) String trustStore,
                                        @Param(value = TRUST_STORE_PASSWORD, encrypted = true) String trustStorePassword,
                                        @Param(value = KEYSTORE) String keystore,
