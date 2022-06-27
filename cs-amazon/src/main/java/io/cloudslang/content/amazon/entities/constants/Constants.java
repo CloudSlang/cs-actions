@@ -214,4 +214,24 @@ public class Constants {
         public static final String SKIP_FINAL_SNAPSHOT_CONST = "false";
         public static final String DELETE_AUTOMATED_BACKUPS_CONST = "false";
     }
+
+    public static class SchedulerTimeConstants {
+        public static final String SCHEDULER_START_TIME = "schedulerStartTime";
+        public static final String SCHEDULER_TIME_ZONE = "schedulerTimeZone";
+        public static final String TIME_ZONE = "timeZone";
+        public static final String TRIGGER_EXPRESSION = "triggerExpression";
+        public static final String SCHEDULER_TIME = "schedulerTime";
+        public static final String COLON = ":";
+        public static final String NEW_LINE = "\n";
+        public static final String FAILURE = "failure";
+        public static final String EXCEPTION = "exception";
+        public static final String SCHEDULER_TIME_OPERATION_NAME = "Scheduler Time";
+
+        public static final String EXCEPTION_SCHEDULER_TIME = "The %s format should be in HH:MM:SS format.";
+        public static final String EXCEPTION_SCHEDULER_HOUR_TIME = "The %s format should be in between 0 to 23.";
+        public static final String EXCEPTION_SCHEDULER_MINUTES_TIME = "The %s format should be in between 0 to 59.";
+        public static final String EXCEPTION_SCHEDULER_TIMEZONE = "The %s is not a valid.";
+
+
+    }
 }
