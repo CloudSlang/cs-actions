@@ -86,6 +86,11 @@ public class GetMailMessageCountAction {
      * <br><b>returnResult</b> - The text content of the attachment, if the attachment is in plain text format.
      * <br><b>exception</b> - the exception message if the operation goes to failure.
      */
+
+    //IMPORTANT!
+    //FOR THE oo-base RELEASE THE VERSION FOR org.bouncycastle: bcprov-jdk15on,bcmail-jdk15on,bcpkix-jdk15on
+    //NEEDS TO BE SET AT 1.60
+
     @Action(name = "Get Mail Message Count",
             outputs = {
                     @Output(OutputNames.RETURN_RESULT),

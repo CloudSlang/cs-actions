@@ -116,6 +116,11 @@ public class GetMailAttachmentAction {
      * <br><b>temporaryFile</b> - The path to the temporary file where the attachment was saved.
      * <br><b>exception</b> - the exception message if the operation goes to failure.
      */
+
+    //IMPORTANT!
+    //FOR THE oo-base RELEASE THE VERSION FOR org.bouncycastle: bcprov-jdk15on,bcmail-jdk15on,bcpkix-jdk15on
+    //NEEDS TO BE SET AT 1.60
+
     @Action(name = "Get Mail Attachment",
             outputs = {
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_RESULT),
