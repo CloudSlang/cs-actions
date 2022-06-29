@@ -123,6 +123,11 @@
             <artifactId>javax.mail</artifactId>
             <version>1.6.0</version>
         </dependency>
+
+        //IMPORTANT!
+        //FOR THE oo-base RELEASE THE VERSION FOR org.bouncycastle: bcprov-jdk15on,bcmail-jdk15on,bcpkix-jdk15on
+        //NEEDS TO BE SET AT 1.60
+
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
