@@ -28,6 +28,7 @@ import io.cloudslang.content.mail.entities.GetMailAttachmentInput;
 import io.cloudslang.content.mail.services.GetMailAttachmentService;
 import io.cloudslang.content.mail.constants.InputNames;
 import io.cloudslang.content.mail.utils.ResultUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -186,10 +187,22 @@ public class GetMailAttachmentAction {
                 .timeout(timeout)
                 .tlsVersion(tlsVersion)
                 .allowedCiphers(encryptionAlgorithm);
-        try {
-            return new GetMailAttachmentService().execute(inputBuilder.build());
-        } catch (Exception ex) {
-            return ResultUtils.fromException(ex);
+        if(StringUtils.isEmpty(tlsVersion))
+            try {
+                return new GetMailAttachmentService().execute(inputBuilder.tlsVersion("TLSv1.2").build());
+            } catch (Exception ex) {
+                try {
+                    return new GetMailAttachmentService().execute(inputBuilder.build());
+                } catch (Exception e){
+                    return ResultUtils.fromException(ex);
+                }
+            }
+        else {
+            try {
+                return new GetMailAttachmentService().execute(inputBuilder.build());
+            } catch (Exception e) {
+                return ResultUtils.fromException(e);
+            }
         }
     }
 }
