@@ -132,12 +132,12 @@
                 <dependency>
                     <groupId>org.bouncycastle</groupId>
                     <artifactId>bcprov-jdk15on</artifactId>
-                    <version>1.70</version>
+                    <version>1.60</version>
                 </dependency>
                 <dependency>
                     <groupId>org.bouncycastle</groupId>
                     <artifactId>bcmail-jdk15on</artifactId>
-                    <version>1.70</version>
+                    <version>1.60</version>
                     <exclusions>
                         <exclusion>
                             <groupId>org.bouncycastle</groupId>
@@ -148,7 +148,7 @@
                 <dependency>
                     <groupId>org.bouncycastle</groupId>
                     <artifactId>bcpkix-jdk15on</artifactId>
-                    <version>1.70</version>
+                    <version>1.60</version>
                 </dependency>
                 <dependency>
                     <groupId>org.htmlparser</groupId>
@@ -184,6 +184,12 @@
             <artifactId>powermock-api-mockito</artifactId>
             <version>1.6.5</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.hp.score.sdk</groupId>
+            <artifactId>score-content-sdk</artifactId>
+            <version>1.10.7</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
