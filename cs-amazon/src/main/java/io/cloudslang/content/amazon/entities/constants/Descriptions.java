@@ -209,4 +209,14 @@ public class Descriptions {
         public static final String DB_PASSWORD_DESC = "The password for the master user.";
 
     }
+
+    public static class SchedulerTime {
+
+        public static final String SCHEDULER_TIME_OPERATION_DESC = "Converts time with specified timezone and return the scheduler time.";
+        public static final String SCHEDULER_START_TIME_DESC = "Scheduler start time.";
+        public static final String TIME_ZONE_DESC = "Scheduler timeZone.";
+        public static final String TRIGGER_EXPRESSION_DESC = "Scheduler trigger expression.";
+        public static final String SCHEDULER_TIME_DESC = "Scheduler time in HH:MM:SS format";
+
+    }
 }
