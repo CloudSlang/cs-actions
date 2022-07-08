@@ -234,4 +234,10 @@ public class Constants {
 
 
     }
+
+    public static class GetTimeFormatConstants {
+        public static final String GET_TIME_FORMAT_OPERATION_NAME = "Get Time Format";
+        public static final String EPOCH_TIME = "epochTime";
+        public static final String DATE_FORMAT = "dateFormat";
+    }
 }
