@@ -51,7 +51,7 @@ public class GetTimeFormat {
 
         try {
             Map<String, String> map = new HashMap<>();
-            map.put(DATE_FORMAT,LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(epochTime)), ZoneId.of(timeZone.split(",")[1]))+":00");
+            map.put(DATE_FORMAT,LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(epochTime)), ZoneId.of(timeZone.split("\\) ")[1]))+":00");
             return map;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
