@@ -27,6 +27,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import static io.cloudslang.content.amazon.entities.constants.Constants.GetTimeFormatConstants.EXCEPTION_EPOCH_TIME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.SchedulerTimeConstants.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
@@ -102,6 +103,7 @@ public class Validator {
         }
         return exceptions;
     }
+   
     @NotNull
     private static List<String> addVerifySchedulerTime(@NotNull List<String> exceptions, @NotNull final String input) {
         String[] timeFormat = input.split(COLON);
