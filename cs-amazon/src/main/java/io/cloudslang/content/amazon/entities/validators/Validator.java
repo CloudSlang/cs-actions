@@ -27,9 +27,11 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.GetTimeFormatConstants.EXCEPTION_EPOCH_TIME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.SchedulerTimeConstants.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.NumberUtilities.isValidInt;
+import static io.cloudslang.content.utils.NumberUtilities.isValidLong;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.join;
@@ -83,6 +85,23 @@ public class Validator {
         return exceptionMessages;
     }
 
+    @NotNull
+    public static List<String> verifyTimeFormatInputs(@NotNull final String epochTime, @NotNull final String timeZone) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyEpochTime(exceptionMessages, epochTime);
+        addVerifySchedulerTimezone(exceptionMessages, timeZone);
+        return exceptionMessages;
+    }
+
+    @NotNull
+    private static List<String> addVerifyEpochTime(@NotNull List<String> exceptions, @NotNull final String input) {
+
+        if(!isValidLong(input))
+        {
+            exceptions.add(String.format(EXCEPTION_EPOCH_TIME, Constants.GetTimeFormatConstants.EPOCH_TIME));
+        }
+        return exceptions;
+    }
     @NotNull
     private static List<String> addVerifySchedulerTime(@NotNull List<String> exceptions, @NotNull final String input) {
         String[] timeFormat = input.split(COLON);
