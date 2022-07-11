@@ -135,7 +135,6 @@ public class Descriptions {
                 "Default: latest";
         public static final String DISK_SIZE_IN_GB_DESC = "Size of the disk in GB. \n" +
                 "Default: 10";
-        ;
         public static final String STORAGE_ACCOUNT_DESC = "Name of the storageAccount. If availabilitySet is classic, " +
                 "then storageAccount is used.";
         public static final String STORAGE_ACCOUNT_TYPE_DESC = "Type of the storageAccount. If availabilitySet is " +
@@ -285,4 +284,9 @@ public class Descriptions {
 
     }
 
+    public static class GetTimeFormat {
+        public static final String GET_TIME_FORMAT_OPERATION_DESC = "This operation converts the unix time into given format.";
+        public static final String EPOCH_TIME_DESC = "Epoch time.";
+        public static final String DATE_FORMAT_DESC = "Date format.";
+    }
 }
