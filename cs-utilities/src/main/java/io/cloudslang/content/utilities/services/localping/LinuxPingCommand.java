@@ -60,15 +60,15 @@ public class LinuxPingCommand implements LocalPingCommand {
 
         if (isEmpty(ipVersion)) {
             if (InetAddressValidator.getInstance().isValidInet6Address(targetHost)) {
-                command.append("ping6 ");
+                command.append("/usr/bin/ping6 ");
             } else {
-                command.append("ping ");
+                command.append("/usr/bin/ping ");
             }
         } else {
             if (ipVersion.equals(IP_VERSION_6)) {
-                command.append("ping6 ");
+                command.append("/usr/bin/ping6 ");
             } else if (ipVersion.equals(IP_VERSION_4)) {
-                command.append("ping ");
+                command.append("/usr/bin/ping ");
             } else {
                 throw new IllegalArgumentException(format(INVALID_ARGUMENT_IP_VERSION, ipVersion));
             }
