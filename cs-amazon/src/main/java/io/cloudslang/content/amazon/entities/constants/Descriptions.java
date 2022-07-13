@@ -221,10 +221,8 @@ public class Descriptions {
     }
 
     public static class GetTimeFormat {
-
         public static final String GET_TIME_FORMAT_OPERATION_DESC = "This operation converts the unix time into given format.";
         public static final String EPOCH_TIME_DESC = "Epoch time.";
         public static final String DATE_FORMAT_DESC = "Date format.";
-
     }
 }

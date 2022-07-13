@@ -241,4 +241,11 @@ public final class Constants {
 
 
     }
+
+    public static class GetTimeFormatConstants {
+        public static final String GET_TIME_FORMAT_OPERATION_NAME = "Get Time Format";
+        public static final String EPOCH_TIME = "epochTime";
+        public static final String DATE_FORMAT = "dateFormat";
+        public static final String EXCEPTION_EPOCH_TIME = "The %s is not a valid.";
+    }
 }
