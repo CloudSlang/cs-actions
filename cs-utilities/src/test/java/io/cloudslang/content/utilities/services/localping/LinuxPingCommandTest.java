@@ -69,7 +69,7 @@ public class LinuxPingCommandTest {
         LocalPingCommand linuxPingCommand = new LinuxPingCommand();
         String command = linuxPingCommand.createCommand(localPingInputs);
 
-        assertEquals("ping -w 30 -c 5 -s 100 10.0.0.1", command);
+        assertEquals("/usr/bin/ping -w 30 -c 5 -s 100 10.0.0.1", command);
     }
 
     @Test

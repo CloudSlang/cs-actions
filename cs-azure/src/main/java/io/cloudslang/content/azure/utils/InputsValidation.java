@@ -39,6 +39,7 @@ import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PRIMARY_
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PORT;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.USERNAME;
 import static io.cloudslang.content.azure.utils.Constants.*;
+import static io.cloudslang.content.azure.utils.Constants.GetTimeFormatConstants.EXCEPTION_EPOCH_TIME;
 import static io.cloudslang.content.azure.utils.Constants.SchedulerTimeConstants.*;
 import static io.cloudslang.content.azure.utils.Inputs.CreateVMInputs.*;
 import static io.cloudslang.content.azure.utils.StorageInputNames.BLOB_NAME;
@@ -46,6 +47,7 @@ import static io.cloudslang.content.azure.utils.StorageInputNames.CONTAINER_NAME
 import static io.cloudslang.content.azure.utils.StorageInputNames.TIMEOUT;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
+import static io.cloudslang.content.utils.NumberUtilities.isValidLong;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -185,6 +187,24 @@ public final class InputsValidation {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!NumberUtilities.isValidInt(input)) {
             exceptions.add(String.format(EXCEPTION_INVALID_PROXY, PROXY_PORT));
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    public static List<String> verifyTimeFormatInputs(@NotNull final String epochTime, @NotNull final String timeZone) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyEpochTime(exceptionMessages, epochTime);
+        addVerifySchedulerTimezone(exceptionMessages, timeZone);
+        return exceptionMessages;
+    }
+
+    @NotNull
+    private static List<String> addVerifyEpochTime(@NotNull List<String> exceptions, @NotNull final String input) {
+
+        if(!isValidLong(input))
+        {
+            exceptions.add(String.format(EXCEPTION_EPOCH_TIME, Constants.GetTimeFormatConstants.EPOCH_TIME));
         }
         return exceptions;
     }
