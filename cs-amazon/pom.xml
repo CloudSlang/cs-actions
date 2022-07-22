@@ -140,7 +140,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-xml</artifactId>
-            <version>0.0.18</version>
+            <version>0.0.19</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
@@ -156,6 +156,10 @@
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
                     <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.dataformat</groupId>
+                    <artifactId>jackson-dataformat-cbor</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
