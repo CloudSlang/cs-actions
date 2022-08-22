@@ -95,4 +95,19 @@ public class Descriptions {
 
     }
 
+    public static class SchedulerTime {
+        public static final String SCHEDULER_TIME_OPERATION_DESC = "Converts time with specified timezone and return the scheduler time.";
+        public static final String SCHEDULER_START_TIME_DESC = "Scheduler start time.";
+        public static final String TIME_ZONE_DESC = "Scheduler timeZone.";
+        public static final String TRIGGER_EXPRESSION_DESC = "Scheduler trigger expression.";
+        public static final String SCHEDULER_TIME_DESC = "Scheduler time in HH:MM:SS format";
+        public static final String EXCEPTION_DESC = "Exception if there was an error when executing, empty otherwise.";
+    }
+
+    public static class GetTimeFormat {
+        public static final String CONVERT_EPOCH_TIME_OPERATION_DESC = "This operation converts the unix time into given format.";
+        public static final String EPOCH_TIME_DESC = "Epoch time.";
+        public static final String DATE_FORMAT_DESC = "Date format.";
+    }
+
 }
