@@ -48,6 +48,8 @@
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <cs-commons.version>0.0.5</cs-commons.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <custom.nexus>overwritten_by_ci</custom.nexus>
     </properties>
 
     <dependencies>
