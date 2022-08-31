@@ -34,6 +34,8 @@ public class Inputs {
     public static final String PASSWORD = "password";
     public static final String COMMAND = "command";
     public static final String DELIMITER = "delimiter";
+    public static final String SCRIPT_FILE_NAME = "scriptFileName";
+    public static final String SQL_COMMANDS = "sqlCommands";
     public static final String TRUST_STORE = "trustKeystore";
     public static final String TRUST_STORE_PASSWORD = "trustKeystorePassword";
     public static final String KEYSTORE = "keystore";
@@ -42,9 +44,11 @@ public class Inputs {
     public static final String WALLET_PATH = "walletPath";
     public static final String OVERWRITE = "overwrite";
     public static final String SESSION_KEY = "sessionKey";
+    public static final String COL_DELIMITER = "colDelimiter";
+    public static final String ROW_DELIMITER = "rowDelimiter";
     public static final String GLOBAL_SESSION_OBJECT = "globalSessionObject";
     public static final String RESULT_SET_TYPE = "resultSetType";
     public static final String RESULT_SET_CONCURRENCY = "resultSetConcurrency";
     public static final String IGNORE_CASE = "ignoreCase";
 
-}
+    }

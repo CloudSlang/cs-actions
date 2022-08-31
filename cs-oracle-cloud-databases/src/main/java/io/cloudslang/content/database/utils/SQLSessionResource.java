@@ -16,9 +16,10 @@ package io.cloudslang.content.database.utils;
 
 import com.hp.oo.sdk.content.plugin.SessionResource;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class SQLSessionResource extends SessionResource<Map<String, Object>> {
+public class SQLSessionResource extends SessionResource<Map<String, Object>> implements Serializable {
 
     private Map<String, Object> sqlConnectionMap;
 

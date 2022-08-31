@@ -13,7 +13,7 @@
  * limitations under the License.
 */
 /*
- * (c) Copyright 2022 Micro Focus
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -27,92 +27,78 @@
  * limitations under the License.
  */
 
+
+
 package io.cloudslang.content.database.service;
 
+
 import io.cloudslang.content.database.entities.OracleCloudInputs;
-import io.cloudslang.content.database.utils.OracleDbmsOutput;
-import io.cloudslang.content.database.utils.Outputs;
+import io.cloudslang.content.database.utils.SQLUtils;
 import oracle.jdbc.driver.OracleConnection;
 
-import java.sql.*;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
 import java.util.Properties;
 
-import static io.cloudslang.content.database.utils.Constants.*;
-import static io.cloudslang.content.database.utils.Outputs.*;
-import static io.cloudslang.content.database.utils.Outputs.DBMS_OUTPUT;
-import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
+import static io.cloudslang.content.database.constants.DBOtherValues.SYBASE_DB_TYPE;
+import static io.cloudslang.content.database.utils.Constants.JKS;
+import static io.cloudslang.content.database.utils.Constants.ORACLE_URL;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-public class OracleCloudQueryService {
+/**
+ * Created by victor on 13.01.2017.
+ */
+public class OracleCloudScriptService {
 
-    public static Map<String, String> executeSqlCommand(OracleCloudInputs sqlInputs) throws SQLException {
-
-        Properties props = getProperties(sqlInputs);
-        try (Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props);
-             final OracleDbmsOutput oracleDbmsOutput = new OracleDbmsOutput(connection)) {
-
-            try (final PreparedStatement statement = connection.prepareStatement(sqlInputs.getSqlCommand())) {
-                statement.setQueryTimeout(sqlInputs.getExecutionTimeout());
-                ResultSet resultSet = statement.executeQuery();
-
-                int updateCount = statement.getUpdateCount();
-                Map<String, String> result = getSuccessResultsMap(SUCCESS_MESSAGE);
-
-                if (resultSet.getMetaData().getColumnCount() > 0) {
-                    resultSet.next();
-                    if (resultSet.getString(1) != null)
-                        result.put(OUTPUT_TEXT, resultSet.getString(1));
-                }
-                if (sqlInputs.getSqlCommand().contains(DBMS_OUTPUT_TEXT))
-                    result.put(DBMS_OUTPUT, oracleDbmsOutput.getOutput());
-                result.put(UPDATE_COUNT, String.valueOf(updateCount));
-                return result;
-            }
+    public static String executeSqlScript(List<String> lines, OracleCloudInputs sqlInputs)
+            throws Exception {
+        if (lines == null || lines.isEmpty()) {
+            throw new Exception("No SQL command to be executed.");
         }
-    }
-
-    public static void executeSqlQuery(final OracleCloudInputs sqlInputs) throws Exception {
-
         Properties props = getProperties(sqlInputs);
         try (Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props)) {
             connection.setReadOnly(true);
-            Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency());
-            statement.setQueryTimeout(sqlInputs.getExecutionTimeout());
 
-            final ResultSet results = statement.executeQuery(sqlInputs.getSqlCommand());
-            final ResultSetMetaData metaData = results.getMetaData();
-
-            final StringBuilder strColumns = new StringBuilder();
-
-            for (int i = 1; i <= metaData.getColumnCount(); i++) {
-
-                if (i > 1)
-                    strColumns.append(sqlInputs.getDelimiter());
-
-                strColumns.append(metaData.getColumnLabel(i));
-            }
-
-            sqlInputs.setColumnNames(strColumns.toString());
-
-            while (results.next()) {
-
-                final StringBuilder strRowHolder = new StringBuilder();
-
-                for (int i = 1; i <= metaData.getColumnCount(); i++) {
-
-                    if (i > 1)
-                        strRowHolder.append(sqlInputs.getDelimiter());
-
-                    if (results.getString(i) != null)
-                        strRowHolder.append(results.getString(i).trim());
+            try (final Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency())) {
+                statement.setQueryTimeout(sqlInputs.getExecutionTimeout());
+                boolean autoCommit = connection.getAutoCommit();
+                connection.setAutoCommit(false);
+                int updateCount = 0;
+                if (lines.size() > 1) {
+                    for (String line : lines) {
+                        statement.addBatch(line);
+                    }
+                    int[] updateCounts = statement.executeBatch();
+                    for (int i : updateCounts) {
+                        if (i > 0) {
+                            updateCount += i;
+                        }
+                    }
+                } else {
+                    statement.execute(lines.get(0));
+                    updateCount = statement.getUpdateCount();
                 }
-
-                sqlInputs.getRowsLeft().add(strRowHolder.toString());
+                sqlInputs.setIUpdateCount(updateCount);
+                connection.commit();
+                connection.setAutoCommit(autoCommit);
+            } catch (SQLException e) {
+                //during a dump sybase sends back status as exceptions.
+                final String dbType = sqlInputs.getDbType();
+                if (SYBASE_DB_TYPE.equalsIgnoreCase(dbType)) {
+                    if (lines.get(0).trim().toLowerCase().startsWith("dump")) {
+                        return SQLUtils.processDumpException(e);
+                    } else if (lines.get(0).trim().toLowerCase().startsWith("load")) {
+                        return SQLUtils.processLoadException(e);
+                    }
+                } else
+                    throw e;
             }
         }
+        return "Command completed successfully";
     }
-
     private static Properties getProperties(OracleCloudInputs sqlInputs) {
         Properties props = new Properties();
         props.setProperty(OracleConnection.CONNECTION_PROPERTY_USER_NAME, sqlInputs.getUsername());
@@ -138,4 +124,3 @@ public class OracleCloudQueryService {
         return props;
     }
 }
-
