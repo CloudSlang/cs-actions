@@ -12,53 +12,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-
 package io.cloudslang.content.database.service;
 
 import io.cloudslang.content.database.entities.OracleCloudInputs;
-import io.cloudslang.content.database.utils.OracleDbmsOutput;
-import io.cloudslang.content.database.utils.Outputs;
+import io.cloudslang.content.database.utils.Format;
 import oracle.jdbc.driver.OracleConnection;
 
 import java.sql.*;
-import java.util.Map;
 import java.util.Properties;
 
 import static io.cloudslang.content.database.utils.Constants.*;
-import static io.cloudslang.content.database.utils.Outputs.*;
-import static io.cloudslang.content.database.utils.Outputs.DBMS_OUTPUT;
-import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-public class OracleCloudQueryService {
+public class OracleCloudQueryAllRowsService {
 
-    public static Map<String, String> executeSqlCommand(OracleCloudInputs sqlInputs) throws SQLException {
-
-        Properties props = getProperties(sqlInputs);
-        try (Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props);
-             final OracleDbmsOutput oracleDbmsOutput = new OracleDbmsOutput(connection)) {
-
-            try (final PreparedStatement statement = connection.prepareStatement(sqlInputs.getSqlCommand())) {
-                statement.setQueryTimeout(sqlInputs.getExecutionTimeout());
-                ResultSet resultSet = statement.executeQuery();
-
-                int updateCount = statement.getUpdateCount();
-                Map<String, String> result = getSuccessResultsMap(SUCCESS_MESSAGE);
-
-                if (resultSet.getMetaData().getColumnCount() > 0) {
-                    resultSet.next();
-                    if (resultSet.getString(1) != null)
-                        result.put(OUTPUT_TEXT, resultSet.getString(1));
-                }
-                if (sqlInputs.getSqlCommand().contains(DBMS_OUTPUT_TEXT))
-                    result.put(DBMS_OUTPUT, oracleDbmsOutput.getOutput());
-                result.put(UPDATE_COUNT, String.valueOf(updateCount));
-                return result;
-            }
-        }
-    }
-
-    public static void executeSqlQuery(final OracleCloudInputs sqlInputs) throws Exception {
+    public static String execQueryAllRows(final OracleCloudInputs sqlInputs) throws Exception {
 
         Properties props = getProperties(sqlInputs);
         try (Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props)) {
@@ -67,35 +35,12 @@ public class OracleCloudQueryService {
             statement.setQueryTimeout(sqlInputs.getExecutionTimeout());
 
             final ResultSet results = statement.executeQuery(sqlInputs.getSqlCommand());
-            final ResultSetMetaData metaData = results.getMetaData();
 
-            final StringBuilder strColumns = new StringBuilder();
-
-            for (int i = 1; i <= metaData.getColumnCount(); i++) {
-
-                if (i > 1)
-                    strColumns.append(sqlInputs.getDelimiter());
-
-                strColumns.append(metaData.getColumnLabel(i));
+            final String resultSetToDelimitedColsAndRows = Format.resultSetToDelimitedColsAndRows(results, sqlInputs.isNetcool(), sqlInputs.getColDelimiter(), sqlInputs.getRowDelimiter());
+            if (results != null) {
+                results.close();
             }
-
-            sqlInputs.setColumnNames(strColumns.toString());
-
-            while (results.next()) {
-
-                final StringBuilder strRowHolder = new StringBuilder();
-
-                for (int i = 1; i <= metaData.getColumnCount(); i++) {
-
-                    if (i > 1)
-                        strRowHolder.append(sqlInputs.getDelimiter());
-
-                    if (results.getString(i) != null)
-                        strRowHolder.append(results.getString(i).trim());
-                }
-
-                sqlInputs.getRowsLeft().add(strRowHolder.toString());
-            }
+            return resultSetToDelimitedColsAndRows;
         }
     }
 

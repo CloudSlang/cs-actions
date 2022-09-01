@@ -12,28 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package io.cloudslang.content.database.utils;
 
-import com.hp.oo.sdk.content.plugin.SessionResource;
+package io.cloudslang.content.database.constants;
 
-import java.io.Serializable;
-import java.util.Map;
-
-public class SQLSessionResource extends SessionResource<Map<String, Object>> implements Serializable {
-
-    private Map<String, Object> sqlConnectionMap;
-
-    public SQLSessionResource(final Map<String, Object> sqlConnectionMap) {
-        this.sqlConnectionMap = sqlConnectionMap;
-    }
-
-    @Override
-    public Map<String, Object> get() {
-        return sqlConnectionMap;
-    }
-
-    @Override
-    public void release() {
-        sqlConnectionMap = null;
-    }
+/**
+ * Created by victor on 18.01.2017.
+ */
+public class DBDefaultValues {
+    public static final String AUTH_SQL = "Sql";
+    public static final String DEFAULT_TIMEOUT = "120";
+    public static final String NEW_LINE = "\n";
 }
