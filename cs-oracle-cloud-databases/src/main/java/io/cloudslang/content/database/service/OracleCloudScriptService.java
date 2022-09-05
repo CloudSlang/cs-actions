@@ -15,38 +15,30 @@
 
 package io.cloudslang.content.database.service;
 
-
 import io.cloudslang.content.database.entities.OracleCloudInputs;
-import io.cloudslang.content.database.utils.SQLUtils;
 import oracle.jdbc.driver.OracleConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Properties;
 
-import static io.cloudslang.content.database.constants.DBOtherValues.SYBASE_DB_TYPE;
 import static io.cloudslang.content.database.utils.Constants.JKS;
 import static io.cloudslang.content.database.utils.Constants.ORACLE_URL;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-/**
- * Created by victor on 13.01.2017.
- */
 public class OracleCloudScriptService {
 
     public static String executeSqlScript(List<String> lines, OracleCloudInputs sqlInputs)
             throws Exception {
         if (lines == null || lines.isEmpty()) {
-            throw new Exception("No SQL command to be executed.");
+            throw new Exception("No SQL script to be executed.");
         }
         Properties props = getProperties(sqlInputs);
         try (Connection connection = DriverManager.getConnection(ORACLE_URL + sqlInputs.getConnectionString(), props)) {
-            connection.setReadOnly(true);
 
-            try (final Statement statement = connection.createStatement(sqlInputs.getResultSetType(), sqlInputs.getResultSetConcurrency())) {
+            try (final Statement statement = connection.createStatement()) {
                 statement.setQueryTimeout(sqlInputs.getExecutionTimeout());
                 boolean autoCommit = connection.getAutoCommit();
                 connection.setAutoCommit(false);
@@ -68,21 +60,11 @@ public class OracleCloudScriptService {
                 sqlInputs.setIUpdateCount(updateCount);
                 connection.commit();
                 connection.setAutoCommit(autoCommit);
-            } catch (SQLException e) {
-                //during a dump sybase sends back status as exceptions.
-                final String dbType = sqlInputs.getDbType();
-                if (SYBASE_DB_TYPE.equalsIgnoreCase(dbType)) {
-                    if (lines.get(0).trim().toLowerCase().startsWith("dump")) {
-                        return SQLUtils.processDumpException(e);
-                    } else if (lines.get(0).trim().toLowerCase().startsWith("load")) {
-                        return SQLUtils.processLoadException(e);
-                    }
-                } else
-                    throw e;
             }
         }
-        return "Command completed successfully";
+        return "Script completed successfully";
     }
+
     private static Properties getProperties(OracleCloudInputs sqlInputs) {
         Properties props = new Properties();
         props.setProperty(OracleConnection.CONNECTION_PROPERTY_USER_NAME, sqlInputs.getUsername());

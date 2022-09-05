@@ -86,6 +86,25 @@ public class InputsValidation {
     }
 
     @NotNull
+    public static List<String> verifySqlScript(@NotNull final String walletPath,
+                                               @NotNull final String trustore,
+                                               @NotNull final String keystore,
+                                               @NotNull final String overwrite,
+                                               @NotNull final String timeout) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+
+
+        addVerifyFile(exceptionMessages, walletPath, WALLET_PATH);
+        addVerifyFile(exceptionMessages, trustore, TRUST_STORE);
+        addVerifyFile(exceptionMessages, keystore, KEYSTORE);
+        addVerifyBoolean(exceptionMessages, overwrite, OVERWRITE);
+        addVerifyPositiveNumber(exceptionMessages, timeout, EXECUTION_TIMEOUT);
+
+        return exceptionMessages;
+    }
+
+    @NotNull
     private static List<String> addVerifyPositiveNumber(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
 
         if (!NumberUtilities.isValidInt(input)) {

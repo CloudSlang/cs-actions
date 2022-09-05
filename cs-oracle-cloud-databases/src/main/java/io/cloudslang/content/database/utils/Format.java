@@ -24,9 +24,6 @@ import java.util.List;
 import static io.cloudslang.content.database.constants.DBDefaultValues.NEW_LINE;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-/**
- * Created by victor on 13.01.2017.
- */
 public class Format {
     public static int colPadding = 2;
 
@@ -38,29 +35,24 @@ public class Format {
      * Row2Col1  Row2Col2
      *
      * @param result
-     * @param checkNullTermination
      * @return
      */
-    public static String resultSetToTable(ResultSet result, boolean checkNullTermination) throws SQLException {
-        return resultSetToTable(result, Calendar.getInstance(), checkNullTermination);
+    public static String resultSetToTable(ResultSet result) throws SQLException {
+        return resultSetToTable(result, Calendar.getInstance());
     }
 
     /**
      * Returns column number col from the current result set and returns as string
      *
-     * @param rs                   the result set on current row
-     * @param col                  1-indexed column number
-     * @param checkNullTermination perform the null termination check on a string (eg. netcool)
+     * @param rs  the result set on current row
+     * @param col 1-indexed column number
      * @return
      * @throws SQLException
      */
-    private static String getColumn(ResultSet rs, int col, boolean checkNullTermination) throws SQLException {
+    private static String getColumn(ResultSet rs, int col) throws SQLException {
         final String value = rs.getString(col);
         if (value == null) {
             return "null";
-        }
-        if (checkNullTermination) {
-            return processNullTerminatedString(value);
         }
         return value;
     }
@@ -99,7 +91,7 @@ public class Format {
      * @return
      * @throws SQLException
      */
-    private static String resultSetToTable(ResultSet result, Calendar cal, boolean checkNullTermination) throws SQLException {
+    private static String resultSetToTable(ResultSet result, Calendar cal) throws SQLException {
         assert (result != null);
 
         ResultSetMetaData md = result.getMetaData();
@@ -123,7 +115,7 @@ public class Format {
         while (result.next()) {
             String[] row = new String[headers.length];
             for (int colN = 0; colN < nCols; colN++) {
-                String colVal = getColumn(result, colN + 1, checkNullTermination);
+                String colVal = getColumn(result, colN + 1);
                 headerSz[colN] = colVal.length() > headerSz[colN] ? colVal.length() : headerSz[colN];
                 row[colN] = colVal;
             }
@@ -166,7 +158,7 @@ public class Format {
      * @return
      * @throws SQLException
      */
-    public static String resultSetToDelimitedColsAndRows(ResultSet resultSet, boolean checkNullTermination, String colDelimiter, String rowDelimiter) throws SQLException {
+    public static String resultSetToDelimitedColsAndRows(ResultSet resultSet, String colDelimiter, String rowDelimiter) throws SQLException {
 //        assert (resultSet != null);
 
         final StringBuilder delimitedResult = new StringBuilder();
@@ -179,7 +171,7 @@ public class Format {
                     if (colN != 0) {
                         delimitedResult.append(colDelimiter);
                     }
-                    delimitedResult.append(getColumn(resultSet, colN + 1, checkNullTermination));
+                    delimitedResult.append(getColumn(resultSet, colN + 1));
                 }
                 delimitedResult.append(rowDelimiter);
             }

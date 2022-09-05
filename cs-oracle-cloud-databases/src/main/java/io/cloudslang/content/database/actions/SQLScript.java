@@ -37,11 +37,11 @@ import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static io.cloudslang.content.database.constants.DBExceptionValues.NO_SQL_COMMAND;
+import static io.cloudslang.content.database.constants.DBExceptionValues.NO_SQL_SCRIPT;
 import static io.cloudslang.content.database.entities.OracleCloudInputs.getSqlCommands;
 import static io.cloudslang.content.database.utils.Constants.*;
 import static io.cloudslang.content.database.utils.Inputs.*;
-import static io.cloudslang.content.database.utils.Outputs.*;
+import static io.cloudslang.content.database.utils.Outputs.UPDATE_COUNT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -63,21 +63,18 @@ public class SQLScript {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> execute(@Param(value = CONNECTION_STRING, required = true) String connectionString,
+                                       @Param(value = WALLET_PATH) String walletPath,
                                        @Param(value = USERNAME, required = true) String username,
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
-                                       @Param(value = WALLET_PATH) String walletPath,
                                        @Param(value = OVERWRITE) String overwrite,
                                        @Param(value = DELIMITER) String delimiter,
                                        @Param(value = SQL_COMMANDS) String sqlCommands,
                                        @Param(value = SCRIPT_FILE_NAME) String scriptFileName,
-                                       @Param(value = SESSION_KEY) String sessionKey,
                                        @Param(value = TRUST_STORE) String trustStore,
                                        @Param(value = TRUST_STORE_PASSWORD, encrypted = true) String trustStorePassword,
                                        @Param(value = KEYSTORE) String keystore,
                                        @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
                                        @Param(value = EXECUTION_TIMEOUT) String executionTimeout,
-                                       @Param(value = RESULT_SET_TYPE) String resultSetType,
-                                       @Param(value = RESULT_SET_CONCURRENCY) String resultSetConcurrency,
                                        @Param(value = GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
 
         username = defaultIfEmpty(username, EMPTY);
@@ -85,14 +82,11 @@ public class SQLScript {
         trustStore = defaultIfEmpty(trustStore, EMPTY);
         trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_TIMEOUT);
-        resultSetType = defaultIfEmpty(resultSetType, TYPE_FORWARD_ONLY);
-        resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
         overwrite = defaultIfEmpty(overwrite, FALSE);
-        delimiter = defaultIfEmpty(delimiter, ";");
-        sessionKey = defaultIfEmpty(sessionKey,EMPTY);
+        delimiter = defaultIfEmpty(delimiter, SEMICOLON);
         walletPath = defaultIfEmpty(Utils.unzip(walletPath, Boolean.parseBoolean(overwrite)), EMPTY);
 
-        final List<String> preInputsValidation = InputsValidation.verifySqlQuery(walletPath, trustStore, keystore, overwrite, executionTimeout, resultSetConcurrency, resultSetType);
+        final List<String> preInputsValidation = InputsValidation.verifySqlScript(walletPath, trustStore, keystore, overwrite, executionTimeout);
 
 
         if (!preInputsValidation.isEmpty()) {
@@ -106,14 +100,11 @@ public class SQLScript {
                 .walletPath(walletPath)
                 .sqlCommands(getSqlCommands(sqlCommands, scriptFileName, delimiter))
                 .delimiter(delimiter)
-                .key(sessionKey)
                 .trustStore(trustStore)
                 .trustStorePassword(trustStorePassword)
                 .keyStore(keystore)
                 .keyStorePassword(keystorePassword)
                 .executionTimeout(Integer.parseInt(executionTimeout))
-                .resultSetConcurrency(InputsValidation.concurValues.get(resultSetConcurrency))
-                .resultSetType(InputsValidation.typeValues.get(resultSetType))
                 .build();
 
         try {
@@ -125,7 +116,7 @@ public class SQLScript {
                 result.put(UPDATE_COUNT, String.valueOf(sqlInputs.getIUpdateCount()));
                 return result;
             }
-            return getFailureResultsMap(NO_SQL_COMMAND);
+            return getFailureResultsMap(NO_SQL_SCRIPT);
         } catch (Exception e) {
             return OutputUtilities.getFailureResultsMap(e);
         }

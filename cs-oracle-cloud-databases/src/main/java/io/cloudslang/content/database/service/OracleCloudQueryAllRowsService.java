@@ -18,10 +18,14 @@ import io.cloudslang.content.database.entities.OracleCloudInputs;
 import io.cloudslang.content.database.utils.Format;
 import oracle.jdbc.driver.OracleConnection;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Properties;
 
-import static io.cloudslang.content.database.utils.Constants.*;
+import static io.cloudslang.content.database.utils.Constants.JKS;
+import static io.cloudslang.content.database.utils.Constants.ORACLE_URL;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class OracleCloudQueryAllRowsService {
@@ -36,7 +40,7 @@ public class OracleCloudQueryAllRowsService {
 
             final ResultSet results = statement.executeQuery(sqlInputs.getSqlCommand());
 
-            final String resultSetToDelimitedColsAndRows = Format.resultSetToDelimitedColsAndRows(results, sqlInputs.isNetcool(), sqlInputs.getColDelimiter(), sqlInputs.getRowDelimiter());
+            final String resultSetToDelimitedColsAndRows = Format.resultSetToDelimitedColsAndRows(results, sqlInputs.getColDelimiter(), sqlInputs.getRowDelimiter());
             if (results != null) {
                 results.close();
             }

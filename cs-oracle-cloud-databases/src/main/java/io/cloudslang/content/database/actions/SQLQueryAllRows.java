@@ -59,14 +59,13 @@ public class SQLQueryAllRows {
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> execute(@Param(value = CONNECTION_STRING, required = true) String connectionString,
+                                       @Param(value = WALLET_PATH) String walletPath,
                                        @Param(value = USERNAME, required = true) String username,
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = COMMAND, required = true) String command,
-                                       @Param(value = WALLET_PATH) String walletPath,
                                        @Param(value = OVERWRITE) String overwrite,
                                        @Param(value = COL_DELIMITER) String colDelimiter,
                                        @Param(value = ROW_DELIMITER) String rowDelimiter,
-                                       @Param(value = SESSION_KEY) String sessionKey,
                                        @Param(value = TRUST_STORE) String trustStore,
                                        @Param(value = TRUST_STORE_PASSWORD, encrypted = true) String trustStorePassword,
                                        @Param(value = KEYSTORE) String keystore,
@@ -81,7 +80,6 @@ public class SQLQueryAllRows {
         overwrite = defaultIfEmpty(overwrite, FALSE);
         colDelimiter = defaultIfEmpty(colDelimiter,COMMA_DELIMITER);
         rowDelimiter = defaultIfEmpty(rowDelimiter, NEW_LINE);
-        sessionKey = defaultIfEmpty(sessionKey,EMPTY);
         trustStore = defaultIfEmpty(trustStore, EMPTY);
         trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_TIMEOUT);
@@ -104,7 +102,6 @@ public class SQLQueryAllRows {
                 .sqlCommand(command)
                 .colDelimiter(colDelimiter)
                 .rowDelimiter(rowDelimiter)
-                .key(sessionKey)
                 .trustStore(trustStore)
                 .trustStorePassword(trustStorePassword)
                 .keyStore(keystore)
