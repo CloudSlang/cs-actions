@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    * (c) Copyright 2022 Micro Focus
+    * (c) Copyright 2022 Micro Focus, L.P.
     * All rights reserved. This program and the accompanying materials
     * are made available under the terms of the Apache License v2.0 which accompany this distribution.
     *
@@ -19,11 +19,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.cloudslang.content</groupId>
-    <artifactId>cs-oracle-cloud-databases</artifactId>
+    <artifactId>cs-oauth</artifactId>
     <version>1.0.1-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Oracle Cloud ATP</description>
+    <description>OAuth</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
 
     <licenses>
@@ -40,6 +40,20 @@
         <tag>master</tag>
     </scm>
 
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
+        <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <score-content-sdk.version>1.10.7</score-content-sdk.version>
+        <cs-commons.version>0.0.5</cs-commons.version>
+        <custom.nexus>overwritten_by_ci</custom.nexus>
+    </properties>
+
     <distributionManagement>
         <repository>
             <id>ossrh</id>
@@ -53,74 +67,32 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <properties>
-        <!--Maven versions-->
-        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
-        <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
-        <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
-        <license-maven-plugin.version>3.0</license-maven-plugin.version>
-        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
-        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <!--Dependencies versions-->
-        <cs-commons.version>0.0.7</cs-commons.version>
-        <score-content-sdk.version>1.10.9</score-content-sdk.version>
-        <cs-http-client.version>0.1.83</cs-http-client.version>
-        <!--Misc properties-->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.sources.skip>true</maven.sources.skip>
-        <custom.nexus>overwritten_by_ci</custom.nexus>
-    </properties>
-
     <dependencies>
-        <dependency>
-            <groupId>io.cloudslang.content</groupId>
-            <artifactId>cs-commons</artifactId>
-            <version>${cs-commons.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
             <version>${score-content-sdk.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.15</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8 -->
-        <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc8</artifactId>
-            <version>21.5.0.0</version>
-        </dependency>
-<!--        Oracle PKI to access Oracle Wallets from Java-->
-        <dependency>
-            <groupId>com.oracle.database.security</groupId>
-            <artifactId>oraclepki</artifactId>
-            <version>21.5.0.0</version>
-        </dependency>
-<!--        Certificate management components used for Oracle Wallets-->
-        <dependency>
-            <groupId>com.oracle.database.security</groupId>
-            <artifactId>osdt_cert</artifactId>
-            <version>21.5.0.0</version>
-        </dependency>
-<!--        Core components for use with osdt_cert-->
-        <dependency>
-            <groupId>com.oracle.database.security</groupId>
-            <artifactId>osdt_core</artifactId>
-            <version>21.5.0.0</version>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-commons</artifactId>
+            <version>${cs-commons.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.15</version>
-            <scope>compile</scope>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>msal4j</artifactId>
+            <version>1.11.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.minidev</groupId>
+                    <artifactId>json-smart</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>net.minidev</groupId>
+            <artifactId>json-smart</artifactId>
+            <version>2.4.7</version>
         </dependency>
     </dependencies>
 
@@ -201,6 +173,14 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -251,5 +231,5 @@
             </build>
         </profile>
     </profiles>
-</project>
 
+</project>
