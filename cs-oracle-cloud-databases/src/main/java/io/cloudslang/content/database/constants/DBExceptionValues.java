@@ -17,9 +17,6 @@ package io.cloudslang.content.database.constants;
 
 import io.cloudslang.content.constants.ExceptionValues;
 
-/**
- * Created by pinteae on 1/16/2017.
- */
 public class DBExceptionValues extends ExceptionValues {
     public static final String INVALID_IGNORE_CASE = "The value \"%s\" is an invalid value for ignoreCase input.";
     public static final String INVALID_AUTH_TYPE = "The authentication type input \"%s\" is not valid authentication method.";
@@ -43,4 +40,5 @@ public class DBExceptionValues extends ExceptionValues {
     public static final String INVALID_COMMANDS_EXCLUSIVITY = "Only one of the sqlCommands and scriptFileName can be specified";
     public static final String INVALID_AUTHENTICATION_TYPE_FOR_MS_SQL = "Invalid authentication type for MS SQL : ";
     public static final String NO_SQL_COMMAND = "No SQL command to be executed.";
+    public static final String NO_SQL_SCRIPT = "No SQL script to be executed.";
 }

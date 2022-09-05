@@ -12,6 +12,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+/*
+ * (c) Copyright 2022 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.database.entities;
 
 import io.cloudslang.content.database.utils.SQLUtils;
@@ -47,7 +61,6 @@ public class OracleCloudInputs {
     private int resultSetConcurrency;
 
     private String key;
-    private boolean isNetcool = false;
     private int iUpdateCount;
     private String dbType;
 
@@ -57,7 +70,7 @@ public class OracleCloudInputs {
 
     @java.beans.ConstructorProperties({"connectionString", "username", "password", "walletPath", "sqlCommand", "sqlCommands",
             "delimiter", "colDelimiter", "rowDelimiter", "overwrite", "trustStore", "trustStorePassword", "keyStore", "keyStorePassword",
-            "executionTimeout", "resultSetType", "resultSetConcurrency","key", "isNetcool"})
+            "executionTimeout", "resultSetType", "resultSetConcurrency", "key"})
     public OracleCloudInputs(String connectionString,
                              String username,
                              String password,
@@ -75,8 +88,8 @@ public class OracleCloudInputs {
                              int executionTimeout,
                              int resultSetType,
                              int resultSetConcurrency,
-                             String key,
-                             boolean isNetcool) {
+                             String key
+    ) {
 
         this.connectionString = connectionString;
         this.username = username;
@@ -85,8 +98,8 @@ public class OracleCloudInputs {
         this.sqlCommand = sqlCommand;
         this.sqlCommands = sqlCommands;
         this.delimiter = delimiter;
-        this.colDelimiter= colDelimiter;
-        this.rowDelimiter= rowDelimiter;
+        this.colDelimiter = colDelimiter;
+        this.rowDelimiter = rowDelimiter;
         this.overwrite = overwrite;
         this.trustStore = trustStore;
         this.trustStorePassword = trustStorePassword;
@@ -95,8 +108,7 @@ public class OracleCloudInputs {
         this.executionTimeout = executionTimeout;
         this.resultSetType = resultSetType;
         this.resultSetConcurrency = resultSetConcurrency;
-        this.key=key;
-        this.isNetcool = isNetcool;
+        this.key = key;
     }
 
     public static OracleCloudInputsBuilder builder() {
@@ -162,6 +174,7 @@ public class OracleCloudInputs {
     public List<String> getRowsLeft() {
         return rowsLeft;
     }
+
     public void setRowsLeft(List<String> rowsLeft) {
         this.rowsLeft = rowsLeft;
     }
@@ -194,14 +207,6 @@ public class OracleCloudInputs {
         this.rowDelimiter = rowDelimiter;
     }
 
-    public boolean isNetcool() {
-        return isNetcool;
-    }
-
-    public void setNetcool(boolean netcool) {
-        isNetcool = netcool;
-    }
-
     public List<String> getSqlCommands() {
         return sqlCommands;
     }
@@ -215,6 +220,7 @@ public class OracleCloudInputs {
         }
         return Collections.emptyList();
     }
+
     public void setSqlCommands(List<String> sqlCommands) {
         this.sqlCommands = sqlCommands;
     }
@@ -255,7 +261,6 @@ public class OracleCloudInputs {
         private int resultSetConcurrency;
         private boolean overwrite;
         private String key;
-        private boolean isNetcool;
 
         public OracleCloudInputsBuilder() {
         }
@@ -269,6 +274,7 @@ public class OracleCloudInputs {
             this.sqlCommand = sqlCommand;
             return this;
         }
+
         public OracleCloudInputsBuilder sqlCommands(List<String> sqlCommands) {
             this.sqlCommands = sqlCommands;
             return this;
@@ -339,20 +345,16 @@ public class OracleCloudInputs {
             return this;
         }
 
-        public OracleCloudInputsBuilder  resultSetConcurrency(int resultSetConcurrency) {
+        public OracleCloudInputsBuilder resultSetConcurrency(int resultSetConcurrency) {
             this.resultSetConcurrency = resultSetConcurrency;
             return this;
         }
 
-        public OracleCloudInputsBuilder  key(String key) {
+        public OracleCloudInputsBuilder key(String key) {
             this.key = key;
             return this;
         }
 
-        public OracleCloudInputsBuilder  isNetcool(boolean isNetcool) {
-            this.isNetcool = isNetcool;
-            return this;
-        }
 
         public OracleCloudInputs build() {
             return new OracleCloudInputs(connectionString,
@@ -372,8 +374,8 @@ public class OracleCloudInputs {
                     executionTimeout,
                     resultSetType,
                     resultSetConcurrency,
-                    key,
-                    isNetcool);
+                    key
+            );
         }
     }
 }

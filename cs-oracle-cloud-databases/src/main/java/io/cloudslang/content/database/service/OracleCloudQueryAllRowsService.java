@@ -12,16 +12,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+/*
+ * (c) Copyright 2022 Micro Focus
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.database.service;
 
 import io.cloudslang.content.database.entities.OracleCloudInputs;
 import io.cloudslang.content.database.utils.Format;
 import oracle.jdbc.driver.OracleConnection;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Properties;
 
-import static io.cloudslang.content.database.utils.Constants.*;
+import static io.cloudslang.content.database.utils.Constants.JKS;
+import static io.cloudslang.content.database.utils.Constants.ORACLE_URL;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class OracleCloudQueryAllRowsService {
@@ -36,7 +54,7 @@ public class OracleCloudQueryAllRowsService {
 
             final ResultSet results = statement.executeQuery(sqlInputs.getSqlCommand());
 
-            final String resultSetToDelimitedColsAndRows = Format.resultSetToDelimitedColsAndRows(results, sqlInputs.isNetcool(), sqlInputs.getColDelimiter(), sqlInputs.getRowDelimiter());
+            final String resultSetToDelimitedColsAndRows = Format.resultSetToDelimitedColsAndRows(results, sqlInputs.getColDelimiter(), sqlInputs.getRowDelimiter());
             if (results != null) {
                 results.close();
             }
