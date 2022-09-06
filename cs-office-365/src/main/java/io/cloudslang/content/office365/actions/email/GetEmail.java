@@ -23,6 +23,7 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.office365.entities.*;
 import io.cloudslang.content.office365.services.AuthorizationTokenImpl;
+import io.cloudslang.content.office365.services.AuthorizationTokenV2Impl;
 import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.StringUtils;
@@ -152,19 +153,19 @@ public class GetEmail {
         Map<String, String> successResultMap;
 
         try {
-            final String authToken = AuthorizationTokenImpl.getToken(AuthorizationTokenInputs.builder()
+            final String authToken = AuthorizationTokenV2Impl.getToken(AuthorizationTokenInputs.builder()
                     .loginType(loginType)
                     .username(username)
                     .password(password)
                     .clientId(clientId)
                     .clientSecret(clientSecret)
                     .authority(loginAuthority)
-                    .resource(DEFAULT_RESOURCE)
+                    .scope(DEFAULT_SCOPE)
                     .proxyHost(proxyHost)
                     .proxyPort(NumberUtilities.toInteger(proxyPort))
                     .proxyUsername(proxyUsername)
                     .proxyPassword(proxyPassword)
-                    .build()).getAccessToken();
+                    .build()).accessToken();
 
             if (messageId.isEmpty()) {
                 final Map<String, String> ListMessagesResult = listMessages(ListMessagesInputs.builder()

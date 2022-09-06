@@ -23,6 +23,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.office365.entities.*;
 import io.cloudslang.content.office365.services.AuthorizationTokenImpl;
+import io.cloudslang.content.office365.services.AuthorizationTokenV2Impl;
 import io.cloudslang.content.office365.utils.Constants;
 import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
@@ -158,19 +159,19 @@ public class SendEmail {
         }
 
         try {
-            final String authToken = AuthorizationTokenImpl.getToken(AuthorizationTokenInputs.builder()
+            final String authToken = AuthorizationTokenV2Impl.getToken(AuthorizationTokenInputs.builder()
                     .loginType(loginType)
                     .username(username)
                     .password(password)
                     .clientId(clientId)
                     .clientSecret(clientSecret)
                     .authority(loginAuthority)
-                    .resource(DEFAULT_RESOURCE)
+                    .scope(DEFAULT_SCOPE)
                     .proxyHost(proxyHost)
                     .proxyPort(NumberUtilities.toInteger(proxyPort))
                     .proxyUsername(proxyUsername)
                     .proxyPassword(proxyPassword)
-                    .build()).getAccessToken();
+                    .build()).accessToken();
 
             final String createdMessage = createMessage(CreateMessageInputs.builder()
                     .ccRecipients(ccRecipients)
