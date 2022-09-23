@@ -32,6 +32,7 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
     private String protocol;
     private String username;
     private String password;
+    private String authToken;
     private boolean trustAllRoots;
     private boolean enableSSL;
     private boolean enableTLS;
@@ -72,7 +73,7 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
 
 
     public String getProtocol() {
-        return this.isEnableTLS() && !this.getTlsVersions().isEmpty()?
+        return this.isEnableTLS() && !this.getTlsVersions().isEmpty() && this.getAuthToken().isEmpty() ?
                 protocol + SecurityConstants.SECURE_SUFFIX :
                 protocol;
     }
@@ -85,6 +86,11 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
 
     public String getPassword() {
         return password;
+    }
+
+
+    public String getAuthToken() {
+        return authToken;
     }
 
 
@@ -225,6 +231,7 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
         private String protocol;
         private String username;
         private String password;
+        private String authToken;
         private String trustAllRoots;
         private String enableSSL;
         private String enableTLS;
@@ -277,6 +284,12 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
 
         public Builder password(String password) {
             this.password = password;
+            return this;
+        }
+
+
+        public Builder authToken(String authToken) {
+            this.authToken = authToken;
             return this;
         }
 
@@ -443,6 +456,8 @@ public class GetMailMessageInput implements GetMailInput, DecryptableMailInput {
             input.username = buildUsername(username, true);
 
             input.password = buildPassword(password);
+
+            input.authToken = buildAuthToken(authToken);
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 

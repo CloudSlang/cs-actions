@@ -60,6 +60,7 @@ public class SendMailAction {
      * @param attachments                A delimited separated list of files to attach (must be full path).
      * @param user                       If SMTP authentication is needed, the username to use.
      * @param password                   If SMTP authentication is needed, the password to use.
+     * @param authToken                  The OAuth 2.0 token used for connecting to the email host. If given, the password input will be ignored.
      * @param delimiter                  A delimiter to separate the email recipients and the attachments. Default value: ','.
      * @param characterSet               The character set encoding for the entire email which includes subject, body,
      *                                   attached file name and the attached file.
@@ -133,7 +134,8 @@ public class SendMailAction {
             @Param(value = InputNames.HEADERS_ROW_DELIMITER) String rowDelimiter,
             @Param(value = InputNames.HEADERS_COLUMN_DELIMITER) String columnDelimiter,
             @Param(value = InputNames.USERNAME) String user,
-            @Param(value = InputNames.PASSWORD) String password,
+            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
+            @Param(value = InputNames.AUTH_TOKEN) String authToken,
             @Param(value = InputNames.DELIMITER) String delimiter,
             @Param(value = InputNames.CHARACTER_SET) String characterSet,
             @Param(value = InputNames.CONTENT_TRANSFER_ENCODING) String contentTransferEncoding,
@@ -165,6 +167,7 @@ public class SendMailAction {
                 .columnDelimiter(columnDelimiter)
                 .user(user)
                 .password(password)
+                .authToken(authToken)
                 .delimiter(delimiter)
                 .characterSet(characterSet)
                 .contentTransferEncoding(contentTransferEncoding)

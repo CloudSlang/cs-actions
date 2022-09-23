@@ -101,7 +101,10 @@ public class SSLUtils {
         if(StringUtils.isNotEmpty(input.getProxyHost())) {
             ProxyUtils.setPropertiesProxy(props, input);
         }
-        Authenticator auth = new SimpleAuthenticator(input.getUsername(), input.getPassword());
+        if (!input.getAuthToken().isEmpty()) {
+            props.put(String.format(PropNames.MAIL_AUTH_MECHANISMS, Constants.IMAP), Constants.XOAUTH2);
+        }
+        Authenticator auth = new SimpleAuthenticator(input.getUsername(), input.getAuthToken().isEmpty() ? input.getPassword() : input.getAuthToken());
         Store store;
         if (input.isEnableTLS() || input.isEnableSSL()) {
             addSSLSettings(input.isTrustAllRoots(), input.getKeystore(), input.getKeystorePassword(),
@@ -251,7 +254,8 @@ public class SSLUtils {
         props.setProperty(mailStartTLSRequired, String.valueOf(startTlsRequired));
         if(!input.getTlsVersions().isEmpty()) {
             props.put(mailSocketFactory, socketFactory);
-            props.setProperty(mailSocketFactoryFallback, String.valueOf(socketFactoryFallback));
+            if (input.getAuthToken().isEmpty())
+                props.setProperty(mailSocketFactoryFallback, String.valueOf(socketFactoryFallback));
         }
     }
 

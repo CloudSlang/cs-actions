@@ -20,6 +20,8 @@ import java.util.List;
 public interface MailInput {
     String getPassword();
 
+    String getAuthToken();
+
     String getUsername();
 
     String getHostname();

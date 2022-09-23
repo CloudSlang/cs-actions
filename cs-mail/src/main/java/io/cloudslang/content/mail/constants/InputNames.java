@@ -20,6 +20,7 @@ public final class InputNames {
     public static final String PORT = "port";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
+    public static final String AUTH_TOKEN = "authToken";
     public static final String TIMEOUT = "timeout";
     public static final String PROXY_HOST = "proxyHost";
     public static final String PROXY_PORT = "proxyPort";

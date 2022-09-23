@@ -99,6 +99,11 @@ public final class InputBuilderUtils {
     }
 
 
+    public static String buildAuthToken(String authToken) {
+        return (authToken == null) ? StringUtils.EMPTY : authToken;
+    }
+
+
     public static boolean buildTrustAllRoots(String trustAllRoots) {
         return StringUtils.isEmpty(trustAllRoots) ? true : Boolean.parseBoolean(trustAllRoots);
     }

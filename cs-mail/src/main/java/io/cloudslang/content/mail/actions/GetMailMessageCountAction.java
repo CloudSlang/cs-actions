@@ -40,6 +40,7 @@ public class GetMailMessageCountAction {
      * @param hostname            The email host.
      * @param username            The username for email host.
      * @param password            The password for email host.
+     * @param authToken                  The OAuth 2.0 token used for connecting to the email host. If given, the password input will be ignored.
      * @param folder              The folder to read the message from (NOTE: POP3 only supports 'INBOX').
      * @param port                The port to connect to host on (normally 110 for POP3, 143 for IMAP4).
      *                            This input can be left empty if the protocol value is 'pop3' or 'imap4':
@@ -108,7 +109,8 @@ public class GetMailMessageCountAction {
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String hostname,
             @Param(value = InputNames.USERNAME, required = true) String username,
-            @Param(value = InputNames.PASSWORD, required = true, encrypted = true) String password,
+            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
+            @Param(value = InputNames.AUTH_TOKEN) String authToken,
             @Param(value = InputNames.FOLDER, required = true) String folder,
             @Param(value = InputNames.PORT) String port,
             @Param(value = InputNames.PROTOCOL) String protocol,
@@ -130,6 +132,7 @@ public class GetMailMessageCountAction {
                 .hostname(hostname)
                 .username(username)
                 .password(password)
+                .authToken(authToken)
                 .folder(folder)
                 .port(port)
                 .protocol(protocol)
