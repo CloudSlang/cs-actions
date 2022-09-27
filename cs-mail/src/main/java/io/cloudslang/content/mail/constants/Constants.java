@@ -29,4 +29,5 @@ public final class Constants {
     public static final String POP3_PORT = "110";
     public static final String MAIL_POP3 = "mail.pop3.";
     public static final String SMTP = "smtp";
+    public static final String XOAUTH2 = "XOAUTH2";
 }

@@ -36,4 +36,5 @@ public final class PropNames {
     public static final String MAIL_PROXY_PORT = "mail.%s.proxy.port";
     public static final String MAIL_PROXY_USER = "mail.%s.proxy.user";
     public static final String MAIL_PROXY_PASSWORD = "mail.%s.proxy.password";
+    public static final String MAIL_AUTH_MECHANISMS = "mail.%s.auth.mechanisms";
 }

@@ -82,6 +82,9 @@ public class SendMailService {
             props.put(String.format(PropNames.MAIL_HOST, Constants.SMTP), input.getHostname());
             props.put(String.format(PropNames.MAIL_PORT, Constants.SMTP), StringUtils.EMPTY + input.getPort());
 
+            if (!input.getAuthToken().isEmpty())
+                props.put(String.format(PropNames.MAIL_AUTH_MECHANISMS, Constants.SMTP), Constants.XOAUTH2);
+
             if (null != input.getUsername() && input.getUsername().length() > 0) {
                 props.put(String.format(PropNames.MAIL_USER, input.getProtocol()), input.getUsername());
                 props.put(String.format(PropNames.MAIL_PASSWORD, input.getProtocol()), input.getPassword());
@@ -196,7 +199,7 @@ public class SendMailService {
 
             if (StringUtils.isNotEmpty(input.getUsername())) {
                 transport = session.getTransport(input.getProtocol());
-                transport.connect(input.getHostname(), input.getPort(), input.getUsername(), input.getPassword());
+                transport.connect(input.getHostname(), input.getPort(), input.getUsername(), input.getAuthToken().isEmpty() ? input.getPassword() : input.getAuthToken());
                 transport.sendMessage(msg, msg.getAllRecipients());
             } else {
                 Transport.send(msg);

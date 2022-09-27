@@ -31,6 +31,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
     private String protocol;
     private String username;
     private String password;
+    private String authToken;
     private boolean trustAllRoots;
     private boolean enableSSL;
     private boolean enableTLS;
@@ -136,7 +137,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
 
 
     public String getProtocol() {
-        return this.isEnableTLS() && !this.getTlsVersions().isEmpty()?
+        return this.isEnableTLS() && !this.getTlsVersions().isEmpty() && this.getAuthToken().isEmpty() ?
                 protocol + SecurityConstants.SECURE_SUFFIX :
                 protocol;
     }
@@ -149,6 +150,11 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
 
     public String getPassword() {
         return password;
+    }
+
+
+    public String getAuthToken() {
+        return authToken;
     }
 
 
@@ -219,6 +225,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
         private String protocol;
         private String username;
         private String password;
+        private String authToken;
         private String trustAllRoots;
         private String enableSSL;
         private String enableTLS;
@@ -333,6 +340,12 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
         }
 
 
+        public Builder authToken(String authToken) {
+            this.authToken = authToken;
+            return this;
+        }
+
+
         public Builder trustAllRoots(String trustAllRoots) {
             this.trustAllRoots = trustAllRoots;
             return this;
@@ -420,6 +433,8 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
             input.username = buildUsername(username, true);
 
             input.password = buildPassword(password);
+
+            input.authToken = buildAuthToken(authToken);
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 
