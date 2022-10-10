@@ -18,21 +18,19 @@ import io.cloudslang.content.winrm.entities.WinRMInputs;
 import io.cloudsoft.winrm4j.client.WinRmClientContext;
 import io.cloudsoft.winrm4j.winrm.WinRmTool;
 import io.cloudsoft.winrm4j.winrm.WinRmToolResponse;
-import org.apache.commons.lang3.time.StopWatch;
 import org.apache.http.client.config.AuthSchemes;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.http.conn.ssl.DefaultHostnameVerifier;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.TrustAllStrategy;
+import org.apache.http.ssl.SSLContextBuilder;
 import sun.security.krb5.KrbException;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
 import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.STDERR;
@@ -46,12 +44,12 @@ public class WinRMService {
 
     public static Map<String, String> execute(WinRMInputs winRMInputs) throws KrbException, IOException {
 
-        boolean useHttps = useHttps(winRMInputs);
+        boolean useHttps = winRMInputs.getProtocol().equalsIgnoreCase(HTTPS);
         if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS)) {
-            if (!winRMInputs.getUseSubjectCredsOnly().isEmpty())
-                System.setProperty("javax.security.auth.useSubjectCredsOnly", winRMInputs.getUseSubjectCredsOnly());
-            else
-                System.setProperty("javax.security.auth.useSubjectCredsOnly", BOOLEAN_TRUE);
+//            if (!winRMInputs.getUseSubjectCredsOnly().isEmpty())
+//                System.setProperty("javax.security.auth.useSubjectCredsOnly", winRMInputs.getUseSubjectCredsOnly());
+//            else
+//                System.setProperty("javax.security.auth.useSubjectCredsOnly", BOOLEAN_TRUE);
 
             if (!winRMInputs.getKerberosConfFile().isEmpty()) {
                 if (new File(winRMInputs.getKerberosConfFile()).exists()) {
@@ -71,25 +69,27 @@ public class WinRMService {
                 }
                 sun.security.krb5.Config.refresh();
             }
-            if (!winRMInputs.getKerberosLoginConfFile().isEmpty()) {
-                if (new File(winRMInputs.getKerberosLoginConfFile()).exists()) {
-                    System.setProperty("java.security.auth.login.config", winRMInputs.getKerberosLoginConfFile());
-                } else {
-                    BufferedWriter bw = null;
-                    try {
-                        File tempFile = Files.createTempFile(LOGIN, CONF).toFile();
-                        bw = new BufferedWriter(new FileWriter(tempFile));
-                        bw.write(winRMInputs.getKerberosLoginConfFile().replace(SLASH_NEW_LINE, System.getProperty(LINE_SEPARATOR)));
-                        tempFile.deleteOnExit();
-                        System.setProperty("java.security.auth.login.config", tempFile.getAbsolutePath());
-                    } finally {
-                        if (bw != null)
-                            bw.close();
-                    }
-                }
-            } else
-                System.setProperty("java.security.auth.login.config", EMPTY_STRING);
+//            if (!winRMInputs.getKerberosLoginConfFile().isEmpty()) {
+//                if (new File(winRMInputs.getKerberosLoginConfFile()).exists()) {
+//                    System.setProperty("java.security.auth.login.config", winRMInputs.getKerberosLoginConfFile());
+//                } else {
+//                    BufferedWriter bw = null;
+//                    try {
+//                        File tempFile = Files.createTempFile(LOGIN, CONF).toFile();
+//                        bw = new BufferedWriter(new FileWriter(tempFile));
+//                        bw.write(winRMInputs.getKerberosLoginConfFile().replace(SLASH_NEW_LINE, System.getProperty(LINE_SEPARATOR)));
+//                        tempFile.deleteOnExit();
+//                        System.setProperty("java.security.auth.login.config", tempFile.getAbsolutePath());
+//                    } finally {
+//                        if (bw != null)
+//                            bw.close();
+//                    }
+//                }
+//            } else
+//                System.setProperty("java.security.auth.login.config", EMPTY_STRING);
         }
+
+
         WinRmTool.Builder builder;
 
         if (winRMInputs.getDomain().isEmpty())
@@ -101,60 +101,54 @@ public class WinRMService {
                 .useHttps(useHttps)
                 .disableCertificateChecks(Boolean.parseBoolean(winRMInputs.getTrustAllRoots()));
 
+        if (!winRMInputs.getProxyHost().isEmpty())
+            builder.proxy(winRMInputs.getProxyHost(), winRMInputs.getProxyPort());
+
+        if (!winRMInputs.getProxyUsername().isEmpty() && !winRMInputs.getProxyPassword().isEmpty())
+            builder.proxyCredentials(winRMInputs.getProxyUsername(), winRMInputs.getProxyPassword());
+
         if (!winRMInputs.getWorkingDirectory().isEmpty())
             builder.workingDirectory(winRMInputs.getWorkingDirectory());
 
         if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS))
             builder.requestNewKerberosTicket(Boolean.parseBoolean(winRMInputs.getRequestNewKerberosTicket()));
 
-        if (!Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
-            try {
-                System.setProperty("javax.net.ssl.keyStore", winRMInputs.getKeystore());
-                System.setProperty("javax.net.ssl.keyStorePassword", winRMInputs.getKeystorePassword());
-                System.setProperty("javax.net.ssl.trustStore", winRMInputs.getTrustKeystore());
-                System.setProperty("javax.net.ssl.trustStorePassword", winRMInputs.getTrustPassword());
+        //Setting SSLContext with TLS and certificates
+        try {
+            SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
+            sslContextBuilder.setProtocol(tlsVersion(winRMInputs.getTlsVersion()));
 
-                KeyStore keyStore = KeyStore.getInstance(JKS);
-                keyStore.load(new FileInputStream(winRMInputs.getKeystore()), winRMInputs.getKeystorePassword().toCharArray());
-                // Create key manager
-                KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(SunX509);
-                keyManagerFactory.init(keyStore, winRMInputs.getKeystorePassword().toCharArray());
-                KeyManager[] km = keyManagerFactory.getKeyManagers();
-                // Create trust manager
-                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(SunX509);
-                trustManagerFactory.init(keyStore);
-                TrustManager[] tm = trustManagerFactory.getTrustManagers();
-                // Initialize SSLContext
-                SSLContext sslContext = SSLContext.getInstance(tlsVersion(winRMInputs.getTlsVersion()));
-                sslContext.init(km, tm, new SecureRandom());
-                sslContext.createSSLEngine();
-
-                builder.sslContext(sslContext);
-                builder.hostnameVerifier(x509HostnameVerifier(winRMInputs.getX509HostnameVerifier()));
-            } catch (Exception exception) {
-                return getFailureResultsMap(exception);
+            if (!winRMInputs.getKeystore().isEmpty()) {
+                KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+                try (InputStream in = new FileInputStream(winRMInputs.getKeystore())) {
+                    keyStore.load(in, winRMInputs.getKeystorePassword().toCharArray());
+                }
+                sslContextBuilder.loadKeyMaterial(keyStore, winRMInputs.getKeystorePassword().toCharArray());
             }
-        } else {
-            try {
-                SSLContext sslContext = SSLContext.getInstance(tlsVersion(winRMInputs.getTlsVersion()));
-                sslContext.init(null, new TrustManager[]{getTrustAllRoots()}, new SecureRandom());
-                sslContext.createSSLEngine();
 
-                builder.sslContext(sslContext);
+            if (Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
+                sslContextBuilder.loadTrustMaterial(new TrustAllStrategy());
+            } else if (!winRMInputs.getTrustKeystore().isEmpty())
+                sslContextBuilder.loadTrustMaterial(new File(winRMInputs.getTrustKeystore()), winRMInputs.getTrustPassword().toCharArray());
 
-            } catch (Exception exception) {
-                return getFailureResultsMap(exception);
-            }
+
+            builder.sslContext(sslContextBuilder.build());
+            builder.hostnameVerifier(getHostnameVerifier(winRMInputs.getX509HostnameVerifier()));
+        } catch (FileNotFoundException exception) {
+            throw new RuntimeException(EXCEPTION_CERTIFICATE_NOT_FOUND);
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
         }
 
-        long userTimeout = winRMInputs.getOperationTimeout() * 1000L;
-        StopWatch watch = new StopWatch();
         WinRmToolResponse res;
         WinRmClientContext context = null;
         try {
             context = WinRmClientContext.newInstance();
             WinRmTool tool = builder.context(context).build();
-            watch.start();
+            //Setting operation timeout
+            long userTimeout = winRMInputs.getOperationTimeout() * 1000L;
+            tool.setOperationTimeout(userTimeout);
+
             if (winRMInputs.getCommandType().equalsIgnoreCase(CMD))
                 res = tool.executeCommand(winRMInputs.getCommand());
             else {
@@ -162,12 +156,6 @@ public class WinRMService {
                     res = tool.executePs(winRMInputs.getCommand());
                 else
                     res = tool.executeCommand(compilePs(winRMInputs.getCommand(), winRMInputs.getConfigurationName()), new StringWriter(), new StringWriter());
-            }
-            watch.stop();
-            long result = watch.getTime();
-            if (result > userTimeout) {
-                Thread.currentThread().interrupt();
-                return getFailureResultsMap(EXCEPTION_TIMED_OUT);
             }
         } finally {
             if (context != null)
@@ -186,41 +174,10 @@ public class WinRMService {
         return results;
     }
 
-    private static boolean useHttps(WinRMInputs winRMInputs) {
-        boolean useHttps = false;
-        if (winRMInputs.getProtocol().equalsIgnoreCase(HTTPS)) {
-            useHttps = true;
-            if (!winRMInputs.getProxyHost().isEmpty()) {
-                System.setProperty("https.proxyHost", winRMInputs.getProxyHost());
-                System.setProperty("https.proxyPort", winRMInputs.getProxyPort());
-            } else {
-                System.setProperty("https.proxyHost", EMPTY_STRING);
-                System.setProperty("https.proxyPort", EMPTY_STRING);
-            }
-            if (!winRMInputs.getProxyUsername().isEmpty()) {
-                System.setProperty("https.proxyUser", winRMInputs.getProxyUsername());
-                System.setProperty("https.proxyPassword", winRMInputs.getProxyPassword());
-            } else {
-                System.setProperty("https.proxyUser", EMPTY_STRING);
-                System.setProperty("https.proxyPassword", EMPTY_STRING);
-            }
-        } else if (winRMInputs.getProtocol().equalsIgnoreCase(HTTP)) {
-            if (!winRMInputs.getProxyHost().isEmpty()) {
-                System.setProperty("http.proxyHost", winRMInputs.getProxyHost());
-                System.setProperty("http.proxyPort", winRMInputs.getProxyPort());
-            } else {
-                System.setProperty("http.proxyHost", EMPTY_STRING);
-                System.setProperty("http.proxyPort", EMPTY_STRING);
-            }
-            if (!winRMInputs.getProxyUsername().isEmpty()) {
-                System.setProperty("http.proxyUser", winRMInputs.getProxyUsername());
-                System.setProperty("http.proxyPassword", winRMInputs.getProxyPassword());
-            } else {
-                System.setProperty("http.proxyUser", EMPTY_STRING);
-                System.setProperty("http.proxyPassword", EMPTY_STRING);
-            }
-        }
-        return useHttps;
+    private static String compilePs(String psScript, String configurationName) {
+        byte[] cmd = psScript.getBytes(StandardCharsets.UTF_16LE);
+        String arg = DatatypeConverter.printBase64Binary(cmd);
+        return "powershell -ConfigurationName " + configurationName + " -encodedcommand " + arg;
     }
 
     private static String authScheme(String authScheme) {
@@ -258,43 +215,10 @@ public class WinRMService {
         return tls_version;
     }
 
-    private static HostnameVerifier x509HostnameVerifier(String hostnameVerifier) {
-        String x509HostnameVerifierStr = hostnameVerifier.toLowerCase();
-
-        X509HostnameVerifier x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
-        ;
-        switch (x509HostnameVerifierStr) {
-            case "strict":
-                x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
-                break;
-            case "browser_compatible":
-                x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
-                break;
-            case "allow_all":
-                x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
-                break;
-        }
-        return x509HostnameVerifier;
+    private static HostnameVerifier getHostnameVerifier(String hostnameVerifier) {
+        if (hostnameVerifier.equalsIgnoreCase(ALLOW_ALL))
+            return new NoopHostnameVerifier();
+        else
+            return new DefaultHostnameVerifier();
     }
-
-    private static TrustManager getTrustAllRoots() {
-        return new X509TrustManager() {
-            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-            }
-
-            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-            }
-
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-        };
-    }
-
-    private static String compilePs(String psScript, String configurationName) {
-        byte[] cmd = psScript.getBytes(StandardCharsets.UTF_16LE);
-        String arg = DatatypeConverter.printBase64Binary(cmd);
-        return "powershell -ConfigurationName " + configurationName + " -encodedcommand " + arg;
-    }
-
 }

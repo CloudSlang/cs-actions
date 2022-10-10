@@ -26,6 +26,8 @@ public final class Constants {
     public static final String NTLM = "NTLM";
     public static final String HTTPS = "https";
     public static final String HTTP = "http";
+    public static final String ALLOW_ALL = "allow_all";
+    public static final String TEMP_PATH = System.getProperty("java.io.tmpdir") + "content-java/";
     public static final String DEFAULT_PROXY_PORT = "8080";
     public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
@@ -57,5 +59,6 @@ public final class Constants {
     public static final String EXCEPTION_INVALID_PROTOCOL = "%s for input %s is not a valid protocol. The valid values are 'http' or 'https'.";
     public static final String EXCEPTION_INVALID_COMMAND_TYPE = "%s for input %s is not a valid command type. The valid values are 'cmd' or 'powershell'.";
     public static final String EXCEPTION_TIMED_OUT = "Operation timed out.";
+    public static final String EXCEPTION_CERTIFICATE_NOT_FOUND ="Truststore or Keystore file not found.";
 
 }
