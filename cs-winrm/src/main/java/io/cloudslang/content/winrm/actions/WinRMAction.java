@@ -85,11 +85,11 @@ public class WinRMAction {
             @Param(value = CONFIGURATION_NAME, description = CONFIGURATION_NAME_DESC) String configurationName,
             @Param(value = COMMAND_TYPE, description = COMMAND_TYPE_DESC) String commandType,
             @Param(value = KERBEROS_CONF_FILE, description = KERBEROS_CONF_FILE_DESC) String kerberosConfFile,
-            @Param(value = KERBEROS_LOGIN_CONF_FILE, description = LOGIN_CONF_FILE_DESC) String kerberosLoginConfFile,
-            @Param(value = DOMAIN, description = DOMAIN_DESC) String domain,
-            @Param(value = USE_SUBJECT_CREDS_ONLY, description = USE_SUBJECT_CREDS_ONLY_DESC) String useSubjectCredsOnly
+//            @Param(value = KERBEROS_LOGIN_CONF_FILE, description = LOGIN_CONF_FILE_DESC) String kerberosLoginConfFile,
+            @Param(value = DOMAIN, description = DOMAIN_DESC) String domain)
+//            @Param(value = USE_SUBJECT_CREDS_ONLY, description = USE_SUBJECT_CREDS_ONLY_DESC) String useSubjectCredsOnly
 
-    ) {
+    {
         host = defaultIfEmpty(host, EMPTY);
         command = defaultIfEmpty(command, EMPTY);
         port = defaultIfEmpty(port, DEFAULT_PORT);
@@ -114,9 +114,9 @@ public class WinRMAction {
         configurationName = defaultIfEmpty(configurationName, EMPTY);
         commandType = defaultIfEmpty(commandType, DEFAULT_COMMAND_TYPE);
         kerberosConfFile = defaultIfEmpty(kerberosConfFile, EMPTY);
-        kerberosLoginConfFile = defaultIfEmpty(kerberosLoginConfFile, EMPTY);
+//        kerberosLoginConfFile = defaultIfEmpty(kerberosLoginConfFile, EMPTY);
         domain = defaultIfEmpty(domain, EMPTY);
-        useSubjectCredsOnly = defaultIfEmpty(useSubjectCredsOnly, EMPTY);
+//        useSubjectCredsOnly = defaultIfEmpty(useSubjectCredsOnly, EMPTY);
 
         final List<String> exceptionMessages = verifyWinRMInputs(proxyPort, trustAllRoots, operationTimeout, requestNewKerberosToken,
                 authType, x509HostnameVerifier, trustKeystore, keystore, port, tlsVersion, protocol, commandType);
@@ -150,8 +150,8 @@ public class WinRMAction {
                 .commandType(commandType)
                 .domain(domain)
                 .kerberosConfFile(kerberosConfFile)
-                .kerberosLoginConfFile(kerberosLoginConfFile)
-                .useSubjectCredsOnly(useSubjectCredsOnly)
+//                .kerberosLoginConfFile(kerberosLoginConfFile)
+//                .useSubjectCredsOnly(useSubjectCredsOnly)
                 .build();
         try {
             return WinRMService.execute(winRMInputs);
