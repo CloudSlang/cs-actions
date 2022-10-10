@@ -23,7 +23,6 @@ import org.apache.http.conn.ssl.DefaultHostnameVerifier;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
-import sun.security.krb5.KrbException;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.xml.bind.DatatypeConverter;
@@ -42,7 +41,7 @@ import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.STDOUT;
 
 public class WinRMService {
 
-    public static Map<String, String> execute(WinRMInputs winRMInputs) throws KrbException, IOException {
+    public static Map<String, String> execute(WinRMInputs winRMInputs) throws Exception{
 
         boolean useHttps = winRMInputs.getProtocol().equalsIgnoreCase(HTTPS);
         if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS)) {
