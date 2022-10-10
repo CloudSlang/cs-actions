@@ -15,12 +15,13 @@
     * limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-winrm</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A WinRM client for executing PowerShell Commands.</description>
@@ -85,6 +86,26 @@
             <groupId>io.cloudsoft.windows</groupId>
             <artifactId>winrm4j</artifactId>
             <version>${winrm4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudsoft.windows</groupId>
+            <artifactId>winrm4j-client</artifactId>
+            <version>${winrm4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudsoft.windows</groupId>
+            <artifactId>winrm4j-service</artifactId>
+            <version>${winrm4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.15</version>
         </dependency>
         <dependency>
             <groupId>io.cloudslang.content</groupId>
@@ -224,5 +245,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>
