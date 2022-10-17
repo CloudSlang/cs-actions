@@ -25,7 +25,8 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.Miscella
  * 6/15/2016.
  */
 public enum VolumeType {
-    STANDARD;
+    STANDARD,
+    IO1;
 
     public static String getValue(String input) {
         if (isBlank(input))
