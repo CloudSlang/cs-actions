@@ -21,15 +21,20 @@ import io.cloudsoft.winrm4j.winrm.WinRmToolResponse;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.conn.ssl.DefaultHostnameVerifier;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.TrustAllStrategy;
-import org.apache.http.ssl.SSLContextBuilder;
 
-import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.*;
 import javax.xml.bind.DatatypeConverter;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.STDERR;
@@ -41,7 +46,7 @@ import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.STDOUT;
 
 public class WinRMService {
 
-    public static Map<String, String> execute(WinRMInputs winRMInputs) throws Exception{
+    public static Map<String, String> execute(WinRMInputs winRMInputs) throws Exception {
 
         boolean useHttps = winRMInputs.getProtocol().equalsIgnoreCase(HTTPS);
         if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS)) {
@@ -113,30 +118,39 @@ public class WinRMService {
             builder.requestNewKerberosTicket(Boolean.parseBoolean(winRMInputs.getRequestNewKerberosTicket()));
 
         //Setting SSLContext with TLS and certificates
-        try {
-            SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
-            sslContextBuilder.setProtocol(tlsVersion(winRMInputs.getTlsVersion()));
+        if (!Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
+            try {
+                KeyStore keyStore = KeyStore.getInstance(JKS);
+                keyStore.load(Files.newInputStream(Paths.get(winRMInputs.getKeystore())), winRMInputs.getKeystorePassword().toCharArray());
+                // Create key manager
+                KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(SunX509);
+                keyManagerFactory.init(keyStore, winRMInputs.getKeystorePassword().toCharArray());
+                KeyManager[] km = keyManagerFactory.getKeyManagers();
+                // Create trust manager
+                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(SunX509);
+                trustManagerFactory.init(keyStore);
+                TrustManager[] tm = trustManagerFactory.getTrustManagers();
+                // Initialize SSLContext
+                SSLContext sslContext = SSLContext.getInstance(tlsVersion(winRMInputs.getTlsVersion()));
+                sslContext.init(km, tm, new SecureRandom());
+                sslContext.createSSLEngine();
 
-            if (!winRMInputs.getKeystore().isEmpty()) {
-                KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-                try (InputStream in = new FileInputStream(winRMInputs.getKeystore())) {
-                    keyStore.load(in, winRMInputs.getKeystorePassword().toCharArray());
-                }
-                sslContextBuilder.loadKeyMaterial(keyStore, winRMInputs.getKeystorePassword().toCharArray());
+                builder.sslContext(sslContext);
+                builder.hostnameVerifier(getHostnameVerifier(winRMInputs.getX509HostnameVerifier()));
+            } catch (Exception exception) {
+                return getFailureResultsMap(exception);
             }
+        } else {
+            try {
+                SSLContext sslContext = SSLContext.getInstance(tlsVersion(winRMInputs.getTlsVersion()));
+                sslContext.init(null, new TrustManager[]{getTrustAllRoots()}, new SecureRandom());
+                sslContext.createSSLEngine();
 
-            if (Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
-                sslContextBuilder.loadTrustMaterial(new TrustAllStrategy());
-            } else if (!winRMInputs.getTrustKeystore().isEmpty())
-                sslContextBuilder.loadTrustMaterial(new File(winRMInputs.getTrustKeystore()), winRMInputs.getTrustPassword().toCharArray());
+                builder.sslContext(sslContext);
 
-
-            builder.sslContext(sslContextBuilder.build());
-            builder.hostnameVerifier(getHostnameVerifier(winRMInputs.getX509HostnameVerifier()));
-        } catch (FileNotFoundException exception) {
-            throw new RuntimeException(EXCEPTION_CERTIFICATE_NOT_FOUND);
-        } catch (Exception exception) {
-            throw new RuntimeException(exception);
+            } catch (Exception exception) {
+                return getFailureResultsMap(exception);
+            }
         }
 
         WinRmToolResponse res;
@@ -214,10 +228,27 @@ public class WinRMService {
         return tls_version;
     }
 
+
     private static HostnameVerifier getHostnameVerifier(String hostnameVerifier) {
         if (hostnameVerifier.equalsIgnoreCase(ALLOW_ALL))
             return new NoopHostnameVerifier();
         else
             return new DefaultHostnameVerifier();
+    }
+
+    private static TrustManager getTrustAllRoots() {
+        return new X509TrustManager() {
+            @Override
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            }
+
+            @Override
+            public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+            }
+
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+        };
     }
 }
