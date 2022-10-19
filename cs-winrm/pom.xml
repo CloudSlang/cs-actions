@@ -88,29 +88,13 @@
         </dependency>
         <dependency>
             <groupId>io.cloudsoft.windows</groupId>
-            <artifactId>winrm4j-client</artifactId>
-            <version>${winrm4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cloudsoft.windows</groupId>
             <artifactId>winrm4j-service</artifactId>
             <version>${winrm4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>4.4.15</version>
         </dependency>
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-commons</artifactId>
             <version>${cs-commons.version}</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
