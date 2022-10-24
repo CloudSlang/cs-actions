@@ -66,7 +66,7 @@ public class SQLScript {
                                        @Param(value = WALLET_PATH) String walletPath,
                                        @Param(value = USERNAME, required = true) String username,
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
-                                       @Param(value = OVERWRITE) String overwrite,
+                                       @Param(value = OVERWRITE_WALLET) String overwriteWallet,
                                        @Param(value = DELIMITER) String delimiter,
                                        @Param(value = SQL_COMMANDS) String sqlCommands,
                                        @Param(value = SCRIPT_FILE_NAME) String scriptFileName,
@@ -82,16 +82,15 @@ public class SQLScript {
         trustStore = defaultIfEmpty(trustStore, EMPTY);
         trustStorePassword = defaultIfEmpty(trustStorePassword, EMPTY);
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_TIMEOUT);
-        overwrite = defaultIfEmpty(overwrite, FALSE);
+        overwriteWallet = defaultIfEmpty(overwriteWallet, FALSE);
         delimiter = defaultIfEmpty(delimiter, SEMICOLON);
-        walletPath = defaultIfEmpty(Utils.unzip(walletPath, Boolean.parseBoolean(overwrite)), EMPTY);
+        walletPath = defaultIfEmpty(Utils.unzip(walletPath, Boolean.parseBoolean(overwriteWallet)), EMPTY);
 
-        final List<String> preInputsValidation = InputsValidation.verifySqlScript(walletPath, trustStore, keystore, overwrite, executionTimeout);
-
-
-        if (!preInputsValidation.isEmpty()) {
+        final List<String> preInputsValidation = InputsValidation.verifySqlScript(walletPath, trustStore, keystore, overwriteWallet, executionTimeout);
+        if (!preInputsValidation.isEmpty())
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
-        }
+
+        walletPath = defaultIfEmpty((!walletPath.isEmpty()) ? Utils.unzip(walletPath, Boolean.parseBoolean(overwriteWallet)) : EMPTY, EMPTY);
 
         OracleCloudInputs sqlInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
                 .connectionString(connectionString)

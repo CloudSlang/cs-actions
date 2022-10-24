@@ -37,12 +37,12 @@ public class Inputs {
     public static final String SCRIPT_FILE_NAME = "scriptFileName";
     public static final String SQL_COMMANDS = "sqlCommands";
     public static final String TRUST_STORE = "trustKeystore";
-    public static final String TRUST_STORE_PASSWORD = "trustKeystorePassword";
+    public static final String TRUST_STORE_PASSWORD = "trustPassword";
     public static final String KEYSTORE = "keystore";
     public static final String KEYSTORE_PASSWORD = "keystorePassword";
     public static final String EXECUTION_TIMEOUT = "executionTimeout";
     public static final String WALLET_PATH = "walletPath";
-    public static final String OVERWRITE = "overwrite";
+    public static final String OVERWRITE_WALLET = "overwriteWallet";
     public static final String SESSION_KEY = "sessionKey";
     public static final String COL_DELIMITER = "colDelimiter";
     public static final String ROW_DELIMITER = "rowDelimiter";

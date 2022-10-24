@@ -11,7 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.cloudslang.content.database.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -67,7 +67,7 @@ public class SQLQuery {
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = COMMAND, required = true) String command,
                                        @Param(value = WALLET_PATH) String walletPath,
-                                       @Param(value = OVERWRITE) String overwrite,
+                                       @Param(value = OVERWRITE_WALLET) String overwriteWallet,
                                        @Param(value = DELIMITER, required = true) String delimiter,
                                        @Param(value = SESSION_KEY) String sessionKey,
                                        @Param(value = TRUST_STORE) String trustStore,
@@ -86,16 +86,14 @@ public class SQLQuery {
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_TIMEOUT);
         resultSetType = defaultIfEmpty(resultSetType, TYPE_FORWARD_ONLY);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
-        overwrite = defaultIfEmpty(overwrite, FALSE);
-        delimiter = defaultIfEmpty(delimiter,COMMA);
-        sessionKey = defaultIfEmpty(sessionKey,EMPTY);
-        walletPath = defaultIfEmpty(Utils.unzip(walletPath, Boolean.parseBoolean(overwrite)), EMPTY);
-
-
-        final List<String> preInputsValidation = InputsValidation.verifySqlQuery(walletPath, trustStore, keystore, overwrite, executionTimeout, resultSetConcurrency, resultSetType);
-
+        overwriteWallet = defaultIfEmpty(overwriteWallet, FALSE);
+        delimiter = defaultIfEmpty(delimiter, COMMA);
+        sessionKey = defaultIfEmpty(sessionKey, EMPTY);
+        final List<String> preInputsValidation = InputsValidation.verifySqlQuery(walletPath, trustStore, keystore, overwriteWallet, executionTimeout, resultSetConcurrency, resultSetType);
         if (!preInputsValidation.isEmpty())
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
+
+        walletPath = defaultIfEmpty((!walletPath.isEmpty()) ? Utils.unzip(walletPath, Boolean.parseBoolean(overwriteWallet)) : EMPTY, EMPTY);
 
         OracleCloudInputs sqlInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
                 .connectionString(connectionString)

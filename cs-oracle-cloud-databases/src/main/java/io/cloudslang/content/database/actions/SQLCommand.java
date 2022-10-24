@@ -68,7 +68,7 @@ public class SQLCommand {
                                        @Param(value = PASSWORD, encrypted = true, required = true) String password,
                                        @Param(value = WALLET_PATH) String walletPath,
                                        @Param(value = COMMAND, required = true) String command,
-                                       @Param(value = OVERWRITE) String overwrite,
+                                       @Param(value = OVERWRITE_WALLET) String overwriteWallet,
                                        @Param(value = TRUST_STORE) String trustStore,
                                        @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
                                        @Param(value = KEYSTORE) String keystore,
@@ -76,16 +76,16 @@ public class SQLCommand {
                                        @Param(value = EXECUTION_TIMEOUT) String executionTimeout) {
 
 
-        overwrite = defaultIfEmpty(overwrite, FALSE);
+        overwriteWallet = defaultIfEmpty(overwriteWallet, FALSE);
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_TIMEOUT);
         trustStore = defaultIfEmpty(trustStore, EMPTY);
         keystore = defaultIfEmpty(keystore, EMPTY);
-        walletPath = defaultIfEmpty(Utils.unzip(walletPath, Boolean.parseBoolean(overwrite)), EMPTY);
 
-        final List<String> exceptionMessages = InputsValidation.verifySqlCommand(walletPath, trustStore, keystore, overwrite, executionTimeout);
+        final List<String> exceptionMessages = InputsValidation.verifySqlCommand(walletPath, trustStore, keystore, overwriteWallet, executionTimeout);
         if (!exceptionMessages.isEmpty())
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
+        walletPath = defaultIfEmpty((!walletPath.isEmpty()) ? Utils.unzip(walletPath, Boolean.parseBoolean(overwriteWallet)) : EMPTY, EMPTY);
 
         OracleCloudInputs oracleCloudInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
                 .connectionString(connectionString)
