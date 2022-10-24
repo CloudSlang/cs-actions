@@ -63,7 +63,7 @@ public class SQLQueryAllRows {
                                        @Param(value = USERNAME, required = true) String username,
                                        @Param(value = PASSWORD, required = true, encrypted = true) String password,
                                        @Param(value = COMMAND, required = true) String command,
-                                       @Param(value = OVERWRITE) String overwrite,
+                                       @Param(value = OVERWRITE_WALLET) String overwriteWallet,
                                        @Param(value = COL_DELIMITER) String colDelimiter,
                                        @Param(value = ROW_DELIMITER) String rowDelimiter,
                                        @Param(value = TRUST_STORE) String trustStore,
@@ -77,7 +77,7 @@ public class SQLQueryAllRows {
 
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
-        overwrite = defaultIfEmpty(overwrite, FALSE);
+        overwriteWallet = defaultIfEmpty(overwriteWallet, FALSE);
         colDelimiter = defaultIfEmpty(colDelimiter,COMMA_DELIMITER);
         rowDelimiter = defaultIfEmpty(rowDelimiter, NEW_LINE);
         trustStore = defaultIfEmpty(trustStore, EMPTY);
@@ -85,14 +85,12 @@ public class SQLQueryAllRows {
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_TIMEOUT);
         resultSetType = defaultIfEmpty(resultSetType, TYPE_FORWARD_ONLY);
         resultSetConcurrency = defaultIfEmpty(resultSetConcurrency, CONCUR_READ_ONLY);
-        walletPath = defaultIfEmpty(Utils.unzip(walletPath, Boolean.parseBoolean(overwrite)), EMPTY);
 
-        final List<String> preInputsValidation = InputsValidation.verifySqlQuery(walletPath, trustStore, keystore, overwrite, executionTimeout, resultSetConcurrency, resultSetType);
-
-
-        if (!preInputsValidation.isEmpty()) {
+        final List<String> preInputsValidation = InputsValidation.verifySqlQuery(walletPath, trustStore, keystore, overwriteWallet, executionTimeout, resultSetConcurrency, resultSetType);
+        if (!preInputsValidation.isEmpty())
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
-        }
+
+        walletPath = defaultIfEmpty((!walletPath.isEmpty()) ? Utils.unzip(walletPath, Boolean.parseBoolean(overwriteWallet)) : EMPTY, EMPTY);
 
         OracleCloudInputs sqlInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
                 .connectionString(connectionString)

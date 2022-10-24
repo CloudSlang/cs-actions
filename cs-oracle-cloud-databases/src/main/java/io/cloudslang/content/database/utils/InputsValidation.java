@@ -55,7 +55,7 @@ public class InputsValidation {
         addVerifyFile(exceptionMessages, walletPath, WALLET_PATH);
         addVerifyFile(exceptionMessages, trustore, TRUST_STORE);
         addVerifyFile(exceptionMessages, keystore, KEYSTORE);
-        addVerifyBoolean(exceptionMessages, overwrite, OVERWRITE);
+        addVerifyBoolean(exceptionMessages, overwrite, OVERWRITE_WALLET);
         addVerifyPositiveNumber(exceptionMessages, timeout, EXECUTION_TIMEOUT);
 
         return exceptionMessages;
@@ -76,7 +76,7 @@ public class InputsValidation {
         addVerifyFile(exceptionMessages, walletPath, WALLET_PATH);
         addVerifyFile(exceptionMessages, trustore, TRUST_STORE);
         addVerifyFile(exceptionMessages, keystore, KEYSTORE);
-        addVerifyBoolean(exceptionMessages, overwrite, OVERWRITE);
+        addVerifyBoolean(exceptionMessages, overwrite, OVERWRITE_WALLET);
         addVerifyPositiveNumber(exceptionMessages, timeout, EXECUTION_TIMEOUT);
         validateResultSetConcurrency(resultSetConcurrency, exceptionMessages);
         validateResultSetType(resultSetType, exceptionMessages);
@@ -98,7 +98,7 @@ public class InputsValidation {
         addVerifyFile(exceptionMessages, walletPath, WALLET_PATH);
         addVerifyFile(exceptionMessages, trustore, TRUST_STORE);
         addVerifyFile(exceptionMessages, keystore, KEYSTORE);
-        addVerifyBoolean(exceptionMessages, overwrite, OVERWRITE);
+        addVerifyBoolean(exceptionMessages, overwrite, OVERWRITE_WALLET);
         addVerifyPositiveNumber(exceptionMessages, timeout, EXECUTION_TIMEOUT);
 
         return exceptionMessages;
