@@ -47,7 +47,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class PowerShellScriptCrossPlatformAction {
-    @Action(name = "WinRM Command",
+    @Action(name = "Powershell Script Cross Platform",
             outputs = {
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
