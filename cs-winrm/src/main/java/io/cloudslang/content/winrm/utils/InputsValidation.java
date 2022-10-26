@@ -61,6 +61,35 @@ public class InputsValidation {
     }
 
     @NotNull
+    public static List<String> verifyPowerShellScriptInputs(@Nullable final String proxyPort,
+                                                 @Nullable final String trust_all_roots,
+                                                 @Nullable final String operationTimeout,
+                                                 @Nullable final String requestNewKerberosToken,
+                                                 @NotNull final String authType,
+                                                 @NotNull final String x509HostnameVerifier,
+                                                 @NotNull final String trustKeystore,
+                                                 @NotNull final String keystore,
+                                                 @NotNull final String port,
+                                                 @NotNull final String tlsVersion,
+                                                 @NotNull final String protocol) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
+        addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
+        addVerifyBoolean(exceptionMessages, requestNewKerberosToken, REQUEST_NEW_KERBEROS_TICKET);
+        addVerifyNumber(exceptionMessages, operationTimeout, OPERATION_TIMEOUT);
+        addVerifyAuthType(exceptionMessages, authType, AUTH_TYPE);
+        addVerifyx509HostnameVerifier(exceptionMessages, x509HostnameVerifier, X509_HOSTNAME_VERIFIER);
+        addVerifyFile(exceptionMessages, trustKeystore, TRUST_KEYSTORE);
+        addVerifyFile(exceptionMessages, keystore, KEYSTORE);
+        addVerifyPort(exceptionMessages, port, PORT);
+        addVerifyTlsVersion(exceptionMessages, tlsVersion, TLS_VERSION);
+        addVerifyProtocol(exceptionMessages, protocol, PROTOCOL);
+        return exceptionMessages;
+    }
+
+
+    @NotNull
     private static List<String> addVerifyNotNullOrEmpty(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
