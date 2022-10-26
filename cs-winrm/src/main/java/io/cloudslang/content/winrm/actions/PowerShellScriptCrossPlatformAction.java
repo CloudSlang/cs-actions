@@ -63,7 +63,7 @@ public class PowerShellScriptCrossPlatformAction {
     )
     public Map<String, String> execute(
             @Param(value = HOST, description = HOST_DESC, required = true) String host,
-            @Param(value = COMMAND, description = COMMAND_DESC, required = true) String command,
+            @Param(value = SCRIPT, description = COMMAND_DESC, required = true) String script,
             @Param(value = PORT, description = PORT_DESC) String port,
             @Param(value = PROTOCOL, description = PROTOCOL_DESC) String protocol,
             @Param(value = USERNAME, description = USERNAME_DESC) String username,
@@ -91,7 +91,7 @@ public class PowerShellScriptCrossPlatformAction {
 
     {
         host = defaultIfEmpty(host, EMPTY);
-        command = defaultIfEmpty(command, EMPTY);
+        script = defaultIfEmpty(script, EMPTY);
         port = defaultIfEmpty(port, DEFAULT_PORT);
         protocol = defaultIfEmpty(protocol, HTTPS);
         username = defaultIfEmpty(username, EMPTY);
@@ -130,7 +130,7 @@ public class PowerShellScriptCrossPlatformAction {
                 .username(username)
                 .password(password)
                 .authType(authType)
-                .command(command)
+                .command(script)
                 .proxyHost(proxyHost)
                 .proxyPort(proxyPort)
                 .proxyUsername(proxyUsername)
