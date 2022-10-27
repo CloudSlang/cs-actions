@@ -39,6 +39,7 @@ public final class Constants {
     public static final String GET = "GET";
     public static final String POST = "POST";
     public static final String PATCH = "PATCH";
+    public static final String BYTES = "bytes ";
     public static final String DELETE = "DELETE";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String CHANGEIT = "changeit";
@@ -48,9 +49,15 @@ public final class Constants {
     public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
     public static final String TOP_QUERY_CONST = "10";
     public static final String AUTHORIZATION = "Authorization:";
+    public static final String OCTET_STREAM = "application/octet-stream";
+    public static final String CONTENT_TYPE_FILE = "Content-Type: ";
+    public static final String CONTENT_LENGTH_FILE = "Content-Length: ";
+    public static final String CONTENT_RANGE_FILE = "Content-Range: ";
     public static final String BEARER = "Bearer ";
     public static final String GRAPH_HOST = "graph.microsoft.com";
     public static final String BASE_GRAPH_PATH = "/v1.0/users/";
+    public static final String UPLOAD_SESSION_BASE_PATH = "/v1.0/me/messages/";
+    public static final String UPLOAD_SESSION_ATTACHMENT_PATH = "/attachments/createUploadSession";
     public static final String MESSAGES_PATH = "/messages";
     public static final String PATH_SEPARATOR = "/";
     public static final String MAIL_FOLDERS_PATH = "/mailFolders/";
@@ -75,6 +82,13 @@ public final class Constants {
     public static final String ID = "id";
     public static final String COMMA = ",";
     public static final String NAME = "name";
+    public static final String ATTACHMENT_TYPE = "attachmentType";
+    public static final String ATTACHMENT_TYPE_FILE = "file";
+    public static final String ATTACHMENT_ITEM = "AttachmentItem";
+    public static final String ATTACHMENT_NAME = "name";
+    public static final String ATTACHMENT_SIZE = "size";
+    public static final String UPLOAD_SESSION_URL = "uploadUrl";
+    public static final String METHOD_PUT = "PUT";
     public static final String SIZE = "size";
     public static final String MANAGE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
@@ -101,4 +115,7 @@ public final class Constants {
     public static final String ERROR = "error";
     public static final String MESSAGE = "message";
     public static final String SEND_EMAIL_ADD_ATTACHMENT = "Could not attach %S";
+    public static final String OPEN_PARANTHESES = "{";
+    public static final String CLOSE_PARANTHESES = "}";
+    public static final String MINUS = "-";
 }

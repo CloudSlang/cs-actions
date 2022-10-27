@@ -33,6 +33,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -284,6 +286,13 @@ public class EmailServiceImpl {
                 addAttachmentInputs.getContentBytes()));
 
         return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static void addBigAttachment(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
+
+        UploadBigFileImpl.createUploadSession(addAttachmentInputs);
+
     }
 
     @NotNull
