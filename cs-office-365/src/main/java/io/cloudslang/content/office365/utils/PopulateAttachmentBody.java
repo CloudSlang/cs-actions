@@ -18,8 +18,11 @@ package io.cloudslang.content.office365.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
+import sun.misc.BASE64Encoder;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -72,10 +75,11 @@ public class PopulateAttachmentBody {
         return new Gson().toJson(body);
     }
 
-    public static String populateUploadChunkBody(@NotNull final byte[] fileChunk) throws IOException {
+    public static String populateUploadChunkBody(@NotNull final byte[] fileChunk, String contentLength) throws IOException {
         final StringBuilder bodyBuilder = new StringBuilder();
+        final BigInteger biStr = new BigInteger(fileChunk);
         bodyBuilder.append(OPEN_PARANTHESES)
-                .append(Arrays.toString(fileChunk))
+                .append(biStr.toString(2))
                 .append(CLOSE_PARANTHESES);
 
         return bodyBuilder.toString();
