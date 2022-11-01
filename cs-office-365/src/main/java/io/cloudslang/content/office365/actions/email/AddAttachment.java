@@ -83,8 +83,6 @@ public class AddAttachment {
                                        @Param(value = CONTENT_NAME, description = CONTENT_NAME_DESC) String contentName,
                                        @Param(value = CONTENT_BYTES, description = CONTENT_BYTES_DESC) String contentBytes,
 
-                                       @Param(value = "bigAttachment", description = CONTENT_BYTES_DESC) String bigAttachment,
-
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
