@@ -26,6 +26,8 @@ public final class Constants {
     public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
     public static final String STRICT = "strict";
+    public static final String STATUS_CODE_201 = "201";
+    public static final int ATTACHMENT_SIZE_THRESHOLD =  3000000;
     public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED="Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
@@ -39,7 +41,6 @@ public final class Constants {
     public static final String GET = "GET";
     public static final String POST = "POST";
     public static final String PATCH = "PATCH";
-    public static final String BYTES = "bytes ";
     public static final String DELETE = "DELETE";
     public static final String DEFAULT_JAVA_KEYSTORE = System.getProperty("java.home") + "/lib/security/cacerts";
     public static final String CHANGEIT = "changeit";

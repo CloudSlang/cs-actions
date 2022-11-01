@@ -25,6 +25,9 @@ import io.cloudslang.content.office365.entities.AddAttachmentInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,8 +57,8 @@ import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyAddAttachmentInputs;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class AddAttachment {
     @Action(name = "Add an attachment to a message in Office 365",
@@ -127,8 +130,9 @@ public class AddAttachment {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
-        if(!Boolean.parseBoolean(bigAttachment))
-            try {
+        try {
+            if (Files.size(Paths.get(filePath)) < ATTACHMENT_SIZE_THRESHOLD) {
+
                 final Map<String, String> result = addAttachment(AddAttachmentInputs.builder()
                         .messageId(messageId)
                         .filePath(filePath)
@@ -155,20 +159,15 @@ public class AddAttachment {
                         .build());
 
                 final String returnMessage = result.get(RETURN_RESULT);
-                final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+                final Map<String, String> results = getOperationResults(result, SUCCESS_DESC, returnMessage, returnMessage);
                 final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
                 if (statusCode >= 200 && statusCode < 300) {
                     addOutput(results, new JsonParser().parse(returnMessage).getAsJsonObject(), ID, ATTACHMENT_ID);
                 }
-
                 return results;
-            } catch (Exception exception) {
-                return getFailureResultsMap(exception);
-            }
-        else
-            try {
-                 addBigAttachment(AddAttachmentInputs.builder()
+            } else {
+                addBigAttachment(AddAttachmentInputs.builder()
                         .messageId(messageId)
                         .filePath(filePath)
                         .contentName(contentName)
@@ -193,14 +192,14 @@ public class AddAttachment {
                                 .build())
                         .build());
 
-                final Map<String, String> results = null;
-//                results.put(STATUS_CODE, "200");
-//                results.put(RETURN_RESULT, "Attachment added.");
-//                results.put(RETURN_CODE, "0");
-
+                final Map<String, String> results = new HashMap<>();
+                results.put(STATUS_CODE, STATUS_CODE_201);
+                results.put(RETURN_RESULT, SUCCESS_DESC);
+                results.put(RETURN_CODE, ZERO);
                 return results;
-            } catch (Exception exception) {
-                return getFailureResultsMap(exception);
             }
+        } catch (Exception exception) {
+            return getFailureResultsMap(exception);
+        }
     }
 }
