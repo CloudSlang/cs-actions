@@ -81,7 +81,7 @@
         <tess4j>4.6.1</tess4j>
         <junit-jupiter-api.version>5.4.0</junit-jupiter-api.version>
         <jayway-jsonpath.version>2.4.0</jayway-jsonpath.version>
-        <gson.version>2.9.1</gson.version>
+        <gson.version>2.8.9</gson.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
