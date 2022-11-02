@@ -74,14 +74,4 @@ public class PopulateAttachmentBody {
 
         return new Gson().toJson(body);
     }
-
-    public static String populateUploadChunkBody(@NotNull final byte[] fileChunk, String contentLength) throws IOException {
-        final StringBuilder bodyBuilder = new StringBuilder();
-        final BigInteger biStr = new BigInteger(fileChunk);
-        bodyBuilder.append(OPEN_PARANTHESES)
-                .append(biStr.toString(2))
-                .append(CLOSE_PARANTHESES);
-
-        return bodyBuilder.toString();
-    }
 }

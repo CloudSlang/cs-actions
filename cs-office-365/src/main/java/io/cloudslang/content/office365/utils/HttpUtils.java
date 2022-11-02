@@ -218,21 +218,6 @@ public class HttpUtils {
         return headerBuilder.toString();
     }
 
-    @NotNull
-    public static String getBigFileHeaders(String contentLength, String contentRange) {
-        final StringBuilder headerBuilder = new StringBuilder();
-        headerBuilder
-//                .append(CONTENT_TYPE_FILE)
-//                .append(OCTET_STREAM)
-//                .append(HEADERS_DELIMITER)
-//                .append(CONTENT_LENGTH_FILE)
-//                .append(contentLength)
-//                .append(HEADERS_DELIMITER)
-                .append(CONTENT_RANGE_FILE)
-                .append(contentRange);
-        return headerBuilder.toString();
-    }
-
 
     @NotNull
     public static String getQueryParams(@NotNull final String topQuery,
