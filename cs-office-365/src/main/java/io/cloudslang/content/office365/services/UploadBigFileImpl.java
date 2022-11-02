@@ -3,18 +3,23 @@ package io.cloudslang.content.office365.services;
 import com.azure.core.credential.TokenCredential;
 import com.google.gson.JsonParser;
 import com.microsoft.graph.authentication.TokenCredentialAuthProvider;
+import com.microsoft.graph.httpcore.HttpClients;
 import com.microsoft.graph.models.FileAttachment;
 import com.microsoft.graph.models.UploadSession;
 import com.microsoft.graph.requests.GraphServiceClient;
+import com.microsoft.graph.tasks.LargeFileUploadResult;
 import com.microsoft.graph.tasks.LargeFileUploadTask;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.AddAttachmentInputs;
-import okhttp3.Request;
+import okhttp3.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -29,7 +34,7 @@ import static io.cloudslang.content.office365.utils.PopulateAttachmentBody.popul
 
 public class UploadBigFileImpl {
 
-    public static void createUploadSession(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
+    public static String createUploadSession(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
 
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
 
@@ -52,7 +57,7 @@ public class UploadBigFileImpl {
 
         UploadSession uploadSession = new UploadSession();
         uploadSession.uploadUrl = getUploadUrl(new HttpClientService().execute(httpClientInputs));
-        uploadFileChunk(addAttachmentInputs, uploadSession);
+        return uploadFileChunk(addAttachmentInputs, uploadSession);
     }
 
     @NotNull
@@ -70,14 +75,34 @@ public class UploadBigFileImpl {
             throw new RuntimeException(createSessionResult.get(EXCEPTION));
     }
 
-    private static void uploadFileChunk(@NotNull final AddAttachmentInputs addAttachmentInputs, UploadSession uploadSession) throws Exception {
+    private static String uploadFileChunk(@NotNull final AddAttachmentInputs addAttachmentInputs, UploadSession uploadSession) throws Exception {
 
         TokenCredential tokenCredential = new AuthTokenCredential(addAttachmentInputs.getCommonInputs().getAuthToken());
         final TokenCredentialAuthProvider tokenCredAuthProvider = new TokenCredentialAuthProvider(Arrays.asList(DEFAULT_SCOPE), tokenCredential);
+        final OkHttpClient.Builder httpClientBuilder = HttpClients.createDefault(tokenCredAuthProvider).newBuilder();
+
+        Authenticator proxyAuthenticator = null;
+        if (!addAttachmentInputs.getCommonInputs().getProxyUsername().isEmpty()) {
+            proxyAuthenticator = new Authenticator() {
+                @Override
+                public Request authenticate(Route route, Response response) throws IOException {
+                    String credential = Credentials.basic(addAttachmentInputs.getCommonInputs().getProxyUsername(), addAttachmentInputs.getCommonInputs().getProxyPassword());
+                    return response.request().newBuilder()
+                            .header("Proxy-Authorization", credential)
+                            .build();
+                }
+            };
+        }
+        if (!addAttachmentInputs.getCommonInputs().getProxyHost().isEmpty())
+            httpClientBuilder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(addAttachmentInputs.getCommonInputs().getProxyHost(), Integer.parseInt(addAttachmentInputs.getCommonInputs().getProxyPort()))));
+
+        if (proxyAuthenticator != null)
+            httpClientBuilder.proxyAuthenticator(proxyAuthenticator);
 
         final GraphServiceClient<Request> graphClient = GraphServiceClient
                 .builder()
                 .authenticationProvider(tokenCredAuthProvider)
+                .httpClient(httpClientBuilder.build())
                 .buildClient();
 
         InputStream fileStream = Files.newInputStream(Paths.get(addAttachmentInputs.getFilePath()));
@@ -97,6 +122,7 @@ public class UploadBigFileImpl {
                 new LargeFileUploadTask<>
                         (uploadSession, graphClient, fileStream, Files.size(Paths.get(addAttachmentInputs.getFilePath())), FileAttachment.class);
 // Do the upload
-        uploadTask.upload(0, null, null);
+        LargeFileUploadResult<FileAttachment> result = uploadTask.upload(0, null, null);
+        return result.location;
     }
 }

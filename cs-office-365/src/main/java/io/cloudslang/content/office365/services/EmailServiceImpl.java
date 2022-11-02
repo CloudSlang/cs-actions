@@ -30,7 +30,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -288,8 +287,8 @@ public class EmailServiceImpl {
         return new HttpClientService().execute(httpClientInputs);
     }
 
-    public static void addBigAttachment(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
-        UploadBigFileImpl.createUploadSession(addAttachmentInputs);
+    public static String addBigAttachment(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
+        return UploadBigFileImpl.createUploadSession(addAttachmentInputs);
     }
 
     @NotNull

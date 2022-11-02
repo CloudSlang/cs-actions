@@ -27,8 +27,9 @@ public final class Constants {
     public static final String BOOLEAN_TRUE = "true";
     public static final String STRICT = "strict";
     public static final String STATUS_CODE_201 = "201";
-    public static final int ATTACHMENT_SIZE_THRESHOLD =  3000000;
-    public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED="Request to acquire token failed.";
+    public static final String ATTACHMENTS_SPLIT = "Attachments";
+    public static final int ATTACHMENT_SIZE_THRESHOLD = 3000000;
+    public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
@@ -104,7 +105,7 @@ public final class Constants {
     public static final String PASSWORD_BODY = "password";
     public static final String ATTACHMENTS = "/attachments";
     public static final String ATTACHMENTS_PATH = "/attachments/";
-    public static final String VALUE= "value";
+    public static final String VALUE = "value";
     public static final String MESSAGE_ID_LIST_JSON_PATH = "$.value[*].id";
     public static final String FILE_PATH = "filePath";
     public static final String ODATA_TYPE = "@odata.type";

@@ -157,7 +157,7 @@ public class AddAttachment {
                         .build());
 
                 final String returnMessage = result.get(RETURN_RESULT);
-                final Map<String, String> results = getOperationResults(result, SUCCESS_DESC, returnMessage, returnMessage);
+                final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
                 final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
                 if (statusCode >= 200 && statusCode < 300) {
@@ -165,7 +165,7 @@ public class AddAttachment {
                 }
                 return results;
             } else {
-                addBigAttachment(AddAttachmentInputs.builder()
+                String response = addBigAttachment(AddAttachmentInputs.builder()
                         .messageId(messageId)
                         .filePath(filePath)
                         .contentName(contentName)
@@ -191,8 +191,12 @@ public class AddAttachment {
                         .build());
 
                 final Map<String, String> results = new HashMap<>();
+
+                String attachmentId =  response.split(ATTACHMENTS_SPLIT)[1];
+                results.put(ATTACHMENT_ID, attachmentId.substring(2, attachmentId.length() - 2));
                 results.put(STATUS_CODE, STATUS_CODE_201);
-                results.put(RETURN_RESULT, SUCCESS_DESC);
+                results.put(RETURN_RESULT, response);
+                results.put(DOCUMENT, response);
                 results.put(RETURN_CODE, ZERO);
                 return results;
             }
