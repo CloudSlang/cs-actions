@@ -30,9 +30,10 @@ import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,11 +41,11 @@ import java.util.Map;
 import static io.cloudslang.content.office365.services.HttpCommons.setCommonHttpInputs;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.CONTENT_TYPE;
 import static io.cloudslang.content.office365.utils.Outputs.GetAttachmentsOutputs.*;
 import static io.cloudslang.content.office365.utils.PopulateAttachmentBody.populateAddAttachmentBody;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class EmailServiceImpl {
 
@@ -286,6 +287,10 @@ public class EmailServiceImpl {
         return new HttpClientService().execute(httpClientInputs);
     }
 
+    public static String addBigAttachment(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
+        return UploadBigFileImpl.createUploadSession(addAttachmentInputs);
+    }
+
     @NotNull
     public static Map<String, String> getAttachments(@NotNull final GetAttachmentsInputs getAttachmentsInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
@@ -310,13 +315,13 @@ public class EmailServiceImpl {
     private static void downloadAttachment(String filePath, String contentBytes, String contentName) throws IOException {
         byte[] data = Base64.decodeBase64(contentBytes);
         final String finalPath = filePath + File.separator + contentName;
-        try (OutputStream stream = new FileOutputStream(finalPath)) {
+        try (OutputStream stream = Files.newOutputStream(Paths.get(finalPath))) {
             stream.write(data);
         }
     }
 
-    public static String addAditionalOutputs(Map<String, String> results, Map<String, String> result, String returnMessage, String filePath) throws IOException {
-        final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+    public static String addAditionalOutputs(Map<String, String> results, Map<String, String> result, String returnMessage, String filePath) {
+        final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
 
         try {
             if (statusCode >= 200 && statusCode < 300) {
@@ -339,6 +344,7 @@ public class EmailServiceImpl {
         }
         return null;
     }
+
     public static void addOutput(Map<String, String> results, JsonObject responseJson, String key, String keyToAdd) {
         if (responseJson.has(key))
             results.put(keyToAdd, responseJson.get(key).getAsString());
@@ -367,7 +373,7 @@ public class EmailServiceImpl {
     }
 
     @NotNull
-    private static String listAttachmentsUrl(String userPrincipalName, String userId, String messageId) throws Exception {
+    private static String listAttachmentsUrl(String userPrincipalName, String userId, String messageId) {
         String finalUrl;
         if (!StringUtils.isEmpty(userPrincipalName))
             finalUrl = GET_USER_REQUEST_URL + userPrincipalName;
@@ -380,7 +386,7 @@ public class EmailServiceImpl {
     }
 
     public static String retrieveAttachmentIdList(String returnMessage) {
-        final List<JsonElement> attachmentIdList = new ArrayList();
+        final List<JsonElement> attachmentIdList = new ArrayList<>();
         final JsonParser parser = new JsonParser();
         final JsonObject responseJson = parser.parse(returnMessage).getAsJsonObject();
         if (responseJson.has(VALUE)) {

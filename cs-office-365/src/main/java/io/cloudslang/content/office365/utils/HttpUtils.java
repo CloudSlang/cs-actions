@@ -70,6 +70,16 @@ public class HttpUtils {
     }
 
     @NotNull
+    public static String createUploadSessionMessagePath(@NotNull final String messageId) {
+
+        StringBuilder pathString = new StringBuilder()
+                .append(UPLOAD_SESSION_BASE_PATH)
+                .append(messageId)
+                .append(UPLOAD_SESSION_ATTACHMENT_PATH);
+        return pathString.toString();
+    }
+
+    @NotNull
     public static String updateUserPath(String userPrincipalName, String userId) {
         StringBuilder pathString = new StringBuilder()
                 .append(BASE_GRAPH_PATH)
@@ -207,6 +217,7 @@ public class HttpUtils {
         headerBuilder.append(AUTHORIZATION).append(BEARER).append(authToken);
         return headerBuilder.toString();
     }
+
 
     @NotNull
     public static String getQueryParams(@NotNull final String topQuery,

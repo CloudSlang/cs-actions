@@ -25,6 +25,9 @@ import io.cloudslang.content.office365.entities.AddAttachmentInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,8 +38,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.office365.services.EmailServiceImpl.addAttachment;
-import static io.cloudslang.content.office365.services.EmailServiceImpl.addOutput;
+import static io.cloudslang.content.office365.services.EmailServiceImpl.*;
 import static io.cloudslang.content.office365.utils.Constants.FILE_PATH;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.AddAttachment.FAILURE_DESC;
@@ -127,40 +129,77 @@ public class AddAttachment {
         }
 
         try {
-            final Map<String, String> result = addAttachment(AddAttachmentInputs.builder()
-                    .messageId(messageId)
-                    .filePath(filePath)
-                    .contentName(contentName)
-                    .contentBytes(contentBytes)
-                    .commonInputs(Office365CommonInputs.builder()
-                            .authToken(authToken)
-                            .userPrincipalName(userPrincipalName)
-                            .userId(userId)
-                            .connectionsMaxPerRoute(connectionsMaxPerRoute)
-                            .connectionsMaxTotal(connectionsMaxTotal)
-                            .proxyHost(proxyHost)
-                            .proxyPort(proxyPort)
-                            .proxyUsername(proxyUsername)
-                            .proxyPassword(proxyPassword)
-                            .keepAlive(keepAlive)
-                            .responseCharacterSet(responseCharacterSet)
-                            .connectTimeout(connectTimeout)
-                            .trustAllRoots(trustAllRoots)
-                            .x509HostnameVerifier(x509HostnameVerifier)
-                            .trustKeystore(trustKeystore)
-                            .trustPassword(trustPassword)
-                            .build())
-                    .build());
+            if (Files.size(Paths.get(filePath)) < ATTACHMENT_SIZE_THRESHOLD) {
 
-            final String returnMessage = result.get(RETURN_RESULT);
-            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
-            final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+                final Map<String, String> result = addAttachment(AddAttachmentInputs.builder()
+                        .messageId(messageId)
+                        .filePath(filePath)
+                        .contentName(contentName)
+                        .contentBytes(contentBytes)
+                        .commonInputs(Office365CommonInputs.builder()
+                                .authToken(authToken)
+                                .userPrincipalName(userPrincipalName)
+                                .userId(userId)
+                                .connectionsMaxPerRoute(connectionsMaxPerRoute)
+                                .connectionsMaxTotal(connectionsMaxTotal)
+                                .proxyHost(proxyHost)
+                                .proxyPort(proxyPort)
+                                .proxyUsername(proxyUsername)
+                                .proxyPassword(proxyPassword)
+                                .keepAlive(keepAlive)
+                                .responseCharacterSet(responseCharacterSet)
+                                .connectTimeout(connectTimeout)
+                                .trustAllRoots(trustAllRoots)
+                                .x509HostnameVerifier(x509HostnameVerifier)
+                                .trustKeystore(trustKeystore)
+                                .trustPassword(trustPassword)
+                                .build())
+                        .build());
 
-            if (statusCode >= 200 && statusCode < 300) {
-                addOutput(results, new JsonParser().parse(returnMessage).getAsJsonObject(), ID, ATTACHMENT_ID);
+                final String returnMessage = result.get(RETURN_RESULT);
+                final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+                final Integer statusCode = Integer.parseInt(result.get(STATUS_CODE));
+
+                if (statusCode >= 200 && statusCode < 300) {
+                    addOutput(results, new JsonParser().parse(returnMessage).getAsJsonObject(), ID, ATTACHMENT_ID);
+                }
+                return results;
+            } else {
+                String response = addBigAttachment(AddAttachmentInputs.builder()
+                        .messageId(messageId)
+                        .filePath(filePath)
+                        .contentName(contentName)
+                        .contentBytes(contentBytes)
+                        .commonInputs(Office365CommonInputs.builder()
+                                .authToken(authToken)
+                                .userPrincipalName(userPrincipalName)
+                                .userId(userId)
+                                .connectionsMaxPerRoute(connectionsMaxPerRoute)
+                                .connectionsMaxTotal(connectionsMaxTotal)
+                                .proxyHost(proxyHost)
+                                .proxyPort(proxyPort)
+                                .proxyUsername(proxyUsername)
+                                .proxyPassword(proxyPassword)
+                                .keepAlive(keepAlive)
+                                .responseCharacterSet(responseCharacterSet)
+                                .connectTimeout(connectTimeout)
+                                .trustAllRoots(trustAllRoots)
+                                .x509HostnameVerifier(x509HostnameVerifier)
+                                .trustKeystore(trustKeystore)
+                                .trustPassword(trustPassword)
+                                .build())
+                        .build());
+
+                final Map<String, String> results = new HashMap<>();
+
+                String attachmentId =  response.split(ATTACHMENTS_SPLIT)[1];
+                results.put(ATTACHMENT_ID, attachmentId.substring(2, attachmentId.length() - 2));
+                results.put(STATUS_CODE, STATUS_CODE_201);
+                results.put(RETURN_RESULT, response);
+                results.put(DOCUMENT, response);
+                results.put(RETURN_CODE, ZERO);
+                return results;
             }
-
-            return results;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

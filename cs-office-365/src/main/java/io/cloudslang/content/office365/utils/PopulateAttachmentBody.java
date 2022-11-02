@@ -18,10 +18,14 @@ package io.cloudslang.content.office365.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
+import sun.misc.BASE64Encoder;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Inputs.AddAttachment.CONTENT_BYTES;
@@ -44,6 +48,29 @@ public class PopulateAttachmentBody {
             body.addProperty(NAME, contentName);
             body.addProperty(CONTENT_BYTES, contentBytes);
         }
+
+        return new Gson().toJson(body);
+    }
+
+    public static String populateCreateUploadSessionBody(@NotNull final String filePath,
+                                                         @NotNull final String fileName,
+                                                         @NotNull final String fileType,
+                                                         @NotNull long fileSize) throws IOException {
+        final JsonObject body = new JsonObject();
+        final JsonObject attachmentItem = new JsonObject();
+
+        if(isEmpty(fileType))
+            attachmentItem.addProperty(ATTACHMENT_TYPE, ATTACHMENT_TYPE_FILE);
+        else
+            attachmentItem.addProperty(ATTACHMENT_TYPE, fileType);
+
+        if(isEmpty(fileName))
+            attachmentItem.addProperty(ATTACHMENT_NAME, getName(filePath));
+        else
+            attachmentItem.addProperty(ATTACHMENT_NAME, fileName);
+
+        attachmentItem.addProperty(ATTACHMENT_SIZE, fileSize);
+        body.add(ATTACHMENT_ITEM, attachmentItem);
 
         return new Gson().toJson(body);
     }
