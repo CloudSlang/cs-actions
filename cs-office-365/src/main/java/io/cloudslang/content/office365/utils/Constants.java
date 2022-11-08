@@ -26,6 +26,7 @@ public final class Constants {
     public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
     public static final String STRICT = "strict";
+    public static final String TLS = "TLS";
     public static final String STATUS_CODE_201 = "201";
     public static final String ATTACHMENTS_SPLIT = "Attachments";
     public static final int ATTACHMENT_SIZE_THRESHOLD = 3000000;
