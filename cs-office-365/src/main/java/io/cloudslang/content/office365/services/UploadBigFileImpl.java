@@ -14,8 +14,13 @@ import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.AddAttachmentInputs;
 import okhttp3.*;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.jetbrains.annotations.NotNull;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
@@ -81,6 +86,24 @@ public class UploadBigFileImpl {
         final TokenCredentialAuthProvider tokenCredAuthProvider = new TokenCredentialAuthProvider(Arrays.asList(DEFAULT_SCOPE), tokenCredential);
         final OkHttpClient.Builder httpClientBuilder = HttpClients.createDefault(tokenCredAuthProvider).newBuilder();
 
+        final TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    @Override
+                    public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                    }
+
+                    @Override
+                    public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                    }
+
+                    @Override
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                        return new java.security.cert.X509Certificate[]{};
+                    }
+
+                }
+        };
+
         Authenticator proxyAuthenticator = null;
         if (!addAttachmentInputs.getCommonInputs().getProxyUsername().isEmpty()) {
             proxyAuthenticator = new Authenticator() {
@@ -98,6 +121,15 @@ public class UploadBigFileImpl {
 
         if (proxyAuthenticator != null)
             httpClientBuilder.proxyAuthenticator(proxyAuthenticator);
+
+        // Install the all-trusting trust manager
+        final SSLContext sslContext = SSLContext.getInstance(TLS);
+        sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+        // Create a ssl socket factory with our all-trusting manager
+        final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+        httpClientBuilder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
+        httpClientBuilder.hostnameVerifier(new NoopHostnameVerifier());
 
         final GraphServiceClient<Request> graphClient = GraphServiceClient
                 .builder()
