@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2022 Micro Focus, L.P.
+ * (c) Copyright 2022 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.utilities.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -20,15 +21,18 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
 import io.cloudslang.content.utilities.entities.CounterImpl;
+import io.cloudslang.content.utilities.exceptions.CounterImplException;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.utilities.util.Constants.CounterConstants.*;
 
 
@@ -38,6 +42,34 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 
 public class Counter {
+
+    public static final String RESULT_DBG_INDEX = "index";
+
+    private Map<String, String> count(String from, String to, String incrementBy, boolean reset, StepSerializableSessionObject session) {
+        CounterImpl counter = new CounterImpl();
+        Map<String, String> returnResult = new HashMap<String, String>();
+        returnResult.put("result", "failed");
+
+        try {
+            counter.init(from, to, incrementBy, reset, session);
+            if (counter.hasNext()) {
+                returnResult.put(RESULT_DBG_INDEX, Long.toString(counter.getIndex()));
+                returnResult.put(RETURN_RESULT, counter.getNext(session));
+                returnResult.put(RESULT, "has more");
+                returnResult.put(RETURN_CODE,"0");
+            } else {
+                counter.setStepSessionEnd(session);
+                returnResult.put(RETURN_RESULT, "");
+                returnResult.put(RESULT, "no more");
+                returnResult.put(RETURN_CODE,"1");
+            }
+        } catch (CounterImplException e) {
+            returnResult.put(RESULT, "failed");
+            returnResult.put(RETURN_RESULT, e.getMessage());
+            returnResult.put(RETURN_CODE,"-1");
+        }
+        return returnResult;
+    }
 
     @Action(name = COUNTER_OPERATION_NAME, description = COUNTER_DESC,
             outputs = {
@@ -51,14 +83,11 @@ public class Counter {
                                        @Param(value = TO, required = true, description = TO_DESC) String to,
                                        @Param(value = INCREMENT_BY, description = INCREMENT_BY_DESC) String incrementBy,
                                        @Param(value = RESET, description = RESET_DESC) String reset,
-                                       @Param("globalSessionObject") GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+                                       @Param("sessionCounter") StepSerializableSessionObject sessionCounter) {
 
         reset = defaultIfEmpty(reset, BOOLEAN_FALSE);
         incrementBy = defaultIfEmpty(incrementBy, INCREMENT_BY_DEFAULT_VALUE);
 
-
-        return CounterImpl.counter(to, from, incrementBy, Boolean.parseBoolean(reset), globalSessionObject);
-
+        return count(from, to, incrementBy, Boolean.parseBoolean(reset), sessionCounter);
     }
-
 }
