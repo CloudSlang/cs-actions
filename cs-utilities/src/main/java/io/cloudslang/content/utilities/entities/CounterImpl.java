@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2022 Micro Focus, L.P.
+ * (c) Copyright 2022 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,48 +12,107 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.utilities.entities;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.utilities.util.CounterProcessor;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.utilities.util.Constants.CounterConstants.INDEX;
-import static io.cloudslang.content.utilities.util.Constants.CounterConstants.RESULT;
-import static io.cloudslang.content.utils.Constants.OutputNames.RETURN_RESULT;
+import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
+import io.cloudslang.content.utilities.exceptions.CounterImplException;
 
 public class CounterImpl {
-    public static Map<String, String> counter(String to, String from, String by, boolean reset, GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+    private static final Long endIndex = -1L;
+    private long end;
+    private long start;
+    private long index;
+    private int increment;
 
-        CounterProcessor counter = new CounterProcessor();
-        Map<String, String> returnResult = new HashMap<>();
-        returnResult.put("result", "failed");
+    public void init(String from, String to, String by, boolean reset, StepSerializableSessionObject session) throws CounterImplException {
+        /*
+         * If the session resource is not ini
+         */
+        if (session.getValue() == null || endIndex.equals(session.getValue()) || reset) {
+            session.setValue(Long.valueOf(0));
+        }
 
         try {
-            counter.init(to, from, by, reset, globalSessionObject);
-            if (counter.hasNext()) {
-                returnResult.put(INDEX, Integer.toString(counter.getIndex()));
-                returnResult.put(RETURN_RESULT, counter.getNext(globalSessionObject));
-                if (counter.hasNext()) {
-                    returnResult.put(RESULT, "has more");
-                    returnResult.put(RETURN_CODE, "0");
-                } else {
-                    returnResult.put(RETURN_RESULT, "");
-                    returnResult.put(RETURN_CODE, "1");
-                    counter.setStepSessionEnd(globalSessionObject);
-                    returnResult.put(RESULT, "no more");
+            start = Long.parseLong(from.trim());
+            end = Long.parseLong(to.trim());
+            if (by == null || by.length() == 0)
+                increment = 1;
+            else
+                try {
+                    increment = Integer.parseInt(by);
+                } catch (Exception e) {
+                    increment = 1;
                 }
-            }
         } catch (Exception e) {
-            returnResult.put(RESULT, "failed");
-            returnResult.put(RETURN_RESULT, e.getMessage());
-            returnResult.put(RETURN_CODE, "-1");
+            throw new CounterImplException("Start or end is not a long integer, or by is not an integer.\nfrom: " + from + "\nto: " + to + "\nby:" + by);
         }
-        return returnResult;
+
+        // pull data from context
+        this.index = (Long) session.getValue();
+    }
+
+    public String getNext(StepSerializableSessionObject session) {
+        String ret = null;
+        if (start < end) {
+            if (start + index <= end) {
+                ret = "" + (index + start);
+                index += increment;
+                session.setValue(index);
+            } else
+                index += increment;
+        } else if (start - index >= end) {
+            ret = "" + (start - index);
+            index += increment;
+            session.setValue(index);
+        } else
+            index += increment;
+        return ret;
+    }
+
+    public boolean hasNext() {
+        long diff = (start < end) ? end - start : start - end;
+        if (index <= diff) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void setStepSessionEnd(StepSerializableSessionObject session) {
+        session.setValue(endIndex);
     }
 
 
+    public long getEnd() {
+        return end;
+    }
+
+    public void setEnd(long end) {
+        this.end = end;
+    }
+
+    public long getStart() {
+        return start;
+    }
+
+    public void setStart(long start) {
+        this.start = start;
+    }
+
+    public long getIndex() {
+        return index;
+    }
+
+    public void setIndex(long index) {
+        this.index = index;
+    }
+
+    public int getIncrement() {
+        return increment;
+    }
+
+    public void setIncrement(int increment) {
+        this.increment = increment;
+    }
 }

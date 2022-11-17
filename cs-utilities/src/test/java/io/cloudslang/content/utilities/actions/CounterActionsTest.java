@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2022 Micro Focus, L.P.
+ * (c) Copyright 2022 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,11 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.utilities.actions;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import java.util.Map;
 
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -35,7 +38,7 @@ public class CounterActionsTest {
         String incrementBy = "1";
         String reset = "false";
 
-        GlobalSessionObject<Map<String, Object>> globalSessionObject = new GlobalSessionObject<>();
+        StepSerializableSessionObject globalSessionObject = new StepSerializableSessionObject();
         Counter counter = new Counter();
         for (int i = Integer.parseInt(from); i < Integer.parseInt(to); i++) {
             Map<String, String> actualResult = counter.execute(from, to, incrementBy, reset, globalSessionObject);
