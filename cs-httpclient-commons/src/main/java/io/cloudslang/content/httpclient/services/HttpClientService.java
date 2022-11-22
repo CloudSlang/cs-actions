@@ -32,10 +32,13 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.utils.ExecutionTimeout;
+import org.apache.hc.client5.http.auth.AuthCache;
 import org.apache.hc.client5.http.auth.CredentialsProvider;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.cookie.CookieStore;
+import org.apache.hc.client5.http.impl.auth.BasicAuthCache;
+import org.apache.hc.client5.http.impl.auth.BasicScheme;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -44,6 +47,7 @@ import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpHost;
 
 import java.io.IOException;
 import java.net.URI;
@@ -91,6 +95,12 @@ public class HttpClientService {
         HttpClientContext context = CustomHttpClientContext.getHttpClientContext(httpClientInputs, credentialsProvider, uri);
         HttpEntity httpEntity = CustomEntity.getHttpEntity(httpClientInputs);
         httpRequest.setEntity(httpEntity);
+
+        if (Boolean.parseBoolean(httpClientInputs.getPreemptiveAuth())) {
+            AuthCache authCache = new BasicAuthCache();
+            authCache.put(new HttpHost(uri.getScheme(), uri.getHost()), new BasicScheme());
+            context.setAuthCache(authCache);
+        }
 
         HeaderBuilder.headerBuiler(httpRequest, httpClientInputs);
 
