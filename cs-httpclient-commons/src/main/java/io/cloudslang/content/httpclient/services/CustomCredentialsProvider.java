@@ -41,7 +41,7 @@ public class CustomCredentialsProvider {
                 credentials = new UsernamePasswordCredentials(httpInputs.getUsername(), httpInputs.getPassword().toCharArray());
             }
 
-            credentialsProvider.setCredentials(new AuthScope(httpInputs.getHost(), uri.getPort() == -1 ? 443 : uri.getPort()), credentials);
+            credentialsProvider.setCredentials(new AuthScope(uri.getScheme(), uri.getHost(), uri.getPort() == -1 ? 443 : uri.getPort(), null, null), credentials);
         }
 
         //Auth Provider for Proxy
