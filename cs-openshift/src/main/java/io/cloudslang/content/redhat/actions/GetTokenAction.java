@@ -70,7 +70,7 @@ public class GetTokenAction {
                                        @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
         try {
 
-            String auth = "kubeadmin" + ":" + "XFaTK-6qDEQ-HsBEH-H29gk";
+            String auth = username + ":" + password;
             byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
 
             Map<String, String> result = new HttpClientGetAction().execute(
