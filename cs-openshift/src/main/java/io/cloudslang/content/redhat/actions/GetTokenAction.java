@@ -25,7 +25,9 @@ import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
 import io.cloudslang.content.utils.OutputUtilities;
+import org.apache.commons.codec.binary.Base64;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
@@ -67,14 +69,18 @@ public class GetTokenAction {
                                        @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
                                        @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
         try {
+
+            String auth = "kubeadmin" + ":" + "XFaTK-6qDEQ-HsBEH-H29gk";
+            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
+
             Map<String, String> result = new HttpClientGetAction().execute(
-                    host,
-                    "basic",
-                    username,
-                    password,
-                    "false",
-                    "web-proxy.eu.softwaregrp.net",
-                    "8080",
+                    "https://oauth-openshift.apps.oscbtp448t.swinfra.net/oauth/authorize",
+                    "Anonymous",
+                    "",
+                    "",
+                    "true",
+                    "",
+                    "",
                     "",
                     "",
                     "",
@@ -88,14 +94,14 @@ public class GetTokenAction {
                     "",
                     "",
                     "",
+                    "true",
+                    "true",
+                    "Authorization: Basic " + new String(encodedAuth),
+                    "",
+                    "",
+                    "response_type=code&client_id=openshift-browser-client",
+                    "true",
                     "false",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
                     "",
                     "",
                     "",

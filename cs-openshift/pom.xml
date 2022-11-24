@@ -91,8 +91,15 @@
             <dependency>
                 <groupId>io.cloudslang.content</groupId>
                 <artifactId>cs-httpclient-commons</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>0.0.2-SNAPSHOT</version>
                 <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <!-- jsoup HTML parser library @ https://jsoup.org/ -->
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>1.15.3</version>
             </dependency>
 
         </dependencies>
