@@ -16,16 +16,19 @@
 package io.cloudslang.content.redhat.utils;
 
 public class Descriptions {
-    public static class Common{
-        public static final String RETURN_CODE_DESC = "0 if success, -1 if failure.";
-    }
-    public static class GetTokenAction {
 
-        public static final String GET_TOKEN_NAME = "Get Token";
-        public static final String RETURN_RESULT_DESC = "The authorization token for Openshift.";
-        public static final String AUTH_TOKEN_DESC = "Generated authentication token.";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while generating the " +
-                "token.";
+    public static class Common{
+
+        public static final String RETURN_CODE_DESC = "0 if success, -1 if failure.";
+
+        public static final String HOST_DESC = "HOST.";
+        public static final String AUTH_TOKEN_DESC = "Token used to authenticate to the Openshift environment.";
+        public static final String PROXY_HOST_DESC = "The proxy server used to access the web site.";
+        public static final String PROXY_PORT_DESC = "The proxy server port." +
+                "Default value: 8080.";
+        public static final String PROXY_USERNAME_DESC = "The username used when connecting to the proxy.";
+        public static final String PROXY_PASSWORD_DESC = "The proxy server password associated with the 'proxyUsername'" +
+                " input value.";
         public static final String TRUST_ALL_ROOTS_DESCRIPTION = "Specifies whether to enable weak security over SSL/TSL. " +
                 "A certificate is trusted even if no trusted certification authority issued it.";
         public static final String X509_HOSTNAME_VERIFIER_DESCRIPTION = "Specifies the way the server hostname must match a domain name in " +
@@ -35,13 +38,34 @@ public class Descriptions {
                 "the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only " +
                 "difference between \"browser_compatible\" and \"strict\" is that a wildcard (such as \"*.foo.com\") " +
                 "with \"browser_compatible\" matches all subdomains, including \"a.b.foo.com\".";
+
+    }
+
+    public static class GetTokenAction {
+
+        public static final String GET_TOKEN_NAME = "Get Token";
+        public static final String RETURN_RESULT_DESC = "The authorization token for Openshift.";
+        public static final String AUTH_TOKEN_DESC = "Generated authentication token.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while generating the " +
+                "token.";
         public static final String USERNAME_DESC = "The name of the user who is logging in to Openshift.";
         public static final String PASSWORD_DESC = "The password used by the user to log in to Openshift.";
-        public static final String HOST_DESC = "HOST.";
 
         public static final String SUCCESS_DESC = "Token generated successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
 
+    }
+
+    public static class DeleteDeployment {
+
+        public static final String DELETE_DEPLOYMENT_NAME = "Delete Deployment";
+        public static final String NAMESPACE_DESC = "Namespace to delete the deployment from.";
+        public static final String DEPLOYMENT_DESC = "Name of the deployment to delete.";
+        public static final String RETURN_RESULT_DESC = "The deployment was successfully deleted.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while deleting the deployment.";
+
+        public static final String SUCCESS_DESC = "Deployment was successfully deleted.";
+        public static final String FAILURE_DESC = "There was an error while trying to delete the deployment.";
 
     }
 }

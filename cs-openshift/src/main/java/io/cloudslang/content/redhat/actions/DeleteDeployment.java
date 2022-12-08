@@ -23,11 +23,9 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
+import io.cloudslang.content.httpclient.actions.HttpClientDeleteAction;
 import io.cloudslang.content.utils.OutputUtilities;
-import org.apache.commons.codec.binary.Base64;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
@@ -41,45 +39,45 @@ import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SES
 import static io.cloudslang.content.redhat.services.OpenshiftService.processHttpResult;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
-import static io.cloudslang.content.redhat.utils.Descriptions.GetTokenAction.AUTH_TOKEN_DESC;
-import static io.cloudslang.content.redhat.utils.Descriptions.GetTokenAction.*;
+import static io.cloudslang.content.redhat.utils.Descriptions.DeleteDeployment.*;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.AUTH_TOKEN;
 
-public class GetTokenAction {
-    @Action(name = GET_TOKEN_NAME,
+public class DeleteDeployment {
+    @Action(name = DELETE_DEPLOYMENT_NAME,
             description = "DESC",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = HOST, description = HOST_DESC) String host,
-                                       @Param(value = USERNAME, description = USERNAME_DESC) String username,
-                                       @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
+    public Map<String, String> execute(@Param(value = HOST, required = true, description = HOST_DESC) String host,
+                                       @Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
+                                       @Param(value = NAMESPACE, required = true, description = NAMESPACE_DESC) String namespace,
+                                       @Param(value = DEPLOYMENT, required = true, description = DEPLOYMENT_DESC) String deployment,
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC) String proxyPassword,
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESCRIPTION) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_HOSTNAME_VERIFIER_DESCRIPTION) String x509HostnameVerifier,
                                        @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
                                        @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
         try {
 
-            String auth = username + ":" + password;
-            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
-
-            Map<String, String> result = new HttpClientGetAction().execute(
-                    "https://oauth-openshift.apps.oscbtp448t.swinfra.net/oauth/authorize",
+            Map<String, String> result = new HttpClientDeleteAction().execute(
+                    host + "/apis/apps/v1/namespaces/" + namespace + "/deployments/" + deployment,
                     "Anonymous",
                     "",
                     "",
                     "true",
-                    "",
-                    "",
-                    "",
-                    "",
+                    proxyHost,
+                    proxyPort,
+                    proxyUsername,
+                    proxyPassword,
                     "",
                     "",
                     trustAllRoots,
@@ -92,13 +90,9 @@ public class GetTokenAction {
                     "",
                     "",
                     "true",
-                    "true",
-                    "Authorization: Basic " + new String(encodedAuth),
+                    "Authorization: Bearer " + authToken,
                     "",
                     "",
-                    "response_type=code&client_id=openshift-browser-client",
-                    "true",
-                    "false",
                     "",
                     "",
                     "",

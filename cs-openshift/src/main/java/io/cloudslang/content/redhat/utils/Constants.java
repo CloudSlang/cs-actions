@@ -36,6 +36,12 @@ public final class Constants {
         public static final String HOST = "hostname";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
+        public static final String NAMESPACE = "namespace";
+        public static final String DEPLOYMENT = "deployment";
+        public static final String PROXY_HOST = "proxyHost";
+        public static final String PROXY_PORT = "proxyPort";
+        public static final String PROXY_USERNAME = "proxyUsername";
+        public static final String PROXY_PASSWORD = "proxyPassword";
         public static final String TRUST_ALL_ROOTS = "trustAllRoots";
         public static final String X509_HOSTNAME_VERIFIER = "x509HostnameVerifier";
         public static final String SESSION_COOKIES = "httpClientCookieSession";
