@@ -17,7 +17,7 @@ package io.cloudslang.content.redhat.utils;
 
 public class Descriptions {
 
-    public static class Common{
+    public static class Common {
 
         public static final String RETURN_CODE_DESC = "0 if success, -1 if failure.";
 
@@ -104,6 +104,29 @@ public class Descriptions {
 
         public static final String SUCCESS_DESC = "Deployment was successfully deleted.";
         public static final String FAILURE_DESC = "There was an error while trying to delete the deployment.";
+
+    }
+
+    public static class GetDeploymentStatus {
+
+        public static final String GET_DEPLOYMENT_STATUS = "Get Deployment Status";
+        public static final String GET_DEPLOYMENT_STATUS_DESC = "Read the status of the specified deployment.";
+
+        public static final String NAME_DESC = "The name of the deployment.";
+        public static final String NAMESPACE_DESC = "The object name and auth scope, such as for teams and projects.";
+
+        //Outputs
+        public static final String RETURN_RESULT_DESC = "A json object that comes as a response after the call.";
+        public static final String STATUS_CODE_DESC = "The status code of the request.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while reading the deployment status.";
+
+        public static final String SUCCESS_DESC = "The request to read the status of the specified deployment was made successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to get the status of the deployment.";
+
+        //API
+        public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_1 = "/apis/apps/v1/namespaces/";
+        public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_2 = "/deployments/";
+        public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_3 = "/status";
 
     }
 }
