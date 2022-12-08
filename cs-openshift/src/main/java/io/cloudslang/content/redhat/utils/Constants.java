@@ -36,8 +36,25 @@ public final class Constants {
         public static final String HOST = "hostname";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
+        public static final String NAMESPACE = "namespace";
+        public static final String DEPLOYMENT = "deployment";
+        public static final String PROXY_HOST = "proxyHost";
+        public static final String PROXY_PORT = "proxyPort";
+        public static final String PROXY_USERNAME = "proxyUsername";
+        public static final String PROXY_PASSWORD = "proxyPassword";
+        public static final String TLS_VERSION = "tlsVersion";
+        public static final String ALLOWED_CIPHERS = "allowedCiphers";
         public static final String TRUST_ALL_ROOTS = "trustAllRoots";
         public static final String X509_HOSTNAME_VERIFIER = "x509HostnameVerifier";
+        public static final String TRUST_KEYSTORE = "trustKeystore";
+        public static final String TRUST_PASSWORD = "trustPassword";
+        public static final String KEYSTORE = "keystore";
+        public static final String KEYSTORE_PASSWORD = "keystorePassword";
+        public static final String CONNECT_TIMEOUT = "connectTimeout";
+        public static final String EXECUTION_TIMEOUT = "executionTimeout";
+        public static final String KEEP_ALIVE = "keepAlive";
+        public static final String CONNECTIONS_MAX_PER_ROUTE = "connectionsMaxPerRoute";
+        public static final String CONNECTIONS_MAX_TOTAL = "connectionsMaxTotal";
         public static final String SESSION_COOKIES = "httpClientCookieSession";
         public static final String SESSION_CONNECTION_POOL = "httpClientPoolingConnectionManager";
 
@@ -45,6 +62,14 @@ public final class Constants {
         public static final String BASIC = "BASIC";
         public static final String APPLICATION_JSON = "application/json";
         public static final String CONTENT_TYPE = "Content-Type:";
+        public static final String TRUE = "true";
+        public static final String EMPTY_STRING = "";
+        public static final String AUTHORIZATION_BEARER = "Authorization: Bearer ";
+        public static final String ANONYMOUS = "Anonymous";
+
+        //apis
+        public static final String APPS_V1_NAMESPACES = "/apis/apps/v1/namespaces/";
+        public static final String DEPLOYMENTS = "/deployments/";
 
     }
 

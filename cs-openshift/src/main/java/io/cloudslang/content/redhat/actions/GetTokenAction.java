@@ -40,13 +40,10 @@ import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SES
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_COOKIES_DESC;
 import static io.cloudslang.content.redhat.services.OpenshiftService.processHttpResult;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
-import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.HOST;
-import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.PASSWORD;
-import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.USERNAME;
-import static io.cloudslang.content.redhat.utils.Descriptions.Common.RETURN_CODE_DESC;
+import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
+import static io.cloudslang.content.redhat.utils.Descriptions.GetTokenAction.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetTokenAction.*;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.AUTH_TOKEN;
-import static org.apache.commons.lang3.StringUtils.*;
 
 public class GetTokenAction {
     @Action(name = GET_TOKEN_NAME,
@@ -64,8 +61,8 @@ public class GetTokenAction {
     public Map<String, String> execute(@Param(value = HOST, description = HOST_DESC) String host,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
-                                       @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESCRIPTION) String trustAllRoots,
-                                       @Param(value = X509_HOSTNAME_VERIFIER, description = X509_HOSTNAME_VERIFIER_DESCRIPTION) String x509HostnameVerifier,
+                                       @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
+                                       @Param(value = X509_HOSTNAME_VERIFIER, description = X509_HOSTNAME_VERIFIER_DESC) String x509HostnameVerifier,
                                        @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
                                        @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
         try {
