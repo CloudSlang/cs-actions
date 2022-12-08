@@ -17,7 +17,7 @@ package io.cloudslang.content.redhat.utils;
 
 public class Descriptions {
 
-    public static class Common{
+    public static class Common {
 
         public static final String RETURN_CODE_DESC = "0 if success, -1 if failure.";
 
@@ -29,11 +29,11 @@ public class Descriptions {
         public static final String PROXY_USERNAME_DESC = "The username used when connecting to the proxy.";
         public static final String PROXY_PASSWORD_DESC = "The proxy server password associated with the 'proxyUsername'" +
                 " input value.";
-        public static final String TLS_VERSION_DESC= "The version of TLS to use. The value of this input will be ignored if 'protocol'" +
+        public static final String TLS_VERSION_DESC = "The version of TLS to use. The value of this input will be ignored if 'protocol'" +
                 "is set to 'HTTP'. This capability is provided “as is”, please see product documentation for further information." +
                 "Valid values: TLSv1, TLSv1.1, TLSv1.2. \n" +
                 "Default value: TLSv1.2.  \n";
-        public static final String ALLOWED_CIPHERS_DESC= "A list of ciphers to use. The value of this input will be ignored " +
+        public static final String ALLOWED_CIPHERS_DESC = "A list of ciphers to use. The value of this input will be ignored " +
                 "if 'tlsVersion' does " +
                 "not contain 'TLSv1.2'. This capability is provided “as is”, please see product documentation for further security considerations." +
                 "In order to connect successfully to the target host, it should accept at least one of the following ciphers. If this is not the case, it is " +
@@ -43,7 +43,7 @@ public class Descriptions {
                 "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, " +
                 "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_CBC_SHA256, " +
                 "TLS_RSA_WITH_AES_128_CBC_SHA256.";
-        public static final String TRUST_ALL_ROOTS_DESC= "Specifies whether to enable weak security over SSL/TSL. " +
+        public static final String TRUST_ALL_ROOTS_DESC = "Specifies whether to enable weak security over SSL/TSL. " +
                 "A certificate is trusted even if no trusted certification authority issued it.";
         public static final String X509_HOSTNAME_VERIFIER_DESC = "Specifies the way the server hostname must match a domain name in " +
                 "the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to " +
@@ -89,6 +89,17 @@ public class Descriptions {
 
         public static final String SUCCESS_DESC = "Token generated successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
+
+    }
+
+    public static class CreateDeploymentAction {
+        public static final String CREATE_DEPLOYMENT = "Create Deployment";
+        public static final String CREATE_DEPLOYMENT_DESCRIPTION = "This operation creates a deployment with the inputs from the user.";
+        public static final String HOST_DESCRIPTION = "HOST.";
+        public static final String PROTOCOL_DESCRIPTION = "PROTOCOL.";
+        public static final String AUTH_TOKEN_DESCRIPTION = "Token used to authenticate to the openshift environment.";
+        public static final String NAMESPACE_DESCRIPTION = "The namespace in which the deployment will be created.";
+        public static final String DEFINITION_DESCRIPTION = "YAML or JSON definitions.";
 
     }
 

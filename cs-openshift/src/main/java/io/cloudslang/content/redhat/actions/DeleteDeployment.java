@@ -22,7 +22,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLBoundOperation;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientDeleteAction;
 import io.cloudslang.content.utils.OutputUtilities;
