@@ -29,15 +29,51 @@ public class Descriptions {
         public static final String PROXY_USERNAME_DESC = "The username used when connecting to the proxy.";
         public static final String PROXY_PASSWORD_DESC = "The proxy server password associated with the 'proxyUsername'" +
                 " input value.";
-        public static final String TRUST_ALL_ROOTS_DESCRIPTION = "Specifies whether to enable weak security over SSL/TSL. " +
+        public static final String TLS_VERSION_DESC= "The version of TLS to use. The value of this input will be ignored if 'protocol'" +
+                "is set to 'HTTP'. This capability is provided “as is”, please see product documentation for further information." +
+                "Valid values: TLSv1, TLSv1.1, TLSv1.2. \n" +
+                "Default value: TLSv1.2.  \n";
+        public static final String ALLOWED_CIPHERS_DESC= "A list of ciphers to use. The value of this input will be ignored " +
+                "if 'tlsVersion' does " +
+                "not contain 'TLSv1.2'. This capability is provided “as is”, please see product documentation for further security considerations." +
+                "In order to connect successfully to the target host, it should accept at least one of the following ciphers. If this is not the case, it is " +
+                "the user's responsibility to configure the host accordingly or to update the list of allowed ciphers. \n" +
+                "Default value: TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, " +
+                "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, " +
+                "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, " +
+                "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_CBC_SHA256, " +
+                "TLS_RSA_WITH_AES_128_CBC_SHA256.";
+        public static final String TRUST_ALL_ROOTS_DESC= "Specifies whether to enable weak security over SSL/TSL. " +
                 "A certificate is trusted even if no trusted certification authority issued it.";
-        public static final String X509_HOSTNAME_VERIFIER_DESCRIPTION = "Specifies the way the server hostname must match a domain name in " +
+        public static final String X509_HOSTNAME_VERIFIER_DESC = "Specifies the way the server hostname must match a domain name in " +
                 "the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to " +
                 "\"allow_all\" to skip any checking. For the value \"browser_compatible\" the hostname verifier " +
                 "works the same way as Curl and Firefox. The hostname must match either the first CN, or any of " +
                 "the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only " +
                 "difference between \"browser_compatible\" and \"strict\" is that a wildcard (such as \"*.foo.com\") " +
                 "with \"browser_compatible\" matches all subdomains, including \"a.b.foo.com\".";
+        public static final String TRUST_KEYSTORE_DESC = "The pathname of the Java TrustStore file. This contains " +
+                "certificates from other parties that you expect to communicate with, or from Certificate Authorities" +
+                " that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https' " +
+                "or if trustAllRoots is 'true' this input is ignored. \n " +
+                "Format: Java KeyStore (JKS)";
+        public static final String TRUST_PASSWORD_DESC = "The password associated with the TrustStore file. If " +
+                "trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied.";
+        public static final String KEYSTORE_DESC = "The pathname of the Java KeyStore file. You only need this if " +
+                "the server requires client authentication. If the protocol (specified by the 'url') is not 'https' " +
+                "or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS)";
+        public static final String KEYSTORE_PASSWORD_DESC = "The password associated with the KeyStore file. If " +
+                "trustAllRoots is false and keystore is empty, keystorePassword default will be supplied.";
+        public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
+                "in seconds. A timeout value of '0' represents an infinite timeout.";
+        public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in seconds) to allow the client to complete the execution " +
+                "of an API call. A value of '0' disables this feature. \n" +
+                "Default: 60  \n";
+        public static final String KEEP_ALIVE_DESC = "Specifies whether to create a shared connection that will be " +
+                "used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
+                "execution it will close it.";
+        public static final String CONNECTIONS_MAX_PER_ROUTE_DESC = "The maximum limit of connections on a per route basis.";
+        public static final String CONNECTIONS_MAX_TOTAL_DESC = "The maximum limit of connections in total.";
 
     }
 
@@ -59,6 +95,8 @@ public class Descriptions {
     public static class DeleteDeployment {
 
         public static final String DELETE_DEPLOYMENT_NAME = "Delete Deployment";
+        public static final String DELETE_DEPLOYMENT_DESC = "Deletes the deployment from namespace.";
+
         public static final String NAMESPACE_DESC = "Namespace to delete the deployment from.";
         public static final String DEPLOYMENT_DESC = "Name of the deployment to delete.";
         public static final String RETURN_RESULT_DESC = "The deployment was successfully deleted.";

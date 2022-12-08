@@ -22,6 +22,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLBoundOperation;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientDeleteAction;
 import io.cloudslang.content.utils.OutputUtilities;
@@ -44,7 +45,7 @@ import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.AUTH_TOKEN;
 
 public class DeleteDeployment {
     @Action(name = DELETE_DEPLOYMENT_NAME,
-            description = "DESC",
+            description = DELETE_DEPLOYMENT_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -58,44 +59,56 @@ public class DeleteDeployment {
                                        @Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = NAMESPACE, required = true, description = NAMESPACE_DESC) String namespace,
                                        @Param(value = DEPLOYMENT, required = true, description = DEPLOYMENT_DESC) String deployment,
+
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC) String proxyPassword,
-                                       @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESCRIPTION) String trustAllRoots,
-                                       @Param(value = X509_HOSTNAME_VERIFIER, description = X509_HOSTNAME_VERIFIER_DESCRIPTION) String x509HostnameVerifier,
+                                       @Param(value = TLS_VERSION, description = TLS_VERSION_DESC) String tlsVersion,
+                                       @Param(value = ALLOWED_CIPHERS, description = ALLOWED_CIPHERS_DESC) String allowedCyphers,
+                                       @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
+                                       @Param(value = X509_HOSTNAME_VERIFIER, description = X509_HOSTNAME_VERIFIER_DESC) String x509HostnameVerifier,
+                                       @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
+                                       @Param(value = TRUST_PASSWORD, description = TRUST_PASSWORD_DESC) String trustPassword,
+                                       @Param(value = KEYSTORE, description = KEYSTORE_DESC) String keystore,
+                                       @Param(value = KEYSTORE_PASSWORD, description = KEYSTORE_PASSWORD_DESC) String keystorePassword,
+                                       @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
+                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
+                                       @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
+                                       @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONNECTIONS_MAX_PER_ROUTE_DESC) String connectionsMaxPerRoute,
+                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONNECTIONS_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
                                        @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
         try {
 
             Map<String, String> result = new HttpClientDeleteAction().execute(
-                    host + "/apis/apps/v1/namespaces/" + namespace + "/deployments/" + deployment,
-                    "Anonymous",
-                    "",
-                    "",
-                    "true",
+                    host + APPS_V1_NAMESPACES + namespace + DEPLOYMENTS + deployment,
+                    ANONYMOUS,
+                    EMPTY_STRING,
+                    EMPTY_STRING,
+                    TRUE,
                     proxyHost,
                     proxyPort,
                     proxyUsername,
                     proxyPassword,
-                    "",
-                    "",
+                    tlsVersion,
+                    allowedCyphers,
                     trustAllRoots,
                     x509HostnameVerifier,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "true",
-                    "Authorization: Bearer " + authToken,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
+                    trustKeystore,
+                    trustPassword,
+                    keystore,
+                    keystorePassword,
+                    keepAlive,
+                    connectionsMaxPerRoute,
+                    connectionsMaxTotal,
+                    TRUE,
+                    AUTHORIZATION_BEARER + authToken,
+                    EMPTY_STRING,
+                    EMPTY_STRING,
+                    connectTimeout,
+                    EMPTY_STRING,
+                    executionTimeout,
                     sessionCookies,
                     sessionConnectionPool);
 
