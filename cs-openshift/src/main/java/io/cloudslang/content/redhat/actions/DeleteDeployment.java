@@ -22,7 +22,6 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLBoundOperation;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientDeleteAction;
 import io.cloudslang.content.utils.OutputUtilities;
@@ -42,6 +41,7 @@ import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.DeleteDeployment.*;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.AUTH_TOKEN;
+import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.STATUS_CODE;
 
 public class DeleteDeployment {
     @Action(name = DELETE_DEPLOYMENT_NAME,
@@ -49,7 +49,8 @@ public class DeleteDeployment {
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = EXCEPTION, description = EXCEPTION_DESC)
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),

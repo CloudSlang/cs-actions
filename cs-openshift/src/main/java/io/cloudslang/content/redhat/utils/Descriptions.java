@@ -20,6 +20,7 @@ public class Descriptions {
     public static class Common{
 
         public static final String RETURN_CODE_DESC = "0 if success, -1 if failure.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for Openshift API request.";
 
         public static final String HOST_DESC = "HOST.";
         public static final String AUTH_TOKEN_DESC = "Token used to authenticate to the Openshift environment.";
