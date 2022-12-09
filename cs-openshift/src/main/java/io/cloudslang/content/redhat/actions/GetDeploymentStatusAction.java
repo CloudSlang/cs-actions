@@ -14,6 +14,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
 import io.cloudslang.content.utils.OutputUtilities;
 
+import static io.cloudslang.content.redhat.services.OpenshiftService.processHttpGetDeploymentStatusResult;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
 
 import java.util.Map;
@@ -21,36 +22,48 @@ import java.util.Map;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.FAILURE_DESC;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.SUCCESS_DESC;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.RETURN_RESULT_DESC;
-import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.STATUS_CODE;
+import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.*;
+import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.EXCEPTION;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.*;
 
-import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.AUTH_TOKEN;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_CONNECTION_POOL_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_COOKIES_DESC;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_CONNECTION_POOL;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_COOKIES;
-import static io.cloudslang.content.redhat.services.OpenshiftService.processHttpResult;
-
 
 public class GetDeploymentStatusAction {
 
     @Action(name = GET_DEPLOYMENT_STATUS,
             description = GET_DEPLOYMENT_STATUS_DESC,
             outputs = {
+                    //Common outputs
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = EXCEPTION, description = EXCEPTION_DESC)
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    //Specific outputs - general
+                    @Output(value = DOCUMENT_OUTPUT, description = DOCUMENT_OUTPUT_DESC),
+
+                    @Output(value = KIND_OUTPUT, description = KIND_OUTPUT_DESC),
+                    @Output(value = NAME_OUTPUT, description = NAME_OUTPUT_DESC),
+                    @Output(value = NAMESPACE_OUTPUT, description = NAMESPACE_OUTPUT_DESC),
+                    @Output(value = UID_OUTPUT, description = UID_OUTPUT_DESC),
+                    //Specific outputs - general
+                    @Output(value = OBSERVED_GENERATION_OUTPUT, description = OBSERVED_GENERATION_OUTPUT_DESC),
+                    @Output(value = REPLICAS_OUTPUT, description = REPLICAS_OUTPUT_DESC),
+                    @Output(value = UPDATED_REPLICAS_OUTPUT, description = UPDATED_REPLICAS_OUTPUT_DESC),
+                    @Output(value = UNAVAILABLE_REPLICAS_OUTPUT, description = UNAVAILABLE_REPLICAS_OUTPUT_DESC),
+                    @Output(value = CONDITIONS_OUTPUT, description = CONDITIONS_OUTPUT_DESC)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS,
-                              matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
                     @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE,
-                              matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
+                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
             })
 
     public Map<String, String> execute(
@@ -85,8 +98,8 @@ public class GetDeploymentStatusAction {
 
             Map<String, String> result = new HttpClientGetAction().execute(
                     host + GET_DEPLOYMENT_STATUS_ENDPOINT_1 + namespace +
-                                GET_DEPLOYMENT_STATUS_ENDPOINT_2 + name +
-                                GET_DEPLOYMENT_STATUS_ENDPOINT_3,
+                            GET_DEPLOYMENT_STATUS_ENDPOINT_2 + name +
+                            GET_DEPLOYMENT_STATUS_ENDPOINT_3,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
@@ -121,7 +134,7 @@ public class GetDeploymentStatusAction {
                     sessionConnectionPool
             );
 
-            processHttpResult(result);
+            processHttpGetDeploymentStatusResult(result);
             return result;
 
         } catch (Exception exception) {
