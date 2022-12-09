@@ -33,9 +33,10 @@ public final class Constants {
     public static final class CommonConstants {
 
         //Inputs
-        public static final String HOST = "hostname";
+        public static final String HOST = "host";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
+        public static final String NAME = "name";
         public static final String NAMESPACE = "namespace";
         public static final String DEPLOYMENT = "deployment";
         public static final String PROXY_HOST = "proxyHost";
