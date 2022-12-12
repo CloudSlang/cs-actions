@@ -24,6 +24,7 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
+import io.cloudslang.content.redhat.entities.HttpInput;
 import io.cloudslang.content.utils.OutputUtilities;
 import org.apache.commons.codec.binary.Base64;
 
@@ -38,6 +39,8 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_CONNECTION_POOL_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_COOKIES_DESC;
+import static io.cloudslang.content.redhat.entities.HttpInput.builder;
+import static io.cloudslang.content.redhat.services.OpenshiftService.processAuthTokenResult;
 import static io.cloudslang.content.redhat.services.OpenshiftService.processHttpResult;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
@@ -61,8 +64,24 @@ public class GetTokenAction {
     public Map<String, String> execute(@Param(value = HOST, description = HOST_DESC) String host,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
+
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC) String proxyPassword,
+                                       @Param(value = TLS_VERSION, description = TLS_VERSION_DESC) String tlsVersion,
+                                       @Param(value = ALLOWED_CIPHERS, description = ALLOWED_CIPHERS_DESC) String allowedCyphers,
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_HOSTNAME_VERIFIER_DESC) String x509HostnameVerifier,
+                                       @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
+                                       @Param(value = TRUST_PASSWORD, description = TRUST_PASSWORD_DESC) String trustPassword,
+                                       @Param(value = KEYSTORE, description = KEYSTORE_DESC) String keystore,
+                                       @Param(value = KEYSTORE_PASSWORD, description = KEYSTORE_PASSWORD_DESC) String keystorePassword,
+                                       @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
+                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
+                                       @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
+                                       @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONNECTIONS_MAX_PER_ROUTE_DESC) String connectionsMaxPerRoute,
+                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONNECTIONS_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
                                        @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
         try {
@@ -70,42 +89,66 @@ public class GetTokenAction {
             String auth = username + ":" + password;
             byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
 
+            HttpInput input = HttpInput.builder()
+                    .host(host)
+                    .proxyHost(proxyHost)
+                    .proxyPassword(proxyPassword)
+                    .proxyPort(proxyPort)
+                    .proxyPassword(proxyPassword)
+                    .connectionsMaxPerRoute(connectionsMaxPerRoute)
+                    .keystorePassword(keystorePassword)
+                    .proxyUsername(proxyUsername)
+                    .allowedCyphers(allowedCyphers)
+                    .trustKeystore(trustKeystore)
+                    .connectionsMaxTotal(connectionsMaxTotal)
+                    .keepAlive(keepAlive)
+                    .keystore(keystore)
+                    .tlsVersion(tlsVersion)
+                    .trustAllRoots(trustAllRoots)
+                    .trustPassword(trustPassword)
+                    .x509HostnameVerifier(x509HostnameVerifier)
+                    .username(username)
+                    .password(password)
+                    .build();
+
             Map<String, String> result = new HttpClientGetAction().execute(
-                    "https://oauth-openshift.apps.oscbtp448t.swinfra.net/oauth/authorize",
-                    "Anonymous",
-                    "",
-                    "",
-                    "true",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    trustAllRoots,
-                    x509HostnameVerifier,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "true",
-                    "true",
-                    "Authorization: Basic " + new String(encodedAuth),
-                    "",
-                    "",
-                    "response_type=code&client_id=openshift-browser-client",
-                    "true",
-                    "false",
-                    "",
-                    "",
-                    "",
+                    input.getHost() +AUTHORIZE_TOKEN_URL,
+                    ANONYMOUS,
+                    EMPTY_STRING,
+                    EMPTY_STRING,
+                    TRUE,
+                    input.getProxyHost(),
+                    input.getProxyPort(),
+                    input.getProxyUsername(),
+                    input.getProxyPassword(),
+                    input.getTlsVersion(),
+                    input.getAllowedCyphers(),
+                    input.getTrustAllRoots(),
+                    input.getX509HostnameVerifier(),
+                    input.getTrustKeystore(),
+                    input.getTrustPassword(),
+                    input.getKeystore(),
+                    input.getKeystorePassword(),
+                    input.getKeepAlive(),
+                    input.getConnectionsMaxPerRoute(),
+                    input.getConnectionsMaxTotal(),
+                    TRUE,
+                    TRUE,
+                    AUTHORIZATION_BASIC + new String(encodedAuth),
+                    EMPTY_STRING,
+                    EMPTY_STRING,
+                    QUERY_PARAM,
+                    TRUE,
+                    FALSE,
+                    input.getConnectTimeout(),
+                    EMPTY_STRING,
+                    input.getExecutionTimeout(),
                     sessionCookies,
                     sessionConnectionPool);
 
-            processHttpResult(result);
+
+            processAuthTokenResult(result,input,sessionCookies,sessionConnectionPool);
+
             return result;
         } catch (Exception exception) {
             return OutputUtilities.getFailureResultsMap(exception);
