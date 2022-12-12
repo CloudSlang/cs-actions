@@ -19,8 +19,9 @@ import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
 
 import java.util.Map;
 
-import static io.cloudslang.content.redhat.utils.Descriptions.Common.STATUS_CODE_DESC;
+import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.AUTH_TOKEN;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.FAILURE_DESC;
+import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.STATUS_CODE_DESC;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.SUCCESS_DESC;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.RETURN_RESULT_DESC;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.*;

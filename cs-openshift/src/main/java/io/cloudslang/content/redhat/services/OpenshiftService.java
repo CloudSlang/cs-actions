@@ -19,7 +19,9 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
+import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.COMMA;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetTokenAction.SUCCESS_DESC;
+import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.AUTH_TOKEN;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.EXCEPTION;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.STATUS_CODE;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetPodList.*;
@@ -41,7 +43,7 @@ public class OpenshiftService {
             if (StringUtils.isEmpty(statusCode) || Integer.parseInt(statusCode) < 200 || Integer.parseInt(statusCode) >= 300) {
                 if (StringUtils.isEmpty(httpResults.get(EXCEPTION)))
                     httpResults.put(EXCEPTION, httpResults.get(RETURN_RESULT));
-                httpResults.put(RETURN_CODE, "-1");
+                httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
             }
             Map<String, String> test = new HttpClientPostAction().execute(
                     input.getHost() + DISPLAY_TOKEN_ENDPOINT,
@@ -86,13 +88,13 @@ public class OpenshiftService {
             if (StringUtils.isEmpty(statusCode) || Integer.parseInt(statusCode) < 200 || Integer.parseInt(statusCode) >= 300) {
                 if (StringUtils.isEmpty(httpResults.get(EXCEPTION)))
                     httpResults.put(EXCEPTION, httpResults.get(RETURN_RESULT));
-                httpResults.put(RETURN_CODE, "-1");
+                httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
             }
 
 
         } catch (IndexOutOfBoundsException e) {
             httpResults.put(EXCEPTION, httpResults.get(RETURN_RESULT));
-            httpResults.put(RETURN_CODE, "-1");
+            httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
         }
     }
     public static void processHttpResult(Map<String, String> httpResults) {

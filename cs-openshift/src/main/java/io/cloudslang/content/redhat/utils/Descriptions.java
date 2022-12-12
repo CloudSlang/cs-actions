@@ -190,6 +190,5 @@ public class Descriptions {
         public static final String PROPERTY_UID = "uid";
         public static final String PROPERTY_ITEMS = "items";
         public static final String PROPERTY_METADATA = "metadata";
-        public static final String COMMA = ",";
     }
 }
