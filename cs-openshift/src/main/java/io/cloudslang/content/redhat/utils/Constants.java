@@ -84,6 +84,7 @@ public final class Constants {
         public static final String EQUAL = "=";
         public static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
         public static final String DISPLAY_TOKEN_ENDPOINT = "/oauth/token/display";
+        public static final String COLON_PUNCTUATION = ":";
 
     }
 

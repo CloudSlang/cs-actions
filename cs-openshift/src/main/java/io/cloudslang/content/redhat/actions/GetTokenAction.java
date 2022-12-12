@@ -50,7 +50,7 @@ import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.AUTH_TOKEN;
 
 public class GetTokenAction {
     @Action(name = GET_TOKEN_NAME,
-            description = "DESC",
+            description = GET_TOKEN_NAME_DESC,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -86,7 +86,7 @@ public class GetTokenAction {
                                        @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
         try {
 
-            String auth = username + ":" + password;
+            String auth = username + COLON_PUNCTUATION + password;
             byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
 
             HttpInput input = HttpInput.builder()
