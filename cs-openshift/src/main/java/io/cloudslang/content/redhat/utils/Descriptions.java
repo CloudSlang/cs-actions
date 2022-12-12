@@ -81,6 +81,7 @@ public class Descriptions {
     public static class GetTokenAction {
 
         public static final String GET_TOKEN_NAME = "Get Token";
+        public static final String GET_TOKEN_NAME_DESC = "Get Authorization Token";
         public static final String RETURN_RESULT_DESC = "The authorization token for Openshift.";
         public static final String AUTH_TOKEN_DESC = "Generated authentication token.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while generating the " +
