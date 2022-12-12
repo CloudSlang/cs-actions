@@ -34,14 +34,14 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_CONNECTION_POOL_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_COOKIES_DESC;
-import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROTOCOL;
 import static io.cloudslang.content.redhat.services.OpenshiftService.processHttpResult;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.CreateDeploymentAction.*;
+import static io.cloudslang.content.redhat.utils.Descriptions.CreateDeploymentAction.EXCEPTION_DESC;
+import static io.cloudslang.content.redhat.utils.Descriptions.CreateDeploymentAction.RETURN_RESULT_DESC;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.EXCEPTION;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.STATUS_CODE;
-import static io.cloudslang.content.redhat.utils.Utils.validateProtocol;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class CreateDeployment {
@@ -49,21 +49,21 @@ public class CreateDeployment {
     @Action(name = CREATE_DEPLOYMENT,
             description = CREATE_DEPLOYMENT_DESCRIPTION,
             outputs = {
-                    @Output(RETURN_RESULT),
-                    @Output(STATUS_CODE),
-                    @Output(RETURN_CODE),
-                    @Output(EXCEPTION)
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED),
                     @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> execute(
-            @Param(value = HOST, description = HOST_DESCRIPTION, required = true) String hostName,
-            @Param(value = PROTOCOL, description = PROTOCOL_DESCRIPTION) String protocol,
+            @Param(value = HOST, description = HOST_DESC, required = true) String hostName,
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESCRIPTION, required = true) String authToken,
             @Param(value = DEFINITION, description = DEFINITION_DESCRIPTION, required = true) String body,
-            @Param(value = NAMESPACE, description = NAMESPACE_DESCRIPTION) String namespace,
+            @Param(value = NAMESPACE, description = NAMESPACE_DESCRIPTION, required = true) String namespace,
+
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
             @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -86,14 +86,12 @@ public class CreateDeployment {
 
         try {
 
-            validateProtocol(protocol);
-
             Map<String, String> result = new HttpClientPostAction().execute(
-                    protocol + PROTOCOL_DELIMITER + hostName + "/apis/apps/v1/namespaces/" + namespace + "/deployments",
+                      hostName + APPS_V1_NAMESPACES + namespace + "/deployments",
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
-                    EMPTY,
+                    TRUE,
                     proxyHost,
                     proxyPort,
                     proxyUsername,

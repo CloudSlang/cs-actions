@@ -20,6 +20,7 @@ public class Descriptions {
     public static class Common {
 
         public static final String RETURN_CODE_DESC = "0 if success, -1 if failure.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for Openshift API request.";
 
         public static final String HOST_DESC = "HOST.";
         public static final String AUTH_TOKEN_DESC = "Token used to authenticate to the Openshift environment.";
@@ -95,12 +96,13 @@ public class Descriptions {
     public static class CreateDeploymentAction {
         public static final String CREATE_DEPLOYMENT = "Create Deployment";
         public static final String CREATE_DEPLOYMENT_DESCRIPTION = "This operation creates a deployment with the inputs from the user.";
-        public static final String HOST_DESCRIPTION = "HOST.";
-        public static final String PROTOCOL_DESCRIPTION = "PROTOCOL.";
         public static final String AUTH_TOKEN_DESCRIPTION = "Token used to authenticate to the openshift environment.";
         public static final String NAMESPACE_DESCRIPTION = "The namespace in which the deployment will be created.";
         public static final String DEFINITION_DESCRIPTION = "YAML or JSON definitions.";
-
+        public static final String RETURN_RESULT_DESC = "The authorization token for Openshift.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error";
+        public static final String SUCCESS_DESC = "Deployment created successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to create the deployment.";
     }
 
     public static class DeleteDeployment {
