@@ -81,6 +81,7 @@ public class Descriptions {
     public static class GetTokenAction {
 
         public static final String GET_TOKEN_NAME = "Get Token";
+        public static final String GET_TOKEN_NAME_DESC = "Get Authorization Token";
         public static final String RETURN_RESULT_DESC = "The authorization token for Openshift.";
         public static final String AUTH_TOKEN_DESC = "Generated authentication token.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while generating the " +
@@ -91,6 +92,18 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "Token generated successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
 
+    }
+
+    public static class CreateDeploymentAction {
+        public static final String CREATE_DEPLOYMENT = "Create Deployment";
+        public static final String CREATE_DEPLOYMENT_DESCRIPTION = "This operation creates a deployment with the inputs from the user.";
+        public static final String AUTH_TOKEN_DESCRIPTION = "Token used to authenticate to the openshift environment.";
+        public static final String NAMESPACE_DESCRIPTION = "The namespace in which the deployment will be created.";
+        public static final String DEFINITION_DESCRIPTION = "YAML or JSON definitions.";
+        public static final String RETURN_RESULT_DESC = "The authorization token for Openshift.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error";
+        public static final String SUCCESS_DESC = "Deployment created successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to create the deployment.";
     }
 
     public static class DeleteDeployment {
