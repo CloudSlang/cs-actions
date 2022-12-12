@@ -76,18 +76,16 @@
         </properties>
 
         <dependencies>
-
-            <!--HTTP CLIENT-->
             <dependency>
                 <groupId>com.hp.score.sdk</groupId>
                 <artifactId>score-content-sdk</artifactId>
                 <version>${score-content-sdk.version}</version>
             </dependency>
-            <dependency>
-                <groupId>io.cloudslang.content</groupId>
-                <artifactId>cs-commons</artifactId>
-                <version>${cs-commons.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>io.cloudslang.content</groupId>-->
+<!--                <artifactId>cs-commons</artifactId>-->
+<!--                <version>${cs-commons.version}</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>io.cloudslang.content</groupId>
                 <artifactId>cs-httpclient-commons</artifactId>
@@ -96,7 +94,6 @@
             </dependency>
 
             <dependency>
-                <!-- jsoup HTML parser library @ https://jsoup.org/ -->
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
                 <version>1.15.3</version>

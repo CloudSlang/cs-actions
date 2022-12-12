@@ -1,19 +1,20 @@
 package io.cloudslang.content.redhat.services;
 
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import com.jayway.jsonpath.JsonPath;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.redhat.utils.Descriptions.GetPodList.*;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.RETURN_RESULT_MESSAGE_DESC;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class OpenshiftService {
 
@@ -24,8 +25,63 @@ public class OpenshiftService {
         if (StringUtils.isEmpty(statusCode) || Integer.parseInt(statusCode) < 200 || Integer.parseInt(statusCode) >= 300) {
             if (StringUtils.isEmpty(httpResults.get(EXCEPTION)))
                 httpResults.put(EXCEPTION, httpResults.get(RETURN_RESULT));
-            httpResults.put(RETURN_CODE, "-1");
+            httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
         }
+    }
+
+    public static  void addPodListResults(Map<String, String> httpResults) {
+        try {
+            String returnResult = httpResults.get(RETURN_RESULT);
+            if (!(returnResult.isEmpty())) {
+
+                //populate the document output
+                httpResults.put(DOCUMENT_OUTPUT, returnResult);
+
+                //parse the API response, extract required information construct the podList and podArray outputs
+                JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
+                JsonArray podArray = jsonResponse.getAsJsonArray(PROPERTY_ITEMS);
+                StringBuilder podList = new StringBuilder();
+                List<JsonObject> podPairList = new ArrayList<>();
+                for (JsonElement pod : podArray) {
+                    JsonObject podObject = new JsonObject();
+                    podObject.add(PROPERTY_NAME, pod.getAsJsonObject().get(PROPERTY_METADATA).getAsJsonObject().get(PROPERTY_NAME));
+                    podObject.add(PROPERTY_UID, pod.getAsJsonObject().get(PROPERTY_METADATA).getAsJsonObject().get(PROPERTY_UID));
+                    podPairList.add(podObject);
+                    podList.append(pod.getAsJsonObject().get(PROPERTY_METADATA).getAsJsonObject().get(PROPERTY_UID).getAsString());
+                    podList.append(COMMA);
+                }
+
+                //remove the last comma from the podList value
+                podList.deleteCharAt(podList.length()-1);
+
+                //populate the podList and podArray outputs
+                httpResults.put(POD_LIST, podList.toString());
+                httpResults.put(POD_ARRAY, podPairList.toString());
+
+                //overwrite the returnResult output with a success message
+                httpResults.put(RETURN_RESULT, SUCCESSFUL_RETURN_RESULT);
+
+                }
+
+        } catch (Exception e) {
+            //in case an error arises during the parsing, populate the custom outputs with empty values
+            setFailureCustomResults(httpResults);
+
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static void setFailureCustomResults(Map<String, String> httpResults){
+        httpResults.put(POD_LIST, EMPTY);
+        httpResults.put(POD_ARRAY, EMPTY);
+        httpResults.put(DOCUMENT_OUTPUT, EMPTY);
+    }
+
+    public static void setFailureCommonResults(Map<String, String> httpResults, Exception e){
+        httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
+        httpResults.put(RETURN_RESULT, e.getMessage());
+        httpResults.put(EXCEPTION, ExceptionUtils.getStackTrace(e));
     }
 
     public static void processHttpGetDeploymentStatusResult(Map<String, String> httpResults) {
@@ -36,7 +92,7 @@ public class OpenshiftService {
         if (!(returnResult.isEmpty())) {
             httpResults.put(DOCUMENT_OUTPUT, returnResult);
 
-            JsonObject jsonResponse = ((new JsonParser()).parse(httpResults.get(RETURN_RESULT))).getAsJsonObject();
+            JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
 
             //Kind output
             JsonPrimitive tmpResponse = (JsonPrimitive) jsonResponse.get(KIND_OUTPUT);
@@ -92,7 +148,7 @@ public class OpenshiftService {
         if (StringUtils.isEmpty(statusCode) || Integer.parseInt(statusCode) < 200 || Integer.parseInt(statusCode) >= 300) {
             if (StringUtils.isEmpty(httpResults.get(EXCEPTION)))
                 httpResults.put(EXCEPTION, httpResults.get(RETURN_RESULT));
-            httpResults.put(RETURN_CODE, "-1");
+            httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
         }
     }
 }

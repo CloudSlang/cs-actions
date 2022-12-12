@@ -151,4 +151,32 @@ public class Descriptions {
         public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_3 = "/status";
 
     }
+
+    public static class GetPodList {
+        public static final String GET_POD_LIST = "Get Pod List";
+        public static final String GET_POD_LIST_DESC = "List objects of Pod type.";
+        public static final String NAMESPACE_DESC = "The object name and auth scope, such as for teams and projects.";
+        public static final String RETURN_RESULT_DESC = "A suggestive message both for the case of success and for the " +
+                "case of failure.";
+        public static final String STATUS_CODE_DESC = "The status code of the request.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the Pod list.";
+        public static final String SUCCESS_DESC = "The retrieval of the pod list was made successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the pod list.";
+        public static final String POD_LIST_DESC = "The comma separated list of pod uids.";
+        public static final String POD_ARRAY_DESC = "The list containing pairs of pod name and uids.";
+
+        public static final String DOCUMENT_OUTPUT_DESC = "All the information related to a the pod list in json format.";
+
+        //API
+        public static final String GET_POD_LIST_ENDPOINT_1 = "/api/v1/namespaces/";
+        public static final String GET_POD_LIST_ENDPOINT_2 = "/pods";
+        public static final String NEGATIVE_RETURN_CODE = "-1";
+        public static final String SUCCESSFUL_RETURN_RESULT = "The Pod list was returned successfully.";
+        public static final String FAILURE_RETURN_RESULT = "An issue was encountered during your query. Please check the exception output for more information.";
+        public static final String PROPERTY_NAME = "name";
+        public static final String PROPERTY_UID = "uid";
+        public static final String PROPERTY_ITEMS = "items";
+        public static final String PROPERTY_METADATA = "metadata";
+        public static final String COMMA = ",";
+    }
 }
