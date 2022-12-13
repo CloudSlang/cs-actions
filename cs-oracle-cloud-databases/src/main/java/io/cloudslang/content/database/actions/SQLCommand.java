@@ -29,6 +29,7 @@ import io.cloudslang.content.database.utils.InputsValidation;
 import io.cloudslang.content.database.utils.Outputs;
 import io.cloudslang.content.database.utils.Utils;
 import io.cloudslang.content.utils.StringUtilities;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.sql.DriverManager;
@@ -85,7 +86,7 @@ public class SQLCommand {
         if (!exceptionMessages.isEmpty())
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
-        walletPath = defaultIfEmpty((!walletPath.isEmpty()) ? Utils.unzip(walletPath, Boolean.parseBoolean(overwriteWallet)) : EMPTY, EMPTY);
+        walletPath = defaultIfEmpty((!StringUtils.isEmpty(walletPath)) ? Utils.unzip(walletPath, Boolean.parseBoolean(overwriteWallet)) : EMPTY, EMPTY);
 
         OracleCloudInputs oracleCloudInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
                 .connectionString(connectionString)
