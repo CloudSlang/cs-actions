@@ -14,7 +14,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
 import io.cloudslang.content.utils.OutputUtilities;
 
-import static io.cloudslang.content.redhat.services.OpenshiftService.processHttpGetDeploymentStatusResult;
+import static io.cloudslang.content.redhat.services.OpenshiftService.*;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
 
 import java.util.Map;
@@ -24,6 +24,8 @@ import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatu
 import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.STATUS_CODE_DESC;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.SUCCESS_DESC;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.RETURN_RESULT_DESC;
+import static io.cloudslang.content.redhat.utils.Descriptions.GetPodList.FAILURE_RETURN_RESULT;
+import static io.cloudslang.content.redhat.utils.Descriptions.GetPodList.NEGATIVE_RETURN_CODE;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.*;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.EXCEPTION;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -37,7 +39,7 @@ import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SES
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_CONNECTION_POOL;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_COOKIES;
 
-public class GetDeploymentStatusAction {
+public class GetDeploymentStatus {
 
     @Action(name = GET_DEPLOYMENT_STATUS,
             description = GET_DEPLOYMENT_STATUS_DESC,
@@ -54,7 +56,7 @@ public class GetDeploymentStatusAction {
                     @Output(value = NAME_OUTPUT, description = NAME_OUTPUT_DESC),
                     @Output(value = NAMESPACE_OUTPUT, description = NAMESPACE_OUTPUT_DESC),
                     @Output(value = UID_OUTPUT, description = UID_OUTPUT_DESC),
-                    //Specific outputs - general
+
                     @Output(value = OBSERVED_GENERATION_OUTPUT, description = OBSERVED_GENERATION_OUTPUT_DESC),
                     @Output(value = REPLICAS_OUTPUT, description = REPLICAS_OUTPUT_DESC),
                     @Output(value = UPDATED_REPLICAS_OUTPUT, description = UPDATED_REPLICAS_OUTPUT_DESC),
@@ -73,8 +75,8 @@ public class GetDeploymentStatusAction {
             @Param(value = HOST, description = HOST_DESC, required = true) String host,
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true) String authToken,
             //Specific inputs
-            @Param(value = NAME, description = NAME_DESC) String name,
-            @Param(value = NAMESPACE, description = NAMESPACE_DESC) String namespace,
+            @Param(value = NAME, description = NAME_DESC, required = true) String name,
+            @Param(value = NAMESPACE, description = NAMESPACE_DESC, required = true) String namespace,
             //Common Inputs
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -136,7 +138,16 @@ public class GetDeploymentStatusAction {
                     sessionConnectionPool
             );
 
-            processHttpGetDeploymentStatusResult(result);
+            if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
+                if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300)
+                    processHttpGetDeploymentStatusResult(result);
+                else {
+                    result.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
+                    result.put(EXCEPTION, result.get(RETURN_RESULT));
+                    result.put(RETURN_RESULT, FAILURE_RETURN_RESULT);
+                }
+            }
+
             return result;
 
         } catch (Exception exception) {

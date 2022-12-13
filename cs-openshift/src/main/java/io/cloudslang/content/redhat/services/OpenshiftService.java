@@ -80,7 +80,7 @@ public class OpenshiftService {
 
             String postHtmlResponse = test.get(RETURN_RESULT);
             Document second_response = Jsoup.parse(postHtmlResponse);
-            if (!StringUtils.isEmpty(postHtmlResponse)){
+            if (!StringUtils.isEmpty(postHtmlResponse)) {
                 httpResults.put(RETURN_RESULT, SUCCESS_DESC);
                 httpResults.put(AUTH_TOKEN, second_response.select(CODE).get(0).text());
             }
@@ -97,6 +97,7 @@ public class OpenshiftService {
             httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
         }
     }
+
     public static void processHttpResult(Map<String, String> httpResults) {
 
         String statusCode = httpResults.get(STATUS_CODE);
@@ -108,7 +109,7 @@ public class OpenshiftService {
         }
     }
 
-    public static  void addPodListResults(Map<String, String> httpResults) {
+    public static void addPodListResults(Map<String, String> httpResults) {
         try {
             String returnResult = httpResults.get(RETURN_RESULT);
             if (!(returnResult.isEmpty())) {
@@ -131,7 +132,7 @@ public class OpenshiftService {
                 }
 
                 //remove the last comma from the podList value
-                podList.deleteCharAt(podList.length()-1);
+                podList.deleteCharAt(podList.length() - 1);
 
                 //populate the podList and podArray outputs
                 httpResults.put(POD_LIST, podList.toString());
@@ -140,7 +141,7 @@ public class OpenshiftService {
                 //overwrite the returnResult output with a success message
                 httpResults.put(RETURN_RESULT, SUCCESSFUL_RETURN_RESULT);
 
-                }
+            }
 
         } catch (Exception e) {
             //in case an error arises during the parsing, populate the custom outputs with empty values
@@ -151,13 +152,13 @@ public class OpenshiftService {
 
     }
 
-    public static void setFailureCustomResults(Map<String, String> httpResults){
+    public static void setFailureCustomResults(Map<String, String> httpResults) {
         httpResults.put(POD_LIST, EMPTY);
         httpResults.put(POD_ARRAY, EMPTY);
         httpResults.put(DOCUMENT_OUTPUT, EMPTY);
     }
 
-    public static void setFailureCommonResults(Map<String, String> httpResults, Exception e){
+    public static void setFailureCommonResults(Map<String, String> httpResults, Exception e) {
         httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
         httpResults.put(RETURN_RESULT, e.getMessage());
         httpResults.put(EXCEPTION, ExceptionUtils.getStackTrace(e));
@@ -167,67 +168,63 @@ public class OpenshiftService {
 
         //Process the return result output
         String returnResult = httpResults.get(RETURN_RESULT);
+        try {
 
-        if (!(returnResult.isEmpty())) {
-            httpResults.put(DOCUMENT_OUTPUT, returnResult);
+            if (!(returnResult.isEmpty())) {
+                httpResults.put(DOCUMENT_OUTPUT, returnResult);
 
-            JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
+                JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
 
-            //Kind output
-            JsonPrimitive tmpResponse = (JsonPrimitive) jsonResponse.get(KIND_OUTPUT);
-            httpResults.put(KIND_OUTPUT, tmpResponse.toString());
+                //Kind output
+                JsonPrimitive tmpResponse = (JsonPrimitive) jsonResponse.get(KIND_OUTPUT);
+                httpResults.put(KIND_OUTPUT, tmpResponse.toString());
 
-            //Name outputs
-            String namePath = "$.metadata.name";
-            String namePathResponse = JsonPath.read(jsonResponse.toString(), namePath);
-            httpResults.put(NAME_OUTPUT, namePathResponse);
+                //Name outputs
+                String namePath = "$.metadata.name";
+                String namePathResponse = JsonPath.read(jsonResponse.toString(), namePath);
+                httpResults.put(NAME_OUTPUT, namePathResponse);
 
-            //Namespace outputs
-            String namespacePath = "$.metadata.namespace";
-            String namespacePathResponse = JsonPath.read(jsonResponse.toString(), namespacePath);
-            httpResults.put(NAMESPACE_OUTPUT, namespacePathResponse);
+                //Namespace outputs
+                String namespacePath = "$.metadata.namespace";
+                String namespacePathResponse = JsonPath.read(jsonResponse.toString(), namespacePath);
+                httpResults.put(NAMESPACE_OUTPUT, namespacePathResponse);
 
-            //Uid outputs
-            String uidPath = "$.metadata.uid";
-            String uidPathResponse = JsonPath.read(jsonResponse.toString(), uidPath);
-            httpResults.put(UID_OUTPUT, uidPathResponse);
+                //Uid outputs
+                String uidPath = "$.metadata.uid";
+                String uidPathResponse = JsonPath.read(jsonResponse.toString(), uidPath);
+                httpResults.put(UID_OUTPUT, uidPathResponse);
 
-            //ObservedGeneration output
-            String observedGenerationPath = "$.status.observedGeneration";
-            Integer observedGenerationPathResponse = JsonPath.read(jsonResponse.toString(), observedGenerationPath);
-            httpResults.put(OBSERVED_GENERATION_OUTPUT, observedGenerationPathResponse.toString());
+                //ObservedGeneration output
+                String observedGenerationPath = "$.status.observedGeneration";
+                Integer observedGenerationPathResponse = JsonPath.read(jsonResponse.toString(), observedGenerationPath);
+                httpResults.put(OBSERVED_GENERATION_OUTPUT, observedGenerationPathResponse.toString());
 
-            //Replicas output
-            String replicasPath = "$.status.replicas";
-            Integer replicasPathResponse = JsonPath.read(jsonResponse.toString(), replicasPath);
-            httpResults.put(REPLICAS_OUTPUT, replicasPathResponse.toString());
+                //Replicas output
+                String replicasPath = "$.status.replicas";
+                Integer replicasPathResponse = JsonPath.read(jsonResponse.toString(), replicasPath);
+                httpResults.put(REPLICAS_OUTPUT, replicasPathResponse.toString());
 
-            //UpdatedReplicas output
-            String updatedReplicasPath = "$.status.updatedReplicas";
-            Integer updatedReplicasPathResponse = JsonPath.read(jsonResponse.toString(), updatedReplicasPath);
-            httpResults.put(UPDATED_REPLICAS_OUTPUT, updatedReplicasPathResponse.toString());
+                //UpdatedReplicas output
+                String updatedReplicasPath = "$.status.updatedReplicas";
+                Integer updatedReplicasPathResponse = JsonPath.read(jsonResponse.toString(), updatedReplicasPath);
+                httpResults.put(UPDATED_REPLICAS_OUTPUT, updatedReplicasPathResponse.toString());
 
-            //UnavailableReplicas output
-            String unavailableReplicasPath = "$.status.unavailableReplicas";
-            Integer unavailableReplicasPathResponse = JsonPath.read(jsonResponse.toString(), unavailableReplicasPath);
-            httpResults.put(UNAVAILABLE_REPLICAS_OUTPUT, unavailableReplicasPathResponse.toString());
+                //UnavailableReplicas output
+                String unavailableReplicasPath = "$.status.unavailableReplicas";
+                Integer unavailableReplicasPathResponse = JsonPath.read(jsonResponse.toString(), unavailableReplicasPath);
+                httpResults.put(UNAVAILABLE_REPLICAS_OUTPUT, unavailableReplicasPathResponse.toString());
 
-            //Conditions output
-            String conditionsPath = "$.status.conditions";
-            List<String> conditionsPathResponse = JsonPath.read(jsonResponse.toString(), conditionsPath);
-            httpResults.put(CONDITIONS_OUTPUT, conditionsPathResponse.toString());
+                //Conditions output
+                String conditionsPath = "$.status.conditions";
+                List<String> conditionsPathResponse = JsonPath.read(jsonResponse.toString(), conditionsPath);
+                httpResults.put(CONDITIONS_OUTPUT, conditionsPathResponse.toString());
 
-            httpResults.put(RETURN_RESULT, RETURN_RESULT_MESSAGE_DESC);
-        }
+                httpResults.put(RETURN_RESULT, RETURN_RESULT_MESSAGE_DESC);
+            }
 
-
-        //Process HTTP status code
-        String statusCode = httpResults.get(STATUS_CODE);
-
-        if (StringUtils.isEmpty(statusCode) || Integer.parseInt(statusCode) < 200 || Integer.parseInt(statusCode) >= 300) {
-            if (StringUtils.isEmpty(httpResults.get(EXCEPTION)))
-                httpResults.put(EXCEPTION, httpResults.get(RETURN_RESULT));
-            httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
+
 }
