@@ -39,9 +39,8 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_CONNECTION_POOL_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_COOKIES_DESC;
-import static io.cloudslang.content.redhat.entities.HttpInput.builder;
+
 import static io.cloudslang.content.redhat.services.OpenshiftService.processAuthTokenResult;
-import static io.cloudslang.content.redhat.services.OpenshiftService.processHttpResult;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetTokenAction.AUTH_TOKEN_DESC;
@@ -61,22 +60,22 @@ public class GetTokenAction {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = HOST, description = HOST_DESC) String host,
-                                       @Param(value = USERNAME, description = USERNAME_DESC) String username,
-                                       @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
+    public Map<String, String> execute(@Param(value = HOST, required = true, description = HOST_DESC) String host,
+                                       @Param(value = USERNAME, required = true, description = USERNAME_DESC) String username,
+                                       @Param(value = PASSWORD, required = true, encrypted = true, description = PASSWORD_DESC) String password,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC) String proxyPassword,
+                                       @Param(value = PROXY_PASSWORD,encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
                                        @Param(value = TLS_VERSION, description = TLS_VERSION_DESC) String tlsVersion,
                                        @Param(value = ALLOWED_CIPHERS, description = ALLOWED_CIPHERS_DESC) String allowedCyphers,
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_HOSTNAME_VERIFIER_DESC) String x509HostnameVerifier,
                                        @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
-                                       @Param(value = TRUST_PASSWORD, description = TRUST_PASSWORD_DESC) String trustPassword,
+                                       @Param(value = TRUST_PASSWORD,encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
                                        @Param(value = KEYSTORE, description = KEYSTORE_DESC) String keystore,
-                                       @Param(value = KEYSTORE_PASSWORD, description = KEYSTORE_PASSWORD_DESC) String keystorePassword,
+                                       @Param(value = KEYSTORE_PASSWORD,encrypted = true, description = KEYSTORE_PASSWORD_DESC) String keystorePassword,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
