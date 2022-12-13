@@ -57,7 +57,7 @@ public class GetPodList {
             //Specific input
             @Param(value = HOST, description = HOST_DESC, required = true) String host,
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true) String authToken,
-            @Param(value = NAMESPACE, description = NAMESPACE_DESC) String namespace,
+            @Param(value = NAMESPACE, description = NAMESPACE_DESC, required = true) String namespace,
             //Common Inputs
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
