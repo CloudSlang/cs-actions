@@ -78,7 +78,6 @@ public final class Constants {
         public static final String SEMICOLON = ";";
 
         // Create Deployment
-        public static final String AUTH_TOKEN = "authToken";
         public static final String DEFINITION = "definition";
 
 
