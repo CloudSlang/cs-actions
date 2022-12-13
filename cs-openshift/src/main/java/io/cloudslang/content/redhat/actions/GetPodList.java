@@ -23,7 +23,6 @@ import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SES
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_COOKIES_DESC;
 import static io.cloudslang.content.redhat.services.OpenshiftService.*;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
-import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.AUTH_TOKEN;
 import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetPodList.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.GetPodList.STATUS_CODE_DESC;
