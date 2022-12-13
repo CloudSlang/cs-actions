@@ -37,6 +37,11 @@ public final class Outputs extends OutputNames {
         public static final String UNAVAILABLE_REPLICAS_OUTPUT = "unavailableReplicas";
         public static final String CONDITIONS_OUTPUT = "conditions";
 
+        //Get Pod List
+
+        public static final String POD_LIST = "podList";
+        public static final String POD_ARRAY = "podArray";
+
     }
 }
 
