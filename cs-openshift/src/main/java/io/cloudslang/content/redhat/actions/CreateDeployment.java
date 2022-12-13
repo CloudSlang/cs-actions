@@ -40,8 +40,7 @@ import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.CreateDeploymentAction.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.CreateDeploymentAction.EXCEPTION_DESC;
 import static io.cloudslang.content.redhat.utils.Descriptions.CreateDeploymentAction.RETURN_RESULT_DESC;
-import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.EXCEPTION;
-import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.STATUS_CODE;
+import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class CreateDeployment {
