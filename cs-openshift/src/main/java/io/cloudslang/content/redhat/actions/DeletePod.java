@@ -1,19 +1,3 @@
-/*
- * (c) Copyright 2022 Micro Focus, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-
 package io.cloudslang.content.redhat.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -32,6 +16,7 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUA
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_CONNECTION_POOL_DESC;
@@ -39,13 +24,14 @@ import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SES
 import static io.cloudslang.content.redhat.services.OpenshiftService.processHttpResult;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
-import static io.cloudslang.content.redhat.utils.Descriptions.DeleteDeployment.*;
+import static io.cloudslang.content.redhat.utils.Descriptions.DeletePod.*;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.AUTH_TOKEN;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.STATUS_CODE;
 
-public class DeleteDeployment {
-    @Action(name = DELETE_DEPLOYMENT_NAME,
-            description = DELETE_DEPLOYMENT_DESC,
+public class DeletePod {
+
+    @Action(name = DELETE_POD,
+            description = DELETE_POD_DESCRIPTION,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -57,9 +43,9 @@ public class DeleteDeployment {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = HOST, required = true, description = HOST_DESC) String host,
-                                       @Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC, encrypted = true) String authToken,
-                                       @Param(value = NAMESPACE, required = true, description = NAMESPACE_DESC) String namespace,
-                                       @Param(value = DEPLOYMENT, required = true, description = DEPLOYMENT_DESC) String deployment,
+                                       @Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESCRIPTION, encrypted = true) String authToken,
+                                       @Param(value = NAMESPACE, required = true, description = NAMESPACE_DESCRIPTION) String namespace,
+                                       @Param(value = POD_NAME, required = true, description = POD_NAME_DESCRIPTION) String podName,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -83,7 +69,7 @@ public class DeleteDeployment {
         try {
 
             Map<String, String> result = new HttpClientDeleteAction().execute(
-                    host + APPS_V1_NAMESPACES + namespace + DEPLOYMENTS  + FORWARD_SLASH + deployment,
+                    host + POD_ENDPOINT_1 + namespace + POD_ENDPOINT_2 + FORWARD_SLASH + podName,
                     ANONYMOUS,
                     EMPTY_STRING,
                     EMPTY_STRING,

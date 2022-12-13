@@ -88,7 +88,7 @@ public final class Constants {
         }
 
         public static final String APPS_V1_NAMESPACES = "/apis/apps/v1/namespaces/";
-        public static final String DEPLOYMENTS = "/deployments/";
+        public static final String DEPLOYMENTS = "/deployments";
 
         //query for authorization
         public static final String QUERY_PARAM = "response_type=code&client_id=openshift-browser-client";
@@ -101,6 +101,21 @@ public final class Constants {
         public static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
         public static final String DISPLAY_TOKEN_ENDPOINT = "/oauth/token/display";
         public static final String COLON_PUNCTUATION = ":";
+
+        public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_1 = "/apis/apps/v1/namespaces/";
+        public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_2 = "/deployments/";
+        public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_3 = "/status";
+
+        public static final String POD_ENDPOINT_1 = "/api/v1/namespaces/";
+        public static final String POD_ENDPOINT_2 = "/pods";
+        public static final String NEGATIVE_RETURN_CODE = "-1";
+
+        public static final String PROPERTY_NAME = "name";
+        public static final String PROPERTY_UID = "uid";
+        public static final String PROPERTY_ITEMS = "items";
+        public static final String PROPERTY_METADATA = "metadata";
+        public static final String SPECIFICATION = "specification";
+        public static final String POD_NAME = "podName";
     }
 
 }

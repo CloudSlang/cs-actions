@@ -59,8 +59,8 @@ public class CreateDeployment {
                     @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true)
             })
     public Map<String, String> execute(
-            @Param(value = HOST, description = HOST_DESC, required = true) String hostName,
-            @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESCRIPTION, required = true) String authToken,
+            @Param(value = HOST, description = HOST_DESC, required = true) String host,
+            @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESCRIPTION, required = true, encrypted = true) String authToken,
             @Param(value = DEFINITION, description = DEFINITION_DESCRIPTION, required = true) String body,
             @Param(value = NAMESPACE, description = NAMESPACE_DESCRIPTION, required = true) String namespace,
 
@@ -87,7 +87,7 @@ public class CreateDeployment {
         try {
 
             Map<String, String> result = new HttpClientPostAction().execute(
-                      hostName + APPS_V1_NAMESPACES + namespace + "/deployments",
+                      host + APPS_V1_NAMESPACES + namespace + DEPLOYMENTS,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
