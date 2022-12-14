@@ -222,12 +222,12 @@ public class OpenshiftService {
                 //Name outputs
                 String namePath = "$.metadata.name";
                 String namePathResponse = JsonPath.read(jsonResponse.toString(), namePath);
-                httpResults.put(NAME_OUTPUT, namePathResponse);
+                httpResults.put(DEPLOYMENT_NAME_OUTPUT, namePathResponse);
 
                 //Namespace outputs
                 String namespacePath = "$.metadata.namespace";
                 String namespacePathResponse = JsonPath.read(jsonResponse.toString(), namespacePath);
-                httpResults.put(NAMESPACE_OUTPUT, namespacePathResponse);
+                httpResults.put(DEPLOYMENT_NAMESPACE_OUTPUT, namespacePathResponse);
 
                 //Uid outputs
                 String uidPath = "$.metadata.uid";

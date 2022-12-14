@@ -146,8 +146,8 @@ public class Descriptions {
         //Specific outputs
 
         //Get Deployment Status
-        public static final String NAME_OUTPUT_DESC = "The deployment name.";
-        public static final String NAMESPACE_OUTPUT_DESC = "The deployment namespace.";
+        public static final String DEPLOYMENT_NAME_OUTPUT_DESC = "The deployment name.";
+        public static final String DEPLOYMENT_NAMESPACE_OUTPUT_DESC = "The deployment namespace.";
         public static final String UID_OUTPUT_DESC = "The deployment uid.";
         public static final String KIND_OUTPUT_DESC = "The deployment kind.";
         public static final String OBSERVED_GENERATION_OUTPUT_DESC = "The observedGeneration status property of the deployment.";
