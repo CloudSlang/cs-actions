@@ -7,6 +7,7 @@ import io.cloudslang.content.httpclient.actions.HttpClientPostAction;
 import io.cloudslang.content.redhat.entities.HttpInput;
 import com.google.gson.JsonPrimitive;
 import com.jayway.jsonpath.JsonPath;
+import io.cloudslang.content.redhat.utils.Descriptions;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -111,28 +112,12 @@ public class OpenshiftService {
 
     public static void addPodListResults(Map<String, String> httpResults) {
         try {
-            String returnResult = httpResults.get(RETURN_RESULT);
-            if (!(returnResult.isEmpty())) {
+            if (!(httpResults.get(RETURN_RESULT).isEmpty())) {
 
-                //populate the document output
-                httpResults.put(DOCUMENT_OUTPUT, returnResult);
-
-                //parse the API response, extract required information construct the podList and podArray outputs
-                JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
-                JsonArray podArray = jsonResponse.getAsJsonArray(PROPERTY_ITEMS);
                 StringBuilder podList = new StringBuilder();
                 List<JsonObject> podPairList = new ArrayList<>();
-                for (JsonElement pod : podArray) {
-                    JsonObject podObject = new JsonObject();
-                    podObject.add(PROPERTY_NAME, pod.getAsJsonObject().get(PROPERTY_METADATA).getAsJsonObject().get(PROPERTY_NAME));
-                    podObject.add(PROPERTY_UID, pod.getAsJsonObject().get(PROPERTY_METADATA).getAsJsonObject().get(PROPERTY_UID));
-                    podPairList.add(podObject);
-                    podList.append(pod.getAsJsonObject().get(PROPERTY_METADATA).getAsJsonObject().get(PROPERTY_UID).getAsString());
-                    podList.append(COMMA);
-                }
 
-                //remove the last comma from the podList value
-                podList.deleteCharAt(podList.length() - 1);
+                extractValue(httpResults, podList, podPairList);
 
                 //populate the podList and podArray outputs
                 httpResults.put(POD_LIST, podList.toString());
@@ -145,17 +130,72 @@ public class OpenshiftService {
 
         } catch (Exception e) {
             //in case an error arises during the parsing, populate the custom outputs with empty values
-            setFailureCustomResults(httpResults);
+            setFailureCustomResults(httpResults, POD_LIST, POD_ARRAY, DOCUMENT_OUTPUT);
 
             throw new RuntimeException(e);
         }
 
     }
 
-    public static void setFailureCustomResults(Map<String, String> httpResults) {
-        httpResults.put(POD_LIST, EMPTY);
-        httpResults.put(POD_ARRAY, EMPTY);
-        httpResults.put(DOCUMENT_OUTPUT, EMPTY);
+    public static void addRouteListResults(Map<String, String> httpResults) {
+        try {
+            if (!(httpResults.get(RETURN_RESULT).isEmpty())) {
+
+                StringBuilder routeList = new StringBuilder();
+                List<JsonObject> routePairList = new ArrayList<>();
+
+                extractValue(httpResults, routeList, routePairList);
+
+                //populate the routeList and routeArray outputs
+                httpResults.put(ROUTE_LIST, routeList.toString());
+                httpResults.put(ROUTE_ARRAY, routePairList.toString());
+
+                //overwrite the returnResult output with a success message
+                httpResults.put(RETURN_RESULT, Descriptions.GetRouteList.SUCCESSFUL_RETURN_RESULT);
+
+            }
+
+        } catch (Exception e) {
+            //in case an error arises during the parsing, populate the custom outputs with empty values
+            setFailureCustomResults(httpResults, DOCUMENT_OUTPUT, ROUTE_LIST, ROUTE_ARRAY);
+
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private static void extractValue(Map<String, String> httpResults, StringBuilder elementList, List<JsonObject> elementPairList) {
+
+        //populate the document output
+        httpResults.put(DOCUMENT_OUTPUT, httpResults.get(RETURN_RESULT));
+
+        //parse the API response, extract required information construct the elementList and elementArray outputs
+        JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
+        JsonArray elementArray = jsonResponse.getAsJsonArray(PROPERTY_ITEMS);
+
+        for (JsonElement element : elementArray) {
+            JsonObject elementObject = new JsonObject();
+            elementObject.add(PROPERTY_NAME, element.getAsJsonObject().get(PROPERTY_METADATA).getAsJsonObject().get(PROPERTY_NAME));
+            elementObject.add(PROPERTY_UID, element.getAsJsonObject().get(PROPERTY_METADATA).getAsJsonObject().get(PROPERTY_UID));
+            elementPairList.add(elementObject);
+            elementList.append(element.getAsJsonObject().get(PROPERTY_METADATA).getAsJsonObject().get(PROPERTY_UID).getAsString());
+            elementList.append(COMMA);
+        }
+
+        //remove the last comma from the podList value
+
+        try {
+            elementList.deleteCharAt(elementList.length() - 1);
+        } catch (IndexOutOfBoundsException e) {
+            //do nothing with the exception as this was added for the case where the http request is successful but no item is returned
+            //in that case this would throw an IndexOutOfBoundsException
+        }
+    }
+
+    public static void setFailureCustomResults(Map<String, String> httpResults, String... inputs) {
+
+        for (String input : inputs)
+            httpResults.put(input, EMPTY);
     }
 
     public static void setFailureCommonResults(Map<String, String> httpResults, Exception e) {
