@@ -56,7 +56,7 @@ public class GetPodList {
     public Map<String, String> execute(
             //Specific input
             @Param(value = HOST, description = HOST_DESC, required = true) String host,
-            @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true) String authToken,
+            @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true, encrypted = true) String authToken,
             @Param(value = NAMESPACE, description = NAMESPACE_DESC, required = true) String namespace,
             //Common Inputs
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
@@ -84,7 +84,7 @@ public class GetPodList {
         try {
 
             result = new HttpClientGetAction().execute(
-                    host + GET_POD_LIST_ENDPOINT_1 + namespace + GET_POD_LIST_ENDPOINT_2,
+                    host + POD_ENDPOINT_1 + namespace + POD_ENDPOINT_2,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,

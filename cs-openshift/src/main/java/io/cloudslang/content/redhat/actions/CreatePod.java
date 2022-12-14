@@ -8,75 +8,45 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
-import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
+import io.cloudslang.content.httpclient.actions.HttpClientPostAction;
 import io.cloudslang.content.utils.OutputUtilities;
-
-import static io.cloudslang.content.redhat.services.OpenshiftService.*;
-import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
 
 import java.util.Map;
 
-import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.AUTH_TOKEN;
-import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.FAILURE_DESC;
-import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.STATUS_CODE_DESC;
-import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.SUCCESS_DESC;
-import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.RETURN_RESULT_DESC;
-import static io.cloudslang.content.redhat.utils.Descriptions.GetPodList.FAILURE_RETURN_RESULT;
-import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.*;
-import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.EXCEPTION;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-
-import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
-import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentStatus.*;
-
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_CONNECTION_POOL_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_COOKIES_DESC;
-import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_CONNECTION_POOL;
-import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.SESSION_COOKIES;
+import static io.cloudslang.content.redhat.services.OpenshiftService.processHttpResult;
+import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
+import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
+import static io.cloudslang.content.redhat.utils.Descriptions.CreatePod.*;
+import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.EXCEPTION;
+import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.STATUS_CODE;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class GetDeploymentStatus {
+public class CreatePod {
 
-    @Action(name = GET_DEPLOYMENT_STATUS,
-            description = GET_DEPLOYMENT_STATUS_DESC,
+    @Action(name = CREATE_POD,
+            description = CREATE_POD_DESCRIPTION,
             outputs = {
-                    //Common outputs
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
-                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    //Specific outputs - general
-                    @Output(value = DOCUMENT_OUTPUT, description = DOCUMENT_OUTPUT_DESC),
-
-                    @Output(value = KIND_OUTPUT, description = KIND_OUTPUT_DESC),
-                    @Output(value = NAME_OUTPUT, description = NAME_OUTPUT_DESC),
-                    @Output(value = NAMESPACE_OUTPUT, description = NAMESPACE_OUTPUT_DESC),
-                    @Output(value = UID_OUTPUT, description = UID_OUTPUT_DESC),
-
-                    @Output(value = OBSERVED_GENERATION_OUTPUT, description = OBSERVED_GENERATION_OUTPUT_DESC),
-                    @Output(value = REPLICAS_OUTPUT, description = REPLICAS_OUTPUT_DESC),
-                    @Output(value = UPDATED_REPLICAS_OUTPUT, description = UPDATED_REPLICAS_OUTPUT_DESC),
-                    @Output(value = UNAVAILABLE_REPLICAS_OUTPUT, description = UNAVAILABLE_REPLICAS_OUTPUT_DESC),
-                    @Output(value = CONDITIONS_OUTPUT, description = CONDITIONS_OUTPUT_DESC)
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
-                    @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
-                    @Response(text = ResponseNames.FAILURE, field = OutputNames.RETURN_CODE, value = ReturnCodes.FAILURE,
-                            matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, description = FAILURE_DESC)
+                    @Response(text = ResponseNames.SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = ResponseNames.FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.ERROR, isOnFail = true, description = FAILURE_DESC)
             })
-
     public Map<String, String> execute(
-            //Common Inputs
             @Param(value = HOST, description = HOST_DESC, required = true) String host,
-            @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true, encrypted = true) String authToken,
-            //Specific inputs
-            @Param(value = NAME, description = NAME_DESC, required = true) String name,
-            @Param(value = NAMESPACE, description = NAMESPACE_DESC, required = true) String namespace,
-            //Common Inputs
+            @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESCRIPTION, required = true, encrypted = true) String authToken,
+            @Param(value = SPECIFICATION, description = SPEC_DESCRIPTION, required = true) String body,
+            @Param(value = NAMESPACE, description = NAMESPACE_DESCRIPTION, required = true) String namespace,
+
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
             @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -99,14 +69,12 @@ public class GetDeploymentStatus {
 
         try {
 
-            Map<String, String> result = new HttpClientGetAction().execute(
-                    host + GET_DEPLOYMENT_STATUS_ENDPOINT_1 + namespace +
-                            GET_DEPLOYMENT_STATUS_ENDPOINT_2 + name +
-                            GET_DEPLOYMENT_STATUS_ENDPOINT_3,
+            Map<String, String> result = new HttpClientPostAction().execute(
+                    host + POD_ENDPOINT_1 + namespace + POD_ENDPOINT_2,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
-                    EMPTY,
+                    TRUE,
                     proxyHost,
                     proxyPort,
                     proxyUsername,
@@ -130,6 +98,12 @@ public class GetDeploymentStatus {
                     EMPTY,
                     EMPTY,
                     EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    body,
+                    APPLICATION_JSON,
+                    EMPTY,
                     connectTimeout,
                     EMPTY,
                     executionTimeout,
@@ -137,21 +111,11 @@ public class GetDeploymentStatus {
                     sessionConnectionPool
             );
 
-            if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
-                if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300)
-                    processHttpGetDeploymentStatusResult(result);
-                else {
-                    result.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
-                    result.put(EXCEPTION, result.get(RETURN_RESULT));
-                    result.put(RETURN_RESULT, FAILURE_RETURN_RESULT);
-                }
-            }
-
+            processHttpResult(result);
             return result;
 
         } catch (Exception exception) {
             return OutputUtilities.getFailureResultsMap(exception);
         }
     }
-
 }

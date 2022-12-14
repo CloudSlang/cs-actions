@@ -22,7 +22,8 @@ public class Descriptions {
         public static final String RETURN_CODE_DESC = "0 if success, -1 if failure.";
         public static final String STATUS_CODE_DESC = "The HTTP status code for Openshift API request.";
 
-        public static final String HOST_DESC = "The OpenShift hostname.";
+        public static final String HOST_DESC = "The url of the service to which API calls are made.\n" +
+                "Example: https://api.domain:6443";
         public static final String AUTH_TOKEN_DESC = "Token used to authenticate to the Openshift environment.";
         public static final String PROXY_HOST_DESC = "The proxy server used to access the web site.";
         public static final String PROXY_PORT_DESC = "The proxy server port." +
@@ -100,7 +101,7 @@ public class Descriptions {
         public static final String AUTH_TOKEN_DESCRIPTION = "Token used to authenticate to the openshift environment.";
         public static final String NAMESPACE_DESCRIPTION = "The namespace in which the deployment will be created.";
         public static final String DEFINITION_DESCRIPTION = "YAML or JSON definitions.";
-        public static final String RETURN_RESULT_DESC = "The authorization token for Openshift.";
+        public static final String RETURN_RESULT_DESC = "The created deployment in case of success or a comprehensive message in case of failure.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error";
         public static final String SUCCESS_DESC = "Deployment created successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to create the deployment.";
@@ -158,11 +159,6 @@ public class Descriptions {
         public static final String DOCUMENT_OUTPUT_DESC = "All the information related to a specific deployment in the " +
                 "json format.";
 
-        //API
-        public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_1 = "/apis/apps/v1/namespaces/";
-        public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_2 = "/deployments/";
-        public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_3 = "/status";
-
     }
 
     public static class GetPodList {
@@ -176,19 +172,34 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The retrieval of the pod list was made successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the pod list.";
         public static final String POD_LIST_DESC = "The comma separated list of pod uids.";
-        public static final String POD_ARRAY_DESC = "The list containing pairs of pod name and uids.";
-
-        public static final String DOCUMENT_OUTPUT_DESC = "All the information related to a the pod list in json format.";
-
-        //API
-        public static final String GET_POD_LIST_ENDPOINT_1 = "/api/v1/namespaces/";
-        public static final String GET_POD_LIST_ENDPOINT_2 = "/pods";
-        public static final String NEGATIVE_RETURN_CODE = "-1";
+        public static final String POD_ARRAY_DESC = "The list containing pairs of pod name and uids in JSON format.";
+        public static final String DOCUMENT_OUTPUT_DESC = "All the information related to the pod list in json format.";
         public static final String SUCCESSFUL_RETURN_RESULT = "The Pod list was returned successfully.";
         public static final String FAILURE_RETURN_RESULT = "An issue was encountered during your query. Please check the exception output for more information.";
-        public static final String PROPERTY_NAME = "name";
-        public static final String PROPERTY_UID = "uid";
-        public static final String PROPERTY_ITEMS = "items";
-        public static final String PROPERTY_METADATA = "metadata";
+
+    }
+
+    public static class CreatePod {
+        public static final String CREATE_POD = "Create Pod";
+        public static final String CREATE_POD_DESCRIPTION = "This operation creates a new pod with the inputs from the user.";
+        public static final String AUTH_TOKEN_DESCRIPTION = "Token used to authenticate to the openshift environment.";
+        public static final String NAMESPACE_DESCRIPTION = "The namespace in which the pod will be created.";
+        public static final String SPEC_DESCRIPTION = "The pod specification in JSON format.";
+        public static final String RETURN_RESULT_DESC = "The created pod in case of success or a comprehensive message in case of failure.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while creating the pod.";
+        public static final String SUCCESS_DESC = "The pod was created successfully.";
+        public static final String FAILURE_DESC = "There was an error while creating the pod.";
+    }
+
+    public static class DeletePod {
+        public static final String DELETE_POD = "Delete Pod";
+        public static final String DELETE_POD_DESCRIPTION = "This operation deletes a pod from a namespace.";
+        public static final String AUTH_TOKEN_DESCRIPTION = "Token used to authenticate to the openshift environment.";
+        public static final String NAMESPACE_DESCRIPTION = "The namespace from which to delete the pod.";
+        public static final String POD_NAME_DESCRIPTION = "Name of the pod to delete.";
+        public static final String RETURN_RESULT_DESC = "A suggestive message in case of success or failure.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while deleting the pod.";
+        public static final String SUCCESS_DESC = "The pod was deleted successfully.";
+        public static final String FAILURE_DESC = "There was an error while deleting the pod.";
     }
 }
