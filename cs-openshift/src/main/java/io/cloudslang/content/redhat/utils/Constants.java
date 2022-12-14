@@ -108,6 +108,7 @@ public final class Constants {
 
         public static final String POD_ENDPOINT_1 = "/api/v1/namespaces/";
         public static final String POD_ENDPOINT_2 = "/pods";
+        public static final String POD_ENDPOINT_3 = "/podtemplates";
         public static final String NEGATIVE_RETURN_CODE = "-1";
 
         public static final String PROPERTY_NAME = "name";
