@@ -116,6 +116,9 @@ public final class Constants {
         public static final String PROPERTY_METADATA = "metadata";
         public static final String SPECIFICATION = "specification";
         public static final String POD_NAME = "podName";
+
+        public static final String ROUTE_ENDPOINT_1 = "/apis/route.openshift.io/v1/namespaces/";
+        public static final String ROUTE_ENDPOINT_2 = "/routes";
     }
 
 }

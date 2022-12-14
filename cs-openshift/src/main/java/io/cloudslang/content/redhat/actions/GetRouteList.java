@@ -1,6 +1,5 @@
 package io.cloudslang.content.redhat.actions;
 
-
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -25,26 +24,25 @@ import static io.cloudslang.content.redhat.services.OpenshiftService.*;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.AUTH_TOKEN;
 import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
-import static io.cloudslang.content.redhat.utils.Descriptions.GetPodList.*;
-import static io.cloudslang.content.redhat.utils.Descriptions.GetPodList.STATUS_CODE_DESC;
+import static io.cloudslang.content.redhat.utils.Descriptions.Common.CONNECTIONS_MAX_TOTAL_DESC;
+import static io.cloudslang.content.redhat.utils.Descriptions.GetRouteList.*;
+import static io.cloudslang.content.redhat.utils.Descriptions.GetPodList.FAILURE_RETURN_RESULT;
+import static io.cloudslang.content.redhat.utils.Descriptions.GetRouteList.STATUS_CODE_DESC;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-public class GetPodList {
+public class GetRouteList {
 
-
-    @Action(name = GET_POD_LIST,
-            description = GET_POD_LIST_DESC,
+    @Action(name = GET_ROUTE_LIST,
+            description = GET_ROUTE_LIST_DESC,
             outputs = {
-                    //Common outputs
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    //Specific outputs - general
                     @Output(value = DOCUMENT_OUTPUT, description = DOCUMENT_OUTPUT_DESC),
-                    @Output(value = POD_LIST, description = POD_LIST_DESC),
-                    @Output(value = POD_ARRAY, description = POD_ARRAY_DESC),
+                    @Output(value = ROUTE_LIST, description = ROUTE_LIST_DESC),
+                    @Output(value = ROUTE_ARRAY, description = ROUTE_ARRAY_DESC),
             },
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS,
@@ -84,7 +82,7 @@ public class GetPodList {
         try {
 
             result = new HttpClientGetAction().execute(
-                    host + POD_ENDPOINT_1 + namespace + POD_ENDPOINT_2,
+                    host + ROUTE_ENDPOINT_1 + namespace + ROUTE_ENDPOINT_2,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
@@ -121,16 +119,16 @@ public class GetPodList {
 
             if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
                 if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300)
-                    addPodListResults(result);
+                    addRouteListResults(result);
                 else {
-                    setFailureCustomResults(result, POD_LIST, POD_ARRAY, DOCUMENT_OUTPUT);
+                    setFailureCustomResults(result, DOCUMENT_OUTPUT, ROUTE_LIST, ROUTE_ARRAY);
                     result.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
                     result.put(EXCEPTION, result.get(RETURN_RESULT));
                     result.put(RETURN_RESULT, FAILURE_RETURN_RESULT);
                 }
 
             } else
-                setFailureCustomResults(result, POD_LIST, POD_ARRAY, DOCUMENT_OUTPUT);
+                setFailureCustomResults(result, DOCUMENT_OUTPUT, ROUTE_LIST, ROUTE_ARRAY);
             return result;
 
         } catch (Exception exception) {

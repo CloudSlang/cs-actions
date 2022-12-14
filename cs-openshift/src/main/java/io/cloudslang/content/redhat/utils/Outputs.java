@@ -42,6 +42,11 @@ public final class Outputs extends OutputNames {
         public static final String POD_LIST = "podList";
         public static final String POD_ARRAY = "podArray";
 
+        //Get Route List
+
+        public static final String ROUTE_LIST = "routeList";
+        public static final String ROUTE_ARRAY = "routeArray";
+
     }
 }
 
