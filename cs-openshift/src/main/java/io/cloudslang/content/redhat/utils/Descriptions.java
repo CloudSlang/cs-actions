@@ -219,4 +219,21 @@ public class Descriptions {
         public static final String SUCCESSFUL_RETURN_RESULT = "The route list was returned successfully.";
 
     }
+
+    public static class GetPodTemplateList {
+        public static final String GET_POD_TEMPLATE_LIST = "Get Pod Template List";
+        public static final String GET_POD_TEMPLATE_LIST_DESC = "This operation returns a list of pod templates present in a given namespace.";
+        public static final String NAMESPACE_DESC = "The object name and auth scope, such as for teams and projects.";
+        public static final String RETURN_RESULT_DESC = "A suggestive message in case of success or failure.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code of the Openshift API request.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the pod template list.";
+        public static final String SUCCESS_DESC = "The retrieval of the pod template list was made successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the pod template list.";
+        public static final String POD_TEMPLATE_LIST_DESC = "A comma separated list of pod template uids.";
+        public static final String POD_TEMPLATE_ARRAY_DESC = "A list containing pairs of pod template name and uids in JSON format.";
+        public static final String DOCUMENT_OUTPUT_DESC = "All the information related to the pod template list in json format.";
+        public static final String SUCCESSFUL_RETURN_RESULT = "The pod template list was returned successfully.";
+        public static final String FAILURE_RETURN_RESULT = "An issue was encountered during your query. Please check the exception output for more information.";
+
+    }
 }

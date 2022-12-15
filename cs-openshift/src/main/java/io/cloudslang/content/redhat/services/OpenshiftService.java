@@ -137,6 +137,33 @@ public class OpenshiftService {
 
     }
 
+    public static void addPodTemplateListResults(Map<String, String> httpResults) {
+        try {
+            if (!(httpResults.get(RETURN_RESULT).isEmpty())) {
+
+                StringBuilder podTemplateList = new StringBuilder();
+                List<JsonObject> podTemplatePairList = new ArrayList<>();
+
+                extractValue(httpResults, podTemplateList, podTemplatePairList);
+
+                //populate the podTemplateList and podTemplateArray outputs
+                httpResults.put(POD_TEMPLATE_LIST, podTemplateList.toString());
+                httpResults.put(POD_TEMPLATE_ARRAY, podTemplatePairList.toString());
+
+                //overwrite the returnResult output with a success message
+                httpResults.put(RETURN_RESULT, Descriptions.GetPodTemplateList.SUCCESSFUL_RETURN_RESULT);
+
+            }
+
+        } catch (Exception e) {
+            //in case an error arises during the parsing, populate the custom outputs with empty values
+            setFailureCustomResults(httpResults, POD_TEMPLATE_LIST, POD_TEMPLATE_ARRAY, DOCUMENT_OUTPUT);
+
+            throw new RuntimeException(e);
+        }
+
+    }
+
     public static void addRouteListResults(Map<String, String> httpResults) {
         try {
             if (!(httpResults.get(RETURN_RESULT).isEmpty())) {
