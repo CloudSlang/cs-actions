@@ -47,6 +47,11 @@ public final class Outputs extends OutputNames {
         public static final String POD_TEMPLATE_LIST = "podTemplateList";
         public static final String POD_TEMPLATE_ARRAY = "podTemplateArray";
 
+        //Get Template List
+
+        public static final String TEMPLATE_LIST = "templateList";
+        public static final String TEMPLATE_ARRAY = "templateArray";
+
         //Get Route List
 
         public static final String ROUTE_LIST = "routeList";
