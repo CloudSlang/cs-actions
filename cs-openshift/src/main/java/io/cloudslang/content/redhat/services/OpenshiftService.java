@@ -164,6 +164,34 @@ public class OpenshiftService {
 
     }
 
+
+    public static void addTemplateListResults(Map<String, String> httpResults) {
+        try {
+            if (!(httpResults.get(RETURN_RESULT).isEmpty())) {
+
+                StringBuilder templateList = new StringBuilder();
+                List<JsonObject> templatePairList = new ArrayList<>();
+
+                extractValue(httpResults, templateList, templatePairList);
+
+                //populate the templateList and templateArray outputs
+                httpResults.put(TEMPLATE_LIST, templateList.toString());
+                httpResults.put(TEMPLATE_ARRAY, templatePairList.toString());
+
+                //overwrite the returnResult output with a success message
+                httpResults.put(RETURN_RESULT, Descriptions.GetTemplateList.SUCCESSFUL_RETURN_RESULT);
+
+            }
+
+        } catch (Exception e) {
+            //in case an error arises during the parsing, populate the custom outputs with empty values
+            setFailureCustomResults(httpResults, TEMPLATE_LIST, TEMPLATE_ARRAY, DOCUMENT_OUTPUT);
+
+            throw new RuntimeException(e);
+        }
+
+    }
+
     public static void addRouteListResults(Map<String, String> httpResults) {
         try {
             if (!(httpResults.get(RETURN_RESULT).isEmpty())) {

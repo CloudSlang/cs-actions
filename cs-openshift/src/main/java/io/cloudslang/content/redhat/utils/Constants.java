@@ -120,6 +120,9 @@ public final class Constants {
 
         public static final String ROUTE_ENDPOINT_1 = "/apis/route.openshift.io/v1/namespaces/";
         public static final String ROUTE_ENDPOINT_2 = "/routes";
+
+        public static final String TEMPLATE_ENDPOINT_1 = "/apis/template.openshift.io/v1/namespaces/";
+        public static final String TEMPLATE_ENDPOINT_2 = "/templates";
     }
 
 }
