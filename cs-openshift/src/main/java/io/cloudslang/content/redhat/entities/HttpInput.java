@@ -18,8 +18,6 @@ public class HttpInput {
     private String trustPassword;
     private String keystore;
     private String keystorePassword;
-    private String keepAlive;
-    private String connectionsMaxPerRoute;
     private String connectionsMaxTotal;
     private String username;
     private String password;
@@ -29,8 +27,7 @@ public class HttpInput {
     public HttpInput(String host, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword,
                      String tlsVersion, String allowedCyphers, String trustAllRoots, String x509HostnameVerifier,
                      String trustKeystore, String trustPassword, String keystore, String keystorePassword,
-                     String keepAlive, String connectionsMaxPerRoute, String connectionsMaxTotal,String username,
-                     String password,String connectTimeout,String executionTimeout) {
+                     String username,String password,String connectTimeout, String executionTimeout) {
         this.host = host;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
@@ -44,9 +41,6 @@ public class HttpInput {
         this.trustPassword = trustPassword;
         this.keystore = keystore;
         this.keystorePassword = keystorePassword;
-        this.keepAlive = keepAlive;
-        this.connectionsMaxPerRoute = connectionsMaxPerRoute;
-        this.connectionsMaxTotal = connectionsMaxTotal;
         this.username = username;
         this.password = password;
         this.connectTimeout = connectTimeout;
@@ -165,30 +159,6 @@ public class HttpInput {
         this.keystorePassword = keystorePassword;
     }
 
-    public String getKeepAlive() {
-        return keepAlive;
-    }
-
-    public void setKeepAlive(String keepAlive) {
-        this.keepAlive = keepAlive;
-    }
-
-    public String getConnectionsMaxPerRoute() {
-        return connectionsMaxPerRoute;
-    }
-
-    public void setConnectionsMaxPerRoute(String connectionsMaxPerRoute) {
-        this.connectionsMaxPerRoute = connectionsMaxPerRoute;
-    }
-
-    public String getConnectionsMaxTotal() {
-        return connectionsMaxTotal;
-    }
-
-    public void setConnectionsMaxTotal(String connectionsMaxTotal) {
-        this.connectionsMaxTotal = connectionsMaxTotal;
-    }
-
     public static GetHttpInputBuilder builder() {
         return new GetHttpInputBuilder();
     }
@@ -232,9 +202,6 @@ public class HttpInput {
         private String trustPassword = EMPTY;
         private String keystore = EMPTY;
         private String keystorePassword = EMPTY;
-        private String keepAlive = EMPTY;
-        private String connectionsMaxPerRoute = EMPTY;
-        private String connectionsMaxTotal = EMPTY;
         private String username = EMPTY;
         private String password = EMPTY;
         private String executionTimeout = EMPTY;
@@ -313,21 +280,6 @@ public class HttpInput {
             return this;
         }
 
-        public GetHttpInputBuilder keepAlive(final String keepAlive) {
-            this.keepAlive = keepAlive;
-            return this;
-        }
-
-        public GetHttpInputBuilder connectionsMaxPerRoute(final String connectionsMaxPerRoute) {
-            this.connectionsMaxPerRoute = connectionsMaxPerRoute;
-            return this;
-        }
-
-        public GetHttpInputBuilder connectionsMaxTotal(final String connectionsMaxTotal) {
-            this.connectionsMaxTotal = connectionsMaxTotal;
-            return this;
-        }
-
         public GetHttpInputBuilder proxyHost(final String proxyHost) {
             this.proxyHost = proxyHost;
             return this;
@@ -340,8 +292,7 @@ public class HttpInput {
 
         public HttpInput build() {
             return new HttpInput(host,proxyHost,proxyPort,proxyUsername,proxyPassword,tlsVersion,allowedCyphers,
-                    trustAllRoots, x509HostnameVerifier,trustKeystore,trustPassword,keystore,keystorePassword,keepAlive,
-                    connectionsMaxPerRoute,connectionsMaxTotal,username,password,connectTimeout,executionTimeout);
+                    trustAllRoots, x509HostnameVerifier,trustKeystore,trustPassword,keystore,keystorePassword,username,password,connectTimeout,executionTimeout);
         }
     }
 }

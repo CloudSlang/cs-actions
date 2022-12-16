@@ -71,11 +71,6 @@ public class Descriptions {
         public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in seconds) to allow the client to complete the execution " +
                 "of an API call. A value of '0' disables this feature. \n" +
                 "Default: 60  \n";
-        public static final String KEEP_ALIVE_DESC = "Specifies whether to create a shared connection that will be " +
-                "used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
-                "execution it will close it.";
-        public static final String CONNECTIONS_MAX_PER_ROUTE_DESC = "The maximum limit of connections on a per route basis.";
-        public static final String CONNECTIONS_MAX_TOTAL_DESC = "The maximum limit of connections in total.";
 
     }
 

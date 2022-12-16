@@ -61,9 +61,6 @@ public class DeletePod {
                                        @Param(value = KEYSTORE_PASSWORD, encrypted = true, description = KEYSTORE_PASSWORD_DESC) String keystorePassword,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
-                                       @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
-                                       @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONNECTIONS_MAX_PER_ROUTE_DESC) String connectionsMaxPerRoute,
-                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONNECTIONS_MAX_TOTAL_DESC) String connectionsMaxTotal,
                                        @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
                                        @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
         try {
@@ -86,9 +83,9 @@ public class DeletePod {
                     trustPassword,
                     keystore,
                     keystorePassword,
-                    keepAlive,
-                    connectionsMaxPerRoute,
-                    connectionsMaxTotal,
+                    FALSE,
+                    CONNECTION_MAX_PER_ROUTE,
+                    CONNECTIONS_MAX_TOTAL_VALUE,
                     TRUE,
                     AUTHORIZATION_BEARER + authToken,
                     EMPTY_STRING,

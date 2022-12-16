@@ -53,7 +53,6 @@ public final class Constants {
         public static final String KEYSTORE_PASSWORD = "keystorePassword";
         public static final String CONNECT_TIMEOUT = "connectTimeout";
         public static final String EXECUTION_TIMEOUT = "executionTimeout";
-        public static final String KEEP_ALIVE = "keepAlive";
         public static final String CONNECTIONS_MAX_PER_ROUTE = "connectionsMaxPerRoute";
         public static final String CONNECTIONS_MAX_TOTAL = "connectionsMaxTotal";
         public static final String SESSION_COOKIES = "httpClientCookieSession";
@@ -71,11 +70,9 @@ public final class Constants {
         public static final String ANONYMOUS = "Anonymous";
 
         //Other
-        public static final String PROTOCOL_DELIMITER = "://";
         public static final String FORWARD_SLASH = "/";
         public static final String COMMA = ",";
-        public static final String EQUALS = "=";
-        public static final String SEMICOLON = ";";
+
 
         // Create Deployment
         public static final String AUTH_TOKEN = "authToken";
@@ -110,6 +107,8 @@ public final class Constants {
         public static final String POD_ENDPOINT_2 = "/pods";
         public static final String POD_ENDPOINT_3 = "/podtemplates";
         public static final String NEGATIVE_RETURN_CODE = "-1";
+        public static final String CONNECTION_MAX_PER_ROUTE = "20";
+        public static final String CONNECTIONS_MAX_TOTAL_VALUE = "200";
 
         public static final String PROPERTY_NAME = "name";
         public static final String PROPERTY_UID = "uid";

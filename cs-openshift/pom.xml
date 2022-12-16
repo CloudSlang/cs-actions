@@ -24,7 +24,7 @@
         <packaging>jar</packaging>
 
         <name>${project.groupId}:${project.artifactId}</name>
-        <description>Openshift</description>
+        <description>Redhat Openshift</description>
         <url>https://github.com/CloudSlang/cs-actions</url>
 
         <licenses>
