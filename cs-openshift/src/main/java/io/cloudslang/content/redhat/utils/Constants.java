@@ -116,12 +116,17 @@ public final class Constants {
         public static final String PROPERTY_METADATA = "metadata";
         public static final String SPECIFICATION = "specification";
         public static final String POD_NAME = "podName";
+        public static final String BUILD_CONFIG = "buildConfig";
 
         public static final String ROUTE_ENDPOINT_1 = "/apis/route.openshift.io/v1/namespaces/";
         public static final String ROUTE_ENDPOINT_2 = "/routes";
 
         public static final String TEMPLATE_ENDPOINT_1 = "/apis/template.openshift.io/v1/namespaces/";
         public static final String TEMPLATE_ENDPOINT_2 = "/templates";
+
+        public static final String CREATE_BUILD_ENDPOINT_1 = "/apis/build.openshift.io/v1/namespaces/";
+        public static final String CREATE_BUILD_ENDPOINT_2 = "/buildconfigs/";
+        public static final String CREATE_BUILD_ENDPOINT_3 = "/instantiate";
     }
 
 }
