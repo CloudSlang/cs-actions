@@ -106,7 +106,7 @@ public class CreateDeployment {
                     CONNECTIONS_MAX_TOTAL_VALUE,
                     EMPTY,
                     EMPTY,
-                    CONTENT_TYPE + APPLICATION_JSON + COMMA + AUTHORIZATION_BEARER + authToken,
+                    AUTHORIZATION_BEARER + authToken,
                     EMPTY,
                     EMPTY,
                     EMPTY,

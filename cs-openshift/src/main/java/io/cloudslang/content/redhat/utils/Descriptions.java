@@ -95,7 +95,7 @@ public class Descriptions {
         public static final String CREATE_DEPLOYMENT_DESCRIPTION = "This operation creates a deployment with the inputs from the user.";
         public static final String AUTH_TOKEN_DESCRIPTION = "Token used to authenticate to the openshift environment.";
         public static final String NAMESPACE_DESCRIPTION = "The namespace in which the deployment will be created.";
-        public static final String DEFINITION_DESCRIPTION = "YAML or JSON definitions.";
+        public static final String DEFINITION_DESCRIPTION = "JSON definitions consisting of the deployment specifications.";
         public static final String RETURN_RESULT_DESC = "The created deployment in case of success or a comprehensive message in case of failure.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error";
         public static final String SUCCESS_DESC = "Deployment created successfully.";
