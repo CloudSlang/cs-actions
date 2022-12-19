@@ -249,4 +249,16 @@ public class Descriptions {
         public static final String FAILURE_RETURN_RESULT = "An issue was encountered during your query. Please check the exception output for more information.";
 
     }
+
+    public static class CreateBuild {
+        public static final String CREATE_BUILD = "Create Build";
+        public static final String CREATE_BUILD_DESC = "This operation starts a build from an already existing build config.";
+        public static final String NAMESPACE_DESC = "The namespace where the build config is located.";
+        public static final String BUILD_CONFIG_DESC= "The build config that will be used as a template for the build.";
+        public static final String SPECIFICATION_DESC = "The build specification in JSON format.";
+        public static final String RETURN_RESULT_DESC = "The created build in case of success or a comprehensive message in case of failure.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while creating the build.";
+        public static final String SUCCESS_DESC = "The build was created successfully.";
+        public static final String FAILURE_DESC = "There was an error while creating the build.";
+    }
 }
