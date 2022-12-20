@@ -67,15 +67,13 @@ public class GetTokenAction {
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
-                                       @Param(value = PROXY_PASSWORD,encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
                                        @Param(value = TLS_VERSION, description = TLS_VERSION_DESC) String tlsVersion,
                                        @Param(value = ALLOWED_CIPHERS, description = ALLOWED_CIPHERS_DESC) String allowedCyphers,
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_HOSTNAME_VERIFIER_DESC) String x509HostnameVerifier,
                                        @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
-                                       @Param(value = TRUST_PASSWORD,encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
-                                       @Param(value = KEYSTORE, description = KEYSTORE_DESC) String keystore,
-                                       @Param(value = KEYSTORE_PASSWORD,encrypted = true, description = KEYSTORE_PASSWORD_DESC) String keystorePassword,
+                                       @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
                                        @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
@@ -91,11 +89,9 @@ public class GetTokenAction {
                     .proxyPassword(proxyPassword)
                     .proxyPort(proxyPort)
                     .proxyPassword(proxyPassword)
-                    .keystorePassword(keystorePassword)
                     .proxyUsername(proxyUsername)
                     .allowedCyphers(allowedCyphers)
                     .trustKeystore(trustKeystore)
-                    .keystore(keystore)
                     .tlsVersion(tlsVersion)
                     .trustAllRoots(trustAllRoots)
                     .trustPassword(trustPassword)
@@ -107,7 +103,7 @@ public class GetTokenAction {
                     .build();
 
             Map<String, String> result = new HttpClientGetAction().execute(
-                    input.getHost() +AUTHORIZE_TOKEN_URL,
+                    input.getHost() + AUTHORIZE_TOKEN_URL,
                     ANONYMOUS,
                     EMPTY_STRING,
                     EMPTY_STRING,
@@ -122,8 +118,8 @@ public class GetTokenAction {
                     input.getX509HostnameVerifier(),
                     input.getTrustKeystore(),
                     input.getTrustPassword(),
-                    input.getKeystore(),
-                    input.getKeystorePassword(),
+                    EMPTY_STRING,
+                    EMPTY_STRING,
                     FALSE,
                     CONNECTION_MAX_PER_ROUTE,
                     CONNECTIONS_MAX_TOTAL_VALUE,
@@ -142,7 +138,7 @@ public class GetTokenAction {
                     sessionConnectionPool);
 
 
-            processAuthTokenResult(result,input,sessionCookies,sessionConnectionPool);
+            processAuthTokenResult(result, input, sessionCookies, sessionConnectionPool);
 
             return result;
         } catch (Exception exception) {

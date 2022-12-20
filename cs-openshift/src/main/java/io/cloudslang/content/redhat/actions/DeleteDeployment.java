@@ -71,8 +71,6 @@ public class DeleteDeployment {
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_HOSTNAME_VERIFIER_DESC) String x509HostnameVerifier,
                                        @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
                                        @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
-                                       @Param(value = KEYSTORE, description = KEYSTORE_DESC) String keystore,
-                                       @Param(value = KEYSTORE_PASSWORD, encrypted = true, description = KEYSTORE_PASSWORD_DESC) String keystorePassword,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
                                        @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
@@ -80,7 +78,7 @@ public class DeleteDeployment {
         try {
 
             Map<String, String> result = new HttpClientDeleteAction().execute(
-                    host + APPS_V1_NAMESPACES + namespace + DEPLOYMENTS  + FORWARD_SLASH + deployment,
+                    host + APPS_V1_NAMESPACES + namespace + DEPLOYMENTS + FORWARD_SLASH + deployment,
                     ANONYMOUS,
                     EMPTY_STRING,
                     EMPTY_STRING,
@@ -95,8 +93,8 @@ public class DeleteDeployment {
                     x509HostnameVerifier,
                     trustKeystore,
                     trustPassword,
-                    keystore,
-                    keystorePassword,
+                    EMPTY_STRING,
+                    EMPTY_STRING,
                     FALSE,
                     CONNECTION_MAX_PER_ROUTE,
                     CONNECTIONS_MAX_TOTAL_VALUE,
