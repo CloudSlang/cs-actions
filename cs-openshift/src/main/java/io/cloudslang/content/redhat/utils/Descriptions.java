@@ -198,6 +198,18 @@ public class Descriptions {
         public static final String FAILURE_DESC = "There was an error while deleting the pod.";
     }
 
+    public static class CreateRoute{
+        public static final String CREATE_ROUTE="Create Route";
+        public static final String CREATE_ROUTE_DESCRIPTION = "This operation creates a new route with the inputs from the user.";
+        public static final String AUTH_TOKEN_DESCRIPTION = "Token used to authenticate to the openshift environment.";
+        public static final String NAMESPACE_DESCRIPTION = "The namespace in which the route will be created.";
+        public static final String SPEC_DESCRIPTION = "The route specification in JSON format.";
+        public static final String RETURN_RESULT_DESC = "The created route in case of success or a comprehensive message in case of failure.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while creating the route.";
+        public static final String SUCCESS_DESC = "The route was created successfully.";
+        public static final String FAILURE_DESC = "There was an error while creating the route.";
+    }
+
     public static class GetRouteList {
         public static final String GET_ROUTE_LIST = "Get Route List";
         public static final String GET_ROUTE_LIST_DESC = "This operation returns a list of routes present in a given namespace.";
