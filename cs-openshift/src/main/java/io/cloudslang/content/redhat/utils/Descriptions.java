@@ -254,11 +254,24 @@ public class Descriptions {
         public static final String CREATE_BUILD = "Create Build";
         public static final String CREATE_BUILD_DESC = "This operation starts a build from an already existing build config.";
         public static final String NAMESPACE_DESC = "The namespace where the build config is located.";
-        public static final String BUILD_CONFIG_DESC= "The build config that will be used as a template for the build.";
+        public static final String BUILD_CONFIG_DESC = "The build config that will be used as a template for the build.";
         public static final String SPECIFICATION_DESC = "The build specification in JSON format.";
         public static final String RETURN_RESULT_DESC = "The created build in case of success or a comprehensive message in case of failure.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while creating the build.";
         public static final String SUCCESS_DESC = "The build was created successfully.";
         public static final String FAILURE_DESC = "There was an error while creating the build.";
+    }
+
+
+    public static class DeleteRoute {
+        public static final String DELETE_ROUTE = "Delete Route";
+        public static final String DELETE_ROUTE_DESCRIPTION = "This operation deletes a route from a namespace.";
+        public static final String AUTH_TOKEN_DESCRIPTION = "Token used to authenticate to the openshift environment.";
+        public static final String NAMESPACE_DESCRIPTION = "The namespace from which to delete the route.";
+        public static final String ROUTE_NAME_DESCRIPTION = "Name of the route to delete.";
+        public static final String RETURN_RESULT_DESC = "A suggestive message in case of success or failure.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while deleting the route.";
+        public static final String SUCCESS_DESC = "The route was deleted successfully.";
+        public static final String FAILURE_DESC = "There was an error while deleting the route.";
     }
 }
