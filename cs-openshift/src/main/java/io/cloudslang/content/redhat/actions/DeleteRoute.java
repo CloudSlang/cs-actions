@@ -1,19 +1,3 @@
-/*
- * (c) Copyright 2022 Micro Focus, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-
 package io.cloudslang.content.redhat.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -23,12 +7,9 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
-import io.cloudslang.content.redhat.entities.HttpInput;
+import io.cloudslang.content.httpclient.actions.HttpClientDeleteAction;
 import io.cloudslang.content.utils.OutputUtilities;
-import org.apache.commons.codec.binary.Base64;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
@@ -39,30 +20,31 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_CONNECTION_POOL_DESC;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.SESSION_COOKIES_DESC;
-
-import static io.cloudslang.content.redhat.services.OpenshiftService.processAuthTokenResult;
+import static io.cloudslang.content.redhat.services.OpenshiftService.processHttpResult;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
-import static io.cloudslang.content.redhat.utils.Descriptions.GetTokenAction.AUTH_TOKEN_DESC;
-import static io.cloudslang.content.redhat.utils.Descriptions.GetTokenAction.*;
+import static io.cloudslang.content.redhat.utils.Descriptions.DeleteRoute.*;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.AUTH_TOKEN;
+import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.STATUS_CODE;
 
-public class GetTokenAction {
-    @Action(name = GET_TOKEN_NAME,
-            description = GET_TOKEN_NAME_DESC,
+public class DeleteRoute {
+
+    @Action(name = DELETE_ROUTE,
+            description = DELETE_ROUTE_DESCRIPTION,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC),
-                    @Output(value = EXCEPTION, description = EXCEPTION_DESC)
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
     public Map<String, String> execute(@Param(value = HOST, required = true, description = HOST_DESC) String host,
-                                       @Param(value = USERNAME, required = true, description = USERNAME_DESC) String username,
-                                       @Param(value = PASSWORD, required = true, encrypted = true, description = PASSWORD_DESC) String password,
+                                       @Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESCRIPTION, encrypted = true) String authToken,
+                                       @Param(value = NAMESPACE, required = true, description = NAMESPACE_DESCRIPTION) String namespace,
+                                       @Param(value = ROUTE_NAME, required = true, description = ROUTE_NAME_DESCRIPTION) String routeName,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -80,66 +62,38 @@ public class GetTokenAction {
                                        @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
         try {
 
-            String auth = username + COLON_PUNCTUATION + password;
-            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
-
-            HttpInput input = HttpInput.builder()
-                    .host(host)
-                    .proxyHost(proxyHost)
-                    .proxyPassword(proxyPassword)
-                    .proxyPort(proxyPort)
-                    .proxyPassword(proxyPassword)
-                    .proxyUsername(proxyUsername)
-                    .allowedCyphers(allowedCyphers)
-                    .trustKeystore(trustKeystore)
-                    .tlsVersion(tlsVersion)
-                    .trustAllRoots(trustAllRoots)
-                    .trustPassword(trustPassword)
-                    .x509HostnameVerifier(x509HostnameVerifier)
-                    .username(username)
-                    .password(password)
-                    .connectTimeout(connectTimeout)
-                    .executionTimeout(executionTimeout)
-                    .build();
-
-            Map<String, String> result = new HttpClientGetAction().execute(
-                    input.getHost() + AUTHORIZE_TOKEN_URL,
+            Map<String, String> result = new HttpClientDeleteAction().execute(
+                    host + ROUTE_ENDPOINT_1 + namespace + ROUTE_ENDPOINT_2 + FORWARD_SLASH + routeName,
                     ANONYMOUS,
                     EMPTY_STRING,
                     EMPTY_STRING,
                     TRUE,
-                    input.getProxyHost(),
-                    input.getProxyPort(),
-                    input.getProxyUsername(),
-                    input.getProxyPassword(),
-                    input.getTlsVersion(),
-                    input.getAllowedCyphers(),
-                    input.getTrustAllRoots(),
-                    input.getX509HostnameVerifier(),
-                    input.getTrustKeystore(),
-                    input.getTrustPassword(),
+                    proxyHost,
+                    proxyPort,
+                    proxyUsername,
+                    proxyPassword,
+                    tlsVersion,
+                    allowedCyphers,
+                    trustAllRoots,
+                    x509HostnameVerifier,
+                    trustKeystore,
+                    trustPassword,
                     EMPTY_STRING,
                     EMPTY_STRING,
                     FALSE,
                     CONNECTION_MAX_PER_ROUTE,
                     CONNECTIONS_MAX_TOTAL_VALUE,
                     TRUE,
-                    TRUE,
-                    AUTHORIZATION_BASIC + new String(encodedAuth),
+                    AUTHORIZATION_BEARER + authToken,
                     EMPTY_STRING,
                     EMPTY_STRING,
-                    QUERY_PARAM,
-                    TRUE,
-                    FALSE,
-                    input.getConnectTimeout(),
+                    connectTimeout,
                     EMPTY_STRING,
-                    input.getExecutionTimeout(),
+                    executionTimeout,
                     sessionCookies,
                     sessionConnectionPool);
 
-
-            processAuthTokenResult(result, input, sessionCookies, sessionConnectionPool);
-
+            processHttpResult(result);
             return result;
         } catch (Exception exception) {
             return OutputUtilities.getFailureResultsMap(exception);

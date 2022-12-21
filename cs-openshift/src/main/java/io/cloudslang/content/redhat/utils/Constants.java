@@ -78,6 +78,9 @@ public final class Constants {
         public static final String AUTH_TOKEN = "authToken";
         public static final String DEFINITION = "definition";
 
+        //Routes
+        public static final String ROUTE_NAME = "routeName";
+
 
         // endpoints
         public static final String CREATE_DEPLOYMENT_ENDPOINT(String namespace) {
