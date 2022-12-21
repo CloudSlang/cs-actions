@@ -52,8 +52,8 @@ public class GetDeploymentStatus {
                     @Output(value = DOCUMENT_OUTPUT, description = DOCUMENT_OUTPUT_DESC),
 
                     @Output(value = KIND_OUTPUT, description = KIND_OUTPUT_DESC),
-                    @Output(value = NAME_OUTPUT, description = NAME_OUTPUT_DESC),
-                    @Output(value = NAMESPACE_OUTPUT, description = NAMESPACE_OUTPUT_DESC),
+                    @Output(value = DEPLOYMENT_NAME_OUTPUT, description = DEPLOYMENT_NAME_OUTPUT_DESC),
+                    @Output(value = DEPLOYMENT_NAMESPACE_OUTPUT, description = DEPLOYMENT_NAMESPACE_OUTPUT_DESC),
                     @Output(value = UID_OUTPUT, description = UID_OUTPUT_DESC),
 
                     @Output(value = OBSERVED_GENERATION_OUTPUT, description = OBSERVED_GENERATION_OUTPUT_DESC),

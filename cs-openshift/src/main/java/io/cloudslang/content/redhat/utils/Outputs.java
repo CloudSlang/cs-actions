@@ -26,9 +26,9 @@ public final class Outputs extends OutputNames {
         public static final String AUTH_TOKEN = "authToken";
 
         //Get Deployment Status
-        public static final String NAME_OUTPUT = "name";
+        public static final String DEPLOYMENT_NAME_OUTPUT = "deploymentName";
         public static final String DOCUMENT_OUTPUT = "document";
-        public static final String NAMESPACE_OUTPUT = "namespace";
+        public static final String DEPLOYMENT_NAMESPACE_OUTPUT = "deploymentNamespace";
         public static final String UID_OUTPUT = "uid";
         public static final String KIND_OUTPUT = "kind";
         public static final String OBSERVED_GENERATION_OUTPUT = "observedGeneration";
