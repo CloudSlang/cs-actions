@@ -70,7 +70,6 @@ public class GetTokenAction {
                                        @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
                                        @Param(value = TLS_VERSION, description = TLS_VERSION_DESC) String tlsVersion,
                                        @Param(value = ALLOWED_CIPHERS, description = ALLOWED_CIPHERS_DESC) String allowedCyphers,
-                                       @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_HOSTNAME_VERIFIER_DESC) String x509HostnameVerifier,
                                        @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
                                        @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
@@ -93,7 +92,6 @@ public class GetTokenAction {
                     .allowedCyphers(allowedCyphers)
                     .trustKeystore(trustKeystore)
                     .tlsVersion(tlsVersion)
-                    .trustAllRoots(trustAllRoots)
                     .trustPassword(trustPassword)
                     .x509HostnameVerifier(x509HostnameVerifier)
                     .username(username)
@@ -114,7 +112,7 @@ public class GetTokenAction {
                     input.getProxyPassword(),
                     input.getTlsVersion(),
                     input.getAllowedCyphers(),
-                    input.getTrustAllRoots(),
+                    TRUE,
                     input.getX509HostnameVerifier(),
                     input.getTrustKeystore(),
                     input.getTrustPassword(),
