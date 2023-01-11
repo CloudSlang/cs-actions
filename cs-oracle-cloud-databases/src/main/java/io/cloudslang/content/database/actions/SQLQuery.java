@@ -93,7 +93,7 @@ public class SQLQuery {
         if (!preInputsValidation.isEmpty())
             return getFailureResultsMap(StringUtils.join(preInputsValidation, NEW_LINE));
 
-        walletPath = defaultIfEmpty((!walletPath.isEmpty()) ? Utils.unzip(walletPath, Boolean.parseBoolean(overwriteWallet)) : EMPTY, EMPTY);
+        walletPath = defaultIfEmpty((!StringUtils.isEmpty(walletPath)) ? Utils.unzip(walletPath, Boolean.parseBoolean(overwriteWallet)) : EMPTY, EMPTY);
 
         OracleCloudInputs sqlInputs = new OracleCloudInputs.OracleCloudInputsBuilder()
                 .connectionString(connectionString)
