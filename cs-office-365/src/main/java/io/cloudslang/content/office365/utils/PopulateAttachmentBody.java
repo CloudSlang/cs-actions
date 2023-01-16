@@ -18,14 +18,10 @@ package io.cloudslang.content.office365.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
-import sun.misc.BASE64Encoder;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Inputs.AddAttachment.CONTENT_BYTES;
@@ -59,12 +55,12 @@ public class PopulateAttachmentBody {
         final JsonObject body = new JsonObject();
         final JsonObject attachmentItem = new JsonObject();
 
-        if(isEmpty(fileType))
+        if (isEmpty(fileType))
             attachmentItem.addProperty(ATTACHMENT_TYPE, ATTACHMENT_TYPE_FILE);
         else
             attachmentItem.addProperty(ATTACHMENT_TYPE, fileType);
 
-        if(isEmpty(fileName))
+        if (isEmpty(fileName))
             attachmentItem.addProperty(ATTACHMENT_NAME, getName(filePath));
         else
             attachmentItem.addProperty(ATTACHMENT_NAME, fileName);
