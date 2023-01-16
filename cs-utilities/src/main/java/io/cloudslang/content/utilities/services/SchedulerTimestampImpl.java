@@ -44,7 +44,7 @@ public class SchedulerTimestampImpl {
         map.put(TRIGGER_EXPRESSION, expression);
         LocalDateTime localDateAndTimeWithTimeZone = LocalDateTime.now(ZoneId.of(timeZone));
         if (localDateAndTimeWithTimeZone.compareTo(localDateTime) >= 1) {
-            localDateTime = localDateTime.withDayOfMonth(localDateAndTimeWithTimeZone.getDayOfMonth() + 1);
+            localDateTime = localDateTime.plusDays(1);
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
